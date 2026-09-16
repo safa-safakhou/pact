@@ -1,5 +1,7 @@
 # PACT — rules and initial balance
 
+> **Historical design — superseded.** Use [PACT Version 1](../docs/pact/README.md). Its product, access, runtime, rulebook, social, privacy, and delivery documents replace this document as implementation authority.
+
 Design draft 1.0 · 15 September 2026 · Companion to [32 — Full game design](32-pact-game-design.md)
 
 **This is the proposed authoritative ruleset for the first prototype and first-season tuning.** All values below are hypotheses. Arithmetic checks can establish internal consistency; they cannot establish fun, economic stability, abuse resistance, or retention. Implementation must version these rules and publish changes.

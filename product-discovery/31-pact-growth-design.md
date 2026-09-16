@@ -1,5 +1,7 @@
 # PACT — a game people bring their friends into
 
+> **Historical design — superseded.** Use [PACT Version 1](../docs/pact/README.md). Its product, access, runtime, rulebook, social, privacy, and delivery documents replace this document as implementation authority.
+
 14 September 2026. **Proposed growth design, built on [30-pact-design.md](30-pact-design.md).** The founder asked for a design that is easy to share and gives user growth the strongest theoretical foundation. This is a recommendation, not a newly accepted founder decision. The original consolidated design remains intact.
 
 Design only. No product, integration, experiment, or growth result has been produced.

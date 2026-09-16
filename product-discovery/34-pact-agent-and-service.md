@@ -1,5 +1,7 @@
 # PACT — agent behavior, service operation, and delivery
 
+> **Historical design — superseded.** Use [PACT Version 1](../docs/pact/README.md). Its product, access, runtime, rulebook, social, privacy, and delivery documents replace this document as implementation authority.
+
 Design draft 1.0 · 15 September 2026 · Companion to [32 — Game design](32-pact-game-design.md) and [33 — Rules and balance](33-pact-rules-and-balance.md)
 
 This specifies the intended service and production process. It is not implemented architecture, a security audit, a provider approval, or a cost estimate based on measured use. Gameplay values are owned by document 33; presentation is owned by document 32. Conflicts should be corrected there rather than silently interpreted by an engineer or model.

@@ -1,5 +1,7 @@
 # PACT — full game design, first season
 
+> **Historical design — superseded.** Use [PACT Version 1](../docs/pact/README.md). Its product, access, runtime, rulebook, social, privacy, and delivery documents replace this document as implementation authority.
+
 Design draft 1.0 · 15 September 2026 · **Season One: The Lean Crown**
 
 **Build a kingdom. Give your AI a purpose. Discover what other people's promises are worth.**

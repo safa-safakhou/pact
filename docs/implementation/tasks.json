@@ -1,0 +1,3961 @@
+{
+  "schema_version": 1,
+  "specification": "../pact/README.md",
+  "status": "planned_not_implemented",
+  "tasks": [
+    {
+      "id": "PACT-001",
+      "title": "Bootstrap the application workspace and continuous integration",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [],
+      "sources": [
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "A01"
+      ],
+      "scope": [
+        "Create a Node 24 / TypeScript workspace with React web, Fastify API, and separate rules, inference, and notification worker entry points; lock dependencies.",
+        "Add PostgreSQL 17 local services, environment validation, migration commands, lint/typecheck/build jobs, and a test database per suite.",
+        "Scaffold platform/domain/transport package boundaries for web, native, and Telegram; do not implement a separate game backend per surface."
+      ],
+      "acceptance": [
+        "A fresh checkout starts the web/API/database using the documented commands without real provider credentials.",
+        "CI builds every process and runs migrations plus a minimal API/database smoke test; no secrets or real user data are committed."
+      ],
+      "components": [
+        "workspace",
+        "CI",
+        "local environment"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-082",
+      "title": "Establish reusable package boundaries and product isolation",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Architecture",
+      "size": "M",
+      "depends_on": [
+        "PACT-001"
+      ],
+      "sources": [
+        "architecture",
+        "runtime"
+      ],
+      "covers": [
+        "A09"
+      ],
+      "scope": [
+        "Define explicit platform/domain/transport package exports, ownership/migration boundaries, scoped principal/event types, and transaction interfaces.",
+        "Configure CI import/dependency rules, contract versioning, injected infrastructure ports, and a single composition root; do not split every module into a network service."
+      ],
+      "acceptance": [
+        "A forbidden platform-to-PACT import fails CI; packages expose only declared interfaces and carry explicit product scope.",
+        "Document and fixture-test the atomic unit of work spanning domain stock and authorization reservations; notification delivery remains an outbox effect."
+      ],
+      "components": [
+        "workspace packages",
+        "domain ports",
+        "CI boundaries"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-002",
+      "title": "Define shared command, event, and tool schemas",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-001",
+        "PACT-082"
+      ],
+      "sources": [
+        "runtime",
+        "access"
+      ],
+      "covers": [
+        "A03",
+        "A05"
+      ],
+      "scope": [
+        "Create versioned typed schemas for actor context, command envelope, receipt/error codes, events, cursors, model tool calls, and sandbox actions.",
+        "Generate JSON Schema for MCP and an HTTP API contract from the same definitions; define monetary units and serialization bounds explicitly."
+      ],
+      "acceptance": [
+        "Web, MCP, and provider tool validators accept the same valid command fixture and reject the same malformed payload.",
+        "Schemas cannot accept arbitrary code, actor impersonation, unrestricted database queries, credential reads, or human-only account operations as game tools."
+      ],
+      "components": [
+        "shared contracts"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-003",
+      "title": "Create account persistence and transaction/outbox infrastructure",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-001",
+        "PACT-002"
+      ],
+      "sources": [
+        "runtime",
+        "access",
+        "privacy"
+      ],
+      "covers": [
+        "A01",
+        "A06"
+      ],
+      "scope": [
+        "Add migrations for accounts, drafts, sessions, connection records, command receipts, durable jobs, inbox events, and outbox rows; add unique constraints and foreign keys.",
+        "Implement a transaction boundary with stable lock ordering and bounded retries, plus job leases and idempotent outbox consumers. Domain tables arrive with their feature tickets."
+      ],
+      "acceptance": [
+        "Two workers cannot hold the same live job lease; an abandoned lease can be recovered.",
+        "Transaction rollback writes neither a receipt nor an outbox event; successful commit survives worker restart and duplicate delivery."
+      ],
+      "components": [
+        "persistence",
+        "job/outbox infrastructure"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-004",
+      "title": "Provision the isolated connection-test environment",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "L",
+      "depends_on": [
+        "PACT-001",
+        "PACT-003"
+      ],
+      "sources": [
+        "runtime",
+        "privacy"
+      ],
+      "covers": [
+        "A06"
+      ],
+      "scope": [
+        "Define AWS Frankfurt infrastructure as code for isolated test ECS services, RDS PostgreSQL, private S3, KMS, SES, TLS, and secret injection; use separate environment identities.",
+        "Configure 35-day backup lifecycle, least-privilege process roles, deployment/rollback commands, and outbound-provider access. Synthetic identities only until PACT-025 passes."
+      ],
+      "acceptance": [
+        "Deploy and restore a synthetic account database in the test environment; deleted/revoked-record replay hooks are available for PACT-024.",
+        "Inference credentials are inaccessible to the web bundle and unrelated worker roles; no private API response is CDN-cached."
+      ],
+      "components": [
+        "infrastructure",
+        "deployment"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "AWS test account, deployment domain, verified sender identity"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-005",
+      "title": "Add redacted operational telemetry and failure correlation",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-002",
+        "PACT-003"
+      ],
+      "sources": [
+        "runtime",
+        "privacy"
+      ],
+      "covers": [
+        "A06"
+      ],
+      "scope": [
+        "Add structured request/command/run/job IDs, health probes, metrics for queue lag and provider errors, and sanitized error reporting.",
+        "Apply credential, authorization-header, email, prompt, and message-body redaction; configure security/IP retention classes."
+      ],
+      "acceptance": [
+        "Seed secrets and private text into failed requests and confirm none appear in application logs or client error payloads.",
+        "A failed command can be traced through API, transaction, outbox, and worker using IDs without transcript logging."
+      ],
+      "components": [
+        "observability"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-006",
+      "title": "Implement signup, verification, and human sessions",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-003",
+        "PACT-005"
+      ],
+      "sources": [
+        "access",
+        "privacy"
+      ],
+      "covers": [
+        "A01"
+      ],
+      "scope": [
+        "Implement email normalization, 18+ and terms-version acceptance, compromised-password checks, Argon2id settings, verification tokens, and session cookies exactly as specified.",
+        "Add CSRF/origin checks, login and email throttles, generic account-existence responses, idle/absolute expiry, and transactional security email."
+      ],
+      "acceptance": [
+        "Duplicate concurrent signup/verification cannot create two accounts or reuse an expired token.",
+        "Password and session expiry, CSRF, cross-account access, throttling, and email enumeration fixtures pass."
+      ],
+      "components": [
+        "identity",
+        "email"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-007",
+      "title": "Implement recovery, reauthentication, and account security",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-006"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A01",
+        "A05"
+      ],
+      "scope": [
+        "Implement password reset, verified email changes, five-minute recent-auth checks, optional TOTP/recovery codes, and staff MFA.",
+        "Add a revocation service and session/connection inventory; password reset and sign-out-everywhere revoke applicable access and signal active-run cancellation."
+      ],
+      "acceptance": [
+        "A reset token is single-use and expires after 15 minutes; resetting revokes old cookies and OAuth grants.",
+        "An Envoy cannot raise authority, replace a credential, export, delete, or approve using a game token; TOTP recovery codes cannot be reused."
+      ],
+      "components": [
+        "identity",
+        "access revocation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-008",
+      "title": "Implement private kingdom drafts and resumable setup",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-006",
+        "PACT-002"
+      ],
+      "sources": [
+        "access",
+        "social"
+      ],
+      "covers": [
+        "A01"
+      ],
+      "scope": [
+        "Persist draft name, proposed handle, portrait, connection-check timestamp, and typed invitation destination; purge unused drafts after seven days.",
+        "Add a sandbox-only activation fixture with exactly-once acceptance; real founding is PACT-031 and cannot be invoked in the connection experiment."
+      ],
+      "acceptance": [
+        "A draft has no stocks, troops, score, or targetable public kingdom identity.",
+        "OAuth redirect, logout/recovery, and repeated setup submissions preserve the same permitted destination; stale checks and unverified accounts fail activation validation."
+      ],
+      "components": [
+        "onboarding",
+        "drafts"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-009",
+      "title": "Build encrypted model credential storage",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-004",
+        "PACT-007"
+      ],
+      "sources": [
+        "access",
+        "privacy"
+      ],
+      "covers": [
+        "A02",
+        "A06"
+      ],
+      "scope": [
+        "Implement save/replace/revoke for five saved model connections with AES-256-GCM envelope encryption and KMS wrapping.",
+        "Restrict decryption to the inference worker, show only labels/suffixes, and remove live encrypted keys within 24 hours of revocation."
+      ],
+      "acceptance": [
+        "Key substitution across accounts fails and no key is returned by read/MCP endpoints or included in prompts.",
+        "Revocation immediately prevents a new call; a credential already submitted to a provider is reported truthfully rather than claimed recalled."
+      ],
+      "components": [
+        "credential vault"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-010",
+      "title": "Build the provider adapter interface and contract harness",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-002",
+        "PACT-009"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A02"
+      ],
+      "scope": [
+        "Define model discovery/capabilities, structured tool calls/results, token accounting, cancellation, sanitized errors, and optional pricing metadata.",
+        "Build a deterministic fake provider for CI and adapter fixtures for unknown pricing, absent usage, malformed tools, timeout, and quota exhaustion."
+      ],
+      "acceptance": [
+        "A route can be swapped without changing command schemas or kingdom identity.",
+        "Unsupported models are rejected before a run; missing price is never rendered as zero; failure never silently switches provider or credential."
+      ],
+      "components": [
+        "provider interface",
+        "provider test harness"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-011",
+      "title": "Implement the OpenAI model adapter",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-010"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A02"
+      ],
+      "scope": [
+        "Implement the specified Responses API route, server-side credentials, tool-call continuation, selected model validation, and usage mapping.",
+        "Add provider-backed smoke evidence using an operator test key alongside recorded/sanitized fixtures."
+      ],
+      "acceptance": [
+        "A real supported model reads the draft, proposes a valid sandbox write, and consumes its tool receipt in a final response.",
+        "Invalid key, tool error, cancellation, unavailable model, and quota failure produce the shared adapter result without leaking credentials."
+      ],
+      "components": [
+        "OpenAI adapter"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Operator-provided test API key and quota"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-012",
+      "title": "Implement the Anthropic model adapter",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-010"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A02"
+      ],
+      "scope": [
+        "Implement Messages API with the pinned API version, supported authentication/workspace fields, tool-result continuation, and usage mapping.",
+        "Keep subscription login separate from API credentials and record the successful model identifier."
+      ],
+      "acceptance": [
+        "A real supported model completes the same draft-read/sandbox-write/tool-result fixture as other adapters.",
+        "Required workspace errors, malformed tools, quota failure, and cancellation map to shared results without starting a fallback route."
+      ],
+      "components": [
+        "Anthropic adapter"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Operator-provided test API key/workspace and quota"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-013",
+      "title": "Implement the Gemini model adapter",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-010"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A02"
+      ],
+      "scope": [
+        "Implement the specified Gemini auth-key route, function calls/results, capability checks, and provider-specific context/usage handling.",
+        "Validate a real supported credential instead of accepting legacy-key syntax as proof of working access."
+      ],
+      "acceptance": [
+        "A real tool-capable model completes the common connection fixture.",
+        "Unsupported credentials/models, blocked responses, missing usage, and provider throttles stop or report correctly without fabricated game success."
+      ],
+      "components": [
+        "Gemini adapter"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Operator-provided Gemini auth key and quota"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-014",
+      "title": "Implement the xAI model adapter",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-010"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A02"
+      ],
+      "scope": [
+        "Implement the specified API bearer-key route, tool-call continuation, model selection, and usage/error conversion.",
+        "Label this as xAI model access in PACT; do not present it as an unverified Grok consumer-chat MCP integration."
+      ],
+      "acceptance": [
+        "A real supported model passes the common connection fixture.",
+        "Invalid key, model mismatch, repeated tool-call IDs, and provider timeouts cannot cause duplicate sandbox actions."
+      ],
+      "components": [
+        "xAI adapter"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Operator-provided test API key and quota"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-015",
+      "title": "Implement OpenRouter authorization and model adapter",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "L",
+      "depends_on": [
+        "PACT-010",
+        "PACT-007"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A02"
+      ],
+      "scope": [
+        "Implement manual-key entry and the official PKCE authorization/code-to-key exchange with session-bound state, exact callback validation, single use, and ten-minute expiry.",
+        "Implement explicit model/upstream routing disclosure, tool results, usage accounting, and provider-failure handling."
+      ],
+      "acceptance": [
+        "Both key entry and authorization complete the common real-provider fixture.",
+        "Swapped state/verifier, replayed callback, expired flow, or an undisclosed routing fallback cannot attach a credential or run a model."
+      ],
+      "components": [
+        "OpenRouter adapter",
+        "authorization callback"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "OpenRouter test account/key and quota"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-016",
+      "title": "Implement PACT OAuth for external clients",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Security",
+      "size": "L",
+      "depends_on": [
+        "PACT-007",
+        "PACT-002"
+      ],
+      "sources": [
+        "access",
+        "architecture"
+      ],
+      "covers": [
+        "A03",
+        "A05"
+      ],
+      "scope": [
+        "Implement the authorization-code/PKCE flow, resource and authorization metadata, audience-bound scopes, refresh rotation, revocation, and exact redirect checks.",
+        "Support preregistration, validated client-ID metadata, and dynamic registration; protect metadata fetches against SSRF. Use reviewed OAuth primitives rather than inventing cryptographic protocols.",
+        "Separate first-party native human client registrations/audiences from MCP agent grants; authorization-code primitives are reusable but human permissions cannot be delegated to agent tokens."
+      ],
+      "acceptance": [
+        "Wrong audience/scope, refresh replay, revoked access, redirect mismatch, and private-network metadata requests fail.",
+        "Consent names the client and draft/kingdom; OAuth tokens cannot read provider keys or authorize human-only operations."
+      ],
+      "components": [
+        "OAuth authorization/resource service"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-017",
+      "title": "Implement the remote MCP transport and tool registry",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "L",
+      "depends_on": [
+        "PACT-016",
+        "PACT-002"
+      ],
+      "sources": [
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A03"
+      ],
+      "scope": [
+        "Expose the single Streamable HTTP endpoint with the two pinned protocol versions, initialization, typed tool listing, structured results, bounded reads, and origin checks.",
+        "Bind every tool invocation to the authenticated actor; use an injectable command dispatcher until PACT-018 is connected."
+      ],
+      "acceptance": [
+        "Protocol fixtures pass for initialization, supported/unsupported versions, POST results, GET stream behavior, and isolated client sessions.",
+        "Listing or invoking a tool never grants broader scope; another account cannot resume or read a private stream."
+      ],
+      "components": [
+        "MCP transport"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-018",
+      "title": "Implement the shared dispatcher and sandbox receipts",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-003",
+        "PACT-007",
+        "PACT-002"
+      ],
+      "sources": [
+        "runtime"
+      ],
+      "covers": [
+        "A03",
+        "A05"
+      ],
+      "scope": [
+        "Build one command gateway with authenticated actor derivation, payload/version checks, idempotency keys, receipts, and transactional outbox.",
+        "Add harmless private-draft read/write fixtures under a sandbox-only namespace; defer economic handlers to phase 1."
+      ],
+      "acceptance": [
+        "Same ID and payload produce one mutation and the original receipt; changed payload with reused ID returns conflict.",
+        "A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account’s result."
+      ],
+      "components": [
+        "command gateway",
+        "receipts"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-019",
+      "title": "Implement mandate permissions and immediate-spend checks",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-018"
+      ],
+      "sources": [
+        "runtime"
+      ],
+      "covers": [
+        "A05"
+      ],
+      "scope": [
+        "Persist human-editable versioned mandates and implement action/target restrictions, session/troop ceilings, reserve floors, and default deny/approval rules.",
+        "Add the immediate authorization ledger interface using synthetic amounts; full future-commitment integration is PACT-039."
+      ],
+      "acceptance": [
+        "Agents cannot mutate their mandate or obtain human-only permissions by changing payload text.",
+        "Two sandbox requests sharing an allowance cannot both spend it; raising authority requires recent human authentication and increments its version."
+      ],
+      "components": [
+        "authority service"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-020",
+      "title": "Implement exact-command human approvals",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-019"
+      ],
+      "sources": [
+        "runtime",
+        "access"
+      ],
+      "covers": [
+        "A05"
+      ],
+      "scope": [
+        "Store immutable approval requests, command hashes, current-state preconditions, minimum expiry deadlines, and one-use human permits.",
+        "Implement authenticated approval/reject POSTs, status reads, and deep links that expose no bearer approval secret."
+      ],
+      "acceptance": [
+        "GET, chatbot text, or a host tool confirmation cannot approve; changed/expired terms fail.",
+        "Double approval commits once; a successful approval can be read after the original chatbot disconnects."
+      ],
+      "components": [
+        "approval service"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-021",
+      "title": "Implement bounded Envoy runs and exclusive write leases",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "L",
+      "depends_on": [
+        "PACT-010",
+        "PACT-018",
+        "PACT-019",
+        "PACT-020"
+      ],
+      "sources": [
+        "runtime"
+      ],
+      "covers": [
+        "A04",
+        "A05"
+      ],
+      "scope": [
+        "Implement PACT run start/stop/wait/resume, durable worker jobs, one write lease and one in-flight request per kingdom, pinned connection/model, and token/call/message/deadline reservations.",
+        "Implement MCP lease acquisition without provider inference; takeovers and revocation prevent new commands while preserving already-committed jobs."
+      ],
+      "acceptance": [
+        "A fake-provider run stops at each limit, preserves allowance on resume, and cannot be extended by repeated callbacks.",
+        "Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop."
+      ],
+      "components": [
+        "run service",
+        "inference worker"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-022",
+      "title": "Implement the durable inbox and live event delivery",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-003",
+        "PACT-018"
+      ],
+      "sources": [
+        "runtime",
+        "privacy"
+      ],
+      "covers": [
+        "A03",
+        "A04"
+      ],
+      "scope": [
+        "Persist audience-filtered events with cursor pagination, acknowledgement, deduplication, and app SSE delivery.",
+        "Add event subscriptions for approvals, run state, and security notices; define resync behavior when a cursor predates retained events."
+      ],
+      "acceptance": [
+        "Disconnect/reconnect returns ordered authorized events without duplicate user-visible cards.",
+        "Notification/outbox workers never invoke the provider adapter; omitted or unavailable delivery cannot change an action receipt."
+      ],
+      "components": [
+        "inbox service",
+        "SSE"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-023",
+      "title": "Build account, connection, and Envoy setup screens",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "L",
+      "depends_on": [
+        "PACT-008",
+        "PACT-009",
+        "PACT-015",
+        "PACT-016",
+        "PACT-017",
+        "PACT-020",
+        "PACT-021",
+        "PACT-022"
+      ],
+      "sources": [
+        "product",
+        "access",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05"
+      ],
+      "scope": [
+        "Build English responsive signup/security, draft, provider selection, credentials, model choice, allowance confirmation, run controls, and approval-inbox screens.",
+        "Preserve the invitation destination; show truthful Working/Waiting/Stopped states, unknown pricing, external-host usage, and connector prerequisites. Wire MCP tools to the same dispatcher/run services.",
+        "Separate reusable DOM feature components from the web host shell so Telegram can reuse them; expose platform-independent view models for native screens."
+      ],
+      "acceptance": [
+        "Complete setup and a sandbox approval on phone and desktop using keyboard as well as touch.",
+        "Closing/reopening the page shows server state; expired approval, revoked key, and unsupported host produce actionable messages without founding a live kingdom."
+      ],
+      "components": [
+        "account and Envoy UI"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-083",
+      "title": "Build the shared client SDK and capability contract",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend / Frontend",
+      "size": "M",
+      "depends_on": [
+        "PACT-002",
+        "PACT-016",
+        "PACT-018",
+        "PACT-020",
+        "PACT-022",
+        "PACT-082"
+      ],
+      "sources": [
+        "architecture",
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "A08",
+        "A09"
+      ],
+      "scope": [
+        "Generate reusable HTTP/tool client types, command IDs, receipt reconciliation, authenticated read projections, cursor subscriptions, error mapping, and platform-independent view models.",
+        "Publish API/schema versions and capabilities with graceful unsupported-version behavior; separate human and agent audiences in the SDK."
+      ],
+      "acceptance": [
+        "A web and non-browser test client issue the same sandbox command and observe the same receipt after a timeout/retry.",
+        "SDK imports no DOM/React Native/Telegram globals; no client retry silently changes an idempotency key or acquires human scopes."
+      ],
+      "components": [
+        "TypeScript SDK",
+        "generated types",
+        "capability metadata"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-084",
+      "title": "Prove native iOS and Android login, linking, and approval",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Mobile",
+      "size": "L",
+      "depends_on": [
+        "PACT-007",
+        "PACT-023",
+        "PACT-083"
+      ],
+      "sources": [
+        "architecture",
+        "access",
+        "privacy"
+      ],
+      "covers": [
+        "A08"
+      ],
+      "scope": [
+        "Create one native application with iOS/Android development builds, system-browser PACT PKCE login, verified app links, secure refresh storage, and in-memory access tokens.",
+        "Complete private-draft read, sandbox command, exact human approval, reconnect, and revoke on both platforms; full gameplay comes in PACT-087."
+      ],
+      "acceptance": [
+        "A malicious callback, wrong audience, stale approval, duplicate tap, and revoked session fail or return the original receipt correctly.",
+        "Credentials do not appear in app preferences/logs/backups; backgrounding/reopening shows server state without a new run."
+      ],
+      "components": [
+        "React Native Expo shell",
+        "native identity",
+        "secure storage"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "iOS/Android build environment and test devices; platform signing for device builds"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-085",
+      "title": "Prove Telegram identity linking and Mini App authentication",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "L",
+      "depends_on": [
+        "PACT-007",
+        "PACT-023",
+        "PACT-083"
+      ],
+      "sources": [
+        "architecture",
+        "access",
+        "privacy"
+      ],
+      "covers": [
+        "A08"
+      ],
+      "scope": [
+        "Create the test bot/Mini App shell; implement validated bot-bound initData, five-minute age check, single-use bootstrap exchange, webhook secret/update deduplication, and linked PACT account confirmation.",
+        "Add sandbox read/write and human approval in the authenticated Mini App, unlink/revoke, and denied group-chat control paths."
+      ],
+      "acceptance": [
+        "Forged/stale/replayed launch data, changed usernames, forwarded callbacks, and swapped PACT sessions cannot link or operate another account.",
+        "Unlink immediately revokes channel sessions; no game privilege is inferred from a Telegram handle or message text."
+      ],
+      "components": [
+        "Telegram adapter",
+        "Mini App shell",
+        "linking sessions"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Operator-owned Telegram bot token and HTTPS test endpoint"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-024",
+      "title": "Implement first-account retention, export, and deletion",
+      "phase": 0,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Security",
+      "size": "L",
+      "depends_on": [
+        "PACT-004",
+        "PACT-008",
+        "PACT-009",
+        "PACT-016",
+        "PACT-021",
+        "PACT-022",
+        "PACT-084",
+        "PACT-085"
+      ],
+      "sources": [
+        "privacy",
+        "access",
+        "architecture"
+      ],
+      "covers": [
+        "A06"
+      ],
+      "scope": [
+        "Implement account/draft/key/session/run/inbox retention jobs, JSON export with readable index and authenticated download, legal-hold metadata, and deletion/revocation registry.",
+        "Add purge/restore replay for phase-0 data and a privacy Settings screen; gameplay retirement and social data are added in later tickets.",
+        "Include native and Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers."
+      ],
+      "acceptance": [
+        "Export excludes credentials and other players’ data; delete disables access immediately and meets specified live-store deadlines.",
+        "Restore a pre-deletion backup and replay the deletion/revocation registry before traffic; removed credentials and content cannot reappear."
+      ],
+      "components": [
+        "privacy jobs",
+        "export",
+        "deletion registry"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-025",
+      "title": "Complete the real-account environment preflight",
+      "phase": 0,
+      "status": "todo",
+      "kind": "operations",
+      "owner_role": "Operations",
+      "size": "M",
+      "depends_on": [
+        "PACT-004",
+        "PACT-005",
+        "PACT-006",
+        "PACT-007",
+        "PACT-024"
+      ],
+      "sources": [
+        "privacy",
+        "access",
+        "architecture"
+      ],
+      "covers": [
+        "A06"
+      ],
+      "scope": [
+        "Populate actual controller/support identity, terms/privacy versions, processor disclosures, provider agreements/transfer records, and transactional email sender configuration.",
+        "Keep registration disabled when required values are missing; use synthetic data for all earlier development and restore tests. Record privacy/support ownership for connection testers.",
+        "Include Telegram and device-session data flows in actual operator notices before cross-channel testers register."
+      ],
+      "acceptance": [
+        "A deployment with an empty required legal/operator field cannot accept a real signup.",
+        "The configured notices, email delivery, privacy-request channel, staff MFA, and restore/deletion checks are demonstrated before inviting a tester."
+      ],
+      "components": [
+        "operator configuration",
+        "policies"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Actual operator identity and processor agreements"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-086",
+      "title": "Certify additional assistant routes and publish a capability matrix",
+      "phase": 0,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-017",
+        "PACT-023",
+        "PACT-025",
+        "PACT-083"
+      ],
+      "sources": [
+        "architecture",
+        "access",
+        "delivery"
+      ],
+      "covers": [
+        "A03",
+        "A09"
+      ],
+      "scope": [
+        "Run the authenticated MCP read/action/approval/revoke fixture in Gemini CLI and a Grok-powered external tool client using the standard adapter/SDK.",
+        "Record supported model APIs separately from consumer chatbot installation, OAuth eligibility/billing, tool capabilities, client versions, and readable versus writable surfaces."
+      ],
+      "acceptance": [
+        "Named supported routes have real fixture evidence; unsupported consumer-app connections are not advertised as working.",
+        "The Grok/Gemini routes share PACT receipts and authority, use scoped game credentials, and never treat subscription login as an unverified hosted API credential."
+      ],
+      "components": [
+        "Gemini CLI certification",
+        "Grok tool-client fixture",
+        "compatibility registry"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Eligible Gemini client and xAI test access/quota"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-026",
+      "title": "Certify every connection route and measure unaided setup",
+      "phase": 0,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "L",
+      "depends_on": [
+        "PACT-011",
+        "PACT-012",
+        "PACT-013",
+        "PACT-014",
+        "PACT-015",
+        "PACT-017",
+        "PACT-023",
+        "PACT-024",
+        "PACT-025",
+        "PACT-084",
+        "PACT-085",
+        "PACT-086"
+      ],
+      "sources": [
+        "access",
+        "delivery",
+        "architecture"
+      ],
+      "covers": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09"
+      ],
+      "scope": [
+        "Run the full signup/OAuth/read/write/approval/revoke fixture in ChatGPT, Claude, and Gemini CLI and real-key runs through all five PACT adapters.",
+        "Publish tested host/model/protocol/date requirements; test five unfamiliar people per named route and record credential-ready timing, errors, usage, and a sanitized evidence link.",
+        "Include Gemini CLI certification and native/Telegram sandbox setup evidence from the dedicated new tickets."
+      ],
+      "acceptance": [
+        "Each route reaches at least four of five successful unaided sandbox outcomes within five minutes after credentials/host eligibility; verification time is reported separately.",
+        "Every required route has evidence for expiry, revocation, browser/host closure, and approval; unavailable distribution is recorded accurately and cannot be claimed universally installed."
+      ],
+      "components": [
+        "connection certification",
+        "setup guides"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Eligible ChatGPT/Claude test accounts and consenting setup testers"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-027",
+      "title": "Accept the connection experiment",
+      "phase": 0,
+      "status": "todo",
+      "kind": "gate",
+      "owner_role": "Release",
+      "size": "S",
+      "depends_on": [
+        "PACT-001",
+        "PACT-002",
+        "PACT-003",
+        "PACT-004",
+        "PACT-005",
+        "PACT-006",
+        "PACT-007",
+        "PACT-008",
+        "PACT-009",
+        "PACT-010",
+        "PACT-011",
+        "PACT-012",
+        "PACT-013",
+        "PACT-014",
+        "PACT-015",
+        "PACT-016",
+        "PACT-017",
+        "PACT-018",
+        "PACT-019",
+        "PACT-020",
+        "PACT-021",
+        "PACT-022",
+        "PACT-023",
+        "PACT-024",
+        "PACT-025",
+        "PACT-026",
+        "PACT-082",
+        "PACT-083",
+        "PACT-084",
+        "PACT-085",
+        "PACT-086"
+      ],
+      "sources": [
+        "delivery"
+      ],
+      "covers": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09"
+      ],
+      "scope": [
+        "Collect A01–A09 evidence, supported-route matrix, setup recordings, privacy preflight, and the test-environment release revision.",
+        "Record pass/fail for every criterion and defects that must close before phase 1 starts."
+      ],
+      "acceptance": [
+        "All A01–A09 checks pass, including native/Telegram sandbox identities and reusable-module contracts, with no live economic world exposed.",
+        "A gate cannot be marked done from a mock-provider result, missing host test, or assumed privacy operation."
+      ],
+      "components": [
+        "connection release gate"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-028",
+      "title": "Encode the versioned rules catalog and exact arithmetic",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R02",
+        "R05"
+      ],
+      "scope": [
+        "Translate all building/unit/resource/cost/cap/harvest tables into a versioned data catalog with schema validation.",
+        "Implement exact resource-unit and rational-power helpers, UUID tie ordering, rounding, and deterministic fixture loading; reject unsafe numeric serialization."
+      ],
+      "acceptance": [
+        "Every published value has a catalog entry and explicit unit; server rules use no floating-point comparison for combat or settlement.",
+        "Reproduce construction affordability, six-hour food example, and rational power values; API round-trips preserve exact quantities."
+      ],
+      "components": [
+        "pure rules catalog and arithmetic"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-029",
+      "title": "Implement the authoritative clock and atomic tick coordinator",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-028"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R02",
+        "R06"
+      ],
+      "scope": [
+        "Implement game-time/real-time separation, minute boundaries, unique world-worker lease, phase ordering, command admission against a committed tick, and pause/resume.",
+        "Persist resumable work and publish each tick atomically; define crash recovery without catching up starvation after an outage."
+      ],
+      "acceptance": [
+        "A second worker, lease expiry, duplicate tick, or crash between phases cannot publish mixed-time state.",
+        "Exact-boundary fixtures and outage recovery freeze game windows/harvest together while account expiries continue in real time."
+      ],
+      "components": [
+        "game clock",
+        "rules worker"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-030",
+      "title": "Implement the resource ledger, provenance, and storage",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-028",
+        "PACT-029"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R06"
+      ],
+      "scope": [
+        "Add ordinary/restricted balances, production/sink records, locked funds, installed/training cost provenance, storage limits, and atomic debit/credit primitives.",
+        "Persist explicit overflow and cancellation losses; integrate the minute-production phase and founding-allowance expiry hooks."
+      ],
+      "acceptance": [
+        "Property tests conserve value across debit/credit/overflow operations and reject negative balances.",
+        "Concurrent commands cannot overspend; allowance funds cannot enter trade, bond, unit training, raid provisions, or ordinary cancellation refunds."
+      ],
+      "components": [
+        "resource ledger",
+        "storage"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-031",
+      "title": "Activate real kingdoms exactly once",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-008",
+        "PACT-027",
+        "PACT-028",
+        "PACT-029",
+        "PACT-030"
+      ],
+      "sources": [
+        "access",
+        "rules"
+      ],
+      "covers": [
+        "A01",
+        "R01",
+        "R02"
+      ],
+      "scope": [
+        "Replace the sandbox activation fixture with the real human-only founding transaction: unique handle, seven starting buildings, two builders, restricted grants, Home Guard, score baseline, and filled charges. Include the minimal unit identity/placement schema needed to persist the founding Home Guard; PACT-033 extends it with training and military behavior.",
+        "Add activation event, one-ranked-kingdom constraint, connection-check expiry validation, and first-tick scheduling."
+      ],
+      "acceptance": [
+        "Concurrent activation attempts return one kingdom, one set of grants, and one activation time.",
+        "The draft is never targetable before commit; activation produces the specified zero ordinary wealth and starts time/charges only once."
+      ],
+      "components": [
+        "kingdom founding"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-032",
+      "title": "Implement building upgrades and the two builder queues",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-030",
+        "PACT-031"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R02",
+        "R04"
+      ],
+      "scope": [
+        "Implement unlock/prerequisite validation, target-level costs, two active slots, one waiting instruction per slot, exact completion times, and 50% active cancellation refunds.",
+        "Preserve paid-resource provenance and call the authority reservation interface on queue/start/cancel; final economic integration is verified in PACT-039."
+      ],
+      "acceptance": [
+        "Hall and dependent upgrades reach every specified level without illegal bypass; the same building cannot occupy both slots.",
+        "Waiting starts in slot order only when funded/authorized; completion or cancellation retries never duplicate level gains, refunds, or spending."
+      ],
+      "components": [
+        "building rules and queues"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-033",
+      "title": "Implement troop identity, training, placement, and capacity",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-028",
+        "PACT-030",
+        "PACT-031"
+      ],
+      "sources": [
+        "rules"
+      ],
+      "covers": [
+        "R01",
+        "R03"
+      ],
+      "scope": [
+        "Add immutable unit IDs and owner/type/Home-Guard/placement fields; implement one training queue, batches up to 40, reserved costs/slots, completion, cancellation, and disbanding.",
+        "Create commitment and battle-eligibility interfaces that reference existing units rather than copy inventories."
+      ],
+      "acceptance": [
+        "Simultaneous training/assignment cannot overfill owned or visiting pools or reuse a unit in exclusive placements.",
+        "Home Guard cannot raid/scout/lend/refund, but can disband for zero; partial training cancellation refunds only uncompleted reserved costs."
+      ],
+      "components": [
+        "unit inventory and training"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-034",
+      "title": "Implement upkeep, hunger recovery, and desertion",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-029",
+        "PACT-030",
+        "PACT-033"
+      ],
+      "sources": [
+        "rules"
+      ],
+      "covers": [
+        "R02",
+        "R03"
+      ],
+      "scope": [
+        "Implement food responsibility by current placement, ordinary-before-allowance spending, Hungry state, funded-minute recovery, shortage warning, and desertion schedule.",
+        "Group desertion by food payer/original owner across formations, use fixed type/ID allocation, and emit hooks for host garrison default."
+      ],
+      "acceptance": [
+        "Recovery requires 60 consecutive funded minutes; first desertion is minute 180, then each additional underfunded hour.",
+        "Splitting units across contracts or display stacks changes no losses; operational locks do not create starvation immunity."
+      ],
+      "components": [
+        "upkeep and attrition"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-035",
+      "title": "Implement kingdom-wide charges and action limits",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-029",
+        "PACT-031"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R02",
+        "R04"
+      ],
+      "scope": [
+        "Implement full starting raid/scout pools, serial regeneration clocks, successful-action rolling windows, and shared human/agent/client counters.",
+        "Separate receipt/security-control abuse limits from gameplay reads; expose exact next-regeneration and retry timestamps."
+      ],
+      "acceptance": [
+        "Spend from full starts the timer; further spends do not reset it; capped pools bank no extra time.",
+        "Provider/client swaps and retries cannot refill charges or bypass quotas; rejected/idempotent commands incur no additional fee or successful-action count."
+      ],
+      "components": [
+        "limits and charges"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-036",
+      "title": "Implement contacts, bounded messages, and direct transfers",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-022",
+        "PACT-027",
+        "PACT-030",
+        "PACT-031",
+        "PACT-035"
+      ],
+      "sources": [
+        "rules",
+        "social",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R04"
+      ],
+      "scope": [
+        "Implement accepted contacts, cold request fee/expiry/capacity, bounded private threads, unread counters, message limits, and minimal block/mute state.",
+        "Implement one-off ordinary-resource transfers with recipient overflow, accepted-contact checks, shared limits, and direct-contact invitations for controlled tests."
+      ],
+      "acceptance": [
+        "Full queues reject before charging; blocked pairs cannot send text, new offers, or gifts in either direction.",
+        "A transfer charges once and never guarantees a return payment; notification traffic does not consume player-message allowance."
+      ],
+      "components": [
+        "contacts",
+        "messages",
+        "transfers"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-037",
+      "title": "Implement supply offers, signatures, bonds, and contract activation",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "L",
+      "depends_on": [
+        "PACT-019",
+        "PACT-027",
+        "PACT-030",
+        "PACT-035",
+        "PACT-036"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R04"
+      ],
+      "scope": [
+        "Build typed offer versions, exact signatures, allowed durations/notices/rates, expiries, incoming/outgoing slot limits, bonds, and atomic activation.",
+        "Wire provisional authority reservation hooks on signature, invalidation, activation, and withdrawal; settlement is PACT-038 and complete exposure integration is PACT-039."
+      ],
+      "acceptance": [
+        "A counteroffer invalidates old signatures; simultaneous acceptances cannot duplicate a contract or exceed bond/contract capacity.",
+        "Half-funded bonds, zero/zero flows, invalid notice, self-contracts, expired offers, and blocked parties fail without partial activation."
+      ],
+      "components": [
+        "supply offers and signatures"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-038",
+      "title": "Implement independent contract delivery and default settlement",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-029",
+        "PACT-030",
+        "PACT-034",
+        "PACT-037"
+      ],
+      "sources": [
+        "rules"
+      ],
+      "covers": [
+        "R01",
+        "R02"
+      ],
+      "scope": [
+        "Implement pre-delivery snapshots, reserve-constrained available balances, proportional allocation with contract-ID remainder order, later incoming credits, and all termination/bond states.",
+        "Settle notice, mutual release, natural expiry, one-sided default, and simultaneous default in the specified tick phases."
+      ],
+      "acceptance": [
+        "A six-hour contract produces exactly 360 installments; incoming funds cannot finance another outgoing obligation in the same tick.",
+        "Partial delivery defaults correctly without reversing an already-funded counterparty; both-default bond transfer, overflow, floor changes, and grant expiry match the rulebook."
+      ],
+      "components": [
+        "contract settlement and bonds"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-039",
+      "title": "Complete future exposure accounting and human exceptions",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "L",
+      "depends_on": [
+        "PACT-019",
+        "PACT-020",
+        "PACT-027",
+        "PACT-032",
+        "PACT-037",
+        "PACT-038"
+      ],
+      "sources": [
+        "runtime",
+        "rules"
+      ],
+      "covers": [
+        "R04"
+      ],
+      "scope": [
+        "Integrate the authorization ledger across signed future flows, bonds, queued construction, immediate costs, troop limits, and visiting-upkeep reservations.",
+        "Move actual outgoing amounts from reserved to spent; release unused exposure on every terminal path; retain exact human-permit commitments separately."
+      ],
+      "acceptance": [
+        "Two concurrent signatures cannot each reserve the last allowance; switching providers never creates a second ledger.",
+        "Refunds/incoming trades do not replenish spent authority; canceled offers release once; lowered mandates and approved exceptions follow the specified existing-commitment behavior."
+      ],
+      "components": [
+        "authority exposure ledger"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-040",
+      "title": "Implement garrison contracts, recall, return, and seizure",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-033",
+        "PACT-034",
+        "PACT-037",
+        "PACT-039"
+      ],
+      "sources": [
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R03",
+        "R04"
+      ],
+      "scope": [
+        "Implement Hall-III lending, host acceptance, garrison bonds/slots, immediate placement, host feeding, durations, expiry/recall/return/default, and explicit human-approved seizure.",
+        "Use a shared battle-lock interface; queue exits behind existing locks and exclude them from new locks. Integrate final overlapping-battle behavior in PACT-044."
+      ],
+      "acceptance": [
+        "Owner and host capacity remain consistent through return/death/seizure; seized units keep IDs and transfer wealth once.",
+        "Underfunded host default and pending return do not extend upkeep exposure beyond the prescribed lock allowance; seizure cannot bypass a lock or human approval."
+      ],
+      "components": [
+        "garrison rules"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-041",
+      "title": "Implement scouting and private observation reports",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-029",
+        "PACT-033",
+        "PACT-035",
+        "PACT-039"
+      ],
+      "sources": [
+        "rules",
+        "social"
+      ],
+      "covers": [
+        "R02",
+        "R03",
+        "R04"
+      ],
+      "scope": [
+        "Implement charge/ordinary-resource costs, two-Spearman commitment, ten-minute completion, target notice, and report visibility.",
+        "Sample bands and exact wall from post-battle state when deadlines coincide; timestamp reports and expose shareable report records without unrelated private data."
+      ],
+      "acceptance": [
+        "Home Guard, locked units, self-targets, and insufficient resources cannot start a scout; retries never charge twice.",
+        "Band boundary/fractional-stock fixtures pass and no visiting-owner names, private contracts, or offsite troops leak into the report."
+      ],
+      "components": [
+        "scout rules and reports"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-042",
+      "title": "Implement raid seed commitments and deterministic dice",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Security",
+      "size": "M",
+      "depends_on": [
+        "PACT-004",
+        "PACT-027",
+        "PACT-028"
+      ],
+      "sources": [
+        "social",
+        "rules"
+      ],
+      "covers": [
+        "R05"
+      ],
+      "scope": [
+        "Implement CSPRNG seeds, encrypted storage, RFC-8785 commitment payloads, HMAC rejection-sampling dice, reveal-on-resolution/cancellation, and seed-access audit.",
+        "Publish a small verification routine and the specification’s fixed fixture; keep cryptographic and game-power calculations separate."
+      ],
+      "acceptance": [
+        "The reference seed yields the published commitment and attacker 6 / defender 1.",
+        "Rejection of byte values 252–255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed."
+      ],
+      "components": [
+        "randomness and verification"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-043",
+      "title": "Implement pure combat, casualties, and loot calculations",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-028",
+        "PACT-033"
+      ],
+      "sources": [
+        "rules"
+      ],
+      "covers": [
+        "R03",
+        "R05"
+      ],
+      "scope": [
+        "Build deterministic functions for counters, hunger, Ram wall suppression, dice multipliers, tie/zero branches, casualty grouping, type/ID selection, carrying capacity, and loot priorities.",
+        "Return a complete typed calculation trace for entitled participants without reading live database state inside the calculator."
+      ],
+      "acceptance": [
+        "The worked battle loses 7 attackers and 14 defenders, carries 100 Silver and 44 Iron, and wins 26 of 36 die pairs.",
+        "Reordering/splitting formations preserves results; same-owner troops on opposite sides remain distinct groups; no-negative and zero-power properties pass."
+      ],
+      "components": [
+        "pure combat calculator"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-044",
+      "title": "Implement raids, contributors, locks, and overlapping resolution",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-029",
+        "PACT-033",
+        "PACT-034",
+        "PACT-035",
+        "PACT-039",
+        "PACT-040",
+        "PACT-042",
+        "PACT-043"
+      ],
+      "sources": [
+        "rules",
+        "social"
+      ],
+      "covers": [
+        "R02",
+        "R03",
+        "R05"
+      ],
+      "scope": [
+        "Implement declarations, exact deadlines, two nominated contributors, provisions, acceptance/withdrawal, final locks, and pinned wall/unit snapshots.",
+        "Resolve raids in chronological/declaration order against surviving IDs, apply loot only to the leader, release pending returns, and retain participant/public report variants."
+      ],
+      "acceptance": [
+        "An earlier battle’s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.",
+        "Same-boundary completion/lock/withdrawal, hunger changes, leader cancellation, pinned visitors, last-second requests, and missing units resolve exactly once."
+      ],
+      "components": [
+        "raid lifecycle and locks"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-045",
+      "title": "Build authorized world views and factual forecasts",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-022",
+        "PACT-027",
+        "PACT-032",
+        "PACT-038",
+        "PACT-040",
+        "PACT-041",
+        "PACT-044"
+      ],
+      "sources": [
+        "rules",
+        "runtime",
+        "product"
+      ],
+      "covers": [
+        "R06"
+      ],
+      "scope": [
+        "Expose current kingdom/production/upkeep/builders/troops/contracts/threats, bounded records, and factual event summaries from committed state.",
+        "Create separate owner, participant, contact, and public projections; show exact time, last committed version, and forecast assumptions."
+      ],
+      "acceptance": [
+        "Unauthorized IDs and public profiles never expose live stocks, building levels, commitments, or model instructions.",
+        "Forecasts label assumed future deliveries, preserve founding-versus-ordinary amounts, and change correctly after default, harvest shift, and overlapping combat."
+      ],
+      "components": [
+        "authorized state projections"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-046",
+      "title": "Implement Fortune accounting and provisional standings",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-030",
+        "PACT-032",
+        "PACT-033",
+        "PACT-038",
+        "PACT-040",
+        "PACT-044"
+      ],
+      "sources": [
+        "rules"
+      ],
+      "covers": [
+        "R01"
+      ],
+      "scope": [
+        "Compute exact marked wealth from stock, reserved construction/training, ordinary installed value, owned bonds, and surviving owned troops; keep a season baseline and hourly snapshots.",
+        "Add Hall-band filters and provisional ranking queries without awarding final seasonal prizes yet."
+      ],
+      "acceptance": [
+        "Build/train conversions preserve marked wealth; grants, Home Guard, expected income, borrowed units, and cosmetics never count.",
+        "Transfer, default, cancellation, loot, and seizure fixtures change the correct owner’s wealth once and allow negative Fortune."
+      ],
+      "components": [
+        "wealth accounting and rankings"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-047",
+      "title": "Implement achievement triggers and earned cosmetic entitlements",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-032",
+        "PACT-038",
+        "PACT-041",
+        "PACT-044",
+        "PACT-046"
+      ],
+      "sources": [
+        "rules",
+        "product"
+      ],
+      "covers": [
+        "R01",
+        "L03"
+      ],
+      "scope": [
+        "Add event-driven, once-per-account achievement records, the eight exact triggers, and atomic grants of each ornament plus 25 earned Gems.",
+        "Keep a separate cosmetic entitlement/wallet ledger; provide test event fixtures for future Seal and seasonal triggers without claiming those features are shipped."
+      ],
+      "acceptance": [
+        "Replayed events cannot award duplicate Gems or ornaments.",
+        "Achievements grant no resource/authority/production benefit; a private dev event injector is absent from public HTTP and MCP surfaces."
+      ],
+      "components": [
+        "achievements and earned entitlements"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-048",
+      "title": "Build the plain rules-prototype interface",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "L",
+      "depends_on": [
+        "PACT-023",
+        "PACT-027",
+        "PACT-045",
+        "PACT-046",
+        "PACT-047"
+      ],
+      "sources": [
+        "product",
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R05"
+      ],
+      "scope": [
+        "Implement functional Kingdom/Envoy/People/Chronicle navigation with text-first construction, training, contract sheets, troop/garrison/scout/raid controls, and report views.",
+        "Connect all human controls to the shared commands, approval previews, server versions, and live events; keep art and shop out of this stage."
+      ],
+      "acceptance": [
+        "Two test players can found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild using the UI.",
+        "Manual actions remain usable with disconnected providers and cannot bypass stock, charge, lock, or shared action limits."
+      ],
+      "components": [
+        "functional gameplay UI"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-049",
+      "title": "Expose complete game tools to every Envoy route",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-017",
+        "PACT-021",
+        "PACT-027",
+        "PACT-039",
+        "PACT-045",
+        "PACT-048"
+      ],
+      "sources": [
+        "access",
+        "runtime",
+        "rules",
+        "architecture"
+      ],
+      "covers": [
+        "R04",
+        "R06"
+      ],
+      "scope": [
+        "Replace sandbox-only routing with all permitted typed game command groups, record reads, messages, receipts, and approvals.",
+        "Implement bounded context selection and readable receipt summaries; preserve the same dispatch and authorization behavior in all adapters and MCP."
+      ],
+      "acceptance": [
+        "A recorded scenario produces equivalent game commands/receipts from web, adapter, and MCP paths.",
+        "Malicious counterpart text cannot change identity, tool scope, model connection, or mandate; no adapter receives hidden state through a convenience summary.",
+        "Generated SDK, model-adapter, and MCP commands use the same product-scoped contracts and cannot gain first-party human privileges."
+      ],
+      "components": [
+        "game tool registry",
+        "context assembly"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-050",
+      "title": "Implement gameplay retirement and account-deletion settlement",
+      "phase": 1,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-024",
+        "PACT-027",
+        "PACT-038",
+        "PACT-040",
+        "PACT-041",
+        "PACT-044",
+        "PACT-046"
+      ],
+      "sources": [
+        "privacy",
+        "rules"
+      ],
+      "covers": [
+        "R01",
+        "R03",
+        "R06"
+      ],
+      "scope": [
+        "Add closing/retired kingdom states, immediate access revocation, rejection of new commitments, supply defaults, pending unit returns, existing-engagement settlement, and final asset disposal.",
+        "Decouple identifying-data erasure deadlines from frozen game time and preserve only permitted economic tombstones."
+      ],
+      "acceptance": [
+        "Deletion cannot cancel an already-declared enemy raid or redirect remaining wealth to a friend.",
+        "Both owners closing, locked visiting troops, a long world pause, and repeated retirement jobs settle once while personal data still meets real-time deletion deadlines."
+      ],
+      "components": [
+        "kingdom retirement"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-051",
+      "title": "Run transaction, replay, and adversarial rules tests",
+      "phase": 1,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "L",
+      "depends_on": [
+        "PACT-027",
+        "PACT-029",
+        "PACT-030",
+        "PACT-032",
+        "PACT-033",
+        "PACT-034",
+        "PACT-035",
+        "PACT-036",
+        "PACT-037",
+        "PACT-038",
+        "PACT-039",
+        "PACT-040",
+        "PACT-041",
+        "PACT-042",
+        "PACT-043",
+        "PACT-044",
+        "PACT-046",
+        "PACT-050"
+      ],
+      "sources": [
+        "delivery",
+        "rules",
+        "runtime"
+      ],
+      "covers": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06"
+      ],
+      "scope": [
+        "Build seeded/property-based economy scenarios, boundary-time fixtures, cross-account authorization tests, and fault injection around every durable command/tick transition.",
+        "Rehearse backup restore and outbox replay; compare recomputed wealth and unit placement to the authoritative state after recovery."
+      ],
+      "acceptance": [
+        "All R01–R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.",
+        "No negative stock, duplicate troop, repeated reward, partially published tick, or lost committed receipt survives a generated scenario."
+      ],
+      "components": [
+        "rules property/recovery suites"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-052",
+      "title": "Build and run the allowed script baseline",
+      "phase": 1,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-049",
+        "PACT-051"
+      ],
+      "sources": [
+        "delivery",
+        "runtime"
+      ],
+      "covers": [
+        "R07"
+      ],
+      "scope": [
+        "Create a deterministic client that uses the same published reads, negotiation primitives, and command limits as Envoys; isolate operator test identities from the real world.",
+        "Run matched scripted and model-driven scenarios with recorded initial state, partner behavior, quotas, outcomes, and API costs when measurable."
+      ],
+      "acceptance": [
+        "The script cannot use hidden state, private administrative APIs, free resources, or privileged action rates.",
+        "Publish the actual comparison even when the script wins; a successful execution test is separate from proof that negotiation is fun."
+      ],
+      "components": [
+        "script client and comparison harness"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-096",
+      "title": "Demonstrate platform-module reuse outside PACT",
+      "phase": 1,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "Architecture / QA",
+      "size": "M",
+      "depends_on": [
+        "PACT-027",
+        "PACT-028",
+        "PACT-039",
+        "PACT-049",
+        "PACT-051",
+        "PACT-082",
+        "PACT-083"
+      ],
+      "sources": [
+        "architecture",
+        "runtime",
+        "delivery"
+      ],
+      "covers": [
+        "R08"
+      ],
+      "scope": [
+        "Build a small test-only non-game application using identity, model/runtime, exact approvals, and notifications through public package exports and in-memory adapters.",
+        "Use a fake provider and generic synthetic action; prove no PACT-domain/database import, no credential/event sharing across product scopes, and no required AWS dependency."
+      ],
+      "acceptance": [
+        "The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.",
+        "PACT’s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes."
+      ],
+      "components": [
+        "non-game fixture",
+        "module isolation tests"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-053",
+      "title": "Accept the transactional rules prototype",
+      "phase": 1,
+      "status": "todo",
+      "kind": "gate",
+      "owner_role": "Release",
+      "size": "S",
+      "depends_on": [
+        "PACT-027",
+        "PACT-028",
+        "PACT-029",
+        "PACT-030",
+        "PACT-031",
+        "PACT-032",
+        "PACT-033",
+        "PACT-034",
+        "PACT-035",
+        "PACT-036",
+        "PACT-037",
+        "PACT-038",
+        "PACT-039",
+        "PACT-040",
+        "PACT-041",
+        "PACT-042",
+        "PACT-043",
+        "PACT-044",
+        "PACT-045",
+        "PACT-046",
+        "PACT-047",
+        "PACT-048",
+        "PACT-049",
+        "PACT-050",
+        "PACT-051",
+        "PACT-052",
+        "PACT-096"
+      ],
+      "sources": [
+        "delivery"
+      ],
+      "covers": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05",
+        "R06",
+        "R07",
+        "R08"
+      ],
+      "scope": [
+        "Collect the playable prototype revision, rules-catalog version, command schemas, replay fixtures, invariant results, and script comparison.",
+        "Review the eight rules acceptance checks without treating design arithmetic as implemented tests."
+      ],
+      "acceptance": [
+        "R01–R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.",
+        "The release record lists precise reproduction commands and evidence; no unresolved ledger or identity corruption is carried into the social slice."
+      ],
+      "components": [
+        "rules release gate"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-054",
+      "title": "Implement public profiles and handle lifecycle",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053"
+      ],
+      "sources": [
+        "social",
+        "privacy"
+      ],
+      "covers": [
+        "S01"
+      ],
+      "scope": [
+        "Implement exact-handle search, public cosmetic profiles, allowed display-name validation, rename throttles, former-name display, and reserved-handle redirects.",
+        "Project public events by immutable identity while respecting deletion and hidden kingdom state."
+      ],
+      "acceptance": [
+        "Concurrent handle claims/renames cannot collide or bypass reservations; case-insensitive search resolves correctly.",
+        "Public profiles and redirects expose no current army/building/stock or online state; deleted profiles use the specified tombstone behavior."
+      ],
+      "components": [
+        "identity profiles and handles"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-055",
+      "title": "Implement every invitation destination and redemption rule",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054"
+      ],
+      "sources": [
+        "social",
+        "access",
+        "product"
+      ],
+      "covers": [
+        "S01"
+      ],
+      "scope": [
+        "Extend preserved draft destinations and direct-contact invitations to Court, notice, and story destinations with hashed tokens, expiry, revoke, reuse caps, and issuer quotas.",
+        "Add public landing/status routes and atomic human redemption; reserve no membership or promise on link open."
+      ],
+      "acceptance": [
+        "Two users racing for the last redemption produce one accepted result; repeated acceptance by the same account does not consume another use.",
+        "Signup, provider authorization, recovery, and an expired/full/revoked link preserve or explain the actual destination without open redirects or implicit agreements."
+      ],
+      "components": [
+        "invitation service and landing pages"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-056",
+      "title": "Implement Court membership, roles, and lifecycle",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-055"
+      ],
+      "sources": [
+        "social",
+        "runtime"
+      ],
+      "covers": [
+        "S01"
+      ],
+      "scope": [
+        "Add Court schema, separate handle namespace, open/request/invite modes, role and roster pagination, membership/ownership limits, pins, moderation actions, and audit events.",
+        "Implement consenting ownership transfer, immediate leave/removal, closure, and deleted-owner archive behavior."
+      ],
+      "acceptance": [
+        "Concurrent joins cannot exceed a kingdom’s membership limit; moderators cannot remove owners or other moderators or seize game assets.",
+        "Leaving/closing a Court does not cancel contracts or allegiance; an accepted invitation grants only the stated membership."
+      ],
+      "components": [
+        "Court service"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-057",
+      "title": "Implement Articles and mutual allegiance",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054"
+      ],
+      "sources": [
+        "social",
+        "runtime"
+      ],
+      "covers": [
+        "S01"
+      ],
+      "scope": [
+        "Add signed Article versions, publish/replace/withdraw states, human approval, active-count limits, and shared publication quota.",
+        "Add allegiance proposals, two-human signatures, expiry, one-patron uniqueness, cycle detection, public graph reads, and immediate termination."
+      ],
+      "acceptance": [
+        "Concurrent patron changes cannot create a cycle or multiple direct patrons.",
+        "Editing invalidates an old declaration version; neither Article prose nor allegiance creates tribute, military authority, free intel, immunity, or automatic contract cancellation."
+      ],
+      "components": [
+        "Articles and allegiance"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-058",
+      "title": "Implement signed excerpts and the evidence viewer",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Security",
+      "size": "L",
+      "depends_on": [
+        "PACT-042",
+        "PACT-053",
+        "PACT-054"
+      ],
+      "sources": [
+        "social",
+        "privacy"
+      ],
+      "covers": [
+        "S02"
+      ],
+      "scope": [
+        "Implement participant-authorized message/report Seal creation, immutable source digests, UTF-8 ranges, omission labels, canonical JSON, Ed25519 signing, public verification keys, and key rotation.",
+        "Build the preview/verification viewer with human publication approval, authenticity-only labels, source expiry, removal, and compromised-key status."
+      ],
+      "acceptance": [
+        "Altered/reordered/out-of-boundary excerpts and unauthorized originals fail; a complete excerpt and a selectively omitted one show different context labels.",
+        "Old-key verification survives rotation; a removed source cannot be fetched through a Seal API; authentic content is never labeled a proven allegation."
+      ],
+      "components": [
+        "evidence signing and viewer"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-059",
+      "title": "Implement Chronicle stories, notices, and public share pages",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058"
+      ],
+      "sources": [
+        "social",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "S01",
+        "S02"
+      ],
+      "scope": [
+        "Build private history and chronological published feeds with author/Court filters, versioned notice expiry, selected evidence, factual outcome, human commentary, and invitation links.",
+        "Add preview-before-publish, safe public metadata/card images, copy-link, report/remove, and audience-aware cache invalidation."
+      ],
+      "acceptance": [
+        "An unauthenticated recipient can view deliberately published content and reach its specific invitation.",
+        "Private prompts, live reserves, withheld excerpts, and full transcripts cannot leak through HTML metadata, link previews, caching, or API expansion."
+      ],
+      "components": [
+        "Chronicle and public pages"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-060",
+      "title": "Deliver opt-in critical email and Web Push",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-022",
+        "PACT-053",
+        "PACT-055"
+      ],
+      "sources": [
+        "runtime",
+        "privacy",
+        "architecture"
+      ],
+      "covers": [
+        "S03"
+      ],
+      "scope": [
+        "Implement notification preferences, browser subscriptions, delivery jobs, deduplication, ten-minute grouping, unsubscribe/revocation, and privacy-safe authenticated deep links.",
+        "Connect raid/default/starvation/approval events and routine completion/expiry events to their specified channel rules.",
+        "Expose a channel-neutral delivery port; native and Telegram implementations are PACT-090, sharing the same inbox/category preferences."
+      ],
+      "acceptance": [
+        "No push permission or email opt-in means no optional delivery; security mail remains transactional.",
+        "Offline delivery failure changes no deadline and invokes no LLM; previews expose no amounts or message text and a stale link cannot approve an expired action."
+      ],
+      "components": [
+        "notification worker and preferences"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-061",
+      "title": "Complete the first-session and social interface",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-059",
+        "PACT-060"
+      ],
+      "sources": [
+        "product",
+        "access",
+        "social"
+      ],
+      "covers": [
+        "S01",
+        "S06"
+      ],
+      "scope": [
+        "Extend the four-screen prototype with real People/Court/profile views, a clear Envoy command desk, opportunity entry, result cards, and privacy/conduct explanations.",
+        "Guide founding, first build, conversation, exact offer approval, and first consequence without fake players or fabricated successful trade."
+      ],
+      "acceptance": [
+        "A newcomer entering from a shared story retains that destination through connection and sees the real outcome of their first action.",
+        "Pending/offline counterparties remain visibly pending; on phone the next decision is understandable without opening every transcript."
+      ],
+      "components": [
+        "first-session and social UI"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-062",
+      "title": "Improve Envoy context selection and result explanations",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-049",
+        "PACT-053",
+        "PACT-054",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059"
+      ],
+      "sources": [
+        "runtime",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "S06"
+      ],
+      "scope": [
+        "Build an objective/mandate-first context assembler with selected threads, authorized evidence, compact factual history, and provider-aware token bounds.",
+        "Label agent assessments separately from engine receipts, attach supporting record IDs, and summarize unanswered offers and decisions without automatic background inference."
+      ],
+      "acceptance": [
+        "Long or adversarial transcripts cannot overflow the run allowance, reveal hidden records, execute arbitrary URLs, or elevate counterpart instructions.",
+        "For a seeded negotiation, the player sees what was committed, what only was proposed, what failed, and what still needs approval."
+      ],
+      "components": [
+        "Envoy context and summaries"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-063",
+      "title": "Build reporting, moderation, and appeals tools",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-056",
+        "PACT-058",
+        "PACT-059"
+      ],
+      "sources": [
+        "privacy",
+        "social"
+      ],
+      "covers": [
+        "S05"
+      ],
+      "scope": [
+        "Implement report submission from messages/profiles/posts, relevant-evidence capture, case queues, priority deadlines, staff access logs, and English support tooling.",
+        "Add hide/message-suspend/play-suspend/close actions, Court-versus-platform permissions, legal-hold scope, appeals, and deletion/retirement integration."
+      ],
+      "acceptance": [
+        "A moderator sees only case-authorized private evidence and cannot use role powers to transfer game assets.",
+        "Seeded doxxing and abuse cases can be hidden and appealed with audit reasons; a different reviewer handles the appeal and expired evidence is purged."
+      ],
+      "components": [
+        "reporting",
+        "moderation console"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-064",
+      "title": "Extend privacy workflows to the complete social world",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Security",
+      "size": "M",
+      "depends_on": [
+        "PACT-050",
+        "PACT-053",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059",
+        "PACT-063"
+      ],
+      "sources": [
+        "privacy",
+        "social"
+      ],
+      "covers": [
+        "S05"
+      ],
+      "scope": [
+        "Register every new table/blob/cache/export with its retention class and add profile, handle history, Court, Article, Seal, story, invitation, and case cleanup.",
+        "Implement hosted-content removal, restricted case holds, account-data export, deleted-owner Courts, and downstream erasure records where applicable."
+      ],
+      "acceptance": [
+        "Deletion during combat plus Court ownership preserves only necessary economic state while removing identifying/private data within real-time deadlines.",
+        "Restoring a backup or regenerating a share preview cannot resurrect removed content; exports never include a counterparty’s withheld private data."
+      ],
+      "components": [
+        "social retention and deletion"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-065",
+      "title": "Implement privacy-bounded product measurement",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-061",
+        "PACT-062",
+        "PACT-064"
+      ],
+      "sources": [
+        "delivery",
+        "privacy"
+      ],
+      "covers": [
+        "S06",
+        "S07"
+      ],
+      "scope": [
+        "Instrument activation, meaningful actions, setup failures, shares/referrals, run use, and return windows using structured events and stable pseudonymous IDs.",
+        "Add dashboards for the defined denominators and observation windows; distinguish API-metered cost, unknown pricing, and optional external-host self-report."
+      ],
+      "acceptance": [
+        "Raw prompts/messages and provider secrets never enter analytics; events expire at 90 days before de-identified aggregation.",
+        "Day-8–14 returns, referred-player windows, incomplete observation, and intelligence-sale labels can be reproduced from fixtures without counting opens as meaningful play."
+      ],
+      "components": [
+        "product event pipeline and dashboards"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-087",
+      "title": "Build complete native kingdom and Envoy screens",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Mobile",
+      "size": "L",
+      "depends_on": [
+        "PACT-048",
+        "PACT-053",
+        "PACT-061",
+        "PACT-083",
+        "PACT-084"
+      ],
+      "sources": [
+        "architecture",
+        "product",
+        "runtime"
+      ],
+      "covers": [
+        "S08"
+      ],
+      "scope": [
+        "Implement the four screens using native accessible controls, shared client/view-model logic, assets, resource formatting, and existing application commands.",
+        "Include build/train/contracts/scout/garrison/raid/report/social controls, account/security settings, run start/stop, and approval handoff."
+      ],
+      "acceptance": [
+        "A player completes the full core loop on each native platform and sees the same version/receipt on web.",
+        "Offline state is visibly stale; reconnect cannot replay a signature/raid or start another Envoy; native approval cannot bypass expiry or reauthentication."
+      ],
+      "components": [
+        "native gameplay screens",
+        "shared view models"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-088",
+      "title": "Deliver the complete Telegram Mini App",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-061",
+        "PACT-083",
+        "PACT-085"
+      ],
+      "sources": [
+        "architecture",
+        "product"
+      ],
+      "covers": [
+        "S08"
+      ],
+      "scope": [
+        "Reuse web feature components in the Telegram shell with safe areas, themes, resize/back-navigation behavior, linking state, account controls, and invitation destinations.",
+        "Implement dashboard/gameplay/Envoy/social flows and exact approvals; route sensitive credential entry through the secure PACT flow."
+      ],
+      "acceptance": [
+        "The same user can start in web, inspect in Telegram, and approve the current exact offer without losing destination or duplicating effects.",
+        "Telegram UI differences never change rules or expose private content; invalid/expired channel sessions reauthenticate before any write."
+      ],
+      "components": [
+        "Telegram web shell",
+        "shared DOM features"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-089",
+      "title": "Implement private-chat bot briefings and explicit run controls",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-049",
+        "PACT-053",
+        "PACT-055",
+        "PACT-062",
+        "PACT-085"
+      ],
+      "sources": [
+        "architecture",
+        "runtime",
+        "privacy"
+      ],
+      "covers": [
+        "S08"
+      ],
+      "scope": [
+        "Implement /world, /inbox, /status, /stop, and objective previews for /run/free text; use deterministic state summaries unless the user explicitly starts inference.",
+        "Bind Start run to one owner/objective/model/allowance and short-lived one-use callback. Link game approvals to authenticated visual sheets, never chat-only approval."
+      ],
+      "acceptance": [
+        "Repeated/forwarded/expired buttons cannot start extra runs; a message or notification alone starts no inference.",
+        "Groups, unlinked accounts, and agent-generated chat cannot invoke human approvals; /stop acts on the same global run and private summaries exclude credentials."
+      ],
+      "components": [
+        "Telegram bot commands",
+        "explicit start confirmation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-090",
+      "title": "Add native push and Telegram notification delivery",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend / Mobile",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-060",
+        "PACT-087",
+        "PACT-088",
+        "PACT-089"
+      ],
+      "sources": [
+        "architecture",
+        "runtime",
+        "privacy"
+      ],
+      "covers": [
+        "S03",
+        "S08"
+      ],
+      "scope": [
+        "Extend the reusable dispatcher with APNs, FCM, and bot delivery, account/category/channel preferences, grouping, endpoint invalidation, and audience-safe deep links.",
+        "Persist one inbox event regardless of how many devices subscribe; deduplicate each external delivery by event/group/channel/endpoint."
+      ],
+      "acceptance": [
+        "A burst produces the specified grouped notifications without exposing sensitive amounts/text or waking inference.",
+        "Revoked tokens, blocked bot, unlinked identity, device change, and failed push never alter game deadlines or lose the durable inbox event."
+      ],
+      "components": [
+        "APNs adapter",
+        "FCM adapter",
+        "Telegram delivery"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "APNs and Firebase credentials; test-device push entitlement"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-091",
+      "title": "Complete cross-channel session and privacy lifecycle",
+      "phase": 2,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Security",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-064",
+        "PACT-087",
+        "PACT-088",
+        "PACT-089",
+        "PACT-090"
+      ],
+      "sources": [
+        "architecture",
+        "access",
+        "privacy"
+      ],
+      "covers": [
+        "S05",
+        "S08"
+      ],
+      "scope": [
+        "Extend sign-out/reset/export/delete to native sessions, linked Telegram identities, push registrations, webhook metadata, and product-scoped connection records.",
+        "Process/discard raw Telegram payloads and purge deduplication IDs after 24 hours; remove live channel identifiers within 24 hours of unlink while respecting declared audit/backup rules."
+      ],
+      "acceptance": [
+        "Account reset or deletion prevents new commands on every surface and records no keys or extra personal data in channel logs. Unlink also stops new work by runs initiated through the revoked channel without rolling back committed game actions.",
+        "Restore cannot resurrect an unlinked bot/device token; exports include channel links but no third-party secrets or hidden counterpart information."
+      ],
+      "components": [
+        "channel lifecycle",
+        "push cleanup",
+        "scoped revocation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-092",
+      "title": "Verify cross-device and assistant handoff end to end",
+      "phase": 2,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-065",
+        "PACT-086",
+        "PACT-087",
+        "PACT-088",
+        "PACT-089",
+        "PACT-090",
+        "PACT-091"
+      ],
+      "sources": [
+        "architecture",
+        "delivery"
+      ],
+      "covers": [
+        "S08"
+      ],
+      "scope": [
+        "Run the same account/objective/offer/approval/receipt sequence across web, iOS, Android, Telegram, and certified assistant routes.",
+        "Exercise concurrent approvals, one-write-lease takeover, stale app versions/cursors, lost responses, invitation handoff, offline state, and deletion during a pending action."
+      ],
+      "acceptance": [
+        "All surfaces converge on one committed result and enforce the same limits without duplicated authority or purchases.",
+        "A client-specific failure degrades that channel only; state resync and privacy-safe notifications work without automatic reasoning."
+      ],
+      "components": [
+        "channel contract tests",
+        "race fixtures"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-066",
+      "title": "Run the social integration and load suite",
+      "phase": 2,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059",
+        "PACT-060",
+        "PACT-061",
+        "PACT-062",
+        "PACT-063",
+        "PACT-064",
+        "PACT-065",
+        "PACT-087",
+        "PACT-088",
+        "PACT-089",
+        "PACT-090",
+        "PACT-091",
+        "PACT-092"
+      ],
+      "sources": [
+        "delivery",
+        "runtime"
+      ],
+      "covers": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05"
+      ],
+      "scope": [
+        "Run permission, invitation, evidence, notification, deletion, moderation, and agent-injection scenarios end to end.",
+        "Load 50 kingdoms with 12 negotiations each, maximum active contracts, concurrent raids, disconnects, and provider failures; separate provider latency from service time."
+      ],
+      "acceptance": [
+        "p95 authorized state reads are under 500 ms and command receipts under one second at the specified load, with no skipped or duplicate tick.",
+        "S01–S05 have recorded passing evidence, including compromised key, removed evidence, blocked messaging, and a privacy restore drill."
+      ],
+      "components": [
+        "social/load validation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-067",
+      "title": "Run the three-week social pilot",
+      "phase": 2,
+      "status": "todo",
+      "kind": "operations",
+      "owner_role": "Operations",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-066"
+      ],
+      "sources": [
+        "delivery",
+        "privacy",
+        "product",
+        "architecture"
+      ],
+      "covers": [
+        "S06",
+        "S07"
+      ],
+      "scope": [
+        "Recruit 50 invited adults into one world only after technical/privacy checks pass; staff urgent/ordinary reports and appeals to the policy deadlines.",
+        "Conduct ten agency interviews; collect voluntary sharing, referring-player activation, return windows, model expense, and political-outcome observations without referral rewards.",
+        "Include web, native mobile, and Telegram users in the same pilot world; record channel-specific setup failures and handoffs without increasing gameplay quotas."
+      ],
+      "acceptance": [
+        "Record at least 7/10 correct explanations of a consequential human decision; evaluate 20/50 meaningful returns in days 8–14, five voluntary sharers, and three referred returning players.",
+        "Report full denominators, incomplete referral windows, staff coverage, incidents, and actual failures; do not mark criteria passed before each observation window closes."
+      ],
+      "components": [
+        "pilot operation and observation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "50 consenting adult players and staffed support"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-068",
+      "title": "Accept the social slice",
+      "phase": 2,
+      "status": "todo",
+      "kind": "gate",
+      "owner_role": "Release",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059",
+        "PACT-060",
+        "PACT-061",
+        "PACT-062",
+        "PACT-063",
+        "PACT-064",
+        "PACT-065",
+        "PACT-066",
+        "PACT-067",
+        "PACT-087",
+        "PACT-088",
+        "PACT-089",
+        "PACT-090",
+        "PACT-091",
+        "PACT-092"
+      ],
+      "sources": [
+        "delivery"
+      ],
+      "covers": [
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08"
+      ],
+      "scope": [
+        "Compile S01–S08 evidence and the pilot release revision; distinguish technical checks from observed player behavior.",
+        "Record whether the baseline advances or requires a versioned interaction revision and another pilot."
+      ],
+      "acceptance": [
+        "All required technical and behavioral thresholds pass before phase 3 begins.",
+        "If a behavioral threshold fails, retain measured results and block the next gate rather than silently changing the threshold or claiming growth."
+      ],
+      "components": [
+        "social release gate"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-069",
+      "title": "Implement the complete six-week season lifecycle",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-068"
+      ],
+      "sources": [
+        "rules",
+        "product"
+      ],
+      "covers": [
+        "L01"
+      ],
+      "scope": [
+        "Extend the clock/score foundation with configured opening time, the published harvest schedule, pre-boundary closing snapshot, next-season baseline, and pinned in-flight rules.",
+        "Add equal-age newcomer cohorts and persistent assets/contracts across seasons; expose current week and next transition in the UI/API."
+      ],
+      "acceptance": [
+        "An accelerated six-week run applies exactly the specified multipliers and awards boundary-tick value to the correct season.",
+        "A contract/raid crossing a season or world pause retains its correct terms/version; newcomer comparisons use age-seven-day snapshots without reset exploits."
+      ],
+      "components": [
+        "season lifecycle and newcomer cohorts"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-070",
+      "title": "Implement seasonal honors and award review",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-063",
+        "PACT-068",
+        "PACT-069"
+      ],
+      "sources": [
+        "rules",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "L01",
+        "L05"
+      ],
+      "scope": [
+        "Implement meaningful-day eligibility, minimum band population, exact percentile thresholds/ties, overall plaques, arrival/participation rewards, and seven-real-day provisional review.",
+        "Build the audited disqualification/appeal and idempotent entitlement workflow, including updates to awards after a successful appeal."
+      ],
+      "acceptance": [
+        "Small bands issue no false percentile award; ties expand honors as specified and only the highest border is granted.",
+        "Closing/disqualified accounts are excluded; review retries or overturned decisions cannot duplicate rewards, delete legitimate gameplay stock, or silently change Fortune."
+      ],
+      "components": [
+        "award calculation and review"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-071",
+      "title": "Produce and integrate the illustrated kingdom and cosmetics",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend / Art",
+      "size": "L",
+      "depends_on": [
+        "PACT-068"
+      ],
+      "sources": [
+        "product"
+      ],
+      "covers": [
+        "L02"
+      ],
+      "scope": [
+        "Create or commission the authored building silhouettes, Hall II/IV/VI evolution, portrait scenes, banners, achievement ornaments, scaffolds, and palette variants.",
+        "Add optimized asset manifests, provenance/licenses, text alternatives, cosmetic placement, and responsive scene rendering; actual hidden defenses never determine public portraits."
+      ],
+      "acceptance": [
+        "Every building state is readable at phone size and has an equivalent text entry; scene updates follow committed state rather than speculative success.",
+        "Cosmetic changes affect only presentation; private building levels do not leak through public images or asset URLs."
+      ],
+      "components": [
+        "art assets and kingdom scene"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Approved/licensed visual assets or art production capacity"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-072",
+      "title": "Integrate optional audio, motion, and notification feedback",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend / Audio",
+      "size": "M",
+      "depends_on": [
+        "PACT-068",
+        "PACT-071"
+      ],
+      "sources": [
+        "product",
+        "runtime"
+      ],
+      "covers": [
+        "L02"
+      ],
+      "scope": [
+        "Produce/integrate the specified short sound cues and restrained ambience with per-channel controls, user-gesture activation, and message batching.",
+        "Add short build/signature/result transitions and full reduced-motion equivalents; avoid continual tick sounds or autoplayed player speech."
+      ],
+      "acceptance": [
+        "Muted and reduced-motion play retains every consequence and control.",
+        "Reconnecting does not replay every historical sound; one grouped event generates one appropriate cue and preferences persist."
+      ],
+      "components": [
+        "audio and motion"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Approved/licensed audio assets or audio production capacity"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-073",
+      "title": "Finish responsive accessibility and PWA behavior",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "L",
+      "depends_on": [
+        "PACT-061",
+        "PACT-068",
+        "PACT-071",
+        "PACT-072"
+      ],
+      "sources": [
+        "product",
+        "access"
+      ],
+      "covers": [
+        "L02"
+      ],
+      "scope": [
+        "Complete installable PWA manifest/icons, responsive layouts, keyboard/focus paths, screen-reader labels, contrast, reflow, touch targets, and batched live announcements.",
+        "Cache only safe static assets; show stale/offline state and require a live server commit for gameplay actions instead of queueing expired commands silently."
+      ],
+      "acceptance": [
+        "Manual keyboard/screen-reader and phone/desktop audits cover signup, approvals, contracts, raids, reports, and privacy controls against the specified accessibility target.",
+        "App install/update/offline recovery preserves server authority and never caches keys, private responses, or a reusable approval action."
+      ],
+      "components": [
+        "responsive UI",
+        "accessibility",
+        "PWA"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-074",
+      "title": "Implement the cosmetic catalog, wallet, and unlock flow",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-047",
+        "PACT-068",
+        "PACT-071"
+      ],
+      "sources": [
+        "product",
+        "rules",
+        "architecture"
+      ],
+      "covers": [
+        "L03"
+      ],
+      "scope": [
+        "Extend the earned-Gem ledger with catalog definitions, price validation, account-bound inventory, cosmetic spending, and human-only purchase permissions.",
+        "Separate achievement/rank items from sale items; model paid Gem lots and reversible entitlement provenance for later refunds.",
+        "Support platform-origin paid Gem lots, globally shared earned Gems, and account-owned cosmetics; display available-here versus other-channel paid balances."
+      ],
+      "acceptance": [
+        "Catalog purchases debit once and unlock once; an already-owned item cannot be charged again by a retry.",
+        "Gems/skins are excluded from every economic, combat, score, queue, authority, and run-priority calculation; Envoys cannot initiate checkout."
+      ],
+      "components": [
+        "cosmetic catalog and wallet"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-075",
+      "title": "Integrate hosted payments and verified purchase receipts",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "L",
+      "depends_on": [
+        "PACT-007",
+        "PACT-064",
+        "PACT-068",
+        "PACT-074"
+      ],
+      "sources": [
+        "product",
+        "privacy",
+        "architecture"
+      ],
+      "covers": [
+        "L03",
+        "L04"
+      ],
+      "scope": [
+        "Integrate one processor-hosted checkout behind a payment adapter; map the two Gem packs to server-controlled product IDs and localized prices.",
+        "Add signed webhook verification, durable event deduplication, settlement-before-credit, processor receipt references, and required merchant/legal-retention configuration.",
+        "This ticket remains web checkout only; PACT-093/094 own store and Stars adapters feeding the same verified receipt/entitlement ledger."
+      ],
+      "acceptance": [
+        "Forged, duplicate, reordered, or client-modified payment events cannot mint Gems; unsuccessful payments grant nothing.",
+        "Missing merchant/price/retention configuration disables checkout; no full card data reaches PACT and all purchase controls require human authentication."
+      ],
+      "components": [
+        "checkout and payment receipts"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Merchant/processor account, product prices, legal payment-record schedule"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-076",
+      "title": "Implement refunds, reversals, and cosmetic reconciliation",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-068",
+        "PACT-075"
+      ],
+      "sources": [
+        "product",
+        "privacy",
+        "architecture"
+      ],
+      "covers": [
+        "L03"
+      ],
+      "scope": [
+        "Implement processor refund/chargeback handling using paid-lot and cosmetic provenance, including already-spent paid Gems and mixed earned/paid purchases.",
+        "Record the deterministic reversal policy in the payment module contract before enabling checkout; reverse only attributable paid value/entitlements, preserving earned and unrelated purchases."
+      ],
+      "acceptance": [
+        "Duplicate and out-of-order refund events cannot over-reverse, credit Gems, or affect ordinary game balances, Fortune, troops, buildings, or achievements.",
+        "Full/partial refunds and mixed-funding fixtures reconcile to payment receipts with a human-readable explanation and support audit trail.",
+        "Refund reconciliation retains original purchase-channel provenance and cannot debit another channel’s paid lot to hide an attribution error."
+      ],
+      "components": [
+        "refund reconciliation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-077",
+      "title": "Run the competitive abuse and moderation release review",
+      "phase": 3,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA / Operations",
+      "size": "L",
+      "depends_on": [
+        "PACT-063",
+        "PACT-065",
+        "PACT-068",
+        "PACT-069",
+        "PACT-070"
+      ],
+      "sources": [
+        "delivery",
+        "rules",
+        "privacy"
+      ],
+      "covers": [
+        "L05"
+      ],
+      "scope": [
+        "Execute scenarios for account farms, gift concentration, bond/default cycling, training/bond storage sheltering, indefinite owned-defender pinning, smear campaigns, and model-tier differences.",
+        "Validate investigation evidence, review permissions, conduct notices, appeals, and alerting; preserve legitimate alliances and gifts instead of treating size or success as guilt."
+      ],
+      "acceptance": [
+        "Every scenario has observed effects, a documented permitted/prohibited classification, and reproducible evidence.",
+        "Release-blocking exploit or policy-enforcement failures receive fixes and reruns; model fairness and abuse resistance are not claimed from action caps alone."
+      ],
+      "components": [
+        "competitive abuse validation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-093",
+      "title": "Implement StoreKit and Google Play cosmetic purchases",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend / Mobile",
+      "size": "L",
+      "depends_on": [
+        "PACT-068",
+        "PACT-074",
+        "PACT-075",
+        "PACT-076",
+        "PACT-087"
+      ],
+      "sources": [
+        "architecture",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "L03",
+        "L06"
+      ],
+      "scope": [
+        "Implement store products/price display, signed server receipt validation, entitlement reconciliation, refund/revoke notifications, and restore paths for iOS/Android.",
+        "Maintain platform-origin paid Gem lots, shared earned Gems, and account-wide cosmetic ownership using the existing commerce interface."
+      ],
+      "acceptance": [
+        "Replayed or cross-account receipts, pending/canceled purchases, out-of-order refunds, and reinstall cannot grant twice.",
+        "Spent consumable packs are not re-credited by restore; origin-restricted balances display correctly and never affect game resources, score, or run limits."
+      ],
+      "components": [
+        "native billing adapters",
+        "receipt verification"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Apple/Google developer and merchant accounts; sandbox products and test users"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-094",
+      "title": "Implement Telegram Stars cosmetic purchases",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-068",
+        "PACT-074",
+        "PACT-075",
+        "PACT-076",
+        "PACT-088",
+        "PACT-089"
+      ],
+      "sources": [
+        "architecture",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "L03",
+        "L06"
+      ],
+      "scope": [
+        "Implement server-priced Stars invoices, bounded pre-checkout validation, verified successful-payment processing, deduplicated grants, support/refund handling, and source-tagged Gem lots.",
+        "Keep web checkout out of Telegram purchase paths; cosmetic catalog and account entitlements use the same commerce service."
+      ],
+      "acceptance": [
+        "Invoice creation or pre-checkout alone never grants Gems; duplicate updates/refunds and forwarded invoices cannot alter the wrong account.",
+        "Purchases preserve origin restrictions and account-wide cosmetic ownership without changing gameplay; failed payment retains a clear recoverable state."
+      ],
+      "components": [
+        "Stars billing adapter",
+        "cosmetic provenance"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Telegram bot with Stars test and production payment capability"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-078",
+      "title": "Provision and rehearse production operations",
+      "phase": 3,
+      "status": "todo",
+      "kind": "operations",
+      "owner_role": "Platform",
+      "size": "L",
+      "depends_on": [
+        "PACT-068",
+        "PACT-069",
+        "PACT-070",
+        "PACT-073",
+        "PACT-076",
+        "PACT-093",
+        "PACT-094"
+      ],
+      "sources": [
+        "runtime",
+        "privacy",
+        "delivery"
+      ],
+      "covers": [
+        "L04"
+      ],
+      "scope": [
+        "Create the production-isolated infrastructure from phase-0 IaC with the specified database resilience, backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, and deployment rollback.",
+        "Configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations."
+      ],
+      "acceptance": [
+        "Rehearse a production-like restore, deletion suppression, outbox replay, signing-key rotation, credential incident, and world pause/resume before admitting players.",
+        "Operators can diagnose and recover without manual unlogged balance edits; registration/checkout stay disabled when required operational configuration is missing."
+      ],
+      "components": [
+        "production infrastructure and operations"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Production AWS account, domain, and operator coverage"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-079",
+      "title": "Re-certify external clients and complete distribution",
+      "phase": 3,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "Integrations",
+      "size": "L",
+      "depends_on": [
+        "PACT-049",
+        "PACT-062",
+        "PACT-068",
+        "PACT-073",
+        "PACT-078"
+      ],
+      "sources": [
+        "access",
+        "delivery",
+        "architecture"
+      ],
+      "covers": [
+        "L04"
+      ],
+      "scope": [
+        "Repeat full real-game connection, read/write, authority approval, bounded run, revoke, and reconnect checks for all five adapters plus ChatGPT and Claude on the release candidate.",
+        "Submit and complete required external-client distribution reviews; publish tested plans/platforms/models/dates and a generic MCP guide.",
+        "Certify Gemini CLI and the Grok-powered external tool client as well; clearly separate API model support from consumer-chat installation availability."
+      ],
+      "acceptance": [
+        "All required routes pass against production-like endpoints and the shipped schemas, not just phase-0 fixtures.",
+        "Review acceptance and host availability are evidenced before advertising support; a private developer connection is not represented as universal installation."
+      ],
+      "components": [
+        "provider/client release certification"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Eligible release host accounts and any required distribution approvals"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-095",
+      "title": "Prepare and certify mobile-store and Telegram distribution",
+      "phase": 3,
+      "status": "todo",
+      "kind": "operations",
+      "owner_role": "Mobile / Operations",
+      "size": "L",
+      "depends_on": [
+        "PACT-068",
+        "PACT-073",
+        "PACT-078",
+        "PACT-087",
+        "PACT-088",
+        "PACT-090",
+        "PACT-091",
+        "PACT-093",
+        "PACT-094"
+      ],
+      "sources": [
+        "architecture",
+        "privacy",
+        "delivery"
+      ],
+      "covers": [
+        "L04",
+        "L06"
+      ],
+      "scope": [
+        "Prepare iOS/Android signed releases, privacy/data disclosures, account deletion access, report/block controls, review accounts, production app links/push, and supported-device testing.",
+        "Complete required store reviews, Telegram Mini App/bot metadata/deep links, and each channel’s digital-purchase checks; record policy versions and acceptance evidence."
+      ],
+      "acceptance": [
+        "Release artifacts are reproducible and the tested binaries match submitted builds; production links resolve to the correct account/destination.",
+        "Required reviews/disclosures and purchase checks pass; web availability alone cannot mark native/Telegram distribution done."
+      ],
+      "components": [
+        "signed builds",
+        "store submissions",
+        "Telegram production configuration"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Apple/Google distribution approvals; production Telegram bot/domain configuration"
+      ],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-097",
+      "title": "Certify the full production channel matrix",
+      "phase": 3,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "L",
+      "depends_on": [
+        "PACT-068",
+        "PACT-079",
+        "PACT-092",
+        "PACT-093",
+        "PACT-094",
+        "PACT-095",
+        "PACT-096"
+      ],
+      "sources": [
+        "architecture",
+        "delivery"
+      ],
+      "covers": [
+        "L04",
+        "L06"
+      ],
+      "scope": [
+        "Repeat handoff/approval/revoke/inbox/model-run fixtures across the production-like web, signed native apps, Telegram, and certified assistant clients.",
+        "Rehearse channel outage, store/Stars refund replay, device reinstall, stale client API version, account deletion, and external-host feature unavailability."
+      ],
+      "acceptance": [
+        "Each required surface has evidence tied to its build/client version and backend revision; advertised capability labels match actual supported routes.",
+        "Cross-surface entitlements, run leases, event state, and privacy controls remain consistent; a blocked store review or failed required channel blocks release."
+      ],
+      "components": [
+        "production-like cross-surface certification"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-080",
+      "title": "Rehearse Season One end to end",
+      "phase": 3,
+      "status": "todo",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "L",
+      "depends_on": [
+        "PACT-068",
+        "PACT-069",
+        "PACT-070",
+        "PACT-071",
+        "PACT-072",
+        "PACT-073",
+        "PACT-074",
+        "PACT-075",
+        "PACT-076",
+        "PACT-077",
+        "PACT-078",
+        "PACT-079",
+        "PACT-095",
+        "PACT-097"
+      ],
+      "sources": [
+        "delivery"
+      ],
+      "covers": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05"
+      ],
+      "scope": [
+        "Run an accelerated complete season against the release candidate, then validate signup/invitations, mixed-provider negotiations, scarcity, raids, privacy deletion, public evidence, purchases/refunds, and final honors.",
+        "Execute final accessibility, load, security, provider-error, and recovery regressions at the planned release capacity and record the tested limit."
+      ],
+      "acceptance": [
+        "L01–L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.",
+        "Critical defects are fixed and their affected scenarios rerun; a 50-player slice test is not mislabeled proof of unlimited global-world capacity."
+      ],
+      "components": [
+        "full-season release validation"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    },
+    {
+      "id": "PACT-081",
+      "title": "Accept and prepare the Season One release",
+      "phase": 3,
+      "status": "todo",
+      "kind": "gate",
+      "owner_role": "Release",
+      "size": "S",
+      "depends_on": [
+        "PACT-068",
+        "PACT-069",
+        "PACT-070",
+        "PACT-071",
+        "PACT-072",
+        "PACT-073",
+        "PACT-074",
+        "PACT-075",
+        "PACT-076",
+        "PACT-077",
+        "PACT-078",
+        "PACT-079",
+        "PACT-080",
+        "PACT-093",
+        "PACT-094",
+        "PACT-095",
+        "PACT-097"
+      ],
+      "sources": [
+        "delivery",
+        "product"
+      ],
+      "covers": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05",
+        "L06"
+      ],
+      "scope": [
+        "Assemble the release revision, schema/rules versions, supported-client matrix, migration plan, tested capacity, operator roster, rollback runbook, season configuration, and pass/fail register. Include native/Telegram builds, store approval evidence, and the tested client capability matrix.",
+        "Prepare the deploy command and controlled signup enablement; actual release execution is a separate explicit operational action, not an effect of generating this backlog."
+      ],
+      "acceptance": [
+        "Every L01–L06 criterion passes, including native/Telegram distribution, verified payments, and the complete channel matrix; all blocking defects/external reviews are closed.",
+        "The release record names who can pause/recover the world and provides a reproducible go/no-go checklist; no task is marked completed merely because it is scheduled."
+      ],
+      "components": [
+        "Season One release gate"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null
+    }
+  ],
+  "source_sha256": {
+    "../pact/access.md": "78bfceeca11bb44a054cbac293706a739490119a20ab3b214fdd10b07737ce67",
+    "../pact/runtime.md": "4ea70728d3d5fcc56b002594fea8bb9dd68d89ddd28ed67958c40d9000d7e58f",
+    "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
+    "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
+    "../pact/privacy.md": "84b4b346c8da547a25e750e84ac3a455d9d6f08fd2d88b2f57cc58f9f7664350",
+    "../pact/product.md": "f06f6d55a0a9c8c22a0c82521ef01302ca376944ba7a01fbda23c5aebb971504",
+    "../pact/delivery.md": "a2f1b296e61b93f8cca2e128ccf83d126723c1a49673f443b89f1c70be45e451",
+    "../pact/architecture.md": "4185426c1025cee5b95a28fb0c7c9452f317e793047f887f8c8c3efabc27ce54"
+  },
+  "task_status_values": [
+    "todo",
+    "in_progress",
+    "blocked",
+    "done"
+  ],
+  "size_legend": {
+    "S": "Small bounded change or evidence review",
+    "M": "Several collaborating components with a focused test suite",
+    "L": "Cross-cutting lifecycle or integration, usually delivered as multiple reviewable pull requests"
+  },
+  "source_of_truth": "tasks.json owns ticket fields; Markdown phase pages are generated views. Game behavior remains owned by ../pact/.",
+  "specification_revision": "1.1 — 2026-09-16"
+}

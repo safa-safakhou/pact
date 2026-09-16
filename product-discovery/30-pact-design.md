@@ -1,5 +1,7 @@
 # PACT — consolidated design
 
+> **Historical design — superseded.** Use [PACT Version 1](../docs/pact/README.md). Its product, access, runtime, rulebook, social, privacy, and delivery documents replace this document as implementation authority.
+
 **Consolidated baseline, 14 September 2026.** It folds together [v2](/Users/safa.safakhou/repos/mine/random_idea/product-discovery/25-pact-v2.md), [the hardening pass](/Users/safa.safakhou/repos/mine/random_idea/product-discovery/23-pact-hardening.md), and [the empires and contracts amendment](/Users/safa.safakhou/repos/mine/random_idea/product-discovery/26-pact-empires-and-contracts.md). The founder subsequently requested a detailed design: start with [32 — Full game design](/Users/safa.safakhou/repos/mine/random_idea/product-discovery/32-pact-game-design.md). Documents 32–34 develop this baseline and explicitly revise its conflicting or unvalidated assumptions; document 33 owns the current proposed numeric rules. The body below preserves the earlier baseline.
 
 Nothing here has been built, playtested, costed, or validated. It is a design.

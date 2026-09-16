@@ -1,0 +1,98 @@
+id,title,phase,status,kind,owner_role,size,depends_on,covers,document
+PACT-001,Bootstrap the application workspace and continuous integration,0,todo,implementation,Platform,M,,A01,phase-0-connections.md#pact-001
+PACT-082,Establish reusable package boundaries and product isolation,0,todo,implementation,Architecture,M,PACT-001,A09,phase-0-connections.md#pact-082
+PACT-002,"Define shared command, event, and tool schemas",0,todo,implementation,Backend,M,PACT-001;PACT-082,A03;A05,phase-0-connections.md#pact-002
+PACT-003,Create account persistence and transaction/outbox infrastructure,0,todo,implementation,Backend,M,PACT-001;PACT-002,A01;A06,phase-0-connections.md#pact-003
+PACT-004,Provision the isolated connection-test environment,0,todo,implementation,Platform,L,PACT-001;PACT-003,A06,phase-0-connections.md#pact-004
+PACT-005,Add redacted operational telemetry and failure correlation,0,todo,implementation,Platform,M,PACT-002;PACT-003,A06,phase-0-connections.md#pact-005
+PACT-006,"Implement signup, verification, and human sessions",0,todo,implementation,Backend,M,PACT-003;PACT-005,A01,phase-0-connections.md#pact-006
+PACT-007,"Implement recovery, reauthentication, and account security",0,todo,implementation,Backend,M,PACT-006,A01;A05,phase-0-connections.md#pact-007
+PACT-008,Implement private kingdom drafts and resumable setup,0,todo,implementation,Backend,M,PACT-006;PACT-002,A01,phase-0-connections.md#pact-008
+PACT-009,Build encrypted model credential storage,0,todo,implementation,Backend,M,PACT-004;PACT-007,A02;A06,phase-0-connections.md#pact-009
+PACT-010,Build the provider adapter interface and contract harness,0,todo,implementation,Integrations,M,PACT-002;PACT-009,A02,phase-0-connections.md#pact-010
+PACT-011,Implement the OpenAI model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-011
+PACT-012,Implement the Anthropic model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-012
+PACT-013,Implement the Gemini model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-013
+PACT-014,Implement the xAI model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-014
+PACT-015,Implement OpenRouter authorization and model adapter,0,todo,implementation,Integrations,L,PACT-010;PACT-007,A02,phase-0-connections.md#pact-015
+PACT-016,Implement PACT OAuth for external clients,0,todo,implementation,Security,L,PACT-007;PACT-002,A03;A05,phase-0-connections.md#pact-016
+PACT-017,Implement the remote MCP transport and tool registry,0,todo,implementation,Integrations,L,PACT-016;PACT-002,A03,phase-0-connections.md#pact-017
+PACT-018,Implement the shared dispatcher and sandbox receipts,0,todo,implementation,Backend,M,PACT-003;PACT-007;PACT-002,A03;A05,phase-0-connections.md#pact-018
+PACT-019,Implement mandate permissions and immediate-spend checks,0,todo,implementation,Backend,M,PACT-018,A05,phase-0-connections.md#pact-019
+PACT-020,Implement exact-command human approvals,0,todo,implementation,Backend,M,PACT-019,A05,phase-0-connections.md#pact-020
+PACT-021,Implement bounded Envoy runs and exclusive write leases,0,todo,implementation,Backend,L,PACT-010;PACT-018;PACT-019;PACT-020,A04;A05,phase-0-connections.md#pact-021
+PACT-022,Implement the durable inbox and live event delivery,0,todo,implementation,Backend,M,PACT-003;PACT-018,A03;A04,phase-0-connections.md#pact-022
+PACT-023,"Build account, connection, and Envoy setup screens",0,todo,implementation,Frontend,L,PACT-008;PACT-009;PACT-015;PACT-016;PACT-017;PACT-020;PACT-021;PACT-022,A01;A02;A03;A04;A05,phase-0-connections.md#pact-023
+PACT-083,Build the shared client SDK and capability contract,0,todo,implementation,Backend / Frontend,M,PACT-002;PACT-016;PACT-018;PACT-020;PACT-022;PACT-082,A08;A09,phase-0-connections.md#pact-083
+PACT-084,"Prove native iOS and Android login, linking, and approval",0,todo,implementation,Mobile,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-084
+PACT-085,Prove Telegram identity linking and Mini App authentication,0,todo,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085
+PACT-024,"Implement first-account retention, export, and deletion",0,todo,implementation,Security,L,PACT-004;PACT-008;PACT-009;PACT-016;PACT-021;PACT-022;PACT-084;PACT-085,A06,phase-0-connections.md#pact-024
+PACT-025,Complete the real-account environment preflight,0,todo,operations,Operations,M,PACT-004;PACT-005;PACT-006;PACT-007;PACT-024,A06,phase-0-connections.md#pact-025
+PACT-086,Certify additional assistant routes and publish a capability matrix,0,todo,verification,Integrations,M,PACT-017;PACT-023;PACT-025;PACT-083,A03;A09,phase-0-connections.md#pact-086
+PACT-026,Certify every connection route and measure unaided setup,0,todo,verification,QA,L,PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-017;PACT-023;PACT-024;PACT-025;PACT-084;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-026
+PACT-027,Accept the connection experiment,0,todo,gate,Release,S,PACT-001;PACT-002;PACT-003;PACT-004;PACT-005;PACT-006;PACT-007;PACT-008;PACT-009;PACT-010;PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-016;PACT-017;PACT-018;PACT-019;PACT-020;PACT-021;PACT-022;PACT-023;PACT-024;PACT-025;PACT-026;PACT-082;PACT-083;PACT-084;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-027
+PACT-028,Encode the versioned rules catalog and exact arithmetic,1,todo,implementation,Rules,M,PACT-027,R01;R02;R05,phase-1-rules.md#pact-028
+PACT-029,Implement the authoritative clock and atomic tick coordinator,1,todo,implementation,Backend,L,PACT-027;PACT-028,R02;R06,phase-1-rules.md#pact-029
+PACT-030,"Implement the resource ledger, provenance, and storage",1,todo,implementation,Backend,L,PACT-027;PACT-028;PACT-029,R01;R06,phase-1-rules.md#pact-030
+PACT-031,Activate real kingdoms exactly once,1,todo,implementation,Backend,M,PACT-008;PACT-027;PACT-028;PACT-029;PACT-030,A01;R01;R02,phase-1-rules.md#pact-031
+PACT-032,Implement building upgrades and the two builder queues,1,todo,implementation,Rules,M,PACT-027;PACT-030;PACT-031,R01;R02;R04,phase-1-rules.md#pact-032
+PACT-033,"Implement troop identity, training, placement, and capacity",1,todo,implementation,Rules,L,PACT-027;PACT-028;PACT-030;PACT-031,R01;R03,phase-1-rules.md#pact-033
+PACT-034,"Implement upkeep, hunger recovery, and desertion",1,todo,implementation,Rules,M,PACT-027;PACT-029;PACT-030;PACT-033,R02;R03,phase-1-rules.md#pact-034
+PACT-035,Implement kingdom-wide charges and action limits,1,todo,implementation,Backend,M,PACT-027;PACT-029;PACT-031,R02;R04,phase-1-rules.md#pact-035
+PACT-036,"Implement contacts, bounded messages, and direct transfers",1,todo,implementation,Backend,M,PACT-022;PACT-027;PACT-030;PACT-031;PACT-035,R01;R04,phase-1-rules.md#pact-036
+PACT-037,"Implement supply offers, signatures, bonds, and contract activation",1,todo,implementation,Rules,L,PACT-019;PACT-027;PACT-030;PACT-035;PACT-036,R01;R04,phase-1-rules.md#pact-037
+PACT-038,Implement independent contract delivery and default settlement,1,todo,implementation,Rules,L,PACT-027;PACT-029;PACT-030;PACT-034;PACT-037,R01;R02,phase-1-rules.md#pact-038
+PACT-039,Complete future exposure accounting and human exceptions,1,todo,implementation,Backend,L,PACT-019;PACT-020;PACT-027;PACT-032;PACT-037;PACT-038,R04,phase-1-rules.md#pact-039
+PACT-040,"Implement garrison contracts, recall, return, and seizure",1,todo,implementation,Rules,L,PACT-027;PACT-033;PACT-034;PACT-037;PACT-039,R01;R03;R04,phase-1-rules.md#pact-040
+PACT-041,Implement scouting and private observation reports,1,todo,implementation,Rules,M,PACT-027;PACT-029;PACT-033;PACT-035;PACT-039,R02;R03;R04,phase-1-rules.md#pact-041
+PACT-042,Implement raid seed commitments and deterministic dice,1,todo,implementation,Security,M,PACT-004;PACT-027;PACT-028,R05,phase-1-rules.md#pact-042
+PACT-043,"Implement pure combat, casualties, and loot calculations",1,todo,implementation,Rules,M,PACT-027;PACT-028;PACT-033,R03;R05,phase-1-rules.md#pact-043
+PACT-044,"Implement raids, contributors, locks, and overlapping resolution",1,todo,implementation,Rules,L,PACT-027;PACT-029;PACT-033;PACT-034;PACT-035;PACT-039;PACT-040;PACT-042;PACT-043,R02;R03;R05,phase-1-rules.md#pact-044
+PACT-045,Build authorized world views and factual forecasts,1,todo,implementation,Backend,M,PACT-022;PACT-027;PACT-032;PACT-038;PACT-040;PACT-041;PACT-044,R06,phase-1-rules.md#pact-045
+PACT-046,Implement Fortune accounting and provisional standings,1,todo,implementation,Rules,M,PACT-027;PACT-030;PACT-032;PACT-033;PACT-038;PACT-040;PACT-044,R01,phase-1-rules.md#pact-046
+PACT-047,Implement achievement triggers and earned cosmetic entitlements,1,todo,implementation,Rules,M,PACT-027;PACT-032;PACT-038;PACT-041;PACT-044;PACT-046,R01;L03,phase-1-rules.md#pact-047
+PACT-048,Build the plain rules-prototype interface,1,todo,implementation,Frontend,L,PACT-023;PACT-027;PACT-045;PACT-046;PACT-047,R01;R05,phase-1-rules.md#pact-048
+PACT-049,Expose complete game tools to every Envoy route,1,todo,implementation,Integrations,M,PACT-017;PACT-021;PACT-027;PACT-039;PACT-045;PACT-048,R04;R06,phase-1-rules.md#pact-049
+PACT-050,Implement gameplay retirement and account-deletion settlement,1,todo,implementation,Backend,M,PACT-024;PACT-027;PACT-038;PACT-040;PACT-041;PACT-044;PACT-046,R01;R03;R06,phase-1-rules.md#pact-050
+PACT-051,"Run transaction, replay, and adversarial rules tests",1,todo,verification,QA,L,PACT-027;PACT-029;PACT-030;PACT-032;PACT-033;PACT-034;PACT-035;PACT-036;PACT-037;PACT-038;PACT-039;PACT-040;PACT-041;PACT-042;PACT-043;PACT-044;PACT-046;PACT-050,R01;R02;R03;R04;R05;R06,phase-1-rules.md#pact-051
+PACT-052,Build and run the allowed script baseline,1,todo,verification,QA,M,PACT-027;PACT-049;PACT-051,R07,phase-1-rules.md#pact-052
+PACT-096,Demonstrate platform-module reuse outside PACT,1,todo,verification,Architecture / QA,M,PACT-027;PACT-028;PACT-039;PACT-049;PACT-051;PACT-082;PACT-083,R08,phase-1-rules.md#pact-096
+PACT-053,Accept the transactional rules prototype,1,todo,gate,Release,S,PACT-027;PACT-028;PACT-029;PACT-030;PACT-031;PACT-032;PACT-033;PACT-034;PACT-035;PACT-036;PACT-037;PACT-038;PACT-039;PACT-040;PACT-041;PACT-042;PACT-043;PACT-044;PACT-045;PACT-046;PACT-047;PACT-048;PACT-049;PACT-050;PACT-051;PACT-052;PACT-096,R01;R02;R03;R04;R05;R06;R07;R08,phase-1-rules.md#pact-053
+PACT-054,Implement public profiles and handle lifecycle,2,todo,implementation,Backend,M,PACT-053,S01,phase-2-social.md#pact-054
+PACT-055,Implement every invitation destination and redemption rule,2,todo,implementation,Backend,M,PACT-053;PACT-054,S01,phase-2-social.md#pact-055
+PACT-056,"Implement Court membership, roles, and lifecycle",2,todo,implementation,Backend,M,PACT-053;PACT-054;PACT-055,S01,phase-2-social.md#pact-056
+PACT-057,Implement Articles and mutual allegiance,2,todo,implementation,Backend,M,PACT-053;PACT-054,S01,phase-2-social.md#pact-057
+PACT-058,Implement signed excerpts and the evidence viewer,2,todo,implementation,Security,L,PACT-042;PACT-053;PACT-054,S02,phase-2-social.md#pact-058
+PACT-059,"Implement Chronicle stories, notices, and public share pages",2,todo,implementation,Frontend,L,PACT-053;PACT-055;PACT-056;PACT-057;PACT-058,S01;S02,phase-2-social.md#pact-059
+PACT-060,Deliver opt-in critical email and Web Push,2,todo,implementation,Backend,M,PACT-022;PACT-053;PACT-055,S03,phase-2-social.md#pact-060
+PACT-061,Complete the first-session and social interface,2,todo,implementation,Frontend,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-059;PACT-060,S01;S06,phase-2-social.md#pact-061
+PACT-062,Improve Envoy context selection and result explanations,2,todo,implementation,Integrations,M,PACT-049;PACT-053;PACT-054;PACT-056;PACT-057;PACT-058;PACT-059,S06,phase-2-social.md#pact-062
+PACT-063,"Build reporting, moderation, and appeals tools",2,todo,implementation,Backend,L,PACT-053;PACT-054;PACT-056;PACT-058;PACT-059,S05,phase-2-social.md#pact-063
+PACT-064,Extend privacy workflows to the complete social world,2,todo,implementation,Security,M,PACT-050;PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-063,S05,phase-2-social.md#pact-064
+PACT-065,Implement privacy-bounded product measurement,2,todo,implementation,Backend,M,PACT-053;PACT-061;PACT-062;PACT-064,S06;S07,phase-2-social.md#pact-065
+PACT-087,Build complete native kingdom and Envoy screens,2,todo,implementation,Mobile,L,PACT-048;PACT-053;PACT-061;PACT-083;PACT-084,S08,phase-2-social.md#pact-087
+PACT-088,Deliver the complete Telegram Mini App,2,todo,implementation,Frontend,M,PACT-053;PACT-061;PACT-083;PACT-085,S08,phase-2-social.md#pact-088
+PACT-089,Implement private-chat bot briefings and explicit run controls,2,todo,implementation,Integrations,M,PACT-049;PACT-053;PACT-055;PACT-062;PACT-085,S08,phase-2-social.md#pact-089
+PACT-090,Add native push and Telegram notification delivery,2,todo,implementation,Backend / Mobile,M,PACT-053;PACT-060;PACT-087;PACT-088;PACT-089,S03;S08,phase-2-social.md#pact-090
+PACT-091,Complete cross-channel session and privacy lifecycle,2,todo,implementation,Security,M,PACT-053;PACT-064;PACT-087;PACT-088;PACT-089;PACT-090,S05;S08,phase-2-social.md#pact-091
+PACT-092,Verify cross-device and assistant handoff end to end,2,todo,verification,QA,L,PACT-053;PACT-065;PACT-086;PACT-087;PACT-088;PACT-089;PACT-090;PACT-091,S08,phase-2-social.md#pact-092
+PACT-066,Run the social integration and load suite,2,todo,verification,QA,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-087;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05,phase-2-social.md#pact-066
+PACT-067,Run the three-week social pilot,2,todo,operations,Operations,L,PACT-053;PACT-066,S06;S07,phase-2-social.md#pact-067
+PACT-068,Accept the social slice,2,todo,gate,Release,S,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-066;PACT-067;PACT-087;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05;S06;S07;S08,phase-2-social.md#pact-068
+PACT-069,Implement the complete six-week season lifecycle,3,todo,implementation,Rules,M,PACT-068,L01,phase-3-season-one.md#pact-069
+PACT-070,Implement seasonal honors and award review,3,todo,implementation,Rules,M,PACT-063;PACT-068;PACT-069,L01;L05,phase-3-season-one.md#pact-070
+PACT-071,Produce and integrate the illustrated kingdom and cosmetics,3,todo,implementation,Frontend / Art,L,PACT-068,L02,phase-3-season-one.md#pact-071
+PACT-072,"Integrate optional audio, motion, and notification feedback",3,todo,implementation,Frontend / Audio,M,PACT-068;PACT-071,L02,phase-3-season-one.md#pact-072
+PACT-073,Finish responsive accessibility and PWA behavior,3,todo,implementation,Frontend,L,PACT-061;PACT-068;PACT-071;PACT-072,L02,phase-3-season-one.md#pact-073
+PACT-074,"Implement the cosmetic catalog, wallet, and unlock flow",3,todo,implementation,Backend,M,PACT-047;PACT-068;PACT-071,L03,phase-3-season-one.md#pact-074
+PACT-075,Integrate hosted payments and verified purchase receipts,3,todo,implementation,Backend,L,PACT-007;PACT-064;PACT-068;PACT-074,L03;L04,phase-3-season-one.md#pact-075
+PACT-076,"Implement refunds, reversals, and cosmetic reconciliation",3,todo,implementation,Backend,M,PACT-068;PACT-075,L03,phase-3-season-one.md#pact-076
+PACT-077,Run the competitive abuse and moderation release review,3,todo,verification,QA / Operations,L,PACT-063;PACT-065;PACT-068;PACT-069;PACT-070,L05,phase-3-season-one.md#pact-077
+PACT-093,Implement StoreKit and Google Play cosmetic purchases,3,todo,implementation,Backend / Mobile,L,PACT-068;PACT-074;PACT-075;PACT-076;PACT-087,L03;L06,phase-3-season-one.md#pact-093
+PACT-094,Implement Telegram Stars cosmetic purchases,3,todo,implementation,Backend,M,PACT-068;PACT-074;PACT-075;PACT-076;PACT-088;PACT-089,L03;L06,phase-3-season-one.md#pact-094
+PACT-078,Provision and rehearse production operations,3,todo,operations,Platform,L,PACT-068;PACT-069;PACT-070;PACT-073;PACT-076;PACT-093;PACT-094,L04,phase-3-season-one.md#pact-078
+PACT-079,Re-certify external clients and complete distribution,3,todo,verification,Integrations,L,PACT-049;PACT-062;PACT-068;PACT-073;PACT-078,L04,phase-3-season-one.md#pact-079
+PACT-095,Prepare and certify mobile-store and Telegram distribution,3,todo,operations,Mobile / Operations,L,PACT-068;PACT-073;PACT-078;PACT-087;PACT-088;PACT-090;PACT-091;PACT-093;PACT-094,L04;L06,phase-3-season-one.md#pact-095
+PACT-097,Certify the full production channel matrix,3,todo,verification,QA,L,PACT-068;PACT-079;PACT-092;PACT-093;PACT-094;PACT-095;PACT-096,L04;L06,phase-3-season-one.md#pact-097
+PACT-080,Rehearse Season One end to end,3,todo,verification,QA,L,PACT-068;PACT-069;PACT-070;PACT-071;PACT-072;PACT-073;PACT-074;PACT-075;PACT-076;PACT-077;PACT-078;PACT-079;PACT-095;PACT-097,L01;L02;L03;L04;L05,phase-3-season-one.md#pact-080
+PACT-081,Accept and prepare the Season One release,3,todo,gate,Release,S,PACT-068;PACT-069;PACT-070;PACT-071;PACT-072;PACT-073;PACT-074;PACT-075;PACT-076;PACT-077;PACT-078;PACT-079;PACT-080;PACT-093;PACT-094;PACT-095;PACT-097,L01;L02;L03;L04;L05;L06,phase-3-season-one.md#pact-081
