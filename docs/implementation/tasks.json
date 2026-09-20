@@ -615,7 +615,7 @@
       "id": "PACT-016",
       "title": "Implement PACT OAuth for external clients",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Security",
       "size": "L",
@@ -643,8 +643,12 @@
       "components": [
         "OAuth authorization/resource service"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/oauth-authority.md",
+        "npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build",
+        "tests/integration/oauth.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -728,7 +732,7 @@
       "id": "PACT-019",
       "title": "Implement mandate permissions and immediate-spend checks",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -752,8 +756,12 @@
       "components": [
         "authority service"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/oauth-authority.md",
+        "npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build",
+        "tests/integration/authority.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },

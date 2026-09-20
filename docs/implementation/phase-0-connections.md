@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 9 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 11 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -420,7 +420,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-016"></a>
 ## PACT-016 — Implement PACT OAuth for external clients
 
-**Status:** todo · **Role:** Security · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Security · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -436,8 +436,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Wrong audience/scope, refresh replay, revoked access, redirect mismatch, and private-network metadata requests fail.
-- [ ] Consent names the client and draft/kingdom; OAuth tokens cannot read provider keys or authorize human-only operations.
+- [x] Wrong audience/scope, refresh replay, revoked access, redirect mismatch, and private-network metadata requests fail.
+- [x] Consent names the client and draft/kingdom; OAuth tokens cannot read provider keys or authorize human-only operations.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/oauth-authority.md
+- npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build
+- tests/integration/oauth.test.ts
 
 <a id="pact-017"></a>
 ## PACT-017 — Implement the remote MCP transport and tool registry
@@ -492,7 +500,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-019"></a>
 ## PACT-019 — Implement mandate permissions and immediate-spend checks
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-018](phase-0-connections.md#pact-018)
 
@@ -507,8 +515,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Agents cannot mutate their mandate or obtain human-only permissions by changing payload text.
-- [ ] Two sandbox requests sharing an allowance cannot both spend it; raising authority requires recent human authentication and increments its version.
+- [x] Agents cannot mutate their mandate or obtain human-only permissions by changing payload text.
+- [x] Two sandbox requests sharing an allowance cannot both spend it; raising authority requires recent human authentication and increments its version.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/oauth-authority.md
+- npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build
+- tests/integration/authority.test.ts
 
 <a id="pact-020"></a>
 ## PACT-020 — Implement exact-command human approvals

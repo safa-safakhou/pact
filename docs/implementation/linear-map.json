@@ -586,7 +586,7 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-20T07:56:00Z",
+  "last_synced_at": "2026-09-20T17:26:00Z",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -619,9 +619,9 @@
       17
     ],
     "todo": 1,
-    "backlog": 87,
-    "done": 9,
+    "backlog": 85,
+    "done": 11,
     "blocked_local": 1,
-    "note": "PACT-004 blocked locally (no AWS credentials). PACT-018 completed 2026-09-20."
+    "note": "PACT-004 blocked (no AWS). PACT-016 and PACT-019 completed 2026-09-20."
   }
 }

@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { CommandDispatcher } from "@pact/application";
+import { AuthorityService } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
 import { createPool } from "@pact/db";
 import {
@@ -9,6 +10,7 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
+import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { readEnvironment } from "./config.js";
 import { buildServer } from "./server.js";
@@ -41,10 +43,20 @@ const dispatcher = new CommandDispatcher({
   clock,
   productScope: ProductScopeSchema.parse("pact"),
 });
+const oauth = new OAuthService(pool, {
+  productScope: "pact",
+  issuer: environment.PACT_ORIGIN,
+  mcpResource: `${environment.PACT_ORIGIN}/mcp`,
+  humanResource: `${environment.PACT_ORIGIN}/native`,
+  clock,
+});
+const authority = new AuthorityService(pool, { productScope: "pact", identity, now: clock.now });
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
   dispatcher,
+  oauth,
+  authority,
 });
 
 const shutdown = async (): Promise<void> => {

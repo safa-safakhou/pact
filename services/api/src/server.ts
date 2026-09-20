@@ -1,5 +1,7 @@
 import type { CommandDispatcher } from "@pact/application";
+import type { AuthorityService } from "@pact/authority";
 import type { IdentityService } from "@pact/identity";
+import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
 import {
   createCorrelationIds,
@@ -13,6 +15,7 @@ import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
 import { registerCommandRoutes } from "./command-routes.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
+import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
 
 function safeLogger(logger: boolean | object): false | Record<string, unknown> {
   if (logger === false) return false;
@@ -28,11 +31,19 @@ function safeLogger(logger: boolean | object): false | Record<string, unknown> {
   };
 }
 
+export interface ApiModules {
+  identity: IdentityService;
+  onboarding: OnboardingService;
+  dispatcher: CommandDispatcher;
+  oauth?: OAuthService;
+  authority?: AuthorityService;
+}
+
 export function buildServer(
   pool: Pool,
   logger: boolean | object = true,
   telemetry: Telemetry = stdoutTelemetry(),
-  modules?: { identity: IdentityService; onboarding: OnboardingService; dispatcher: CommandDispatcher },
+  modules?: ApiModules,
 ): FastifyInstance {
   const failedRequests = new WeakSet<object>();
   const server = Fastify({
@@ -101,6 +112,8 @@ export function buildServer(
   if (modules) {
     registerIdentityRoutes(server, modules.identity, modules.onboarding);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
+    if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);
+    if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);
   }
   return server;
 }

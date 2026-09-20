@@ -8,7 +8,7 @@ Application transactions retry serialization failures and deadlocks a bounded nu
 
 Job workers use expiring PostgreSQL leases. Outbox consumers acquire an expiring per-consumer event lease, perform the external effect outside the producing transaction, and mark it delivered. A crash leaves a recoverable lease; a delivered row prevents repeat effects. The external adapter must still use the event ID as its idempotency key when supported.
 
-Migration `0006_sandbox_dispatcher.sql` (owned by `@pact/application`) adds `command_receipts.account_id` plus sandbox counter/draft fixture tables used by the shared dispatcher.
+Migration `0006_sandbox_dispatcher.sql` (owned by `@pact/application`) adds `command_receipts.account_id` plus sandbox counter/draft fixture tables used by the shared dispatcher. Migration `0007_oauth_authorization.sql` (`@pact/oauth`) adds OAuth clients, authorization codes, and refresh tokens. Migration `0008_mandates_authority.sql` (`@pact/authority`) adds versioned mandates and the immediate authority ledger.
 
 Outbox rows store nullable request, command, run, and job UUIDs as diagnostic context. Supply them through `appendOutbox`; do not place prompts, messages, credentials, or provider responses in correlation fields. The command and request columns are indexed for incident tracing.
 

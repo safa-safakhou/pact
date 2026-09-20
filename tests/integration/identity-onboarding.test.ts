@@ -312,6 +312,7 @@ describe("private resumable setup", () => {
 
   it("rejects unverified accounts, expired drafts, and stale connection checks", async () => {
     const unverified = await signup(`unverified-${randomUUID()}@example.test`);
+    await pool.query("UPDATE accounts SET created_at = $2 WHERE id = $1", [unverified.accountId, baseTime]);
     await expect(onboarding.ensureDraft(unverified.accountId)).rejects.toMatchObject({ code: "FORBIDDEN" });
 
     const created = await signup(`stale-${randomUUID()}@example.test`);

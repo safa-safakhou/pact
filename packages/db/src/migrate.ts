@@ -7,6 +7,8 @@ const migrationUrls = [
   new URL("../../identity/migrations/", import.meta.url),
   new URL("../../onboarding/migrations/", import.meta.url),
   new URL("../../application/migrations/", import.meta.url),
+  new URL("../../oauth/migrations/", import.meta.url),
+  new URL("../../authority/migrations/", import.meta.url),
 ];
 const identifierPattern = /^[a-z_][a-z0-9_]{0,62}$/;
 

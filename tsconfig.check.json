@@ -12,7 +12,9 @@
       "@pact/db": ["./packages/db/src/index.ts"],
       "@pact/telemetry": ["./packages/telemetry/src/index.ts"],
       "@pact/identity": ["./packages/identity/src/index.ts"],
-      "@pact/onboarding": ["./packages/onboarding/src/index.ts"]
+      "@pact/onboarding": ["./packages/onboarding/src/index.ts"],
+      "@pact/oauth": ["./packages/oauth/src/index.ts"],
+      "@pact/authority": ["./packages/authority/src/index.ts"]
     }
   },
   "include": [

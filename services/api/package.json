@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@pact/application": "0.1.0",
+    "@pact/authority": "0.1.0",
     "@pact/contracts": "0.1.0",
     "@pact/db": "0.1.0",
     "@pact/identity": "0.1.0",
+    "@pact/oauth": "0.1.0",
     "@pact/onboarding": "0.1.0",
     "@pact/telemetry": "0.1.0",
     "fastify": "5.12.5",

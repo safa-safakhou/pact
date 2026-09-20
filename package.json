@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "build": "npm run build:packages && npm run build --workspace @pact/api && npm run build --workspace @pact/rules-worker && npm run build --workspace @pact/inference-worker && npm run build --workspace @pact/notification-worker && npm run build --workspace @pact/channel-worker && npm run build --workspace @pact/web",
-    "build:packages": "npm run build --workspace @pact/contracts && npm run build --workspace @pact/platform && npm run build --workspace @pact/domain && npm run build --workspace @pact/application && npm run build --workspace @pact/telemetry && npm run build --workspace @pact/db && npm run build --workspace @pact/identity && npm run build --workspace @pact/onboarding",
+    "build:packages": "npm run build --workspace @pact/contracts && npm run build --workspace @pact/platform && npm run build --workspace @pact/domain && npm run build --workspace @pact/application && npm run build --workspace @pact/telemetry && npm run build --workspace @pact/db && npm run build --workspace @pact/identity && npm run build --workspace @pact/onboarding && npm run build --workspace @pact/oauth && npm run build --workspace @pact/authority",
     "check:boundaries": "node scripts/check-boundaries.mjs && node scripts/verify-boundary-fixture.mjs",
     "clean": "node scripts/clean.mjs",
     "db:down": "node scripts/compose.mjs down",
