@@ -656,7 +656,7 @@
       "id": "PACT-017",
       "title": "Implement the remote MCP transport and tool registry",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "L",
@@ -682,8 +682,12 @@
       "components": [
         "MCP transport"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/mcp-approvals-inbox.md",
+        "npm run lint; npm run typecheck; npm test (18); npm run test:integration (21); npm run build:packages; npm run build --workspace @pact/api",
+        "tests/integration/mcp-approval-inbox.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -769,7 +773,7 @@
       "id": "PACT-020",
       "title": "Implement exact-command human approvals",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -794,8 +798,12 @@
       "components": [
         "approval service"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/mcp-approvals-inbox.md",
+        "npm run lint; npm run typecheck; npm test (18); npm run test:integration (21); npm run build:packages; npm run build --workspace @pact/api",
+        "tests/integration/mcp-approval-inbox.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -841,7 +849,7 @@
       "id": "PACT-022",
       "title": "Implement the durable inbox and live event delivery",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -869,8 +877,12 @@
         "inbox service",
         "SSE"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/mcp-approvals-inbox.md",
+        "npm run lint; npm run typecheck; npm test (18); npm run test:integration (21); npm run build:packages; npm run build --workspace @pact/api",
+        "tests/integration/mcp-approval-inbox.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },

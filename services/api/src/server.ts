@@ -1,6 +1,9 @@
 import type { CommandDispatcher } from "@pact/application";
+import type { ApprovalService } from "@pact/approvals";
 import type { AuthorityService } from "@pact/authority";
 import type { IdentityService } from "@pact/identity";
+import type { InboxService } from "@pact/inbox";
+import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
 import {
@@ -15,6 +18,7 @@ import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
 import { registerCommandRoutes } from "./command-routes.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
+import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
 
 function safeLogger(logger: boolean | object): false | Record<string, unknown> {
@@ -37,6 +41,10 @@ export interface ApiModules {
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
   authority?: AuthorityService;
+  mcp?: McpTransport;
+  approvals?: ApprovalService;
+  inbox?: InboxService;
+  origin?: string;
 }
 
 export function buildServer(
@@ -114,6 +122,11 @@ export function buildServer(
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
     if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);
     if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);
+    if (modules.mcp && modules.oauth) {
+      registerMcpRoutes(server, modules.mcp, modules.oauth, modules.origin ?? "https://pact.example");
+    }
+    if (modules.approvals) registerApprovalRoutes(server, modules.identity, modules.approvals);
+    if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
   }
   return server;
 }

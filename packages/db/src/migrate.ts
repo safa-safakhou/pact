@@ -9,6 +9,9 @@ const migrationUrls = [
   new URL("../../application/migrations/", import.meta.url),
   new URL("../../oauth/migrations/", import.meta.url),
   new URL("../../authority/migrations/", import.meta.url),
+  new URL("../../mcp/migrations/", import.meta.url),
+  new URL("../../approvals/migrations/", import.meta.url),
+  new URL("../../inbox/migrations/", import.meta.url),
 ];
 const identifierPattern = /^[a-z_][a-z0-9_]{0,62}$/;
 

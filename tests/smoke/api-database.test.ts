@@ -38,6 +38,9 @@ describe("API/database smoke", () => {
       { name: "0006_sandbox_dispatcher.sql" },
       { name: "0007_oauth_authorization.sql" },
       { name: "0008_mandates_authority.sql" },
+      { name: "0009_mcp_sessions.sql" },
+      { name: "0010_approval_requests.sql" },
+      { name: "0011_inbox_acknowledgements.sql" },
     ]);
     await server.close();
   });

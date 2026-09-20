@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { CommandDispatcher } from "@pact/application";
+import { ApprovalService } from "@pact/approvals";
 import { AuthorityService } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
 import { createPool } from "@pact/db";
@@ -10,6 +11,8 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
+import { InboxService } from "@pact/inbox";
+import { McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { readEnvironment } from "./config.js";
@@ -51,12 +54,31 @@ const oauth = new OAuthService(pool, {
   clock,
 });
 const authority = new AuthorityService(pool, { productScope: "pact", identity, now: clock.now });
+const mcp = new McpTransport({
+  pool,
+  productScope: "pact",
+  dispatcher,
+  origin: environment.PACT_ORIGIN,
+  clock,
+});
+const approvals = new ApprovalService(pool, {
+  productScope: "pact",
+  identity,
+  dispatcher,
+  clock,
+  origin: environment.PACT_ORIGIN,
+});
+const inbox = new InboxService(pool, { productScope: "pact", clock });
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
   dispatcher,
   oauth,
   authority,
+  mcp,
+  approvals,
+  inbox,
+  origin: environment.PACT_ORIGIN,
 });
 
 const shutdown = async (): Promise<void> => {

@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 11 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 14 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -450,7 +450,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-017"></a>
 ## PACT-017 — Implement the remote MCP transport and tool registry
 
-**Status:** todo · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-016](phase-0-connections.md#pact-016), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -465,8 +465,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Protocol fixtures pass for initialization, supported/unsupported versions, POST results, GET stream behavior, and isolated client sessions.
-- [ ] Listing or invoking a tool never grants broader scope; another account cannot resume or read a private stream.
+- [x] Protocol fixtures pass for initialization, supported/unsupported versions, POST results, GET stream behavior, and isolated client sessions.
+- [x] Listing or invoking a tool never grants broader scope; another account cannot resume or read a private stream.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/mcp-approvals-inbox.md
+- npm run lint; npm run typecheck; npm test (18); npm run test:integration (21); npm run build:packages; npm run build --workspace @pact/api
+- tests/integration/mcp-approval-inbox.test.ts
 
 <a id="pact-018"></a>
 ## PACT-018 — Implement the shared dispatcher and sandbox receipts
@@ -529,7 +537,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-020"></a>
 ## PACT-020 — Implement exact-command human approvals
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-019](phase-0-connections.md#pact-019)
 
@@ -544,8 +552,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] GET, chatbot text, or a host tool confirmation cannot approve; changed/expired terms fail.
-- [ ] Double approval commits once; a successful approval can be read after the original chatbot disconnects.
+- [x] GET, chatbot text, or a host tool confirmation cannot approve; changed/expired terms fail.
+- [x] Double approval commits once; a successful approval can be read after the original chatbot disconnects.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/mcp-approvals-inbox.md
+- npm run lint; npm run typecheck; npm test (18); npm run test:integration (21); npm run build:packages; npm run build --workspace @pact/api
+- tests/integration/mcp-approval-inbox.test.ts
 
 <a id="pact-021"></a>
 ## PACT-021 — Implement bounded Envoy runs and exclusive write leases
@@ -571,7 +587,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-022"></a>
 ## PACT-022 — Implement the durable inbox and live event delivery
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-003](phase-0-connections.md#pact-003), [PACT-018](phase-0-connections.md#pact-018)
 
@@ -586,8 +602,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Disconnect/reconnect returns ordered authorized events without duplicate user-visible cards.
-- [ ] Notification/outbox workers never invoke the provider adapter; omitted or unavailable delivery cannot change an action receipt.
+- [x] Disconnect/reconnect returns ordered authorized events without duplicate user-visible cards.
+- [x] Notification/outbox workers never invoke the provider adapter; omitted or unavailable delivery cannot change an action receipt.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/mcp-approvals-inbox.md
+- npm run lint; npm run typecheck; npm test (18); npm run test:integration (21); npm run build:packages; npm run build --workspace @pact/api
+- tests/integration/mcp-approval-inbox.test.ts
 
 <a id="pact-023"></a>
 ## PACT-023 — Build account, connection, and Envoy setup screens

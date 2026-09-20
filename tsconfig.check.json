@@ -14,7 +14,10 @@
       "@pact/identity": ["./packages/identity/src/index.ts"],
       "@pact/onboarding": ["./packages/onboarding/src/index.ts"],
       "@pact/oauth": ["./packages/oauth/src/index.ts"],
-      "@pact/authority": ["./packages/authority/src/index.ts"]
+      "@pact/authority": ["./packages/authority/src/index.ts"],
+      "@pact/mcp": ["./packages/mcp/src/index.ts"],
+      "@pact/approvals": ["./packages/approvals/src/index.ts"],
+      "@pact/inbox": ["./packages/inbox/src/index.ts"]
     }
   },
   "include": [
