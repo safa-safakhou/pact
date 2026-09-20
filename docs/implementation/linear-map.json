@@ -586,7 +586,7 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-20T06:24:40Z",
+  "last_synced_at": "2026-09-20T06:54:57Z",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -618,8 +618,8 @@
       21,
       17
     ],
-    "todo": 2,
+    "todo": 1,
     "backlog": 91,
-    "done": 4
+    "done": 5
   }
 }
