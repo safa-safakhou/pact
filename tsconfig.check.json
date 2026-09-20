@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@pact/contracts": ["./packages/contracts/src/index.ts"],
+      "@pact/platform": ["./packages/platform/src/index.ts"],
+      "@pact/domain": ["./packages/domain/src/index.ts"],
+      "@pact/application": ["./packages/application/src/index.ts"],
+      "@pact/db": ["./packages/db/src/index.ts"]
+    }
+  },
+  "include": [
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "services/**/*.ts",
+    "workers/**/*.ts",
+    "packages/**/*.ts",
+    "scripts/**/*.ts",
+    "tests/**/*.ts",
+    "*.ts"
+  ]
+}

@@ -28,6 +28,10 @@ Tasks inside a milestone can proceed independently once their listed dependencie
 
 ## Start here
 
+Agents follow the repository [engineering instructions](../../AGENTS.md). Use the [first implementation prompt](kickoff.md) to assign the foundation batch: PACT-001 → PACT-082 → PACT-002 → PACT-003. These are four checkpoints within one assignment, not four required agents.
+
+The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 97 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the first assignment.
+
 1. **[PACT-001 — Workspace and CI](phase-0-connections.md#pact-001):** establish a reproducible local application and database environment.
 2. **[PACT-082 — Reusable module boundaries](phase-0-connections.md#pact-082):** define package ownership, product scoping, and forbidden dependencies before contracts spread through clients.
 3. **[PACT-002 — Shared schemas](phase-0-connections.md#pact-002):** establish command, receipt, event, and tool contracts.
@@ -59,10 +63,10 @@ Entity migrations belong to their implementation tickets and share one database.
 
 ## Working a ticket
 
-1. Check its specification links and completed dependencies. Use `tasks.json` for the authoritative status and assignment fields.
+1. Check its specification links and completed dependencies. Until Linear activation, use `tasks.json` for status and assignment. After activation, check Linear and reconcile the local snapshot using the [tracking workflow](linear-workflow.md).
 2. Set an assignee and `in_progress`. Implement only its declared scope; larger tickets may have several PRs under the same parent ID.
 3. Add relevant migration, authorization, numerical, or failure tests listed in its acceptance criteria. Use fake providers for deterministic CI and real-provider calls for the designated certification evidence.
-4. Attach PR/revision and test/demo evidence in the ticket's `evidence` list. A gate also needs the specified operational or player-observation results.
+4. Update relevant implementation documentation and write a [completion report](reports/README.md). Attach that report plus PR/revision and test/demo evidence to the tracker and local `evidence` list. A gate also needs the specified operational or player-observation results.
 5. Mark `done` only when every acceptance item passes. Set `blocked` with an explicit reason if an actual external prerequisite prevents completion; a merely future task stays `todo`.
 
 All persisted features require their migration and retention registration. Every write uses the shared dispatcher and receipt contract. Every new read projection must enforce audience ownership. Failures, retries, expiry, and revocation are normal acceptance paths, not later polish.
@@ -73,7 +77,7 @@ All persisted features require their migration and retention registration. Every
 - [tasks.csv](tasks.csv): compact tracker-import/index view with IDs and dependencies. Full descriptions remain in JSON and the phase documents.
 - [coverage.md](coverage.md): maps all **31** release criteria to implementation/verification tickets and their closing gates.
 
-The JSON file owns task metadata; the phase pages, CSV, and coverage table are rendered views. Run `python3 docs/implementation/backlog.py render` after editing tickets, then `python3 docs/implementation/backlog.py check`. These commands manage planning documents only; they do not create external issues, run a game, call a provider, or deploy anything.
+The JSON file owns planned scope, dependencies, and acceptance criteria. Execution fields remain local until Linear activation, then become snapshots reconciled from Linear. The phase pages, CSV, and coverage table are rendered views. Run `python3 docs/implementation/backlog.py render` after editing tickets, then `python3 docs/implementation/backlog.py check`. These commands manage planning documents only; they do not synchronize Linear, create external issues, run a game, call a provider, or deploy anything.
 
 ## External prerequisites and release evidence
 

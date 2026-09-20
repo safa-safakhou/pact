@@ -1,13 +1,13 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 4 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
 <a id="pact-001"></a>
 ## PACT-001 — Bootstrap the application workspace and continuous integration
 
-**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Depends on:** None — start here.
 
@@ -23,13 +23,20 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A fresh checkout starts the web/API/database using the documented commands without real provider credentials.
-- [ ] CI builds every process and runs migrations plus a minimal API/database smoke test; no secrets or real user data are committed.
+- [x] A fresh checkout starts the web/API/database using the documented commands without real provider credentials.
+- [x] CI builds every process and runs migrations plus a minimal API/database smoke test; no secrets or real user data are committed.
+
+**Assignee:** codex-foundation-run
+
+**Evidence**
+
+- docs/implementation/reports/foundation.md
+- Local verification 2026-09-20: npm ci; lint; typecheck; build; unit/integration smoke; live API readiness and web shell
 
 <a id="pact-082"></a>
 ## PACT-082 — Establish reusable package boundaries and product isolation
 
-**Status:** todo · **Role:** Architecture · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Architecture · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001)
 
@@ -44,13 +51,20 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A forbidden platform-to-PACT import fails CI; packages expose only declared interfaces and carry explicit product scope.
-- [ ] Document and fixture-test the atomic unit of work spanning domain stock and authorization reservations; notification delivery remains an outbox effect.
+- [x] A forbidden platform-to-PACT import fails CI; packages expose only declared interfaces and carry explicit product scope.
+- [x] Document and fixture-test the atomic unit of work spanning domain stock and authorization reservations; notification delivery remains an outbox effect.
+
+**Assignee:** codex-foundation-run
+
+**Evidence**
+
+- docs/implementation/reports/foundation.md
+- Local verification 2026-09-20: architecture boundary real-tree pass, forbidden fixture rejection, atomic unit-of-work tests 2/2
 
 <a id="pact-002"></a>
 ## PACT-002 — Define shared command, event, and tool schemas
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-082](phase-0-connections.md#pact-082)
 
@@ -65,13 +79,20 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Web, MCP, and provider tool validators accept the same valid command fixture and reject the same malformed payload.
-- [ ] Schemas cannot accept arbitrary code, actor impersonation, unrestricted database queries, credential reads, or human-only account operations as game tools.
+- [x] Web, MCP, and provider tool validators accept the same valid command fixture and reject the same malformed payload.
+- [x] Schemas cannot accept arbitrary code, actor impersonation, unrestricted database queries, credential reads, or human-only account operations as game tools.
+
+**Assignee:** codex-foundation-run
+
+**Evidence**
+
+- docs/implementation/reports/foundation.md
+- Local verification 2026-09-20: shared contract tests 7/7 and TypeScript compile
 
 <a id="pact-003"></a>
 ## PACT-003 — Create account persistence and transaction/outbox infrastructure
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -86,8 +107,15 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Two workers cannot hold the same live job lease; an abandoned lease can be recovered.
-- [ ] Transaction rollback writes neither a receipt nor an outbox event; successful commit survives worker restart and duplicate delivery.
+- [x] Two workers cannot hold the same live job lease; an abandoned lease can be recovered.
+- [x] Transaction rollback writes neither a receipt nor an outbox event; successful commit survives worker restart and duplicate delivery.
+
+**Assignee:** codex-foundation-run
+
+**Evidence**
+
+- docs/implementation/reports/foundation.md
+- Local PostgreSQL 17 verification 2026-09-20: integration/smoke tests 4/4; migrations idempotent
 
 <a id="pact-004"></a>
 ## PACT-004 — Provision the isolated connection-test environment

@@ -1,0 +1,25 @@
+{
+  "name": "@pact/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "migrate": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@pact/contracts": "0.1.0",
+    "@pact/platform": "0.1.0",
+    "pg": "8.23.0"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1",
+    "tsx": "4.23.14"
+  }
+}
