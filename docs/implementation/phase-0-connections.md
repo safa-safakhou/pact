@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 4 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -143,7 +143,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-005"></a>
 ## PACT-005 — Add redacted operational telemetry and failure correlation
 
-**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-002](phase-0-connections.md#pact-002), [PACT-003](phase-0-connections.md#pact-003)
 
@@ -158,8 +158,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Seed secrets and private text into failed requests and confirm none appear in application logs or client error payloads.
-- [ ] A failed command can be traced through API, transaction, outbox, and worker using IDs without transcript logging.
+- [x] Seed secrets and private text into failed requests and confirm none appear in application logs or client error payloads.
+- [x] A failed command can be traced through API, transaction, outbox, and worker using IDs without transcript logging.
+
+**Assignee:** codex-telemetry-run
+
+**Evidence**
+
+- docs/implementation/reports/telemetry.md documents both acceptance checks, architecture decisions, and hosted-retention limitation.
+- npm run lint, npm run typecheck, npm run build, and npm test passed locally on 2026-09-20; 7 unit files and 17 tests passed, including seeded-secret redaction and the four-stage failed-command trace.
+- PostgreSQL 17.11 migration 0003 applied and reran idempotently; npm run test:integration passed 2 files and 4 tests, including persisted outbox correlation and API/database smoke.
 
 <a id="pact-006"></a>
 ## PACT-006 — Implement signup, verification, and human sessions

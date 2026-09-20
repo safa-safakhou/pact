@@ -1,3 +1,5 @@
+import type { CorrelationIds, TraceReporter } from "@pact/telemetry";
+import { safeErrorCode } from "@pact/telemetry";
 import type { Pool, PoolClient } from "pg";
 
 const retryableCodes = new Set(["40001", "40P01"]);
@@ -5,6 +7,8 @@ const retryableCodes = new Set(["40001", "40P01"]);
 export interface TransactionOptions {
   maxRetries?: number;
   isolation?: "SERIALIZABLE" | "REPEATABLE READ" | "READ COMMITTED";
+  trace?: TraceReporter;
+  correlation?: CorrelationIds;
 }
 
 export function stableLockOrder(ids: readonly string[]): string[] {
@@ -30,15 +34,29 @@ export async function withTransaction<T>(
   const isolation = options.isolation ?? "SERIALIZABLE";
   for (let attempt = 0; ; attempt += 1) {
     const client = await pool.connect();
+    if (options.trace && options.correlation) {
+      options.trace.recordStage("transaction", "started", options.correlation, { attempt });
+    }
     try {
       await client.query(`BEGIN ISOLATION LEVEL ${isolation}`);
       const result = await operation(client);
       await client.query("COMMIT");
+      if (options.trace && options.correlation) {
+        options.trace.recordStage("transaction", "succeeded", options.correlation, { attempt });
+      }
       return result;
     } catch (error) {
       await client.query("ROLLBACK");
       const code = typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
-      if (!retryableCodes.has(code) || attempt >= maxRetries) throw error;
+      if (!retryableCodes.has(code) || attempt >= maxRetries) {
+        if (options.trace && options.correlation) {
+          options.trace.recordStage("transaction", "failed", options.correlation, {
+            attempt,
+            errorCode: safeErrorCode(error),
+          });
+        }
+        throw error;
+      }
     } finally {
       client.release();
     }

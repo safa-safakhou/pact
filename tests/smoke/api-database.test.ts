@@ -32,6 +32,7 @@ describe("API/database smoke", () => {
     expect((await pool.query("SELECT name FROM app_migrations ORDER BY name")).rows).toEqual([
       { name: "0001_platform_foundation.sql" },
       { name: "0002_outbox_delivery_leases.sql" },
+      { name: "0003_outbox_correlation.sql" },
     ]);
     await server.close();
   });

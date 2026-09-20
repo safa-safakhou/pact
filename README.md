@@ -20,7 +20,7 @@ npm run db:migrate
 npm run dev:api
 ```
 
-In another terminal, `npm run dev:web` starts the React client. The API exposes `GET /health` for process health and `GET /ready` for database readiness.
+In another terminal, `npm run dev:web` starts the React client. The API exposes `GET /health` for process health, `GET /ready` for database readiness, and `GET /metrics` for content-free Prometheus metrics.
 
 The database scripts detect either the Docker Compose plugin or the standalone `docker-compose` command. `npm run db:down` stops the local database without deleting its volume.
 
@@ -46,6 +46,7 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 - `packages/platform`: reusable scoped principals, actions, events, transaction ports, and unit-of-work fixture
 - `packages/domain`: PACT-owned domain types
 - `packages/application`: composition root and application-facing wiring
+- `packages/telemetry`: correlation, redaction, retention classes, safe errors, and operational metrics
 - `packages/db`: PostgreSQL migrations, transactions, job leases, inbox/outbox, and test database support
 
-See [architecture](docs/architecture/modules.md) and [database operations](docs/operations/database.md) for ownership and recovery boundaries.
+See [architecture](docs/architecture/modules.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.

@@ -8,4 +8,6 @@ Application transactions retry serialization failures and deadlocks a bounded nu
 
 Job workers use expiring PostgreSQL leases. Outbox consumers acquire an expiring per-consumer event lease, perform the external effect outside the producing transaction, and mark it delivered. A crash leaves a recoverable lease; a delivered row prevents repeat effects. The external adapter must still use the event ID as its idempotency key when supported.
 
+Outbox rows store nullable request, command, run, and job UUIDs as diagnostic context. Supply them through `appendOutbox`; do not place prompts, messages, credentials, or provider responses in correlation fields. The command and request columns are indexed for incident tracing.
+
 For local recovery, stop the application, restore PostgreSQL, run migrations, then restart workers. Verify that committed receipts and undelivered outbox rows remain present before admitting writes. Production backup/restore procedures arrive with the operations milestone; the local Compose volume is not a backup.

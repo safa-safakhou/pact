@@ -11,6 +11,7 @@ import {
   markOutboxDelivered,
   withTransaction,
 } from "@pact/db";
+import { createCorrelationIds } from "@pact/telemetry";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -73,16 +74,38 @@ describe("receipts and outbox transaction", () => {
   it("survives pool restart and deduplicates delivery per consumer", async () => {
     const commandId = randomUUID();
     const eventId = randomUUID();
+    const correlation = createCorrelationIds({
+      requestId: randomUUID(),
+      commandId,
+      runId: randomUUID(),
+      jobId: randomUUID(),
+    });
     await withTransaction(pool, async (client) => {
       await client.query(
         "INSERT INTO command_receipts(product_scope, command_id, canonical_payload_hash, code, receipt) VALUES ($1, $2, $3, $4, $5::jsonb)",
         ["pact", commandId, "fixture", "COMMITTED", "{}"],
       );
-      await appendOutbox(client, { productScope: "pact", eventId, type: "fixture", payload: { commandId } });
+      await appendOutbox(client, {
+        productScope: "pact",
+        eventId,
+        type: "fixture",
+        payload: { commandId },
+        correlation,
+      });
     });
     await pool.end();
     pool = createSchemaPool(connectionString, schema);
     expect((await pool.query("SELECT 1 FROM command_receipts WHERE command_id = $1", [commandId])).rowCount).toBe(1);
+    const persistedCorrelation = await pool.query(
+      "SELECT request_id, command_id, run_id, job_id FROM outbox_events WHERE event_id = $1",
+      [eventId],
+    );
+    expect(persistedCorrelation.rows[0]).toEqual({
+      request_id: correlation.requestId,
+      command_id: correlation.commandId,
+      run_id: correlation.runId,
+      job_id: correlation.jobId,
+    });
     await withTransaction(pool, async (client) => {
       const claim = { consumer: "fixture-consumer", eventId, workerId: "worker-one", leaseMilliseconds: 60_000 };
       expect(await claimOutboxDelivery(client, claim)).toBe(true);

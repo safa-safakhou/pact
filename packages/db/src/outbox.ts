@@ -1,13 +1,42 @@
+import type { CorrelationIds, TraceReporter } from "@pact/telemetry";
 import type { PoolClient } from "pg";
 
 export async function appendOutbox(
   client: PoolClient,
-  input: { productScope: string; eventId: string; type: string; payload: unknown },
+  input: {
+    productScope: string;
+    eventId: string;
+    type: string;
+    payload: unknown;
+    correlation?: CorrelationIds;
+    trace?: TraceReporter;
+  },
 ): Promise<void> {
   await client.query(
-    "INSERT INTO outbox_events(product_scope, event_id, type, payload) VALUES ($1, $2, $3, $4::jsonb)",
-    [input.productScope, input.eventId, input.type, JSON.stringify(input.payload)],
+    `INSERT INTO outbox_events(
+       product_scope, event_id, type, payload, request_id, command_id, run_id, job_id
+     ) VALUES ($1, $2, $3, $4::jsonb, $5, $6, $7, $8)`,
+    [
+      input.productScope,
+      input.eventId,
+      input.type,
+      JSON.stringify(input.payload),
+      input.correlation?.requestId ?? null,
+      input.correlation?.commandId ?? null,
+      input.correlation?.runId ?? null,
+      input.correlation?.jobId ?? null,
+    ],
   );
+  if (input.trace && input.correlation) {
+    input.trace.recordStage(
+      "outbox",
+      "persisted",
+      { ...input.correlation, outboxEventId: input.eventId },
+      {
+        eventType: input.type,
+      },
+    );
+  }
 }
 
 export async function claimOutboxDelivery(
