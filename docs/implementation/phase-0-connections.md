@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 8 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 9 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -120,7 +120,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-004"></a>
 ## PACT-004 — Provision the isolated connection-test environment
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** blocked · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-003](phase-0-connections.md#pact-003)
 
@@ -139,6 +139,10 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Inference credentials are inaccessible to the web bundle and unrelated worker roles; no private API response is CDN-cached.
 
 **External prerequisites:** AWS test account, deployment domain, verified sender identity.
+
+**Assignee:** cursor-agent
+
+**Block reason:** Missing AWS test account credentials, deployment domain, and verified SES sender identity. aws sts get-caller-identity fails with no credentials (2026-09-20).
 
 <a id="pact-005"></a>
 ## PACT-005 — Add redacted operational telemetry and failure correlation
@@ -459,7 +463,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-018"></a>
 ## PACT-018 — Implement the shared dispatcher and sandbox receipts
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-003](phase-0-connections.md#pact-003), [PACT-007](phase-0-connections.md#pact-007), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -474,8 +478,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Same ID and payload produce one mutation and the original receipt; changed payload with reused ID returns conflict.
-- [ ] A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account’s result.
+- [x] Same ID and payload produce one mutation and the original receipt; changed payload with reused ID returns conflict.
+- [x] A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account’s result.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/dispatcher.md
+- npm run lint; npm run typecheck; npm test (18); npm run test:integration (14); npm run build
+- tests/integration/dispatcher.test.ts
 
 <a id="pact-019"></a>
 ## PACT-019 — Implement mandate permissions and immediate-spend checks

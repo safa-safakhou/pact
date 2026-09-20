@@ -45,10 +45,12 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 - `packages/contracts`: versioned command, receipt, event, cursor, and tool schemas
 - `packages/platform`: reusable scoped principals, actions, events, transaction ports, and unit-of-work fixture
 - `packages/domain`: PACT-owned domain types
-- `packages/application`: composition root and application-facing wiring
+- `packages/application`: composition root, shared command dispatcher, and sandbox-only command handlers
 - `packages/telemetry`: correlation, redaction, retention classes, safe errors, and operational metrics
 - `packages/identity`: email/password accounts, sessions, recovery, recent authentication, MFA, and revocation
 - `packages/onboarding`: private resumable kingdom drafts and sandbox activation validation
 - `packages/db`: PostgreSQL migrations, transactions, job leases, inbox/outbox, and test database support
+
+Authenticated clients submit commands to `POST /v1/commands` and reconcile uncertain writes with `GET /v1/receipts/:commandId`. Both routes derive the account from the session cookie and set `Cache-Control: no-store`.
 
 See [architecture](docs/architecture/modules.md), [identity operations](docs/operations/identity.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.

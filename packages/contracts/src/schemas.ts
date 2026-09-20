@@ -42,6 +42,13 @@ export const SandboxActionSchema = z.discriminatedUnion("kind", [
       amount: z.number().int().min(1).max(100),
     })
     .strict(),
+  z.object({ kind: z.literal("sandbox.draft.read") }).strict(),
+  z
+    .object({
+      kind: z.literal("sandbox.draft.write"),
+      note: z.string().max(500),
+    })
+    .strict(),
 ]);
 
 export const CommandEnvelopeSchema = z
@@ -109,7 +116,7 @@ export const EventCursorSchema = z
 
 export const ToolCallSchema = z
   .object({
-    name: z.enum(["sandbox.echo", "sandbox.counter.increment"]),
+    name: z.enum(["sandbox.echo", "sandbox.counter.increment", "sandbox.draft.read", "sandbox.draft.write"]),
     arguments: z.record(z.string(), z.unknown()),
   })
   .strict();

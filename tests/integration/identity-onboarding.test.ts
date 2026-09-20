@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import { CommandDispatcher } from "@pact/application";
+import { ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -348,7 +350,12 @@ describe("HTTP identity boundary", () => {
     const second = await signup(secondEmail);
     await identity.verifyEmail(second.verificationToken);
     await onboarding.ensureDraft(second.accountId);
-    const server = buildServer(pool, false, new Telemetry(() => undefined), { identity, onboarding });
+    const dispatcher = new CommandDispatcher({
+      pool,
+      clock: { now: () => new Date(now) },
+      productScope: ProductScopeSchema.parse("pact"),
+    });
+    const server = buildServer(pool, false, new Telemetry(() => undefined), { identity, onboarding, dispatcher });
 
     const existingReset = await server.inject({
       method: "POST",

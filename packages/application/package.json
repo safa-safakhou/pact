@@ -14,7 +14,14 @@
   },
   "dependencies": {
     "@pact/contracts": "0.1.0",
+    "@pact/db": "0.1.0",
+    "@pact/domain": "0.1.0",
     "@pact/platform": "0.1.0",
-    "@pact/domain": "0.1.0"
+    "@pact/telemetry": "0.1.0",
+    "pg": "8.23.0"
+  },
+  "devDependencies": {
+    "@types/pg": "8.23.1",
+    "vitest": "5.0.1"
   }
 }

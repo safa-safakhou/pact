@@ -35,6 +35,7 @@ describe("API/database smoke", () => {
       { name: "0003_outbox_correlation.sql" },
       { name: "0004_identity_security.sql" },
       { name: "0005_private_kingdom_drafts.sql" },
+      { name: "0006_sandbox_dispatcher.sql" },
     ]);
     await server.close();
   });

@@ -1,4 +1,6 @@
 import { readFile } from "node:fs/promises";
+import { CommandDispatcher } from "@pact/application";
+import { ProductScopeSchema } from "@pact/contracts";
 import { createPool } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -34,7 +36,16 @@ const onboarding = new OnboardingService(pool, {
   currentTermsVersion: environment.CURRENT_TERMS_VERSION,
   now: clock.now,
 });
-const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, { identity, onboarding });
+const dispatcher = new CommandDispatcher({
+  pool,
+  clock,
+  productScope: ProductScopeSchema.parse("pact"),
+});
+const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
+  identity,
+  onboarding,
+  dispatcher,
+});
 
 const shutdown = async (): Promise<void> => {
   await server.close();
