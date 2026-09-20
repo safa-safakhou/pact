@@ -13,4 +13,8 @@ describe("environment validation", () => {
   it("rejects a non-PostgreSQL database URL", () => {
     expect(() => readEnvironment({ DATABASE_URL: "https://example.com" })).toThrow();
   });
+
+  it("rejects development identity secrets and a missing compromised-password set in production", () => {
+    expect(() => readEnvironment({ DATABASE_URL: "postgres://localhost/pact", NODE_ENV: "production" })).toThrow();
+  });
 });

@@ -47,6 +47,8 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 - `packages/domain`: PACT-owned domain types
 - `packages/application`: composition root and application-facing wiring
 - `packages/telemetry`: correlation, redaction, retention classes, safe errors, and operational metrics
+- `packages/identity`: email/password accounts, sessions, recovery, recent authentication, MFA, and revocation
+- `packages/onboarding`: private resumable kingdom drafts and sandbox activation validation
 - `packages/db`: PostgreSQL migrations, transactions, job leases, inbox/outbox, and test database support
 
-See [architecture](docs/architecture/modules.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.
+See [architecture](docs/architecture/modules.md), [identity operations](docs/operations/identity.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.

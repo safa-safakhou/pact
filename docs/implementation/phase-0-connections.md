@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 8 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -172,7 +172,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-006"></a>
 ## PACT-006 — Implement signup, verification, and human sessions
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-003](phase-0-connections.md#pact-003), [PACT-005](phase-0-connections.md#pact-005)
 
@@ -187,13 +187,21 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Duplicate concurrent signup/verification cannot create two accounts or reuse an expired token.
-- [ ] Password and session expiry, CSRF, cross-account access, throttling, and email enumeration fixtures pass.
+- [x] Duplicate concurrent signup/verification cannot create two accounts or reuse an expired token.
+- [x] Password and session expiry, CSRF, cross-account access, throttling, and email enumeration fixtures pass.
+
+**Assignee:** codex-identity-batch
+
+**Evidence**
+
+- docs/implementation/reports/identity-onboarding.md records both acceptance checks, security decisions, and external sender limitations.
+- npm run test:integration passed the concurrent signup/single-use verification, password/session expiry, CSRF/origin, cross-account ownership, durable throttle, and enumeration fixtures on PostgreSQL 17.11.
+- npm run lint, npm run typecheck, npm run build, and npm test passed locally on 2026-09-20.
 
 <a id="pact-007"></a>
 ## PACT-007 — Implement recovery, reauthentication, and account security
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-006](phase-0-connections.md#pact-006)
 
@@ -208,13 +216,21 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A reset token is single-use and expires after 15 minutes; resetting revokes old cookies and OAuth grants.
-- [ ] An Envoy cannot raise authority, replace a credential, export, delete, or approve using a game token; TOTP recovery codes cannot be reused.
+- [x] A reset token is single-use and expires after 15 minutes; resetting revokes old cookies and OAuth grants.
+- [x] An Envoy cannot raise authority, replace a credential, export, delete, or approve using a game token; TOTP recovery codes cannot be reused.
+
+**Assignee:** codex-identity-batch
+
+**Evidence**
+
+- docs/implementation/reports/identity-onboarding.md records recovery, recent-auth, MFA, revocation, inventory, and delivery-boundary evidence.
+- PostgreSQL fixtures passed 15-minute reset expiry/replay, session and OAuth revocation, active-run cancellation event, human-audience gates for every listed sensitive action, staff MFA, and one-use recovery codes.
+- Token tables contain HMACs and transactional email outbox payloads contain AES-256-GCM sealed delivery tokens rather than plaintext tokens.
 
 <a id="pact-008"></a>
 ## PACT-008 — Implement private kingdom drafts and resumable setup
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-006](phase-0-connections.md#pact-006), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -229,8 +245,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A draft has no stocks, troops, score, or targetable public kingdom identity.
-- [ ] OAuth redirect, logout/recovery, and repeated setup submissions preserve the same permitted destination; stale checks and unverified accounts fail activation validation.
+- [x] A draft has no stocks, troops, score, or targetable public kingdom identity.
+- [x] OAuth redirect, logout/recovery, and repeated setup submissions preserve the same permitted destination; stale checks and unverified accounts fail activation validation.
+
+**Assignee:** codex-identity-batch
+
+**Evidence**
+
+- docs/implementation/reports/identity-onboarding.md records private-draft and resumable-setup acceptance evidence.
+- PostgreSQL fixtures passed server-side destination preservation, unverified/expired/stale rejection, seven-day purge behavior, and concurrent exactly-once sandbox activation.
+- Schema and tests confirm the draft has no stocks, troops, score, or public kingdom table; real founding remains unavailable.
 
 <a id="pact-009"></a>
 ## PACT-009 — Build encrypted model credential storage

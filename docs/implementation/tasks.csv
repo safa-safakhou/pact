@@ -5,9 +5,9 @@ PACT-002,"Define shared command, event, and tool schemas",0,done,implementation,
 PACT-003,Create account persistence and transaction/outbox infrastructure,0,done,implementation,Backend,M,PACT-001;PACT-002,A01;A06,phase-0-connections.md#pact-003
 PACT-004,Provision the isolated connection-test environment,0,todo,implementation,Platform,L,PACT-001;PACT-003,A06,phase-0-connections.md#pact-004
 PACT-005,Add redacted operational telemetry and failure correlation,0,done,implementation,Platform,M,PACT-002;PACT-003,A06,phase-0-connections.md#pact-005
-PACT-006,"Implement signup, verification, and human sessions",0,todo,implementation,Backend,M,PACT-003;PACT-005,A01,phase-0-connections.md#pact-006
-PACT-007,"Implement recovery, reauthentication, and account security",0,todo,implementation,Backend,M,PACT-006,A01;A05,phase-0-connections.md#pact-007
-PACT-008,Implement private kingdom drafts and resumable setup,0,todo,implementation,Backend,M,PACT-006;PACT-002,A01,phase-0-connections.md#pact-008
+PACT-006,"Implement signup, verification, and human sessions",0,done,implementation,Backend,M,PACT-003;PACT-005,A01,phase-0-connections.md#pact-006
+PACT-007,"Implement recovery, reauthentication, and account security",0,done,implementation,Backend,M,PACT-006,A01;A05,phase-0-connections.md#pact-007
+PACT-008,Implement private kingdom drafts and resumable setup,0,done,implementation,Backend,M,PACT-006;PACT-002,A01,phase-0-connections.md#pact-008
 PACT-009,Build encrypted model credential storage,0,todo,implementation,Backend,M,PACT-004;PACT-007,A02;A06,phase-0-connections.md#pact-009
 PACT-010,Build the provider adapter interface and contract harness,0,todo,implementation,Integrations,M,PACT-002;PACT-009,A02,phase-0-connections.md#pact-010
 PACT-011,Implement the OpenAI model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-011

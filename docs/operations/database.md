@@ -2,7 +2,7 @@
 
 PostgreSQL 17 is the authority for accounts, commands, jobs, inbox/outbox events, and later game state. Redis is not required for correctness.
 
-Run `npm run db:migrate` with `DATABASE_URL` set. Migrations are ordered SQL files and run once under a PostgreSQL advisory lock. Each migration commits atomically and is recorded in `app_migrations`; never edit a migration that has run outside an expendable local database.
+Run `npm run db:migrate` with `DATABASE_URL` set. Migrations are ordered, globally unique SQL filenames discovered from the shared database package and each owning module. They run once under a PostgreSQL advisory lock. Each migration commits atomically and is recorded in `app_migrations`; never edit a migration that has run outside an expendable local database.
 
 Application transactions retry serialization failures and deadlocks a bounded number of times. Multi-row writers call `stableLockOrder`/`lockRows` before mutation so concurrent commands request aggregate locks in the same ID order. Callers provide a stable command ID and reconcile uncertain results through command history.
 

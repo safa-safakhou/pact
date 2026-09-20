@@ -9,3 +9,5 @@ The foundation tool set contains only `sandbox.echo` and `sandbox.counter.increm
 Resource amounts serialize as non-negative integer strings with at most 18 decimal digits, avoiding JSON floating-point loss. The game rulebook's internal resource unit is 1/600 of a displayed resource; later rule tickets own that conversion and exact arithmetic.
 
 `commandJsonSchema` is the shared request schema. `httpCommandContract` binds it to `POST /v1/commands`; `mcpCommandTool` exposes the same schema to MCP. Receipt codes are a closed enum and never replaced with improvised model prose.
+
+Human identity and setup endpoints are documented separately in [identity API](identity.md). They use the same authenticated server boundary but are human account operations rather than model/game commands.

@@ -1,3 +1,5 @@
+import type { IdentityService } from "@pact/identity";
+import type { OnboardingService } from "@pact/onboarding";
 import {
   createCorrelationIds,
   fastifyRedactionPaths,
@@ -8,6 +10,7 @@ import {
 } from "@pact/telemetry";
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
+import { registerIdentityRoutes } from "./identity-routes.js";
 
 function safeLogger(logger: boolean | object): false | Record<string, unknown> {
   if (logger === false) return false;
@@ -27,6 +30,7 @@ export function buildServer(
   pool: Pool,
   logger: boolean | object = true,
   telemetry: Telemetry = stdoutTelemetry(),
+  modules?: { identity: IdentityService; onboarding: OnboardingService },
 ): FastifyInstance {
   const failedRequests = new WeakSet<object>();
   const server = Fastify({
@@ -43,11 +47,16 @@ export function buildServer(
 
   server.addHook("onResponse", async (request, reply) => {
     if (!failedRequests.has(request)) {
-      telemetry.recordStage("api", "succeeded", createCorrelationIds({ requestId: request.id }), {
-        method: request.method,
-        route: request.routeOptions.url,
-        statusCode: reply.statusCode,
-      });
+      telemetry.recordStage(
+        "api",
+        reply.statusCode >= 400 ? "failed" : "succeeded",
+        createCorrelationIds({ requestId: request.id }),
+        {
+          method: request.method,
+          route: request.routeOptions.url,
+          statusCode: reply.statusCode,
+        },
+      );
     }
   });
 
@@ -87,5 +96,6 @@ export function buildServer(
   server.get("/metrics", async (_request, reply) => {
     return reply.type("text/plain; version=0.0.4; charset=utf-8").send(telemetry.metrics.renderPrometheus());
   });
+  if (modules) registerIdentityRoutes(server, modules.identity, modules.onboarding);
   return server;
 }

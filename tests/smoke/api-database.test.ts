@@ -33,6 +33,8 @@ describe("API/database smoke", () => {
       { name: "0001_platform_foundation.sql" },
       { name: "0002_outbox_delivery_leases.sql" },
       { name: "0003_outbox_correlation.sql" },
+      { name: "0004_identity_security.sql" },
+      { name: "0005_private_kingdom_drafts.sql" },
     ]);
     await server.close();
   });

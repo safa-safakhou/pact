@@ -241,7 +241,7 @@
       "id": "PACT-006",
       "title": "Implement signup, verification, and human sessions",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -268,8 +268,12 @@
         "identity",
         "email"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/identity-onboarding.md records both acceptance checks, security decisions, and external sender limitations.",
+        "npm run test:integration passed the concurrent signup/single-use verification, password/session expiry, CSRF/origin, cross-account ownership, durable throttle, and enumeration fixtures on PostgreSQL 17.11.",
+        "npm run lint, npm run typecheck, npm run build, and npm test passed locally on 2026-09-20."
+      ],
+      "assignee": "codex-identity-batch",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -277,7 +281,7 @@
       "id": "PACT-007",
       "title": "Implement recovery, reauthentication, and account security",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -304,8 +308,12 @@
         "identity",
         "access revocation"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/identity-onboarding.md records recovery, recent-auth, MFA, revocation, inventory, and delivery-boundary evidence.",
+        "PostgreSQL fixtures passed 15-minute reset expiry/replay, session and OAuth revocation, active-run cancellation event, human-audience gates for every listed sensitive action, staff MFA, and one-use recovery codes.",
+        "Token tables contain HMACs and transactional email outbox payloads contain AES-256-GCM sealed delivery tokens rather than plaintext tokens."
+      ],
+      "assignee": "codex-identity-batch",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -313,7 +321,7 @@
       "id": "PACT-008",
       "title": "Implement private kingdom drafts and resumable setup",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -340,8 +348,12 @@
         "onboarding",
         "drafts"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/identity-onboarding.md records private-draft and resumable-setup acceptance evidence.",
+        "PostgreSQL fixtures passed server-side destination preservation, unverified/expired/stale rejection, seven-day purge behavior, and concurrent exactly-once sandbox activation.",
+        "Schema and tests confirm the draft has no stocks, troops, score, or public kingdom table; real founding remains unavailable."
+      ],
+      "assignee": "codex-identity-batch",
       "blocked_by_external": [],
       "block_reason": null
     },
