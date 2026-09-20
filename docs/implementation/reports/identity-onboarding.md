@@ -1,7 +1,7 @@
 # Human identity, account security, and private onboarding
 
 Tickets: PACT-006 / [MNI-66](https://linear.app/mnim/issue/MNI-66/pact-006-implement-signup-verification-and-human-sessions), PACT-007 / [MNI-67](https://linear.app/mnim/issue/MNI-67/pact-007-implement-recovery-reauthentication-and-account-security), PACT-008 / [MNI-68](https://linear.app/mnim/issue/MNI-68/pact-008-implement-private-kingdom-drafts-and-resumable-setup)
-Implementation revision/PR: this identity batch commit, based on tracker revision `4228a6e`; no PR.
+Implementation revision/PR: `f8eabe5`, based on tracker revision `4228a6e`; no PR.
 Verification date/environment: 2026-09-20; macOS, Node 24.21.0, npm 11.19.0, PostgreSQL 17.11 in Docker/Colima.
 
 ## Result
