@@ -23,6 +23,7 @@ import { readEnvironment } from "./config.js";
 import { buildServer } from "./server.js";
 
 const environment = readEnvironment();
+const publicBaseUrl = (environment.PACT_PUBLIC_BASE_URL ?? environment.PACT_ORIGIN).replace(/\/$/, "");
 const pool = createPool(environment.DATABASE_URL);
 const clock = { now: () => new Date() };
 const compromisedPasswordDigests = environment.COMPROMISED_PASSWORD_SHA256_FILE
@@ -52,16 +53,16 @@ const dispatcher = new CommandDispatcher({
 });
 const oauth = new OAuthService(pool, {
   productScope: "pact",
-  issuer: environment.PACT_ORIGIN,
-  mcpResource: `${environment.PACT_ORIGIN}/mcp`,
-  humanResource: `${environment.PACT_ORIGIN}/native`,
+  issuer: publicBaseUrl,
+  mcpResource: `${publicBaseUrl}/mcp`,
+  humanResource: `${publicBaseUrl}/native`,
   clock,
 });
 await oauth.registerPreregisteredClient({
   clientId: "pact-native",
   displayName: "PACT native app",
   audience: "human",
-  redirectUris: [`${environment.PACT_ORIGIN}/native/callback`],
+  redirectUris: [`${publicBaseUrl}/native/callback`],
 });
 const authority = new AuthorityService(pool, { productScope: "pact", identity, now: clock.now });
 const mcp = new McpTransport({

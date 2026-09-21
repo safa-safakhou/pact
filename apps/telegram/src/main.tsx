@@ -2,10 +2,10 @@ import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
-const apiOrigin = import.meta.env.VITE_PACT_ORIGIN ?? window.location.origin;
+const apiOrigin = new URL(import.meta.env.BASE_URL, import.meta.env.VITE_PACT_ORIGIN ?? window.location.origin);
 
 async function request(path: string, init: RequestInit = {}) {
-  const response = await fetch(`${apiOrigin}${path}`, { ...init, credentials: "include" });
+  const response = await fetch(new URL(path.replace(/^\//, ""), apiOrigin), { ...init, credentials: "include" });
   const body = (await response.json()) as unknown;
   if (!response.ok) throw new Error(JSON.stringify(body));
   return body;

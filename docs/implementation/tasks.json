@@ -191,12 +191,17 @@
         "infrastructure",
         "deployment"
       ],
-      "evidence": [],
-      "assignee": "cursor-agent",
-      "blocked_by_external": [
-        "Project VPS access, deployment domain/DNS, encrypted off-host backup target, SMTP sender credentials"
+      "evidence": [
+        "docs/implementation/reports/single-vps-deployment.md",
+        "Live VPS 2026-09-21: https://safa.dedyn.io/pact health/ready/web/Telegram checks passed; migrations 0001-0015 applied",
+        "infra/production/bin/verify.sh passed: PostgreSQL private, inference-only unwrap key, authenticated no-store headers"
       ],
-      "block_reason": "Missing project VPS access, deployment domain/DNS, encrypted off-host backup target, and SMTP sender credentials (2026-09-21). Local implementation work is intentionally not gated by this deployment proof."
+      "assignee": "codex-vps-deployment",
+      "blocked_by_external": [
+        "Encrypted off-host Restic-compatible backup target and credentials",
+        "SMTP sender URL and credentials"
+      ],
+      "block_reason": "The isolated single-VPS stack is deployed and the live security checks pass. Completion still requires an encrypted off-host base/WAL backup restore drill and transactional SMTP delivery, but no backup target or SMTP credentials have been supplied."
     },
     {
       "id": "PACT-005",
@@ -1111,9 +1116,9 @@
       ],
       "assignee": "codex-channel-auth-batch",
       "blocked_by_external": [
-        "Operator-owned Telegram bot token and HTTPS test endpoint"
+        "Operator-owned Telegram bot token"
       ],
-      "block_reason": "Local Mini App, bot-bound initData, one-use linking, webhook, session-revocation, and adversarial fixture implementation is complete, but real Telegram certification requires an operator-owned bot token and a public HTTPS Mini App/webhook endpoint."
+      "block_reason": "The Mini App and webhook are now publicly reachable through the single VPS at https://safa.dedyn.io/pact, but real Telegram certification still requires an operator-owned bot token."
     },
     {
       "id": "PACT-024",

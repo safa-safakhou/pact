@@ -11,6 +11,7 @@ const EnvironmentSchema = z
     DATABASE_URL: z.url().startsWith("postgres://").or(z.url().startsWith("postgresql://")),
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
     PACT_ORIGIN: z.url().default("http://127.0.0.1:5173"),
+    PACT_PUBLIC_BASE_URL: z.url().optional(),
     CURRENT_TERMS_VERSION: z.string().min(1).max(64).default("development-v1"),
     IDENTITY_TOKEN_PEPPER: z.string().min(43).default(developmentPepper),
     IDENTITY_ENCRYPTION_KEY: z.string().min(43).default(developmentEncryptionKey),
@@ -40,6 +41,12 @@ const EnvironmentSchema = z
     const telegramValues = [value.TELEGRAM_BOT_ID, value.TELEGRAM_BOT_TOKEN, value.TELEGRAM_WEBHOOK_SECRET];
     if (telegramValues.some(Boolean) && !telegramValues.every(Boolean)) {
       context.addIssue({ code: "custom", message: "Telegram bot configuration must be supplied as a complete set" });
+    }
+    if (
+      value.PACT_PUBLIC_BASE_URL &&
+      new URL(value.PACT_PUBLIC_BASE_URL).origin !== new URL(value.PACT_ORIGIN).origin
+    ) {
+      context.addIssue({ code: "custom", message: "PACT_PUBLIC_BASE_URL must use PACT_ORIGIN" });
     }
   });
 

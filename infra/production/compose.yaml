@@ -1,0 +1,173 @@
+name: ${PACT_COMPOSE_PROJECT:-pact-connection-test}
+
+x-runtime: &runtime
+  image: ${PACT_IMAGE:-pact-runtime:local}
+  restart: unless-stopped
+  init: true
+  environment: &runtime-environment
+    NODE_ENV: production
+    PACT_ORIGIN: ${PACT_ORIGIN:?Set the browser origin}
+    PACT_PUBLIC_BASE_URL: ${PACT_PUBLIC_BASE_URL:-${PACT_ORIGIN}}
+    CURRENT_TERMS_VERSION: ${CURRENT_TERMS_VERSION:-connection-test-v1}
+    LOG_LEVEL: ${LOG_LEVEL:-info}
+  secrets:
+    - postgres_password
+    - identity_token_pepper
+    - identity_encryption_key
+  networks:
+    - application
+    - data
+
+services:
+  postgres-volume-init:
+    image: alpine:3.22
+    restart: "no"
+    command: ["sh", "-c", "chown -R 70:70 /basebackup /wal"]
+    volumes:
+      - postgres-wal:/wal
+      - postgres-basebackup:/basebackup
+    networks:
+      - data
+
+  postgres:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pact
+      POSTGRES_DB: pact
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    command:
+      - postgres
+      - -c
+      - archive_mode=on
+      - -c
+      - archive_command=test ! -f /var/lib/postgresql/wal-archive/%f && cp %p /var/lib/postgresql/wal-archive/%f
+      - -c
+      - archive_timeout=300
+    secrets:
+      - postgres_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-wal:/var/lib/postgresql/wal-archive
+      - postgres-basebackup:/var/lib/postgresql/basebackup
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pact -d pact"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - data
+    depends_on:
+      postgres-volume-init:
+        condition: service_completed_successfully
+
+  migrate:
+    <<: *runtime
+    restart: "no"
+    command: ["node", "packages/db/dist/cli.js"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    <<: *runtime
+    command: ["npm", "run", "start", "--workspace", "@pact/api"]
+    environment:
+      <<: *runtime-environment
+      HOST: 0.0.0.0
+      PORT: 3000
+      MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE: /run/secrets/model_credential_public_key
+      MODEL_CREDENTIAL_WRAPPING_KEY_ID: ${MODEL_CREDENTIAL_WRAPPING_KEY_ID:-vps-primary-v1}
+      COMPROMISED_PASSWORD_SHA256_FILE: /run/secrets/compromised_password_sha256
+    secrets:
+      - postgres_password
+      - identity_token_pepper
+      - identity_encryption_key
+      - model_credential_public_key
+      - compromised_password_sha256
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  rules:
+    <<: *runtime
+    command: ["npm", "run", "start", "--workspace", "@pact/rules-worker"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  inference:
+    <<: *runtime
+    command: ["npm", "run", "start", "--workspace", "@pact/inference-worker"]
+    secrets:
+      - postgres_password
+      - identity_token_pepper
+      - identity_encryption_key
+      - model_credential_private_key
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  notification:
+    <<: *runtime
+    command: ["npm", "run", "start", "--workspace", "@pact/notification-worker"]
+    secrets:
+      - postgres_password
+      - identity_token_pepper
+      - identity_encryption_key
+      - smtp_url
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  channel:
+    <<: *runtime
+    command: ["npm", "run", "start", "--workspace", "@pact/channel-worker"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  gateway:
+    image: ${PACT_GATEWAY_IMAGE:-pact-gateway:local}
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${PACT_LOOPBACK_PORT:-8088}:8080"
+    networks:
+      - application
+      - edge
+
+volumes:
+  postgres-data:
+  postgres-wal:
+  postgres-basebackup:
+
+networks:
+  application:
+  data:
+    internal: true
+  edge:
+    name: ${PACT_EDGE_NETWORK:-pact-edge}
+
+secrets:
+  postgres_password:
+    file: ${PACT_SECRETS_DIR:?Set PACT_SECRETS_DIR}/postgres_password
+  identity_token_pepper:
+    file: ${PACT_SECRETS_DIR}/identity_token_pepper
+  identity_encryption_key:
+    file: ${PACT_SECRETS_DIR}/identity_encryption_key
+  model_credential_public_key:
+    file: ${PACT_SECRETS_DIR}/model_credential_public.pem
+  model_credential_private_key:
+    file: ${PACT_SECRETS_DIR}/model_credential_private.pem
+  smtp_url:
+    file: ${PACT_SECRETS_DIR}/smtp_url
+  compromised_password_sha256:
+    file: ${PACT_SECRETS_DIR}/compromised_password_sha256.txt

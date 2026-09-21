@@ -34,7 +34,7 @@ function App(): React.JSX.Element {
   const client = useMemo(
     () =>
       createWebPactClient({
-        apiOrigin: window.location.origin,
+        apiOrigin: new URL(import.meta.env.BASE_URL, window.location.origin).toString(),
         csrfToken: readCsrfToken,
         fetch: window.fetch.bind(window),
       }),

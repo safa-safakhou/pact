@@ -1,0 +1,9 @@
+.git
+.env
+.env.*
+infra/production/*.env
+node_modules
+**/dist
+coverage
+*.log
+.DS_Store

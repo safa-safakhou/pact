@@ -138,11 +138,17 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Deploy the stack to the project VPS and restore a synthetic account database from an encrypted off-host backup; deleted/revoked-record replay hooks are available for PACT-024.
 - [ ] PostgreSQL is not publicly reachable; private credential-unwrapping material is mounted only into the inference worker; unrelated processes cannot read it; authenticated responses are not cached by the reverse proxy.
 
-**External prerequisites:** Project VPS access, deployment domain/DNS, encrypted off-host backup target, SMTP sender credentials.
+**External prerequisites:** Encrypted off-host Restic-compatible backup target and credentials; SMTP sender URL and credentials.
 
-**Assignee:** cursor-agent
+**Assignee:** codex-vps-deployment
 
-**Block reason:** Missing project VPS access, deployment domain/DNS, encrypted off-host backup target, and SMTP sender credentials (2026-09-21). Local implementation work is intentionally not gated by this deployment proof.
+**Block reason:** The isolated single-VPS stack is deployed and the live security checks pass. Completion still requires an encrypted off-host base/WAL backup restore drill and transactional SMTP delivery, but no backup target or SMTP credentials have been supplied.
+
+**Evidence**
+
+- docs/implementation/reports/single-vps-deployment.md
+- Live VPS 2026-09-21: https://safa.dedyn.io/pact health/ready/web/Telegram checks passed; migrations 0001-0015 applied
+- infra/production/bin/verify.sh passed: PostgreSQL private, inference-only unwrap key, authenticated no-store headers
 
 <a id="pact-005"></a>
 ## PACT-005 — Add redacted operational telemetry and failure correlation
@@ -799,11 +805,11 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Forged/stale/replayed launch data, changed usernames, forwarded callbacks, and swapped PACT sessions cannot link or operate another account.
 - [ ] Unlink immediately revokes channel sessions; no game privilege is inferred from a Telegram handle or message text.
 
-**External prerequisites:** Operator-owned Telegram bot token and HTTPS test endpoint.
+**External prerequisites:** Operator-owned Telegram bot token.
 
 **Assignee:** codex-channel-auth-batch
 
-**Block reason:** Local Mini App, bot-bound initData, one-use linking, webhook, session-revocation, and adversarial fixture implementation is complete, but real Telegram certification requires an operator-owned bot token and a public HTTPS Mini App/webhook endpoint.
+**Block reason:** The Mini App and webhook are now publicly reachable through the single VPS at https://safa.dedyn.io/pact, but real Telegram certification still requires an operator-owned bot token.
 
 **Evidence**
 

@@ -1,0 +1,58 @@
+{
+  auto_https off
+  admin off
+}
+
+:8080 {
+  encode zstd gzip
+  header {
+    -Server
+    X-Content-Type-Options nosniff
+    X-Frame-Options DENY
+    Referrer-Policy no-referrer
+  }
+
+  handle /health {
+    reverse_proxy api:3000
+  }
+  handle /ready {
+    reverse_proxy api:3000
+  }
+  handle /metrics {
+    reverse_proxy api:3000
+  }
+  handle /.well-known/* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle /oauth/* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle /v1/* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle /mcp* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle /approvals/* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle /telegram/webhook {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle_path /telegram/* {
+    root * /srv/telegram
+    try_files {path} /index.html
+    file_server
+  }
+  handle {
+    root * /srv/web
+    try_files {path} /index.html
+    file_server
+  }
+}

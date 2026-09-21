@@ -13,7 +13,8 @@ class BrowserTransport implements ClientTransport {
 
   async send(request: ClientRequest): Promise<ClientResponse> {
     const csrf = request.method === "POST" ? this.options.csrfToken() : undefined;
-    const response = await this.options.fetch(new URL(request.path, this.options.apiOrigin), {
+    const base = this.options.apiOrigin.endsWith("/") ? this.options.apiOrigin : `${this.options.apiOrigin}/`;
+    const response = await this.options.fetch(new URL(request.path.replace(/^\//, ""), base), {
       method: request.method,
       credentials: "include",
       headers: {

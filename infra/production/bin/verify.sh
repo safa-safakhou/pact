@@ -1,0 +1,36 @@
+#!/bin/sh
+set -eu
+
+if [ "$#" -ne 2 ]; then echo "usage: verify.sh DEPLOY_ENV PUBLIC_BASE_URL" >&2; exit 2; fi
+deploy_env="$1"
+public_base_url="${2%/}"
+set -a
+. "$deploy_env"
+set +a
+
+compose="docker compose --env-file $deploy_env -f infra/production/compose.yaml"
+$compose ps --status running --services | grep -qx api
+$compose ps --status running --services | grep -qx postgres
+curl -fsS "http://127.0.0.1:${PACT_LOOPBACK_PORT:-8088}/ready" >/dev/null
+curl -fsS "$public_base_url/health" >/dev/null
+curl -fsS "$public_base_url/" >/dev/null
+
+if ss -lnt | grep -Eq '(^|[[:space:]])[^[:space:]]*:5432[[:space:]]'; then
+  echo "PostgreSQL unexpectedly has a host listener" >&2
+  exit 1
+fi
+
+private_destination=/run/secrets/model_credential_private_key
+for service in api rules notification channel; do
+  container="$(${compose} ps -q "$service")"
+  if docker inspect "$container" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$private_destination"; then
+    echo "$service can read the private model credential key" >&2
+    exit 1
+  fi
+done
+inference="$(${compose} ps -q inference)"
+docker inspect "$inference" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$private_destination"
+
+cache_header="$(curl -sSI "$public_base_url/v1/setup/draft" | tr -d '\r' | sed -n 's/^cache-control:[[:space:]]*//Ip' | head -1)"
+test "$cache_header" = "no-store"
+echo "PACT deployment verification passed."
