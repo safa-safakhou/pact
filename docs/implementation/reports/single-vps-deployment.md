@@ -2,7 +2,7 @@
 
 Ticket: [PACT-004 / MNI-64](https://linear.app/mnim/issue/MNI-64/pact-004-provision-the-single-vps-connection-test-environment)
 
-Implementation revision/PR: the commit containing this report, based on revision `6b4d993`; no PR was created.
+Implementation revision/PR: `4aed694`; no PR was created.
 
 Verification environment: 21 September 2026; Ubuntu 26.04 x86_64 VPS at the operator-supplied host; Docker Compose 2.40.3; Node 24.21.0 image; PostgreSQL 17.11; Caddy 2.10.2. Only synthetic data is present.
 
@@ -19,7 +19,7 @@ The second acceptance criterion passes on the live VPS. The first remains partia
 | Deploy to the project VPS and restore a synthetic database from encrypted off-host backup; replay hooks available for PACT-024 | `deploy.sh`; migrations 0001–0015; `backup.sh`; `restore-drill.sh`; live `GET /pact/health` | Partial. Live deployment and schema pass; PostgreSQL successfully archives WAL after the permission initialization fix. Off-host encrypted upload/restore not run because no repository credentials were supplied. PACT-024 replay hooks remain that ticket's scope. |
 | PostgreSQL is not public; private unwrap key only reaches inference; authenticated responses are not cached | `verify.sh`; host `ss`; Docker mount inspection; public response headers | Pass. No host listener on 5432; only inference mounts the private key; `/pact/v1/*` returns `Cache-Control: no-store`; existing root service still responds after shared-edge integration. |
 
-Supporting checks: `npm run lint`, `npm run typecheck`, 48/48 unit tests, 31/31 integration tests, 1/1 smoke test, clean production build, backlog render/check, and `git diff --check` pass locally. Compose interpolation and shell syntax validation pass on the VPS. Both an image clean build from no pre-existing `dist` and a live rollback from `vps4` to `vps3` followed by restoration to `vps4` passed `verify.sh`. The public OAuth issuer equals `https://safa.dedyn.io/pact`; web and Telegram shells return 200.
+Supporting checks: `npm run lint`, `npm run typecheck`, 48/48 unit tests, 31/31 integration tests, 1/1 smoke test, clean production build, backlog render/check, and `git diff --check` pass locally. Compose interpolation and shell syntax validation pass on the VPS. Both an image clean build from no pre-existing `dist` and a live rollback from `vps4` to `vps3` followed by restoration to `vps4` passed `verify.sh`. The committed `4aed694-vps5` release then passed `verify.sh`; the public OAuth issuer equals `https://safa.dedyn.io/pact`, and web and Telegram shells return 200.
 
 ## Documentation
 
