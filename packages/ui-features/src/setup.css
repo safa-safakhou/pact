@@ -1,0 +1,149 @@
+.pact-setup {
+  color: #e8e1d0;
+  background: #121713;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  width: min(42rem, calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: 1.25rem 0 2.5rem;
+}
+
+.pact-setup__eyebrow {
+  color: #d5a84b;
+  letter-spacing: 0.14em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.pact-setup__title {
+  font-family: ui-serif, Georgia, serif;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0 0 0.75rem;
+}
+
+.pact-setup__lede,
+.pact-setup__hint,
+.pact-setup__meta {
+  color: #aeb9ae;
+  line-height: 1.55;
+  margin: 0 0 1rem;
+}
+
+.pact-setup__panel {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.pact-setup__field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.pact-setup__field label {
+  font-size: 0.9rem;
+}
+
+.pact-setup__field input,
+.pact-setup__field select,
+.pact-setup__field textarea {
+  color: #e8e1d0;
+  background: #1a211c;
+  border: 1px solid #2d3a31;
+  border-radius: 0.35rem;
+  padding: 0.7rem 0.75rem;
+  font: inherit;
+  min-height: 2.75rem;
+}
+
+.pact-setup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+}
+
+.pact-touch-target {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 0.35rem;
+  border: 1px solid #2d3a31;
+  background: #1a211c;
+  color: #e8e1d0;
+}
+
+.pact-touch-target--primary {
+  background: #d5a84b;
+  border-color: #d5a84b;
+  color: #121713;
+  font-weight: 600;
+}
+
+.pact-touch-target:focus-visible {
+  outline: 2px solid #d5a84b;
+  outline-offset: 2px;
+}
+
+.pact-setup__status {
+  display: inline-block;
+  font-weight: 600;
+  color: #d5a84b;
+}
+
+.pact-setup__alert {
+  border: 1px solid #8a4b3a;
+  background: #241816;
+  color: #f0d2c8;
+  padding: 0.85rem 1rem;
+  border-radius: 0.35rem;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.pact-setup__notice {
+  border: 1px solid #2d3a31;
+  background: #171e19;
+  padding: 0.85rem 1rem;
+  border-radius: 0.35rem;
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+
+.pact-setup__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pact-setup__list-item {
+  border: 1px solid #2d3a31;
+  border-radius: 0.35rem;
+  padding: 0.85rem 1rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pact-setup__destination {
+  color: #d5a84b;
+  font-size: 0.9rem;
+  margin: 0 0 1rem;
+}
+
+@media (max-width: 40rem) {
+  .pact-setup {
+    width: min(100vw - 1.5rem, 42rem);
+  }
+
+  .pact-setup__actions {
+    flex-direction: column;
+  }
+
+  .pact-setup__actions .pact-touch-target {
+    width: 100%;
+  }
+}

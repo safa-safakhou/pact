@@ -21,7 +21,9 @@
       "@pact/credential-vault": ["./packages/credential-vault/src/index.ts"],
       "@pact/model-provider": ["./packages/model-provider/src/index.ts"],
       "@pact/runs": ["./packages/runs/src/index.ts"],
-      "@pact/client-sdk": ["./packages/client-sdk/src/index.ts"]
+      "@pact/client-sdk": ["./packages/client-sdk/src/index.ts"],
+      "@pact/ui-features": ["./packages/ui-features/src/index.ts"],
+      "@pact/openrouter": ["./packages/openrouter/src/index.ts"]
     }
   },
   "include": [
@@ -30,6 +32,7 @@
     "services/**/*.ts",
     "workers/**/*.ts",
     "packages/**/*.ts",
+    "packages/**/*.tsx",
     "scripts/**/*.ts",
     "tests/**/*.ts",
     "*.ts"

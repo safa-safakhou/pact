@@ -16,6 +16,7 @@ import { InboxService } from "@pact/inbox";
 import { McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
+import { OpenRouterAuthService } from "@pact/openrouter";
 import { RunService } from "@pact/runs";
 import { readEnvironment } from "./config.js";
 import { buildServer } from "./server.js";
@@ -82,6 +83,7 @@ const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
       ),
     })
   : undefined;
+const openRouter = new OpenRouterAuthService(pool, { productScope: "pact", clock });
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
@@ -92,6 +94,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   approvals,
   inbox,
   runs,
+  openRouter,
   ...(credentialVault ? { credentialVault } : {}),
   origin: environment.PACT_ORIGIN,
 });

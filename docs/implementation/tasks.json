@@ -604,7 +604,7 @@
       "id": "PACT-015",
       "title": "Implement OpenRouter authorization and model adapter",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "L",
@@ -631,8 +631,14 @@
         "OpenRouter adapter",
         "authorization callback"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/openrouter-setup-ui.md",
+        "docs/api/openrouter.md",
+        "npm run lint; npm run typecheck; npm test (40); npm run test:integration (29); npm run build",
+        "tests/integration/openrouter.test.ts",
+        "packages/model-provider/src/openrouter.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [
         "OpenRouter test account/key and quota"
       ],
@@ -921,7 +927,7 @@
       "id": "PACT-023",
       "title": "Build account, connection, and Envoy setup screens",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -960,8 +966,15 @@
       "components": [
         "account and Envoy UI"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/openrouter-setup-ui.md",
+        "docs/implementation/reports/setup-ui.md",
+        "docs/api/setup-ui.md",
+        "npm run lint; npm run typecheck; npm test (40); npm run test:integration (29); npm run build",
+        "packages/client-sdk/src/setup-view-models.test.ts",
+        "packages/ui-features/src/setup-flow.test.tsx"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },

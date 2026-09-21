@@ -1,0 +1,29 @@
+{
+  "name": "@pact/ui-features",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./setup.css": "./dist/setup.css"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && cp src/setup.css dist/setup.css"
+  },
+  "dependencies": {
+    "@pact/client-sdk": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "vitest": "5.0.1"
+  }
+}

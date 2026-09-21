@@ -62,3 +62,48 @@ export interface ReceiptViewModel {
   readonly committedAt?: string;
   readonly approvalId?: string;
 }
+
+/** Ordered steps for account / Envoy connection setup (PACT-023). */
+export type SetupStep = "account" | "draft" | "provider" | "credentials" | "model" | "allowance" | "run" | "inbox";
+
+export type RunStatusLabel = "Working" | "Waiting" | "Stopped";
+
+export type PricingMessageKind = "estimate" | "unavailable";
+
+export interface PricingMessage {
+  readonly kind: PricingMessageKind;
+  readonly text: string;
+}
+
+export interface InvitationDestination {
+  readonly invite?: string;
+  readonly destination?: string;
+}
+
+export interface SetupSnapshotInput {
+  readonly step: SetupStep;
+  readonly invitation?: InvitationDestination;
+  readonly runStatus?: string;
+  readonly pricing?: {
+    readonly available: boolean;
+    readonly estimateText?: string;
+  };
+  readonly errorCode?: string;
+  readonly externalHostMessage?: string;
+  readonly connectorPrerequisiteMessage?: string;
+  /** Server-hydrated draft/run/approval fields; closing the page must re-apply these. */
+  readonly serverState?: Readonly<Record<string, unknown>>;
+}
+
+export interface SetupSnapshot {
+  readonly step: SetupStep;
+  readonly invitation: InvitationDestination;
+  readonly runStatusLabel: RunStatusLabel;
+  readonly pricing: PricingMessage;
+  readonly errorMessage: string | null;
+  readonly externalHostMessage: string | null;
+  readonly connectorPrerequisiteMessage: string | null;
+  readonly serverState: Readonly<Record<string, unknown>>;
+  /** Setup never activates a live kingdom; drafts remain private. */
+  readonly foundsLiveKingdom: false;
+}

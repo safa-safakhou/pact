@@ -7,6 +7,7 @@ import type { InboxService } from "@pact/inbox";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
+import type { OpenRouterAuthService } from "@pact/openrouter";
 import type { RunService } from "@pact/runs";
 import {
   createCorrelationIds,
@@ -24,6 +25,7 @@ import { registerIdentityRoutes } from "./identity-routes.js";
 import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
 import { registerModelCredentialRoutes } from "./model-credential-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
+import { registerOpenRouterRoutes } from "./openrouter-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
 
 function safeLogger(logger: boolean | object): false | Record<string, unknown> {
@@ -51,6 +53,7 @@ export interface ApiModules {
   inbox?: InboxService;
   credentialVault?: CredentialVaultService;
   runs?: RunService;
+  openRouter?: OpenRouterAuthService;
   origin?: string;
 }
 
@@ -137,6 +140,9 @@ export function buildServer(
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
     if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs);
+    if (modules.openRouter) {
+      registerOpenRouterRoutes(server, modules.identity, modules.openRouter, modules.credentialVault);
+    }
   }
   return server;
 }

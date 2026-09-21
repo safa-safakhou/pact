@@ -17,3 +17,7 @@ Host adapters own authentication. The web adapter in `apps/web/src/pact-client.t
 ## Projections and subscriptions
 
 Receipt and inbox payloads are validated against the shared schemas before becoming platform-independent view models. `readInbox` uses cursor pagination. `subscribeInbox` consumes an injected async event stream, allowing browser SSE and native/Telegram polling adapters to share event projections without importing host globals.
+
+## Setup view models
+
+`SetupStep`, `toRunStatusLabel`, `toPricingMessage`, `toSetupErrorMessage`, `readInvitationDestination`, and `buildSetupSnapshot` map connection-setup server state into host-neutral labels and messages. Native and DOM hosts share these helpers; unknown pricing never becomes a zero cost, and run statuses map only to Working, Waiting, or Stopped.

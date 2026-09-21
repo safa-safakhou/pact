@@ -43,6 +43,7 @@ describe("API/database smoke", () => {
       { name: "0011_inbox_acknowledgements.sql" },
       { name: "0012_credential_vault.sql" },
       { name: "0013_envoy_runs.sql" },
+      { name: "0014_openrouter_oauth.sql" },
     ]);
     await server.close();
   });

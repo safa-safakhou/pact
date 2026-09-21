@@ -10,7 +10,7 @@ Resource amounts serialize as non-negative integer strings with at most 18 decim
 
 `commandJsonSchema` is the shared request schema. `httpCommandContract` binds it to `POST /v1/commands`; `mcpCommandTool` exposes the same schema to MCP. Receipt codes are a closed enum and never replaced with improvised model prose. `GET /v1/receipts/:commandId` returns the caller's own receipt for retry reconciliation and never another account's result. Private API responses set `Cache-Control: no-store`.
 
-Human identity and setup endpoints are documented separately in [identity API](identity.md). They use the same authenticated server boundary but are human account operations rather than model/game commands. MCP transport is documented in [mcp.md](mcp.md); exact-command approvals in [approvals.md](approvals.md); durable inbox/SSE in [inbox.md](inbox.md).
+Human identity and setup endpoints are documented separately in [identity API](identity.md). They use the same authenticated server boundary but are human account operations rather than model/game commands. MCP transport is documented in [mcp.md](mcp.md); exact-command approvals in [approvals.md](approvals.md); durable inbox/SSE in [inbox.md](inbox.md). OpenRouter PKCE and adapter routes are in [openrouter.md](openrouter.md). Setup UI hosting is in [setup-ui.md](setup-ui.md).
 
 The platform-independent retry, projection, and subscription helpers are documented in the [client SDK](client-sdk.md).
 

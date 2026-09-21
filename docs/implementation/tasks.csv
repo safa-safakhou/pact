@@ -14,7 +14,7 @@ PACT-011,Implement the OpenAI model adapter,0,done,implementation,Integrations,M
 PACT-012,Implement the Anthropic model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-012
 PACT-013,Implement the Gemini model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-013
 PACT-014,Implement the xAI model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-014
-PACT-015,Implement OpenRouter authorization and model adapter,0,todo,implementation,Integrations,L,PACT-010;PACT-007,A02,phase-0-connections.md#pact-015
+PACT-015,Implement OpenRouter authorization and model adapter,0,done,implementation,Integrations,L,PACT-010;PACT-007,A02,phase-0-connections.md#pact-015
 PACT-016,Implement PACT OAuth for external clients,0,done,implementation,Security,L,PACT-007;PACT-002,A03;A05,phase-0-connections.md#pact-016
 PACT-017,Implement the remote MCP transport and tool registry,0,done,implementation,Integrations,L,PACT-016;PACT-002,A03,phase-0-connections.md#pact-017
 PACT-018,Implement the shared dispatcher and sandbox receipts,0,done,implementation,Backend,M,PACT-003;PACT-007;PACT-002,A03;A05,phase-0-connections.md#pact-018
@@ -22,7 +22,7 @@ PACT-019,Implement mandate permissions and immediate-spend checks,0,done,impleme
 PACT-020,Implement exact-command human approvals,0,done,implementation,Backend,M,PACT-019,A05,phase-0-connections.md#pact-020
 PACT-021,Implement bounded Envoy runs and exclusive write leases,0,done,implementation,Backend,L,PACT-010;PACT-018;PACT-019;PACT-020,A04;A05,phase-0-connections.md#pact-021
 PACT-022,Implement the durable inbox and live event delivery,0,done,implementation,Backend,M,PACT-003;PACT-018,A03;A04,phase-0-connections.md#pact-022
-PACT-023,"Build account, connection, and Envoy setup screens",0,todo,implementation,Frontend,L,PACT-008;PACT-009;PACT-015;PACT-016;PACT-017;PACT-020;PACT-021;PACT-022,A01;A02;A03;A04;A05,phase-0-connections.md#pact-023
+PACT-023,"Build account, connection, and Envoy setup screens",0,done,implementation,Frontend,L,PACT-008;PACT-009;PACT-015;PACT-016;PACT-017;PACT-020;PACT-021;PACT-022,A01;A02;A03;A04;A05,phase-0-connections.md#pact-023
 PACT-083,Build the shared client SDK and capability contract,0,done,implementation,Backend / Frontend,M,PACT-002;PACT-016;PACT-018;PACT-020;PACT-022;PACT-082,A08;A09,phase-0-connections.md#pact-083
 PACT-084,"Prove native iOS and Android login, linking, and approval",0,todo,implementation,Mobile,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-084
 PACT-085,Prove Telegram identity linking and Mini App authentication,0,todo,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085

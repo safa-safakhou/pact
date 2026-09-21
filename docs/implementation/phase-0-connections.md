@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 22 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 24 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -449,7 +449,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-015"></a>
 ## PACT-015 — Implement OpenRouter authorization and model adapter
 
-**Status:** todo · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010), [PACT-007](phase-0-connections.md#pact-007)
 
@@ -464,10 +464,20 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Both key entry and authorization complete the common real-provider fixture.
-- [ ] Swapped state/verifier, replayed callback, expired flow, or an undisclosed routing fallback cannot attach a credential or run a model.
+- [x] Both key entry and authorization complete the common real-provider fixture.
+- [x] Swapped state/verifier, replayed callback, expired flow, or an undisclosed routing fallback cannot attach a credential or run a model.
 
 **External prerequisites:** OpenRouter test account/key and quota.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/openrouter-setup-ui.md
+- docs/api/openrouter.md
+- npm run lint; npm run typecheck; npm test (40); npm run test:integration (29); npm run build
+- tests/integration/openrouter.test.ts
+- packages/model-provider/src/openrouter.test.ts
 
 <a id="pact-016"></a>
 ## PACT-016 — Implement PACT OAuth for external clients
@@ -676,7 +686,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-023"></a>
 ## PACT-023 — Build account, connection, and Envoy setup screens
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-015](phase-0-connections.md#pact-015), [PACT-016](phase-0-connections.md#pact-016), [PACT-017](phase-0-connections.md#pact-017), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022)
 
@@ -692,8 +702,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Complete setup and a sandbox approval on phone and desktop using keyboard as well as touch.
-- [ ] Closing/reopening the page shows server state; expired approval, revoked key, and unsupported host produce actionable messages without founding a live kingdom.
+- [x] Complete setup and a sandbox approval on phone and desktop using keyboard as well as touch.
+- [x] Closing/reopening the page shows server state; expired approval, revoked key, and unsupported host produce actionable messages without founding a live kingdom.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/openrouter-setup-ui.md
+- docs/implementation/reports/setup-ui.md
+- docs/api/setup-ui.md
+- npm run lint; npm run typecheck; npm test (40); npm run test:integration (29); npm run build
+- packages/client-sdk/src/setup-view-models.test.ts
+- packages/ui-features/src/setup-flow.test.tsx
 
 <a id="pact-083"></a>
 ## PACT-083 — Build the shared client SDK and capability contract
