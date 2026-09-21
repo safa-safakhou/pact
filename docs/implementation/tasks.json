@@ -481,7 +481,7 @@
       "id": "PACT-012",
       "title": "Implement the Anthropic model adapter",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -506,8 +506,13 @@
       "components": [
         "Anthropic adapter"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/provider-adapters-anthropic-gemini-xai.md",
+        "npm run build --workspace @pact/model-provider; npm test -- packages/model-provider (9)",
+        "packages/model-provider/src/{anthropic,gemini,xai}.ts; packages/model-provider/src/provider-adapters.test.ts",
+        "Live operator keys not used; fixture HTTP transports verified"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [
         "Operator-provided test API key/workspace and quota"
       ],
@@ -517,7 +522,7 @@
       "id": "PACT-013",
       "title": "Implement the Gemini model adapter",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -542,8 +547,13 @@
       "components": [
         "Gemini adapter"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/provider-adapters-anthropic-gemini-xai.md",
+        "npm run build --workspace @pact/model-provider; npm test -- packages/model-provider (9)",
+        "packages/model-provider/src/{anthropic,gemini,xai}.ts; packages/model-provider/src/provider-adapters.test.ts",
+        "Live operator keys not used; fixture HTTP transports verified"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [
         "Operator-provided Gemini auth key and quota"
       ],
@@ -553,7 +563,7 @@
       "id": "PACT-014",
       "title": "Implement the xAI model adapter",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -578,8 +588,13 @@
       "components": [
         "xAI adapter"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/provider-adapters-anthropic-gemini-xai.md",
+        "npm run build --workspace @pact/model-provider; npm test -- packages/model-provider (9)",
+        "packages/model-provider/src/{anthropic,gemini,xai}.ts; packages/model-provider/src/provider-adapters.test.ts",
+        "Live operator keys not used; fixture HTTP transports verified"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [
         "Operator-provided test API key and quota"
       ],

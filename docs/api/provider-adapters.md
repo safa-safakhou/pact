@@ -25,4 +25,6 @@ Only the following sanitized codes cross the adapter boundary: `CANCELLED`, `INV
 
 `OpenAiResponsesAdapter` translates the OpenAI Responses API (`POST /v1/responses`) through an injectable `fetch`. Unit tests use `createOpenAiFixtureFetch` recorded fixtures for draft-read → sandbox-write → final text, plus invalid key, quota, cancel, and unsupported-model mapping without copying bearer secrets into errors.
 
+`AnthropicMessagesAdapter` uses Messages API with `anthropic-version: 2023-06-01`, optional workspace header, and API-key credentials only (no subscription login). `GeminiGenerateContentAdapter` uses `generateContent` with AI Studio auth keys and rejects legacy credential placeholders. `XaiChatCompletionsAdapter` uses bearer chat-completions tool calls and is labeled as xAI model API access — not a Grok consumer-chat MCP claim. Duplicate tool-call IDs fail as `MALFORMED_TOOL_CALL`.
+
 Provider-specific tickets must additionally use a fake HTTP transport to verify request/response translation. Real-provider certification remains a separate acceptance gate and cannot be inferred from this harness.

@@ -11,9 +11,9 @@ PACT-008,Implement private kingdom drafts and resumable setup,0,done,implementat
 PACT-009,Build encrypted model credential storage,0,done,implementation,Backend,M,PACT-007,A02;A06,phase-0-connections.md#pact-009
 PACT-010,Build the provider adapter interface and contract harness,0,done,implementation,Integrations,M,PACT-002;PACT-009,A02,phase-0-connections.md#pact-010
 PACT-011,Implement the OpenAI model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-011
-PACT-012,Implement the Anthropic model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-012
-PACT-013,Implement the Gemini model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-013
-PACT-014,Implement the xAI model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-014
+PACT-012,Implement the Anthropic model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-012
+PACT-013,Implement the Gemini model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-013
+PACT-014,Implement the xAI model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-014
 PACT-015,Implement OpenRouter authorization and model adapter,0,todo,implementation,Integrations,L,PACT-010;PACT-007,A02,phase-0-connections.md#pact-015
 PACT-016,Implement PACT OAuth for external clients,0,done,implementation,Security,L,PACT-007;PACT-002,A03;A05,phase-0-connections.md#pact-016
 PACT-017,Implement the remote MCP transport and tool registry,0,done,implementation,Integrations,L,PACT-016;PACT-002,A03,phase-0-connections.md#pact-017
