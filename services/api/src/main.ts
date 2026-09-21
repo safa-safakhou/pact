@@ -18,6 +18,7 @@ import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { OpenRouterAuthService } from "@pact/openrouter";
 import { RunService } from "@pact/runs";
+import { TelegramService } from "@pact/telegram";
 import { readEnvironment } from "./config.js";
 import { buildServer } from "./server.js";
 
@@ -56,6 +57,12 @@ const oauth = new OAuthService(pool, {
   humanResource: `${environment.PACT_ORIGIN}/native`,
   clock,
 });
+await oauth.registerPreregisteredClient({
+  clientId: "pact-native",
+  displayName: "PACT native app",
+  audience: "human",
+  redirectUris: [`${environment.PACT_ORIGIN}/native/callback`],
+});
 const authority = new AuthorityService(pool, { productScope: "pact", identity, now: clock.now });
 const mcp = new McpTransport({
   pool,
@@ -84,6 +91,18 @@ const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
     })
   : undefined;
 const openRouter = new OpenRouterAuthService(pool, { productScope: "pact", clock });
+const telegram =
+  environment.TELEGRAM_BOT_ID && environment.TELEGRAM_BOT_TOKEN && environment.TELEGRAM_WEBHOOK_SECRET
+    ? new TelegramService(pool, {
+        productScope: "pact",
+        botId: environment.TELEGRAM_BOT_ID,
+        botToken: environment.TELEGRAM_BOT_TOKEN,
+        webhookSecret: environment.TELEGRAM_WEBHOOK_SECRET,
+        clock,
+        issueHumanSession: (accountId, label) => identity.createLinkedHumanSession(accountId, label),
+        revokeHumanSessions: (accountId, sessionIds) => identity.revokeLinkedHumanSessions(accountId, sessionIds),
+      })
+    : undefined;
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
@@ -96,6 +115,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   runs,
   openRouter,
   ...(credentialVault ? { credentialVault } : {}),
+  ...(telegram ? { telegram } : {}),
   origin: environment.PACT_ORIGIN,
 });
 

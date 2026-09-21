@@ -748,7 +748,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-084"></a>
 ## PACT-084 — Prove native iOS and Android login, linking, and approval
 
-**Status:** todo · **Role:** Mobile · **Size:** L · **Type:** implementation
+**Status:** blocked · **Role:** Mobile · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -768,10 +768,20 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **External prerequisites:** iOS/Android build environment and test devices; platform signing for device builds.
 
+**Assignee:** codex-channel-auth-batch
+
+**Block reason:** Local native PKCE, secure-storage, bearer route, and adversarial fixture implementation is complete, but signed iOS and Android development builds cannot be certified without platform signing, build environments, and physical test devices.
+
+**Evidence**
+
+- docs/implementation/reports/native-telegram-auth.md
+- npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build
+- apps/native/src/session-controller.test.ts; apps/native/app.json
+
 <a id="pact-085"></a>
 ## PACT-085 — Prove Telegram identity linking and Mini App authentication
 
-**Status:** todo · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** blocked · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -790,6 +800,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Unlink immediately revokes channel sessions; no game privilege is inferred from a Telegram handle or message text.
 
 **External prerequisites:** Operator-owned Telegram bot token and HTTPS test endpoint.
+
+**Assignee:** codex-channel-auth-batch
+
+**Block reason:** Local Mini App, bot-bound initData, one-use linking, webhook, session-revocation, and adversarial fixture implementation is complete, but real Telegram certification requires an operator-owned bot token and a public HTTPS Mini App/webhook endpoint.
+
+**Evidence**
+
+- docs/implementation/reports/native-telegram-auth.md
+- npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build
+- packages/telegram/src/crypto.test.ts; tests/integration/telegram.test.ts
 
 <a id="pact-024"></a>
 ## PACT-024 — Implement first-account retention, export, and deletion

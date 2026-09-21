@@ -17,6 +17,12 @@ const EnvironmentSchema = z
     COMPROMISED_PASSWORD_SHA256_FILE: z.string().min(1).optional(),
     MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE: z.string().min(1).optional(),
     MODEL_CREDENTIAL_WRAPPING_KEY_ID: z.string().min(1).max(128).default("vps-primary-v1"),
+    TELEGRAM_BOT_ID: z
+      .string()
+      .regex(/^[1-9][0-9]*$/)
+      .optional(),
+    TELEGRAM_BOT_TOKEN: z.string().min(16).optional(),
+    TELEGRAM_WEBHOOK_SECRET: z.string().min(32).max(256).optional(),
   })
   .superRefine((value, context) => {
     if (
@@ -31,10 +37,14 @@ const EnvironmentSchema = z
     if (value.NODE_ENV === "production" && !value.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE) {
       context.addIssue({ code: "custom", message: "Production model-credential public wrapping key is required" });
     }
+    const telegramValues = [value.TELEGRAM_BOT_ID, value.TELEGRAM_BOT_TOKEN, value.TELEGRAM_WEBHOOK_SECRET];
+    if (telegramValues.some(Boolean) && !telegramValues.every(Boolean)) {
+      context.addIssue({ code: "custom", message: "Telegram bot configuration must be supplied as a complete set" });
+    }
   });
 
 export type Environment = z.infer<typeof EnvironmentSchema>;
 
-export function readEnvironment(input: NodeJS.ProcessEnv = process.env): Environment {
+export function readEnvironment(input: Record<string, string | undefined> = process.env): Environment {
   return EnvironmentSchema.parse(input);
 }

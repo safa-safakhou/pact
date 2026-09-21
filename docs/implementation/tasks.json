@@ -1029,7 +1029,7 @@
       "id": "PACT-084",
       "title": "Prove native iOS and Android login, linking, and approval",
       "phase": 0,
-      "status": "todo",
+      "status": "blocked",
       "kind": "implementation",
       "owner_role": "Mobile",
       "size": "L",
@@ -1059,18 +1059,22 @@
         "native identity",
         "secure storage"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/native-telegram-auth.md",
+        "npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build",
+        "apps/native/src/session-controller.test.ts; apps/native/app.json"
+      ],
+      "assignee": "codex-channel-auth-batch",
       "blocked_by_external": [
         "iOS/Android build environment and test devices; platform signing for device builds"
       ],
-      "block_reason": null
+      "block_reason": "Local native PKCE, secure-storage, bearer route, and adversarial fixture implementation is complete, but signed iOS and Android development builds cannot be certified without platform signing, build environments, and physical test devices."
     },
     {
       "id": "PACT-085",
       "title": "Prove Telegram identity linking and Mini App authentication",
       "phase": 0,
-      "status": "todo",
+      "status": "blocked",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "L",
@@ -1100,12 +1104,16 @@
         "Mini App shell",
         "linking sessions"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/native-telegram-auth.md",
+        "npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build",
+        "packages/telegram/src/crypto.test.ts; tests/integration/telegram.test.ts"
+      ],
+      "assignee": "codex-channel-auth-batch",
       "blocked_by_external": [
         "Operator-owned Telegram bot token and HTTPS test endpoint"
       ],
-      "block_reason": null
+      "block_reason": "Local Mini App, bot-bound initData, one-use linking, webhook, session-revocation, and adversarial fixture implementation is complete, but real Telegram certification requires an operator-owned bot token and a public HTTPS Mini App/webhook endpoint."
     },
     {
       "id": "PACT-024",

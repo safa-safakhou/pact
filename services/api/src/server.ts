@@ -9,6 +9,7 @@ import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
 import type { OpenRouterAuthService } from "@pact/openrouter";
 import type { RunService } from "@pact/runs";
+import type { TelegramService } from "@pact/telegram";
 import {
   createCorrelationIds,
   fastifyRedactionPaths,
@@ -24,9 +25,11 @@ import { registerCommandRoutes } from "./command-routes.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
 import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
 import { registerModelCredentialRoutes } from "./model-credential-routes.js";
+import { registerNativeRoutes } from "./native-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
 import { registerOpenRouterRoutes } from "./openrouter-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
+import { registerTelegramRoutes } from "./telegram-routes.js";
 
 function safeLogger(logger: boolean | object): false | Record<string, unknown> {
   if (logger === false) return false;
@@ -54,6 +57,7 @@ export interface ApiModules {
   credentialVault?: CredentialVaultService;
   runs?: RunService;
   openRouter?: OpenRouterAuthService;
+  telegram?: TelegramService;
   origin?: string;
 }
 
@@ -137,12 +141,16 @@ export function buildServer(
       registerMcpRoutes(server, modules.mcp, modules.oauth, modules.origin ?? "https://pact.example");
     }
     if (modules.approvals) registerApprovalRoutes(server, modules.identity, modules.approvals);
+    if (modules.oauth && modules.approvals) {
+      registerNativeRoutes(server, modules.oauth, modules.onboarding, modules.dispatcher, modules.approvals);
+    }
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
     if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs);
     if (modules.openRouter) {
       registerOpenRouterRoutes(server, modules.identity, modules.openRouter, modules.credentialVault);
     }
+    if (modules.telegram) registerTelegramRoutes(server, modules.identity, modules.telegram);
   }
   return server;
 }

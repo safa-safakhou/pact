@@ -99,6 +99,11 @@ export class ApprovalService {
 
   async approve(sessionToken: string, approvalId: string): Promise<ApprovalView> {
     const session = await this.requireHuman(sessionToken);
+    return this.approveForHumanPrincipal(session.accountId, session.sessionId, approvalId);
+  }
+
+  /** First-party human transports may call this only after authenticating a human-scoped principal. */
+  async approveForHumanPrincipal(accountId: string, sessionId: string, approvalId: string): Promise<ApprovalView> {
     const prepared = await withTransaction(this.pool, async (client) => {
       const loaded = await client.query<ApprovalRow>(
         `SELECT * FROM approval_requests WHERE approval_id = $1 AND product_scope = $2 FOR UPDATE`,
@@ -106,7 +111,7 @@ export class ApprovalService {
       );
       let row = loaded.rows[0];
       if (!row) throw new ApprovalError("NOT_FOUND");
-      if (row.account_id !== session.accountId) throw new ApprovalError("FORBIDDEN");
+      if (row.account_id !== accountId) throw new ApprovalError("FORBIDDEN");
       row = this.maybeExpire(row);
       if (row.status === "approved" && row.receipt) return { kind: "done" as const, row };
       if (row.status === "expired") {
@@ -133,11 +138,11 @@ export class ApprovalService {
       schemaVersion: SCHEMA_VERSION,
       commandId: prepared.row.command_id,
       actor: {
-        principalId: session.accountId,
+        principalId: accountId,
         productScope,
         audience: "human",
-        subject: { type: "account", id: session.accountId },
-        sessionId: session.sessionId,
+        subject: { type: "account", id: accountId },
+        sessionId,
       },
       action: prepared.row.action,
       submittedAt: this.options.clock.now().toISOString(),
@@ -146,10 +151,10 @@ export class ApprovalService {
       throw new ApprovalError("INVALID_TERMS");
     }
     const principal: AuthenticatedPrincipal = {
-      accountId: session.accountId,
+      accountId,
       productScope,
       audience: "human",
-      sessionId: session.sessionId,
+      sessionId,
     };
     const receipt = await this.options.dispatcher.dispatch(principal, command);
     return withTransaction(this.pool, async (client) => {

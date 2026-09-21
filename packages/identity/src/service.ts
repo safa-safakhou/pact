@@ -452,6 +452,27 @@ export class IdentityService {
     };
   }
 
+  /** Trusted channel adapters use this only after proving and confirming an account link. */
+  async createLinkedHumanSession(accountId: string, label: string): Promise<SessionTokens & { sessionId: string }> {
+    const account = await this.pool.query(
+      "SELECT 1 FROM accounts WHERE product_scope = $1 AND id = $2 AND status = 'active'",
+      [this.options.productScope, accountId],
+    );
+    if (account.rowCount !== 1) throw new IdentityError("FORBIDDEN");
+    const tokens = await this.createSession(accountId, label.slice(0, 100));
+    const session = await this.authenticate(tokens.sessionToken, false);
+    return { ...tokens, sessionId: session.sessionId };
+  }
+
+  async revokeLinkedHumanSessions(accountId: string, sessionIds: readonly string[]): Promise<void> {
+    if (sessionIds.length === 0) return;
+    await this.pool.query(
+      `UPDATE sessions SET revoked_at = $4
+       WHERE product_scope = $1 AND account_id = $2 AND id = ANY($3::uuid[]) AND revoked_at IS NULL`,
+      [this.options.productScope, accountId, [...sessionIds], this.options.clock.now()],
+    );
+  }
+
   async purgeExpired(): Promise<{ unverifiedAccounts: number; credentials: number }> {
     const now = this.options.clock.now();
     return withTransaction(this.pool, async (client) => {

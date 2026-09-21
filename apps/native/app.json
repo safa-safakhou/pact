@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "PACT",
+    "slug": "pact-native",
+    "version": "0.1.0",
+    "scheme": "pact",
+    "ios": {
+      "bundleIdentifier": "game.pact.native",
+      "associatedDomains": ["applinks:pact.example"]
+    },
+    "android": {
+      "package": "game.pact.native",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [{ "scheme": "https", "host": "pact.example", "pathPrefix": "/native/callback" }],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "plugins": [
+      [
+        "expo-secure-store",
+        { "configureAndroidBackup": false, "faceIDPermission": "Allow PACT to protect your session." }
+      ]
+    ]
+  }
+}

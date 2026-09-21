@@ -24,8 +24,8 @@ PACT-021,Implement bounded Envoy runs and exclusive write leases,0,done,implemen
 PACT-022,Implement the durable inbox and live event delivery,0,done,implementation,Backend,M,PACT-003;PACT-018,A03;A04,phase-0-connections.md#pact-022
 PACT-023,"Build account, connection, and Envoy setup screens",0,done,implementation,Frontend,L,PACT-008;PACT-009;PACT-015;PACT-016;PACT-017;PACT-020;PACT-021;PACT-022,A01;A02;A03;A04;A05,phase-0-connections.md#pact-023
 PACT-083,Build the shared client SDK and capability contract,0,done,implementation,Backend / Frontend,M,PACT-002;PACT-016;PACT-018;PACT-020;PACT-022;PACT-082,A08;A09,phase-0-connections.md#pact-083
-PACT-084,"Prove native iOS and Android login, linking, and approval",0,todo,implementation,Mobile,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-084
-PACT-085,Prove Telegram identity linking and Mini App authentication,0,todo,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085
+PACT-084,"Prove native iOS and Android login, linking, and approval",0,blocked,implementation,Mobile,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-084
+PACT-085,Prove Telegram identity linking and Mini App authentication,0,blocked,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085
 PACT-024,"Implement first-account retention, export, and deletion",0,todo,implementation,Security,L,PACT-008;PACT-009;PACT-016;PACT-021;PACT-022;PACT-084;PACT-085,A06,phase-0-connections.md#pact-024
 PACT-025,Complete the real-account environment preflight,0,todo,operations,Operations,M,PACT-004;PACT-005;PACT-006;PACT-007;PACT-024,A06,phase-0-connections.md#pact-025
 PACT-086,Certify additional assistant routes and publish a capability matrix,0,todo,verification,Integrations,M,PACT-017;PACT-023;PACT-025;PACT-083,A03;A09,phase-0-connections.md#pact-086

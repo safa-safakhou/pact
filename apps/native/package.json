@@ -1,0 +1,26 @@
+{
+  "name": "@pact/native",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "dev": "expo start --dev-client",
+    "ios": "expo run:ios",
+    "android": "expo run:android"
+  },
+  "dependencies": {
+    "expo": "57.0.24",
+    "expo-auth-session": "57.0.12",
+    "expo-secure-store": "57.0.4",
+    "expo-web-browser": "57.0.3",
+    "react": "19.2.3",
+    "react-native": "0.86.3"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.14",
+    "typescript": "7.0.2",
+    "vitest": "5.0.1"
+  }
+}

@@ -346,6 +346,7 @@ export class OAuthService {
   }
 
   async introspectAccessToken(accessToken: string): Promise<{
+    grantId: string;
     accountId: string;
     clientId: string;
     audience: OAuthAudience;
@@ -353,6 +354,7 @@ export class OAuthService {
     subjectLabel: string;
   } | null> {
     const result = await this.pool.query<{
+      id: string;
       account_id: string;
       client_id: string;
       audience: OAuthAudience;
@@ -361,13 +363,14 @@ export class OAuthService {
       expires_at: Date;
       revoked_at: Date | null;
     }>(
-      `SELECT account_id, client_id, audience, scopes, subject_label, expires_at, revoked_at
+      `SELECT id, account_id, client_id, audience, scopes, subject_label, expires_at, revoked_at
        FROM oauth_grants WHERE product_scope = $1 AND access_token_hash = $2`,
       [this.options.productScope, hashToken(accessToken)],
     );
     const row = result.rows[0];
     if (!row || row.revoked_at || row.expires_at <= this.options.clock.now()) return null;
     return {
+      grantId: row.id,
       accountId: row.account_id,
       clientId: row.client_id,
       audience: row.audience,
