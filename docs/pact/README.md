@@ -1,6 +1,6 @@
-# PACT — Version 1.1 specification
+# PACT — Version 1.2 specification
 
-**Decision baseline: Version 1.1, 16 September 2026. Status: specified; not implemented or tested.**
+**Decision baseline: Version 1.2, 21 September 2026. Status: specified; implementation evidence is tracked separately.**
 
 **Implementation work:** [97 dependency-ordered technical tickets](../implementation/README.md), with acceptance criteria and release-criterion coverage.
 
@@ -34,7 +34,7 @@ PACT is a competitive, persistent kingdom game. You build your kingdom and set y
 | [Privacy and conduct policy](privacy.md) | Data collection, retention, deletion, reporting, and account closure |
 | [Build and acceptance checklist](delivery.md) | Ordered implementation milestones and observable pass/fail conditions |
 
-Version 1.1 supersedes the earlier PWA-only release scope. The architecture document owns cross-channel extensions; access/runtime/privacy keep ownership of their base contracts. Each subject has one owner in this table. Other documents link to it instead of maintaining competing rules. Changes require a new specification version, affected acceptance checks, and a player-facing rules notice when gameplay changes. Historical documents 00–34 remain research history; they do not override this package.
+Version 1.1 superseded the earlier PWA-only release scope. Version 1.2 replaces the AWS-specific hosting prescription with one reproducible EU-hosted VPS while preserving process separation, encrypted credentials, off-host backups, recovery drills, and tested capacity. The architecture document owns cross-channel extensions; access/runtime/privacy keep ownership of their base contracts. Each subject has one owner in this table. Other documents link to it instead of maintaining competing rules. Changes require a new specification version, affected acceptance checks, and a player-facing rules notice when gameplay changes. Historical documents 00–34 remain research history; they do not override this package.
 
 This baseline fixes implementation decisions. Provider certification, security checks, economic playtests, and growth measurements are work to perform against it, not unanswered founder decisions or claims of results already obtained.
 

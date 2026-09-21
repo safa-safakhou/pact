@@ -1,6 +1,6 @@
 # Execution contract
 
-**Version 1.1 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
+**Version 1.2 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
 
 [Architecture](architecture.md) owns reusable package boundaries and channel adapters. Web, native apps, Telegram, and MCP use these same application services; native human sessions and validated Telegram run requests do not create additional Envoy allowances.
 
@@ -113,7 +113,11 @@ Third-party messages are untrusted game content. The run can cite and reason abo
 
 Use a TypeScript modular monolith: **Node.js 24 LTS**, React web/Telegram UI, React Native with Expo for iOS/Android, Fastify HTTP service, and **PostgreSQL 17** as the transactional authority. These are supported release lines at the specification date. Pin dependency patch versions in the implementation lockfile at bootstrap. Separate API, rules worker, inference worker, and notification worker processes from the same repository. Game tables, authority reservations, durable jobs, and the transactional outbox live in PostgreSQL; no Redis dependency is required for correctness. [Node.js release schedule](https://nodejs.org/en/about/previous-releases), [PostgreSQL support policy](https://www.postgresql.org/support/versioning/).
 
-Host in AWS Frankfurt: ECS/Fargate services, RDS PostgreSQL with Multi-AZ and point-in-time recovery, private S3 for exports, KMS for envelope encryption, and SES for transactional email. CDN caches only public static assets and intentionally public pages; never private API responses. Use per-environment accounts, TLS, secret rotation, least-privilege worker roles, and infrastructure as code. Production and test worlds have separate credentials and databases.
+Host the project on one Linux VPS in an EU region, preferably Frankfurt. Use a reproducible Docker Compose deployment with a TLS reverse proxy and separately runnable API, rules, inference, notification, and channel processes from the modular monolith. PostgreSQL 17 runs on the same VPS on a private container network and is never exposed publicly. No Redis, Kubernetes, CDN, or managed cloud service is required for correctness. Static public assets may be cached by the reverse proxy; private and authenticated responses must use non-cacheable headers.
+
+Use distinct container identities, internal networks, databases, and narrowly mounted secret files. The API may receive the public material needed to wrap a credential, while only the inference worker receives private unwrapping material. The VPS administrator remains a trusted operator; this design provides process-level isolation rather than hardware-backed or separate-account isolation. Development stays local. Connection-test and production data use separate databases and secret sets when they coexist on the VPS, and test data is removed before production admission.
+
+Automate TLS renewal, secret/signing-key rotation, health checks, deployment, migrations, rollback, and outbound-provider access. Retain encrypted PostgreSQL base/WAL backups for 35 days in an off-host backup target and test restoration before admitting players; backups stored only on the VPS do not satisfy disaster recovery. Generate exports as authenticated, expiring files or streams and remove temporary files on schedule. Transactional email uses an injected SMTP delivery adapter rather than a hosting-provider-specific service.
 
 One elected world worker advances the authoritative game clock under a database lease. Tick phases follow the [rulebook](rules.md). Prepare large-tick calculations against a committed snapshot; publish the new tick atomically before admitting commands against it. Workers lease jobs with uniqueness keys, and every settlement is replay-safe. Outbox delivery is at least once; consumers deduplicate.
 

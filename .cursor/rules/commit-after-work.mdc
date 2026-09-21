@@ -1,0 +1,10 @@
+---
+description: Always create a git commit after finishing implementation work
+alwaysApply: true
+---
+
+# Commit after completing work
+
+When you finish an assigned implementation batch (code, docs, tests, tracker updates), create a git commit before ending the turn unless the user explicitly says not to commit.
+
+Follow the repository git safety protocol: status/diff/log first, stage relevant files only, no secrets, HEREDOC commit message, never amend unless the amend rules are met, never push unless asked.

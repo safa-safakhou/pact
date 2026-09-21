@@ -25,6 +25,13 @@ function sessionToken(request: FastifyRequest): string {
   return token;
 }
 
+function writeContext(request: FastifyRequest): { sessionToken: string; csrfToken: string; origin: string } {
+  const csrf = request.headers["x-csrf-token"];
+  const origin = request.headers.origin;
+  if (typeof csrf !== "string" || typeof origin !== "string") throw new IdentityError("FORBIDDEN");
+  return { sessionToken: sessionToken(request), csrfToken: csrf, origin };
+}
+
 async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Promise<unknown> {
   try {
     return await operation();
@@ -144,11 +151,19 @@ export function registerApprovalRoutes(
   );
 
   server.post<{ Params: { approvalId: string } }>("/v1/approvals/:approvalId/approve", async (request, reply) =>
-    safe(reply, async () => approvals.approve(sessionToken(request), request.params.approvalId)),
+    safe(reply, async () => {
+      const context = writeContext(request);
+      await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      return approvals.approve(context.sessionToken, request.params.approvalId);
+    }),
   );
 
   server.post<{ Params: { approvalId: string } }>("/v1/approvals/:approvalId/reject", async (request, reply) =>
-    safe(reply, async () => approvals.reject(sessionToken(request), request.params.approvalId)),
+    safe(reply, async () => {
+      const context = writeContext(request);
+      await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      return approvals.reject(context.sessionToken, request.params.approvalId);
+    }),
   );
 }
 
@@ -176,7 +191,8 @@ export function registerInboxRoutes(
 
   server.post("/v1/inbox/ack", async (request, reply) =>
     safe(reply, async () => {
-      const session = await identity.authenticate(sessionToken(request));
+      const context = writeContext(request);
+      const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
       const body = z.object({ cursor: z.string().min(1) }).parse(request.body);
       return inbox.acknowledge(session.accountId, body.cursor);
     }),

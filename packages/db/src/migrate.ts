@@ -12,6 +12,8 @@ const migrationUrls = [
   new URL("../../mcp/migrations/", import.meta.url),
   new URL("../../approvals/migrations/", import.meta.url),
   new URL("../../inbox/migrations/", import.meta.url),
+  new URL("../../credential-vault/migrations/", import.meta.url),
+  new URL("../../runs/migrations/", import.meta.url),
 ];
 const identifierPattern = /^[a-z_][a-z0-9_]{0,62}$/;
 

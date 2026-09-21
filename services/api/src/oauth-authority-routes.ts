@@ -22,6 +22,13 @@ function sessionToken(request: FastifyRequest): string {
   return token;
 }
 
+function writeContext(request: FastifyRequest): { sessionToken: string; csrfToken: string; origin: string } {
+  const csrf = request.headers["x-csrf-token"];
+  const origin = request.headers.origin;
+  if (typeof csrf !== "string" || typeof origin !== "string") throw new IdentityError("FORBIDDEN");
+  return { sessionToken: sessionToken(request), csrfToken: csrf, origin };
+}
+
 async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Promise<unknown> {
   try {
     return await operation();
@@ -89,7 +96,8 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
 
   server.post("/oauth/authorize", async (request, reply) =>
     safe(reply, async () => {
-      const session = await identity.authenticate(sessionToken(request));
+      const context = writeContext(request);
+      const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
       const body = z
         .object({
           client_id: z.string().min(1),
@@ -193,6 +201,8 @@ export function registerAuthorityRoutes(
 
   server.post("/v1/mandate", async (request, reply) =>
     safe(reply, async () => {
+      const context = writeContext(request);
+      await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
       const body = z
         .object({
           allowedActions: z.array(z.string().min(1).max(64)).min(1).max(50),
@@ -203,7 +213,7 @@ export function registerAuthorityRoutes(
           expectedVersion: z.number().int().positive(),
         })
         .parse(request.body);
-      return authority.raiseMandate(sessionToken(request), {
+      return authority.raiseMandate(context.sessionToken, {
         allowedActions: body.allowedActions,
         resourceLimits: body.resourceLimits,
         expectedVersion: body.expectedVersion,

@@ -30,4 +30,4 @@ Correlation values are UUID-only to prevent caller-controlled log content. Metri
 
 ## Handoff
 
-PACT-006 becomes dependency-ready. Its authentication and security events must use the security retention class and must never pass email, authorization material, reset tokens, or password-check responses as telemetry attributes. PACT-004 remains ready but requires its listed AWS account, domain, and sender prerequisites for completion.
+PACT-006 becomes dependency-ready. Its authentication and security events must use the security retention class and must never pass email, authorization material, reset tokens, or password-check responses as telemetry attributes. The later Version 1.2 planning correction replaces the AWS deployment with the project single-VPS contract; PACT-004 now requires VPS, DNS, off-host backup, and SMTP inputs for completion.

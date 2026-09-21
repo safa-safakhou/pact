@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const SCHEMA_VERSION = "pact.command.v1" as const;
 export const EVENT_SCHEMA_VERSION = "pact.event.v1" as const;
+export const API_VERSION = "pact.api.v1" as const;
 
 const safeIdentifier = z
   .string()
@@ -114,6 +115,29 @@ export const EventCursorSchema = z
   })
   .strict();
 
+export const ClientAudienceSchema = z.enum(["human", "agent"]);
+export const AgentScopeSchema = z.enum(["world:read", "messages:write", "game:act"]);
+export const ClientCapabilitySchema = z.enum([
+  "command.submit",
+  "receipt.read",
+  "inbox.read",
+  "inbox.subscribe",
+  "approval.status",
+  "approval.commit",
+  "mcp.tools",
+]);
+export const CapabilityDocumentSchema = z
+  .object({
+    apiVersion: z.literal(API_VERSION),
+    commandSchemaVersion: z.literal(SCHEMA_VERSION),
+    eventSchemaVersion: z.literal(EVENT_SCHEMA_VERSION),
+    audience: ClientAudienceSchema,
+    capabilities: z.array(ClientCapabilitySchema),
+    allowedScopes: z.array(AgentScopeSchema),
+    mcpProtocolVersions: z.array(z.enum(["2025-11-25", "2025-06-18"])),
+  })
+  .strict();
+
 export const ToolCallSchema = z
   .object({
     name: z.enum(["sandbox.echo", "sandbox.counter.increment", "sandbox.draft.read", "sandbox.draft.write"]),
@@ -128,6 +152,10 @@ export type CommandEnvelope = z.infer<typeof CommandEnvelopeSchema>;
 export type CommandReceipt = z.infer<typeof CommandReceiptSchema>;
 export type EventEnvelope = z.infer<typeof EventEnvelopeSchema>;
 export type EventCursor = z.infer<typeof EventCursorSchema>;
+export type ClientAudience = z.infer<typeof ClientAudienceSchema>;
+export type AgentScope = z.infer<typeof AgentScopeSchema>;
+export type ClientCapability = z.infer<typeof ClientCapabilitySchema>;
+export type CapabilityDocument = z.infer<typeof CapabilityDocumentSchema>;
 
 export function validateCommandForWeb(input: unknown): CommandEnvelope {
   return CommandEnvelopeSchema.parse(input);

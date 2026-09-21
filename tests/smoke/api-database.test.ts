@@ -41,6 +41,8 @@ describe("API/database smoke", () => {
       { name: "0009_mcp_sessions.sql" },
       { name: "0010_approval_requests.sql" },
       { name: "0011_inbox_acknowledgements.sql" },
+      { name: "0012_credential_vault.sql" },
+      { name: "0013_envoy_runs.sql" },
     ]);
     await server.close();
   });

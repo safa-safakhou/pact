@@ -3,6 +3,7 @@ import { CommandDispatcher } from "@pact/application";
 import { ApprovalService } from "@pact/approvals";
 import { AuthorityService } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
+import { CredentialVaultService, RsaOaepPublicKeyWrapper } from "@pact/credential-vault";
 import { createPool } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -15,6 +16,7 @@ import { InboxService } from "@pact/inbox";
 import { McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
+import { RunService } from "@pact/runs";
 import { readEnvironment } from "./config.js";
 import { buildServer } from "./server.js";
 
@@ -69,6 +71,17 @@ const approvals = new ApprovalService(pool, {
   origin: environment.PACT_ORIGIN,
 });
 const inbox = new InboxService(pool, { productScope: "pact", clock });
+const runs = new RunService(pool, { productScope: "pact", clock, inbox });
+const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
+  ? new CredentialVaultService(pool, {
+      productScope: "pact",
+      clock,
+      wrapper: new RsaOaepPublicKeyWrapper(
+        await readFile(environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE, "utf8"),
+        environment.MODEL_CREDENTIAL_WRAPPING_KEY_ID,
+      ),
+    })
+  : undefined;
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
@@ -78,6 +91,8 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   mcp,
   approvals,
   inbox,
+  runs,
+  ...(credentialVault ? { credentialVault } : {}),
   origin: environment.PACT_ORIGIN,
 });
 

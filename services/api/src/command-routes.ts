@@ -21,6 +21,13 @@ function sessionToken(request: FastifyRequest): string {
   return token;
 }
 
+function writeContext(request: FastifyRequest): { sessionToken: string; csrfToken: string; origin: string } {
+  const csrf = request.headers["x-csrf-token"];
+  const origin = request.headers.origin;
+  if (typeof csrf !== "string" || typeof origin !== "string") throw new IdentityError("FORBIDDEN");
+  return { sessionToken: sessionToken(request), csrfToken: csrf, origin };
+}
+
 async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Promise<unknown> {
   try {
     return await operation();
@@ -63,7 +70,8 @@ export function registerCommandRoutes(
 
   server.post("/v1/commands", async (request, reply) =>
     safe(reply, async () => {
-      const session = await identity.authenticate(sessionToken(request));
+      const context = writeContext(request);
+      const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
       const receipt = await dispatcher.dispatch(
         {
           accountId: session.accountId,

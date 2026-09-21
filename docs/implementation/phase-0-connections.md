@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 14 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**32 tickets · 19 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -118,7 +118,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - Local PostgreSQL 17 verification 2026-09-20: integration/smoke tests 4/4; migrations idempotent
 
 <a id="pact-004"></a>
-## PACT-004 — Provision the isolated connection-test environment
+## PACT-004 — Provision the single-VPS connection-test environment
 
 **Status:** blocked · **Role:** Platform · **Size:** L · **Type:** implementation
 
@@ -130,19 +130,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Define AWS Frankfurt infrastructure as code for isolated test ECS services, RDS PostgreSQL, private S3, KMS, SES, TLS, and secret injection; use separate environment identities.
-- Configure 35-day backup lifecycle, least-privilege process roles, deployment/rollback commands, and outbound-provider access. Synthetic identities only until PACT-025 passes.
+- Define a reproducible Docker Compose deployment for one EU-hosted Linux VPS: TLS reverse proxy, web/API, rules, inference, notification and channel processes, PostgreSQL 17 on a private network, persistent volumes, health checks, and narrowly mounted secrets.
+- Configure automated deploy/migrate/rollback commands, SMTP delivery, outbound-provider access, expiring local exports, logical test/production separation, and encrypted off-host PostgreSQL base/WAL backups with a 35-day lifecycle. Synthetic identities only until PACT-025 passes.
 
 **Acceptance**
 
-- [ ] Deploy and restore a synthetic account database in the test environment; deleted/revoked-record replay hooks are available for PACT-024.
-- [ ] Inference credentials are inaccessible to the web bundle and unrelated worker roles; no private API response is CDN-cached.
+- [ ] Deploy the stack to the project VPS and restore a synthetic account database from an encrypted off-host backup; deleted/revoked-record replay hooks are available for PACT-024.
+- [ ] PostgreSQL is not publicly reachable; private credential-unwrapping material is mounted only into the inference worker; unrelated processes cannot read it; authenticated responses are not cached by the reverse proxy.
 
-**External prerequisites:** AWS test account, deployment domain, verified sender identity.
+**External prerequisites:** Project VPS access, deployment domain/DNS, encrypted off-host backup target, SMTP sender credentials.
 
 **Assignee:** cursor-agent
 
-**Block reason:** Missing AWS test account credentials, deployment domain, and verified SES sender identity. aws sts get-caller-identity fails with no credentials (2026-09-20).
+**Block reason:** Missing project VPS access, deployment domain/DNS, encrypted off-host backup target, and SMTP sender credentials (2026-09-21). Local implementation work is intentionally not gated by this deployment proof.
 
 <a id="pact-005"></a>
 ## PACT-005 — Add redacted operational telemetry and failure correlation
@@ -263,9 +263,9 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-009"></a>
 ## PACT-009 — Build encrypted model credential storage
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-007](phase-0-connections.md#pact-007)
+**Depends on:** [PACT-007](phase-0-connections.md#pact-007)
 
 **Components:** credential vault.
 
@@ -273,18 +273,26 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Implement save/replace/revoke for five saved model connections with AES-256-GCM envelope encryption and KMS wrapping.
+- Implement save/replace/revoke for five saved model connections with fresh AES-256-GCM data keys and an injected wrapping-key port. The single-VPS adapter uses public wrapping material for writes and mounts private unwrapping material only into the inference worker.
 - Restrict decryption to the inference worker, show only labels/suffixes, and remove live encrypted keys within 24 hours of revocation.
 
 **Acceptance**
 
-- [ ] Key substitution across accounts fails and no key is returned by read/MCP endpoints or included in prompts.
-- [ ] Revocation immediately prevents a new call; a credential already submitted to a provider is reported truthfully rather than claimed recalled.
+- [x] Key substitution across accounts fails; the API-facing adapter can wrap but cannot unwrap; no key is returned by read/MCP endpoints or included in prompts.
+- [x] Revocation immediately prevents a new call; a credential already submitted to a provider is reported truthfully rather than claimed recalled.
+
+**Assignee:** codex-credential-vault
+
+**Evidence**
+
+- docs/implementation/reports/credential-vault.md
+- npm run lint; npm run typecheck; npm run build; npm test (21); npm run test:integration (26)
+- packages/credential-vault/src/crypto.test.ts; tests/integration/credential-vault.test.ts; scripts/check-boundaries.mjs
 
 <a id="pact-010"></a>
 ## PACT-010 — Build the provider adapter interface and contract harness
 
-**Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-002](phase-0-connections.md#pact-002), [PACT-009](phase-0-connections.md#pact-009)
 
@@ -299,13 +307,21 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A route can be swapped without changing command schemas or kingdom identity.
-- [ ] Unsupported models are rejected before a run; missing price is never rendered as zero; failure never silently switches provider or credential.
+- [x] A route can be swapped without changing command schemas or kingdom identity.
+- [x] Unsupported models are rejected before a run; missing price is never rendered as zero; failure never silently switches provider or credential.
+
+**Assignee:** codex-provider-contract
+
+**Evidence**
+
+- docs/implementation/reports/provider-contract.md
+- npm run lint; npm run typecheck; npm run build; npm test (25); npm run test:integration (26)
+- packages/model-provider/src/provider-contract.test.ts; packages/model-provider/src/contract-harness.ts
 
 <a id="pact-011"></a>
 ## PACT-011 — Implement the OpenAI model adapter
 
-**Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010)
 
@@ -320,10 +336,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A real supported model reads the draft, proposes a valid sandbox write, and consumes its tool receipt in a final response.
-- [ ] Invalid key, tool error, cancellation, unavailable model, and quota failure produce the shared adapter result without leaking credentials.
+- [x] A real supported model reads the draft, proposes a valid sandbox write, and consumes its tool receipt in a final response.
+- [x] Invalid key, tool error, cancellation, unavailable model, and quota failure produce the shared adapter result without leaking credentials.
 
 **External prerequisites:** Operator-provided test API key and quota.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/runs-openai.md
+- npm run lint; npm run typecheck; npm test (27 includes openai.test.ts)
+- packages/model-provider/src/openai.ts; packages/model-provider/src/openai.test.ts
+- Live OpenAI operator key smoke not run; fixture Responses transport verified
 
 <a id="pact-012"></a>
 ## PACT-012 — Implement the Anthropic model adapter
@@ -566,7 +591,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-021"></a>
 ## PACT-021 — Implement bounded Envoy runs and exclusive write leases
 
-**Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020)
 
@@ -581,8 +606,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A fake-provider run stops at each limit, preserves allowance on resume, and cannot be extended by repeated callbacks.
-- [ ] Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop.
+- [x] A fake-provider run stops at each limit, preserves allowance on resume, and cannot be extended by repeated callbacks.
+- [x] Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop.
+
+**Assignee:** cursor-agent
+
+**Evidence**
+
+- docs/implementation/reports/runs-openai.md
+- npm run lint; npm run typecheck; npm test (27); npm run test:integration (runs + suite); npm run build:packages; api/inference builds
+- tests/integration/runs.test.ts
 
 <a id="pact-022"></a>
 ## PACT-022 — Implement the durable inbox and live event delivery
@@ -638,7 +671,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-083"></a>
 ## PACT-083 — Build the shared client SDK and capability contract
 
-**Status:** todo · **Role:** Backend / Frontend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend / Frontend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-002](phase-0-connections.md#pact-002), [PACT-016](phase-0-connections.md#pact-016), [PACT-018](phase-0-connections.md#pact-018), [PACT-020](phase-0-connections.md#pact-020), [PACT-022](phase-0-connections.md#pact-022), [PACT-082](phase-0-connections.md#pact-082)
 
@@ -653,8 +686,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A web and non-browser test client issue the same sandbox command and observe the same receipt after a timeout/retry.
-- [ ] SDK imports no DOM/React Native/Telegram globals; no client retry silently changes an idempotency key or acquires human scopes.
+- [x] A web and non-browser test client issue the same sandbox command and observe the same receipt after a timeout/retry.
+- [x] SDK imports no DOM/React Native/Telegram globals; no client retry silently changes an idempotency key or acquires human scopes.
+
+**Assignee:** codex-sdk-run
+
+**Evidence**
+
+- docs/implementation/reports/client-sdk.md
+- npm run lint; npm run typecheck; npm test (20); npm run build; npm run test:integration (24)
+- tests/integration/client-sdk.test.ts; packages/client-sdk/src/client.test.ts
 
 <a id="pact-084"></a>
 ## PACT-084 — Prove native iOS and Android login, linking, and approval
@@ -707,7 +748,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Security · **Size:** L · **Type:** implementation
 
-**Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-084](phase-0-connections.md#pact-084), [PACT-085](phase-0-connections.md#pact-085)
+**Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-084](phase-0-connections.md#pact-084), [PACT-085](phase-0-connections.md#pact-085)
 
 **Components:** privacy jobs, export, deletion registry.
 

@@ -261,7 +261,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Create the production-isolated infrastructure from phase-0 IaC with the specified database resilience, backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, and deployment rollback.
+- Promote and rehearse the phase-0 single-VPS stack for production with separate production database/secrets, encrypted off-host backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, migrations, and deployment rollback.
 - Configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations.
 
 **Acceptance**
@@ -269,7 +269,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Rehearse a production-like restore, deletion suppression, outbox replay, signing-key rotation, credential incident, and world pause/resume before admitting players.
 - [ ] Operators can diagnose and recover without manual unlogged balance edits; registration/checkout stay disabled when required operational configuration is missing.
 
-**External prerequisites:** Production AWS account, domain, and operator coverage.
+**External prerequisites:** Production access to the project VPS, domain/DNS, encrypted off-host backup target, SMTP credentials, and operator coverage.
 
 <a id="pact-079"></a>
 ## PACT-079 — Re-certify external clients and complete distribution

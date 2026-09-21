@@ -15,6 +15,8 @@ const EnvironmentSchema = z
     IDENTITY_TOKEN_PEPPER: z.string().min(43).default(developmentPepper),
     IDENTITY_ENCRYPTION_KEY: z.string().min(43).default(developmentEncryptionKey),
     COMPROMISED_PASSWORD_SHA256_FILE: z.string().min(1).optional(),
+    MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE: z.string().min(1).optional(),
+    MODEL_CREDENTIAL_WRAPPING_KEY_ID: z.string().min(1).max(128).default("vps-primary-v1"),
   })
   .superRefine((value, context) => {
     if (
@@ -25,6 +27,9 @@ const EnvironmentSchema = z
     }
     if (value.NODE_ENV === "production" && !value.COMPROMISED_PASSWORD_SHA256_FILE) {
       context.addIssue({ code: "custom", message: "Production compromised-password digest file is required" });
+    }
+    if (value.NODE_ENV === "production" && !value.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE) {
+      context.addIssue({ code: "custom", message: "Production model-credential public wrapping key is required" });
     }
   });
 

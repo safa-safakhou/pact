@@ -162,7 +162,7 @@
     },
     {
       "id": "PACT-004",
-      "title": "Provision the isolated connection-test environment",
+      "title": "Provision the single-VPS connection-test environment",
       "phase": 0,
       "status": "blocked",
       "kind": "implementation",
@@ -180,12 +180,12 @@
         "A06"
       ],
       "scope": [
-        "Define AWS Frankfurt infrastructure as code for isolated test ECS services, RDS PostgreSQL, private S3, KMS, SES, TLS, and secret injection; use separate environment identities.",
-        "Configure 35-day backup lifecycle, least-privilege process roles, deployment/rollback commands, and outbound-provider access. Synthetic identities only until PACT-025 passes."
+        "Define a reproducible Docker Compose deployment for one EU-hosted Linux VPS: TLS reverse proxy, web/API, rules, inference, notification and channel processes, PostgreSQL 17 on a private network, persistent volumes, health checks, and narrowly mounted secrets.",
+        "Configure automated deploy/migrate/rollback commands, SMTP delivery, outbound-provider access, expiring local exports, logical test/production separation, and encrypted off-host PostgreSQL base/WAL backups with a 35-day lifecycle. Synthetic identities only until PACT-025 passes."
       ],
       "acceptance": [
-        "Deploy and restore a synthetic account database in the test environment; deleted/revoked-record replay hooks are available for PACT-024.",
-        "Inference credentials are inaccessible to the web bundle and unrelated worker roles; no private API response is CDN-cached."
+        "Deploy the stack to the project VPS and restore a synthetic account database from an encrypted off-host backup; deleted/revoked-record replay hooks are available for PACT-024.",
+        "PostgreSQL is not publicly reachable; private credential-unwrapping material is mounted only into the inference worker; unrelated processes cannot read it; authenticated responses are not cached by the reverse proxy."
       ],
       "components": [
         "infrastructure",
@@ -194,9 +194,9 @@
       "evidence": [],
       "assignee": "cursor-agent",
       "blocked_by_external": [
-        "AWS test account, deployment domain, verified sender identity"
+        "Project VPS access, deployment domain/DNS, encrypted off-host backup target, SMTP sender credentials"
       ],
-      "block_reason": "Missing AWS test account credentials, deployment domain, and verified SES sender identity. aws sts get-caller-identity fails with no credentials (2026-09-20)."
+      "block_reason": "Missing project VPS access, deployment domain/DNS, encrypted off-host backup target, and SMTP sender credentials (2026-09-21). Local implementation work is intentionally not gated by this deployment proof."
     },
     {
       "id": "PACT-005",
@@ -361,12 +361,11 @@
       "id": "PACT-009",
       "title": "Build encrypted model credential storage",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
       "depends_on": [
-        "PACT-004",
         "PACT-007"
       ],
       "sources": [
@@ -378,18 +377,22 @@
         "A06"
       ],
       "scope": [
-        "Implement save/replace/revoke for five saved model connections with AES-256-GCM envelope encryption and KMS wrapping.",
+        "Implement save/replace/revoke for five saved model connections with fresh AES-256-GCM data keys and an injected wrapping-key port. The single-VPS adapter uses public wrapping material for writes and mounts private unwrapping material only into the inference worker.",
         "Restrict decryption to the inference worker, show only labels/suffixes, and remove live encrypted keys within 24 hours of revocation."
       ],
       "acceptance": [
-        "Key substitution across accounts fails and no key is returned by read/MCP endpoints or included in prompts.",
+        "Key substitution across accounts fails; the API-facing adapter can wrap but cannot unwrap; no key is returned by read/MCP endpoints or included in prompts.",
         "Revocation immediately prevents a new call; a credential already submitted to a provider is reported truthfully rather than claimed recalled."
       ],
       "components": [
         "credential vault"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/credential-vault.md",
+        "npm run lint; npm run typecheck; npm run build; npm test (21); npm run test:integration (26)",
+        "packages/credential-vault/src/crypto.test.ts; tests/integration/credential-vault.test.ts; scripts/check-boundaries.mjs"
+      ],
+      "assignee": "codex-credential-vault",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -397,7 +400,7 @@
       "id": "PACT-010",
       "title": "Build the provider adapter interface and contract harness",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -424,8 +427,12 @@
         "provider interface",
         "provider test harness"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/provider-contract.md",
+        "npm run lint; npm run typecheck; npm run build; npm test (25); npm run test:integration (26)",
+        "packages/model-provider/src/provider-contract.test.ts; packages/model-provider/src/contract-harness.ts"
+      ],
+      "assignee": "codex-provider-contract",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -433,7 +440,7 @@
       "id": "PACT-011",
       "title": "Implement the OpenAI model adapter",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -458,8 +465,13 @@
       "components": [
         "OpenAI adapter"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/runs-openai.md",
+        "npm run lint; npm run typecheck; npm test (27 includes openai.test.ts)",
+        "packages/model-provider/src/openai.ts; packages/model-provider/src/openai.test.ts",
+        "Live OpenAI operator key smoke not run; fixture Responses transport verified"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [
         "Operator-provided test API key and quota"
       ],
@@ -811,7 +823,7 @@
       "id": "PACT-021",
       "title": "Implement bounded Envoy runs and exclusive write leases",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "L",
@@ -840,8 +852,12 @@
         "run service",
         "inference worker"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/runs-openai.md",
+        "npm run lint; npm run typecheck; npm test (27); npm run test:integration (runs + suite); npm run build:packages; api/inference builds",
+        "tests/integration/runs.test.ts"
+      ],
+      "assignee": "cursor-agent",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -938,7 +954,7 @@
       "id": "PACT-083",
       "title": "Build the shared client SDK and capability contract",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend / Frontend",
       "size": "M",
@@ -972,8 +988,12 @@
         "generated types",
         "capability metadata"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/client-sdk.md",
+        "npm run lint; npm run typecheck; npm test (20); npm run build; npm run test:integration (24)",
+        "tests/integration/client-sdk.test.ts; packages/client-sdk/src/client.test.ts"
+      ],
+      "assignee": "codex-sdk-run",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -1068,7 +1088,6 @@
       "owner_role": "Security",
       "size": "L",
       "depends_on": [
-        "PACT-004",
         "PACT-008",
         "PACT-009",
         "PACT-016",
@@ -1866,7 +1885,6 @@
       "owner_role": "Security",
       "size": "M",
       "depends_on": [
-        "PACT-004",
         "PACT-027",
         "PACT-028"
       ],
@@ -2339,7 +2357,7 @@
       ],
       "scope": [
         "Build a small test-only non-game application using identity, model/runtime, exact approvals, and notifications through public package exports and in-memory adapters.",
-        "Use a fake provider and generic synthetic action; prove no PACT-domain/database import, no credential/event sharing across product scopes, and no required AWS dependency."
+        "Use a fake provider and generic synthetic action; prove no PACT-domain/database import, no credential/event sharing across product scopes, and no required deployment-provider dependency."
       ],
       "acceptance": [
         "The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.",
@@ -3733,7 +3751,7 @@
         "L04"
       ],
       "scope": [
-        "Create the production-isolated infrastructure from phase-0 IaC with the specified database resilience, backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, and deployment rollback.",
+        "Promote and rehearse the phase-0 single-VPS stack for production with separate production database/secrets, encrypted off-host backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, migrations, and deployment rollback.",
         "Configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations."
       ],
       "acceptance": [
@@ -3746,7 +3764,7 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [
-        "Production AWS account, domain, and operator coverage"
+        "Production access to the project VPS, domain/DNS, encrypted off-host backup target, SMTP credentials, and operator coverage"
       ],
       "block_reason": null
     },
@@ -3988,8 +4006,8 @@
     }
   ],
   "source_sha256": {
-    "../pact/access.md": "78bfceeca11bb44a054cbac293706a739490119a20ab3b214fdd10b07737ce67",
-    "../pact/runtime.md": "4ea70728d3d5fcc56b002594fea8bb9dd68d89ddd28ed67958c40d9000d7e58f",
+    "../pact/access.md": "3c5e806eb26c7ed6e2fe531eae3b34df8ab640fcfe2d0ea5d57d44866b617fe0",
+    "../pact/runtime.md": "40b85ce723686773ecf5c1bd2c6401c896828e80d10e1f41f1daaa0e135362f8",
     "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
     "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
     "../pact/privacy.md": "84b4b346c8da547a25e750e84ac3a455d9d6f08fd2d88b2f57cc58f9f7664350",
@@ -4009,5 +4027,5 @@
     "L": "Cross-cutting lifecycle or integration, usually delivered as multiple reviewable pull requests"
   },
   "source_of_truth": "tasks.json owns planned scope, dependencies, and acceptance criteria. Linear owns execution status, assignment, blockers, and evidence; local execution fields are manually reconciled snapshots. See linear-workflow.md and linear-map.json. Markdown phase pages are generated views. Game behavior remains owned by ../pact/.",
-  "specification_revision": "1.1 \u2014 2026-09-16"
+  "specification_revision": "1.2 \u2014 2026-09-21"
 }

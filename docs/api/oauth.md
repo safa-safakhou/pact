@@ -20,7 +20,7 @@ Scopes: `world:read`, `messages:write`, `game:act`. None authorize human approva
 ## Routes
 
 - `POST /oauth/register` — dynamic registration
-- `POST /oauth/authorize` — human session issues a code; response includes consent `{ clientName, subjectLabel, scopes }`
+- `POST /oauth/authorize` — cookie-authenticated Origin/CSRF write; human session issues a code; response includes consent `{ clientName, subjectLabel, scopes }`
 - `POST /oauth/token` — `authorization_code` or `refresh_token`
 - `POST /oauth/revoke`
 

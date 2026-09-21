@@ -586,7 +586,7 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-20T17:26:00Z",
+  "last_synced_at": "2026-09-21T08:24:08Z",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -596,8 +596,8 @@
     "blocked": "No native status; unfinished issue plus explicit blocker. Never map canceled or duplicate to done."
   },
   "source_sha256": {
-    "../pact/access.md": "78bfceeca11bb44a054cbac293706a739490119a20ab3b214fdd10b07737ce67",
-    "../pact/runtime.md": "4ea70728d3d5fcc56b002594fea8bb9dd68d89ddd28ed67958c40d9000d7e58f",
+    "../pact/access.md": "3c5e806eb26c7ed6e2fe531eae3b34df8ab640fcfe2d0ea5d57d44866b617fe0",
+    "../pact/runtime.md": "40b85ce723686773ecf5c1bd2c6401c896828e80d10e1f41f1daaa0e135362f8",
     "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
     "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
     "../pact/privacy.md": "84b4b346c8da547a25e750e84ac3a455d9d6f08fd2d88b2f57cc58f9f7664350",
@@ -619,9 +619,9 @@
       17
     ],
     "todo": 1,
-    "backlog": 85,
-    "done": 11,
+    "backlog": 79,
+    "done": 17,
     "blocked_local": 1,
-    "note": "PACT-004 blocked (no AWS). PACT-016 and PACT-019 completed 2026-09-20."
+    "note": "Version 1.2 replaced AWS-specific planning with the approved single-VPS contract and removed PACT-004 as a local implementation dependency for PACT-009, PACT-024, and PACT-042. PACT-004 remains locally blocked on VPS/domain/off-host-backup/SMTP access. PACT-009, PACT-010, and PACT-083 are completed and reconciled. PACT-011 through PACT-015 and PACT-021 are dependency-ready and unassigned."
   }
 }

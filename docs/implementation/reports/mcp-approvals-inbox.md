@@ -39,6 +39,8 @@ Supporting checks: `npm run lint`, `npm run typecheck`, `npm test` (18), `npm ru
 
 Approval commit runs the dispatcher outside the row lock transaction to avoid nested pool transactions, then records the receipt idempotently. Full run leases remain PACT-021. Hosted CI and real MCP host certification were not run.
 
+Post-completion audit: cookie-authenticated approval and inbox acknowledgement writes now call the shared origin/CSRF guard. `tests/integration/client-sdk.test.ts` verifies a session cookie alone receives HTTP 403 on both surfaces.
+
 ## Handoff
 
-Next ready work includes PACT-021 (bounded Envoy runs; needs 020). PACT-023 still waits on 017/020/021/022. PACT-004 remains blocked on AWS credentials.
+At the time of completion, next work included PACT-021 and PACT-023. Version 1.2 later replaced the AWS gate with the single-VPS deployment contract and made PACT-009 locally dependency-ready; the current tracker owns readiness.

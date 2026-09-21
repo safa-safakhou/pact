@@ -30,9 +30,11 @@ Supporting verification (all passed locally): `npm run lint`, `npm run typecheck
 
 Canonical idempotency hash covers schema version, command ID, expected version, and action; server-derived actor identity is excluded. Sandbox draft notes are fixture state, not kingdom activation. MCP and provider adapters still need to call the same dispatcher in later tickets. Hosted CI was not run.
 
+Post-completion audit: the cookie-authenticated command route now calls the shared origin/CSRF write guard. `tests/integration/client-sdk.test.ts` verifies a session cookie alone receives HTTP 403.
+
 ## Related tracker note
 
-PACT-004 / MNI-64 remains blocked: no AWS credentials (`aws sts get-caller-identity` fails). Deploy/restore acceptance cannot pass without the listed AWS test account, domain, and SES sender.
+PACT-004 / MNI-64 remains an external deployment gate. Version 1.2 replaces AWS with the project single-VPS contract; deploy/restore acceptance requires VPS access, DNS, encrypted off-host backup storage, and SMTP sender credentials, but no longer blocks local credential-vault implementation.
 
 ## Handoff
 

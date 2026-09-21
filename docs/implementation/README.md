@@ -81,7 +81,7 @@ The JSON file owns planned scope, dependencies, and acceptance criteria. Executi
 
 ## External prerequisites and release evidence
 
-Tickets identify where real AWS/merchant accounts, API quota, eligible chatbot accounts, licensed assets, operator identity, distribution review, or consenting testers are needed. These are execution inputs. Development uses synthetic identities and mock providers until the real-account preflight passes. PACT-025 gates recruitment for connection tests; PACT-066 gates recruitment for the social pilot.
+Tickets identify where access to the project VPS, DNS, off-host backup storage, SMTP/merchant accounts, API quota, eligible chatbot accounts, licensed assets, operator identity, distribution review, or consenting testers are needed. These are execution inputs. Development uses local services, synthetic identities, and mock providers until the real-account preflight passes. PACT-025 gates recruitment for connection tests; PACT-066 gates recruitment for the social pilot.
 
 The three-week pilot and each referred player's return window take actual elapsed observation time. Distribution review and live model availability are external dependencies. Neither is inferred from code completion. Global-world capacity is whatever the release load rehearsal demonstrates; the 50-player test does not establish unlimited scale.
 

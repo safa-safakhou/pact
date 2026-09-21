@@ -10,8 +10,8 @@ Tickets: PACT-020.
 | --- | --- | --- |
 | `GET` | `/v1/approvals/:approvalId` | Authenticated status/review; never commits |
 | `GET` | `/approvals/:approvalId` | Deep-link review surface; opaque ID only, never a bearer approval secret |
-| `POST` | `/v1/approvals/:approvalId/approve` | Human session cookie required; commits the exact stored command once |
-| `POST` | `/v1/approvals/:approvalId/reject` | Human session cookie required; records a rejected receipt |
+| `POST` | `/v1/approvals/:approvalId/approve` | Human session cookie, exact Origin, and CSRF token required; commits the exact stored command once |
+| `POST` | `/v1/approvals/:approvalId/reject` | Human session cookie, exact Origin, and CSRF token required; records a rejected receipt |
 
 Double approve returns the original receipt. Expired or changed terms fail. Chatbot text and host tool confirmations are not approval credentials—only the human POST path commits.
 

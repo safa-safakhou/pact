@@ -1,11 +1,13 @@
 import type { CommandDispatcher } from "@pact/application";
 import type { ApprovalService } from "@pact/approvals";
 import type { AuthorityService } from "@pact/authority";
+import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
 import type { InboxService } from "@pact/inbox";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
+import type { RunService } from "@pact/runs";
 import {
   createCorrelationIds,
   fastifyRedactionPaths,
@@ -16,10 +18,13 @@ import {
 } from "@pact/telemetry";
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
+import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
 import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
+import { registerModelCredentialRoutes } from "./model-credential-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
+import { registerRunRoutes } from "./run-routes.js";
 
 function safeLogger(logger: boolean | object): false | Record<string, unknown> {
   if (logger === false) return false;
@@ -44,6 +49,8 @@ export interface ApiModules {
   mcp?: McpTransport;
   approvals?: ApprovalService;
   inbox?: InboxService;
+  credentialVault?: CredentialVaultService;
+  runs?: RunService;
   origin?: string;
 }
 
@@ -117,6 +124,7 @@ export function buildServer(
   server.get("/metrics", async (_request, reply) => {
     return reply.type("text/plain; version=0.0.4; charset=utf-8").send(telemetry.metrics.renderPrometheus());
   });
+  registerCapabilityRoutes(server);
   if (modules) {
     registerIdentityRoutes(server, modules.identity, modules.onboarding);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
@@ -127,6 +135,8 @@ export function buildServer(
     }
     if (modules.approvals) registerApprovalRoutes(server, modules.identity, modules.approvals);
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
+    if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
+    if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs);
   }
   return server;
 }

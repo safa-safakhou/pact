@@ -303,7 +303,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Security · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028)
+**Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028)
 
 **Components:** randomness and verification.
 
@@ -544,7 +544,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **Implement / deliver**
 
 - Build a small test-only non-game application using identity, model/runtime, exact approvals, and notifications through public package exports and in-memory adapters.
-- Use a fake provider and generic synthetic action; prove no PACT-domain/database import, no credential/event sharing across product scopes, and no required AWS dependency.
+- Use a fake provider and generic synthetic action; prove no PACT-domain/database import, no credential/event sharing across product scopes, and no required deployment-provider dependency.
 
 **Acceptance**
 

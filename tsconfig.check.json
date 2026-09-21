@@ -17,7 +17,11 @@
       "@pact/authority": ["./packages/authority/src/index.ts"],
       "@pact/mcp": ["./packages/mcp/src/index.ts"],
       "@pact/approvals": ["./packages/approvals/src/index.ts"],
-      "@pact/inbox": ["./packages/inbox/src/index.ts"]
+      "@pact/inbox": ["./packages/inbox/src/index.ts"],
+      "@pact/credential-vault": ["./packages/credential-vault/src/index.ts"],
+      "@pact/model-provider": ["./packages/model-provider/src/index.ts"],
+      "@pact/runs": ["./packages/runs/src/index.ts"],
+      "@pact/client-sdk": ["./packages/client-sdk/src/index.ts"]
     }
   },
   "include": [

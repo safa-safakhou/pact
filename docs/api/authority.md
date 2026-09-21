@@ -5,7 +5,7 @@ Humans edit a versioned kingdom mandate. Agents receive a readable copy and cann
 ## Routes
 
 - `GET /v1/mandate` — ensure/read the caller's mandate
-- `POST /v1/mandate` — raise/update authority; requires a human session with recent authentication (`authority.raise`)
+- `POST /v1/mandate` — raise/update authority; requires Origin/CSRF proof and a human session with recent authentication (`authority.raise`)
 
 Raising authority increments `version`. Stale sessions return `RECENT_AUTH_REQUIRED`.
 

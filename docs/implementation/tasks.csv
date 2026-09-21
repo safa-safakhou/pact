@@ -3,14 +3,14 @@ PACT-001,Bootstrap the application workspace and continuous integration,0,done,i
 PACT-082,Establish reusable package boundaries and product isolation,0,done,implementation,Architecture,M,PACT-001,A09,phase-0-connections.md#pact-082
 PACT-002,"Define shared command, event, and tool schemas",0,done,implementation,Backend,M,PACT-001;PACT-082,A03;A05,phase-0-connections.md#pact-002
 PACT-003,Create account persistence and transaction/outbox infrastructure,0,done,implementation,Backend,M,PACT-001;PACT-002,A01;A06,phase-0-connections.md#pact-003
-PACT-004,Provision the isolated connection-test environment,0,blocked,implementation,Platform,L,PACT-001;PACT-003,A06,phase-0-connections.md#pact-004
+PACT-004,Provision the single-VPS connection-test environment,0,blocked,implementation,Platform,L,PACT-001;PACT-003,A06,phase-0-connections.md#pact-004
 PACT-005,Add redacted operational telemetry and failure correlation,0,done,implementation,Platform,M,PACT-002;PACT-003,A06,phase-0-connections.md#pact-005
 PACT-006,"Implement signup, verification, and human sessions",0,done,implementation,Backend,M,PACT-003;PACT-005,A01,phase-0-connections.md#pact-006
 PACT-007,"Implement recovery, reauthentication, and account security",0,done,implementation,Backend,M,PACT-006,A01;A05,phase-0-connections.md#pact-007
 PACT-008,Implement private kingdom drafts and resumable setup,0,done,implementation,Backend,M,PACT-006;PACT-002,A01,phase-0-connections.md#pact-008
-PACT-009,Build encrypted model credential storage,0,todo,implementation,Backend,M,PACT-004;PACT-007,A02;A06,phase-0-connections.md#pact-009
-PACT-010,Build the provider adapter interface and contract harness,0,todo,implementation,Integrations,M,PACT-002;PACT-009,A02,phase-0-connections.md#pact-010
-PACT-011,Implement the OpenAI model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-011
+PACT-009,Build encrypted model credential storage,0,done,implementation,Backend,M,PACT-007,A02;A06,phase-0-connections.md#pact-009
+PACT-010,Build the provider adapter interface and contract harness,0,done,implementation,Integrations,M,PACT-002;PACT-009,A02,phase-0-connections.md#pact-010
+PACT-011,Implement the OpenAI model adapter,0,done,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-011
 PACT-012,Implement the Anthropic model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-012
 PACT-013,Implement the Gemini model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-013
 PACT-014,Implement the xAI model adapter,0,todo,implementation,Integrations,M,PACT-010,A02,phase-0-connections.md#pact-014
@@ -20,13 +20,13 @@ PACT-017,Implement the remote MCP transport and tool registry,0,done,implementat
 PACT-018,Implement the shared dispatcher and sandbox receipts,0,done,implementation,Backend,M,PACT-003;PACT-007;PACT-002,A03;A05,phase-0-connections.md#pact-018
 PACT-019,Implement mandate permissions and immediate-spend checks,0,done,implementation,Backend,M,PACT-018,A05,phase-0-connections.md#pact-019
 PACT-020,Implement exact-command human approvals,0,done,implementation,Backend,M,PACT-019,A05,phase-0-connections.md#pact-020
-PACT-021,Implement bounded Envoy runs and exclusive write leases,0,todo,implementation,Backend,L,PACT-010;PACT-018;PACT-019;PACT-020,A04;A05,phase-0-connections.md#pact-021
+PACT-021,Implement bounded Envoy runs and exclusive write leases,0,done,implementation,Backend,L,PACT-010;PACT-018;PACT-019;PACT-020,A04;A05,phase-0-connections.md#pact-021
 PACT-022,Implement the durable inbox and live event delivery,0,done,implementation,Backend,M,PACT-003;PACT-018,A03;A04,phase-0-connections.md#pact-022
 PACT-023,"Build account, connection, and Envoy setup screens",0,todo,implementation,Frontend,L,PACT-008;PACT-009;PACT-015;PACT-016;PACT-017;PACT-020;PACT-021;PACT-022,A01;A02;A03;A04;A05,phase-0-connections.md#pact-023
-PACT-083,Build the shared client SDK and capability contract,0,todo,implementation,Backend / Frontend,M,PACT-002;PACT-016;PACT-018;PACT-020;PACT-022;PACT-082,A08;A09,phase-0-connections.md#pact-083
+PACT-083,Build the shared client SDK and capability contract,0,done,implementation,Backend / Frontend,M,PACT-002;PACT-016;PACT-018;PACT-020;PACT-022;PACT-082,A08;A09,phase-0-connections.md#pact-083
 PACT-084,"Prove native iOS and Android login, linking, and approval",0,todo,implementation,Mobile,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-084
 PACT-085,Prove Telegram identity linking and Mini App authentication,0,todo,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085
-PACT-024,"Implement first-account retention, export, and deletion",0,todo,implementation,Security,L,PACT-004;PACT-008;PACT-009;PACT-016;PACT-021;PACT-022;PACT-084;PACT-085,A06,phase-0-connections.md#pact-024
+PACT-024,"Implement first-account retention, export, and deletion",0,todo,implementation,Security,L,PACT-008;PACT-009;PACT-016;PACT-021;PACT-022;PACT-084;PACT-085,A06,phase-0-connections.md#pact-024
 PACT-025,Complete the real-account environment preflight,0,todo,operations,Operations,M,PACT-004;PACT-005;PACT-006;PACT-007;PACT-024,A06,phase-0-connections.md#pact-025
 PACT-086,Certify additional assistant routes and publish a capability matrix,0,todo,verification,Integrations,M,PACT-017;PACT-023;PACT-025;PACT-083,A03;A09,phase-0-connections.md#pact-086
 PACT-026,Certify every connection route and measure unaided setup,0,todo,verification,QA,L,PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-017;PACT-023;PACT-024;PACT-025;PACT-084;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-026
@@ -45,7 +45,7 @@ PACT-038,Implement independent contract delivery and default settlement,1,todo,i
 PACT-039,Complete future exposure accounting and human exceptions,1,todo,implementation,Backend,L,PACT-019;PACT-020;PACT-027;PACT-032;PACT-037;PACT-038,R04,phase-1-rules.md#pact-039
 PACT-040,"Implement garrison contracts, recall, return, and seizure",1,todo,implementation,Rules,L,PACT-027;PACT-033;PACT-034;PACT-037;PACT-039,R01;R03;R04,phase-1-rules.md#pact-040
 PACT-041,Implement scouting and private observation reports,1,todo,implementation,Rules,M,PACT-027;PACT-029;PACT-033;PACT-035;PACT-039,R02;R03;R04,phase-1-rules.md#pact-041
-PACT-042,Implement raid seed commitments and deterministic dice,1,todo,implementation,Security,M,PACT-004;PACT-027;PACT-028,R05,phase-1-rules.md#pact-042
+PACT-042,Implement raid seed commitments and deterministic dice,1,todo,implementation,Security,M,PACT-027;PACT-028,R05,phase-1-rules.md#pact-042
 PACT-043,"Implement pure combat, casualties, and loot calculations",1,todo,implementation,Rules,M,PACT-027;PACT-028;PACT-033,R03;R05,phase-1-rules.md#pact-043
 PACT-044,"Implement raids, contributors, locks, and overlapping resolution",1,todo,implementation,Rules,L,PACT-027;PACT-029;PACT-033;PACT-034;PACT-035;PACT-039;PACT-040;PACT-042;PACT-043,R02;R03;R05,phase-1-rules.md#pact-044
 PACT-045,Build authorized world views and factual forecasts,1,todo,implementation,Backend,M,PACT-022;PACT-027;PACT-032;PACT-038;PACT-040;PACT-041;PACT-044,R06,phase-1-rules.md#pact-045

@@ -1,6 +1,6 @@
 # Account and connection specification
 
-**Version 1.1 · Owner of identity, model credentials, MCP authorization, and onboarding.**
+**Version 1.2 · Owner of identity, model credentials, MCP authorization, and onboarding.**
 
 [Channels and reusable architecture](architecture.md) adds native human sessions, explicitly linked Telegram identities, and additional assistant certification routes. Email/password remains the canonical PACT account; a linked channel is not a new kingdom.
 
@@ -53,7 +53,7 @@ Google's current key guidance includes migration to auth keys. The connection sc
 
 OpenRouter's documented PKCE flow opens its authorization page with a callback and S256 challenge, then exchanges the returned code plus verifier at `/api/v1/auth/keys`. The resulting credential is an API key. Bind the single-use callback to the authenticated PACT session with an unpredictable state value in the registered callback URL, expire the flow after ten minutes, and keep the verifier server-side. Do not implement refresh-token behavior that this key exchange does not provide. [OpenRouter authorization](https://openrouter.ai/docs/guides/overview/auth/oauth).
 
-Provider keys travel over TLS directly into the PACT backend, are envelope-encrypted with AES-256-GCM and a KMS-managed wrapping key, and are never returned by reads or tools. Only the inference worker decrypts them. The interface displays a label and last four characters. Keys, authorization codes, and bearer tokens are redacted from logs and excluded from prompts. Provider errors are sanitized. Key deletion blocks new calls immediately; already submitted provider requests may complete.
+Provider keys travel over TLS directly into the PACT backend, are envelope-encrypted with AES-256-GCM, and are never returned by reads or tools. Each credential uses a fresh data-encryption key that is sealed through an injected wrapping-key port. The single-VPS adapter exposes public wrapping material to the API but mounts private unwrapping material only into the inference worker; VPS root remains a trusted operator. Wrapped records carry a key identifier so rotation can retain or rewrap older ciphertext deliberately. The interface displays a label and last four characters. Keys, authorization codes, and bearer tokens are redacted from logs and excluded from prompts. Provider errors are sanitized. Key deletion blocks new calls immediately; already submitted provider requests may complete.
 
 Before the first run, display the recipient provider, chosen model, token allowance, and a cost estimate when current pricing is available. If pricing is unavailable, show **Provider price unavailable** and require a token-bounded run confirmation. Never present zero as an unknown cost. OpenRouter's upstream routing choices are disclosed; no silent cross-provider fallback is allowed. A failed provider pauses the run rather than switching credentials or billing destinations.
 

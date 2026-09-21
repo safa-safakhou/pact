@@ -41,3 +41,35 @@ export async function acquireJob(
   );
   return result.rows[0];
 }
+
+export async function completeJob(pool: Pool, jobId: string, workerId: string): Promise<boolean> {
+  const result = await pool.query(
+    `UPDATE durable_jobs SET status = 'done', leased_by = NULL, lease_expires_at = NULL, updated_at = now()
+     WHERE id = $1 AND leased_by = $2 AND status = 'ready'`,
+    [jobId, workerId],
+  );
+  return (result.rowCount ?? 0) > 0;
+}
+
+export async function failJob(
+  pool: Pool,
+  jobId: string,
+  workerId: string,
+  options: { retryAfterMs?: number } = {},
+): Promise<boolean> {
+  if (options.retryAfterMs !== undefined) {
+    const result = await pool.query(
+      `UPDATE durable_jobs
+       SET leased_by = NULL, lease_expires_at = NULL, available_at = now() + ($3 * interval '1 millisecond'), updated_at = now()
+       WHERE id = $1 AND leased_by = $2 AND status = 'ready'`,
+      [jobId, workerId, options.retryAfterMs],
+    );
+    return (result.rowCount ?? 0) > 0;
+  }
+  const result = await pool.query(
+    `UPDATE durable_jobs SET status = 'failed', leased_by = NULL, lease_expires_at = NULL, updated_at = now()
+     WHERE id = $1 AND leased_by = $2 AND status = 'ready'`,
+    [jobId, workerId],
+  );
+  return (result.rowCount ?? 0) > 0;
+}

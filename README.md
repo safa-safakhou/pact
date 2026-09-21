@@ -20,7 +20,7 @@ npm run db:migrate
 npm run dev:api
 ```
 
-In another terminal, `npm run dev:web` starts the React client. The API exposes `GET /health` for process health, `GET /ready` for database readiness, and `GET /metrics` for content-free Prometheus metrics.
+In another terminal, `npm run dev:web` starts the React client. The API exposes `GET /health` for process health, `GET /ready` for database readiness, `GET /metrics` for content-free Prometheus metrics, and `GET /v1/capabilities` for version/capability negotiation.
 
 The database scripts detect either the Docker Compose plugin or the standalone `docker-compose` command. `npm run db:down` stops the local database without deleting its volume.
 
@@ -43,6 +43,7 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 - `services/api`: Fastify HTTP process
 - `workers/*`: rules, inference, notification, and channel-delivery entry points
 - `packages/contracts`: versioned command, receipt, event, cursor, and tool schemas
+- `packages/client-sdk`: platform-independent command retry, receipt/inbox projections, subscriptions, and capability negotiation
 - `packages/platform`: reusable scoped principals, actions, events, transaction ports, and unit-of-work fixture
 - `packages/domain`: PACT-owned domain types
 - `packages/application`: composition root, shared command dispatcher, and sandbox-only command handlers
@@ -51,8 +52,10 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 - `packages/onboarding`: private resumable kingdom drafts and sandbox activation validation
 - `packages/oauth`: PACT OAuth authorization server (PKCE, clients, refresh rotation)
 - `packages/authority`: versioned mandates and immediate spend ledger
+- `packages/credential-vault`: envelope-encrypted provider credentials, revoke admission, and audit/use ledgers
+- `packages/model-provider`: provider-neutral discovery, explicit routing, tool validation, pricing/usage, errors, and CI harness
 - `packages/db`: PostgreSQL migrations, transactions, job leases, inbox/outbox, and test database support
 
-Authenticated clients submit commands to `POST /v1/commands` and reconcile uncertain writes with `GET /v1/receipts/:commandId`. Both routes derive the account from the session cookie and set `Cache-Control: no-store`.
+Authenticated clients submit commands to `POST /v1/commands` and reconcile uncertain writes with `GET /v1/receipts/:commandId`. The write requires the session cookie plus exact Origin/CSRF proof; both routes derive the account server-side and set `Cache-Control: no-store`.
 
-See [architecture](docs/architecture/modules.md), [identity operations](docs/operations/identity.md), [OAuth API](docs/api/oauth.md), [authority API](docs/api/authority.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.
+See [architecture](docs/architecture/modules.md), [client SDK](docs/api/client-sdk.md), [model credentials](docs/api/model-credentials.md), [provider adapters](docs/api/provider-adapters.md), [identity operations](docs/operations/identity.md), [OAuth API](docs/api/oauth.md), [authority API](docs/api/authority.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.

@@ -34,6 +34,8 @@ Supporting checks: `npm run lint`, `npm run typecheck`, `npm test` (18), `npm ru
 
 Refresh reuse detection commits family revocation before returning `INVALID_GRANT` (throw-inside-transaction would roll back the revoke). Full future-commitment exposure remains PACT-039. Hosted CI and real MCP host certification were not run.
 
+Post-completion audit: cookie-authenticated OAuth authorization and mandate writes now call the shared origin/CSRF guard. `tests/integration/client-sdk.test.ts` verifies a session cookie alone receives HTTP 403 on both routes.
+
 ## Handoff
 
-Next ready work includes PACT-022 (inbox/SSE), PACT-017 (MCP transport; needs 016), and PACT-020 (approvals; needs 019). PACT-004 remains blocked on AWS credentials.
+At the time of completion, next ready work included PACT-022 (inbox/SSE), PACT-017 (MCP transport), and PACT-020 (approvals). Version 1.2 later replaced the AWS gate with a single-VPS deployment contract and decoupled local credential-vault work from PACT-004.

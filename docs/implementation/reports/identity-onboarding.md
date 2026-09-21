@@ -39,4 +39,4 @@ Security-email delivery is queued and durable, but an external sender is intenti
 
 ## Handoff
 
-PACT-006 through PACT-008 are complete. PACT-009 still depends on PACT-004 as well as PACT-007, so encrypted model credential storage cannot be marked ready until the AWS/KMS environment acceptance work is complete. Other dependency-ready work should be selected from the reconciled backlog rather than bypassing that gate.
+PACT-006 through PACT-008 are complete. Version 1.2 later removed the hosted-deployment dependency from PACT-009 and replaced KMS with an injected wrapping-key port suitable for the single-VPS design. PACT-009 is therefore dependency-ready from PACT-007 without claiming that the VPS deployment has passed.
