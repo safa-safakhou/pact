@@ -586,7 +586,7 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-22T00:05:49Z",
+  "last_synced_at": "2026-09-22T10:05:02Z",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -597,13 +597,13 @@
   },
   "source_sha256": {
     "../pact/access.md": "3c5e806eb26c7ed6e2fe531eae3b34df8ab640fcfe2d0ea5d57d44866b617fe0",
-    "../pact/runtime.md": "40b85ce723686773ecf5c1bd2c6401c896828e80d10e1f41f1daaa0e135362f8",
+    "../pact/runtime.md": "192e1a5c67ec7a0b24cc3c2816dbd246521aff87be04c8e3729640a6a05bc17d",
     "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
     "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
     "../pact/privacy.md": "84b4b346c8da547a25e750e84ac3a455d9d6f08fd2d88b2f57cc58f9f7664350",
-    "../pact/product.md": "f06f6d55a0a9c8c22a0c82521ef01302ca376944ba7a01fbda23c5aebb971504",
-    "../pact/delivery.md": "a2f1b296e61b93f8cca2e128ccf83d126723c1a49673f443b89f1c70be45e451",
-    "../pact/architecture.md": "4185426c1025cee5b95a28fb0c7c9452f317e793047f887f8c8c3efabc27ce54"
+    "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
+    "../pact/delivery.md": "72c6326d88a62d7370b36d644470294ab7d7f6e37fd55ecb3c360a8ecfc47cef",
+    "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0"
   },
   "verification": {
     "issues": 97,
@@ -618,10 +618,11 @@
       20,
       19
     ],
-    "todo": 1,
-    "backlog": 79,
-    "done": 17,
-    "blocked_local": 1,
+    "todo": 0,
+    "backlog": 71,
+    "in_progress": 1,
+    "done": 25,
+    "blocked_local": 0,
     "note": "Version 1.3 keeps the zero-cost private MVP on one VPS, accepts the documented single-host backup risk, uses internal Mailpit capture, and moves off-host recovery/real outbound email to PACT-078. PACT-004 is complete. Telegram test-bot certification is active in PACT-085. Paid native signing and physical-device work move from the MVP gates to the Season One release milestone in PACT-084/087."
   }
 }
