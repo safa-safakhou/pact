@@ -5,6 +5,7 @@ import React, { useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { createWebPactClient } from "./pact-client.js";
 import "./styles.css";
+import { confirmTelegramLink, readTelegramBootstrap, TelegramLinkError } from "./telegram-link.js";
 
 const DEMO_PROVIDERS = [
   { id: "openai", label: "OpenAI" },
@@ -23,6 +24,8 @@ function readCsrfToken(): string | undefined {
 }
 
 function App(): React.JSX.Element {
+  const apiOrigin = useMemo(() => new URL(import.meta.env.BASE_URL, window.location.origin), []);
+  const telegramBootstrap = useMemo(() => readTelegramBootstrap(window.location.search), []);
   const invitation = useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     return readInvitationDestination({
@@ -34,11 +37,11 @@ function App(): React.JSX.Element {
   const client = useMemo(
     () =>
       createWebPactClient({
-        apiOrigin: new URL(import.meta.env.BASE_URL, window.location.origin).toString(),
+        apiOrigin: apiOrigin.toString(),
         csrfToken: readCsrfToken,
         fetch: window.fetch.bind(window),
       }),
-    [],
+    [apiOrigin],
   );
 
   const [step, setStep] = useState<SetupStep>("account");
@@ -46,9 +49,72 @@ function App(): React.JSX.Element {
   const [modelId, setModelId] = useState<string>("sandbox-small");
   const [runStatus, setRunStatus] = useState("stopped");
   const [errorCode, setErrorCode] = useState<string | undefined>(undefined);
+  const [telegramEmail, setTelegramEmail] = useState("");
+  const [telegramPassword, setTelegramPassword] = useState("");
+  const [telegramStatus, setTelegramStatus] = useState<"idle" | "working" | "linked">("idle");
+  const [telegramError, setTelegramError] = useState<string>();
 
   return (
     <main data-pact-audience={client.audience}>
+      {telegramBootstrap ? (
+        <section className="telegram-link-card" aria-labelledby="telegram-link-title">
+          <h1 id="telegram-link-title">Confirm your Telegram link</h1>
+          {telegramStatus === "linked" ? (
+            <p className="telegram-link-success">
+              Telegram is linked. Return to the Mini App and press <strong>Exchange confirmed link</strong>.
+            </p>
+          ) : (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                setTelegramStatus("working");
+                setTelegramError(undefined);
+                void confirmTelegramLink(window.fetch.bind(window), apiOrigin, telegramBootstrap, {
+                  email: telegramEmail,
+                  password: telegramPassword,
+                })
+                  .then(() => {
+                    setTelegramStatus("linked");
+                    setTelegramPassword("");
+                    const cleanUrl = new URL(window.location.href);
+                    cleanUrl.searchParams.delete("telegram_bootstrap");
+                    window.history.replaceState(null, "", cleanUrl);
+                  })
+                  .catch((error: unknown) => {
+                    setTelegramStatus("idle");
+                    setTelegramError(error instanceof TelegramLinkError ? error.code : "TELEGRAM_LINK_FAILED");
+                  });
+              }}
+            >
+              <p>Sign in to the PACT account you want to use from this private Telegram chat.</p>
+              <label>
+                Email
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={telegramEmail}
+                  onChange={(event) => setTelegramEmail(event.target.value)}
+                />
+              </label>
+              <label>
+                Password
+                <input
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  value={telegramPassword}
+                  onChange={(event) => setTelegramPassword(event.target.value)}
+                />
+              </label>
+              <button type="submit" disabled={telegramStatus === "working"}>
+                {telegramStatus === "working" ? "Confirming…" : "Sign in and confirm"}
+              </button>
+              {telegramError ? <p role="alert">Link failed: {telegramError}</p> : null}
+            </form>
+          )}
+        </section>
+      ) : null}
       <SetupFlow
         step={step}
         onStepChange={setStep}

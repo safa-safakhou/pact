@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
+import { resolvePactOrigin, telegramConfirmationUrl } from "./urls.js";
 
-const apiOrigin = new URL(import.meta.env.BASE_URL, import.meta.env.VITE_PACT_ORIGIN ?? window.location.origin);
+const apiOrigin = resolvePactOrigin(import.meta.env.BASE_URL, import.meta.env.VITE_PACT_ORIGIN, window.location.origin);
 
 async function request(path: string, init: RequestInit = {}) {
   const response = await fetch(new URL(path.replace(/^\//, ""), apiOrigin), { ...init, credentials: "include" });
@@ -48,6 +49,19 @@ function App() {
           }
         >
           Begin account link
+        </button>
+        <button
+          type="button"
+          disabled={!bootstrap}
+          onClick={() => {
+            if (!bootstrap) return;
+            const url = telegramConfirmationUrl(apiOrigin, bootstrap);
+            if (window.Telegram?.WebApp) window.Telegram.WebApp.openLink(url);
+            else window.open(url, "_blank", "noopener,noreferrer");
+            setOutput("Sign in and confirm the link in the opened PACT page, then return here.");
+          }}
+        >
+          Confirm in PACT
         </button>
         <button
           type="button"

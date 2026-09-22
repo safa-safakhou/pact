@@ -25,7 +25,7 @@ The link sequence is deliberately two-party:
 
 1. The Mini App sends its raw `initData` to `POST /v1/telegram/bootstrap`.
 2. The API verifies the bot-bound HMAC, numeric Telegram user ID, private-chat context, five-minute age, and launch uniqueness, then returns an expiring opaque bootstrap token.
-3. An existing PACT cookie session confirms that token with `POST /v1/telegram/link/confirm` and normal Origin/CSRF checks.
+3. **Confirm in PACT** opens the shared web origin with the opaque bootstrap. The player signs in there; the web host uses the returned CSRF token and HttpOnly session cookie to call `POST /v1/telegram/link/confirm`, then removes the bootstrap from the visible URL.
 4. The same validated launch exchanges the confirmed token once at `POST /v1/telegram/session`. The response sets an HttpOnly human cookie and returns its CSRF token.
 5. `POST /v1/telegram/unlink` revokes all human sessions created by that Telegram link immediately.
 

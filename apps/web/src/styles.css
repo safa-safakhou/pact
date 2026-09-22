@@ -13,6 +13,50 @@ body {
 main {
   width: min(42rem, calc(100vw - 3rem));
 }
+.telegram-link-card {
+  background: #1b241d;
+  border: 1px solid #526958;
+  border-radius: 0.85rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+}
+.telegram-link-card h1 {
+  margin-top: 0;
+}
+.telegram-link-card form,
+.telegram-link-card label {
+  display: grid;
+  gap: 0.55rem;
+}
+.telegram-link-card form {
+  gap: 1rem;
+}
+.telegram-link-card input,
+.telegram-link-card button {
+  box-sizing: border-box;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #718278;
+  padding: 0.65rem 0.8rem;
+  font: inherit;
+}
+.telegram-link-card button {
+  color: #17130a;
+  background: #d5a84b;
+  border-color: #d5a84b;
+  cursor: pointer;
+  font-weight: 700;
+}
+.telegram-link-card button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.telegram-link-card [role="alert"] {
+  color: #ffb6ad;
+}
+.telegram-link-success {
+  color: #bde8c5;
+}
 .shell-note {
   color: #aeb9ae;
   line-height: 1.55;
