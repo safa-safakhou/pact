@@ -7,6 +7,7 @@ PACT connection testing runs as an isolated Docker Compose project on the existi
 - Source and deployment state: `/srv/pact/source` and `/srv/pact/state`.
 - Runtime secrets: `/srv/pact/secrets/connection-test`, mode `0600`; never copy this directory into a release or backup report.
 - Public edge: the existing Caddy container handles `/pact/*` and strips `/pact` before proxying to `pact-connection-test-gateway-1:8080` over `pact-edge`.
+- The shared edge removes its default `X-Frame-Options: DENY` only for `/pact/telegram/*` and applies `Content-Security-Policy: frame-ancestors https://web.telegram.org https://*.web.telegram.org`; all other routes retain the default framing denial.
 - The PACT gateway also binds `127.0.0.1:8088` for host-local recovery checks. PostgreSQL has no host port and joins only the internal `data` network.
 - API, rules, inference, notification, and channel processes are separate containers built from one pinned Node 24 image. Only inference mounts `model_credential_private_key`; API receives the public wrapping key.
 
