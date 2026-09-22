@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**31 tickets · 25 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**31 tickets · 26 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -752,7 +752,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-085"></a>
 ## PACT-085 — Prove Telegram identity linking and Mini App authentication
 
-**Status:** in_progress · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -767,12 +767,10 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Forged/stale/replayed launch data, changed usernames, forwarded callbacks, and swapped PACT sessions cannot link or operate another account.
-- [ ] Unlink immediately revokes channel sessions; no game privilege is inferred from a Telegram handle or message text.
+- [x] Forged/stale/replayed launch data, changed usernames, forwarded callbacks, and swapped PACT sessions cannot link or operate another account.
+- [x] Unlink immediately revokes channel sessions; no game privilege is inferred from a Telegram handle or message text.
 
 **Assignee:** codex-channel-auth-batch
-
-**Block reason:** Infrastructure and credentials are configured. Completion now requires the operator-driven real Mini App account-link, sandbox, exact-approval, duplicate, and unlink walkthrough.
 
 **Evidence**
 
@@ -783,6 +781,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - e6efe30 / mvp-20260922-2: live signed synthetic bootstrap, web confirmation, channel session, private read, unlink, and post-revocation 403 pass
 - 1bb8026 / mvp-20260922-3: valid empty JSON writes and live sandbox activation pass
 - 4265c9b / mvp-20260922-4: Telegram bridge script and narrowly scoped web framing policy verified publicly
+- 25a4d2a / mvp-20260922-5: current Telegram signature field included in bot-token HMAC validation; real launch bootstrap passed
+- 28ead74 / mvp-20260922-6: secure partitioned Telegram session cookie; real-client link, private read, sandbox write, exact approval, identical duplicate receipt, unlink, and zero active sessions passed
 
 <a id="pact-024"></a>
 ## PACT-024 — Implement first-account retention, export, and deletion
