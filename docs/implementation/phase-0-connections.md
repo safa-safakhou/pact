@@ -787,7 +787,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-024"></a>
 ## PACT-024 — Implement first-account retention, export, and deletion
 
-**Status:** todo · **Role:** Security · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Security · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-085](phase-0-connections.md#pact-085)
 
@@ -805,6 +805,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] Export excludes credentials and other players’ data; delete disables access immediately and meets specified live-store deadlines.
 - [ ] Restore a pre-deletion backup and replay the deletion/revocation registry before traffic; removed credentials and content cannot reappear.
+
+**Assignee:** codex-privacy-batch
 
 <a id="pact-025"></a>
 ## PACT-025 — Complete the real-account environment preflight

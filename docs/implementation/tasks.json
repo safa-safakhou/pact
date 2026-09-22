@@ -1130,7 +1130,7 @@
       "id": "PACT-024",
       "title": "Implement first-account retention, export, and deletion",
       "phase": 0,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Security",
       "size": "L",
@@ -1165,7 +1165,7 @@
         "deletion registry"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-privacy-batch",
       "blocked_by_external": [],
       "block_reason": null
     },
