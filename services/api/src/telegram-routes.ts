@@ -23,6 +23,11 @@ function writeContext(request: FastifyRequest): { sessionToken: string; csrfToke
   return { sessionToken, csrfToken, origin };
 }
 
+export function telegramSessionCookie(sessionToken?: string): string {
+  const value = sessionToken ? encodeURIComponent(sessionToken) : "";
+  return `pact_session=${value}; Path=/; HttpOnly; Secure; SameSite=None; Partitioned${sessionToken ? "" : "; Max-Age=0"}`;
+}
+
 async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Promise<unknown> {
   try {
     return await operation();
@@ -77,10 +82,7 @@ export function registerTelegramRoutes(
         .object({ initData: z.string().min(1).max(16_384), bootstrapToken: z.string().min(32).max(128) })
         .parse(request.body);
       const session = await telegram.exchangeBootstrap(body.initData, body.bootstrapToken);
-      reply.header(
-        "set-cookie",
-        `pact_session=${encodeURIComponent(session.sessionToken)}; Path=/; HttpOnly; Secure; SameSite=Lax`,
-      );
+      reply.header("set-cookie", telegramSessionCookie(session.sessionToken));
       return { csrfToken: session.csrfToken, telegramUserId: session.telegramUserId };
     }),
   );
@@ -90,7 +92,7 @@ export function registerTelegramRoutes(
       const context = writeContext(request);
       const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
       await telegram.unlink(session.accountId);
-      reply.header("set-cookie", "pact_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0");
+      reply.header("set-cookie", telegramSessionCookie());
       return { unlinked: true };
     }),
   );
