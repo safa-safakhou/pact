@@ -52,4 +52,12 @@ The notification worker leases `security.email.requested.v1` outbox events, decr
 
 The test bot uses the Mini App at `https://safa.dedyn.io/pact/telegram/` and webhook at `https://safa.dedyn.io/pact/telegram/webhook`. Bot ID, token, and webhook secret are mounted only into the API container from root-readable files. Never copy them into a deployment report or checked-in environment.
 
+The synthetic walkthrough account is `pact-mvp-owner@example.test`. Its verified password is generated on the VPS and remains in `/srv/pact/secrets/connection-test/operator_test_password` with mode `0600`. An authorized operator retrieves it directly without copying it into Git, Linear, or logs:
+
+```sh
+ssh agentic@2.28.57.254 'cat /srv/pact/secrets/connection-test/operator_test_password'
+```
+
+In the Mini App, use **Begin account link** → **Confirm in PACT** → sign in with that account → return to Telegram → **Exchange confirmed link**. Then run the private-draft, sandbox, approval, duplicate, and unlink checks. Rotate both this password and the bot token after the shared walkthrough because chat-delivered credentials are not a durable secret-distribution channel.
+
 Do not add real player data to the shared deployment environment until PACT-025 is satisfied.
