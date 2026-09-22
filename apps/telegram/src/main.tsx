@@ -89,7 +89,13 @@ function App() {
           type="button"
           disabled={!csrf}
           onClick={() =>
-            show(() => request("/v1/setup/sandbox-activation", { method: "POST", headers: writeHeaders() }))
+            show(() =>
+              request("/v1/setup/sandbox-activation", {
+                method: "POST",
+                headers: writeHeaders(),
+                body: JSON.stringify({}),
+              }),
+            )
           }
         >
           Activate sandbox
@@ -112,6 +118,7 @@ function App() {
               request(`/v1/approvals/${encodeURIComponent(approvalId)}/approve`, {
                 method: "POST",
                 headers: writeHeaders(),
+                body: JSON.stringify({}),
               }),
             )
           }
@@ -124,7 +131,11 @@ function App() {
         disabled={!csrf}
         onClick={() =>
           show(() =>
-            request("/v1/telegram/unlink", { method: "POST", headers: writeHeaders() }).then((value) => {
+            request("/v1/telegram/unlink", {
+              method: "POST",
+              headers: writeHeaders(),
+              body: JSON.stringify({}),
+            }).then((value) => {
               setCsrf(undefined);
               return value;
             }),
