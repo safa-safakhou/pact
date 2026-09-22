@@ -25,7 +25,7 @@ export function verifyTelegramInitData(raw: string, botToken: string, now: Date)
   const claimedHash = values.get("hash");
   if (!claimedHash) throw new TelegramError("INVALID_INIT_DATA");
   const check = [...values.entries()]
-    .filter(([key]) => key !== "hash" && key !== "signature")
+    .filter(([key]) => key !== "hash")
     .sort(([left], [right]) => left.localeCompare(right, "en"))
     .map(([key, value]) => `${key}=${value}`)
     .join("\n");
