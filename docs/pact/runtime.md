@@ -1,6 +1,6 @@
 # Execution contract
 
-**Version 1.2 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
+**Version 1.3 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
 
 [Architecture](architecture.md) owns reusable package boundaries and channel adapters. Web, native apps, Telegram, and MCP use these same application services; native human sessions and validated Telegram run requests do not create additional Envoy allowances.
 
@@ -117,7 +117,7 @@ Host the project on one Linux VPS in an EU region, preferably Frankfurt. Use a r
 
 Use distinct container identities, internal networks, databases, and narrowly mounted secret files. The API may receive the public material needed to wrap a credential, while only the inference worker receives private unwrapping material. The VPS administrator remains a trusted operator; this design provides process-level isolation rather than hardware-backed or separate-account isolation. Development stays local. Connection-test and production data use separate databases and secret sets when they coexist on the VPS, and test data is removed before production admission.
 
-Automate TLS renewal, secret/signing-key rotation, health checks, deployment, migrations, rollback, and outbound-provider access. Retain encrypted PostgreSQL base/WAL backups for 35 days in an off-host backup target and test restoration before admitting players; backups stored only on the VPS do not satisfy disaster recovery. Generate exports as authenticated, expiring files or streams and remove temporary files on schedule. Transactional email uses an injected SMTP delivery adapter rather than a hosting-provider-specific service.
+Automate TLS renewal, secret/signing-key rotation, health checks, deployment, migrations, rollback, and outbound-provider access. During the zero-cost private MVP, retain encrypted PostgreSQL base/WAL backups for 35 days in a dedicated directory on the single VPS and test restoration before admitting testers. This protects against database corruption and operator mistakes, not loss or compromise of the server; the UI and operations guide must state that limitation. Before production or paid launch, PACT-078 replaces this with encrypted off-host storage and repeats the restore drill. Generate exports as authenticated, expiring files or streams and remove temporary files on schedule. The private MVP captures transactional email through an injected local SMTP adapter; real outbound delivery and sender-domain configuration are likewise production-hardening work in PACT-078.
 
 One elected world worker advances the authoritative game clock under a database lease. Tick phases follow the [rulebook](rules.md). Prepare large-tick calculations against a committed snapshot; publish the new tick atomically before admitting commands against it. Workers lease jobs with uniqueness keys, and every settlement is replay-safe. Outbox delivery is at least once; consumers deduplicate.
 

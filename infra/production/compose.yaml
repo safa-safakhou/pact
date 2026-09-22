@@ -85,6 +85,9 @@ services:
       - identity_encryption_key
       - model_credential_public_key
       - compromised_password_sha256
+      - telegram_bot_id
+      - telegram_bot_token
+      - telegram_webhook_secret
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -116,6 +119,9 @@ services:
   notification:
     <<: *runtime
     command: ["npm", "run", "start", "--workspace", "@pact/notification-worker"]
+    environment:
+      <<: *runtime-environment
+      SMTP_FROM: ${SMTP_FROM:-PACT MVP <noreply@safa.dedyn.io>}
     secrets:
       - postgres_password
       - identity_token_pepper
@@ -124,6 +130,24 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+      mailpit:
+        condition: service_healthy
+
+  mailpit:
+    image: axllent/mailpit:v1.27.11
+    restart: unless-stopped
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: 500
+    volumes:
+      - mailpit-data:/data
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks:
+      - application
 
   channel:
     <<: *runtime
@@ -148,6 +172,7 @@ volumes:
   postgres-data:
   postgres-wal:
   postgres-basebackup:
+  mailpit-data:
 
 networks:
   application:
@@ -171,3 +196,9 @@ secrets:
     file: ${PACT_SECRETS_DIR}/smtp_url
   compromised_password_sha256:
     file: ${PACT_SECRETS_DIR}/compromised_password_sha256.txt
+  telegram_bot_id:
+    file: ${PACT_SECRETS_DIR}/telegram_bot_id
+  telegram_bot_token:
+    file: ${PACT_SECRETS_DIR}/telegram_bot_token
+  telegram_webhook_secret:
+    file: ${PACT_SECRETS_DIR}/telegram_webhook_secret

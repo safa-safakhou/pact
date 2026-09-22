@@ -164,7 +164,7 @@
       "id": "PACT-004",
       "title": "Provision the single-VPS connection-test environment",
       "phase": 0,
-      "status": "blocked",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -181,10 +181,10 @@
       ],
       "scope": [
         "Define a reproducible Docker Compose deployment for one EU-hosted Linux VPS: TLS reverse proxy, web/API, rules, inference, notification and channel processes, PostgreSQL 17 on a private network, persistent volumes, health checks, and narrowly mounted secrets.",
-        "Configure automated deploy/migrate/rollback commands, SMTP delivery, outbound-provider access, expiring local exports, logical test/production separation, and encrypted off-host PostgreSQL base/WAL backups with a 35-day lifecycle. Synthetic identities only until PACT-025 passes."
+        "Configure automated deploy/migrate/rollback commands, captured SMTP delivery, outbound-provider access, expiring local exports, logical test/production separation, and encrypted same-VPS PostgreSQL base/WAL backups with a 35-day lifecycle for the zero-cost MVP. Record that server loss also loses these backups; PACT-078 owns off-host production hardening. Synthetic identities only until PACT-025 passes."
       ],
       "acceptance": [
-        "Deploy the stack to the project VPS and restore a synthetic account database from an encrypted off-host backup; deleted/revoked-record replay hooks are available for PACT-024.",
+        "Deploy the stack to the project VPS, capture a synthetic transactional email through the local SMTP adapter, and restore a synthetic account database from an encrypted local backup; deleted/revoked-record replay hooks are available for PACT-024.",
         "PostgreSQL is not publicly reachable; private credential-unwrapping material is mounted only into the inference worker; unrelated processes cannot read it; authenticated responses are not cached by the reverse proxy."
       ],
       "components": [
@@ -194,14 +194,13 @@
       "evidence": [
         "docs/implementation/reports/single-vps-deployment.md",
         "Live VPS 2026-09-21: https://safa.dedyn.io/pact health/ready/web/Telegram checks passed; migrations 0001-0015 applied",
-        "infra/production/bin/verify.sh passed: PostgreSQL private, inference-only unwrap key, authenticated no-store headers"
+        "infra/production/bin/verify.sh passed: PostgreSQL private, inference-only unwrap key, authenticated no-store headers, internal-only Mailpit",
+        "Live release mvp-20260922-1: synthetic security email captured and outbox marked delivered",
+        "Encrypted local Restic snapshot 403424fc restored and structurally verified; six-hour backup timer active"
       ],
       "assignee": "codex-vps-deployment",
-      "blocked_by_external": [
-        "Encrypted off-host Restic-compatible backup target and credentials",
-        "SMTP sender URL and credentials"
-      ],
-      "block_reason": "The isolated single-VPS stack is deployed and the live security checks pass. Completion still requires an encrypted off-host base/WAL backup restore drill and transactional SMTP delivery, but no backup target or SMTP credentials have been supplied."
+      "blocked_by_external": [],
+      "block_reason": null
     },
     {
       "id": "PACT-005",
@@ -1033,14 +1032,15 @@
     {
       "id": "PACT-084",
       "title": "Prove native iOS and Android login, linking, and approval",
-      "phase": 0,
-      "status": "blocked",
+      "phase": 3,
+      "status": "todo",
       "kind": "implementation",
       "owner_role": "Mobile",
       "size": "L",
       "depends_on": [
         "PACT-007",
         "PACT-023",
+        "PACT-068",
         "PACT-083"
       ],
       "sources": [
@@ -1049,7 +1049,7 @@
         "privacy"
       ],
       "covers": [
-        "A08"
+        "L06"
       ],
       "scope": [
         "Create one native application with iOS/Android development builds, system-browser PACT PKCE login, verified app links, secure refresh storage, and in-memory access tokens.",
@@ -1070,19 +1070,19 @@
         "apps/native/src/session-controller.test.ts; apps/native/src/native-api.test.ts; apps/native/app.json",
         "Xcode 26.4 iOS 26.4 simulator build and launch passed on 2026-09-22; system PKCE prompt opened https://safa.dedyn.io and cancellation returned cleanly"
       ],
-      "assignee": "codex-channel-auth-batch",
+      "assignee": null,
       "blocked_by_external": [
         "Apple team ID, signed physical iOS development build, and iOS test device",
         "Android SDK, signing-certificate fingerprint, signed development build, and Android test device",
         "Hostname-root Apple and Android association files generated from the real signing identities"
       ],
-      "block_reason": "The real native screen and API adapter now pass local tests, and Xcode 26.4 builds and launches the iOS 26.4 simulator app through the system PKCE prompt. Completion still requires real signing identities and association files plus the full matrix on physical iOS and Android devices; this host has no Android SDK."
+      "block_reason": "Deferred by the Version 1.3 MVP decision until web and Telegram gameplay have been played and validated. The existing native shell and simulator evidence are retained; paid signing and physical-device certification resume during Season One release work."
     },
     {
       "id": "PACT-085",
       "title": "Prove Telegram identity linking and Mini App authentication",
       "phase": 0,
-      "status": "blocked",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "L",
@@ -1115,13 +1115,12 @@
       "evidence": [
         "docs/implementation/reports/native-telegram-auth.md",
         "npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build",
-        "packages/telegram/src/crypto.test.ts; tests/integration/telegram.test.ts"
+        "packages/telegram/src/crypto.test.ts; tests/integration/telegram.test.ts",
+        "Live bot and menu configured; HTTPS webhook accepts the secret, rejects missing secret with 403, and returns privilegedAction=false for synthetic message text"
       ],
       "assignee": "codex-channel-auth-batch",
-      "blocked_by_external": [
-        "Operator-owned Telegram bot token"
-      ],
-      "block_reason": "The Mini App and webhook are now publicly reachable through the single VPS at https://safa.dedyn.io/pact, but real Telegram certification still requires an operator-owned bot token."
+      "blocked_by_external": [],
+      "block_reason": "Infrastructure and credentials are configured. Completion now requires the operator-driven real Mini App account-link, sandbox, exact-approval, duplicate, and unlink walkthrough."
     },
     {
       "id": "PACT-024",
@@ -1137,7 +1136,6 @@
         "PACT-016",
         "PACT-021",
         "PACT-022",
-        "PACT-084",
         "PACT-085"
       ],
       "sources": [
@@ -1151,7 +1149,7 @@
       "scope": [
         "Implement account/draft/key/session/run/inbox retention jobs, JSON export with readable index and authenticated download, legal-hold metadata, and deletion/revocation registry.",
         "Add purge/restore replay for phase-0 data and a privacy Settings screen; gameplay retirement and social data are added in later tickets.",
-        "Include native and Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers."
+        "Include Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers; native-session cleanup is added when signed native testing begins."
       ],
       "acceptance": [
         "Export excludes credentials and other players\u2019 data; delete disables access immediately and meets specified live-store deadlines.",
@@ -1271,7 +1269,6 @@
         "PACT-023",
         "PACT-024",
         "PACT-025",
-        "PACT-084",
         "PACT-085",
         "PACT-086"
       ],
@@ -1294,7 +1291,7 @@
       "scope": [
         "Run the full signup/OAuth/read/write/approval/revoke fixture in ChatGPT, Claude, and Gemini CLI and real-key runs through all five PACT adapters.",
         "Publish tested host/model/protocol/date requirements; test five unfamiliar people per named route and record credential-ready timing, errors, usage, and a sanitized evidence link.",
-        "Include Gemini CLI certification and native/Telegram sandbox setup evidence from the dedicated new tickets."
+        "Include Gemini CLI certification and Telegram sandbox setup evidence from the dedicated new tickets; native certification is deferred to L06."
       ],
       "acceptance": [
         "Each route reaches at least four of five successful unaided sandbox outcomes within five minutes after credentials/host eligibility; verification time is reported separately.",
@@ -1348,7 +1345,6 @@
         "PACT-026",
         "PACT-082",
         "PACT-083",
-        "PACT-084",
         "PACT-085",
         "PACT-086"
       ],
@@ -1371,7 +1367,7 @@
         "Record pass/fail for every criterion and defects that must close before phase 1 starts."
       ],
       "acceptance": [
-        "All A01\u2013A09 checks pass, including native/Telegram sandbox identities and reusable-module contracts, with no live economic world exposed.",
+        "All A01\u2013A09 checks pass, including the Telegram sandbox identity, local native-PKCE fixtures, and reusable-module contracts, with no live economic world exposed.",
         "A gate cannot be marked done from a mock-provider result, missing host test, or assumed privacy operation."
       ],
       "components": [
@@ -2942,7 +2938,7 @@
     {
       "id": "PACT-087",
       "title": "Build complete native kingdom and Envoy screens",
-      "phase": 2,
+      "phase": 3,
       "status": "todo",
       "kind": "implementation",
       "owner_role": "Mobile",
@@ -2951,6 +2947,7 @@
         "PACT-048",
         "PACT-053",
         "PACT-061",
+        "PACT-068",
         "PACT-083",
         "PACT-084"
       ],
@@ -2960,11 +2957,12 @@
         "runtime"
       ],
       "covers": [
-        "S08"
+        "L02",
+        "L06"
       ],
       "scope": [
         "Implement the four screens using native accessible controls, shared client/view-model logic, assets, resource formatting, and existing application commands.",
-        "Include build/train/contracts/scout/garrison/raid/report/social controls, account/security settings, run start/stop, and approval handoff."
+        "Include build/train/contracts/scout/garrison/raid/report/social controls, account/security settings, run start/stop, approval handoff, APNs/FCM delivery, and native session/push privacy cleanup."
       ],
       "acceptance": [
         "A player completes the full core loop on each native platform and sees the same version/receipt on web.",
@@ -3059,7 +3057,7 @@
     },
     {
       "id": "PACT-090",
-      "title": "Add native push and Telegram notification delivery",
+      "title": "Add Telegram notification delivery",
       "phase": 2,
       "status": "todo",
       "kind": "implementation",
@@ -3068,7 +3066,6 @@
       "depends_on": [
         "PACT-053",
         "PACT-060",
-        "PACT-087",
         "PACT-088",
         "PACT-089"
       ],
@@ -3082,16 +3079,14 @@
         "S08"
       ],
       "scope": [
-        "Extend the reusable dispatcher with APNs, FCM, and bot delivery, account/category/channel preferences, grouping, endpoint invalidation, and audience-safe deep links.",
+        "Extend the reusable dispatcher with bot delivery, account/category/channel preferences, grouping, endpoint invalidation, and audience-safe deep links. APNs/FCM delivery is deferred with native clients to PACT-087.",
         "Persist one inbox event regardless of how many devices subscribe; deduplicate each external delivery by event/group/channel/endpoint."
       ],
       "acceptance": [
         "A burst produces the specified grouped notifications without exposing sensitive amounts/text or waking inference.",
-        "Revoked tokens, blocked bot, unlinked identity, device change, and failed push never alter game deadlines or lose the durable inbox event."
+        "Revoked sessions, blocked bot, unlinked identity, and failed bot delivery never alter game deadlines or lose the durable inbox event."
       ],
       "components": [
-        "APNs adapter",
-        "FCM adapter",
         "Telegram delivery"
       ],
       "evidence": [],
@@ -3112,7 +3107,6 @@
       "depends_on": [
         "PACT-053",
         "PACT-064",
-        "PACT-087",
         "PACT-088",
         "PACT-089",
         "PACT-090"
@@ -3127,7 +3121,7 @@
         "S08"
       ],
       "scope": [
-        "Extend sign-out/reset/export/delete to native sessions, linked Telegram identities, push registrations, webhook metadata, and product-scoped connection records.",
+        "Extend sign-out/reset/export/delete to linked Telegram identities, bot subscriptions, webhook metadata, and product-scoped connection records. Native sessions and push registrations are deferred to PACT-087.",
         "Process/discard raw Telegram payloads and purge deduplication IDs after 24 hours; remove live channel identifiers within 24 hours of unlink while respecting declared audit/backup rules."
       ],
       "acceptance": [
@@ -3136,7 +3130,7 @@
       ],
       "components": [
         "channel lifecycle",
-        "push cleanup",
+        "bot subscription cleanup",
         "scoped revocation"
       ],
       "evidence": [],
@@ -3146,7 +3140,7 @@
     },
     {
       "id": "PACT-092",
-      "title": "Verify cross-device and assistant handoff end to end",
+      "title": "Verify MVP cross-channel and assistant handoff end to end",
       "phase": 2,
       "status": "todo",
       "kind": "verification",
@@ -3156,7 +3150,6 @@
         "PACT-053",
         "PACT-065",
         "PACT-086",
-        "PACT-087",
         "PACT-088",
         "PACT-089",
         "PACT-090",
@@ -3170,7 +3163,7 @@
         "S08"
       ],
       "scope": [
-        "Run the same account/objective/offer/approval/receipt sequence across web, iOS, Android, Telegram, and certified assistant routes.",
+        "Run the same account/objective/offer/approval/receipt sequence across web, Telegram, and certified assistant routes. Native handoff is deferred to PACT-097.",
         "Exercise concurrent approvals, one-write-lease takeover, stale app versions/cursors, lost responses, invitation handoff, offline state, and deletion during a pending action."
       ],
       "acceptance": [
@@ -3208,7 +3201,6 @@
         "PACT-063",
         "PACT-064",
         "PACT-065",
-        "PACT-087",
         "PACT-088",
         "PACT-089",
         "PACT-090",
@@ -3307,7 +3299,6 @@
         "PACT-065",
         "PACT-066",
         "PACT-067",
-        "PACT-087",
         "PACT-088",
         "PACT-089",
         "PACT-090",
@@ -3796,7 +3787,7 @@
       ],
       "scope": [
         "Promote and rehearse the phase-0 single-VPS stack for production with separate production database/secrets, encrypted off-host backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, migrations, and deployment rollback.",
-        "Configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations."
+        "Replace MVP-local backup and email capture with encrypted off-host backup/restore and real outbound SMTP, then configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations."
       ],
       "acceptance": [
         "Rehearse a production-like restore, deletion suppression, outbox replay, signing-key rotation, credential incident, and world pause/resume before admitting players.",
@@ -4015,6 +4006,8 @@
         "PACT-078",
         "PACT-079",
         "PACT-080",
+        "PACT-084",
+        "PACT-087",
         "PACT-093",
         "PACT-094",
         "PACT-095",
@@ -4051,13 +4044,13 @@
   ],
   "source_sha256": {
     "../pact/access.md": "3c5e806eb26c7ed6e2fe531eae3b34df8ab640fcfe2d0ea5d57d44866b617fe0",
-    "../pact/runtime.md": "40b85ce723686773ecf5c1bd2c6401c896828e80d10e1f41f1daaa0e135362f8",
+    "../pact/runtime.md": "192e1a5c67ec7a0b24cc3c2816dbd246521aff87be04c8e3729640a6a05bc17d",
     "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
     "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
     "../pact/privacy.md": "84b4b346c8da547a25e750e84ac3a455d9d6f08fd2d88b2f57cc58f9f7664350",
-    "../pact/product.md": "f06f6d55a0a9c8c22a0c82521ef01302ca376944ba7a01fbda23c5aebb971504",
-    "../pact/delivery.md": "a2f1b296e61b93f8cca2e128ccf83d126723c1a49673f443b89f1c70be45e451",
-    "../pact/architecture.md": "4185426c1025cee5b95a28fb0c7c9452f317e793047f887f8c8c3efabc27ce54"
+    "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
+    "../pact/delivery.md": "72c6326d88a62d7370b36d644470294ab7d7f6e37fd55ecb3c360a8ecfc47cef",
+    "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0"
   },
   "task_status_values": [
     "todo",
@@ -4071,5 +4064,5 @@
     "L": "Cross-cutting lifecycle or integration, usually delivered as multiple reviewable pull requests"
   },
   "source_of_truth": "tasks.json owns planned scope, dependencies, and acceptance criteria. Linear owns execution status, assignment, blockers, and evidence; local execution fields are manually reconciled snapshots. See linear-workflow.md and linear-map.json. Markdown phase pages are generated views. Game behavior remains owned by ../pact/.",
-  "specification_revision": "1.2 \u2014 2026-09-21"
+  "specification_revision": "1.3 \u2014 2026-09-22"
 }

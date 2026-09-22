@@ -33,7 +33,7 @@ Database migrations must remain forward compatible with the previous application
 
 ## Backups
 
-PostgreSQL archives WAL into its private `postgres-wal` volume. `backup.sh` creates a consistent `pg_basebackup`, sends the base and WAL directories to an encrypted Restic repository, and applies the 35-day lifecycle. Put repository credentials only in a root-readable copy of `backup.env.example`, then install the six-hour timer:
+PostgreSQL archives WAL into its private `postgres-wal` volume. `backup.sh` creates a consistent `pg_basebackup`, sends the base and WAL directories to an encrypted Restic repository, and applies the 35-day lifecycle. For the zero-cost private MVP, that repository is `/srv/pact/backups/restic` on the same VPS. It protects against database corruption and operator mistakes, but not server/disk loss or full-host compromise. PACT-078 must move it off-host before production hardening. Keep the repository password and environment only in root-readable files, then install the six-hour timer:
 
 ```sh
 sudo ./infra/production/bin/install-backup-timer.sh \
@@ -42,11 +42,14 @@ sudo ./infra/production/bin/install-backup-timer.sh \
   /srv/pact/secrets/connection-test/backup.env
 ```
 
-Run `restore-drill.sh` with an explicit Restic snapshot ID before accepting the environment. The current deployment has verified local base/WAL generation, but no off-host repository was supplied, so the encrypted upload/restore acceptance check remains blocked.
+Run `restore-drill.sh` with an explicit Restic snapshot ID before accepting the environment. Snapshot `403424fc` was restored and structurally verified in an isolated disposable volume on 22 September 2026. The `pact-backup.timer` runs every six hours and preserves snapshots within the 35-day window.
 
-## Remaining operator inputs
+## MVP email capture
 
-- An off-host Restic-compatible object-storage repository and credentials.
-- SMTP sender URL/credentials for transactional delivery.
+The notification worker leases `security.email.requested.v1` outbox events, decrypts one-time material only in worker memory, submits the message through the injected SMTP URL, and marks the event delivered only after SMTP accepts it. The zero-cost MVP SMTP endpoint is an internal-only Mailpit container. Its SMTP and web ports are not published to the host or internet. This proves the transactional pipeline and makes messages inspectable by an operator through Docker; it does not deliver internet email. PACT-078 replaces Mailpit with a verified outbound sender before production.
 
-Do not add real Telegram or player credentials to the shared deployment environment until their own ticket prerequisites and PACT-025 are satisfied.
+## Telegram test bot
+
+The test bot uses the Mini App at `https://safa.dedyn.io/pact/telegram/` and webhook at `https://safa.dedyn.io/pact/telegram/webhook`. Bot ID, token, and webhook secret are mounted only into the API container from root-readable files. Never copy them into a deployment report or checked-in environment.
+
+Do not add real player data to the shared deployment environment until PACT-025 is satisfied.

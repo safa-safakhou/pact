@@ -8,10 +8,10 @@ The backlog turns the design into dependency-ordered engineering work. Every tic
 
 | Milestone | Tickets | Deliverable | Exit |
 | --- | --- | --- | --- |
-| [0 — Connections](phase-0-connections.md) | PACT-001–027 + 082–086 · 32 tickets | Reusable foundations, five model adapters, MCP, native/Telegram sandbox access, approvals, bounded runs, and privacy | A01–A09 pass |
+| [0 — Connections](phase-0-connections.md) | PACT-001–027 + 082–083 + 085–086 · 31 tickets | Reusable foundations, five model adapters, MCP, web/Telegram sandbox access, approvals, bounded runs, and privacy | A01–A09 pass |
 | [1 — Rules](phase-1-rules.md) | PACT-028–053 + 096 · 27 tickets | Transactional world, economy, troops, contracts, combat, plain UI, and independent module-reuse proof | R01–R08 pass |
-| [2 — Social slice](phase-2-social.md) | PACT-054–068 + 087–092 · 21 tickets | Web/native/Telegram gameplay, society, sharing, push, moderation, and the 50-player pilot | S01–S08 pass |
-| [3 — Season One](phase-3-season-one.md) | PACT-069–081 + 093–095, 097 · 17 tickets | Season, presentation, store/Stars payments, all-channel distribution, and release rehearsal | L01–L06 pass |
+| [2 — Social slice](phase-2-social.md) | PACT-054–068 + 088–092 · 20 tickets | Web/Telegram gameplay, society, sharing, bot delivery, moderation, and the 50-player pilot | S01–S08 pass |
+| [3 — Season One](phase-3-season-one.md) | PACT-069–081 + 084 + 087 + 093–095, 097 · 19 tickets | Native clients, season, presentation, store/Stars payments, all-channel distribution, and release rehearsal | L01–L06 pass |
 
 ```mermaid
 flowchart LR

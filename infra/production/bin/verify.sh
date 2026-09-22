@@ -10,10 +10,13 @@ set +a
 
 compose="docker compose --env-file $deploy_env -f infra/production/compose.yaml"
 $compose ps --status running --services | grep -qx api
+$compose ps --status running --services | grep -qx mailpit
+$compose ps --status running --services | grep -qx notification
 $compose ps --status running --services | grep -qx postgres
 curl -fsS "http://127.0.0.1:${PACT_LOOPBACK_PORT:-8088}/ready" >/dev/null
 curl -fsS "$public_base_url/health" >/dev/null
 curl -fsS "$public_base_url/" >/dev/null
+curl -fsS "$public_base_url/telegram/" >/dev/null
 
 if ss -lnt | grep -Eq '(^|[[:space:]])[^[:space:]]*:5432[[:space:]]'; then
   echo "PostgreSQL unexpectedly has a host listener" >&2
@@ -30,6 +33,31 @@ for service in api rules notification channel; do
 done
 inference="$(${compose} ps -q inference)"
 docker inspect "$inference" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$private_destination"
+
+telegram_destination=/run/secrets/telegram_bot_token
+api="$(${compose} ps -q api)"
+docker inspect "$api" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$telegram_destination"
+for service in rules inference notification channel; do
+  container="$(${compose} ps -q "$service")"
+  if docker inspect "$container" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$telegram_destination"; then
+    echo "$service can read the Telegram bot token" >&2
+    exit 1
+  fi
+done
+
+smtp_destination=/run/secrets/smtp_url
+notification="$(${compose} ps -q notification)"
+docker inspect "$notification" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$smtp_destination"
+for service in api rules inference channel; do
+  container="$(${compose} ps -q "$service")"
+  if docker inspect "$container" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$smtp_destination"; then
+    echo "$service can read the SMTP URL" >&2
+    exit 1
+  fi
+done
+
+mailpit="$(${compose} ps -q mailpit)"
+test "$(docker inspect "$mailpit" --format '{{json .HostConfig.PortBindings}}')" = "{}"
 
 cache_header="$(curl -sSI "$public_base_url/v1/setup/draft" | tr -d '\r' | sed -n 's/^cache-control:[[:space:]]*//Ip' | head -1)"
 test "$cache_header" = "no-store"

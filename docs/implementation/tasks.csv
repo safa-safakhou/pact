@@ -3,7 +3,7 @@ PACT-001,Bootstrap the application workspace and continuous integration,0,done,i
 PACT-082,Establish reusable package boundaries and product isolation,0,done,implementation,Architecture,M,PACT-001,A09,phase-0-connections.md#pact-082
 PACT-002,"Define shared command, event, and tool schemas",0,done,implementation,Backend,M,PACT-001;PACT-082,A03;A05,phase-0-connections.md#pact-002
 PACT-003,Create account persistence and transaction/outbox infrastructure,0,done,implementation,Backend,M,PACT-001;PACT-002,A01;A06,phase-0-connections.md#pact-003
-PACT-004,Provision the single-VPS connection-test environment,0,blocked,implementation,Platform,L,PACT-001;PACT-003,A06,phase-0-connections.md#pact-004
+PACT-004,Provision the single-VPS connection-test environment,0,done,implementation,Platform,L,PACT-001;PACT-003,A06,phase-0-connections.md#pact-004
 PACT-005,Add redacted operational telemetry and failure correlation,0,done,implementation,Platform,M,PACT-002;PACT-003,A06,phase-0-connections.md#pact-005
 PACT-006,"Implement signup, verification, and human sessions",0,done,implementation,Backend,M,PACT-003;PACT-005,A01,phase-0-connections.md#pact-006
 PACT-007,"Implement recovery, reauthentication, and account security",0,done,implementation,Backend,M,PACT-006,A01;A05,phase-0-connections.md#pact-007
@@ -24,13 +24,13 @@ PACT-021,Implement bounded Envoy runs and exclusive write leases,0,done,implemen
 PACT-022,Implement the durable inbox and live event delivery,0,done,implementation,Backend,M,PACT-003;PACT-018,A03;A04,phase-0-connections.md#pact-022
 PACT-023,"Build account, connection, and Envoy setup screens",0,done,implementation,Frontend,L,PACT-008;PACT-009;PACT-015;PACT-016;PACT-017;PACT-020;PACT-021;PACT-022,A01;A02;A03;A04;A05,phase-0-connections.md#pact-023
 PACT-083,Build the shared client SDK and capability contract,0,done,implementation,Backend / Frontend,M,PACT-002;PACT-016;PACT-018;PACT-020;PACT-022;PACT-082,A08;A09,phase-0-connections.md#pact-083
-PACT-084,"Prove native iOS and Android login, linking, and approval",0,blocked,implementation,Mobile,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-084
-PACT-085,Prove Telegram identity linking and Mini App authentication,0,blocked,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085
-PACT-024,"Implement first-account retention, export, and deletion",0,todo,implementation,Security,L,PACT-008;PACT-009;PACT-016;PACT-021;PACT-022;PACT-084;PACT-085,A06,phase-0-connections.md#pact-024
+PACT-084,"Prove native iOS and Android login, linking, and approval",3,todo,implementation,Mobile,L,PACT-007;PACT-023;PACT-068;PACT-083,L06,phase-3-season-one.md#pact-084
+PACT-085,Prove Telegram identity linking and Mini App authentication,0,in_progress,implementation,Integrations,L,PACT-007;PACT-023;PACT-083,A08,phase-0-connections.md#pact-085
+PACT-024,"Implement first-account retention, export, and deletion",0,todo,implementation,Security,L,PACT-008;PACT-009;PACT-016;PACT-021;PACT-022;PACT-085,A06,phase-0-connections.md#pact-024
 PACT-025,Complete the real-account environment preflight,0,todo,operations,Operations,M,PACT-004;PACT-005;PACT-006;PACT-007;PACT-024,A06,phase-0-connections.md#pact-025
 PACT-086,Certify additional assistant routes and publish a capability matrix,0,todo,verification,Integrations,M,PACT-017;PACT-023;PACT-025;PACT-083,A03;A09,phase-0-connections.md#pact-086
-PACT-026,Certify every connection route and measure unaided setup,0,todo,verification,QA,L,PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-017;PACT-023;PACT-024;PACT-025;PACT-084;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-026
-PACT-027,Accept the connection experiment,0,todo,gate,Release,S,PACT-001;PACT-002;PACT-003;PACT-004;PACT-005;PACT-006;PACT-007;PACT-008;PACT-009;PACT-010;PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-016;PACT-017;PACT-018;PACT-019;PACT-020;PACT-021;PACT-022;PACT-023;PACT-024;PACT-025;PACT-026;PACT-082;PACT-083;PACT-084;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-027
+PACT-026,Certify every connection route and measure unaided setup,0,todo,verification,QA,L,PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-017;PACT-023;PACT-024;PACT-025;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-026
+PACT-027,Accept the connection experiment,0,todo,gate,Release,S,PACT-001;PACT-002;PACT-003;PACT-004;PACT-005;PACT-006;PACT-007;PACT-008;PACT-009;PACT-010;PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-016;PACT-017;PACT-018;PACT-019;PACT-020;PACT-021;PACT-022;PACT-023;PACT-024;PACT-025;PACT-026;PACT-082;PACT-083;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-027
 PACT-028,Encode the versioned rules catalog and exact arithmetic,1,todo,implementation,Rules,M,PACT-027,R01;R02;R05,phase-1-rules.md#pact-028
 PACT-029,Implement the authoritative clock and atomic tick coordinator,1,todo,implementation,Backend,L,PACT-027;PACT-028,R02;R06,phase-1-rules.md#pact-029
 PACT-030,"Implement the resource ledger, provenance, and storage",1,todo,implementation,Backend,L,PACT-027;PACT-028;PACT-029,R01;R06,phase-1-rules.md#pact-030
@@ -70,15 +70,15 @@ PACT-062,Improve Envoy context selection and result explanations,2,todo,implemen
 PACT-063,"Build reporting, moderation, and appeals tools",2,todo,implementation,Backend,L,PACT-053;PACT-054;PACT-056;PACT-058;PACT-059,S05,phase-2-social.md#pact-063
 PACT-064,Extend privacy workflows to the complete social world,2,todo,implementation,Security,M,PACT-050;PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-063,S05,phase-2-social.md#pact-064
 PACT-065,Implement privacy-bounded product measurement,2,todo,implementation,Backend,M,PACT-053;PACT-061;PACT-062;PACT-064,S06;S07,phase-2-social.md#pact-065
-PACT-087,Build complete native kingdom and Envoy screens,2,todo,implementation,Mobile,L,PACT-048;PACT-053;PACT-061;PACT-083;PACT-084,S08,phase-2-social.md#pact-087
+PACT-087,Build complete native kingdom and Envoy screens,3,todo,implementation,Mobile,L,PACT-048;PACT-053;PACT-061;PACT-068;PACT-083;PACT-084,L02;L06,phase-3-season-one.md#pact-087
 PACT-088,Deliver the complete Telegram Mini App,2,todo,implementation,Frontend,M,PACT-053;PACT-061;PACT-083;PACT-085,S08,phase-2-social.md#pact-088
 PACT-089,Implement private-chat bot briefings and explicit run controls,2,todo,implementation,Integrations,M,PACT-049;PACT-053;PACT-055;PACT-062;PACT-085,S08,phase-2-social.md#pact-089
-PACT-090,Add native push and Telegram notification delivery,2,todo,implementation,Backend / Mobile,M,PACT-053;PACT-060;PACT-087;PACT-088;PACT-089,S03;S08,phase-2-social.md#pact-090
-PACT-091,Complete cross-channel session and privacy lifecycle,2,todo,implementation,Security,M,PACT-053;PACT-064;PACT-087;PACT-088;PACT-089;PACT-090,S05;S08,phase-2-social.md#pact-091
-PACT-092,Verify cross-device and assistant handoff end to end,2,todo,verification,QA,L,PACT-053;PACT-065;PACT-086;PACT-087;PACT-088;PACT-089;PACT-090;PACT-091,S08,phase-2-social.md#pact-092
-PACT-066,Run the social integration and load suite,2,todo,verification,QA,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-087;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05,phase-2-social.md#pact-066
+PACT-090,Add Telegram notification delivery,2,todo,implementation,Backend / Mobile,M,PACT-053;PACT-060;PACT-088;PACT-089,S03;S08,phase-2-social.md#pact-090
+PACT-091,Complete cross-channel session and privacy lifecycle,2,todo,implementation,Security,M,PACT-053;PACT-064;PACT-088;PACT-089;PACT-090,S05;S08,phase-2-social.md#pact-091
+PACT-092,Verify MVP cross-channel and assistant handoff end to end,2,todo,verification,QA,L,PACT-053;PACT-065;PACT-086;PACT-088;PACT-089;PACT-090;PACT-091,S08,phase-2-social.md#pact-092
+PACT-066,Run the social integration and load suite,2,todo,verification,QA,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05,phase-2-social.md#pact-066
 PACT-067,Run the three-week social pilot,2,todo,operations,Operations,L,PACT-053;PACT-066,S06;S07,phase-2-social.md#pact-067
-PACT-068,Accept the social slice,2,todo,gate,Release,S,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-066;PACT-067;PACT-087;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05;S06;S07;S08,phase-2-social.md#pact-068
+PACT-068,Accept the social slice,2,todo,gate,Release,S,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-066;PACT-067;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05;S06;S07;S08,phase-2-social.md#pact-068
 PACT-069,Implement the complete six-week season lifecycle,3,todo,implementation,Rules,M,PACT-068,L01,phase-3-season-one.md#pact-069
 PACT-070,Implement seasonal honors and award review,3,todo,implementation,Rules,M,PACT-063;PACT-068;PACT-069,L01;L05,phase-3-season-one.md#pact-070
 PACT-071,Produce and integrate the illustrated kingdom and cosmetics,3,todo,implementation,Frontend / Art,L,PACT-068,L02,phase-3-season-one.md#pact-071
@@ -95,4 +95,4 @@ PACT-079,Re-certify external clients and complete distribution,3,todo,verificati
 PACT-095,Prepare and certify mobile-store and Telegram distribution,3,todo,operations,Mobile / Operations,L,PACT-068;PACT-073;PACT-078;PACT-087;PACT-088;PACT-090;PACT-091;PACT-093;PACT-094,L04;L06,phase-3-season-one.md#pact-095
 PACT-097,Certify the full production channel matrix,3,todo,verification,QA,L,PACT-068;PACT-079;PACT-092;PACT-093;PACT-094;PACT-095;PACT-096,L04;L06,phase-3-season-one.md#pact-097
 PACT-080,Rehearse Season One end to end,3,todo,verification,QA,L,PACT-068;PACT-069;PACT-070;PACT-071;PACT-072;PACT-073;PACT-074;PACT-075;PACT-076;PACT-077;PACT-078;PACT-079;PACT-095;PACT-097,L01;L02;L03;L04;L05,phase-3-season-one.md#pact-080
-PACT-081,Accept and prepare the Season One release,3,todo,gate,Release,S,PACT-068;PACT-069;PACT-070;PACT-071;PACT-072;PACT-073;PACT-074;PACT-075;PACT-076;PACT-077;PACT-078;PACT-079;PACT-080;PACT-093;PACT-094;PACT-095;PACT-097,L01;L02;L03;L04;L05;L06,phase-3-season-one.md#pact-081
+PACT-081,Accept and prepare the Season One release,3,todo,gate,Release,S,PACT-068;PACT-069;PACT-070;PACT-071;PACT-072;PACT-073;PACT-074;PACT-075;PACT-076;PACT-077;PACT-078;PACT-079;PACT-080;PACT-084;PACT-087;PACT-093;PACT-094;PACT-095;PACT-097,L01;L02;L03;L04;L05;L06,phase-3-season-one.md#pact-081

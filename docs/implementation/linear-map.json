@@ -19,7 +19,7 @@
     "0": {
       "id": "f8db801f-0b68-4ad5-a024-a751ae664781",
       "name": "0 — Connections",
-      "description": "32 tickets. Account/credential foundations, five provider adapters, MCP, approvals, bounded runs, native/Telegram authentication, privacy, and real connection certification. Exit: PACT-027, criteria A01–A09.",
+      "description": "31 tickets. Account/credential foundations, five provider adapters, MCP, approvals, bounded runs, Telegram authentication, privacy, and real MVP connection certification. Signed native certification is deferred to Season One release. Exit: PACT-027, criteria A01–A09.",
       "progress": 0,
       "sortOrder": -12
     },
@@ -33,14 +33,14 @@
     "2": {
       "id": "53ce719b-79d8-4b97-9efa-97c9f220422c",
       "name": "2 — Social slice",
-      "description": "21 tickets. Profiles, Courts, Articles, evidence, sharing, all client surfaces, notifications, privacy/moderation, load tests, and a real three-week 50-player pilot. Exit: PACT-068, criteria S01–S08.",
+      "description": "20 tickets. Profiles, Courts, Articles, evidence, sharing, web/Telegram/assistant surfaces, notifications, privacy/moderation, load tests, and a real three-week 50-player pilot. Exit: PACT-068, criteria S01–S08.",
       "progress": 0,
       "sortOrder": 2016
     },
     "3": {
       "id": "80a160f5-7996-41db-b281-470ae9541ba6",
       "name": "3 — Season One release",
-      "description": "17 tickets. Seasons/honors, art/audio/accessibility, cosmetics and platform purchases, operations/distribution certification, and release rehearsal. Exit: PACT-081, criteria L01–L06.",
+      "description": "19 tickets. Native clients and signing, seasons/honors, art/audio/accessibility, cosmetics and platform purchases, operations/distribution certification, and release rehearsal. Exit: PACT-081, criteria L01–L06.",
       "progress": 0,
       "sortOrder": 2933
     }
@@ -613,15 +613,15 @@
     "scope_and_acceptance": "read_back_passed",
     "specification_documents": "read_back_passed_after_markdown_normalization",
     "phase_counts": [
-      32,
+      31,
       27,
-      21,
-      17
+      20,
+      19
     ],
     "todo": 1,
     "backlog": 79,
     "done": 17,
     "blocked_local": 1,
-    "note": "Version 1.2 replaced AWS-specific planning with the approved single-VPS contract and removed PACT-004 as a local implementation dependency for PACT-009, PACT-024, and PACT-042. PACT-004 remains locally blocked on VPS/domain/off-host-backup/SMTP access. PACT-009, PACT-010, and PACT-083 are completed and reconciled. PACT-011 through PACT-015 and PACT-021 are dependency-ready and unassigned."
+    "note": "Version 1.3 keeps the zero-cost private MVP on one VPS, accepts the documented single-host backup risk, uses internal Mailpit capture, and moves off-host recovery/real outbound email to PACT-078. PACT-004 is complete. Telegram test-bot certification is active in PACT-085. Paid native signing and physical-device work move from the MVP gates to the Season One release milestone in PACT-084/087."
   }
 }

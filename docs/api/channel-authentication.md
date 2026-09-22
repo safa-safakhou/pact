@@ -19,6 +19,8 @@ The Phase 0 screen restores and rotates a refresh credential on launch, reloads 
 
 Configure `TELEGRAM_BOT_ID`, `TELEGRAM_BOT_TOKEN`, and `TELEGRAM_WEBHOOK_SECRET` together. The API does not mount Telegram routes unless the complete set is present.
 
+The MVP test bot opens `https://safa.dedyn.io/pact/telegram/`; its webhook is `https://safa.dedyn.io/pact/telegram/webhook`. Store all three values as root-readable Docker secret files. The bot token must never appear in Git, Linear, application logs, or reports.
+
 The link sequence is deliberately two-party:
 
 1. The Mini App sends its raw `initData` to `POST /v1/telegram/bootstrap`.

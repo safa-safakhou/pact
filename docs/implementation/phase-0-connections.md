@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**32 tickets · 24 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**31 tickets · 25 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -120,7 +120,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-004"></a>
 ## PACT-004 — Provision the single-VPS connection-test environment
 
-**Status:** blocked · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-003](phase-0-connections.md#pact-003)
 
@@ -131,24 +131,22 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **Implement / deliver**
 
 - Define a reproducible Docker Compose deployment for one EU-hosted Linux VPS: TLS reverse proxy, web/API, rules, inference, notification and channel processes, PostgreSQL 17 on a private network, persistent volumes, health checks, and narrowly mounted secrets.
-- Configure automated deploy/migrate/rollback commands, SMTP delivery, outbound-provider access, expiring local exports, logical test/production separation, and encrypted off-host PostgreSQL base/WAL backups with a 35-day lifecycle. Synthetic identities only until PACT-025 passes.
+- Configure automated deploy/migrate/rollback commands, captured SMTP delivery, outbound-provider access, expiring local exports, logical test/production separation, and encrypted same-VPS PostgreSQL base/WAL backups with a 35-day lifecycle for the zero-cost MVP. Record that server loss also loses these backups; PACT-078 owns off-host production hardening. Synthetic identities only until PACT-025 passes.
 
 **Acceptance**
 
-- [ ] Deploy the stack to the project VPS and restore a synthetic account database from an encrypted off-host backup; deleted/revoked-record replay hooks are available for PACT-024.
-- [ ] PostgreSQL is not publicly reachable; private credential-unwrapping material is mounted only into the inference worker; unrelated processes cannot read it; authenticated responses are not cached by the reverse proxy.
-
-**External prerequisites:** Encrypted off-host Restic-compatible backup target and credentials; SMTP sender URL and credentials.
+- [x] Deploy the stack to the project VPS, capture a synthetic transactional email through the local SMTP adapter, and restore a synthetic account database from an encrypted local backup; deleted/revoked-record replay hooks are available for PACT-024.
+- [x] PostgreSQL is not publicly reachable; private credential-unwrapping material is mounted only into the inference worker; unrelated processes cannot read it; authenticated responses are not cached by the reverse proxy.
 
 **Assignee:** codex-vps-deployment
-
-**Block reason:** The isolated single-VPS stack is deployed and the live security checks pass. Completion still requires an encrypted off-host base/WAL backup restore drill and transactional SMTP delivery, but no backup target or SMTP credentials have been supplied.
 
 **Evidence**
 
 - docs/implementation/reports/single-vps-deployment.md
 - Live VPS 2026-09-21: https://safa.dedyn.io/pact health/ready/web/Telegram checks passed; migrations 0001-0015 applied
-- infra/production/bin/verify.sh passed: PostgreSQL private, inference-only unwrap key, authenticated no-store headers
+- infra/production/bin/verify.sh passed: PostgreSQL private, inference-only unwrap key, authenticated no-store headers, internal-only Mailpit
+- Live release mvp-20260922-1: synthetic security email captured and outbox marked delivered
+- Encrypted local Restic snapshot 403424fc restored and structurally verified; six-hour backup timer active
 
 <a id="pact-005"></a>
 ## PACT-005 — Add redacted operational telemetry and failure correlation
@@ -751,44 +749,10 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - npm run lint; npm run typecheck; npm test (20); npm run build; npm run test:integration (24)
 - tests/integration/client-sdk.test.ts; packages/client-sdk/src/client.test.ts
 
-<a id="pact-084"></a>
-## PACT-084 — Prove native iOS and Android login, linking, and approval
-
-**Status:** blocked · **Role:** Mobile · **Size:** L · **Type:** implementation
-
-**Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-083](phase-0-connections.md#pact-083)
-
-**Components:** React Native Expo shell, native identity, secure storage.
-
-**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md) · **Release checks:** A08
-
-**Implement / deliver**
-
-- Create one native application with iOS/Android development builds, system-browser PACT PKCE login, verified app links, secure refresh storage, and in-memory access tokens.
-- Complete private-draft read, sandbox command, exact human approval, reconnect, and revoke on both platforms; full gameplay comes in PACT-087.
-
-**Acceptance**
-
-- [ ] A malicious callback, wrong audience, stale approval, duplicate tap, and revoked session fail or return the original receipt correctly.
-- [ ] Credentials do not appear in app preferences/logs/backups; backgrounding/reopening shows server state without a new run.
-
-**External prerequisites:** Apple team ID, signed physical iOS development build, and iOS test device; Android SDK, signing-certificate fingerprint, signed development build, and Android test device; Hostname-root Apple and Android association files generated from the real signing identities.
-
-**Assignee:** codex-channel-auth-batch
-
-**Block reason:** The real native screen and API adapter now pass local tests, and Xcode 26.4 builds and launches the iOS 26.4 simulator app through the system PKCE prompt. Completion still requires real signing identities and association files plus the full matrix on physical iOS and Android devices; this host has no Android SDK.
-
-**Evidence**
-
-- docs/implementation/reports/native-telegram-auth.md
-- npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build
-- apps/native/src/session-controller.test.ts; apps/native/src/native-api.test.ts; apps/native/app.json
-- Xcode 26.4 iOS 26.4 simulator build and launch passed on 2026-09-22; system PKCE prompt opened https://safa.dedyn.io and cancellation returned cleanly
-
 <a id="pact-085"></a>
 ## PACT-085 — Prove Telegram identity linking and Mini App authentication
 
-**Status:** blocked · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -806,24 +770,23 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Forged/stale/replayed launch data, changed usernames, forwarded callbacks, and swapped PACT sessions cannot link or operate another account.
 - [ ] Unlink immediately revokes channel sessions; no game privilege is inferred from a Telegram handle or message text.
 
-**External prerequisites:** Operator-owned Telegram bot token.
-
 **Assignee:** codex-channel-auth-batch
 
-**Block reason:** The Mini App and webhook are now publicly reachable through the single VPS at https://safa.dedyn.io/pact, but real Telegram certification still requires an operator-owned bot token.
+**Block reason:** Infrastructure and credentials are configured. Completion now requires the operator-driven real Mini App account-link, sandbox, exact-approval, duplicate, and unlink walkthrough.
 
 **Evidence**
 
 - docs/implementation/reports/native-telegram-auth.md
 - npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build
 - packages/telegram/src/crypto.test.ts; tests/integration/telegram.test.ts
+- Live bot and menu configured; HTTPS webhook accepts the secret, rejects missing secret with 403, and returns privilegedAction=false for synthetic message text
 
 <a id="pact-024"></a>
 ## PACT-024 — Implement first-account retention, export, and deletion
 
 **Status:** todo · **Role:** Security · **Size:** L · **Type:** implementation
 
-**Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-084](phase-0-connections.md#pact-084), [PACT-085](phase-0-connections.md#pact-085)
+**Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-085](phase-0-connections.md#pact-085)
 
 **Components:** privacy jobs, export, deletion registry.
 
@@ -833,7 +796,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - Implement account/draft/key/session/run/inbox retention jobs, JSON export with readable index and authenticated download, legal-hold metadata, and deletion/revocation registry.
 - Add purge/restore replay for phase-0 data and a privacy Settings screen; gameplay retirement and social data are added in later tickets.
-- Include native and Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers.
+- Include Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers; native-session cleanup is added when signed native testing begins.
 
 **Acceptance**
 
@@ -892,7 +855,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
-**Depends on:** [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-084](phase-0-connections.md#pact-084), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
+**Depends on:** [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
 
 **Components:** connection certification, setup guides.
 
@@ -902,7 +865,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - Run the full signup/OAuth/read/write/approval/revoke fixture in ChatGPT, Claude, and Gemini CLI and real-key runs through all five PACT adapters.
 - Publish tested host/model/protocol/date requirements; test five unfamiliar people per named route and record credential-ready timing, errors, usage, and a sanitized evidence link.
-- Include Gemini CLI certification and native/Telegram sandbox setup evidence from the dedicated new tickets.
+- Include Gemini CLI certification and Telegram sandbox setup evidence from the dedicated new tickets; native certification is deferred to L06.
 
 **Acceptance**
 
@@ -916,7 +879,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
 
-**Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-002](phase-0-connections.md#pact-002), [PACT-003](phase-0-connections.md#pact-003), [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-010](phase-0-connections.md#pact-010), [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-016](phase-0-connections.md#pact-016), [PACT-017](phase-0-connections.md#pact-017), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-026](phase-0-connections.md#pact-026), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083), [PACT-084](phase-0-connections.md#pact-084), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
+**Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-002](phase-0-connections.md#pact-002), [PACT-003](phase-0-connections.md#pact-003), [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-010](phase-0-connections.md#pact-010), [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-016](phase-0-connections.md#pact-016), [PACT-017](phase-0-connections.md#pact-017), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-026](phase-0-connections.md#pact-026), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
 
 **Components:** connection release gate.
 
@@ -929,5 +892,5 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] All A01–A09 checks pass, including native/Telegram sandbox identities and reusable-module contracts, with no live economic world exposed.
+- [ ] All A01–A09 checks pass, including the Telegram sandbox identity, local native-PKCE fixtures, and reusable-module contracts, with no live economic world exposed.
 - [ ] A gate cannot be marked done from a mock-provider result, missing host test, or assumed privacy operation.

@@ -13,7 +13,7 @@ Every criterion in the [design delivery checklist](../pact/delivery.md) is mappe
 | A05 | [PACT-002](phase-0-connections.md#pact-002), [PACT-007](phase-0-connections.md#pact-007), [PACT-016](phase-0-connections.md#pact-016), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-023](phase-0-connections.md#pact-023), [PACT-026](phase-0-connections.md#pact-026) | [PACT-027](phase-0-connections.md#pact-027) |
 | A06 | [PACT-003](phase-0-connections.md#pact-003), [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-009](phase-0-connections.md#pact-009), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-026](phase-0-connections.md#pact-026) | [PACT-027](phase-0-connections.md#pact-027) |
 | A07 | [PACT-026](phase-0-connections.md#pact-026) | [PACT-027](phase-0-connections.md#pact-027) |
-| A08 | [PACT-083](phase-0-connections.md#pact-083), [PACT-084](phase-0-connections.md#pact-084), [PACT-085](phase-0-connections.md#pact-085), [PACT-026](phase-0-connections.md#pact-026) | [PACT-027](phase-0-connections.md#pact-027) |
+| A08 | [PACT-083](phase-0-connections.md#pact-083), [PACT-085](phase-0-connections.md#pact-085), [PACT-026](phase-0-connections.md#pact-026) | [PACT-027](phase-0-connections.md#pact-027) |
 | A09 | [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083), [PACT-086](phase-0-connections.md#pact-086), [PACT-026](phase-0-connections.md#pact-026) | [PACT-027](phase-0-connections.md#pact-027) |
 
 ## Phase 1 — Transactional rules prototype
@@ -40,15 +40,15 @@ Every criterion in the [design delivery checklist](../pact/delivery.md) is mappe
 | S05 | [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-091](phase-2-social.md#pact-091), [PACT-066](phase-2-social.md#pact-066) | [PACT-068](phase-2-social.md#pact-068) |
 | S06 | [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-065](phase-2-social.md#pact-065), [PACT-067](phase-2-social.md#pact-067) | [PACT-068](phase-2-social.md#pact-068) |
 | S07 | [PACT-065](phase-2-social.md#pact-065), [PACT-067](phase-2-social.md#pact-067) | [PACT-068](phase-2-social.md#pact-068) |
-| S08 | [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092) | [PACT-068](phase-2-social.md#pact-068) |
+| S08 | [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092) | [PACT-068](phase-2-social.md#pact-068) |
 
 ## Phase 3 — Season One release
 
 | Criterion | Implementation / verification tickets | Closing gate |
 | --- | --- | --- |
 | L01 | [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
-| L02 | [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
+| L02 | [PACT-087](phase-3-season-one.md#pact-087), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
 | L03 | [PACT-047](phase-1-rules.md#pact-047), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
 | L04 | [PACT-075](phase-3-season-one.md#pact-075), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
 | L05 | [PACT-070](phase-3-season-one.md#pact-070), [PACT-077](phase-3-season-one.md#pact-077), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
-| L06 | [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097) | [PACT-081](phase-3-season-one.md#pact-081) |
+| L06 | [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097) | [PACT-081](phase-3-season-one.md#pact-081) |

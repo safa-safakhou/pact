@@ -1,6 +1,6 @@
 # Product brief
 
-**Version 1.1 · Owner of player experience, release scope, and monetization.**
+**Version 1.3 · Owner of player experience, release scope, and monetization.**
 
 ## The game in two paragraphs
 
@@ -72,6 +72,6 @@ No purchase grants resources, units, builders, time reductions, reserve protecti
 
 A Chronicle card combines a short situation, selected evidence, and a recorded consequence. Publishing and copying the link are deliberate human actions. Recipients can view it before signup and retain the intended invitation through setup. A new player brings another negotiator and another kingdom, not a referral resource bonus. Courts can grow without granting their owner control over members.
 
-All surfaces show the same state, receipts, authority, and achievements. Native and Telegram interfaces are functional during the social slice and certified for release in Season One. A player can begin a conversation in an assistant and approve its exact proposal in another authenticated PACT client.
+All implemented surfaces show the same state, receipts, authority, and achievements. Web, Telegram, and assistant routes are functional during the social slice. Native iOS/Android interfaces and their paid signing/device work begin only after that MVP has been played and validated, and are certified for release in Season One. A player can begin a conversation in an assistant and approve its exact proposal in another authenticated PACT client.
 
 The product is designed to earn repeat play through ownership, competition, and relationships. Success is evaluated by the behavioral checks in [delivery](delivery.md), not asserted from the specification.

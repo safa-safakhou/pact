@@ -1,10 +1,10 @@
 # Channels and reusable architecture
 
-**Version 1.1 · 16 September 2026 · Owner of client coverage, module boundaries, and cross-channel behavior.**
+**Version 1.3 · 22 September 2026 · Owner of client coverage, module boundaries, and cross-channel behavior.**
 
 ## Product commitment
 
-One account, one kingdom, one shared world, accessible through web, iOS, Android, Telegram, and supported assistant clients. These are different ways to reach the same game. Changing an app or model never creates extra resources, a second Envoy, additional action allowances, or separate progress.
+One account, one kingdom, one shared world, accessible through web, iOS, Android, Telegram, and supported assistant clients. These are different ways to reach the same game. Changing an app or model never creates extra resources, a second Envoy, additional action allowances, or separate progress. The zero-cost MVP validates web, Telegram, and assistant access first. Paid Apple/Google membership, signed physical-device certification, and complete native gameplay are deferred to the Season One release milestone after the game has been played and validated; the shared native shell remains preparatory work, not an MVP gate.
 
 Version 1.1 adds native apps and Telegram to the first-season release scope. Web remains the first complete development client. Phase 0 proves authentication and one action on each new surface; phase 2 delivers functional mobile/Telegram play; phase 3 completes distribution and purchases. Native clients are now required, replacing the earlier PWA-only scope.
 

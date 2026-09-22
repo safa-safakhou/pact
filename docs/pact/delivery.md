@@ -1,10 +1,10 @@
 # Build and acceptance checklist
 
-**Version 1.1 · Ordered delivery contract. Empty checkboxes mean work has not been performed.**
+**Version 1.3 · Ordered delivery contract. Empty checkboxes mean work has not been performed.**
 
 The executable work breakdown is the [implementation backlog](../implementation/README.md). Its [coverage table](../implementation/coverage.md) maps the criteria below to concrete tickets; this document remains authoritative for milestone acceptance.
 
-The implementation follows these stages in order. Internal scaffolding can share code, but a later stage does not excuse a failed earlier exit condition. All five PACT model adapters, the certified assistant routes, web, native iOS/Android, and Telegram belong to the release; the connection stage discovers actual host constraints before the game depends on them.
+The implementation follows these stages in order. Internal scaffolding can share code, but a later stage does not excuse a failed earlier exit condition. All five PACT model adapters, the certified assistant routes, web, native iOS/Android, and Telegram belong to the release. The zero-cost connection experiment proves web, assistants, and Telegram; paid native signing and device certification are deliberately deferred until Season One release work.
 
 ## 0. Connection experiment
 
@@ -18,7 +18,7 @@ The implementation follows these stages in order. Internal scaffolding can share
 - [ ] **A06 — Data:** publish real operator notices before accounts exist; demonstrate key encryption/redaction, account export, revocation, deletion, backup suppression, and no third-party transcript analytics.
 - [ ] **A07 — Setup usability:** five unfamiliar testers per named route, using only its published guide. At least four of five reach a correct sandbox result within five minutes after required provider credentials/host eligibility are available. Record account creation separately so verification delays remain visible. Failed routes are fixed before this stage passes.
 
-- [ ] **A08 — Channel authentication:** native iOS/Android development clients and Telegram complete account linking, sandbox read/write, exact human approval, unlink/revoke, and cross-device duplicate-action checks. Telegram initData/webhook validation and native PKCE are verified; no production game loop is required yet.
+- [ ] **A08 — Channel authentication:** Telegram completes account linking, sandbox read/write, exact human approval, unlink/revoke, and cross-device duplicate-action checks. Telegram initData and webhook validation are verified against the test bot. Native PKCE remains covered by local fixtures but signed-device certification is deferred to L06; no production game loop is required yet.
 - [ ] **A09 — Module contracts:** package ownership, imports, transaction ports, product scoping, generated SDK/tool contracts, and provider/client capability matrix are defined and enforced in CI. A Grok-powered external tool client passes the sandbox fixture without claiming universal consumer-app support.
 
 **Exit:** A01–A09 pass with evidence. The output is a working multi-route connection layer and documented host requirements, not a screenshot of one connected assistant.
@@ -51,7 +51,7 @@ The implementation follows these stages in order. Internal scaffolding can share
 - [ ] **S06 — Player agency:** at least seven of ten interviewed players correctly describe one consequential decision they made and what their Envoy did. Reading summaries alone does not count as agency.
 - [ ] **S07 — Return and sharing:** at least 20 of 50 activated players perform a meaningful action in days 8–14; at least five voluntarily share; at least three referred players activate and return for meaningful play in their own days 8–14. Record missing observation windows separately. No referral prizes are used in this test.
 
-- [ ] **S08 — Cross-channel play:** web, iOS, Android, Telegram Mini App/bot, and certified assistant clients operate one kingdom with consistent receipts and run state. Handoff, stale/offline UI, replay, unlink/deletion, safe push, and explicit bot-run confirmation pass. Full gameplay is available on the visual clients; the bot links complex decisions to a visual client.
+- [ ] **S08 — Cross-channel play:** web, Telegram Mini App/bot, and certified assistant clients operate one kingdom with consistent receipts and run state. Handoff, stale/offline UI, replay, unlink/deletion, and explicit bot-run confirmation pass. Full gameplay is available on web and Telegram links complex decisions to that visual client. Native cross-channel play moves to L06.
 
 **Exit:** S01–S05 and S08 pass and the S06–S07 behavioral thresholds are met. These thresholds are product decisions for this pilot, not industry benchmarks. If behavioral thresholds fail, revise the core interaction under a new version and rerun the slice before funding the full season.
 

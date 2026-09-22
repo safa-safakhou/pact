@@ -9,4 +9,4 @@ npm run build --workspace @pact/telegram-app
 npm run dev --workspace @pact/telegram-app
 ```
 
-Set `VITE_PACT_ORIGIN` only when serving from a different development origin. A real bot token and public HTTPS Mini App/webhook endpoint are still required for PACT-085's external certification.
+Set `VITE_PACT_ORIGIN` only when serving from a different development origin. The MVP bot opens the deployed Mini App at `https://safa.dedyn.io/pact/telegram/`; its token and webhook secret stay in root-readable VPS secret files and are never bundled into this client.

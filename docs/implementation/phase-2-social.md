@@ -1,6 +1,6 @@
 # Phase 2 — Social slice
 
-**21 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -257,27 +257,6 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Raw prompts/messages and provider secrets never enter analytics; events expire at 90 days before de-identified aggregation.
 - [ ] Day-8–14 returns, referred-player windows, incomplete observation, and intelligence-sale labels can be reproduced from fixtures without counting opens as meaningful play.
 
-<a id="pact-087"></a>
-## PACT-087 — Build complete native kingdom and Envoy screens
-
-**Status:** todo · **Role:** Mobile · **Size:** L · **Type:** implementation
-
-**Depends on:** [PACT-048](phase-1-rules.md#pact-048), [PACT-053](phase-1-rules.md#pact-053), [PACT-061](phase-2-social.md#pact-061), [PACT-083](phase-0-connections.md#pact-083), [PACT-084](phase-0-connections.md#pact-084)
-
-**Components:** native gameplay screens, shared view models.
-
-**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [runtime](../pact/runtime.md) · **Release checks:** S08
-
-**Implement / deliver**
-
-- Implement the four screens using native accessible controls, shared client/view-model logic, assets, resource formatting, and existing application commands.
-- Include build/train/contracts/scout/garrison/raid/report/social controls, account/security settings, run start/stop, and approval handoff.
-
-**Acceptance**
-
-- [ ] A player completes the full core loop on each native platform and sees the same version/receipt on web.
-- [ ] Offline state is visibly stale; reconnect cannot replay a signature/raid or start another Envoy; native approval cannot bypass expiry or reauthentication.
-
 <a id="pact-088"></a>
 ## PACT-088 — Deliver the complete Telegram Mini App
 
@@ -321,25 +300,25 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Groups, unlinked accounts, and agent-generated chat cannot invoke human approvals; /stop acts on the same global run and private summaries exclude credentials.
 
 <a id="pact-090"></a>
-## PACT-090 — Add native push and Telegram notification delivery
+## PACT-090 — Add Telegram notification delivery
 
 **Status:** todo · **Role:** Backend / Mobile · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-060](phase-2-social.md#pact-060), [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089)
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-060](phase-2-social.md#pact-060), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089)
 
-**Components:** APNs adapter, FCM adapter, Telegram delivery.
+**Components:** Telegram delivery.
 
 **Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md) · **Release checks:** S03, S08
 
 **Implement / deliver**
 
-- Extend the reusable dispatcher with APNs, FCM, and bot delivery, account/category/channel preferences, grouping, endpoint invalidation, and audience-safe deep links.
+- Extend the reusable dispatcher with bot delivery, account/category/channel preferences, grouping, endpoint invalidation, and audience-safe deep links. APNs/FCM delivery is deferred with native clients to PACT-087.
 - Persist one inbox event regardless of how many devices subscribe; deduplicate each external delivery by event/group/channel/endpoint.
 
 **Acceptance**
 
 - [ ] A burst produces the specified grouped notifications without exposing sensitive amounts/text or waking inference.
-- [ ] Revoked tokens, blocked bot, unlinked identity, device change, and failed push never alter game deadlines or lose the durable inbox event.
+- [ ] Revoked sessions, blocked bot, unlinked identity, and failed bot delivery never alter game deadlines or lose the durable inbox event.
 
 **External prerequisites:** APNs and Firebase credentials; test-device push entitlement.
 
@@ -348,15 +327,15 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Security · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-064](phase-2-social.md#pact-064), [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090)
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-064](phase-2-social.md#pact-064), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090)
 
-**Components:** channel lifecycle, push cleanup, scoped revocation.
+**Components:** channel lifecycle, bot subscription cleanup, scoped revocation.
 
 **Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md) · **Release checks:** S05, S08
 
 **Implement / deliver**
 
-- Extend sign-out/reset/export/delete to native sessions, linked Telegram identities, push registrations, webhook metadata, and product-scoped connection records.
+- Extend sign-out/reset/export/delete to linked Telegram identities, bot subscriptions, webhook metadata, and product-scoped connection records. Native sessions and push registrations are deferred to PACT-087.
 - Process/discard raw Telegram payloads and purge deduplication IDs after 24 hours; remove live channel identifiers within 24 hours of unlink while respecting declared audit/backup rules.
 
 **Acceptance**
@@ -365,11 +344,11 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Restore cannot resurrect an unlinked bot/device token; exports include channel links but no third-party secrets or hidden counterpart information.
 
 <a id="pact-092"></a>
-## PACT-092 — Verify cross-device and assistant handoff end to end
+## PACT-092 — Verify MVP cross-channel and assistant handoff end to end
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
-**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-065](phase-2-social.md#pact-065), [PACT-086](phase-0-connections.md#pact-086), [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091)
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-065](phase-2-social.md#pact-065), [PACT-086](phase-0-connections.md#pact-086), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091)
 
 **Components:** channel contract tests, race fixtures.
 
@@ -377,7 +356,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Run the same account/objective/offer/approval/receipt sequence across web, iOS, Android, Telegram, and certified assistant routes.
+- Run the same account/objective/offer/approval/receipt sequence across web, Telegram, and certified assistant routes. Native handoff is deferred to PACT-097.
 - Exercise concurrent approvals, one-write-lease takeover, stale app versions/cursors, lost responses, invitation handoff, offline state, and deletion during a pending action.
 
 **Acceptance**
@@ -390,7 +369,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
-**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-065](phase-2-social.md#pact-065), [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092)
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-065](phase-2-social.md#pact-065), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092)
 
 **Components:** social/load validation.
 
@@ -435,7 +414,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
 
-**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-065](phase-2-social.md#pact-065), [PACT-066](phase-2-social.md#pact-066), [PACT-067](phase-2-social.md#pact-067), [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092)
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-065](phase-2-social.md#pact-065), [PACT-066](phase-2-social.md#pact-066), [PACT-067](phase-2-social.md#pact-067), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092)
 
 **Components:** social release gate.
 

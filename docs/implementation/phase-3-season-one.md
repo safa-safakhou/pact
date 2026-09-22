@@ -1,8 +1,61 @@
 # Phase 3 — Season One release
 
-**17 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**19 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
+
+<a id="pact-084"></a>
+## PACT-084 — Prove native iOS and Android login, linking, and approval
+
+**Status:** todo · **Role:** Mobile · **Size:** L · **Type:** implementation
+
+**Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-068](phase-2-social.md#pact-068), [PACT-083](phase-0-connections.md#pact-083)
+
+**Components:** React Native Expo shell, native identity, secure storage.
+
+**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md) · **Release checks:** L06
+
+**Implement / deliver**
+
+- Create one native application with iOS/Android development builds, system-browser PACT PKCE login, verified app links, secure refresh storage, and in-memory access tokens.
+- Complete private-draft read, sandbox command, exact human approval, reconnect, and revoke on both platforms; full gameplay comes in PACT-087.
+
+**Acceptance**
+
+- [ ] A malicious callback, wrong audience, stale approval, duplicate tap, and revoked session fail or return the original receipt correctly.
+- [ ] Credentials do not appear in app preferences/logs/backups; backgrounding/reopening shows server state without a new run.
+
+**External prerequisites:** Apple team ID, signed physical iOS development build, and iOS test device; Android SDK, signing-certificate fingerprint, signed development build, and Android test device; Hostname-root Apple and Android association files generated from the real signing identities.
+
+**Block reason:** Deferred by the Version 1.3 MVP decision until web and Telegram gameplay have been played and validated. The existing native shell and simulator evidence are retained; paid signing and physical-device certification resume during Season One release work.
+
+**Evidence**
+
+- docs/implementation/reports/native-telegram-auth.md
+- npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build
+- apps/native/src/session-controller.test.ts; apps/native/src/native-api.test.ts; apps/native/app.json
+- Xcode 26.4 iOS 26.4 simulator build and launch passed on 2026-09-22; system PKCE prompt opened https://safa.dedyn.io and cancellation returned cleanly
+
+<a id="pact-087"></a>
+## PACT-087 — Build complete native kingdom and Envoy screens
+
+**Status:** todo · **Role:** Mobile · **Size:** L · **Type:** implementation
+
+**Depends on:** [PACT-048](phase-1-rules.md#pact-048), [PACT-053](phase-1-rules.md#pact-053), [PACT-061](phase-2-social.md#pact-061), [PACT-068](phase-2-social.md#pact-068), [PACT-083](phase-0-connections.md#pact-083), [PACT-084](phase-3-season-one.md#pact-084)
+
+**Components:** native gameplay screens, shared view models.
+
+**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [runtime](../pact/runtime.md) · **Release checks:** L02, L06
+
+**Implement / deliver**
+
+- Implement the four screens using native accessible controls, shared client/view-model logic, assets, resource formatting, and existing application commands.
+- Include build/train/contracts/scout/garrison/raid/report/social controls, account/security settings, run start/stop, approval handoff, APNs/FCM delivery, and native session/push privacy cleanup.
+
+**Acceptance**
+
+- [ ] A player completes the full core loop on each native platform and sees the same version/receipt on web.
+- [ ] Offline state is visibly stale; reconnect cannot replay a signature/raid or start another Envoy; native approval cannot bypass expiry or reauthentication.
 
 <a id="pact-069"></a>
 ## PACT-069 — Implement the complete six-week season lifecycle
@@ -207,7 +260,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend / Mobile · **Size:** L · **Type:** implementation
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-087](phase-2-social.md#pact-087)
+**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-087](phase-3-season-one.md#pact-087)
 
 **Components:** native billing adapters, receipt verification.
 
@@ -262,7 +315,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **Implement / deliver**
 
 - Promote and rehearse the phase-0 single-VPS stack for production with separate production database/secrets, encrypted off-host backup/restore, secrets/signing rotation, monitoring, status page, capacity alarms, migrations, and deployment rollback.
-- Configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations.
+- Replace MVP-local backup and email capture with encrypted off-host backup/restore and real outbound SMTP, then configure support/moderation/privacy ownership, incident world suspension, delayed/failed notifications, provider outage handling, and retention/legal-hold operations.
 
 **Acceptance**
 
@@ -300,7 +353,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Mobile / Operations · **Size:** L · **Type:** operations
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-073](phase-3-season-one.md#pact-073), [PACT-078](phase-3-season-one.md#pact-078), [PACT-087](phase-2-social.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094)
+**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-073](phase-3-season-one.md#pact-073), [PACT-078](phase-3-season-one.md#pact-078), [PACT-087](phase-3-season-one.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094)
 
 **Components:** signed builds, store submissions, Telegram production configuration.
 
@@ -365,7 +418,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-080](phase-3-season-one.md#pact-080), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097)
+**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-080](phase-3-season-one.md#pact-080), [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097)
 
 **Components:** Season One release gate.
 
