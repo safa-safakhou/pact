@@ -16,7 +16,16 @@ $compose ps --status running --services | grep -qx postgres
 curl -fsS "http://127.0.0.1:${PACT_LOOPBACK_PORT:-8088}/ready" >/dev/null
 curl -fsS "$public_base_url/health" >/dev/null
 curl -fsS "$public_base_url/" >/dev/null
-curl -fsS "$public_base_url/telegram/" >/dev/null
+telegram_html="$(curl -fsS "$public_base_url/telegram/")"
+printf '%s' "$telegram_html" | grep -Fq 'https://telegram.org/js/telegram-web-app.js?63'
+printf '%s' "$telegram_html" | grep -Fq '/pact/telegram/assets/'
+telegram_headers="$(curl -fsS -D - -o /dev/null "$public_base_url/telegram/" | tr -d '\r')"
+if printf '%s\n' "$telegram_headers" | grep -qi '^x-frame-options:'; then
+  echo "Telegram Mini App unexpectedly denies framing" >&2
+  exit 1
+fi
+printf '%s\n' "$telegram_headers" | grep -Fqi \
+  'content-security-policy: frame-ancestors https://web.telegram.org https://*.web.telegram.org'
 
 if ss -lnt | grep -Eq '(^|[[:space:]])[^[:space:]]*:5432[[:space:]]'; then
   echo "PostgreSQL unexpectedly has a host listener" >&2
