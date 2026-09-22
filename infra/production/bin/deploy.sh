@@ -22,7 +22,9 @@ done
 
 umask 077
 state_dir="${PACT_STATE_DIR:-/srv/pact/state}"
-mkdir -p "$state_dir/releases"
+mkdir -p "$state_dir/releases" "$state_dir/privacy"
+chmod 700 "$state_dir"
+chmod 700 "$state_dir/privacy"
 
 export PACT_IMAGE="pact-runtime:$release_id"
 export PACT_GATEWAY_IMAGE="pact-gateway:$release_id"
@@ -32,6 +34,7 @@ docker build --target gateway --build-arg "PACT_WEB_BASE_PATH=${PACT_WEB_BASE_PA
 compose="docker compose --env-file $env_file -f infra/production/compose.yaml"
 $compose up -d postgres
 $compose run --rm migrate
+$compose run --rm privacy-replay
 $compose up -d --remove-orphans api rules inference notification channel gateway
 
 cat >"$state_dir/releases/$release_id.env" <<EOF

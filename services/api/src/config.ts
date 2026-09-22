@@ -24,6 +24,7 @@ const EnvironmentSchema = z
       .optional(),
     TELEGRAM_BOT_TOKEN: z.string().min(16).optional(),
     TELEGRAM_WEBHOOK_SECRET: z.string().min(32).max(256).optional(),
+    PACT_DELETION_REGISTRY_FILE: z.string().min(1).optional(),
   })
   .superRefine((value, context) => {
     if (
@@ -37,6 +38,9 @@ const EnvironmentSchema = z
     }
     if (value.NODE_ENV === "production" && !value.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE) {
       context.addIssue({ code: "custom", message: "Production model-credential public wrapping key is required" });
+    }
+    if (value.NODE_ENV === "production" && !value.PACT_DELETION_REGISTRY_FILE) {
+      context.addIssue({ code: "custom", message: "Production deletion registry file is required" });
     }
     const telegramValues = [value.TELEGRAM_BOT_ID, value.TELEGRAM_BOT_TOKEN, value.TELEGRAM_WEBHOOK_SECRET];
     if (telegramValues.some(Boolean) && !telegramValues.every(Boolean)) {

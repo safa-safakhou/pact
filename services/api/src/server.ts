@@ -8,6 +8,7 @@ import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
 import type { OpenRouterAuthService } from "@pact/openrouter";
+import type { PrivacyService } from "@pact/privacy";
 import type { RunService } from "@pact/runs";
 import type { TelegramService } from "@pact/telegram";
 import {
@@ -28,6 +29,7 @@ import { registerModelCredentialRoutes } from "./model-credential-routes.js";
 import { registerNativeRoutes } from "./native-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
 import { registerOpenRouterRoutes } from "./openrouter-routes.js";
+import { registerPrivacyRoutes } from "./privacy-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
 import { registerTelegramRoutes } from "./telegram-routes.js";
 
@@ -58,6 +60,7 @@ export interface ApiModules {
   runs?: RunService;
   openRouter?: OpenRouterAuthService;
   telegram?: TelegramService;
+  privacy?: PrivacyService;
   origin?: string;
 }
 
@@ -151,6 +154,7 @@ export function buildServer(
       registerOpenRouterRoutes(server, modules.identity, modules.openRouter, modules.credentialVault);
     }
     if (modules.telegram) registerTelegramRoutes(server, modules.identity, modules.telegram);
+    if (modules.privacy) registerPrivacyRoutes(server, modules.identity, modules.privacy);
   }
   return server;
 }

@@ -23,7 +23,7 @@ cd /srv/pact/source
 ./infra/production/bin/verify.sh infra/production/vps-connection-test.env https://safa.dedyn.io/pact
 ```
 
-Deployment builds immutable release-tagged runtime and gateway images, starts PostgreSQL, applies migrations once, then replaces application containers after API readiness succeeds. To return to the previously recorded images without rolling the database backward:
+Deployment builds immutable release-tagged runtime and gateway images, starts PostgreSQL, applies migrations once, imports the append-only deletion registry, then replaces application containers after API readiness succeeds. API and all workers depend on the successful `privacy-replay` one-shot service. To return to the previously recorded images without rolling the database backward:
 
 ```sh
 cd /srv/pact/source
@@ -44,6 +44,8 @@ sudo ./infra/production/bin/install-backup-timer.sh \
 ```
 
 Run `restore-drill.sh` with an explicit Restic snapshot ID before accepting the environment. Snapshot `403424fc` was restored and structurally verified in an isolated disposable volume on 22 September 2026. The `pact-backup.timer` runs every six hours and preserves snapshots within the 35-day window.
+
+The opaque deletion registry is `/srv/pact/state/privacy/deletion-registry.ndjson`, mode `0600` after its first write. It is deliberately outside PostgreSQL's base/WAL volumes and is not replaced during a database restore. It contains no email, credentials, or content. Every restore must apply current migrations and run `privacy-replay` before any API or worker starts; the normal deployment path enforces this. Do not roll back to an image that predates `@pact/privacy` while an unexpired deletion tombstone exists.
 
 ## MVP email capture
 

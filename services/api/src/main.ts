@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { clearInterval, setInterval } from "node:timers";
 import { CommandDispatcher } from "@pact/application";
 import { ApprovalService } from "@pact/approvals";
 import { AuthorityService } from "@pact/authority";
@@ -17,6 +18,7 @@ import { McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { OpenRouterAuthService } from "@pact/openrouter";
+import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
 import { RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { readEnvironment } from "./config.js";
@@ -92,6 +94,13 @@ const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
     })
   : undefined;
 const openRouter = new OpenRouterAuthService(pool, { productScope: "pact", clock });
+const privacy = new PrivacyService(pool, {
+  productScope: "pact",
+  clock,
+  ...(environment.PACT_DELETION_REGISTRY_FILE
+    ? { deletionRegistry: new FileDeletionRegistry(environment.PACT_DELETION_REGISTRY_FILE) }
+    : {}),
+});
 const telegram =
   environment.TELEGRAM_BOT_ID && environment.TELEGRAM_BOT_TOKEN && environment.TELEGRAM_WEBHOOK_SECRET
     ? new TelegramService(pool, {
@@ -115,12 +124,22 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   inbox,
   runs,
   openRouter,
+  privacy,
   ...(credentialVault ? { credentialVault } : {}),
   ...(telegram ? { telegram } : {}),
   origin: environment.PACT_ORIGIN,
 });
 
+// A restored backup must have deletion tombstones reapplied before the API accepts traffic.
+await privacy.replayDeletionRegistry();
+const privacyMaintenance = setInterval(
+  () =>
+    void privacy.runRetention().catch((error: unknown) => server.log.error({ err: error }, "privacy retention failed")),
+  24 * 60 * 60_000,
+);
+
 const shutdown = async (): Promise<void> => {
+  clearInterval(privacyMaintenance);
   await server.close();
   await pool.end();
 };

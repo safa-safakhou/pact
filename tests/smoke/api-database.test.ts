@@ -45,6 +45,7 @@ describe("API/database smoke", () => {
       { name: "0013_envoy_runs.sql" },
       { name: "0014_openrouter_oauth.sql" },
       { name: "0015_telegram_channel.sql" },
+      { name: "0016_account_privacy.sql" },
     ]);
     await server.close();
   });

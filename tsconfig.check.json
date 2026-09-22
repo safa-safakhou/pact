@@ -24,7 +24,8 @@
       "@pact/client-sdk": ["./packages/client-sdk/src/index.ts"],
       "@pact/ui-features": ["./packages/ui-features/src/index.ts"],
       "@pact/openrouter": ["./packages/openrouter/src/index.ts"],
-      "@pact/telegram": ["./packages/telegram/src/index.ts"]
+      "@pact/telegram": ["./packages/telegram/src/index.ts"],
+      "@pact/privacy": ["./packages/privacy/src/index.ts"]
     }
   },
   "include": [

@@ -53,6 +53,23 @@ function App(): React.JSX.Element {
   const [telegramPassword, setTelegramPassword] = useState("");
   const [telegramStatus, setTelegramStatus] = useState<"idle" | "working" | "linked">("idle");
   const [telegramError, setTelegramError] = useState<string>();
+  const [privacyPassword, setPrivacyPassword] = useState("");
+  const [privacyCsrf, setPrivacyCsrf] = useState<string | undefined>(() => readCsrfToken());
+  const [privacyStatus, setPrivacyStatus] = useState<string>();
+  const [privacyDownload, setPrivacyDownload] = useState<string>();
+
+  const privacyRequest = async (path: string): Promise<Record<string, unknown>> => {
+    if (!privacyCsrf) throw new Error("Sign in before using privacy settings.");
+    const response = await window.fetch(new URL(path, apiOrigin), {
+      method: "POST",
+      credentials: "include",
+      headers: { "content-type": "application/json", "x-csrf-token": privacyCsrf },
+      body: JSON.stringify({ password: privacyPassword }),
+    });
+    const body = (await response.json()) as Record<string, unknown>;
+    if (!response.ok) throw new Error(String((body.error as { code?: string } | undefined)?.code ?? "REQUEST_FAILED"));
+    return body;
+  };
 
   return (
     <main data-pact-audience={client.audience}>
@@ -147,6 +164,62 @@ function App(): React.JSX.Element {
         onApprove={() => setErrorCode(undefined)}
         onDeny={() => setErrorCode(undefined)}
       />
+      <section className="privacy-card" aria-labelledby="privacy-title">
+        <h2 id="privacy-title">Privacy and account data</h2>
+        <p>Export your phase-0 account data or close the account. Both actions require your current password.</p>
+        <label>
+          Current password
+          <input
+            type="password"
+            autoComplete="current-password"
+            value={privacyPassword}
+            onChange={(event) => setPrivacyPassword(event.target.value)}
+          />
+        </label>
+        <div className="privacy-actions">
+          <button
+            type="button"
+            onClick={() => {
+              setPrivacyStatus("Preparing export…");
+              void privacyRequest("/v1/privacy/exports")
+                .then((body) => {
+                  if (typeof body.csrfToken === "string") setPrivacyCsrf(body.csrfToken);
+                  if (typeof body.downloadUrl === "string") setPrivacyDownload(body.downloadUrl);
+                  setPrivacyPassword("");
+                  setPrivacyStatus("Export ready for seven days.");
+                })
+                .catch((error: unknown) => setPrivacyStatus(error instanceof Error ? error.message : "Export failed."));
+            }}
+          >
+            Prepare data export
+          </button>
+          <button
+            type="button"
+            className="danger-button"
+            onClick={() => {
+              if (!window.confirm("Close this PACT account now? Access will be revoked immediately.")) return;
+              setPrivacyStatus("Closing account…");
+              void privacyRequest("/v1/privacy/deletion")
+                .then(() => {
+                  setPrivacyPassword("");
+                  setPrivacyDownload(undefined);
+                  setPrivacyStatus("Account closed. Access has been revoked.");
+                })
+                .catch((error: unknown) =>
+                  setPrivacyStatus(error instanceof Error ? error.message : "Closure failed."),
+                );
+            }}
+          >
+            Close account
+          </button>
+        </div>
+        {privacyDownload ? (
+          <a className="privacy-download" href={privacyDownload}>
+            Download JSON export
+          </a>
+        ) : null}
+        {privacyStatus ? <p role="status">{privacyStatus}</p> : null}
+      </section>
       <p className="shell-note">
         Demo shell for PACT-023. Cookie/CSRF transport lives in the web host via <code>createWebPactClient</code>;{" "}
         <code>@pact/ui-features</code> stays reusable for Telegram.{" "}

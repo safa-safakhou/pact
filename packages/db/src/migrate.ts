@@ -16,6 +16,7 @@ const migrationUrls = [
   new URL("../../runs/migrations/", import.meta.url),
   new URL("../../openrouter/migrations/", import.meta.url),
   new URL("../../telegram/migrations/", import.meta.url),
+  new URL("../../privacy/migrations/", import.meta.url),
 ];
 const identifierPattern = /^[a-z_][a-z0-9_]{0,62}$/;
 

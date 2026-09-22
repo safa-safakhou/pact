@@ -21,6 +21,7 @@
     "@pact/oauth": "0.1.0",
     "@pact/onboarding": "0.1.0",
     "@pact/openrouter": "0.1.0",
+    "@pact/privacy": "0.1.0",
     "@pact/runs": "0.1.0",
     "@pact/telegram": "0.1.0",
     "@pact/telemetry": "0.1.0",

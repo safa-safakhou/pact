@@ -10,6 +10,7 @@ x-runtime: &runtime
     PACT_PUBLIC_BASE_URL: ${PACT_PUBLIC_BASE_URL:-${PACT_ORIGIN}}
     CURRENT_TERMS_VERSION: ${CURRENT_TERMS_VERSION:-connection-test-v1}
     LOG_LEVEL: ${LOG_LEVEL:-info}
+    PACT_DELETION_REGISTRY_FILE: /var/lib/pact-state/deletion-registry.ndjson
   secrets:
     - postgres_password
     - identity_token_pepper
@@ -69,6 +70,16 @@ services:
       postgres:
         condition: service_healthy
 
+  privacy-replay:
+    <<: *runtime
+    restart: "no"
+    command: ["node", "packages/privacy/dist/replay-cli.js"]
+    volumes:
+      - ${PACT_STATE_DIR:-/srv/pact/state}/privacy:/var/lib/pact-state
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
   api:
     <<: *runtime
     command: ["npm", "run", "start", "--workspace", "@pact/api"]
@@ -88,8 +99,10 @@ services:
       - telegram_bot_id
       - telegram_bot_token
       - telegram_webhook_secret
+    volumes:
+      - ${PACT_STATE_DIR:-/srv/pact/state}/privacy:/var/lib/pact-state
     depends_on:
-      migrate:
+      privacy-replay:
         condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
@@ -101,7 +114,7 @@ services:
     <<: *runtime
     command: ["npm", "run", "start", "--workspace", "@pact/rules-worker"]
     depends_on:
-      migrate:
+      privacy-replay:
         condition: service_completed_successfully
 
   inference:
@@ -113,7 +126,7 @@ services:
       - identity_encryption_key
       - model_credential_private_key
     depends_on:
-      migrate:
+      privacy-replay:
         condition: service_completed_successfully
 
   notification:
@@ -128,7 +141,7 @@ services:
       - identity_encryption_key
       - smtp_url
     depends_on:
-      migrate:
+      privacy-replay:
         condition: service_completed_successfully
       mailpit:
         condition: service_healthy
@@ -153,7 +166,7 @@ services:
     <<: *runtime
     command: ["npm", "run", "start", "--workspace", "@pact/channel-worker"]
     depends_on:
-      migrate:
+      privacy-replay:
         condition: service_completed_successfully
 
   gateway:
