@@ -781,6 +781,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - packages/telegram/src/crypto.test.ts; tests/integration/telegram.test.ts
 - Live bot and menu configured; HTTPS webhook accepts the secret, rejects missing secret with 403, and returns privilegedAction=false for synthetic message text
 - e6efe30 / mvp-20260922-2: live signed synthetic bootstrap, web confirmation, channel session, private read, unlink, and post-revocation 403 pass
+- 1bb8026 / mvp-20260922-3: valid empty JSON writes and live sandbox activation pass
 
 <a id="pact-024"></a>
 ## PACT-024 — Implement first-account retention, export, and deletion
