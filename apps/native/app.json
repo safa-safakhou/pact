@@ -6,7 +6,7 @@
     "scheme": "pact",
     "ios": {
       "bundleIdentifier": "game.pact.native",
-      "associatedDomains": ["applinks:pact.example"]
+      "associatedDomains": ["applinks:safa.dedyn.io"]
     },
     "android": {
       "package": "game.pact.native",
@@ -14,7 +14,7 @@
         {
           "action": "VIEW",
           "autoVerify": true,
-          "data": [{ "scheme": "https", "host": "pact.example", "pathPrefix": "/native/callback" }],
+          "data": [{ "scheme": "https", "host": "safa.dedyn.io", "pathPrefix": "/pact/native/callback" }],
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ]

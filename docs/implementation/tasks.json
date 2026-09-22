@@ -1067,13 +1067,16 @@
       "evidence": [
         "docs/implementation/reports/native-telegram-auth.md",
         "npm run lint; npm run typecheck; npm test; npm run test:integration; npm run smoke; npm run build",
-        "apps/native/src/session-controller.test.ts; apps/native/app.json"
+        "apps/native/src/session-controller.test.ts; apps/native/src/native-api.test.ts; apps/native/app.json",
+        "Xcode 26.4 iOS 26.4 simulator build and launch passed on 2026-09-22; system PKCE prompt opened https://safa.dedyn.io and cancellation returned cleanly"
       ],
       "assignee": "codex-channel-auth-batch",
       "blocked_by_external": [
-        "iOS/Android build environment and test devices; platform signing for device builds"
+        "Apple team ID, signed physical iOS development build, and iOS test device",
+        "Android SDK, signing-certificate fingerprint, signed development build, and Android test device",
+        "Hostname-root Apple and Android association files generated from the real signing identities"
       ],
-      "block_reason": "Local native PKCE, secure-storage, bearer route, and adversarial fixture implementation is complete, but signed iOS and Android development builds cannot be certified without platform signing, build environments, and physical test devices."
+      "block_reason": "The real native screen and API adapter now pass local tests, and Xcode 26.4 builds and launches the iOS 26.4 simulator app through the system PKCE prompt. Completion still requires real signing identities and association files plus the full matrix on physical iOS and Android devices; this host has no Android SDK."
     },
     {
       "id": "PACT-085",

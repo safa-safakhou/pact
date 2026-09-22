@@ -11,7 +11,9 @@ Human bearer tokens are accepted only by `/v1/native/*`, only when their client,
 - `GET /v1/native/approvals/:approvalId` requires `world:read`.
 - `POST /v1/native/approvals/:approvalId/approve` requires `game:act` and commits through the shared approval service. Duplicate commits return its stored receipt.
 
-Before device use, replace the placeholder app-link host in `apps/native/app.json`, publish Apple/Android association files from the VPS origin, and create signed development builds. Do not add access tokens to logs, preferences, AsyncStorage, or backups.
+The development client targets the single-VPS origin `https://safa.dedyn.io/pact`; `apps/native/app.json` declares `applinks:safa.dedyn.io` and the Android `/pact/native/callback` intent filter. Before physical-device certification, publish the hostname-root Apple and Android association files using the real Apple team ID and Android signing-certificate fingerprint, then create signed development builds. Do not add access tokens to logs, preferences, AsyncStorage, or backups.
+
+The Phase 0 screen restores and rotates a refresh credential on launch, reloads the private draft on foreground, submits an idempotent sandbox command, reviews and commits an exact approval, coalesces duplicate approval taps, and revokes the refresh credential. Failed requests expose only stable error codes in the UI.
 
 ## Telegram
 
