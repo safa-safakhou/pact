@@ -2,7 +2,7 @@
 
 Ticket: [PACT-031 / MNI-95](https://linear.app/mnim/issue/MNI-95/pact-031-activate-real-kingdoms-exactly-once)
 
-Implementation revision/PR: uncommitted during verification; no PR or push.
+Implementation revision/PR: `3f2aad9` on local `master`; no PR or push.
 
 Verification environment: 23 September 2026; macOS arm64; Node.js 24; PostgreSQL 17 test database.
 
