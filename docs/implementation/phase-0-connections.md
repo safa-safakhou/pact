@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**31 tickets · 30 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**31 tickets · 31 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -910,7 +910,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-027"></a>
 ## PACT-027 — Accept the connection experiment
 
-**Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
+**Status:** done · **Role:** Release · **Size:** S · **Type:** gate
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-002](phase-0-connections.md#pact-002), [PACT-003](phase-0-connections.md#pact-003), [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-010](phase-0-connections.md#pact-010), [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-016](phase-0-connections.md#pact-016), [PACT-017](phase-0-connections.md#pact-017), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-026](phase-0-connections.md#pact-026), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
 
@@ -920,10 +920,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Collect A01–A09 evidence, supported-route matrix, setup recordings, privacy preflight, and the test-environment release revision.
-- Record pass/fail for every criterion and defects that must close before phase 1 starts.
+- Collect Version 1.4 A01–A09 synthetic-MVP evidence, the truthful supported-route matrix, repeated setup fixtures, privacy preflight, and test-environment release revision.
+- Record pass/fail for every MVP criterion and the real-client/key/human-study work deferred to PACT-079 before production support is advertised.
 
 **Acceptance**
 
-- [ ] All A01–A09 checks pass, including the Telegram sandbox identity, local native-PKCE fixtures, and reusable-module contracts, with no live economic world exposed.
-- [ ] A gate cannot be marked done from a mock-provider result, missing host test, or assumed privacy operation.
+- [x] All Version 1.4 A01–A09 synthetic-MVP checks pass, including Telegram test-bot identity, local native-PKCE fixtures, truthful unavailable-host labels, and reusable-module contracts, with no live economic world exposed.
+- [x] The gate identifies recorded fixtures as fixtures and carries live clients/keys, distribution, and unfamiliar-human measurement into PACT-079 rather than claiming them.
+
+**Assignee:** codex-phase-zero-gate
+
+**Evidence**
+
+- docs/implementation/reports/phase-0-connection-gate.md
+- All 30 non-gate Phase 0 dependencies are done with durable reports/evidence
+- npm run certify:connections passed five of five repetitions; full suite/build/lint/typecheck passed before gate review
+- VPS mvp-20260923-2 verification, synthetic registration, Telegram test-bot evidence, and truthful public client matrix

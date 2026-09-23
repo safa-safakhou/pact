@@ -7,7 +7,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-028"></a>
 ## PACT-028 — Encode the versioned rules catalog and exact arithmetic
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027)
 
@@ -24,6 +24,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] Every published value has a catalog entry and explicit unit; server rules use no floating-point comparison for combat or settlement.
 - [ ] Reproduce construction affordability, six-hour food example, and rational power values; API round-trips preserve exact quantities.
+
+**Assignee:** codex-rules-foundation
 
 <a id="pact-029"></a>
 ## PACT-029 — Implement the authoritative clock and atomic tick coordinator

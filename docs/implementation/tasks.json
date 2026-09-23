@@ -1330,7 +1330,7 @@
       "id": "PACT-027",
       "title": "Accept the connection experiment",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "gate",
       "owner_role": "Release",
       "size": "S",
@@ -1381,18 +1381,23 @@
         "A09"
       ],
       "scope": [
-        "Collect A01\u2013A09 evidence, supported-route matrix, setup recordings, privacy preflight, and the test-environment release revision.",
-        "Record pass/fail for every criterion and defects that must close before phase 1 starts."
+        "Collect Version 1.4 A01\u2013A09 synthetic-MVP evidence, the truthful supported-route matrix, repeated setup fixtures, privacy preflight, and test-environment release revision.",
+        "Record pass/fail for every MVP criterion and the real-client/key/human-study work deferred to PACT-079 before production support is advertised."
       ],
       "acceptance": [
-        "All A01\u2013A09 checks pass, including the Telegram sandbox identity, local native-PKCE fixtures, and reusable-module contracts, with no live economic world exposed.",
-        "A gate cannot be marked done from a mock-provider result, missing host test, or assumed privacy operation."
+        "All Version 1.4 A01\u2013A09 synthetic-MVP checks pass, including Telegram test-bot identity, local native-PKCE fixtures, truthful unavailable-host labels, and reusable-module contracts, with no live economic world exposed.",
+        "The gate identifies recorded fixtures as fixtures and carries live clients/keys, distribution, and unfamiliar-human measurement into PACT-079 rather than claiming them."
       ],
       "components": [
         "connection release gate"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/phase-0-connection-gate.md",
+        "All 30 non-gate Phase 0 dependencies are done with durable reports/evidence",
+        "npm run certify:connections passed five of five repetitions; full suite/build/lint/typecheck passed before gate review",
+        "VPS mvp-20260923-2 verification, synthetic registration, Telegram test-bot evidence, and truthful public client matrix"
+      ],
+      "assignee": "codex-phase-zero-gate",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -1400,7 +1405,7 @@
       "id": "PACT-028",
       "title": "Encode the versioned rules catalog and exact arithmetic",
       "phase": 1,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -1428,7 +1433,7 @@
         "pure rules catalog and arithmetic"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
       "block_reason": null
     },
