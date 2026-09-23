@@ -45,7 +45,8 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 - `packages/contracts`: versioned command, receipt, event, cursor, and tool schemas
 - `packages/client-sdk`: platform-independent command retry, receipt/inbox projections, subscriptions, and capability negotiation
 - `packages/platform`: reusable scoped principals, actions, events, transaction ports, and unit-of-work fixture
-- `packages/domain`: PACT-owned domain types
+- `packages/domain`: PACT-owned rules catalog, exact arithmetic, and domain types
+- `packages/world`: PostgreSQL-backed authoritative game clock, worker lease, and atomic tick coordinator
 - `packages/application`: composition root, shared command dispatcher, and sandbox-only command handlers
 - `packages/telemetry`: correlation, redaction, retention classes, safe errors, and operational metrics
 - `packages/identity`: email/password accounts, sessions, recovery, recent authentication, MFA, and revocation

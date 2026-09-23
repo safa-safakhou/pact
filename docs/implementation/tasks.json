@@ -1443,7 +1443,7 @@
       "id": "PACT-029",
       "title": "Implement the authoritative clock and atomic tick coordinator",
       "phase": 1,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "L",
@@ -1471,8 +1471,10 @@
         "game clock",
         "rules worker"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/world-clock.md — 2026-09-23: PostgreSQL-fenced world lease, committed game-minute clock, atomic ordered tick transaction/outbox, command admission, suspension/resume without catch-up. Node 24 npm run build, lint, typecheck, test (83), test:integration (41) passed against PostgreSQL 17."
+      ],
+      "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
       "block_reason": null
     },

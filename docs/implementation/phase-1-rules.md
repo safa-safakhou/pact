@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 1 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 2 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -34,7 +34,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-029"></a>
 ## PACT-029 — Implement the authoritative clock and atomic tick coordinator
 
-**Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028)
 
@@ -49,8 +49,14 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A second worker, lease expiry, duplicate tick, or crash between phases cannot publish mixed-time state.
-- [ ] Exact-boundary fixtures and outage recovery freeze game windows/harvest together while account expiries continue in real time.
+- [x] A second worker, lease expiry, duplicate tick, or crash between phases cannot publish mixed-time state.
+- [x] Exact-boundary fixtures and outage recovery freeze game windows/harvest together while account expiries continue in real time.
+
+**Assignee:** codex-rules-foundation
+
+**Evidence**
+
+- docs/implementation/reports/world-clock.md — 2026-09-23: PostgreSQL-fenced world lease, committed game-minute clock, atomic ordered tick transaction/outbox, command admission, suspension/resume without catch-up. Node 24 npm run build, lint, typecheck, test (83), test:integration (41) passed against PostgreSQL 17.
 
 <a id="pact-030"></a>
 ## PACT-030 — Implement the resource ledger, provenance, and storage

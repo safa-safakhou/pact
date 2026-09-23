@@ -2,7 +2,7 @@
 
 Ticket: [PACT-028 / MNI-92](https://linear.app/mnim/issue/MNI-92/pact-028-encode-the-versioned-rules-catalog-and-exact-arithmetic)
 
-Implementation revision/PR: local work on `master`, based on `15181d5`; no PR.
+Implementation revision/PR: `aca145f` on local `master`; no PR or push.
 
 Verification environment: 23 September 2026; macOS arm64; Node.js 24 for tests.
 

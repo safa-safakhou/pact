@@ -8,6 +8,7 @@
       "@pact/contracts": ["./packages/contracts/src/index.ts"],
       "@pact/platform": ["./packages/platform/src/index.ts"],
       "@pact/domain": ["./packages/domain/src/index.ts"],
+      "@pact/world": ["./packages/world/src/index.ts"],
       "@pact/application": ["./packages/application/src/index.ts"],
       "@pact/db": ["./packages/db/src/index.ts"],
       "@pact/telemetry": ["./packages/telemetry/src/index.ts"],
