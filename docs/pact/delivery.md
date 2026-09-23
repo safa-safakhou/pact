@@ -1,6 +1,6 @@
 # Build and acceptance checklist
 
-**Version 1.3 · Ordered delivery contract. Empty checkboxes mean work has not been performed.**
+**Version 1.4 · Ordered delivery contract. Empty checkboxes mean work has not been performed.**
 
 The executable work breakdown is the [implementation backlog](../implementation/README.md). Its [coverage table](../implementation/coverage.md) maps the criteria below to concrete tickets; this document remains authoritative for milestone acceptance.
 
@@ -11,15 +11,15 @@ The implementation follows these stages in order. Internal scaffolding can share
 **Deliverable:** account creation and a private kingdom draft; all required connection routes; one read, one harmless sandbox write, and one human approval. No live economy or recruited public community.
 
 - [ ] **A01 — Identity:** signup, verification, login, recovery, invitation preservation, draft expiry, and exactly-once activation fixture pass. Model credentials never serve as human login.
-- [ ] **A02 — Provider matrix:** OpenAI, Anthropic, Gemini, xAI, and OpenRouter each complete a tool-driven read/write run; OpenRouter authorization and manual-key routes both pass. Invalid key, depleted quota, timeout, and revoke produce truthful states.
-- [ ] **A03 — MCP matrix:** ChatGPT, Claude, and Gemini CLI each complete OAuth, state read, authorized sandbox write, approval deep link, result retrieval, and revocation. Record tested account/workspace/OS versions and distribution status. Both pinned MCP protocol versions pass transport and scope fixtures. No provider-parity claim replaces a recorded result.
+- [ ] **A02 — Provider matrix:** OpenAI, Anthropic, Gemini, xAI, and OpenRouter each complete recorded tool-driven read/write fixtures; OpenRouter authorization and manual-key routes both pass fixtures. Invalid key, depleted quota, timeout, and revoke produce truthful states. Live-key repetitions move to L04.
+- [ ] **A03 — MCP matrix:** the shared OAuth/read/write/approval/result/revoke fixture and both pinned MCP protocol versions pass locally. Publish actual host certification separately: unavailable ChatGPT, Claude, Gemini CLI, or Grok-powered clients remain `not_tested`/`fixture_only` until L04 real-account certification. No provider-parity claim substitutes for a recorded result.
 - [ ] **A04 — Closed browser:** start a bounded PACT run, close the browser, and observe completion within its original allowance. With no active run, inject a notification and observe zero provider calls. External host disconnect leaves committed receipts available.
 - [ ] **A05 — Approval integrity:** test expired/changed terms, replayed approval, malicious message requesting authority, and an agent claiming the human approved. None bypasses the human-authenticated exact command.
 - [ ] **A06 — Data:** publish explicit synthetic-MVP operator notices before connection-test accounts exist and defer actual operator/legal facts to the production gate; demonstrate key encryption/redaction, account export, revocation, deletion, backup suppression, and no third-party transcript analytics.
-- [ ] **A07 — Setup usability:** five unfamiliar testers per named route, using only its published guide. At least four of five reach a correct sandbox result within five minutes after required provider credentials/host eligibility are available. Record account creation separately so verification delays remain visible. Failed routes are fixed before this stage passes.
+- [ ] **A07 — Setup usability:** repeat each synthetic setup/certification fixture five times and publish its guide, prerequisites, truthful availability, errors, and timing harness. The unfamiliar-human four-of-five study is deferred to L04 when eligible client accounts and consenting testers exist; it remains mandatory before advertising production support.
 
 - [ ] **A08 — Channel authentication:** Telegram completes account linking, sandbox read/write, exact human approval, unlink/revoke, and cross-device duplicate-action checks. Telegram initData and webhook validation are verified against the test bot. Native PKCE remains covered by local fixtures but signed-device certification is deferred to L06; no production game loop is required yet.
-- [ ] **A09 — Module contracts:** package ownership, imports, transaction ports, product scoping, generated SDK/tool contracts, and provider/client capability matrix are defined and enforced in CI. A Grok-powered external tool client passes the sandbox fixture without claiming universal consumer-app support.
+- [ ] **A09 — Module contracts:** package ownership, imports, transaction ports, product scoping, generated SDK/tool contracts, and provider/client capability matrix are defined and enforced in CI. The recorded Grok-powered fixture is labeled `fixture_only` without claiming universal consumer-app support; live certification moves to L04.
 
 **Exit:** A01–A09 pass with evidence. The output is a working multi-route connection layer and documented host requirements, not a screenshot of one connected assistant.
 

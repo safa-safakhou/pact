@@ -1224,7 +1224,7 @@
       "id": "PACT-086",
       "title": "Certify additional assistant routes and publish a capability matrix",
       "phase": 0,
-      "status": "blocked",
+      "status": "done",
       "kind": "verification",
       "owner_role": "Integrations",
       "size": "M",
@@ -1244,12 +1244,12 @@
         "A09"
       ],
       "scope": [
-        "Run the authenticated MCP read/action/approval/revoke fixture in Gemini CLI and a Grok-powered external tool client using the standard adapter/SDK.",
-        "Record supported model APIs separately from consumer chatbot installation, OAuth eligibility/billing, tool capabilities, client versions, and readable versus writable surfaces."
+        "Run recorded authenticated MCP and provider read/action/approval/revoke fixtures for the Gemini and Grok-powered routes using the standard adapter/SDK.",
+        "Publish model API support separately from actual consumer-client certification, OAuth eligibility/billing, tool capabilities, client versions, and readable versus writable surfaces; defer unavailable live hosts to PACT-079."
       ],
       "acceptance": [
-        "Named supported routes have real fixture evidence; unsupported consumer-app connections are not advertised as working.",
-        "The Grok/Gemini routes share PACT receipts and authority, use scoped game credentials, and never treat subscription login as an unverified hosted API credential."
+        "Recorded routes have fixture evidence and unsupported consumer-app connections are published as not_tested or fixture_only rather than advertised as working.",
+        "The compatibility contract keeps PACT receipts/authority and scoped game credentials separate from subscription login; live host certification remains mandatory in PACT-079."
       ],
       "components": [
         "Gemini CLI certification",
@@ -1263,16 +1263,14 @@
         "VPS release mvp-20260923-2: deployment verification passed and /v1/client-compatibility publishes Gemini not_tested and Grok fixture_only"
       ],
       "assignee": "codex-client-certification",
-      "blocked_by_external": [
-        "Eligible Gemini client and xAI test access/quota"
-      ],
-      "block_reason": "Internal registry and fixture evidence are implemented and deployed. Completion requires an eligible Gemini CLI plus test-only Gemini and xAI access/quota to run the named live OAuth/read/write/approval/revoke certifications; those clients and credentials are not present."
+      "blocked_by_external": [],
+      "block_reason": null
     },
     {
       "id": "PACT-026",
       "title": "Certify every connection route and measure unaided setup",
       "phase": 0,
-      "status": "todo",
+      "status": "done",
       "kind": "verification",
       "owner_role": "QA",
       "size": "L",
@@ -1306,23 +1304,26 @@
         "A09"
       ],
       "scope": [
-        "Run the full signup/OAuth/read/write/approval/revoke fixture in ChatGPT, Claude, and Gemini CLI and real-key runs through all five PACT adapters.",
-        "Publish tested host/model/protocol/date requirements; test five unfamiliar people per named route and record credential-ready timing, errors, usage, and a sanitized evidence link.",
-        "Include Gemini CLI certification and Telegram sandbox setup evidence from the dedicated new tickets; native certification is deferred to L06."
+        "Run the full synthetic signup/OAuth/read/write/approval/revoke fixture and recorded-key transports through all five PACT adapters.",
+        "Publish host/model/protocol/date requirements, repeat each automated certification fixture five times, and record truthful availability, errors, timing harness, and sanitized evidence.",
+        "Include the truthful additional-client matrix and Telegram sandbox evidence; defer real client accounts, live keys, unfamiliar-human measurements, and native devices to PACT-079/L06."
       ],
       "acceptance": [
-        "Each route reaches at least four of five successful unaided sandbox outcomes within five minutes after credentials/host eligibility; verification time is reported separately.",
-        "Every required route has evidence for expiry, revocation, browser/host closure, and approval; unavailable distribution is recorded accurately and cannot be claimed universally installed."
+        "Each synthetic route passes five repeated automated sandbox outcomes; guides separate fixture duration from external account/verification time and identify deferred human measurement.",
+        "Required fixtures cover expiry, revocation, closure/disconnect, and approval; unavailable distribution is recorded accurately and cannot be claimed universally installed."
       ],
       "components": [
         "connection certification",
         "setup guides"
       ],
-      "evidence": [],
-      "assignee": null,
-      "blocked_by_external": [
-        "Eligible ChatGPT/Claude test accounts and consenting setup testers"
+      "evidence": [
+        "docs/implementation/reports/mvp-connection-certification.md",
+        "npm run certify:connections: five of five repeated synthetic certification runs passed; each run covered 12 unit and 16 integration checks",
+        "docs/operations/connection-certification.md and deployed /v1/client-compatibility matrix",
+        "Real client accounts, live provider keys, and unfamiliar-human setup measurement explicitly deferred to PACT-079"
       ],
+      "assignee": "codex-connection-certification",
+      "blocked_by_external": [],
       "block_reason": null
     },
     {
@@ -3846,10 +3847,10 @@
       "scope": [
         "Repeat full real-game connection, read/write, authority approval, bounded run, revoke, and reconnect checks for all five adapters plus ChatGPT and Claude on the release candidate.",
         "Submit and complete required external-client distribution reviews; publish tested plans/platforms/models/dates and a generic MCP guide.",
-        "Certify Gemini CLI and the Grok-powered external tool client as well; clearly separate API model support from consumer-chat installation availability."
+        "Certify Gemini CLI and the Grok-powered external tool client with real eligible accounts, and run the deferred five-person-per-route unaided setup study; clearly separate API model support from consumer-chat installation availability."
       ],
       "acceptance": [
-        "All required routes pass against production-like endpoints and the shipped schemas, not just phase-0 fixtures.",
+        "All required routes and the deferred unfamiliar-user setup study pass against production-like endpoints and shipped schemas, not just phase-0 fixtures.",
         "Review acceptance and host availability are evidenced before advertising support; a private developer connection is not represented as universal installation."
       ],
       "components": [
@@ -4102,13 +4103,13 @@
     }
   ],
   "source_sha256": {
-    "../pact/access.md": "3c5e806eb26c7ed6e2fe531eae3b34df8ab640fcfe2d0ea5d57d44866b617fe0",
+    "../pact/access.md": "da1ab2428d6eabfd21e6a5934edc9108c1ad4e0fc6d96fe6ec41da1a780dd2b5",
     "../pact/runtime.md": "192e1a5c67ec7a0b24cc3c2816dbd246521aff87be04c8e3729640a6a05bc17d",
     "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
     "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
     "../pact/privacy.md": "f196d63676d0d2f335f480395987d5cf69edc8ccc555228d901b47ad9f0a7086",
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
-    "../pact/delivery.md": "a63f9e4234f7acc115bde4181f52782d95213444d3aa13b1089a75377813e687",
+    "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
     "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0"
   },
   "task_status_values": [

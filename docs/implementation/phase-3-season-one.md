@@ -339,11 +339,11 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - Repeat full real-game connection, read/write, authority approval, bounded run, revoke, and reconnect checks for all five adapters plus ChatGPT and Claude on the release candidate.
 - Submit and complete required external-client distribution reviews; publish tested plans/platforms/models/dates and a generic MCP guide.
-- Certify Gemini CLI and the Grok-powered external tool client as well; clearly separate API model support from consumer-chat installation availability.
+- Certify Gemini CLI and the Grok-powered external tool client with real eligible accounts, and run the deferred five-person-per-route unaided setup study; clearly separate API model support from consumer-chat installation availability.
 
 **Acceptance**
 
-- [ ] All required routes pass against production-like endpoints and the shipped schemas, not just phase-0 fixtures.
+- [ ] All required routes and the deferred unfamiliar-user setup study pass against production-like endpoints and shipped schemas, not just phase-0 fixtures.
 - [ ] Review acceptance and host availability are evidenced before advertising support; a private developer connection is not represented as universal installation.
 
 **External prerequisites:** Eligible release host accounts and any required distribution approvals.

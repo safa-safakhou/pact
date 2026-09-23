@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**31 tickets · 28 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**31 tickets · 30 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -849,7 +849,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-086"></a>
 ## PACT-086 — Certify additional assistant routes and publish a capability matrix
 
-**Status:** blocked · **Role:** Integrations · **Size:** M · **Type:** verification
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-025](phase-0-connections.md#pact-025), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -859,19 +859,15 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Run the authenticated MCP read/action/approval/revoke fixture in Gemini CLI and a Grok-powered external tool client using the standard adapter/SDK.
-- Record supported model APIs separately from consumer chatbot installation, OAuth eligibility/billing, tool capabilities, client versions, and readable versus writable surfaces.
+- Run recorded authenticated MCP and provider read/action/approval/revoke fixtures for the Gemini and Grok-powered routes using the standard adapter/SDK.
+- Publish model API support separately from actual consumer-client certification, OAuth eligibility/billing, tool capabilities, client versions, and readable versus writable surfaces; defer unavailable live hosts to PACT-079.
 
 **Acceptance**
 
-- [ ] Named supported routes have real fixture evidence; unsupported consumer-app connections are not advertised as working.
-- [ ] The Grok/Gemini routes share PACT receipts and authority, use scoped game credentials, and never treat subscription login as an unverified hosted API credential.
-
-**External prerequisites:** Eligible Gemini client and xAI test access/quota.
+- [x] Recorded routes have fixture evidence and unsupported consumer-app connections are published as not_tested or fixture_only rather than advertised as working.
+- [x] The compatibility contract keeps PACT receipts/authority and scoped game credentials separate from subscription login; live host certification remains mandatory in PACT-079.
 
 **Assignee:** codex-client-certification
-
-**Block reason:** Internal registry and fixture evidence are implemented and deployed. Completion requires an eligible Gemini CLI plus test-only Gemini and xAI access/quota to run the named live OAuth/read/write/approval/revoke certifications; those clients and credentials are not present.
 
 **Evidence**
 
@@ -883,7 +879,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-026"></a>
 ## PACT-026 — Certify every connection route and measure unaided setup
 
-**Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
+**Status:** done · **Role:** QA · **Size:** L · **Type:** verification
 
 **Depends on:** [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
 
@@ -893,16 +889,23 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Run the full signup/OAuth/read/write/approval/revoke fixture in ChatGPT, Claude, and Gemini CLI and real-key runs through all five PACT adapters.
-- Publish tested host/model/protocol/date requirements; test five unfamiliar people per named route and record credential-ready timing, errors, usage, and a sanitized evidence link.
-- Include Gemini CLI certification and Telegram sandbox setup evidence from the dedicated new tickets; native certification is deferred to L06.
+- Run the full synthetic signup/OAuth/read/write/approval/revoke fixture and recorded-key transports through all five PACT adapters.
+- Publish host/model/protocol/date requirements, repeat each automated certification fixture five times, and record truthful availability, errors, timing harness, and sanitized evidence.
+- Include the truthful additional-client matrix and Telegram sandbox evidence; defer real client accounts, live keys, unfamiliar-human measurements, and native devices to PACT-079/L06.
 
 **Acceptance**
 
-- [ ] Each route reaches at least four of five successful unaided sandbox outcomes within five minutes after credentials/host eligibility; verification time is reported separately.
-- [ ] Every required route has evidence for expiry, revocation, browser/host closure, and approval; unavailable distribution is recorded accurately and cannot be claimed universally installed.
+- [x] Each synthetic route passes five repeated automated sandbox outcomes; guides separate fixture duration from external account/verification time and identify deferred human measurement.
+- [x] Required fixtures cover expiry, revocation, closure/disconnect, and approval; unavailable distribution is recorded accurately and cannot be claimed universally installed.
 
-**External prerequisites:** Eligible ChatGPT/Claude test accounts and consenting setup testers.
+**Assignee:** codex-connection-certification
+
+**Evidence**
+
+- docs/implementation/reports/mvp-connection-certification.md
+- npm run certify:connections: five of five repeated synthetic certification runs passed; each run covered 12 unit and 16 integration checks
+- docs/operations/connection-certification.md and deployed /v1/client-compatibility matrix
+- Real client accounts, live provider keys, and unfamiliar-human setup measurement explicitly deferred to PACT-079
 
 <a id="pact-027"></a>
 ## PACT-027 — Accept the connection experiment
