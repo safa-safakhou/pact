@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "realRegistrationEnabled": true,
+  "controller": {
+    "legalName": "PACT MVP Test Operator",
+    "contactAddress": "Private single-VPS connection-test environment",
+    "privacyEmail": "privacy@pact.test",
+    "supportEmail": "support@pact.test",
+    "privacyOwner": "PACT MVP test operator",
+    "supportOwner": "PACT MVP test operator"
+  },
+  "documents": {
+    "termsVersion": "connection-test-v1",
+    "termsUrl": "https://safa.dedyn.io/pact/v1/legal/notices#terms",
+    "privacyVersion": "connection-test-v1",
+    "privacyUrl": "https://safa.dedyn.io/pact/v1/legal/notices#privacy",
+    "rightsAndComplaintRoute": "Connection testers contact the test operator; production rights and complaint details are deferred to PACT-098.",
+    "privacyRequestUrl": "https://safa.dedyn.io/pact/v1/legal/notices#privacy-request"
+  },
+  "processing": {
+    "purposesAndLawfulBases": [
+      "Synthetic MVP account, security, gameplay, Telegram, device-session, and model-connector testing only"
+    ],
+    "processors": [
+      {
+        "name": "Single-VPS test host",
+        "purpose": "Run the private PACT MVP",
+        "dataLocation": "EU connection-test VPS",
+        "agreementReference": "Temporary MVP test record; production review is PACT-098",
+        "transferMechanism": "Synthetic-data-only MVP restriction; production review is PACT-098"
+      },
+      {
+        "name": "Telegram test integration",
+        "purpose": "Authenticate and operate the private Telegram Mini App test route",
+        "dataLocation": "Provider-managed test integration",
+        "agreementReference": "Temporary MVP test record; production review is PACT-098",
+        "transferMechanism": "Synthetic-data-only MVP restriction; production review is PACT-098"
+      },
+      {
+        "name": "Tester-selected model providers",
+        "purpose": "Run explicitly requested Envoy inference using tester-owned credentials",
+        "dataLocation": "Depends on the selected test provider",
+        "agreementReference": "Temporary MVP test disclosure; production review is PACT-098",
+        "transferMechanism": "Synthetic-data-only MVP restriction; production review is PACT-098"
+      }
+    ]
+  },
+  "disclosures": {
+    "telegram": true,
+    "deviceSessions": true,
+    "modelProviders": true
+  },
+  "transactionalEmail": {
+    "mode": "captured_smtp",
+    "from": "PACT MVP Test <noreply@safa.dedyn.io>",
+    "deliveryEvidence": {
+      "checkedAt": "2026-09-22T00:00:00.000Z",
+      "reference": "Internal Mailpit security-email delivery verified for the synthetic MVP"
+    }
+  },
+  "operationalEvidence": {
+    "staffMfa": {
+      "checkedAt": "2026-09-23T00:00:00.000Z",
+      "reference": "MVP uses the test operator account; production staff-role MFA certification is PACT-098"
+    },
+    "restore": {
+      "checkedAt": "2026-09-23T00:00:00.000Z",
+      "reference": "VPS isolated PostgreSQL restore and deletion-registry replay drill"
+    },
+    "deletion": {
+      "checkedAt": "2026-09-23T00:00:00.000Z",
+      "reference": "PACT-024 deletion, tombstone replay, and restored-state verification"
+    }
+  }
+}

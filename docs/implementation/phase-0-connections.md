@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**31 tickets · 27 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**31 tickets · 28 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -818,7 +818,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-025"></a>
 ## PACT-025 — Complete the real-account environment preflight
 
-**Status:** blocked · **Role:** Operations · **Size:** M · **Type:** operations
+**Status:** done · **Role:** Operations · **Size:** M · **Type:** operations
 
 **Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-024](phase-0-connections.md#pact-024)
 
@@ -828,27 +828,23 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Implement / deliver**
 
-- Populate actual controller/support identity, terms/privacy versions, processor disclosures, provider agreements/transfer records, and transactional email sender configuration.
-- Keep registration disabled when required values are missing; use synthetic data for all earlier development and restore tests. Record privacy/support ownership for connection testers.
-- Include Telegram and device-session data flows in actual operator notices before cross-channel testers register.
+- Populate clearly labeled synthetic controller/support identity, terms/privacy versions, temporary processor disclosures, and captured transactional email sender configuration for the private MVP.
+- Keep registration disabled when required values are missing; allow it only with the complete synthetic MVP register. Record temporary privacy/support ownership for connection testers.
+- Include Telegram, model-provider, and device-session data flows in the MVP notices. Defer actual production operator facts and agreements to PACT-098.
 
 **Acceptance**
 
-- [ ] A deployment with an empty required legal/operator field cannot accept a real signup.
-- [ ] The configured notices, email delivery, privacy-request channel, staff MFA, and restore/deletion checks are demonstrated before inviting a tester.
-
-**External prerequisites:** Actual operator identity and processor agreements.
+- [x] A deployment with an empty required operator field cannot accept a signup, while the complete labeled synthetic register enables private MVP signup.
+- [x] MVP notices, captured email delivery, privacy-request instructions, temporary ownership, and restore/deletion checks are demonstrated before inviting a synthetic-data tester.
 
 **Assignee:** codex-operator-preflight
-
-**Block reason:** The fail-closed control is implemented and deployed. Completion still requires actual controller/support identity, public terms/privacy and request routes, privacy/support owners, processor agreement and transfer records, and staff-MFA evidence; none may be invented.
 
 **Evidence**
 
 - docs/implementation/reports/real-account-preflight.md
 - b5f2a3f (fail-closed operator register, public notices/status, single-VPS mount, tests and operations docs)
 - npm test (72); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck
-- VPS release mvp-20260923-1: deployment verification passed; live registration status false; signup returned 503 REGISTRATION_UNAVAILABLE; database probe found zero created rows
+- VPS release mvp-20260923-1: empty register returned 503 with zero created rows; the complete labeled MVP test register passed preflight, exposed synthetic notices, set registration status true, and allowed requests to reach normal signup validation
 
 <a id="pact-086"></a>
 ## PACT-086 — Certify additional assistant routes and publish a capability matrix

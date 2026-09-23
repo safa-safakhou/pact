@@ -22,7 +22,7 @@ Password reset and sign-out-everywhere atomically revoke active sessions and OAu
 
 ## Real-registration operator preflight
 
-The API fails closed for `POST /v1/auth/signup`. A deployment can accept a signup only when `PACT_OPERATOR_REGISTER_FILE` points to a readable, valid JSON register and that register explicitly sets `realRegistrationEnabled` to `true`. Login, recovery, privacy operations, and existing synthetic accounts remain available while registration is closed.
+The API fails closed for `POST /v1/auth/signup`. A deployment can accept a signup only when `PACT_OPERATOR_REGISTER_FILE` points to a readable, valid JSON register and that register explicitly sets `realRegistrationEnabled` to `true`. Login, recovery, privacy operations, and existing synthetic accounts remain available while registration is closed. The private MVP may use the checked-in, explicitly synthetic `operator-register.mvp-test.json`; actual production facts are required by PACT-098.
 
 Copy `infra/production/operator-register.example.json` to the host-only state directory and replace every placeholder with reviewed facts. Never enable the example itself. The register requires:
 
@@ -39,4 +39,4 @@ CURRENT_TERMS_VERSION=connection-test-v1 \
   npm run preflight:operator -- /srv/pact/state/operator/operator-register.json
 ```
 
-The command emits only readiness, registration state, and field-level validation errors. It exits non-zero unless real registration is both valid and enabled. `GET /v1/legal/registration-status` exposes only the boolean gate. `GET /v1/legal/notices` exposes the reviewed public controller, document, processor, and channel disclosures; it deliberately omits agreement references, accountable-owner names, and operational evidence.
+The command emits only readiness, registration state, and field-level validation errors. It exits non-zero unless registration is both valid and enabled. `GET /v1/legal/registration-status` exposes only the boolean gate. `GET /v1/legal/notices` exposes the public controller, document, processor, and channel disclosures; it deliberately omits agreement references, accountable-owner names, and operational evidence. Synthetic-MVP notices are not production legal facts.

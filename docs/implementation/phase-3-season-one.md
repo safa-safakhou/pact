@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**19 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -413,12 +413,35 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] L01–L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.
 - [ ] Critical defects are fixed and their affected scenarios rerun; a 50-player slice test is not mislabeled proof of unlimited global-world capacity.
 
+<a id="pact-098"></a>
+## PACT-098 — Replace MVP operator placeholders with reviewed production facts
+
+**Status:** todo · **Role:** Operations / Privacy · **Size:** M · **Type:** operations
+
+**Depends on:** [PACT-025](phase-0-connections.md#pact-025), [PACT-068](phase-2-social.md#pact-068), [PACT-078](phase-3-season-one.md#pact-078)
+
+**Components:** production operator configuration, legal and processor records.
+
+**Specification:** [privacy](../pact/privacy.md), [access](../pact/access.md), [architecture](../pact/architecture.md), [delivery](../pact/delivery.md) · **Release checks:** L04
+
+**Implement / deliver**
+
+- Replace every synthetic MVP controller, address, contact, ownership, terms/privacy, privacy-request, processor, agreement, data-location, transfer, and email-sender value with reviewed production facts.
+- Verify production staff MFA, public notices, outbound email, privacy requests, and processor/transfer records before enabling production or paid signup.
+
+**Acceptance**
+
+- [ ] No test domain, temporary owner, placeholder agreement, synthetic-data restriction, or captured-only sender remains in the production operator register or public notices.
+- [ ] The production preflight and independent review pass against the deployed register before any production or paid account is admitted.
+
+**External prerequisites:** Actual operator identity, public legal contacts, reviewed notices, and processor agreements.
+
 <a id="pact-081"></a>
 ## PACT-081 — Accept and prepare the Season One release
 
 **Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-080](phase-3-season-one.md#pact-080), [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097)
+**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-080](phase-3-season-one.md#pact-080), [PACT-098](phase-3-season-one.md#pact-098), [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097)
 
 **Components:** Season One release gate.
 

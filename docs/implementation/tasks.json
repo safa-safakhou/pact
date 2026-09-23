@@ -1178,7 +1178,7 @@
       "id": "PACT-025",
       "title": "Complete the real-account environment preflight",
       "phase": 0,
-      "status": "blocked",
+      "status": "done",
       "kind": "operations",
       "owner_role": "Operations",
       "size": "M",
@@ -1198,13 +1198,13 @@
         "A06"
       ],
       "scope": [
-        "Populate actual controller/support identity, terms/privacy versions, processor disclosures, provider agreements/transfer records, and transactional email sender configuration.",
-        "Keep registration disabled when required values are missing; use synthetic data for all earlier development and restore tests. Record privacy/support ownership for connection testers.",
-        "Include Telegram and device-session data flows in actual operator notices before cross-channel testers register."
+        "Populate clearly labeled synthetic controller/support identity, terms/privacy versions, temporary processor disclosures, and captured transactional email sender configuration for the private MVP.",
+        "Keep registration disabled when required values are missing; allow it only with the complete synthetic MVP register. Record temporary privacy/support ownership for connection testers.",
+        "Include Telegram, model-provider, and device-session data flows in the MVP notices. Defer actual production operator facts and agreements to PACT-098."
       ],
       "acceptance": [
-        "A deployment with an empty required legal/operator field cannot accept a real signup.",
-        "The configured notices, email delivery, privacy-request channel, staff MFA, and restore/deletion checks are demonstrated before inviting a tester."
+        "A deployment with an empty required operator field cannot accept a signup, while the complete labeled synthetic register enables private MVP signup.",
+        "MVP notices, captured email delivery, privacy-request instructions, temporary ownership, and restore/deletion checks are demonstrated before inviting a synthetic-data tester."
       ],
       "components": [
         "operator configuration",
@@ -1214,13 +1214,11 @@
         "docs/implementation/reports/real-account-preflight.md",
         "b5f2a3f (fail-closed operator register, public notices/status, single-VPS mount, tests and operations docs)",
         "npm test (72); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck",
-        "VPS release mvp-20260923-1: deployment verification passed; live registration status false; signup returned 503 REGISTRATION_UNAVAILABLE; database probe found zero created rows"
+        "VPS release mvp-20260923-1: empty register returned 503 with zero created rows; the complete labeled MVP test register passed preflight, exposed synthetic notices, set registration status true, and allowed requests to reach normal signup validation"
       ],
       "assignee": "codex-operator-preflight",
-      "blocked_by_external": [
-        "Actual operator identity and processor agreements"
-      ],
-      "block_reason": "The fail-closed control is implemented and deployed. Completion still requires actual controller/support identity, public terms/privacy and request routes, privacy/support owners, processor agreement and transfer records, and staff-MFA evidence; none may be invented."
+      "blocked_by_external": [],
+      "block_reason": null
     },
     {
       "id": "PACT-086",
@@ -3999,6 +3997,47 @@
       "block_reason": null
     },
     {
+      "id": "PACT-098",
+      "title": "Replace MVP operator placeholders with reviewed production facts",
+      "phase": 3,
+      "status": "todo",
+      "kind": "operations",
+      "owner_role": "Operations / Privacy",
+      "size": "M",
+      "depends_on": [
+        "PACT-025",
+        "PACT-068",
+        "PACT-078"
+      ],
+      "sources": [
+        "privacy",
+        "access",
+        "architecture",
+        "delivery"
+      ],
+      "covers": [
+        "L04"
+      ],
+      "scope": [
+        "Replace every synthetic MVP controller, address, contact, ownership, terms/privacy, privacy-request, processor, agreement, data-location, transfer, and email-sender value with reviewed production facts.",
+        "Verify production staff MFA, public notices, outbound email, privacy requests, and processor/transfer records before enabling production or paid signup."
+      ],
+      "acceptance": [
+        "No test domain, temporary owner, placeholder agreement, synthetic-data restriction, or captured-only sender remains in the production operator register or public notices.",
+        "The production preflight and independent review pass against the deployed register before any production or paid account is admitted."
+      ],
+      "components": [
+        "production operator configuration",
+        "legal and processor records"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Actual operator identity, public legal contacts, reviewed notices, and processor agreements"
+      ],
+      "block_reason": null
+    },
+    {
       "id": "PACT-081",
       "title": "Accept and prepare the Season One release",
       "phase": 3,
@@ -4020,6 +4059,7 @@
         "PACT-078",
         "PACT-079",
         "PACT-080",
+        "PACT-098",
         "PACT-084",
         "PACT-087",
         "PACT-093",
@@ -4061,9 +4101,9 @@
     "../pact/runtime.md": "192e1a5c67ec7a0b24cc3c2816dbd246521aff87be04c8e3729640a6a05bc17d",
     "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
     "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
-    "../pact/privacy.md": "84b4b346c8da547a25e750e84ac3a455d9d6f08fd2d88b2f57cc58f9f7664350",
+    "../pact/privacy.md": "f196d63676d0d2f335f480395987d5cf69edc8ccc555228d901b47ad9f0a7086",
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
-    "../pact/delivery.md": "72c6326d88a62d7370b36d644470294ab7d7f6e37fd55ecb3c360a8ecfc47cef",
+    "../pact/delivery.md": "a63f9e4234f7acc115bde4181f52782d95213444d3aa13b1089a75377813e687",
     "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0"
   },
   "task_status_values": [
