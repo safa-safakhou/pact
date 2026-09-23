@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 2 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 3 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -61,7 +61,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-030"></a>
 ## PACT-030 — Implement the resource ledger, provenance, and storage
 
-**Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-029](phase-1-rules.md#pact-029)
 
@@ -76,8 +76,14 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Property tests conserve value across debit/credit/overflow operations and reject negative balances.
-- [ ] Concurrent commands cannot overspend; allowance funds cannot enter trade, bond, unit training, raid provisions, or ordinary cancellation refunds.
+- [x] Property tests conserve value across debit/credit/overflow operations and reject negative balances.
+- [x] Concurrent commands cannot overspend; allowance funds cannot enter trade, bond, unit training, raid provisions, or ordinary cancellation refunds.
+
+**Assignee:** codex-rules-foundation
+
+**Evidence**
+
+- docs/implementation/reports/resource-ledger.md — 2026-09-23: exact ordinary/restricted/locked balances, idempotent movement/provenance records, storage overflow, cancellation loss, grant expiry and atomic production hooks. Node 24 npm run lint, typecheck, build, test (87), test:integration (46) passed against PostgreSQL 17.
 
 <a id="pact-031"></a>
 ## PACT-031 — Activate real kingdoms exactly once

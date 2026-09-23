@@ -47,6 +47,7 @@ describe("API/database smoke", () => {
       { name: "0015_telegram_channel.sql" },
       { name: "0016_account_privacy.sql" },
       { name: "0017_world_clock.sql" },
+      { name: "0018_resource_ledger.sql" },
     ]);
     await server.close();
   });

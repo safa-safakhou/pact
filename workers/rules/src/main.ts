@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { createPool } from "@pact/db";
+import { ResourceLedger } from "@pact/ledger";
 import { WorldClockService } from "@pact/world";
 
 const databaseUrl = process.env.DATABASE_URL;
@@ -8,7 +9,12 @@ if (!databaseUrl) {
   process.exitCode = 1;
 } else {
   const pool = createPool(databaseUrl);
-  const world = new WorldClockService(pool, "pact");
+  const ledger = new ResourceLedger("pact");
+  const world = new WorldClockService(pool, "pact", {
+    boundaries_and_completions: (client, context) => ledger.expireFoundingAllowances(client, context),
+    // PACT-069 replaces the test-world week-one default with the configured season clock.
+    production: (client, context) => ledger.settleProductionMinute(client, context, 1),
+  });
   const workerId = `rules-${randomUUID()}`;
   let leaseToken: string | null = null;
   let busy = false;

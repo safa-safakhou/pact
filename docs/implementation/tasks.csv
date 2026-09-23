@@ -33,7 +33,7 @@ PACT-026,Certify every connection route and measure unaided setup,0,done,verific
 PACT-027,Accept the connection experiment,0,done,gate,Release,S,PACT-001;PACT-002;PACT-003;PACT-004;PACT-005;PACT-006;PACT-007;PACT-008;PACT-009;PACT-010;PACT-011;PACT-012;PACT-013;PACT-014;PACT-015;PACT-016;PACT-017;PACT-018;PACT-019;PACT-020;PACT-021;PACT-022;PACT-023;PACT-024;PACT-025;PACT-026;PACT-082;PACT-083;PACT-085;PACT-086,A01;A02;A03;A04;A05;A06;A07;A08;A09,phase-0-connections.md#pact-027
 PACT-028,Encode the versioned rules catalog and exact arithmetic,1,done,implementation,Rules,M,PACT-027,R01;R02;R05,phase-1-rules.md#pact-028
 PACT-029,Implement the authoritative clock and atomic tick coordinator,1,done,implementation,Backend,L,PACT-027;PACT-028,R02;R06,phase-1-rules.md#pact-029
-PACT-030,"Implement the resource ledger, provenance, and storage",1,todo,implementation,Backend,L,PACT-027;PACT-028;PACT-029,R01;R06,phase-1-rules.md#pact-030
+PACT-030,"Implement the resource ledger, provenance, and storage",1,done,implementation,Backend,L,PACT-027;PACT-028;PACT-029,R01;R06,phase-1-rules.md#pact-030
 PACT-031,Activate real kingdoms exactly once,1,todo,implementation,Backend,M,PACT-008;PACT-027;PACT-028;PACT-029;PACT-030,A01;R01;R02,phase-1-rules.md#pact-031
 PACT-032,Implement building upgrades and the two builder queues,1,todo,implementation,Rules,M,PACT-027;PACT-030;PACT-031,R01;R02;R04,phase-1-rules.md#pact-032
 PACT-033,"Implement troop identity, training, placement, and capacity",1,todo,implementation,Rules,L,PACT-027;PACT-028;PACT-030;PACT-031,R01;R03,phase-1-rules.md#pact-033

@@ -18,6 +18,7 @@ const migrationUrls = [
   new URL("../../telegram/migrations/", import.meta.url),
   new URL("../../privacy/migrations/", import.meta.url),
   new URL("../../world/migrations/", import.meta.url),
+  new URL("../../ledger/migrations/", import.meta.url),
 ];
 const identifierPattern = /^[a-z_][a-z0-9_]{0,62}$/;
 
