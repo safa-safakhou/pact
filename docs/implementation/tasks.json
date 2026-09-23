@@ -1130,7 +1130,7 @@
       "id": "PACT-024",
       "title": "Implement first-account retention, export, and deletion",
       "phase": 0,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Security",
       "size": "L",
@@ -1164,7 +1164,12 @@
         "export",
         "deletion registry"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/account-privacy.md",
+        "581add8 / mvp-20260922-7: authenticated export/deletion, migration 0016, daily retention, legal-hold metadata, and pre-traffic deletion replay",
+        "npm test (66); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck",
+        "VPS isolated restore drill: pre-deletion PostgreSQL dump replayed to closing with zero active sessions, live credential ciphertexts, or Telegram links"
+      ],
       "assignee": "codex-privacy-batch",
       "blocked_by_external": [],
       "block_reason": null

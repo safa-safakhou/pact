@@ -1,6 +1,6 @@
 # Phase 0 — Connection experiment
 
-**31 tickets · 26 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**31 tickets · 27 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -787,7 +787,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-024"></a>
 ## PACT-024 — Implement first-account retention, export, and deletion
 
-**Status:** in_progress · **Role:** Security · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Security · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-085](phase-0-connections.md#pact-085)
 
@@ -803,10 +803,17 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Export excludes credentials and other players’ data; delete disables access immediately and meets specified live-store deadlines.
-- [ ] Restore a pre-deletion backup and replay the deletion/revocation registry before traffic; removed credentials and content cannot reappear.
+- [x] Export excludes credentials and other players’ data; delete disables access immediately and meets specified live-store deadlines.
+- [x] Restore a pre-deletion backup and replay the deletion/revocation registry before traffic; removed credentials and content cannot reappear.
 
 **Assignee:** codex-privacy-batch
+
+**Evidence**
+
+- docs/implementation/reports/account-privacy.md
+- 581add8 / mvp-20260922-7: authenticated export/deletion, migration 0016, daily retention, legal-hold metadata, and pre-traffic deletion replay
+- npm test (66); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck
+- VPS isolated restore drill: pre-deletion PostgreSQL dump replayed to closing with zero active sessions, live credential ciphertexts, or Telegram links
 
 <a id="pact-025"></a>
 ## PACT-025 — Complete the real-account environment preflight
