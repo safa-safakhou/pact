@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 6 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -142,7 +142,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-033"></a>
 ## PACT-033 — Implement troop identity, training, placement, and capacity
 
-**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031)
 
@@ -157,8 +157,14 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Simultaneous training/assignment cannot overfill owned or visiting pools or reuse a unit in exclusive placements.
-- [ ] Home Guard cannot raid/scout/lend/refund, but can disband for zero; partial training cancellation refunds only uncompleted reserved costs.
+- [x] Simultaneous training/assignment cannot overfill owned or visiting pools or reuse a unit in exclusive placements.
+- [x] Home Guard cannot raid/scout/lend/refund, but can disband for zero; partial training cancellation refunds only uncompleted reserved costs.
+
+**Assignee:** codex-rules-foundation
+
+**Evidence**
+
+- docs/implementation/reports/troop-training.md — 2026-09-23: ordinary-paid sequential batches, immutable UUIDv7 units, capacity/placement locks, Home Guard restrictions, 80% partial cancellation, battle-ID snapshots. Node 24 npm run build, typecheck, test (90), test:integration (60), lint passed against PostgreSQL 17.
 
 <a id="pact-034"></a>
 ## PACT-034 — Implement upkeep, hunger recovery, and desertion

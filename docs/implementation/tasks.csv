@@ -36,7 +36,7 @@ PACT-029,Implement the authoritative clock and atomic tick coordinator,1,done,im
 PACT-030,"Implement the resource ledger, provenance, and storage",1,done,implementation,Backend,L,PACT-027;PACT-028;PACT-029,R01;R06,phase-1-rules.md#pact-030
 PACT-031,Activate real kingdoms exactly once,1,done,implementation,Backend,M,PACT-008;PACT-027;PACT-028;PACT-029;PACT-030,A01;R01;R02,phase-1-rules.md#pact-031
 PACT-032,Implement building upgrades and the two builder queues,1,done,implementation,Rules,M,PACT-027;PACT-030;PACT-031,R01;R02;R04,phase-1-rules.md#pact-032
-PACT-033,"Implement troop identity, training, placement, and capacity",1,todo,implementation,Rules,L,PACT-027;PACT-028;PACT-030;PACT-031,R01;R03,phase-1-rules.md#pact-033
+PACT-033,"Implement troop identity, training, placement, and capacity",1,done,implementation,Rules,L,PACT-027;PACT-028;PACT-030;PACT-031,R01;R03,phase-1-rules.md#pact-033
 PACT-034,"Implement upkeep, hunger recovery, and desertion",1,todo,implementation,Rules,M,PACT-027;PACT-029;PACT-030;PACT-033,R02;R03,phase-1-rules.md#pact-034
 PACT-035,Implement kingdom-wide charges and action limits,1,todo,implementation,Backend,M,PACT-027;PACT-029;PACT-031,R02;R04,phase-1-rules.md#pact-035
 PACT-036,"Implement contacts, bounded messages, and direct transfers",1,todo,implementation,Backend,M,PACT-022;PACT-027;PACT-030;PACT-031;PACT-035,R01;R04,phase-1-rules.md#pact-036

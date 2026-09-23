@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { createPool } from "@pact/db";
-import { BuildingEngine, FailClosedConstructionAuthority } from "@pact/kingdom";
+import { BuildingEngine, FailClosedConstructionAuthority, TroopService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { WorldClockService } from "@pact/world";
 
@@ -12,10 +12,12 @@ if (!databaseUrl) {
   const pool = createPool(databaseUrl);
   const ledger = new ResourceLedger("pact");
   const buildings = new BuildingEngine("pact", ledger, new FailClosedConstructionAuthority());
+  const troops = new TroopService("pact", ledger);
   const world = new WorldClockService(pool, "pact", {
     boundaries_and_completions: async (client, context) => {
       await ledger.expireFoundingAllowances(client, context);
       await buildings.settleMinute(client, context);
+      await troops.settleMinute(client, context);
     },
     // PACT-069 replaces the test-world week-one default with the configured season clock.
     production: (client, context) => ledger.settleProductionMinute(client, context, 1),
