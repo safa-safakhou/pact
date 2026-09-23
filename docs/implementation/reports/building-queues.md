@@ -2,7 +2,7 @@
 
 Ticket: [PACT-032 / MNI-96](https://linear.app/mnim/issue/MNI-96/pact-032-implement-building-upgrades-and-the-two-builder-queues)
 
-Implementation revision/PR: `4e2e11b` plus final verification edits on local `master`; no PR or push.
+Implementation revision/PR: `4e2e11b` and `51525c8` on local `master`; no PR or push.
 
 Verification environment: 23 September 2026; macOS arm64; Node.js 24; PostgreSQL 17 test database.
 
