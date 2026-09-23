@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
-import { wholeResources } from "@pact/domain";
-import { BuildingEngine, type ConstructionAuthorityPort, KingdomService } from "@pact/kingdom";
+import { type BuildingKind, wholeResources } from "@pact/domain";
+import { BuildingEngine, type ConstructionAuthorityPort, KingdomService, upgradeQuote } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { OnboardingService } from "@pact/onboarding";
 import { WorldClockService } from "@pact/world";
@@ -299,5 +299,104 @@ describe("building queues", () => {
       (await pool.query("SELECT level FROM kingdom_buildings WHERE kingdom_id = $1 AND kind = 'wall'", [kingdomId]))
         .rows[0]?.level,
     ).toBe(2);
+  });
+
+  it("can build the complete legal level-I through level-VI dependency ladder", async () => {
+    const ladderAccount = randomUUID();
+    const ladderKingdom = randomUUID();
+    await pool.query(
+      `INSERT INTO accounts(id, product_scope, email, password_hash, email_verified_at, terms_version)
+       VALUES ($1, 'pact', $2, 'fixture-only', clock_timestamp(), 'terms-v1')`,
+      [ladderAccount, `${ladderAccount}@example.test`],
+    );
+    await withTransaction(pool, async (client) => {
+      await client.query(
+        `INSERT INTO kingdoms(id, product_scope, account_id, handle, display_name, portrait,
+           activated_at, activated_game_time_ms, activated_tick_sequence, first_tick_game_time_ms,
+           activation_event_id)
+         VALUES ($1, 'pact', $2, $3, 'Ladder', 'portrait.wolf', clock_timestamp(),
+           0, 0, 60000, $4)`,
+        [ladderKingdom, ladderAccount, `ladder_${randomUUID().slice(0, 8)}`, randomUUID()],
+      );
+      await ledger.initializeKingdom(client, ladderKingdom, 0);
+      for (const kind of ["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"]) {
+        await client.query(
+          "INSERT INTO kingdom_buildings(product_scope, kingdom_id, kind, level) VALUES ('pact', $1, $2, 1)",
+          [ladderKingdom, kind],
+        );
+      }
+    });
+    let gameTimeMs = 0;
+    let instructionCount = 0;
+    async function build(kind: BuildingKind, targetLevel: number): Promise<void> {
+      const quote = upgradeQuote(kind, targetLevel, gameTimeMs);
+      const instructionId = randomUUID();
+      const queued = await withTransaction(pool, async (client) => {
+        for (const [resource, required] of [
+          ["iron", quote.iron],
+          ["silver", quote.silver],
+        ] as const) {
+          const balance = await ledger.readBalance(client, ladderKingdom, resource);
+          const shortage = required - balance.ordinary - balance.allowance;
+          if (shortage > 0n) {
+            await ledger.creditOrdinary(client, {
+              kingdomId: ladderKingdom,
+              resource,
+              amount: shortage,
+              operationKey: `ladder-funding:${instructionId}:${resource}`,
+              reason: "test_production",
+              gameTimeMs,
+            });
+          }
+        }
+        return engine.queue(client, {
+          accountId: ladderAccount,
+          kingdomId: ladderKingdom,
+          instructionId,
+          slot: 1,
+          kind,
+          targetLevel,
+          actor: "agent",
+          mandateVersion: 1,
+          gameTimeMs,
+        });
+      });
+      expect(queued.state).toBe("active");
+      if (queued.dueGameTimeMs === null) throw new Error("Ladder build missing deadline");
+      gameTimeMs = queued.dueGameTimeMs;
+      await withTransaction(pool, async (client) => {
+        const context = {
+          productScope: "pact",
+          sequence: BigInt(gameTimeMs / 60_000),
+          gameTimeMs,
+          dueAt: new Date(),
+        };
+        await ledger.expireFoundingAllowances(client, context);
+        await engine.settleMinute(client, context);
+      });
+      instructionCount += 1;
+      expect(
+        (
+          await pool.query("SELECT level FROM kingdom_buildings WHERE kingdom_id = $1 AND kind = $2", [
+            ladderKingdom,
+            kind,
+          ])
+        ).rows[0]?.level,
+      ).toBe(targetLevel);
+    }
+    for (let target = 2; target <= 6; target += 1) {
+      for (const kind of ["storehouse", "farm", "barracks", "hall", "mine", "market", "wall"] as const) {
+        await build(kind, target);
+      }
+    }
+    expect(instructionCount).toBe(35);
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::integer AS count FROM building_instructions WHERE kingdom_id = $1 AND state = 'completed'",
+          [ladderKingdom],
+        )
+      ).rows[0]?.count,
+    ).toBe(35);
   });
 });
