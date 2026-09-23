@@ -1,14 +1,14 @@
 # Additional assistant client compatibility
 
 Ticket: PACT-086 / MNI-89
-Implementation revision/PR: uncommitted working tree
-Verification date/environment: 23 September 2026, Node 24 local workspace
+Implementation revision/PR: `b58d7f4`
+Verification date/environment: 23 September 2026, Node 24 local workspace and VPS release `mvp-20260923-2`
 
 ## Result
 
 PACT now publishes a typed additional-client compatibility document at `GET /v1/client-compatibility`. It records model API support independently from real client certification, consumer-app installation, authentication/billing, proven capabilities, readable/writable surfaces, client version/date, evidence, and limitations.
 
-The current result is intentionally not a certification claim: Gemini CLI is `not_tested`; the Grok-powered external tool-client route is `fixture_only`. The environment has no Gemini CLI binary and no Gemini/xAI test credentials.
+The current result is intentionally not a certification claim: Gemini CLI is `not_tested`; the Grok-powered external tool-client route is `fixture_only`. The environment has no Gemini CLI binary and no Gemini/xAI test credentials. The deployed endpoint publishes those exact limitations.
 
 ## Acceptance evidence
 

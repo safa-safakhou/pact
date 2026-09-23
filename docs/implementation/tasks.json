@@ -1224,7 +1224,7 @@
       "id": "PACT-086",
       "title": "Certify additional assistant routes and publish a capability matrix",
       "phase": 0,
-      "status": "in_progress",
+      "status": "blocked",
       "kind": "verification",
       "owner_role": "Integrations",
       "size": "M",
@@ -1256,12 +1256,17 @@
         "Grok tool-client fixture",
         "compatibility registry"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/additional-client-compatibility.md",
+        "b58d7f4 (typed client compatibility contract, truthful public matrix, tests and API documentation)",
+        "npm test (74); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck",
+        "VPS release mvp-20260923-2: deployment verification passed and /v1/client-compatibility publishes Gemini not_tested and Grok fixture_only"
+      ],
       "assignee": "codex-client-certification",
       "blocked_by_external": [
         "Eligible Gemini client and xAI test access/quota"
       ],
-      "block_reason": null
+      "block_reason": "Internal registry and fixture evidence are implemented and deployed. Completion requires an eligible Gemini CLI plus test-only Gemini and xAI access/quota to run the named live OAuth/read/write/approval/revoke certifications; those clients and credentials are not present."
     },
     {
       "id": "PACT-026",

@@ -849,7 +849,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-086"></a>
 ## PACT-086 — Certify additional assistant routes and publish a capability matrix
 
-**Status:** in_progress · **Role:** Integrations · **Size:** M · **Type:** verification
+**Status:** blocked · **Role:** Integrations · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-025](phase-0-connections.md#pact-025), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -870,6 +870,15 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **External prerequisites:** Eligible Gemini client and xAI test access/quota.
 
 **Assignee:** codex-client-certification
+
+**Block reason:** Internal registry and fixture evidence are implemented and deployed. Completion requires an eligible Gemini CLI plus test-only Gemini and xAI access/quota to run the named live OAuth/read/write/approval/revoke certifications; those clients and credentials are not present.
+
+**Evidence**
+
+- docs/implementation/reports/additional-client-compatibility.md
+- b58d7f4 (typed client compatibility contract, truthful public matrix, tests and API documentation)
+- npm test (74); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck
+- VPS release mvp-20260923-2: deployment verification passed and /v1/client-compatibility publishes Gemini not_tested and Grok fixture_only
 
 <a id="pact-026"></a>
 ## PACT-026 — Certify every connection route and measure unaided setup
