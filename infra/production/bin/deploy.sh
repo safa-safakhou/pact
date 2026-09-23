@@ -22,7 +22,7 @@ done
 
 umask 077
 state_dir="${PACT_STATE_DIR:-/srv/pact/state}"
-mkdir -p "$state_dir/releases" "$state_dir/privacy"
+mkdir -p "$state_dir/releases" "$state_dir/privacy" "$state_dir/operator"
 chmod 700 "$state_dir"
 chmod 700 "$state_dir/privacy"
 

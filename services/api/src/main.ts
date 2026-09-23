@@ -22,9 +22,14 @@ import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
 import { RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { readEnvironment } from "./config.js";
+import { loadOperatorPreflight } from "./operator-preflight.js";
 import { buildServer } from "./server.js";
 
 const environment = readEnvironment();
+const operatorPreflight = await loadOperatorPreflight(
+  environment.PACT_OPERATOR_REGISTER_FILE,
+  environment.CURRENT_TERMS_VERSION,
+);
 const publicBaseUrl = (environment.PACT_PUBLIC_BASE_URL ?? environment.PACT_ORIGIN).replace(/\/$/, "");
 const pool = createPool(environment.DATABASE_URL);
 const clock = { now: () => new Date() };
@@ -128,6 +133,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   ...(credentialVault ? { credentialVault } : {}),
   ...(telegram ? { telegram } : {}),
   origin: environment.PACT_ORIGIN,
+  operatorPreflight,
 });
 
 // A restored backup must have deletion tombstones reapplied before the API accepts traffic.

@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "realRegistrationEnabled": false,
+  "controller": {
+    "legalName": "REPLACE WITH THE ACTUAL CONTROLLER LEGAL NAME",
+    "contactAddress": "REPLACE WITH THE ACTUAL CONTACT ADDRESS",
+    "privacyEmail": "privacy@example.invalid",
+    "supportEmail": "support@example.invalid",
+    "privacyOwner": "REPLACE WITH THE ACCOUNTABLE PRIVACY OWNER",
+    "supportOwner": "REPLACE WITH THE ACCOUNTABLE SUPPORT OWNER"
+  },
+  "documents": {
+    "termsVersion": "REPLACE",
+    "termsUrl": "https://example.invalid/terms",
+    "privacyVersion": "REPLACE",
+    "privacyUrl": "https://example.invalid/privacy",
+    "rightsAndComplaintRoute": "REPLACE WITH THE ACTUAL RIGHTS AND COMPLAINT ROUTE",
+    "privacyRequestUrl": "https://example.invalid/privacy-request"
+  },
+  "processing": {
+    "purposesAndLawfulBases": ["REPLACE WITH THE REVIEWED PURPOSE AND LAWFUL BASIS"],
+    "processors": [
+      {
+        "name": "REPLACE WITH THE ACTUAL PROCESSOR",
+        "purpose": "REPLACE",
+        "dataLocation": "REPLACE",
+        "agreementReference": "REPLACE WITH THE INTERNAL AGREEMENT RECORD",
+        "transferMechanism": "REPLACE WITH THE REVIEWED TRANSFER POSITION"
+      }
+    ]
+  },
+  "disclosures": {
+    "telegram": true,
+    "deviceSessions": true,
+    "modelProviders": true
+  },
+  "transactionalEmail": {
+    "mode": "captured_smtp",
+    "from": "PACT MVP <noreply@example.invalid>",
+    "deliveryEvidence": { "checkedAt": "2026-01-01T00:00:00.000Z", "reference": "REPLACE" }
+  },
+  "operationalEvidence": {
+    "staffMfa": { "checkedAt": "2026-01-01T00:00:00.000Z", "reference": "REPLACE" },
+    "restore": { "checkedAt": "2026-01-01T00:00:00.000Z", "reference": "REPLACE" },
+    "deletion": { "checkedAt": "2026-01-01T00:00:00.000Z", "reference": "REPLACE" }
+  }
+}

@@ -64,3 +64,9 @@ ssh agentic@2.28.57.254 'cat /srv/pact/secrets/connection-test/operator_test_pas
 In the Mini App, use **Begin account link** → **Confirm in PACT** → sign in with that account → return to Telegram → **Exchange confirmed link**. Then run the private-draft, sandbox, approval, duplicate, and unlink checks. Rotate both this password and the bot token after the shared walkthrough because chat-delivered credentials are not a durable secret-distribution channel.
 
 Do not add real player data to the shared deployment environment until PACT-025 is satisfied.
+
+## Registration gate
+
+The deployment mounts `/srv/pact/state/operator` read-only into the API. If `operator-register.json` is absent, unreadable, contains placeholders or empty required facts, disagrees with `CURRENT_TERMS_VERSION`, or does not explicitly enable registration, signup returns `503 REGISTRATION_UNAVAILABLE`. This is intentional and does not make `/ready` fail: existing synthetic testers retain login and account-management access while new registration is closed.
+
+Prepare and validate the register using the procedure in [Identity and onboarding operations](identity.md#real-registration-operator-preflight). Keep the real register on the VPS; do not commit it. After changing it, restart the API and verify both `/v1/legal/registration-status` and `/v1/legal/notices` before inviting a tester.

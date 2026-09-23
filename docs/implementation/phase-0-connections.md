@@ -818,7 +818,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-025"></a>
 ## PACT-025 — Complete the real-account environment preflight
 
-**Status:** todo · **Role:** Operations · **Size:** M · **Type:** operations
+**Status:** in_progress · **Role:** Operations · **Size:** M · **Type:** operations
 
 **Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-024](phase-0-connections.md#pact-024)
 
@@ -838,6 +838,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] The configured notices, email delivery, privacy-request channel, staff MFA, and restore/deletion checks are demonstrated before inviting a tester.
 
 **External prerequisites:** Actual operator identity and processor agreements.
+
+**Assignee:** codex-operator-preflight
 
 <a id="pact-086"></a>
 ## PACT-086 — Certify additional assistant routes and publish a capability matrix

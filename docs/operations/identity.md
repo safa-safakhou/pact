@@ -19,3 +19,24 @@ Login failures use durable 15-minute buckets: five per normalized account and 30
 Password reset and sign-out-everywhere atomically revoke active sessions and OAuth grants, append `access.revoked.v1` with `cancelActiveRuns: true`, record a security event, and queue required email. The run service consumes that outbox event when implemented. Security events use the 90-day class; any attached IP is removed after seven days under the privacy policy.
 
 `@pact/onboarding` preserves one private draft and its typed invitation destination for seven days. Repeated setup, logout, recovery, or redirect handling reads the same server record. Expired unused drafts are removed by `purgeExpiredDrafts`; unverified registrations and expired credentials are removed by `IdentityService.purgeExpired`. Schedule both at least daily when the durable scheduler arrives.
+
+## Real-registration operator preflight
+
+The API fails closed for `POST /v1/auth/signup`. A deployment can accept a signup only when `PACT_OPERATOR_REGISTER_FILE` points to a readable, valid JSON register and that register explicitly sets `realRegistrationEnabled` to `true`. Login, recovery, privacy operations, and existing synthetic accounts remain available while registration is closed.
+
+Copy `infra/production/operator-register.example.json` to the host-only state directory and replace every placeholder with reviewed facts. Never enable the example itself. The register requires:
+
+- the controller legal name and contact address, public privacy/support contacts, and accountable owners;
+- HTTPS terms, privacy, and privacy-request routes, with a terms version exactly matching `CURRENT_TERMS_VERSION`;
+- purposes/lawful bases plus every relevant processor's purpose, data location, agreement record, and transfer position;
+- explicit Telegram, device-session, and model-provider disclosures;
+- the SMTP sender/mode and evidence references for delivery, staff MFA, restore, and deletion checks.
+
+Validate the host copy without printing its full contents:
+
+```sh
+CURRENT_TERMS_VERSION=connection-test-v1 \
+  npm run preflight:operator -- /srv/pact/state/operator/operator-register.json
+```
+
+The command emits only readiness, registration state, and field-level validation errors. It exits non-zero unless real registration is both valid and enabled. `GET /v1/legal/registration-status` exposes only the boolean gate. `GET /v1/legal/notices` exposes the reviewed public controller, document, processor, and channel disclosures; it deliberately omits agreement references, accountable-owner names, and operational evidence.

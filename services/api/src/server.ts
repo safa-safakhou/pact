@@ -29,6 +29,8 @@ import { registerModelCredentialRoutes } from "./model-credential-routes.js";
 import { registerNativeRoutes } from "./native-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
 import { registerOpenRouterRoutes } from "./openrouter-routes.js";
+import { OperatorPreflight } from "./operator-preflight.js";
+import { registerOperatorRoutes } from "./operator-routes.js";
 import { registerPrivacyRoutes } from "./privacy-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
 import { registerTelegramRoutes } from "./telegram-routes.js";
@@ -62,6 +64,7 @@ export interface ApiModules {
   telegram?: TelegramService;
   privacy?: PrivacyService;
   origin?: string;
+  operatorPreflight?: OperatorPreflight;
 }
 
 export function buildServer(
@@ -136,7 +139,10 @@ export function buildServer(
   });
   registerCapabilityRoutes(server);
   if (modules) {
-    registerIdentityRoutes(server, modules.identity, modules.onboarding);
+    const operatorPreflight =
+      modules.operatorPreflight ?? OperatorPreflight.unavailable("operator register not supplied");
+    registerIdentityRoutes(server, modules.identity, modules.onboarding, operatorPreflight);
+    registerOperatorRoutes(server, operatorPreflight);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
     if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);
     if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);

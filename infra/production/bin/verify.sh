@@ -15,6 +15,7 @@ $compose ps --status running --services | grep -qx notification
 $compose ps --status running --services | grep -qx postgres
 curl -fsS "http://127.0.0.1:${PACT_LOOPBACK_PORT:-8088}/ready" >/dev/null
 curl -fsS "$public_base_url/health" >/dev/null
+curl -fsS "$public_base_url/v1/legal/registration-status" | grep -Eq '"registrationEnabled":(true|false)'
 curl -fsS "$public_base_url/" >/dev/null
 telegram_html="$(curl -fsS "$public_base_url/telegram/")"
 printf '%s' "$telegram_html" | grep -Fq 'https://telegram.org/js/telegram-web-app.js?63'

@@ -90,6 +90,7 @@ services:
       MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE: /run/secrets/model_credential_public_key
       MODEL_CREDENTIAL_WRAPPING_KEY_ID: ${MODEL_CREDENTIAL_WRAPPING_KEY_ID:-vps-primary-v1}
       COMPROMISED_PASSWORD_SHA256_FILE: /run/secrets/compromised_password_sha256
+      PACT_OPERATOR_REGISTER_FILE: /etc/pact/operator/operator-register.json
     secrets:
       - postgres_password
       - identity_token_pepper
@@ -101,6 +102,7 @@ services:
       - telegram_webhook_secret
     volumes:
       - ${PACT_STATE_DIR:-/srv/pact/state}/privacy:/var/lib/pact-state
+      - ${PACT_STATE_DIR:-/srv/pact/state}/operator:/etc/pact/operator:ro
     depends_on:
       privacy-replay:
         condition: service_completed_successfully

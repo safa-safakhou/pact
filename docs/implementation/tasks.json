@@ -1178,7 +1178,7 @@
       "id": "PACT-025",
       "title": "Complete the real-account environment preflight",
       "phase": 0,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "operations",
       "owner_role": "Operations",
       "size": "M",
@@ -1211,7 +1211,7 @@
         "policies"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-operator-preflight",
       "blocked_by_external": [
         "Actual operator identity and processor agreements"
       ],

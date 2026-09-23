@@ -25,6 +25,7 @@ const EnvironmentSchema = z
     TELEGRAM_BOT_TOKEN: z.string().min(16).optional(),
     TELEGRAM_WEBHOOK_SECRET: z.string().min(32).max(256).optional(),
     PACT_DELETION_REGISTRY_FILE: z.string().min(1).optional(),
+    PACT_OPERATOR_REGISTER_FILE: z.string().min(1).optional(),
   })
   .superRefine((value, context) => {
     if (

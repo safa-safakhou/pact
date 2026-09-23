@@ -4,6 +4,7 @@ import type { OnboardingService } from "@pact/onboarding";
 import { OnboardingError } from "@pact/onboarding";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import type { OperatorPreflight } from "./operator-preflight.js";
 
 const SignupSchema = z.object({
   email: z.string().max(254),
@@ -81,6 +82,7 @@ export function registerIdentityRoutes(
   server: FastifyInstance,
   identity: IdentityService,
   onboarding: OnboardingService,
+  operatorPreflight: OperatorPreflight,
 ): void {
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url.startsWith("/v1/auth/") || request.url.startsWith("/v1/setup/")) {
@@ -88,9 +90,14 @@ export function registerIdentityRoutes(
     }
     return payload;
   });
-  server.post("/v1/auth/signup", async (request, reply) =>
-    safe(reply, () => identity.signup({ ...SignupSchema.parse(request.body), requestId: request.id })),
-  );
+  server.post("/v1/auth/signup", async (request, reply) => {
+    if (!operatorPreflight.registrationEnabled) {
+      return reply.code(503).send({
+        error: { code: "REGISTRATION_UNAVAILABLE", message: "Registration is not currently available." },
+      });
+    }
+    return safe(reply, () => identity.signup({ ...SignupSchema.parse(request.body), requestId: request.id }));
+  });
   server.post("/v1/auth/verify", async (request, reply) =>
     safe(reply, async () => {
       const verified = await identity.verifyEmail(TokenSchema.parse(request.body).token, request.id);
