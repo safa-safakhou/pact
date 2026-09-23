@@ -1,13 +1,13 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 1 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
 <a id="pact-028"></a>
 ## PACT-028 — Encode the versioned rules catalog and exact arithmetic
 
-**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027)
 
@@ -22,10 +22,14 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Every published value has a catalog entry and explicit unit; server rules use no floating-point comparison for combat or settlement.
-- [ ] Reproduce construction affordability, six-hour food example, and rational power values; API round-trips preserve exact quantities.
+- [x] Every published value has a catalog entry and explicit unit; server rules use no floating-point comparison for combat or settlement.
+- [x] Reproduce construction affordability, six-hour food example, and rational power values; API round-trips preserve exact quantities.
 
 **Assignee:** codex-rules-foundation
+
+**Evidence**
+
+- docs/implementation/reports/rules-catalog.md — 2026-09-23: pact-s1-v1 Zod catalog, exact BigInt resource and rational power helpers, grant-first construction, deterministic fixtures, UUID ordering, and API decimal-string round-trip; npm run build, npm test (81), npm run typecheck, npm run lint passed under Node 24.
 
 <a id="pact-029"></a>
 ## PACT-029 — Implement the authoritative clock and atomic tick coordinator

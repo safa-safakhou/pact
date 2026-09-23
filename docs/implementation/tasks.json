@@ -1405,7 +1405,7 @@
       "id": "PACT-028",
       "title": "Encode the versioned rules catalog and exact arithmetic",
       "phase": 1,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -1432,7 +1432,9 @@
       "components": [
         "pure rules catalog and arithmetic"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/rules-catalog.md — 2026-09-23: pact-s1-v1 Zod catalog, exact BigInt resource and rational power helpers, grant-first construction, deterministic fixtures, UUID ordering, and API decimal-string round-trip; npm run build, npm test (81), npm run typecheck, npm run lint passed under Node 24."
+      ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
       "block_reason": null

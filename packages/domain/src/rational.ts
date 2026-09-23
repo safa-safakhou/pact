@@ -48,3 +48,23 @@ export function ceilRational(value: Rational): bigint {
 export function serializeRational(value: Rational): { numerator: string; denominator: string } {
   return { numerator: value.numerator.toString(), denominator: value.denominator.toString() };
 }
+
+export function parseRational(input: unknown): Rational {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) throw new Error("INVALID_RATIONAL");
+  const record = input as Record<string, unknown>;
+  if (typeof record.numerator !== "string" || !/^-?(0|[1-9][0-9]*)$/.test(record.numerator)) {
+    throw new Error("INVALID_RATIONAL");
+  }
+  if (typeof record.denominator !== "string" || !/^[1-9][0-9]*$/.test(record.denominator)) {
+    throw new Error("INVALID_RATIONAL");
+  }
+  return rational(BigInt(record.numerator), BigInt(record.denominator));
+}
+
+export function compareUuidBytes(left: string, right: string): -1 | 0 | 1 {
+  const pattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!pattern.test(left) || !pattern.test(right)) throw new Error("INVALID_UUID");
+  const a = left.replaceAll("-", "").toLowerCase();
+  const b = right.replaceAll("-", "").toLowerCase();
+  return a < b ? -1 : a > b ? 1 : 0;
+}
