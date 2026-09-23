@@ -115,7 +115,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-032"></a>
 ## PACT-032 — Implement building upgrades and the two builder queues
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031)
 
@@ -132,6 +132,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] Hall and dependent upgrades reach every specified level without illegal bypass; the same building cannot occupy both slots.
 - [ ] Waiting starts in slot order only when funded/authorized; completion or cancellation retries never duplicate level gains, refunds, or spending.
+
+**Assignee:** codex-rules-foundation
 
 <a id="pact-033"></a>
 ## PACT-033 — Implement troop identity, training, placement, and capacity

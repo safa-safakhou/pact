@@ -49,6 +49,7 @@ describe("API/database smoke", () => {
       { name: "0017_world_clock.sql" },
       { name: "0018_resource_ledger.sql" },
       { name: "0019_kingdom_founding.sql" },
+      { name: "0020_building_queues.sql" },
     ]);
     await server.close();
   });

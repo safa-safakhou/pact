@@ -1564,7 +1564,7 @@
       "id": "PACT-032",
       "title": "Implement building upgrades and the two builder queues",
       "phase": 1,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -1594,7 +1594,7 @@
         "building rules and queues"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
       "block_reason": null
     },
