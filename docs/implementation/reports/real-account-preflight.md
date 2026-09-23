@@ -1,8 +1,8 @@
 # Real-account environment preflight
 
 Ticket: PACT-025 / MNI-88
-Implementation revision/PR: uncommitted working tree
-Verification date/environment: 23 September 2026, Node 24 local workspace; live VPS verification pending deployment
+Implementation revision/PR: `b5f2a3f`
+Verification date/environment: 23 September 2026, Node 24 local workspace and single VPS release `mvp-20260923-1`
 
 ## Result
 
@@ -14,7 +14,7 @@ Real registration remains disabled. Actual controller/support identity and revie
 
 | Ticket | Acceptance criterion | Check/artifact | Actual result |
 | --- | --- | --- | --- |
-| PACT-025 | A deployment with an empty required legal/operator field cannot accept a real signup. | `services/api/src/operator-preflight.test.ts`; `npm test -- --run services/api/src/operator-preflight.test.ts services/api/src/config.test.ts` | Pass: unavailable/invalid/placeholder configuration returns `503 REGISTRATION_UNAVAILABLE` before input parsing or identity invocation; 11 focused tests passed. |
+| PACT-025 | A deployment with an empty required legal/operator field cannot accept a real signup. | `services/api/src/operator-preflight.test.ts`; focused tests; live `mvp-20260923-1` HTTP/database probe | Pass: unavailable/invalid/placeholder configuration returns `503 REGISTRATION_UNAVAILABLE` before identity invocation. Live status was false, signup returned 503, and the database contained zero rows for the probe email. |
 | PACT-025 | The configured notices, email delivery, privacy-request channel, staff MFA, and restore/deletion checks are demonstrated before inviting a tester. | Operator register schema and `npm run preflight:operator`; prior Mailpit and restore/deletion evidence | Blocked: schema and checker require references, but actual notices, privacy channel, ownership, staff-MFA evidence, and processor agreements still require operator-supplied facts and verification. No real tester may be invited. |
 
 ## Documentation
@@ -29,4 +29,4 @@ Registration availability is separate from process readiness so login and privac
 
 ## Handoff
 
-Deploy and verify the fail-closed state on the VPS. Then the operator must provide the actual controller/contact facts, public document URLs and versions, privacy/support ownership and route, reviewed processor/transfer records, and staff-MFA evidence. Until those pass, PACT-026 and PACT-086 remain dependency-blocked.
+The operator must provide the actual controller/contact facts, public document URLs and versions, privacy/support ownership and route, reviewed processor/transfer records, and staff-MFA evidence. Until those pass, PACT-025 remains blocked and PACT-026 and PACT-086 remain dependency-blocked.

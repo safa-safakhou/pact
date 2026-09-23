@@ -1178,7 +1178,7 @@
       "id": "PACT-025",
       "title": "Complete the real-account environment preflight",
       "phase": 0,
-      "status": "in_progress",
+      "status": "blocked",
       "kind": "operations",
       "owner_role": "Operations",
       "size": "M",
@@ -1210,12 +1210,17 @@
         "operator configuration",
         "policies"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/real-account-preflight.md",
+        "b5f2a3f (fail-closed operator register, public notices/status, single-VPS mount, tests and operations docs)",
+        "npm test (72); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck",
+        "VPS release mvp-20260923-1: deployment verification passed; live registration status false; signup returned 503 REGISTRATION_UNAVAILABLE; database probe found zero created rows"
+      ],
       "assignee": "codex-operator-preflight",
       "blocked_by_external": [
         "Actual operator identity and processor agreements"
       ],
-      "block_reason": null
+      "block_reason": "The fail-closed control is implemented and deployed. Completion still requires actual controller/support identity, public terms/privacy and request routes, privacy/support owners, processor agreement and transfer records, and staff-MFA evidence; none may be invented."
     },
     {
       "id": "PACT-086",

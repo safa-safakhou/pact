@@ -818,7 +818,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-025"></a>
 ## PACT-025 — Complete the real-account environment preflight
 
-**Status:** in_progress · **Role:** Operations · **Size:** M · **Type:** operations
+**Status:** blocked · **Role:** Operations · **Size:** M · **Type:** operations
 
 **Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-024](phase-0-connections.md#pact-024)
 
@@ -840,6 +840,15 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **External prerequisites:** Actual operator identity and processor agreements.
 
 **Assignee:** codex-operator-preflight
+
+**Block reason:** The fail-closed control is implemented and deployed. Completion still requires actual controller/support identity, public terms/privacy and request routes, privacy/support owners, processor agreement and transfer records, and staff-MFA evidence; none may be invented.
+
+**Evidence**
+
+- docs/implementation/reports/real-account-preflight.md
+- b5f2a3f (fail-closed operator register, public notices/status, single-VPS mount, tests and operations docs)
+- npm test (72); npm run test:integration (34); npm run smoke (1); npm run build; npm run lint; npm run typecheck
+- VPS release mvp-20260923-1: deployment verification passed; live registration status false; signup returned 503 REGISTRATION_UNAVAILABLE; database probe found zero created rows
 
 <a id="pact-086"></a>
 ## PACT-086 — Certify additional assistant routes and publish a capability matrix

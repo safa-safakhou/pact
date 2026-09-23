@@ -70,3 +70,5 @@ Do not add real player data to the shared deployment environment until PACT-025 
 The deployment mounts `/srv/pact/state/operator` read-only into the API. If `operator-register.json` is absent, unreadable, contains placeholders or empty required facts, disagrees with `CURRENT_TERMS_VERSION`, or does not explicitly enable registration, signup returns `503 REGISTRATION_UNAVAILABLE`. This is intentional and does not make `/ready` fail: existing synthetic testers retain login and account-management access while new registration is closed.
 
 Prepare and validate the register using the procedure in [Identity and onboarding operations](identity.md#real-registration-operator-preflight). Keep the real register on the VPS; do not commit it. After changing it, restart the API and verify both `/v1/legal/registration-status` and `/v1/legal/notices` before inviting a tester.
+
+Release `mvp-20260923-1` demonstrated the absent-register state on 23 September 2026: deployment verification passed, registration status was false, a synthetic signup probe returned `503 REGISTRATION_UNAVAILABLE`, and no account row was created.
