@@ -3,6 +3,7 @@ import {
   type CapabilityDocument,
   ClientAudienceSchema,
   type ClientCapability,
+  ClientCompatibilityDocumentSchema,
   EVENT_SCHEMA_VERSION,
   SCHEMA_VERSION,
 } from "@pact/contracts";
@@ -17,6 +18,48 @@ const sharedCapabilities: ClientCapability[] = [
   "inbox.subscribe",
   "approval.status",
 ];
+
+export const additionalClientCompatibility = ClientCompatibilityDocumentSchema.parse({
+  generatedAt: "2026-09-23T08:49:00.000Z",
+  entries: [
+    {
+      clientId: "gemini-cli",
+      clientLabel: "Gemini CLI",
+      certificationStatus: "not_tested",
+      modelApiSupport: true,
+      consumerAppInstallation: "not_applicable",
+      authentication:
+        "PACT OAuth with an MCP-audience scoped game credential; Google subscription login is not a PACT credential",
+      billing: "Gemini client/API eligibility and billing remain with the tester's Google account",
+      capabilities: [],
+      readableSurfaces: [],
+      writableSurfaces: [],
+      testedClientVersion: null,
+      testedAt: null,
+      evidence: ["PACT Gemini generateContent adapter recorded fixture"],
+      limitation:
+        "Gemini CLI binary and eligible live test credentials are not present; no host certification is claimed",
+    },
+    {
+      clientId: "grok-external-tool-client",
+      clientLabel: "Grok-powered external tool client",
+      certificationStatus: "fixture_only",
+      modelApiSupport: true,
+      consumerAppInstallation: "not_verified",
+      authentication:
+        "Tester-supplied xAI API credential for the model route and a separate PACT OAuth game credential",
+      billing: "xAI API usage is billed by xAI; a consumer Grok subscription is not treated as API eligibility",
+      capabilities: ["read", "write"],
+      readableSurfaces: ["recorded provider tool-call fixture"],
+      writableSurfaces: ["recorded sandbox command fixture"],
+      testedClientVersion: "recorded-fixture-v1",
+      testedAt: "2026-09-20T00:00:00.000Z",
+      evidence: ["packages/model-provider/src/provider-adapters.test.ts"],
+      limitation:
+        "No eligible live xAI client/key is present; consumer Grok MCP installation and OAuth/approval/revoke are not certified",
+    },
+  ],
+});
 
 export function registerCapabilityRoutes(server: FastifyInstance): void {
   server.addHook("onRequest", async (request, reply) => {
@@ -49,5 +92,10 @@ export function registerCapabilityRoutes(server: FastifyInstance): void {
     };
     reply.header("cache-control", "public, max-age=300");
     return document;
+  });
+
+  server.get("/v1/client-compatibility", async (_request, reply) => {
+    reply.header("cache-control", "public, max-age=300");
+    return additionalClientCompatibility;
   });
 }

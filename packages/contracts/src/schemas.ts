@@ -138,6 +138,32 @@ export const CapabilityDocumentSchema = z
   })
   .strict();
 
+export const ClientCertificationStatusSchema = z.enum(["certified", "fixture_only", "not_tested"]);
+export const ClientCompatibilityEntrySchema = z
+  .object({
+    clientId: z.enum(["gemini-cli", "grok-external-tool-client"]),
+    clientLabel: z.string().min(1),
+    certificationStatus: ClientCertificationStatusSchema,
+    modelApiSupport: z.boolean(),
+    consumerAppInstallation: z.enum(["supported", "not_verified", "not_applicable"]),
+    authentication: z.string().min(1),
+    billing: z.string().min(1),
+    capabilities: z.array(z.enum(["oauth", "read", "write", "approval", "revoke"])),
+    readableSurfaces: z.array(z.string()),
+    writableSurfaces: z.array(z.string()),
+    testedClientVersion: z.string().nullable(),
+    testedAt: z.iso.datetime().nullable(),
+    evidence: z.array(z.string()),
+    limitation: z.string().min(1),
+  })
+  .strict();
+export const ClientCompatibilityDocumentSchema = z
+  .object({
+    generatedAt: z.iso.datetime(),
+    entries: z.array(ClientCompatibilityEntrySchema),
+  })
+  .strict();
+
 export const ToolCallSchema = z
   .object({
     name: z.enum(["sandbox.echo", "sandbox.counter.increment", "sandbox.draft.read", "sandbox.draft.write"]),
@@ -156,6 +182,8 @@ export type ClientAudience = z.infer<typeof ClientAudienceSchema>;
 export type AgentScope = z.infer<typeof AgentScopeSchema>;
 export type ClientCapability = z.infer<typeof ClientCapabilitySchema>;
 export type CapabilityDocument = z.infer<typeof CapabilityDocumentSchema>;
+export type ClientCompatibilityEntry = z.infer<typeof ClientCompatibilityEntrySchema>;
+export type ClientCompatibilityDocument = z.infer<typeof ClientCompatibilityDocumentSchema>;
 
 export function validateCommandForWeb(input: unknown): CommandEnvelope {
   return CommandEnvelopeSchema.parse(input);

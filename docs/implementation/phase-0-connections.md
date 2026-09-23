@@ -849,7 +849,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-086"></a>
 ## PACT-086 — Certify additional assistant routes and publish a capability matrix
 
-**Status:** todo · **Role:** Integrations · **Size:** M · **Type:** verification
+**Status:** in_progress · **Role:** Integrations · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-025](phase-0-connections.md#pact-025), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -868,6 +868,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] The Grok/Gemini routes share PACT receipts and authority, use scoped game credentials, and never treat subscription login as an unverified hosted API credential.
 
 **External prerequisites:** Eligible Gemini client and xAI test access/quota.
+
+**Assignee:** codex-client-certification
 
 <a id="pact-026"></a>
 ## PACT-026 — Certify every connection route and measure unaided setup

@@ -1224,7 +1224,7 @@
       "id": "PACT-086",
       "title": "Certify additional assistant routes and publish a capability matrix",
       "phase": 0,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "verification",
       "owner_role": "Integrations",
       "size": "M",
@@ -1257,7 +1257,7 @@
         "compatibility registry"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-client-certification",
       "blocked_by_external": [
         "Eligible Gemini client and xAI test access/quota"
       ],
