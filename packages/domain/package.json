@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@pact/contracts": "0.1.0",
-    "@pact/platform": "0.1.0"
+    "@pact/platform": "0.1.0",
+    "zod": "4.6.5"
   }
 }
