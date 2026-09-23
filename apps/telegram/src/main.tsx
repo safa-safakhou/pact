@@ -90,7 +90,7 @@ function App() {
           disabled={!csrf}
           onClick={() =>
             show(() =>
-              request("/v1/setup/sandbox-activation", {
+              request("/v1/setup/activate", {
                 method: "POST",
                 headers: writeHeaders(),
                 body: JSON.stringify({}),
@@ -98,7 +98,7 @@ function App() {
             )
           }
         >
-          Activate sandbox
+          Activate kingdom
         </button>
       </section>
       <section>

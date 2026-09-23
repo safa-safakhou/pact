@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 3 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 4 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -88,7 +88,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-031"></a>
 ## PACT-031 — Activate real kingdoms exactly once
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030)
 
@@ -103,8 +103,14 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Concurrent activation attempts return one kingdom, one set of grants, and one activation time.
-- [ ] The draft is never targetable before commit; activation produces the specified zero ordinary wealth and starts time/charges only once.
+- [x] Concurrent activation attempts return one kingdom, one set of grants, and one activation time.
+- [x] The draft is never targetable before commit; activation produces the specified zero ordinary wealth and starts time/charges only once.
+
+**Assignee:** codex-rules-foundation
+
+**Evidence**
+
+- docs/implementation/reports/kingdom-founding.md — 2026-09-23: atomic one-time ranked activation, human-only API, founding state, rollback/retention checks. Node 24 npm run build, typecheck, test (88), test:integration (51), lint passed against PostgreSQL 17.
 
 <a id="pact-032"></a>
 ## PACT-032 — Implement building upgrades and the two builder queues

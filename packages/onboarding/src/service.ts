@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { withTransaction } from "@pact/db";
-import type { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 
 const sevenDays = 7 * 24 * 60 * 60_000;
 const destinationTypes = new Set(["contact", "court", "notice", "story"] as const);
@@ -20,6 +20,14 @@ export interface DraftView {
   readonly connectionCheckedAt: Date | null;
   readonly expiresAt: Date;
   readonly version: number;
+}
+
+export interface ActivationDraft {
+  id: string;
+  displayName: string;
+  handle: string;
+  portrait: string;
+  validatedAt: Date;
 }
 
 export class OnboardingError extends Error {
@@ -134,31 +142,61 @@ export class OnboardingService {
     return this.toView(row);
   }
 
-  async activateSandboxFixture(accountId: string): Promise<{ receiptId: string; draftId: string }> {
+  async validatedActivationDraft(client: PoolClient, accountId: string): Promise<ActivationDraft> {
     const now = this.options.now();
+    const account = await client.query<{
+      email_verified_at: Date | null;
+      terms_version: string | null;
+      status: string;
+    }>(
+      "SELECT email_verified_at, terms_version, status FROM accounts WHERE id = $1 AND product_scope = $2 FOR UPDATE",
+      [accountId, this.options.productScope],
+    );
+    const accountRow = account.rows[0];
+    if (
+      accountRow?.status !== "active" ||
+      !accountRow.email_verified_at ||
+      accountRow.terms_version !== this.options.currentTermsVersion
+    ) {
+      throw new OnboardingError("FORBIDDEN");
+    }
+    const draftResult = await client.query<DraftRow>(
+      "SELECT * FROM kingdom_drafts WHERE account_id = $1 AND product_scope = $2 FOR UPDATE",
+      [accountId, this.options.productScope],
+    );
+    const draft = draftResult.rows[0];
+    if (!draft || draft.expires_at <= now) throw new OnboardingError("DRAFT_EXPIRED");
+    if (!draft.display_name || !draft.proposed_handle || !draft.portrait) {
+      throw new OnboardingError("DRAFT_INCOMPLETE");
+    }
+    if (
+      !draft.connection_checked_at ||
+      draft.connection_checked_at > now ||
+      now.getTime() - draft.connection_checked_at.getTime() > sevenDays
+    ) {
+      throw new OnboardingError("CONNECTION_STALE");
+    }
+    return {
+      id: draft.id,
+      displayName: draft.display_name,
+      handle: draft.proposed_handle,
+      portrait: draft.portrait,
+      validatedAt: now,
+    };
+  }
+
+  async markDraftActivated(client: PoolClient, draftId: string, at: Date): Promise<void> {
+    await client.query("UPDATE kingdom_drafts SET activated_at = COALESCE(activated_at, $2) WHERE id = $1", [
+      draftId,
+      at,
+    ]);
+  }
+
+  async activateSandboxFixture(accountId: string): Promise<{ receiptId: string; draftId: string }> {
     return withTransaction(
       this.pool,
       async (client) => {
-        const account = await client.query<{ email_verified_at: Date | null; terms_version: string | null }>(
-          "SELECT email_verified_at, terms_version FROM accounts WHERE id = $1 AND product_scope = $2 FOR UPDATE",
-          [accountId, this.options.productScope],
-        );
-        const accountRow = account.rows[0];
-        if (!accountRow?.email_verified_at || accountRow.terms_version !== this.options.currentTermsVersion) {
-          throw new OnboardingError("FORBIDDEN");
-        }
-        const draftResult = await client.query<DraftRow>(
-          "SELECT * FROM kingdom_drafts WHERE account_id = $1 AND product_scope = $2 FOR UPDATE",
-          [accountId, this.options.productScope],
-        );
-        const draft = draftResult.rows[0];
-        if (!draft || draft.expires_at <= now) throw new OnboardingError("DRAFT_EXPIRED");
-        if (!draft.display_name || !draft.proposed_handle || !draft.portrait) {
-          throw new OnboardingError("DRAFT_INCOMPLETE");
-        }
-        if (!draft.connection_checked_at || now.getTime() - draft.connection_checked_at.getTime() > sevenDays) {
-          throw new OnboardingError("CONNECTION_STALE");
-        }
+        const draft = await this.validatedActivationDraft(client, accountId);
         const receiptId = randomUUID();
         const inserted = await client.query<{ receipt_id: string }>(
           `INSERT INTO sandbox_activation_fixtures(product_scope, account_id, draft_id, receipt_id)
@@ -175,10 +213,7 @@ export class OnboardingService {
             )
           ).rows[0]?.receipt_id;
         if (!finalReceipt) throw new Error("Sandbox activation receipt missing");
-        await client.query("UPDATE kingdom_drafts SET activated_at = COALESCE(activated_at, $2) WHERE id = $1", [
-          draft.id,
-          now,
-        ]);
+        await this.markDraftActivated(client, draft.id, draft.validatedAt);
         return { receiptId: finalReceipt, draftId: draft.id };
       },
       { isolation: "SERIALIZABLE" },

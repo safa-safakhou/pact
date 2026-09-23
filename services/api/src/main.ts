@@ -14,6 +14,8 @@ import {
   TokenDigester,
 } from "@pact/identity";
 import { InboxService } from "@pact/inbox";
+import { KingdomService } from "@pact/kingdom";
+import { ResourceLedger } from "@pact/ledger";
 import { McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
@@ -21,6 +23,7 @@ import { OpenRouterAuthService } from "@pact/openrouter";
 import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
 import { RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
+import { WorldClockService } from "@pact/world";
 import { readEnvironment } from "./config.js";
 import { loadOperatorPreflight } from "./operator-preflight.js";
 import { buildServer } from "./server.js";
@@ -52,6 +55,14 @@ const onboarding = new OnboardingService(pool, {
   productScope: "pact",
   currentTermsVersion: environment.CURRENT_TERMS_VERSION,
   now: clock.now,
+});
+const world = new WorldClockService(pool, "pact");
+await world.bootstrap();
+const kingdom = new KingdomService(pool, {
+  productScope: "pact",
+  onboarding,
+  world,
+  ledger: new ResourceLedger("pact"),
 });
 const dispatcher = new CommandDispatcher({
   pool,
@@ -121,6 +132,7 @@ const telegram =
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
+  kingdom,
   dispatcher,
   oauth,
   authority,

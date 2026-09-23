@@ -4,6 +4,7 @@ import type { AuthorityService } from "@pact/authority";
 import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
 import type { InboxService } from "@pact/inbox";
+import type { KingdomService } from "@pact/kingdom";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
@@ -52,6 +53,7 @@ function safeLogger(logger: boolean | object): false | Record<string, unknown> {
 export interface ApiModules {
   identity: IdentityService;
   onboarding: OnboardingService;
+  kingdom?: KingdomService;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
   authority?: AuthorityService;
@@ -141,7 +143,7 @@ export function buildServer(
   if (modules) {
     const operatorPreflight =
       modules.operatorPreflight ?? OperatorPreflight.unavailable("operator register not supplied");
-    registerIdentityRoutes(server, modules.identity, modules.onboarding, operatorPreflight);
+    registerIdentityRoutes(server, modules.identity, modules.onboarding, operatorPreflight, modules.kingdom);
     registerOperatorRoutes(server, operatorPreflight);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
     if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);

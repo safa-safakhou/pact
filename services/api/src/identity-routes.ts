@@ -1,5 +1,6 @@
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
+import { KingdomError, type KingdomService } from "@pact/kingdom";
 import type { OnboardingService } from "@pact/onboarding";
 import { OnboardingError } from "@pact/onboarding";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
@@ -71,6 +72,13 @@ async function safe<T>(reply: FastifyReply, operation: () => Promise<T>): Promis
       const status = error.code === "FORBIDDEN" ? 403 : 409;
       return reply.code(status).send({ error: { code: error.code, message: "The request could not be completed." } });
     }
+    if (error instanceof KingdomError) {
+      const status = error.code === "WORLD_PAUSED" ? 503 : 409;
+      if (error.code === "TICK_PENDING") reply.header("retry-after", "1");
+      return reply.code(status).send({
+        error: { code: error.code, message: "The request could not be completed.", suggestions: error.suggestions },
+      });
+    }
     if (error instanceof z.ZodError) {
       return reply.code(400).send({ error: { code: "INVALID_INPUT", message: "The request could not be completed." } });
     }
@@ -83,6 +91,7 @@ export function registerIdentityRoutes(
   identity: IdentityService,
   onboarding: OnboardingService,
   operatorPreflight: OperatorPreflight,
+  kingdom?: KingdomService,
 ): void {
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url.startsWith("/v1/auth/") || request.url.startsWith("/v1/setup/")) {
@@ -218,4 +227,23 @@ export function registerIdentityRoutes(
       return onboarding.activateSandboxFixture(session.accountId);
     }),
   );
+  if (kingdom) {
+    server.post("/v1/setup/activate", async (request, reply) =>
+      safe(reply, async () => {
+        const context = writeContext(request);
+        const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+        return kingdom.activate(session.accountId);
+      }),
+    );
+    server.get("/v1/kingdom/me", async (request, reply) =>
+      safe(reply, async () => {
+        const session = await identity.authenticate(sessionToken(request));
+        const current = await kingdom.getByAccount(session.accountId);
+        return (
+          current ??
+          reply.code(404).send({ error: { code: "KINGDOM_NOT_FOUND", message: "The request could not be completed." } })
+        );
+      }),
+    );
+  }
 }

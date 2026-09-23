@@ -15,4 +15,6 @@ Spending rules are purpose-specific:
 
 The ledger's module-owned rows are keyed by a future kingdom ID and contain no private messages. `deleteKingdomLedger` is the transaction-bound deletion hook for later account/kingdom erasure orchestration; PACT-031 must connect the kingdom to its authenticated owner. Do not issue ad hoc cross-module SQL against these tables.
 
+PACT-031 now calls `initializeKingdom` from the [real founding service](kingdom-founding.md). Its migration registers a deletion trigger for the linked ledger root when a ranked kingdom is erased, while independent ledger fixtures remain possible. This supersedes the earlier future-activation and future-ownership notes above.
+
 Run `npm run db:migrate` before starting the API/rules worker on the single VPS. The integration tests use isolated PostgreSQL 17 schemas and verify rollback, retry, caps, and concurrent spending. An outage does not replay missed production: the [world clock](world-clock.md) resumes at its last committed game minute.

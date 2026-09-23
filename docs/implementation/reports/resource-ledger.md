@@ -2,7 +2,7 @@
 
 Ticket: [PACT-030 / MNI-94](https://linear.app/mnim/issue/MNI-94/pact-030-implement-the-resource-ledger-provenance-and-storage)
 
-Implementation revision/PR: uncommitted local work on `master`; no PR or push.
+Implementation revision/PR: `cd1aac0` on local `master`; no PR or push.
 
 Verification environment: 23 September 2026; macOS arm64; Node.js 24; PostgreSQL 17 test database.
 

@@ -307,7 +307,7 @@ describe("private resumable setup", () => {
       onboarding.activateSandboxFixture(created.accountId),
     ]);
     expect(second).toEqual(first);
-    expect((await pool.query("SELECT to_regclass('kingdoms') AS kingdoms")).rows[0]?.kingdoms).toBeNull();
+    expect((await pool.query("SELECT 1 FROM kingdoms WHERE account_id = $1", [created.accountId])).rowCount).toBe(0);
   });
 
   it("rejects unverified accounts, expired drafts, and stale connection checks", async () => {
