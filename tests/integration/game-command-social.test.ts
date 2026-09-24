@@ -1,5 +1,11 @@
 import { randomUUID } from "node:crypto";
-import { CommandDispatcher, dispatchRunCommandTools, pactRunCommandTool, runToolCommandId } from "@pact/application";
+import {
+  CommandDispatcher,
+  dispatchRunCommandTools,
+  GameCommandHandler,
+  pactRunCommandTool,
+  runToolCommandId,
+} from "@pact/application";
 import { ExactHumanPermitService, ExposureService } from "@pact/authority";
 import { type CommandEnvelope, ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
@@ -26,7 +32,7 @@ import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { GameCommandHandler } from "../../services/api/src/game-command-handler.js";
+import { createInferenceGameRuntime } from "../../workers/inference/src/game-runtime.js";
 
 const databaseUrl = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 const productScope = ProductScopeSchema.parse("pact");
@@ -179,6 +185,54 @@ function command(
 }
 
 describe("shared gameplay command admission", () => {
+  it("uses the production inference composition for a fake-provider game command", async () => {
+    const sender = await kingdom();
+    const recipient = await kingdom();
+    const [kingdomA, kingdomB] = [sender.kingdomId, recipient.kingdomId].sort();
+    await pool.query(
+      `INSERT INTO social_contacts(product_scope, kingdom_a, kingdom_b, accepted_game_time_ms)
+       VALUES ('pact', $1, $2, 0)`,
+      [kingdomA, kingdomB],
+    );
+    const body = `Worker composition fixture ${randomUUID()}`;
+    const provider = new DeterministicFakeProvider({
+      scenario: "success",
+      toolName: pactRunCommandTool.name,
+      toolArguments: command(recipient.accountId, {
+        kind: "game.message.send",
+        recipientKingdomId: recipient.kingdomId,
+        body,
+      }),
+    });
+    const runtime = await createInferenceGameRuntime({
+      pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([provider]),
+      termsVersion: "terms-v1",
+      raidSeed: Buffer.alloc(32, 7),
+    });
+    const started = await runtime.runs.start({
+      accountId: sender.accountId,
+      objective: "Send one message",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished", modelCalls: 1 });
+    const message = await pool.query<{ sender_kingdom_id: string; agent_originated: boolean; operation_key: string }>(
+      "SELECT sender_kingdom_id, agent_originated, operation_key FROM direct_messages WHERE body = $1",
+      [body],
+    );
+    expect(message.rows).toHaveLength(1);
+    expect(message.rows[0]).toMatchObject({ sender_kingdom_id: sender.kingdomId, agent_originated: true });
+    const receipt = await pool.query<{ code: string }>(
+      "SELECT code FROM command_receipts WHERE command_id = $1 AND product_scope = 'pact'",
+      [message.rows[0]?.operation_key],
+    );
+    expect(receipt.rows).toEqual([{ code: "COMMITTED" }]);
+  });
+
   it("routes a fake-provider command through the agent dispatcher with server identity and one receipt", async () => {
     const sender = await kingdom();
     const recipient = await kingdom();

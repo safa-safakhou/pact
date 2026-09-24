@@ -1,4 +1,3 @@
-import { type AuthenticatedPrincipal, DispatcherError, type GameCommandMutation } from "@pact/application";
 import { type ExactHumanPermitService, ExposureError, type ExposureService } from "@pact/authority";
 import type { CommandEnvelope, GameAction } from "@pact/contracts";
 import { rulesCatalog, wholeResources } from "@pact/domain";
@@ -24,6 +23,8 @@ import {
   upgradeQuote,
 } from "@pact/kingdom";
 import type { PoolClient } from "pg";
+import type { GameCommandMutation } from "./dispatcher.js";
+import { type AuthenticatedPrincipal, DispatcherError } from "./types.js";
 
 /** Routes gameplay writes through one transaction and owner-derived domain services. */
 export class GameCommandHandler {

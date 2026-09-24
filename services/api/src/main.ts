@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
-import { CommandDispatcher } from "@pact/application";
+import { CommandDispatcher, GameCommandHandler } from "@pact/application";
 import { ApprovalService } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
@@ -42,7 +42,6 @@ import { RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { readEnvironment } from "./config.js";
-import { GameCommandHandler } from "./game-command-handler.js";
 import { GameReportReader } from "./game-report-reader.js";
 import { loadOperatorPreflight } from "./operator-preflight.js";
 import { buildServer } from "./server.js";

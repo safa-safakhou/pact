@@ -2,7 +2,7 @@
 
 Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
 
-Implementation revisions: `7eccf06`, `75224bf`, `d1457ed`, `cdf7c89`, `804198c`, `ca94561`, and `e1401b3`. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
+Implementation revisions: `7eccf06`, `75224bf`, `d1457ed`, `cdf7c89`, `804198c`, `ca94561`, `e1401b3`, and `988b63e`; current worker-composition increment pending commit. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
 
 ## Result
 
@@ -12,9 +12,9 @@ The dependency graph was corrected: PACT-049's shared command/API work precedes 
 
 | Acceptance criterion | Current evidence | Status |
 | --- | --- | --- |
-| Equivalent game commands/receipts from web, adapter, and MCP | `tests/integration/game-command-social.test.ts` exercises supply, scout, garrison, and raid command admission, replay, ownership denial, and Grain-charge receipt. A fake-provider run now submits a message through the same dispatcher and records one receipt; MCP and SDK tests cover scoped views and command admission separately. A single recorded cross-route scenario is still absent. | Incomplete |
+| Equivalent game commands/receipts from web, adapter, and MCP | `tests/integration/game-command-social.test.ts` exercises supply, scout, garrison, and raid command admission, replay, ownership denial, and Grain-charge receipt. The actual inference-process composition now accepts a fake-provider message via the same `@pact/application` handler as API and records one receipt; MCP and SDK tests cover scoped views and command admission separately. A single recorded cross-route scenario is still absent. | Incomplete |
 | Malicious counterpart text cannot change identity/scope/model/mandate and no hidden-state summary | A fake-provider fixture sends hostile-looking counterpart text with a forged human actor: the committed message belongs to the run owner, the selected model is unchanged, a human-only contact action is denied, and an added model field fails strict parsing. `tests/integration/world-views.test.ts` checks that another account's private balances/buildings/terms/ID are absent. Full model context assembly and all-route manipulation tests remain. | Incomplete |
-| Generated SDK, model adapter, and MCP use product-scoped contracts without human privileges | The run tool uses a generated game-action subset of the same versioned command envelope, and the fake provider executes through the shared dispatcher under a live `pact_run` lease. MCP still uses its separate holder; SDK/MCP contracts remain shared. Production inference-worker composition and durable tool results are missing. | Incomplete |
+| Generated SDK, model adapter, and MCP use product-scoped contracts without human privileges | The run tool uses a generated game-action subset of the same versioned command envelope, and the fake provider executes through the shared dispatcher under a live `pact_run` lease. MCP still uses its separate holder; SDK/MCP contracts remain shared. The inference worker now composes this shared handler; real-provider credentials and durable tool results are missing. | Incomplete |
 
 ## Run tool-admission increment
 
@@ -28,6 +28,10 @@ The dependency graph was corrected: PACT-049's shared command/API work precedes 
 
 The run service now assembles the messages and tool definitions once before reservation and uses the same values for the provider call. It estimates caller-controlled text from its UTF-8 byte length and includes serialized tool definitions instead of reserving the former fixed 50 input tokens. A PostgreSQL fixture starts a run whose objective exceeds its token allowance and proves that it finishes with no provider invocation, in-flight request, call count, or reserved tokens. This guards the admission boundary; tool-schema tokenization remains approximate, and actual usage is still reconciled from the provider response.
 
+## Inference-worker composition increment
+
+`GameCommandHandler` moved from the API transport package into PACT-owned `@pact/application`, so the API and inference worker now instantiate the same command implementation rather than maintaining two permission paths. `workers/inference/src/game-runtime.ts` builds the world-admitted dispatcher, domain services, exact live run-lease check, and generated `pact_command_v1` tool bridge. The single-VPS Compose service mounts the existing raid-seed secret into inference as well as API/rules. A PostgreSQL test creates this actual worker composition with a fake provider, submits a forged-actor message tool call, and verifies that the sender is the run owner and exactly one shared command receipt is committed. No paid provider was called. The deployed worker still registers only the deterministic fake provider and does not yet unwrap real model credentials or pass durable tool results into the next model call.
+
 ## Checks and documentation
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (134 tests against PostgreSQL 17), and `npm run lint` passed after report-read integration. The domain integration fixtures recheck scout owner/share and raid participant/public separation through `GameReportReader`; HTTP/MCP/SDK tests verify scoped adapter behavior. These checks do not establish hosted CI, deployment, client certification, or a player pilot. Updated [MCP API](../../api/mcp.md), [client SDK](../../api/client-sdk.md), [raid module](../../architecture/raids.md), [world views](../../architecture/world-views.md), [social service](../../architecture/social.md), [troop training](../../architecture/troop-training.md), [building queues](../../architecture/building-queues.md), and [module boundaries](../../architecture/modules.md).
@@ -38,4 +42,6 @@ For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run
 
 For the input-allowance increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108), `npm run test:integration` (141 against local PostgreSQL 17), and `npm run lint` passed. The new fixture verifies a low-budget run never invokes the provider. This remains local evidence only.
 
-Wire the product-owned game runtime into the production inference worker, persist tool-result/receipt handoff, add bounded Envoy context and richer approval/read behavior, and record one cross-route command fixture with more adversarial tests. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.
+For the worker-composition increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108), `npm run test:integration` (143 against local PostgreSQL 17), and `npm run lint` passed. This verifies the local fake-provider route through the worker's product wiring, not a live model or deployed VPS behavior.
+
+Wire real provider adapters and inference-only credential resolution, persist tool-result/receipt handoff, add bounded Envoy context and richer approval/read behavior, and record one cross-route command fixture with more adversarial tests. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.

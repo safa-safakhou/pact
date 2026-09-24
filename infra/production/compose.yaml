@@ -133,6 +133,7 @@ services:
       - identity_token_pepper
       - identity_encryption_key
       - model_credential_private_key
+      - raid_seed_encryption_key
     depends_on:
       privacy-replay:
         condition: service_completed_successfully

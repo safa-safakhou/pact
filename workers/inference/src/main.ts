@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { acquireJob, completeJob, createPool, failJob } from "@pact/db";
 import { DeterministicFakeProvider, ProviderRouter } from "@pact/model-provider";
-import { RunService } from "@pact/runs";
+import { createInferenceGameRuntime } from "./game-runtime.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
@@ -11,10 +11,15 @@ if (!databaseUrl) {
   const pool = createPool(databaseUrl);
   const clock = { now: () => new Date() };
   const workerId = `inference-${randomUUID()}`;
-  const runs = new RunService(pool, {
+  const { runs } = await createInferenceGameRuntime({
+    pool,
     productScope: "pact",
     clock,
     providerRouter: new ProviderRouter([new DeterministicFakeProvider({ scenario: "success" })]),
+    termsVersion: process.env.CURRENT_TERMS_VERSION ?? "connection-test-v1",
+    ...(process.env.RAID_SEED_ENCRYPTION_KEY_BASE64
+      ? { raidSeed: Buffer.from(process.env.RAID_SEED_ENCRYPTION_KEY_BASE64, "base64") }
+      : {}),
   });
 
   console.log("PACT inference worker ready; processing bounded envoy.run.tick jobs.");

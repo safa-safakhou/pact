@@ -9,7 +9,7 @@ PACT connection testing runs as an isolated Docker Compose project on the existi
 - Public edge: the existing Caddy container handles `/pact/*` and strips `/pact` before proxying to `pact-connection-test-gateway-1:8080` over `pact-edge`.
 - The shared edge removes its default `X-Frame-Options: DENY` only for `/pact/telegram/*` and applies `Content-Security-Policy: frame-ancestors https://web.telegram.org https://*.web.telegram.org`; all other routes retain the default framing denial.
 - The PACT gateway also binds `127.0.0.1:8088` for host-local recovery checks. PostgreSQL has no host port and joins only the internal `data` network.
-- API, rules, inference, notification, and channel processes are separate containers built from one pinned Node 24 image. Only inference mounts `model_credential_private_key`; API receives the public wrapping key.
+- API, rules, inference, notification, and channel processes are separate containers built from one pinned Node 24 image. Only inference mounts `model_credential_private_key`; API receives the public wrapping key. Rules, API, and inference mount the same `raid_seed_encryption_key` for deterministic raid commitments and shared game-command execution; the inference worker still uses only a fake provider in this MVP configuration.
 
 The original shared-edge Caddyfile backup is `/srv/agentic-world/infra/production/Caddyfile.before-pact-20260921`. Restoring it and restarting only the edge container removes the public PACT route without changing PACT data.
 
