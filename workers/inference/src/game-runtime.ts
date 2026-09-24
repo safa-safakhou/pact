@@ -48,7 +48,20 @@ export async function createInferenceGameRuntime(
     providerRouter: options.providerRouter,
     tools: [pactRunCommandTool],
     executeToolCalls: async (input) => {
-      await dispatchRunCommandTools(dispatcher, scope, input);
+      const receipts = await dispatchRunCommandTools(dispatcher, scope, input);
+      return input.calls.map((call, index) => {
+        const receipt = receipts[index];
+        if (!receipt) throw new Error("Missing command receipt after tool dispatch");
+        return {
+          callId: call.id,
+          content: JSON.stringify({
+            commandId: receipt.commandId,
+            code: receipt.code,
+            charged: receipt.charged,
+            ...(receipt.approvalId ? { approvalId: receipt.approvalId } : {}),
+          }),
+        };
+      });
     },
   });
   const ledger = new ResourceLedger(productScope);

@@ -69,6 +69,67 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("persists bounded tool receipt summaries and supplies them to the next provider step", async () => {
+    const accountId = await verifiedAccount(`run-tool-results-${randomUUID()}@example.com`);
+    const seen: string[][] = [];
+    const summary = JSON.stringify({ commandId: randomUUID(), code: "COMMITTED", charged: [] });
+    const service = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => clockNow },
+      providerRouter: new ProviderRouter([
+        {
+          provider: "fixture",
+          listModels: async () => [fakeProviderModel],
+          invoke: async (request) => {
+            seen.push(request.messages.map((message) => message.content));
+            return seen.length === 1
+              ? {
+                  stopReason: "tool_calls" as const,
+                  toolCalls: [{ id: "fixture-call", name: "fixture.command", arguments: {} }],
+                  usage: { inputTokens: 12, outputTokens: 7 },
+                }
+              : {
+                  stopReason: "completed" as const,
+                  toolCalls: [],
+                  usage: { inputTokens: 18, outputTokens: 7 },
+                };
+          },
+        },
+      ]),
+      tools: [
+        { name: "fixture.command", description: "Synthetic command", inputSchema: {}, parseArguments: () => ({}) },
+      ],
+      executeToolCalls: async () => [{ callId: "fixture-call", content: summary }],
+    });
+    const started = await service.start({
+      accountId,
+      objective: "Use the result of one synthetic command",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 2 },
+    });
+    expect((await service.executeModelCall(started.runId)).status).toBe("running");
+    const persisted = await pool.query<{ call_id: string; summary: string }>(
+      "SELECT call_id, summary FROM envoy_run_tool_results WHERE run_id = $1",
+      [started.runId],
+    );
+    expect(persisted.rows).toEqual([{ call_id: "fixture-call", summary }]);
+    expect((await service.executeModelCall(started.runId)).status).toBe("finished");
+    expect(seen[0]).not.toContain(`Server-recorded result for tool call fixture-call: ${summary}`);
+    expect(seen[1]).toContain(`Server-recorded result for tool call fixture-call: ${summary}`);
+    expect((await service.executeModelCall(started.runId)).status).toBe("finished");
+    expect(seen).toHaveLength(2);
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM envoy_run_tool_results WHERE run_id = $1", [started.runId]))
+        .rows[0]?.count,
+    ).toBe(1);
+    await pool.query("DELETE FROM envoy_runs WHERE run_id = $1", [started.runId]);
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM envoy_run_tool_results WHERE run_id = $1", [started.runId]))
+        .rows[0]?.count,
+    ).toBe(0);
+  });
+
   it("does not invoke a provider when the actual objective exceeds remaining input allowance", async () => {
     const accountId = await verifiedAccount(`run-input-budget-${randomUUID()}@example.com`);
     let invoked = 0;

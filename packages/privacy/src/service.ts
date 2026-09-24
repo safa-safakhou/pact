@@ -488,6 +488,11 @@ export class PrivacyService {
                     used_messages AS "usedMessages", used_calls AS "usedCalls", used_tokens AS "usedTokens",
                     created_at AS "createdAt", updated_at AS "updatedAt", stopped_at AS "stoppedAt"
              FROM envoy_runs WHERE product_scope = $1 AND account_id = $2`);
+    const runToolResults = await query(`SELECT t.run_id AS "runId", t.request_id AS "requestId",
+                    t.call_id AS "callId", t.summary, t.created_at AS "createdAt"
+             FROM envoy_run_tool_results t JOIN envoy_runs r ON r.run_id = t.run_id
+             WHERE t.product_scope = $1 AND r.product_scope = $1 AND r.account_id = $2
+             ORDER BY t.id`);
     const inbox = await query(`SELECT sequence, event_id AS "eventId", type, payload, occurred_at AS "occurredAt"
              FROM inbox_events WHERE product_scope = $1 AND account_id = $2 ORDER BY sequence`);
     const telegram =
@@ -574,6 +579,7 @@ export class PrivacyService {
       authoritySpends,
       authorityHumanPermits,
       runs,
+      runToolResults,
       inbox,
       telegram,
       messages,

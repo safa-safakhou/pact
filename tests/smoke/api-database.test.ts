@@ -43,6 +43,7 @@ describe("API/database smoke", () => {
       { name: "0011_inbox_acknowledgements.sql" },
       { name: "0012_credential_vault.sql" },
       { name: "0013_envoy_runs.sql" },
+      { name: "0013a_run_tool_results.sql" },
       { name: "0014_openrouter_oauth.sql" },
       { name: "0015_telegram_channel.sql" },
       { name: "0016_account_privacy.sql" },

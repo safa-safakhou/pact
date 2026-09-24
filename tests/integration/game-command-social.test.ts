@@ -231,6 +231,16 @@ describe("shared gameplay command admission", () => {
       [message.rows[0]?.operation_key],
     );
     expect(receipt.rows).toEqual([{ code: "COMMITTED" }]);
+    const toolResult = await pool.query<{ summary: string }>(
+      "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+      [started.runId],
+    );
+    expect(toolResult.rows).toHaveLength(1);
+    expect(JSON.parse(toolResult.rows[0]?.summary ?? "null")).toMatchObject({
+      commandId: message.rows[0]?.operation_key,
+      code: "COMMITTED",
+    });
+    expect(toolResult.rows[0]?.summary).not.toContain(body);
   });
 
   it("routes a fake-provider command through the agent dispatcher with server identity and one receipt", async () => {

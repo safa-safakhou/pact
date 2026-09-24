@@ -58,6 +58,12 @@ export interface RunLimits {
   readonly durationMs?: number;
 }
 
+/** A server-generated, bounded tool result; never raw model arguments or counterpart prose. */
+export interface RunToolResult {
+  readonly callId: string;
+  readonly content: string;
+}
+
 interface RunRow {
   run_id: string;
   account_id: string;
@@ -120,7 +126,7 @@ export class RunService {
         run: RunView;
         requestId: string;
         calls: readonly ProviderToolCall[];
-      }) => Promise<void>;
+      }) => Promise<readonly RunToolResult[]> | Promise<void>;
     },
   ) {}
 
@@ -362,12 +368,24 @@ export class RunService {
         return { kind: "finish" as const, row: await this.finish(client, row, "finished") };
       }
       if (row.in_flight_request_id) throw new RunError("IN_FLIGHT");
-      const messages =
+      const baseMessages =
         this.options.messagesForRun?.(toView(row)) ??
         ([
           { role: "system", content: "You are a PACT Envoy operating within fixed allowances." },
           { role: "user", content: row.objective },
         ] satisfies ProviderMessage[]);
+      const recentResults = await client.query<{ call_id: string; summary: string }>(
+        `SELECT call_id, summary FROM envoy_run_tool_results
+         WHERE product_scope = $1 AND run_id = $2 ORDER BY id DESC LIMIT 16`,
+        [this.options.productScope, runId],
+      );
+      const messages: readonly ProviderMessage[] = [
+        ...baseMessages,
+        ...recentResults.rows.reverse().map((result) => ({
+          role: "user" as const,
+          content: `Server-recorded result for tool call ${result.call_id}: ${result.summary}`,
+        })),
+      ];
       const tools = this.options.tools ?? [];
       const remainingTokens = row.max_tokens - row.used_tokens;
       const estimatedInput = estimateInputTokens(messages, tools);
@@ -399,6 +417,7 @@ export class RunService {
     let usageTokens = prepared.estimatedInput + prepared.outputCeiling;
     let errorCode: string | null = null;
     let ambiguous = false;
+    let toolResults: readonly RunToolResult[] = [];
     try {
       const credential = prepared.row.credential_id
         ? await this.options.credentialResolver?.(prepared.row.credential_id, prepared.row.account_id)
@@ -426,11 +445,26 @@ export class RunService {
       }
       if (result.response.toolCalls.length > 0) {
         if (!this.options.executeToolCalls) throw new ProviderError("MALFORMED_TOOL_CALL", false);
-        await this.options.executeToolCalls({
+        const returned = await this.options.executeToolCalls({
           run: toView(prepared.row),
           requestId: prepared.requestId,
           calls: result.response.toolCalls,
         });
+        if (returned) {
+          const expected = new Set(result.response.toolCalls.map((call) => call.id));
+          if (
+            returned.length !== expected.size ||
+            returned.some(
+              (item) =>
+                !expected.delete(item.callId) ||
+                Buffer.byteLength(item.callId, "utf8") > 256 ||
+                Buffer.byteLength(item.content, "utf8") === 0 ||
+                Buffer.byteLength(item.content, "utf8") > 4096,
+            )
+          )
+            throw new AmbiguousProviderCrash();
+          toolResults = returned;
+        }
       }
     } catch (error) {
       if (error instanceof AmbiguousProviderCrash) {
@@ -480,6 +514,13 @@ export class RunService {
         errorCode === "QUOTA_EXHAUSTED";
       const status: RunStatus =
         errorCode && errorCode !== "QUOTA_EXHAUSTED" ? "failed" : exhausted ? "finished" : "running";
+      for (const result of toolResults) {
+        await client.query(
+          `INSERT INTO envoy_run_tool_results(product_scope, run_id, request_id, call_id, summary)
+           VALUES ($1, $2, $3, $4, $5) ON CONFLICT (run_id, request_id, call_id) DO NOTHING`,
+          [this.options.productScope, runId, prepared.requestId, result.callId, result.content],
+        );
+      }
       const updated = await client.query<RunRow>(
         `UPDATE envoy_runs SET
            used_calls = $2, used_tokens = $3, model_calls = $4, reserved_tokens = 0,
