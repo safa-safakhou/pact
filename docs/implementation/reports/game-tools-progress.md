@@ -42,6 +42,12 @@ The worker now registers the existing API adapters only under `PACT_ENABLE_LIVE_
 
 For this increment, local Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (146 on PostgreSQL 17), and `npm run lint` passed. Relevant run API and single-VPS operations instructions were updated. The Linear acceptance checklist remains open.
 
+## Redelivered model-step safety increment
+
+On a retried durable inference job, the worker now checks for a prior unresolved provider request. It marks that run failed and ambiguous, releases its token reservation and write lease, and does not invoke the provider again. A PostgreSQL fixture holds the original synthetic provider call open, runs this recovery path, then lets the original response arrive: only one invocation occurs and late reconciliation cannot restart the run. This is conservative failure, not successful recovery of an unknown provider response or a real killed-process drill.
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (147 on PostgreSQL 17), `npm run lint`, backlog check, and diff check passed for this increment.
+
 ## Checks and documentation
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (134 tests against PostgreSQL 17), and `npm run lint` passed after report-read integration. The domain integration fixtures recheck scout owner/share and raid participant/public separation through `GameReportReader`; HTTP/MCP/SDK tests verify scoped adapter behavior. These checks do not establish hosted CI, deployment, client certification, or a player pilot. Updated [MCP API](../../api/mcp.md), [client SDK](../../api/client-sdk.md), [raid module](../../architecture/raids.md), [world views](../../architecture/world-views.md), [social service](../../architecture/social.md), [troop training](../../architecture/troop-training.md), [building queues](../../architecture/building-queues.md), and [module boundaries](../../architecture/modules.md).
@@ -56,4 +62,4 @@ For the worker-composition increment, Node 24 `npm run build`, `npm run typechec
 
 For the receipt-handoff increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108), `npm run test:integration` (144 against local PostgreSQL 17), and `npm run lint` passed after updating the hard-coded migration smoke list. `git diff --check` and backlog render/check passed before commit. No hosted CI or live provider was exercised.
 
-Add bounded authorized world/inbox context and richer approval/read behavior, recover conservatively from actual worker death around a committed tool result, and record one cross-route command fixture with more adversarial tests. Verify any explicitly enabled real API route separately before claiming provider compatibility. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.
+Add bounded authorized world/inbox context and richer approval/read behavior, run an actual worker-kill drill around a committed tool result, and record one cross-route command fixture with more adversarial tests. Verify any explicitly enabled real API route separately before claiming provider compatibility. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.

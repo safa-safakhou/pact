@@ -357,6 +357,26 @@ export class RunService {
     return toView(row);
   }
 
+  /** A redelivered durable job must never repeat an unresolved provider request. */
+  async failInterruptedModelCall(runId: string): Promise<RunView> {
+    return withTransaction(this.pool, async (client) => {
+      const row = await this.lockRun(client, runId);
+      if (row.status !== "running" || !row.in_flight_request_id) return toView(row);
+      const now = this.options.clock.now();
+      const failed = await client.query<RunRow>(
+        `UPDATE envoy_runs SET status = 'failed', ambiguous_crash = TRUE,
+           last_error_code = 'AMBIGUOUS_PROVIDER_CRASH', in_flight_request_id = NULL,
+           reserved_tokens = 0, stopped_at = $2, updated_at = $2
+         WHERE run_id = $1 RETURNING *`,
+        [runId, now],
+      );
+      await this.releaseLease(client, row.subject_id);
+      const next = failed.rows[0];
+      if (!next) throw new Error("interrupted run update failed");
+      return toView(next);
+    });
+  }
+
   /** One bounded provider step. Safe to retry; never extends the original deadline. */
   async executeModelCall(runId: string): Promise<RunView> {
     const router = this.options.providerRouter;

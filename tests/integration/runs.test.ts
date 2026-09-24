@@ -69,6 +69,60 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("fails an unresolved redelivered model step without a second provider call", async () => {
+    const accountId = await verifiedAccount(`run-redelivery-${randomUUID()}@example.com`);
+    let entered!: () => void;
+    let release!: () => void;
+    const providerEntered = new Promise<void>((resolve) => {
+      entered = resolve;
+    });
+    const providerBlocked = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let invoked = 0;
+    const service = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => clockNow },
+      providerRouter: new ProviderRouter([
+        {
+          provider: "fixture",
+          listModels: async () => [fakeProviderModel],
+          invoke: async () => {
+            invoked += 1;
+            entered();
+            await providerBlocked;
+            return { stopReason: "completed" as const, toolCalls: [], usage: { inputTokens: 10, outputTokens: 5 } };
+          },
+        },
+      ]),
+    });
+    const started = await service.start({
+      accountId,
+      objective: "Synthetic interrupted call",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 2 },
+    });
+    const original = service.executeModelCall(started.runId);
+    await providerEntered;
+    const recovered = await service.failInterruptedModelCall(started.runId);
+    expect(recovered).toMatchObject({
+      status: "failed",
+      ambiguousCrash: true,
+      lastErrorCode: "AMBIGUOUS_PROVIDER_CRASH",
+      reservedTokens: 0,
+    });
+    release();
+    await expect(original).resolves.toMatchObject({ status: "failed", modelCalls: 0 });
+    await expect(service.executeModelCall(started.runId)).resolves.toMatchObject({ status: "failed" });
+    expect(invoked).toBe(1);
+    const lease = await pool.query<{ released_at: Date | null }>(
+      "SELECT released_at FROM write_leases WHERE holder_id = $1",
+      [started.runId],
+    );
+    expect(lease.rows[0]?.released_at).not.toBeNull();
+  });
+
   it("persists bounded tool receipt summaries and supplies them to the next provider step", async () => {
     const accountId = await verifiedAccount(`run-tool-results-${randomUUID()}@example.com`);
     const seen: string[][] = [];

@@ -20,4 +20,8 @@ The next R06 credential-boundary fixture admits a synthetic API credential only 
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (146 on PostgreSQL 17), and `npm run lint` passed for this increment. No hosted CI, full VPS restore, or actual worker kill was run.
 
+An additional R06 redelivery fixture pauses an unresolved model invocation, marks the run failed/ambiguous as a redelivered job would, and then releases the original invocation. It observes one provider call, no restarted run, zero remaining reservation, and a released write lease. This tests the persisted in-flight recovery decision; it does not kill an operating-system process or reconstruct an unknown provider response.
+
+Local Node 24 build, typecheck, lint, 110 unit tests, and 147 PostgreSQL 17 integration tests passed after this increment. The full R01–R06 matrix and VPS recovery remain incomplete.
+
 PACT-051 remains open: the [R01–R06 matrix](../../architecture/rules-verification.md#r01r06-evidence-matrix-incomplete) maps current fixtures and gaps, but generated cross-module scenarios and fault injection around every durable command/tick transition have not been completed. This rehearsal is not a full VPS base/WAL backup restore, hosted CI run, or pilot observation.

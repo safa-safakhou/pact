@@ -57,6 +57,7 @@ if (!databaseUrl) {
         await failJob(pool, job.id, workerId);
         return;
       }
+      if (job.attempts > 1) await runs.failInterruptedModelCall(payload.runId);
       await runs.executeModelCall(payload.runId);
       await completeJob(pool, job.id, workerId);
     } catch (error) {
