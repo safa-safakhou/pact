@@ -6,6 +6,7 @@ import { ActionLimitService, ScoutService, TroopService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { GameReportReader } from "../../services/api/src/game-report-reader.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 let admin: Pool;
@@ -209,6 +210,9 @@ describe("timed scout operations", () => {
     ]);
     expect(await withTransaction(pool, (client) => scouts.finishDue(client, 720_000))).toBe(2);
     const report = await withTransaction(pool, (client) => scouts.readReport(client, source.accountId, operationId));
+    const reader = new GameReportReader(pool, scouts);
+    expect(await reader.read(source.accountId, "scout", operationId)).toEqual(report);
+    expect(await reader.read(stranger.accountId, "scout", operationId)).toBeNull();
     expect(report).toMatchObject({
       kind: "engine_report",
       wallLevel: 3,
@@ -231,6 +235,7 @@ describe("timed scout operations", () => {
     expect(await withTransaction(pool, (client) => scouts.readReport(client, stranger.accountId, operationId))).toEqual(
       report,
     );
+    expect(await reader.read(stranger.accountId, "scout", operationId)).toEqual(report);
   });
 
   it("reserves one agent troop commitment and closes it after observation", async () => {

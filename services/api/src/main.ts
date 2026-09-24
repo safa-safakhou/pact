@@ -43,6 +43,7 @@ import { TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { readEnvironment } from "./config.js";
 import { GameCommandHandler } from "./game-command-handler.js";
+import { GameReportReader } from "./game-report-reader.js";
 import { loadOperatorPreflight } from "./operator-preflight.js";
 import { buildServer } from "./server.js";
 
@@ -133,6 +134,7 @@ const raids = environment.RAID_SEED_ENCRYPTION_KEY_BASE64
       garrison,
     )
   : undefined;
+const reports = new GameReportReader(pool, scouts, raids);
 const gameCommands = new GameCommandHandler(
   social,
   (client, accountId, holderId) => runs.assertMcpWriteLease(client, accountId, holderId),
@@ -177,6 +179,7 @@ const mcp = new McpTransport({
   origin: environment.PACT_ORIGIN,
   clock,
   worldViews,
+  reports,
   runLeases: runs,
 });
 const approvals = new ApprovalService(pool, {
@@ -232,6 +235,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   onboarding,
   kingdom,
   worldViews,
+  reports,
   dispatcher,
   oauth,
   authority,

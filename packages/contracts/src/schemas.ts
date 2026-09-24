@@ -356,6 +356,15 @@ export const WorldViewQuerySchema = z
   .strict();
 export type WorldViewQuery = z.infer<typeof WorldViewQuerySchema>;
 
+/** Record identity is supplied by the caller; visibility is resolved from authentication. */
+export const ReportReadQuerySchema = z
+  .object({
+    kind: z.enum(["scout", "raid_participant", "raid_public"]),
+    recordId: z.uuid(),
+  })
+  .strict();
+export type ReportReadQuery = z.infer<typeof ReportReadQuerySchema>;
+
 export type ActorContext = z.infer<typeof ActorContextSchema>;
 export type ProductScope = z.infer<typeof ProductScopeSchema>;
 export type SubjectRef = z.infer<typeof SubjectRefSchema>;

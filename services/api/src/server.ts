@@ -24,6 +24,7 @@ import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
 import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
+import type { GameReportReader } from "./game-report-reader.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
 import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
 import { registerModelCredentialRoutes } from "./model-credential-routes.js";
@@ -33,6 +34,7 @@ import { registerOpenRouterRoutes } from "./openrouter-routes.js";
 import { OperatorPreflight } from "./operator-preflight.js";
 import { registerOperatorRoutes } from "./operator-routes.js";
 import { registerPrivacyRoutes } from "./privacy-routes.js";
+import { registerReportRoutes } from "./report-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
 import { registerTelegramRoutes } from "./telegram-routes.js";
 import { registerWorldViewRoutes } from "./world-view-routes.js";
@@ -56,6 +58,7 @@ export interface ApiModules {
   onboarding: OnboardingService;
   kingdom?: KingdomService;
   worldViews?: WorldViewService;
+  reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
   authority?: AuthorityService;
@@ -149,6 +152,7 @@ export function buildServer(
     registerOperatorRoutes(server, operatorPreflight);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.reports) registerReportRoutes(server, modules.identity, modules.reports, modules.oauth);
     if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);
     if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);
     if (modules.mcp && modules.oauth) {

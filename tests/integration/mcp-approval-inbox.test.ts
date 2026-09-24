@@ -57,6 +57,9 @@ beforeAll(async () => {
     worldViews: {
       read: async (viewer, target, minutes) => ({ audience: "public", viewer, target, minutes }),
     },
+    reports: {
+      read: async (viewer, kind, recordId) => (viewer === "missing" ? null : { viewer, kind, recordId }),
+    },
   });
   approvals = new ApprovalService(pool, {
     productScope: "pact",
@@ -141,6 +144,7 @@ describe("PACT-017 MCP transport", () => {
     const readOnly = { accountId, productScope, audience: "agent" as const, agentScopes: ["world:read" as const] };
     const readOnlyTools = await mcp.handlePost(readOnly, { method: "tools/list", id: 4 }, init.sessionId);
     expect(JSON.stringify(readOnlyTools.response)).toContain("pact_world_read_v1");
+    expect(JSON.stringify(readOnlyTools.response)).toContain("pact_report_read_v1");
     expect(JSON.stringify(readOnlyTools.response)).not.toContain("pact_command_v1");
     const readOnlyView = await mcp.handlePost(
       readOnly,
@@ -152,6 +156,30 @@ describe("PACT-017 MCP transport", () => {
       init.sessionId,
     );
     expect(readOnlyView.response).toMatchObject({ result: { structuredContent: { viewer: accountId, minutes: 3 } } });
+    const reportId = randomUUID();
+    const report = await mcp.handlePost(
+      readOnly,
+      {
+        method: "tools/call",
+        id: 10,
+        params: { name: "pact_report_read_v1", arguments: { kind: "scout", recordId: reportId } },
+      },
+      init.sessionId,
+    );
+    expect(report.response).toMatchObject({
+      result: { structuredContent: { viewer: accountId, kind: "scout", recordId: reportId } },
+    });
+    await expect(
+      mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 11,
+          params: { name: "pact_report_read_v1", arguments: { kind: "scout", recordId: reportId } },
+        },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(
       mcp.handlePost(
         readOnly,

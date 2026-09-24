@@ -3,16 +3,8 @@ import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
 import type { WorldViewService } from "@pact/kingdom";
 import type { OAuthService } from "@pact/oauth";
-import type { FastifyInstance, FastifyRequest } from "fastify";
-
-function sessionToken(request: FastifyRequest): string {
-  const match = request.headers.cookie
-    ?.split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith("pact_session="));
-  if (!match) throw new IdentityError("FORBIDDEN");
-  return decodeURIComponent(match.slice("pact_session=".length));
-}
+import type { FastifyInstance } from "fastify";
+import { authenticatedWorldViewer } from "./world-read-auth.js";
 
 /** The caller names only the subject; owner/participant/public visibility is derived by WorldViewService. */
 export function registerWorldViewRoutes(
@@ -27,15 +19,7 @@ export function registerWorldViewRoutes(
       reply.header("cache-control", "no-store");
       let accountId: string;
       try {
-        const bearer = request.headers.authorization;
-        if (bearer) {
-          if (!bearer.startsWith("Bearer ") || !oauth) throw new IdentityError("FORBIDDEN");
-          const grant = await oauth.introspectAccessToken(bearer.slice(7));
-          if (!grant?.scopes.includes("world:read")) throw new IdentityError("FORBIDDEN");
-          accountId = grant.accountId;
-        } else {
-          accountId = (await identity.authenticate(sessionToken(request))).accountId;
-        }
+        accountId = await authenticatedWorldViewer(request, identity, oauth);
       } catch (error) {
         if (error instanceof IdentityError) return reply.code(403).send({ error: { code: "FORBIDDEN" } });
         throw error;

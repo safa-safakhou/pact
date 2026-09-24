@@ -3,6 +3,7 @@ import {
   CommandEnvelopeSchema,
   CommandReceiptSchema,
   EventEnvelopeSchema,
+  ReportReadQuerySchema,
   ToolCallSchema,
   WorldViewQuerySchema,
 } from "./schemas.js";
@@ -12,6 +13,7 @@ export const receiptJsonSchema = z.toJSONSchema(CommandReceiptSchema, { target: 
 export const eventJsonSchema = z.toJSONSchema(EventEnvelopeSchema, { target: "draft-7" });
 export const toolCallJsonSchema = z.toJSONSchema(ToolCallSchema, { target: "draft-7" });
 export const worldViewQueryJsonSchema = z.toJSONSchema(WorldViewQuerySchema, { target: "draft-7" });
+export const reportReadQueryJsonSchema = z.toJSONSchema(ReportReadQuerySchema, { target: "draft-7" });
 
 export const httpCommandContract = {
   method: "POST",

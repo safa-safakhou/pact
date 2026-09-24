@@ -91,4 +91,18 @@ describe("platform-independent client SDK", () => {
       audience: "public",
     });
   });
+
+  it("reads a typed report through the same authenticated transport", async () => {
+    const transport: ClientTransport = {
+      send: async (request) => {
+        expect(request.method).toBe("GET");
+        expect(request.path).toBe("/v1/reports/raid_participant/00000000-0000-4000-8000-000000000001");
+        expect(request.headers["x-pact-api-version"]).toBe(API_VERSION);
+        return { status: 200, body: { winner: "defender" } };
+      },
+    };
+    await expect(
+      client(transport).readReport("raid_participant", "00000000-0000-4000-8000-000000000001"),
+    ).resolves.toEqual({ winner: "defender" });
+  });
 });

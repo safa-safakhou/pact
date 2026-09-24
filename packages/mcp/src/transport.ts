@@ -3,6 +3,8 @@ import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/applicatio
 import {
   commandJsonSchema,
   ProductScopeSchema,
+  ReportReadQuerySchema,
+  reportReadQueryJsonSchema,
   SCHEMA_VERSION,
   WorldViewQuerySchema,
   worldViewQueryJsonSchema,
@@ -42,6 +44,7 @@ export interface McpTransportOptions {
   readonly origin: string;
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
+  readonly reports?: ReportReader;
   readonly runLeases?: {
     openMcpLease(input: { accountId: string; holderId: string }): Promise<{ leaseId: string; expiresAt: Date }>;
   };
@@ -50,6 +53,15 @@ export interface McpTransportOptions {
 /** Domain-owned projection behind a product-neutral MCP read port. */
 export interface WorldViewReader {
   read(accountId: string, targetKingdomId: string, forecastMinutes: number): Promise<unknown>;
+}
+
+/** Product-owned authorization behind a product-neutral MCP read port. */
+export interface ReportReader {
+  read(
+    accountId: string,
+    kind: "scout" | "raid_participant" | "raid_public",
+    recordId: string,
+  ): Promise<unknown | null>;
 }
 
 const SANDBOX_TOOLS = [
@@ -103,6 +115,11 @@ const WORLD_READ_TOOL = {
   description: "Read an authorized factual kingdom view. Other players' hidden state is never returned.",
   inputSchema: worldViewQueryJsonSchema,
 } as const;
+const REPORT_READ_TOOL = {
+  name: "pact_report_read_v1",
+  description: "Read one authorized scout or raid report; private reports require participation.",
+  inputSchema: reportReadQueryJsonSchema,
+} as const;
 const RUN_OPEN_TOOL = {
   name: "run.open",
   description: "Open one bounded write lease for this authenticated MCP session; this does not start model inference.",
@@ -135,6 +152,7 @@ export class McpTransport {
           response: this.result(body.id, {
             tools: [
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [WORLD_READ_TOOL] : []),
+              ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [REPORT_READ_TOOL] : []),
               ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
             ],
@@ -232,6 +250,17 @@ export class McpTransport {
       return {
         content: [{ type: "text", text: JSON.stringify(view) }],
         structuredContent: view as Record<string, unknown>,
+      };
+    }
+    if (name === REPORT_READ_TOOL.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.reports) throw new McpError("FORBIDDEN", 403);
+      const query = ReportReadQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const report = await this.options.reports.read(principal.accountId, query.data.kind, query.data.recordId);
+      if (!report) throw new McpError("INVALID_REQUEST", 404);
+      return {
+        content: [{ type: "text", text: JSON.stringify(report) }],
+        structuredContent: report as Record<string, unknown>,
       };
     }
     if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);

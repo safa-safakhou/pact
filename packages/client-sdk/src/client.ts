@@ -9,6 +9,8 @@ import {
   EVENT_SCHEMA_VERSION,
   EventEnvelopeSchema,
   ProductScopeSchema,
+  type ReportReadQuery,
+  ReportReadQuerySchema,
   SCHEMA_VERSION,
 } from "@pact/contracts";
 import type {
@@ -145,6 +147,18 @@ export class PactClient<A extends ClientAudience> {
     const response = await this.send({
       method: "GET",
       path: `/v1/world/kingdoms/${encodeURIComponent(targetKingdomId)}?forecastMinutes=${encodeURIComponent(String(forecastMinutes))}`,
+      headers: { "x-pact-api-version": API_VERSION },
+    });
+    if (response.status < 200 || response.status >= 300) throw responseError(response.status, response.body);
+    return response.body;
+  }
+
+  /** Read a single server-authorized report without claiming viewer identity in the request. */
+  async readReport(kind: ReportReadQuery["kind"], recordId: string): Promise<unknown> {
+    const query = ReportReadQuerySchema.parse({ kind, recordId });
+    const response = await this.send({
+      method: "GET",
+      path: `/v1/reports/${query.kind}/${encodeURIComponent(query.recordId)}`,
       headers: { "x-pact-api-version": API_VERSION },
     });
     if (response.status < 200 || response.status >= 300) throw responseError(response.status, response.body);

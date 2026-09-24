@@ -2,10 +2,18 @@ import { randomUUID } from "node:crypto";
 import { ExposureService } from "@pact/authority";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { wholeResources } from "@pact/domain";
-import { ActionLimitService, GarrisonService, RaidRandomnessService, RaidService, TroopService } from "@pact/kingdom";
+import {
+  ActionLimitService,
+  GarrisonService,
+  RaidRandomnessService,
+  RaidService,
+  ScoutService,
+  TroopService,
+} from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { GameReportReader } from "../../services/api/src/game-report-reader.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 let admin: Pool;
@@ -206,6 +214,14 @@ describe("raid lifecycle", () => {
     expect((secondReport.eligibleUnitIds as string[]).some((id) => firstLosses.has(id))).toBe(false);
     expect(await withTransaction(pool, (client) => raids.resolveDue(client, 1_320_000))).toBe(0);
     const publicReport = await withTransaction(pool, (client) => raids.readPublicReport(client, firstRaid.raidId));
+    const reader = new GameReportReader(
+      pool,
+      new ScoutService("pact", ledger, troops, new ActionLimitService("pact"), exposure),
+      raids,
+    );
+    expect(await reader.read(target.accountId, "raid_participant", firstRaid.raidId)).toEqual(firstReport);
+    expect(await reader.read(stranger.accountId, "raid_participant", firstRaid.raidId)).toBeNull();
+    expect(await reader.read(stranger.accountId, "raid_public", firstRaid.raidId)).toEqual(publicReport);
     expect(JSON.stringify(publicReport)).not.toContain("eligibleUnitIds");
     expect(JSON.stringify(publicReport)).not.toContain("lootTaken");
     await expect(
