@@ -5,6 +5,7 @@ import type {
   ModelProviderAdapter,
   ProviderMessage,
   ProviderRouter,
+  ProviderToolCall,
   ProviderToolDefinition,
 } from "@pact/model-provider";
 import { ProviderError } from "@pact/model-provider";
@@ -101,6 +102,11 @@ export class RunService {
       credentialResolver?: (credentialId: string, accountId: string) => Promise<Uint8Array>;
       tools?: readonly ProviderToolDefinition[];
       messagesForRun?: (run: RunView) => readonly ProviderMessage[];
+      executeToolCalls?: (input: {
+        run: RunView;
+        requestId: string;
+        calls: readonly ProviderToolCall[];
+      }) => Promise<void>;
     },
   ) {}
 
@@ -196,6 +202,18 @@ export class RunService {
       `SELECT 1 FROM write_leases WHERE product_scope = $1 AND subject_id = $2
        AND holder_kind = 'mcp' AND holder_id = $3 AND released_at IS NULL AND expires_at > $4 FOR SHARE`,
       [this.options.productScope, accountId, holderId, this.options.clock.now()],
+    );
+    if (!result.rowCount) throw new RunError("FORBIDDEN");
+  }
+
+  /** An Envoy run may write only for its own account while its run lease is live. */
+  async assertRunWriteLease(client: PoolClient, accountId: string, runId: string): Promise<void> {
+    const result = await client.query(
+      `SELECT 1 FROM write_leases l JOIN envoy_runs r ON r.run_id = l.run_id
+       WHERE l.product_scope = $1 AND l.subject_id = r.subject_id AND l.holder_kind = 'pact_run'
+         AND l.holder_id = $3 AND l.released_at IS NULL AND l.expires_at > $4
+         AND r.account_id = $2 AND r.status = 'running' FOR SHARE OF l, r`,
+      [this.options.productScope, accountId, runId, this.options.clock.now()],
     );
     if (!result.rowCount) throw new RunError("FORBIDDEN");
   }
@@ -374,6 +392,14 @@ export class RunService {
       if ("inputTokens" in result.usage) {
         usageTokens = result.usage.inputTokens + result.usage.outputTokens;
       }
+      if (result.response.toolCalls.length > 0) {
+        if (!this.options.executeToolCalls) throw new ProviderError("MALFORMED_TOOL_CALL", false);
+        await this.options.executeToolCalls({
+          run: toView(prepared.row),
+          requestId: prepared.requestId,
+          calls: result.response.toolCalls,
+        });
+      }
     } catch (error) {
       if (error instanceof AmbiguousProviderCrash) {
         ambiguous = true;
@@ -420,11 +446,8 @@ export class RunService {
         usedTokens >= row.max_tokens ||
         row.deadline_at <= now ||
         errorCode === "QUOTA_EXHAUSTED";
-      const status: RunStatus = exhausted
-        ? errorCode && errorCode !== "QUOTA_EXHAUSTED"
-          ? "failed"
-          : "finished"
-        : "running";
+      const status: RunStatus =
+        errorCode && errorCode !== "QUOTA_EXHAUSTED" ? "failed" : exhausted ? "finished" : "running";
       const updated = await client.query<RunRow>(
         `UPDATE envoy_runs SET
            used_calls = $2, used_tokens = $3, model_calls = $4, reserved_tokens = 0,

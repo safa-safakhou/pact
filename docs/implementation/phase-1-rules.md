@@ -592,6 +592,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **Evidence**
 
 - 24 Sep 2026: docs/implementation/reports/game-tools-progress.md records dependency correction, scoped HTTP/SDK/MCP world and authorized report reads, social/troop/building/supply/scout/garrison/raid commands including exact human seizure, 107 unit and 134 PostgreSQL integration tests, and remaining PACT-049 acceptance work. Revisions 7eccf06, 75224bf, d1457ed, and report-read increment. Not Done.
+- 24 Sep 2026: run tool-admission increment passes router-validated calls to an injected executor, fails closed without one, and checks the exact active run lease. docs/implementation/reports/game-tools-progress.md and docs/api/runs.md record the limits. Node 24 build/typecheck/unit (107)/PostgreSQL integration (137) passed. Full model-dispatch route remains incomplete.
 
 <a id="pact-050"></a>
 ## PACT-050 — Implement gameplay retirement and account-deletion settlement

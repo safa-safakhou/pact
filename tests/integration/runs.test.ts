@@ -69,6 +69,103 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("passes only validated provider tool calls to the run executor and checks the exact run lease", async () => {
+    const accountId = await verifiedAccount(`run-tools-${randomUUID()}@example.com`);
+    const otherAccountId = await verifiedAccount(`run-tools-other-${randomUUID()}@example.com`);
+    const received: Array<{ runId: string; accountId: string; requestId: string; value: number }> = [];
+    const service = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => clockNow },
+      providerRouter: new ProviderRouter([
+        new DeterministicFakeProvider({ scenario: "success", toolName: "fixture.read", toolArguments: { value: 7 } }),
+      ]),
+      tools: [
+        {
+          name: "fixture.read",
+          description: "A validated test-only tool",
+          inputSchema: { type: "object" },
+          parseArguments: (input) => {
+            if (!input || typeof input !== "object" || !("value" in input) || input.value !== 7) {
+              throw new Error("invalid tool arguments");
+            }
+            return { value: 7 };
+          },
+        },
+      ],
+      executeToolCalls: async ({ run, requestId, calls }) => {
+        expect(calls).toHaveLength(1);
+        const call = calls[0];
+        if (!call) throw new Error("missing tool call");
+        received.push({
+          runId: run.runId,
+          accountId: run.accountId,
+          requestId,
+          value: (call.arguments as { value: number }).value,
+        });
+      },
+    });
+    const started = await service.start({
+      accountId,
+      objective: "read test data",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    const lease = await pool.connect();
+    try {
+      await expect(service.assertRunWriteLease(lease, accountId, started.runId)).resolves.toBeUndefined();
+      await expect(service.assertRunWriteLease(lease, otherAccountId, started.runId)).rejects.toMatchObject({
+        code: "FORBIDDEN",
+      });
+      await expect(service.assertMcpWriteLease(lease, accountId, started.runId)).rejects.toMatchObject({
+        code: "FORBIDDEN",
+      });
+    } finally {
+      lease.release();
+    }
+    const finished = await service.executeModelCall(started.runId);
+    expect(finished.status).toBe("finished");
+    expect(received).toEqual([
+      {
+        runId: started.runId,
+        accountId,
+        requestId: expect.any(String),
+        value: 7,
+      },
+    ]);
+    const endedLease = await pool.connect();
+    try {
+      await expect(service.assertRunWriteLease(endedLease, accountId, started.runId)).rejects.toMatchObject({
+        code: "FORBIDDEN",
+      });
+    } finally {
+      endedLease.release();
+    }
+  });
+
+  it("fails closed when a provider returns a tool call without a run executor", async () => {
+    const accountId = await verifiedAccount(`run-no-tool-executor-${randomUUID()}@example.com`);
+    const service = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => clockNow },
+      providerRouter: new ProviderRouter([
+        new DeterministicFakeProvider({ scenario: "success", toolName: "fixture.read" }),
+      ]),
+      tools: [{ name: "fixture.read", description: "test", inputSchema: {}, parseArguments: () => ({}) }],
+    });
+    const started = await service.start({
+      accountId,
+      objective: "read test data",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 3 },
+    });
+    const failed = await service.executeModelCall(started.runId);
+    expect(failed.status).toBe("failed");
+    expect(failed.lastErrorCode).toBe("MALFORMED_TOOL_CALL");
+    expect(failed.usedCalls).toBe(1);
+  });
+
   it("stops at call limits, preserves allowance on resume, and rejects deadline extension", async () => {
     const accountId = await verifiedAccount(`run-${randomUUID()}@example.com`);
     const service = runs();
