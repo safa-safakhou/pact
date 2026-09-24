@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { commandJsonSchema, httpCommandContract, mcpCommandTool } from "./json-schema.js";
-import { validateCommandForMcp, validateCommandForWeb, validateProviderToolCommand } from "./schemas.js";
+import { commandJsonSchema, gameCommandJsonSchema, httpCommandContract, mcpCommandTool } from "./json-schema.js";
+import {
+  validateCommandForMcp,
+  validateCommandForWeb,
+  validateProviderGameCommand,
+  validateProviderToolCommand,
+} from "./schemas.js";
 
 const valid = {
   schemaVersion: "pact.command.v1",
@@ -40,5 +45,18 @@ describe("shared command validation", () => {
     expect(commandJsonSchema).toMatchObject({ type: "object", additionalProperties: false });
     expect(JSON.stringify(commandJsonSchema)).toContain("pact.command.v1");
     expect(JSON.stringify(commandJsonSchema)).not.toContain("execute.code");
+  });
+
+  it("limits the PACT run tool to game actions without changing the shared envelope", () => {
+    const game = {
+      ...valid,
+      action: { kind: "game.message.send", recipientKingdomId: valid.commandId, body: "hello" },
+    };
+    expect(validateProviderGameCommand(game)).toEqual(game);
+    expect(() => validateProviderGameCommand(valid)).toThrow();
+    expect(() => validateProviderGameCommand({ ...game, model: "attacker" })).toThrow();
+    expect(gameCommandJsonSchema).toMatchObject({ type: "object", additionalProperties: false });
+    expect(JSON.stringify(gameCommandJsonSchema)).toContain("game.message.send");
+    expect(JSON.stringify(gameCommandJsonSchema)).not.toContain("sandbox.echo");
   });
 });

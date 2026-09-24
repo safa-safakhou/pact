@@ -137,7 +137,7 @@ const raids = environment.RAID_SEED_ENCRYPTION_KEY_BASE64
 const reports = new GameReportReader(pool, scouts, raids);
 const gameCommands = new GameCommandHandler(
   social,
-  (client, accountId, holderId) => runs.assertMcpWriteLease(client, accountId, holderId),
+  (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
   kingdom,
   troops,
   buildings,

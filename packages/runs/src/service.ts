@@ -218,6 +218,21 @@ export class RunService {
     if (!result.rowCount) throw new RunError("FORBIDDEN");
   }
 
+  /** Shared agent admission accepts the exact MCP session or the owner's active PACT run. */
+  async assertAgentWriteLease(client: PoolClient, accountId: string, holderId: string): Promise<void> {
+    const result = await client.query(
+      `SELECT 1 FROM write_leases l LEFT JOIN envoy_runs r ON r.run_id = l.run_id
+       WHERE l.product_scope = $1 AND l.holder_id = $3
+         AND l.released_at IS NULL AND l.expires_at > $4
+         AND ((l.holder_kind = 'mcp' AND l.subject_id = $2)
+           OR (l.holder_kind = 'pact_run' AND r.account_id = $2
+             AND r.subject_id = l.subject_id AND r.status = 'running'))
+       FOR SHARE OF l`,
+      [this.options.productScope, accountId, holderId, this.options.clock.now()],
+    );
+    if (!result.rowCount) throw new RunError("FORBIDDEN");
+  }
+
   async stop(accountId: string, runId: string): Promise<RunView> {
     return withTransaction(this.pool, async (client) => {
       const row = await this.lockRun(client, runId);

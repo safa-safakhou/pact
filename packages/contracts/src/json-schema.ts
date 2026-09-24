@@ -3,12 +3,14 @@ import {
   CommandEnvelopeSchema,
   CommandReceiptSchema,
   EventEnvelopeSchema,
+  GameCommandEnvelopeSchema,
   ReportReadQuerySchema,
   ToolCallSchema,
   WorldViewQuerySchema,
 } from "./schemas.js";
 
 export const commandJsonSchema = z.toJSONSchema(CommandEnvelopeSchema, { target: "draft-7" });
+export const gameCommandJsonSchema = z.toJSONSchema(GameCommandEnvelopeSchema, { target: "draft-7" });
 export const receiptJsonSchema = z.toJSONSchema(CommandReceiptSchema, { target: "draft-7" });
 export const eventJsonSchema = z.toJSONSchema(EventEnvelopeSchema, { target: "draft-7" });
 export const toolCallJsonSchema = z.toJSONSchema(ToolCallSchema, { target: "draft-7" });

@@ -239,6 +239,9 @@ export const CommandEnvelopeSchema = z
   })
   .strict();
 
+/** A provider's game tool is a strict subset of the shared command envelope. */
+export const GameCommandEnvelopeSchema = CommandEnvelopeSchema.extend({ action: GameActionSchema });
+
 export const ReceiptCodeSchema = z.enum([
   "COMMITTED",
   "ALREADY_COMMITTED",
@@ -389,4 +392,8 @@ export function validateCommandForMcp(input: unknown): CommandEnvelope {
 
 export function validateProviderToolCommand(input: unknown): CommandEnvelope {
   return CommandEnvelopeSchema.parse(input);
+}
+
+export function validateProviderGameCommand(input: unknown): CommandEnvelope & { action: GameAction } {
+  return GameCommandEnvelopeSchema.parse(input);
 }

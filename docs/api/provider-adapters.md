@@ -17,6 +17,8 @@ Pricing uses integer micro-US-dollars per million tokens and ceiling division—
 
 Adapters return provider-neutral tool calls. The router checks the tool name, unique nonempty call ID, maximum call count, and the tool definition's argument parser before application code sees a call. Provider tool arguments can then enter the existing shared command validator without changing command schemas or authenticated actor identity.
 
+PACT's `pactRunCommandTool` uses a generated game-action subset of the shared `pact.command.v1` envelope. The product-owned `dispatchRunCommandTools` bridge deterministically derives each command UUID from the run, provider request, and tool-call IDs, replaces model-supplied identity with the run's agent principal, and sends each call through `CommandDispatcher`. Ordinary dispatcher denials become typed receipts; a committed command's retry retrieves the same receipt and a changed payload conflicts. Human-only game actions remain forbidden. This is covered by a fake-provider/PostgreSQL fixture, not by live provider certification. The production inference worker has not yet composed this bridge or durable tool-result handoff.
+
 Only the following sanitized codes cross the adapter boundary: `CANCELLED`, `INVALID_CREDENTIAL`, `MALFORMED_TOOL_CALL`, `PROVIDER_UNAVAILABLE`, `QUOTA_EXHAUSTED`, `TIMEOUT`, `UNSUPPORTED_MODEL`, and `UNKNOWN_PROVIDER`. Arbitrary SDK/network errors become `PROVIDER_UNAVAILABLE`; their message, response body, headers, credential, and bearer data are not copied into the public error.
 
 ## Contract harness
