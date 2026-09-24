@@ -54,6 +54,12 @@ One recorded social action now runs through `createWebPactClient` plus HTTP, the
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (149 on PostgreSQL 17), `npm run lint`, backlog check, and diff check passed. No hosted CI, live provider, or VPS deployment was exercised.
 
+## Owner-inbox metadata increment
+
+The inbox module now exposes an owner-scoped, newest-first metadata selector capped at eight events. The inference composition adds this to model input as user-role data, filtering arbitrary event types and excluding all payload fields. The PostgreSQL fixture publishes ten owner events with hostile text in each payload and a separate account event: the provider sees eight owner event types, no hostile prose, and no other-account event ID. The existing world snapshot and fixed system prompt remain unchanged. This narrows the context gap but does not implement full conversation selection or prove that a real model will resist every prompt injection. PACT-049 remains In Progress.
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (149 on PostgreSQL 17), `npm run lint`, backlog render/check, and `git diff --check` passed. No hosted CI, live provider call, VPS deployment, or player pilot was run.
+
 ## Checks and documentation
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (134 tests against PostgreSQL 17), and `npm run lint` passed after report-read integration. The domain integration fixtures recheck scout owner/share and raid participant/public separation through `GameReportReader`; HTTP/MCP/SDK tests verify scoped adapter behavior. These checks do not establish hosted CI, deployment, client certification, or a player pilot. Updated [MCP API](../../api/mcp.md), [client SDK](../../api/client-sdk.md), [raid module](../../architecture/raids.md), [world views](../../architecture/world-views.md), [social service](../../architecture/social.md), [troop training](../../architecture/troop-training.md), [building queues](../../architecture/building-queues.md), and [module boundaries](../../architecture/modules.md).

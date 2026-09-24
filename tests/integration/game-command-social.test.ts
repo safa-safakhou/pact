@@ -16,6 +16,7 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
+import { InboxService } from "@pact/inbox";
 import {
   ActionLimitService,
   BuildingEngine,
@@ -206,6 +207,11 @@ describe("shared gameplay command admission", () => {
        VALUES ($1, 'pact', $2, $3, $4, false, $5, 0)`,
       [messageId, counterpart.kingdomId, owner.kingdomId, hostile, `context:${messageId}`],
     );
+    const inbox = new InboxService(pool, { productScope: "pact", clock: { now: () => new Date() } });
+    const otherEventId = await inbox.publish(counterpart.accountId, "raid.private", { text: hostile });
+    for (let index = 0; index < 10; index += 1) {
+      await inbox.publish(owner.accountId, "message.received", { text: hostile, index });
+    }
     let providerMessages: readonly { role: string; content: string }[] = [];
     const runtime = await createInferenceGameRuntime({
       pool,
@@ -237,6 +243,15 @@ describe("shared gameplay command admission", () => {
     expect(Buffer.byteLength(snapshot?.content ?? "", "utf8")).toBeLessThan(8_300);
     expect(JSON.stringify(providerMessages)).not.toContain(hostile);
     expect(JSON.stringify(providerMessages)).not.toContain(counterpart.kingdomId);
+    expect(JSON.stringify(providerMessages)).not.toContain(otherEventId);
+    const inboxContext = providerMessages.find((message) =>
+      message.content.includes("Recent owner inbox event metadata"),
+    );
+    expect(inboxContext?.role).toBe("user");
+    expect(inboxContext?.content).toContain("message.received");
+    expect((inboxContext?.content.match(/message.received/g) ?? []).length).toBe(8);
+    expect(Buffer.byteLength(inboxContext?.content ?? "", "utf8")).toBeLessThan(2_000);
+    expect(inboxContext?.content).not.toContain(hostile);
     expect(providerMessages[0]?.role).toBe("system");
     expect(providerMessages[0]?.content).not.toContain(hostile);
   });

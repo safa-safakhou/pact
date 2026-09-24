@@ -1,6 +1,7 @@
 import { CommandDispatcher, dispatchRunCommandTools, GameCommandHandler, pactRunCommandTool } from "@pact/application";
 import { ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
+import { InboxService } from "@pact/inbox";
 import {
   ActionLimitService,
   BuildingEngine,
@@ -52,12 +53,13 @@ export async function createInferenceGameRuntime(
   let dispatcher: CommandDispatcher;
   let kingdom: KingdomService;
   const views = new WorldViewService(pool, productScope);
+  const inbox = new InboxService(pool, { productScope, clock });
   const runs = new RunService(pool, {
     productScope,
     clock,
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
-    messagesForRun: (run) => ownerRunContext(run, kingdom, views),
+    messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox),
     tools: [pactRunCommandTool],
     executeToolCalls: async (input) => {
       const receipts = await dispatchRunCommandTools(dispatcher, scope, input);

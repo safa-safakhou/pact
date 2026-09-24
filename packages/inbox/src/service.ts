@@ -25,6 +25,13 @@ export interface InboxPage {
   readonly resumeFrom?: string;
 }
 
+export interface InboxEventMetadata {
+  readonly sequence: string;
+  readonly eventId: string;
+  readonly type: string;
+  readonly occurredAt: string;
+}
+
 export class InboxService {
   constructor(
     private readonly pool: Pool,
@@ -102,6 +109,28 @@ export class InboxService {
     }));
     const nextCursor = events.length > 0 ? (events[events.length - 1]?.sequence ?? null) : null;
     return { events, nextCursor };
+  }
+
+  /** A bounded, payload-free owner feed for context assembly; not a substitute for inbox.read. */
+  async listRecentMetadata(accountId: string, limit = 8): Promise<readonly InboxEventMetadata[]> {
+    const result = await this.pool.query<{
+      sequence: string;
+      event_id: string;
+      type: string;
+      occurred_at: Date;
+    }>(
+      `SELECT sequence::text, event_id, type, occurred_at
+       FROM inbox_events
+       WHERE product_scope = $1 AND account_id = $2
+       ORDER BY sequence DESC LIMIT $3`,
+      [this.options.productScope, accountId, Math.min(Math.max(limit, 1), 8)],
+    );
+    return result.rows.map((row) => ({
+      sequence: row.sequence,
+      eventId: row.event_id,
+      type: row.type,
+      occurredAt: row.occurred_at.toISOString(),
+    }));
   }
 
   async acknowledge(accountId: string, cursor: string): Promise<{ lastSequence: string }> {
