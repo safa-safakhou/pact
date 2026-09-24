@@ -16,6 +16,7 @@ import {
   SupplyService,
   SupplySettlementService,
   TroopService,
+  WorldViewService,
 } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { ProviderRouter } from "@pact/model-provider";
@@ -23,6 +24,7 @@ import { OnboardingService } from "@pact/onboarding";
 import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
+import { ownerRunContext } from "./run-context.js";
 
 export interface InferenceGameRuntimeOptions {
   readonly pool: Pool;
@@ -48,11 +50,14 @@ export async function createInferenceGameRuntime(
   const world = new WorldClockService(pool, productScope);
   await world.bootstrap();
   let dispatcher: CommandDispatcher;
+  let kingdom: KingdomService;
+  const views = new WorldViewService(pool, productScope);
   const runs = new RunService(pool, {
     productScope,
     clock,
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
+    messagesForRun: (run) => ownerRunContext(run, kingdom, views),
     tools: [pactRunCommandTool],
     executeToolCalls: async (input) => {
       const receipts = await dispatchRunCommandTools(dispatcher, scope, input);
@@ -88,7 +93,7 @@ export async function createInferenceGameRuntime(
     constructionLedger,
     new ConstructionExposureAdapter(productScope, new ExposureService(productScope, permits), constructionLedger),
   );
-  const kingdom = new KingdomService(pool, {
+  kingdom = new KingdomService(pool, {
     productScope,
     onboarding: new OnboardingService(pool, {
       productScope,

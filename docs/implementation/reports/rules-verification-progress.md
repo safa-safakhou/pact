@@ -24,4 +24,8 @@ An additional R06 redelivery fixture pauses an unresolved model invocation, mark
 
 Local Node 24 build, typecheck, lint, 110 unit tests, and 147 PostgreSQL 17 integration tests passed after this increment. The full R01–R06 matrix and VPS recovery remain incomplete.
 
+The next R04/R06 cross-route fixture uses a live web session, one fake-provider run, and one MCP session against the same dispatcher. It proves an MCP write lease is denied during the PACT run, then admitted after that run completes; all three routes commit one equivalent message receipt without impersonating the recipient named in agent arguments. This is one lease-interleaving and social action, not the full authority-race matrix.
+
+Local Node 24 build, typecheck, lint, 110 unit tests, and 149 PostgreSQL 17 integration tests passed for this fixture. It does not replace the missing generated authority races or actual process-death drill.
+
 PACT-051 remains open: the [R01–R06 matrix](../../architecture/rules-verification.md#r01r06-evidence-matrix-incomplete) maps current fixtures and gaps, but generated cross-module scenarios and fault injection around every durable command/tick transition have not been completed. This rehearsal is not a full VPS base/WAL backup restore, hosted CI run, or pilot observation.

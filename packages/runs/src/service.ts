@@ -126,7 +126,7 @@ export class RunService {
         operation: (credential: Uint8Array) => Promise<T>,
       ) => Promise<T>;
       tools?: readonly ProviderToolDefinition[];
-      messagesForRun?: (run: RunView) => readonly ProviderMessage[];
+      messagesForRun?: (run: RunView) => readonly ProviderMessage[] | Promise<readonly ProviderMessage[]>;
       executeToolCalls?: (input: {
         run: RunView;
         requestId: string;
@@ -394,7 +394,7 @@ export class RunService {
       }
       if (row.in_flight_request_id) throw new RunError("IN_FLIGHT");
       const baseMessages =
-        this.options.messagesForRun?.(toView(row)) ??
+        (await this.options.messagesForRun?.(toView(row))) ??
         ([
           { role: "system", content: "You are a PACT Envoy operating within fixed allowances." },
           { role: "user", content: row.objective },
