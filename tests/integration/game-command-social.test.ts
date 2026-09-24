@@ -178,6 +178,72 @@ function command(
 }
 
 describe("shared gameplay command admission", () => {
+  it("denies an agent transfer queued behind mandate revocation without stock or receipt effects", async () => {
+    const sender = await kingdom();
+    const recipient = await kingdom();
+    const [kingdomA, kingdomB] = [sender.kingdomId, recipient.kingdomId].sort();
+    await pool.query(
+      `INSERT INTO social_contacts(product_scope, kingdom_a, kingdom_b, accepted_game_time_ms)
+       VALUES ('pact', $1, $2, 0)`,
+      [kingdomA, kingdomB],
+    );
+    await pool.query(
+      `INSERT INTO kingdom_mandates(product_scope, account_id, allowed_actions, resource_limits)
+       VALUES ('pact', $1, ARRAY['transfer'], '{"silver":"60000"}'::jsonb)`,
+      [sender.accountId],
+    );
+    const holderId = randomUUID();
+    await runs.openMcpLease({ accountId: sender.accountId, holderId });
+    const principal = {
+      accountId: sender.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act"] as const,
+      sessionId: holderId,
+    };
+    const transfer = command(sender.accountId, {
+      kind: "game.transfer",
+      recipientKingdomId: recipient.kingdomId,
+      resource: "silver",
+      wholeAmount: 1,
+      mandateVersion: 1,
+    });
+    const before = await pool.query<{ ordinary_units: string }>(
+      "SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'",
+      [sender.kingdomId],
+    );
+    const revocation = await pool.connect();
+    try {
+      await revocation.query("BEGIN");
+      await revocation.query("SELECT id FROM accounts WHERE id = $1 FOR UPDATE", [sender.accountId]);
+      await revocation.query(
+        "UPDATE kingdom_mandates SET version = version + 1, allowed_actions = '{}' WHERE account_id = $1",
+        [sender.accountId],
+      );
+      const pending = dispatcher.dispatch(principal, transfer);
+      await revocation.query("COMMIT");
+      await expect(pending).rejects.toMatchObject({ code: "STALE_VERSION" });
+    } finally {
+      revocation.release();
+    }
+    const after = await pool.query<{ ordinary_units: string }>(
+      "SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'",
+      [sender.kingdomId],
+    );
+    expect(after.rows[0]?.ordinary_units).toBe(before.rows[0]?.ordinary_units);
+    expect(
+      (await pool.query("SELECT count(*) AS count FROM command_receipts WHERE command_id = $1", [transfer.commandId]))
+        .rows[0]?.count,
+    ).toBe("0");
+    expect(
+      (
+        await pool.query("SELECT count(*) AS count FROM direct_transfers WHERE operation_key = $1", [
+          transfer.commandId,
+        ])
+      ).rows[0]?.count,
+    ).toBe("0");
+  });
+
   it("serializes simultaneous cross-account signatures and duplicate retries into one contract", async () => {
     const a = await kingdom();
     const b = await kingdom();
