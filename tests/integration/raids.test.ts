@@ -229,6 +229,78 @@ describe("raid lifecycle", () => {
     ).rejects.toThrow("REPORT_NOT_FOUND");
   });
 
+  it("rolls back an overlapping resolution and commits each battle once on retry", async () => {
+    const first = await kingdom();
+    const second = await kingdom();
+    const target = await kingdom();
+    await units(first.kingdomId, 8);
+    await units(second.kingdomId, 8);
+    await units(target.kingdomId, 12, true);
+    const firstRaid = declaration(first.accountId, target.kingdomId, randomUUID(), 61_000);
+    const secondRaid = declaration(second.accountId, target.kingdomId, randomUUID(), 62_000);
+    await withTransaction(pool, (client) => raids.declare(client, firstRaid));
+    await withTransaction(pool, (client) => raids.declare(client, secondRaid));
+    expect(await withTransaction(pool, (client) => raids.lockDue(client, 1_020_000))).toBe(2);
+
+    const raidIds = [firstRaid.raidId, secondRaid.raidId];
+    const kingdomIds = [first.kingdomId, second.kingdomId, target.kingdomId];
+    const troopSnapshot = () =>
+      pool.query(
+        `SELECT id, owner_kingdom_id, host_kingdom_id, placement, placement_ref
+         FROM kingdom_troops WHERE owner_kingdom_id = ANY($1::uuid[]) ORDER BY id`,
+        [kingdomIds],
+      );
+    const balanceSnapshot = () =>
+      pool.query(
+        `SELECT kingdom_id, resource, ordinary_units, locked_units
+         FROM resource_balances WHERE kingdom_id = ANY($1::uuid[]) ORDER BY kingdom_id, resource`,
+        [kingdomIds],
+      );
+    const beforeTroops = (await troopSnapshot()).rows;
+    const beforeBalances = (await balanceSnapshot()).rows;
+    await expect(
+      withTransaction(pool, async (client) => {
+        expect(await raids.resolveDue(client, 1_320_000)).toBe(2);
+        throw new Error("INJECTED_RAID_RESOLUTION_DEATH");
+      }),
+    ).rejects.toThrow("INJECTED_RAID_RESOLUTION_DEATH");
+    expect((await troopSnapshot()).rows).toEqual(beforeTroops);
+    expect((await balanceSnapshot()).rows).toEqual(beforeBalances);
+    expect(
+      (await pool.query("SELECT status FROM raids WHERE id = ANY($1::uuid[]) ORDER BY id", [raidIds])).rows,
+    ).toEqual([{ status: "locked" }, { status: "locked" }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::int AS count FROM outbox_events WHERE type = 'raid.resolved.v1' AND payload->>'raidId' = ANY($1::text[])",
+          [raidIds],
+        )
+      ).rows[0]?.count,
+    ).toBe(0);
+
+    expect(await withTransaction(pool, (client) => raids.resolveDue(client, 1_320_000))).toBe(2);
+    const committedTroops = (await troopSnapshot()).rows;
+    const committedBalances = (await balanceSnapshot()).rows;
+    const reports = (
+      await pool.query("SELECT id, status, participant_report FROM raids WHERE id = ANY($1::uuid[]) ORDER BY id", [
+        raidIds,
+      ])
+    ).rows;
+    expect(reports).toHaveLength(2);
+    expect(reports.every((report) => report.status === "resolved" && report.participant_report)).toBe(true);
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::int AS count FROM outbox_events WHERE type = 'raid.resolved.v1' AND payload->>'raidId' = ANY($1::text[])",
+          [raidIds],
+        )
+      ).rows[0]?.count,
+    ).toBe(2);
+    expect(await withTransaction(pool, (client) => raids.resolveDue(client, 1_320_000))).toBe(0);
+    expect((await troopSnapshot()).rows).toEqual(committedTroops);
+    expect((await balanceSnapshot()).rows).toEqual(committedBalances);
+  });
+
   it("accepts one nominated contributor and pins visitors/wall while hunger is sampled at resolution", async () => {
     const leader = await kingdom();
     const contributor = await kingdom();
