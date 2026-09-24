@@ -26,6 +26,6 @@ Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm
 
 ## Remaining work
 
-For the latest run-tool increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (137 PostgreSQL integration tests), targeted Biome, `npm run check:boundaries`, backlog render/check, and `git diff --check` passed. Full `npm run lint` remains red because the previously committed `tests/integration/game-command-social.test.ts` formatting does not match Biome; the two files edited for this increment pass targeted Biome. The run API documentation now states the injected executor and lease boundary. No real-provider or hosted scenario was exercised.
+For the latest run-tool increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (137 PostgreSQL integration tests), `npm run lint`, backlog render/check, and `git diff --check` passed. A formatting-only correction to the earlier PACT-049 social command fixture cleared the initial full-lint failure. The run API documentation now states the injected executor and lease boundary. No real-provider or hosted scenario was exercised.
 
 Wire richer receipts, approvals, bounded Envoy context, and model-provider execution. Add a single cross-route command fixture and more adversarial tests. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.

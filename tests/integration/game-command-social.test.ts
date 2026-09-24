@@ -163,7 +163,11 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
   return { accountId, kingdomId };
 }
 
-function command(accountId: string, action: CommandEnvelope["action"], commandId: string = randomUUID()): CommandEnvelope {
+function command(
+  accountId: string,
+  action: CommandEnvelope["action"],
+  commandId: string = randomUUID(),
+): CommandEnvelope {
   return {
     schemaVersion: "pact.command.v1",
     commandId,
