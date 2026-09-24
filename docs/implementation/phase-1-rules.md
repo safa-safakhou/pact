@@ -591,7 +591,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Evidence**
 
-- 24 Sep 2026: docs/implementation/reports/game-tools-progress.md records the dependency correction, scoped world-read and social/troop/building/supply/scout/garrison command integration, 104 unit and 132 PostgreSQL integration tests, and remaining PACT-049 acceptance work. Uncommitted; not Done.
+- 24 Sep 2026: docs/implementation/reports/game-tools-progress.md records dependency correction, scoped world-read and social/troop/building/supply/scout/garrison/raid commands, 105 unit and 133 PostgreSQL integration tests, and remaining PACT-049 acceptance work. First implementation revision 7eccf06; follow-up committed separately. Not Done.
 
 <a id="pact-050"></a>
 ## PACT-050 — Implement gameplay retirement and account-deletion settlement

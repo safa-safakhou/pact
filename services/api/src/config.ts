@@ -26,6 +26,7 @@ const EnvironmentSchema = z
     TELEGRAM_WEBHOOK_SECRET: z.string().min(32).max(256).optional(),
     PACT_DELETION_REGISTRY_FILE: z.string().min(1).optional(),
     PACT_OPERATOR_REGISTER_FILE: z.string().min(1).optional(),
+    RAID_SEED_ENCRYPTION_KEY_BASE64: z.string().optional(),
   })
   .superRefine((value, context) => {
     if (
@@ -42,6 +43,17 @@ const EnvironmentSchema = z
     }
     if (value.NODE_ENV === "production" && !value.PACT_DELETION_REGISTRY_FILE) {
       context.addIssue({ code: "custom", message: "Production deletion registry file is required" });
+    }
+    if (value.NODE_ENV === "production" && !value.RAID_SEED_ENCRYPTION_KEY_BASE64) {
+      context.addIssue({ code: "custom", message: "Production raid seed encryption key is required" });
+    }
+    if (
+      value.RAID_SEED_ENCRYPTION_KEY_BASE64 &&
+      (Buffer.from(value.RAID_SEED_ENCRYPTION_KEY_BASE64, "base64").length !== 32 ||
+        Buffer.from(value.RAID_SEED_ENCRYPTION_KEY_BASE64, "base64").toString("base64") !==
+          value.RAID_SEED_ENCRYPTION_KEY_BASE64)
+    ) {
+      context.addIssue({ code: "custom", message: "Raid seed encryption key must be canonical base64 for 32 bytes" });
     }
     const telegramValues = [value.TELEGRAM_BOT_ID, value.TELEGRAM_BOT_TOKEN, value.TELEGRAM_WEBHOOK_SECRET];
     if (telegramValues.some(Boolean) && !telegramValues.every(Boolean)) {

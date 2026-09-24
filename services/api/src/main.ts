@@ -22,6 +22,8 @@ import {
   ImmediateExposureAdapter,
   KingdomRetirementService,
   KingdomService,
+  RaidRandomnessService,
+  RaidService,
   ScoutService,
   SocialService,
   SupplyExposureAdapter,
@@ -120,6 +122,17 @@ const supplySettlement = new SupplySettlementService(
 );
 const scouts = new ScoutService("pact", retirementLedger, troops, new ActionLimitService("pact"), retirementExposure);
 const garrison = new GarrisonService("pact", retirementLedger, troops, retirementExposure, humanPermits);
+const raids = environment.RAID_SEED_ENCRYPTION_KEY_BASE64
+  ? new RaidService(
+      "pact",
+      retirementLedger,
+      troops,
+      new ActionLimitService("pact"),
+      retirementExposure,
+      new RaidRandomnessService("pact", Buffer.from(environment.RAID_SEED_ENCRYPTION_KEY_BASE64, "base64")),
+      garrison,
+    )
+  : undefined;
 const gameCommands = new GameCommandHandler(
   social,
   (client, accountId, holderId) => runs.assertMcpWriteLease(client, accountId, holderId),
@@ -132,6 +145,7 @@ const gameCommands = new GameCommandHandler(
   retirementExposure,
   scouts,
   garrison,
+  raids,
 );
 const dispatcher = new CommandDispatcher({
   pool,

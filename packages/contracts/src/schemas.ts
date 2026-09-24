@@ -78,6 +78,18 @@ const garrisonTerms = z
     hostBond: supplyBond.nullable(),
   })
   .strict();
+const raidUnits = z
+  .array(
+    z
+      .object({
+        type: z.enum(["spearman", "archer", "rider", "ram"]),
+        count: z.number().int().positive().max(40),
+        explicitIds: z.array(z.uuid()).min(1).max(40).optional(),
+      })
+      .strict(),
+  )
+  .min(1)
+  .max(4);
 export const GameActionSchema = z.discriminatedUnion("kind", [
   z
     .object({
@@ -191,6 +203,25 @@ export const GameActionSchema = z.discriminatedUnion("kind", [
       mandateVersion: z.number().int().nonnegative().optional(),
     })
     .strict(),
+  z
+    .object({
+      kind: z.literal("game.raid.declare"),
+      targetKingdomId: z.uuid(),
+      units: raidUnits,
+      lootPriority: z.array(gameResource).length(3).optional(),
+      nominees: z.array(z.uuid()).max(2).optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.raid.nominate"),
+      raidId: z.uuid(),
+      slot: z.union([z.literal(1), z.literal(2)]),
+      kingdomId: z.uuid(),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.raid.accept"), raidId: z.uuid(), units: raidUnits }).strict(),
+  z.object({ kind: z.literal("game.raid.withdraw"), raidId: z.uuid() }).strict(),
 ]);
 export const CommandActionSchema = z.union([SandboxActionSchema, GameActionSchema]);
 export type SandboxAction = z.infer<typeof SandboxActionSchema>;

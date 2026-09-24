@@ -2,7 +2,7 @@
 
 Ticket: [PACT-050 / MNI-114](https://linear.app/mnim/issue/MNI-114/pact-050-implement-gameplay-retirement-and-account-deletion-settlement) — complete in the local checkout.
 
-Implementation revision/PR: uncommitted local checkout. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
+Implementation revision: `7eccf06`. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
 
 ## Result
 

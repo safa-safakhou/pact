@@ -100,6 +100,7 @@ services:
       - telegram_bot_id
       - telegram_bot_token
       - telegram_webhook_secret
+      - raid_seed_encryption_key
     volumes:
       - ${PACT_STATE_DIR:-/srv/pact/state}/privacy:/var/lib/pact-state
       - ${PACT_STATE_DIR:-/srv/pact/state}/operator:/etc/pact/operator:ro

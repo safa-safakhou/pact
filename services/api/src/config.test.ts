@@ -37,4 +37,16 @@ describe("environment validation", () => {
   it("rejects development identity secrets and a missing compromised-password set in production", () => {
     expect(() => readEnvironment({ DATABASE_URL: "postgres://localhost/pact", NODE_ENV: "production" })).toThrow();
   });
+
+  it("validates the shared raid-seed encryption key", () => {
+    expect(() =>
+      readEnvironment({ DATABASE_URL: "postgres://localhost/pact", RAID_SEED_ENCRYPTION_KEY_BASE64: "bad" }),
+    ).toThrow();
+    expect(
+      readEnvironment({
+        DATABASE_URL: "postgres://localhost/pact",
+        RAID_SEED_ENCRYPTION_KEY_BASE64: Buffer.alloc(32, 7).toString("base64"),
+      }).RAID_SEED_ENCRYPTION_KEY_BASE64,
+    ).toBe(Buffer.alloc(32, 7).toString("base64"));
+  });
 });

@@ -10,6 +10,8 @@ import {
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomService,
+  RaidRandomnessService,
+  RaidService,
   ScoutService,
   SocialService,
   SupplyExposureAdapter,
@@ -76,6 +78,15 @@ beforeAll(async () => {
   const supplySettlement = new SupplySettlementService("pact", supplyLedger, { read: async () => 0n }, supplyExposure);
   scouts = new ScoutService("pact", supplyLedger, troops, new ActionLimitService("pact"), new ExposureService("pact"));
   garrison = new GarrisonService("pact", supplyLedger, troops, new ExposureService("pact"), humanPermits);
+  const raids = new RaidService(
+    "pact",
+    supplyLedger,
+    troops,
+    new ActionLimitService("pact"),
+    new ExposureService("pact"),
+    new RaidRandomnessService("pact", Buffer.alloc(32, 7)),
+    garrison,
+  );
   const handler = new GameCommandHandler(
     social,
     (client, accountId, holderId) => runs.assertMcpWriteLease(client, accountId, holderId),
@@ -88,6 +99,7 @@ beforeAll(async () => {
     new ExposureService("pact"),
     scouts,
     garrison,
+    raids,
   );
   dispatcher = new CommandDispatcher({
     pool,
@@ -162,6 +174,58 @@ function command(accountId: string, action: CommandEnvelope["action"], commandId
 }
 
 describe("shared gameplay command admission", () => {
+  it("declares and cancels a raid through owner-derived, replay-safe receipts", async () => {
+    const attacker = await kingdom();
+    const target = await kingdom();
+    const outsider = await kingdom();
+    await withTransaction(pool, async (client) => {
+      await new ResourceLedger("pact").creditOrdinary(client, {
+        kingdomId: attacker.kingdomId,
+        resource: "grain",
+        amount: 600_000n,
+        operationKey: `raid-grain:${attacker.kingdomId}`,
+        reason: "synthetic-test",
+        gameTimeMs: 0,
+      });
+      for (let index = 0; index < 8; index++)
+        await client.query(
+          `INSERT INTO kingdom_troops(id, product_scope, owner_kingdom_id, host_kingdom_id,
+             type, placement, created_game_time_ms, created_at)
+           VALUES ($1, 'pact', $2, $2, 'spearman', 'home', 0, clock_timestamp())`,
+          [randomUUID(), attacker.kingdomId],
+        );
+    });
+    const principal = { accountId: attacker.accountId, productScope, audience: "human" as const };
+    const declaration = command(attacker.accountId, {
+      kind: "game.raid.declare",
+      targetKingdomId: target.kingdomId,
+      units: [{ type: "spearman", count: 8 }],
+    });
+    const first = await dispatcher.dispatch(principal, declaration);
+    expect(first.code).toBe("COMMITTED");
+    expect(first.charged).toEqual([{ asset: "grain", units: expect.stringMatching(/^[1-9][0-9]*$/) }]);
+    expect(await dispatcher.dispatch(principal, declaration)).toEqual(first);
+    expect(
+      (await pool.query("SELECT count(*) AS count FROM raids WHERE id = $1", [declaration.commandId])).rows[0]?.count,
+    ).toBe("1");
+    await expect(
+      dispatcher.dispatch(
+        { accountId: outsider.accountId, productScope, audience: "human" },
+        command(outsider.accountId, { kind: "game.raid.withdraw", raidId: declaration.commandId }),
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(
+      (
+        await dispatcher.dispatch(
+          principal,
+          command(attacker.accountId, { kind: "game.raid.withdraw", raidId: declaration.commandId }),
+        )
+      ).code,
+    ).toBe("COMMITTED");
+    expect((await pool.query("SELECT status FROM raids WHERE id = $1", [declaration.commandId])).rows[0]?.status).toBe(
+      "canceled",
+    );
+  });
   it("activates a garrison with owner-derived signatures and returns visiting units on exit", async () => {
     const lender = await kingdom();
     const host = await kingdom();

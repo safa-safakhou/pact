@@ -9,6 +9,8 @@ import {
   GarrisonError,
   type GarrisonService,
   type KingdomService,
+  RaidError,
+  type RaidService,
   ScoutError,
   type ScoutService,
   SocialError,
@@ -37,6 +39,7 @@ export class GameCommandHandler {
     private readonly exposure?: ExposureService,
     private readonly scouts?: ScoutService,
     private readonly garrison?: GarrisonService,
+    private readonly raids?: RaidService,
   ) {}
 
   async execute(
@@ -402,6 +405,57 @@ export class GameCommandHandler {
           await this.garrison.requestMutualRelease(client, { accountId, contractId: action.contractId, gameTimeMs });
           return { recordVersions: { [`garrison-contract:${action.contractId}`]: 2 }, charged: [] };
         }
+        case "game.raid.declare": {
+          if (!this.raids) throw new DispatcherError("INVALID_COMMAND");
+          const result = await this.raids.declare(client, {
+            accountId,
+            raidId: operationKey,
+            targetKingdomId: action.targetKingdomId,
+            units: action.units.map(({ type, count, explicitIds }) => ({
+              type,
+              count,
+              ...(explicitIds ? { explicitIds } : {}),
+            })),
+            actorKind: principal.audience === "agent" ? "agent" : "human",
+            gameTimeMs,
+            ...(action.lootPriority ? { lootPriority: action.lootPriority } : {}),
+            ...(action.nominees ? { nominees: action.nominees } : {}),
+          });
+          const provision = await this.raidProvision(client, principal.productScope, result.raidId, accountId);
+          return { recordVersions: { [`raid:${result.raidId}`]: 1 }, charged: [{ asset: "grain", units: provision }] };
+        }
+        case "game.raid.nominate": {
+          if (principal.audience !== "human" || !this.raids) throw new DispatcherError("FORBIDDEN");
+          await this.raids.nominate(client, {
+            accountId,
+            raidId: action.raidId,
+            slot: action.slot,
+            kingdomId: action.kingdomId,
+            gameTimeMs,
+          });
+          return { recordVersions: { [`raid:${action.raidId}`]: 2 }, charged: [] };
+        }
+        case "game.raid.accept": {
+          if (!this.raids) throw new DispatcherError("INVALID_COMMAND");
+          await this.raids.accept(client, {
+            accountId,
+            raidId: action.raidId,
+            units: action.units.map(({ type, count, explicitIds }) => ({
+              type,
+              count,
+              ...(explicitIds ? { explicitIds } : {}),
+            })),
+            actorKind: principal.audience === "agent" ? "agent" : "human",
+            gameTimeMs,
+          });
+          const provision = await this.raidProvision(client, principal.productScope, action.raidId, accountId);
+          return { recordVersions: { [`raid:${action.raidId}`]: 2 }, charged: [{ asset: "grain", units: provision }] };
+        }
+        case "game.raid.withdraw": {
+          if (principal.audience !== "human" || !this.raids) throw new DispatcherError("FORBIDDEN");
+          await this.raids.withdraw(client, { accountId, raidId: action.raidId, gameTimeMs });
+          return { recordVersions: { [`raid:${action.raidId}`]: 3 }, charged: [] };
+        }
       }
     } catch (error) {
       if (error instanceof DispatcherError) throw error;
@@ -443,6 +497,16 @@ export class GameCommandHandler {
                 ? "UNIT_LOCKED"
                 : "INVALID_COMMAND",
         );
+      if (error instanceof RaidError)
+        throw new DispatcherError(
+          ["NOT_LEADER", "NOT_PARTICIPANT", "NOT_NOMINATED", "NOT_OWNER"].includes(error.code)
+            ? "FORBIDDEN"
+            : error.code === "UNIT_LOCKED"
+              ? "UNIT_LOCKED"
+              : error.code === "RAID_LOCKED"
+                ? "EXPIRED"
+                : "INVALID_COMMAND",
+        );
       if (error instanceof Error && error.message === "SUPPLY_NOT_PARTY") throw new DispatcherError("FORBIDDEN");
       if (error instanceof Error && error.message.startsWith("SUPPLY_CONTRACT_"))
         throw new DispatcherError("INVALID_COMMAND");
@@ -458,5 +522,21 @@ export class GameCommandHandler {
         throw new DispatcherError("INSUFFICIENT_STOCK");
       throw error;
     }
+  }
+
+  private async raidProvision(
+    client: PoolClient,
+    productScope: string,
+    raidId: string,
+    accountId: string,
+  ): Promise<string> {
+    const result = await client.query<{ provision_units: string }>(
+      `SELECT c.provision_units FROM raid_contributions c
+       JOIN kingdoms k ON k.product_scope = c.product_scope AND k.id = c.kingdom_id
+       WHERE c.product_scope = $1 AND c.raid_id = $2 AND k.account_id = $3`,
+      [productScope, raidId, accountId],
+    );
+    if (!result.rows[0]) throw new DispatcherError("INVALID_COMMAND");
+    return result.rows[0].provision_units;
   }
 }
