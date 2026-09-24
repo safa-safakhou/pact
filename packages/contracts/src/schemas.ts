@@ -189,6 +189,7 @@ export const GameActionSchema = z.discriminatedUnion("kind", [
     .strict(),
   z.object({ kind: z.literal("game.garrison.sign"), offerId: z.uuid(), version: z.number().int().positive() }).strict(),
   z.object({ kind: z.literal("game.garrison.withdraw"), offerId: z.uuid() }).strict(),
+  z.object({ kind: z.literal("game.garrison.seize"), contractId: z.uuid() }).strict(),
   z
     .object({
       kind: z.literal("game.garrison.exit"),

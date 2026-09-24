@@ -174,6 +174,63 @@ function command(accountId: string, action: CommandEnvelope["action"], commandId
 }
 
 describe("shared gameplay command admission", () => {
+  it("requires an exact human session permit to seize a visiting detachment", async () => {
+    const lender = await kingdom();
+    const host = await kingdom();
+    const unitId = randomUUID();
+    await pool.query("UPDATE kingdom_buildings SET level = 3 WHERE kingdom_id = $1 AND kind = 'hall'", [
+      lender.kingdomId,
+    ]);
+    await pool.query(
+      `INSERT INTO kingdom_troops(id, product_scope, owner_kingdom_id, host_kingdom_id,
+         type, placement, created_game_time_ms, created_at)
+       VALUES ($1, 'pact', $2, $2, 'spearman', 'home', 0, clock_timestamp())`,
+      [unitId, lender.kingdomId],
+    );
+    const lenderPrincipal = { accountId: lender.accountId, productScope, audience: "human" as const };
+    const hostPrincipal = { accountId: host.accountId, productScope, audience: "human" as const };
+    const offer = command(lender.accountId, {
+      kind: "game.garrison.offer",
+      hostKingdomId: host.kingdomId,
+      terms: { units: [{ type: "spearman", count: 1 }], durationHours: 1, lenderBond: null, hostBond: null },
+    });
+    await dispatcher.dispatch(lenderPrincipal, offer);
+    await dispatcher.dispatch(
+      lenderPrincipal,
+      command(lender.accountId, { kind: "game.garrison.sign", offerId: offer.commandId, version: 1 }),
+    );
+    const activation = await dispatcher.dispatch(
+      hostPrincipal,
+      command(host.accountId, { kind: "game.garrison.sign", offerId: offer.commandId, version: 1 }),
+    );
+    const contractId = Object.keys(activation.recordVersions)
+      .find((key) => key.startsWith("garrison-contract:"))
+      ?.slice(18);
+    if (!contractId) throw new Error("GARRISON_CONTRACT_ID_MISSING");
+    const seizure = command(host.accountId, { kind: "game.garrison.seize", contractId });
+    await expect(dispatcher.dispatch(hostPrincipal, seizure)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const sessionId = randomUUID();
+    await pool.query(
+      `INSERT INTO sessions(id, product_scope, account_id, audience, token_hash, expires_at, idle_expires_at)
+       VALUES ($1, 'pact', $2, 'human', $3, clock_timestamp() + interval '1 hour',
+         clock_timestamp() + interval '1 hour')`,
+      [sessionId, host.accountId, randomUUID()],
+    );
+    const human = { ...hostPrincipal, sessionId };
+    await expect(
+      dispatcher.dispatch(
+        { ...human, accountId: lender.accountId },
+        command(lender.accountId, { kind: "game.garrison.seize", contractId }),
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const receipt = await dispatcher.dispatch(human, seizure);
+    expect(receipt.code).toBe("COMMITTED");
+    expect(
+      (await pool.query("SELECT owner_kingdom_id FROM kingdom_troops WHERE id = $1", [unitId])).rows[0]
+        ?.owner_kingdom_id,
+    ).toBe(host.kingdomId);
+    expect(await dispatcher.dispatch(human, seizure)).toEqual(receipt);
+  });
   it("declares and cancels a raid through owner-derived, replay-safe receipts", async () => {
     const attacker = await kingdom();
     const target = await kingdom();

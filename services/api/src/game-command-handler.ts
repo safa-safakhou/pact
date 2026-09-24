@@ -387,6 +387,38 @@ export class GameCommandHandler {
           await this.garrison.withdrawOffer(client, { accountId, offerId: action.offerId, gameTimeMs });
           return { recordVersions: { [`garrison-offer:${action.offerId}`]: 0 }, charged: [] };
         }
+        case "game.garrison.seize": {
+          if (principal.audience !== "human" || !principal.sessionId || !this.garrison || !this.humanPermits)
+            throw new DispatcherError("FORBIDDEN");
+          const count = await client.query<{ count: string }>(
+            `SELECT count(*) AS count FROM kingdom_troops
+             WHERE product_scope = $1 AND placement = 'visiting' AND placement_ref = $2`,
+            [principal.productScope, action.contractId],
+          );
+          const troopCount = Number(count.rows[0]?.count ?? 0);
+          if (!troopCount) throw new DispatcherError("INVALID_COMMAND");
+          const permitId = await this.humanPermits.issue(client, {
+            accountId,
+            humanSessionId: principal.sessionId,
+            action: "garrison.seize",
+            operationKey: `garrison:${action.contractId}:seize`,
+            assets: {},
+            troopCount,
+          });
+          const unitIds = await this.garrison.seize(client, {
+            accountId,
+            contractId: action.contractId,
+            permitId,
+            gameTimeMs,
+          });
+          return {
+            recordVersions: {
+              [`garrison-contract:${action.contractId}`]: 3,
+              ...Object.fromEntries(unitIds.map((id) => [`troop:${id}`, 2])),
+            },
+            charged: [],
+          };
+        }
         case "game.garrison.exit": {
           if (!this.garrison) throw new DispatcherError("INVALID_COMMAND");
           if (principal.audience === "agent") {
@@ -508,6 +540,11 @@ export class GameCommandHandler {
                 : "INVALID_COMMAND",
         );
       if (error instanceof Error && error.message === "SUPPLY_NOT_PARTY") throw new DispatcherError("FORBIDDEN");
+      if (
+        error instanceof Error &&
+        ["HUMAN_SESSION_REQUIRED", "HUMAN_PERMIT_CONFLICT", "INVALID_EXACT_PERMIT"].includes(error.message)
+      )
+        throw new DispatcherError("FORBIDDEN");
       if (error instanceof Error && error.message.startsWith("SUPPLY_CONTRACT_"))
         throw new DispatcherError("INVALID_COMMAND");
       if (
