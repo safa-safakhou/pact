@@ -187,33 +187,48 @@ export class CommandDispatcher {
       [this.options.productScope, command.commandId],
     );
     if (prior.rows[0]) return this.replayed(principal, command.commandId, payloadHash, prior.rows[0]);
-    const admitted = await game.admit(async (client, gameTimeMs) => {
-      const existing = await this.loadReceipt(client, command.commandId);
-      if (existing) return this.replayed(principal, command.commandId, payloadHash, existing);
-      const mutation = await game.execute(client, principal, command, gameTimeMs);
-      const receipt: CommandReceipt = {
-        schemaVersion: SCHEMA_VERSION,
-        commandId: command.commandId,
-        code: "COMMITTED",
-        committedEventIds: mutation.committedEventIds ?? [],
-        recordVersions: mutation.recordVersions,
-        charged: mutation.charged,
-        committedAt: this.options.clock.now().toISOString(),
-      };
-      await client.query(
-        `INSERT INTO command_receipts(product_scope, command_id, account_id, canonical_payload_hash, code, receipt)
-         VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
-        [
-          this.options.productScope,
-          command.commandId,
-          principal.accountId,
-          payloadHash,
-          receipt.code,
-          JSON.stringify(receipt),
-        ],
-      );
-      return receipt;
-    });
+    let admitted: Awaited<ReturnType<typeof game.admit<CommandReceipt>>>;
+    try {
+      admitted = await game.admit(async (client, gameTimeMs) => {
+        const existing = await this.loadReceipt(client, command.commandId);
+        if (existing) return this.replayed(principal, command.commandId, payloadHash, existing);
+        const mutation = await game.execute(client, principal, command, gameTimeMs);
+        const receipt: CommandReceipt = {
+          schemaVersion: SCHEMA_VERSION,
+          commandId: command.commandId,
+          code: "COMMITTED",
+          committedEventIds: mutation.committedEventIds ?? [],
+          recordVersions: mutation.recordVersions,
+          charged: mutation.charged,
+          committedAt: this.options.clock.now().toISOString(),
+        };
+        await client.query(
+          `INSERT INTO command_receipts(product_scope, command_id, account_id, canonical_payload_hash, code, receipt)
+           VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
+          [
+            this.options.productScope,
+            command.commandId,
+            principal.accountId,
+            payloadHash,
+            receipt.code,
+            JSON.stringify(receipt),
+          ],
+        );
+        return receipt;
+      });
+    } catch (error) {
+      // A concurrent retry can race the first commit under SERIALIZABLE and surface a unique
+      // action-event/receipt key before this transaction's snapshot can see that receipt.
+      // Only recover if the exact command is now durably committed; never mask another error.
+      if (typeof error === "object" && error !== null && "code" in error && error.code === "23505") {
+        const committed = await this.options.pool.query<ReceiptRow>(
+          "SELECT canonical_payload_hash, receipt, account_id FROM command_receipts WHERE product_scope = $1 AND command_id = $2",
+          [this.options.productScope, command.commandId],
+        );
+        if (committed.rows[0]) return this.replayed(principal, command.commandId, payloadHash, committed.rows[0]);
+      }
+      throw error;
+    }
     return admitted.kind === "admitted" ? admitted.value : receiptSkeleton(command.commandId, "WORLD_PAUSED");
   }
 

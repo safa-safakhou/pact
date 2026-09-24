@@ -17,3 +17,5 @@ The platform-independent retry, projection, and subscription helpers are documen
 ## Command gateway
 
 `@pact/application` owns `CommandDispatcher`. The HTTP adapter verifies the session cookie, exact Origin, and CSRF token, then the dispatcher overwrites command actor fields with that principal. Same `commandId` and canonical payload (schema version, action, expected version) return the original receipt; a changed payload returns `IDEMPOTENCY_CONFLICT` without a second mutation. Receipts, sandbox state, and outbox events commit in one transaction.
+
+For live game commands, the dispatcher checks for a committed receipt before and inside world-clock admission. Concurrent retries under PostgreSQL `SERIALIZABLE` can still reach a unique action-event/receipt key from an older snapshot; after that transaction rolls back, the dispatcher rereads the durable receipt and returns it only when the same authenticated account and canonical payload match. Unrelated unique errors are rethrown. The signature-race fixture verifies two accounts activate one supply contract while a same-ID retry receives the original receipt.

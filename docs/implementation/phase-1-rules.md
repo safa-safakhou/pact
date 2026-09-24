@@ -645,7 +645,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Evidence**
 
-- 24 Sep 2026: MNI-115 claimed In Progress by Mohammad Safakhou after all 18 dependencies were verified Done in Linear. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, and a partial R01–R06 matrix. Broad cross-module fault injection remains, so not Done.
+- 24 Sep 2026: MNI-115 remains In Progress. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, simultaneous cross-account supply signatures with same-ID receipt recovery, 107 unit and 135 PostgreSQL integration tests, and a partial R01–R06 matrix. Broad cross-module fault injection remains, so not Done.
 
 <a id="pact-052"></a>
 ## PACT-052 — Build and run the allowed script baseline

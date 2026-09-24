@@ -163,7 +163,7 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
   return { accountId, kingdomId };
 }
 
-function command(accountId: string, action: CommandEnvelope["action"], commandId = randomUUID()): CommandEnvelope {
+function command(accountId: string, action: CommandEnvelope["action"], commandId: string = randomUUID()): CommandEnvelope {
   return {
     schemaVersion: "pact.command.v1",
     commandId,
@@ -174,6 +174,57 @@ function command(accountId: string, action: CommandEnvelope["action"], commandId
 }
 
 describe("shared gameplay command admission", () => {
+  it("serializes simultaneous cross-account signatures and duplicate retries into one contract", async () => {
+    const a = await kingdom();
+    const b = await kingdom();
+    const humanA = { accountId: a.accountId, productScope, audience: "human" as const };
+    const humanB = { accountId: b.accountId, productScope, audience: "human" as const };
+    const offer = command(a.accountId, {
+      kind: "game.supply.offer",
+      counterpartyKingdomId: b.kingdomId,
+      terms: {
+        aToB: { resource: "silver", wholePerHour: 1 },
+        bToA: null,
+        aBond: null,
+        bBond: null,
+        durationHours: 1,
+        noticeHours: 0,
+      },
+    });
+    expect((await dispatcher.dispatch(humanA, offer)).code).toBe("COMMITTED");
+    const signA = command(a.accountId, { kind: "game.supply.sign", offerId: offer.commandId, version: 1 });
+    const signB = command(b.accountId, { kind: "game.supply.sign", offerId: offer.commandId, version: 1 });
+    const [first, retry, second] = await Promise.all([
+      dispatcher.dispatch(humanA, signA),
+      dispatcher.dispatch(humanA, signA),
+      dispatcher.dispatch(humanB, signB),
+    ]);
+    expect(first).toEqual(retry);
+    expect(second.code).toBe("COMMITTED");
+    const signatures = await pool.query<{ count: string }>(
+      "SELECT count(*) AS count FROM supply_offer_signatures WHERE product_scope = 'pact' AND offer_id = $1 AND version = 1",
+      [offer.commandId],
+    );
+    const contracts = await pool.query<{ count: string }>(
+      "SELECT count(*) AS count FROM supply_contracts WHERE product_scope = 'pact' AND offer_id = $1",
+      [offer.commandId],
+    );
+    const receipts = await pool.query<{ count: string }>(
+      "SELECT count(*) AS count FROM command_receipts WHERE product_scope = 'pact' AND command_id = ANY($1::uuid[])",
+      [[signA.commandId, signB.commandId]],
+    );
+    expect(signatures.rows[0]?.count).toBe("2");
+    expect(contracts.rows[0]?.count).toBe("1");
+    expect(receipts.rows[0]?.count).toBe("2");
+    expect(
+      (
+        await dispatcher.dispatch(
+          humanA,
+          command(a.accountId, { kind: "game.supply.sign", offerId: offer.commandId, version: 2 }, signA.commandId),
+        )
+      ).code,
+    ).toBe("IDEMPOTENCY_CONFLICT");
+  });
   it("requires an exact human session permit to seize a visiting detachment", async () => {
     const lender = await kingdom();
     const host = await kingdom();
