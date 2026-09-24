@@ -281,6 +281,68 @@ describe("shared gameplay command admission", () => {
     ).toBe("0");
   });
 
+  it("retains one committed tool receipt when the run crashes before provider-step reconciliation", async () => {
+    const sender = await kingdom();
+    const recipient = await kingdom();
+    const [kingdomA, kingdomB] = [sender.kingdomId, recipient.kingdomId].sort();
+    await pool.query(
+      `INSERT INTO social_contacts(product_scope, kingdom_a, kingdom_b, accepted_game_time_ms)
+       VALUES ('pact', $1, $2, 0)`,
+      [kingdomA, kingdomB],
+    );
+    const toolCommand = command(sender.accountId, {
+      kind: "game.message.send",
+      recipientKingdomId: recipient.kingdomId,
+      body: "A committed message survives a provider-step crash",
+    });
+    let requestId = "";
+    const modelRuns = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([
+        new DeterministicFakeProvider({
+          scenario: "success",
+          toolName: pactRunCommandTool.name,
+          toolArguments: toolCommand,
+        }),
+      ]),
+      tools: [pactRunCommandTool],
+      executeToolCalls: async (input) => {
+        requestId = input.requestId;
+        const receipts = await dispatchRunCommandTools(dispatcher, productScope, input);
+        expect(receipts[0]?.code).toBe("COMMITTED");
+        throw new Error("injected failure after command commit");
+      },
+    });
+    const started = await modelRuns.start({
+      accountId: sender.accountId,
+      objective: "Send a message once",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 2 },
+    });
+    const failed = await modelRuns.executeModelCall(started.runId);
+    expect(failed.status).toBe("failed");
+    expect(failed.ambiguousCrash).toBe(true);
+    expect(failed.usedCalls).toBe(0);
+    const commandId = runToolCommandId(started.runId, requestId, "fixture-call");
+    expect(
+      (await pool.query("SELECT count(*) AS count FROM command_receipts WHERE command_id = $1", [commandId])).rows[0]
+        ?.count,
+    ).toBe("1");
+    const replay = await dispatchRunCommandTools(dispatcher, productScope, {
+      run: started,
+      requestId,
+      calls: [{ id: "fixture-call", name: pactRunCommandTool.name, arguments: toolCommand }],
+    });
+    expect(replay[0]?.code).toBe("COMMITTED");
+    expect(
+      (await pool.query("SELECT count(*) AS count FROM direct_messages WHERE operation_key = $1", [commandId])).rows[0]
+        ?.count,
+    ).toBe("1");
+    await expect(modelRuns.executeModelCall(started.runId)).resolves.toMatchObject({ status: "failed" });
+  });
+
   it("denies an agent transfer queued behind mandate revocation without stock or receipt effects", async () => {
     const sender = await kingdom();
     const recipient = await kingdom();

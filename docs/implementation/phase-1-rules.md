@@ -648,6 +648,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **Evidence**
 
 - 24 Sep 2026: MNI-115 remains In Progress. Revisions 7eccf06, 804198c, b38c5f5. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, simultaneous cross-account supply signatures with same-ID receipt recovery, and a revocation-first agent transfer race with no stock or receipt effect. Node 24 typecheck/lint and 138 PostgreSQL integration tests passed. The R01–R06 matrix remains partial; broad cross-module fault injection is not Done.
+- 24 Sep 2026: a deterministic failure injected after a fake-provider game command commits but before run reconciliation leaves one recoverable receipt/message; the run fails conservatively and a repeated model step is not invoked. Node 24 lint and 140 PostgreSQL integration tests passed. See docs/implementation/reports/rules-verification-progress.md. This is one R06 interleaving, not complete process-death, transition, or VPS recovery evidence.
 
 <a id="pact-052"></a>
 ## PACT-052 — Build and run the allowed script baseline
