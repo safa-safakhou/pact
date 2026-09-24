@@ -16,6 +16,8 @@ Tickets: PACT-021.
 
 Defaults: 15 minutes, 6 conversations, 12 messages, 20 calls, 40 000 tokens. Resume never extends the deadline. A second client receives `RUN_ALREADY_ACTIVE`.
 
+Before invoking a provider, the service reserves against the actual assembled messages and tool definitions for that call, not a fixed input allowance. Caller-controlled message text is charged conservatively by UTF-8 bytes; stable tool schemas use an approximate four-bytes-per-token estimate. If the estimate leaves no output allowance, the run finishes without a provider call. Provider-reported usage reconciles the reservation afterward. This is a bounded admission estimate, not an exact provider-token guarantee.
+
 ## Inference worker
 
 `workers/inference` leases `envoy.run.tick` durable jobs and calls `RunService.executeModelCall`. Ambiguous provider failures mark the run `failed` with `ambiguousCrash` and fail the job without an unbounded retry loop. Idle inbox delivery never receives a provider adapter.

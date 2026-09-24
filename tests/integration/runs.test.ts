@@ -69,6 +69,39 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("does not invoke a provider when the actual objective exceeds remaining input allowance", async () => {
+    const accountId = await verifiedAccount(`run-input-budget-${randomUUID()}@example.com`);
+    let invoked = 0;
+    const service = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => clockNow },
+      providerRouter: new ProviderRouter([
+        {
+          provider: "fixture",
+          listModels: async () => [fakeProviderModel],
+          invoke: async () => {
+            invoked += 1;
+            return { stopReason: "completed" as const, toolCalls: [], usage: { inputTokens: 1, outputTokens: 1 } };
+          },
+        },
+      ]),
+    });
+    const started = await service.start({
+      accountId,
+      objective: "A".repeat(500),
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxTokens: 100 },
+    });
+    const finished = await service.executeModelCall(started.runId);
+    expect(finished).toMatchObject({ status: "finished", usedCalls: 0, modelCalls: 0, reservedTokens: 0 });
+    expect(invoked).toBe(0);
+    expect(
+      (await pool.query("SELECT in_flight_request_id FROM envoy_runs WHERE run_id = $1", [started.runId])).rows[0]
+        ?.in_flight_request_id,
+    ).toBeNull();
+  });
+
   it("passes only validated provider tool calls to the run executor and checks the exact run lease", async () => {
     const accountId = await verifiedAccount(`run-tools-${randomUUID()}@example.com`);
     const otherAccountId = await verifiedAccount(`run-tools-other-${randomUUID()}@example.com`);

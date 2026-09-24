@@ -91,6 +91,20 @@ const DEFAULT_MAX_TOKENS = 40_000;
 const MAX_OUTPUT_RESERVATION = 2_000;
 const MCP_LEASE_MS = 15 * 60_000;
 
+/** Conservative for caller-controlled prose; tool schemas use a documented approximation. */
+function estimateInputTokens(messages: readonly ProviderMessage[], tools: readonly ProviderToolDefinition[]): number {
+  let estimate = 32;
+  for (const message of messages) {
+    estimate += 16 + Buffer.byteLength(message.content, "utf8");
+    if (message.toolCallId) estimate += Buffer.byteLength(message.toolCallId, "utf8");
+  }
+  for (const tool of tools) {
+    const schema = JSON.stringify({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema });
+    estimate += 64 + Math.ceil(Buffer.byteLength(schema, "utf8") / 4);
+  }
+  return estimate;
+}
+
 export class RunService {
   constructor(
     private readonly pool: Pool,
@@ -348,12 +362,19 @@ export class RunService {
         return { kind: "finish" as const, row: await this.finish(client, row, "finished") };
       }
       if (row.in_flight_request_id) throw new RunError("IN_FLIGHT");
+      const messages =
+        this.options.messagesForRun?.(toView(row)) ??
+        ([
+          { role: "system", content: "You are a PACT Envoy operating within fixed allowances." },
+          { role: "user", content: row.objective },
+        ] satisfies ProviderMessage[]);
+      const tools = this.options.tools ?? [];
       const remainingTokens = row.max_tokens - row.used_tokens;
-      const estimatedInput = 50;
-      const outputCeiling = Math.min(MAX_OUTPUT_RESERVATION, Math.max(1, remainingTokens - estimatedInput));
-      if (estimatedInput + outputCeiling > remainingTokens) {
+      const estimatedInput = estimateInputTokens(messages, tools);
+      if (!Number.isSafeInteger(estimatedInput) || estimatedInput >= remainingTokens) {
         return { kind: "finish" as const, row: await this.finish(client, row, "finished") };
       }
+      const outputCeiling = Math.min(MAX_OUTPUT_RESERVATION, remainingTokens - estimatedInput);
       const requestId = randomUUID();
       const updated = await client.query<RunRow>(
         `UPDATE envoy_runs SET in_flight_request_id = $2, reserved_tokens = $3, updated_at = $4
@@ -368,6 +389,8 @@ export class RunService {
         requestId,
         estimatedInput,
         outputCeiling,
+        messages,
+        tools,
       };
     });
 
@@ -391,16 +414,10 @@ export class RunService {
         prepared.outputCeiling,
         new AbortController().signal,
       );
-      const messages =
-        this.options.messagesForRun?.(toView(prepared.row)) ??
-        ([
-          { role: "system", content: "You are a PACT Envoy operating within fixed allowances." },
-          { role: "user", content: prepared.row.objective },
-        ] satisfies ProviderMessage[]);
       const result = await router.run(preparedRoute, {
         requestId: prepared.requestId,
-        messages,
-        tools: this.options.tools ?? [],
+        messages: prepared.messages,
+        tools: prepared.tools,
         credential: credential ?? new Uint8Array(),
         signal: new AbortController().signal,
       });
