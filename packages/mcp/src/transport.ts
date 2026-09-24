@@ -2,7 +2,9 @@ import { randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
 import {
   commandJsonSchema,
+  InboxReadQuerySchema,
   ProductScopeSchema,
+  pactInboxReadTool,
   ReportReadQuerySchema,
   reportReadQueryJsonSchema,
   SCHEMA_VERSION,
@@ -45,6 +47,7 @@ export interface McpTransportOptions {
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
   readonly reports?: ReportReader;
+  readonly inbox?: InboxReader;
   readonly runLeases?: {
     openMcpLease(input: { accountId: string; holderId: string }): Promise<{ leaseId: string; expiresAt: Date }>;
   };
@@ -62,6 +65,11 @@ export interface ReportReader {
     kind: "scout" | "raid_participant" | "raid_public",
     recordId: string,
   ): Promise<unknown | null>;
+}
+
+/** Owner identity is supplied by MCP authentication, never tool arguments. */
+export interface InboxReader {
+  readBounded(accountId: string, cursor: string | undefined, limit: number): Promise<unknown>;
 }
 
 const SANDBOX_TOOLS = [
@@ -153,6 +161,7 @@ export class McpTransport {
             tools: [
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [WORLD_READ_TOOL] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [REPORT_READ_TOOL] : []),
+              ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
             ],
@@ -261,6 +270,16 @@ export class McpTransport {
       return {
         content: [{ type: "text", text: JSON.stringify(report) }],
         structuredContent: report as Record<string, unknown>,
+      };
+    }
+    if (name === pactInboxReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.inbox) throw new McpError("FORBIDDEN", 403);
+      const query = InboxReadQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const page = await this.options.inbox.readBounded(principal.accountId, query.data.cursor, query.data.limit);
+      return {
+        content: [{ type: "text", text: JSON.stringify(page) }],
+        structuredContent: page as Record<string, unknown>,
       };
     }
     if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);

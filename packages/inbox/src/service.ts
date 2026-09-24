@@ -25,6 +25,14 @@ export interface InboxPage {
   readonly resumeFrom?: string;
 }
 
+export interface BoundedInboxPage {
+  readonly events: readonly (InboxEventMetadata & { readonly payload: unknown; readonly payloadOmitted?: true })[];
+  readonly nextCursor: string | null;
+  readonly resyncRequired?: true;
+  readonly resumeFrom?: string;
+  readonly untrustedContent: true;
+}
+
 export interface InboxEventMetadata {
   readonly sequence: string;
   readonly eventId: string;
@@ -109,6 +117,32 @@ export class InboxService {
     }));
     const nextCursor = events.length > 0 ? (events[events.length - 1]?.sequence ?? null) : null;
     return { events, nextCursor };
+  }
+
+  /** Owner-scoped tool projection: no event payload can exceed the model-result budget. */
+  async readBounded(accountId: string, cursor: string | undefined, limit = 5): Promise<BoundedInboxPage> {
+    const page = await this.list(accountId, cursor, Math.min(Math.max(limit, 1), 5));
+    const events = page.events.map((event) => {
+      const envelope = event.payload as { payload?: unknown } | null;
+      const payload = envelope?.payload ?? null;
+      const encoded = JSON.stringify(payload);
+      return {
+        sequence: event.sequence,
+        eventId: event.eventId,
+        type: event.type.slice(0, 64),
+        occurredAt: event.occurredAt,
+        ...(encoded && Buffer.byteLength(encoded, "utf8") <= 512
+          ? { payload }
+          : { payload: null, payloadOmitted: true as const }),
+      };
+    });
+    return {
+      events,
+      nextCursor: page.nextCursor,
+      ...(page.resyncRequired ? { resyncRequired: page.resyncRequired } : {}),
+      ...(page.resumeFrom ? { resumeFrom: page.resumeFrom } : {}),
+      untrustedContent: true,
+    };
   }
 
   /** A bounded, payload-free owner feed for context assembly; not a substitute for inbox.read. */

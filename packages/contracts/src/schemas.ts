@@ -368,6 +368,15 @@ export const ReportReadQuerySchema = z
   .strict();
 export type ReportReadQuery = z.infer<typeof ReportReadQuerySchema>;
 
+/** Owner identity is supplied by the authenticated route or active run. */
+export const InboxReadQuerySchema = z
+  .object({
+    cursor: z.string().max(20).regex(/^\d+$/).optional(),
+    limit: z.number().int().min(1).max(5).default(5),
+  })
+  .strict();
+export type InboxReadQuery = z.infer<typeof InboxReadQuerySchema>;
+
 export type ActorContext = z.infer<typeof ActorContextSchema>;
 export type ProductScope = z.infer<typeof ProductScopeSchema>;
 export type SubjectRef = z.infer<typeof SubjectRefSchema>;

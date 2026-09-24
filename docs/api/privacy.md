@@ -6,7 +6,7 @@
 
 `POST /v1/privacy/exports` requires the current session cookie, `Origin`, `X-CSRF-Token`, and `{ "password": "...", "mfaCode": "..." }` when MFA is enabled. It reauthenticates and rotates the session before building the export. The response contains an authenticated `downloadUrl`, its seven-day expiry, and the rotated CSRF token.
 
-`GET /v1/privacy/exports/:token` requires the rotated human session. The opaque token is stored only as a SHA-256 digest. The JSON response contains a readable index and explicitly selected account-owned data, including bounded server-generated Envoy tool-result summaries. Password hashes, token hashes, MFA material, provider ciphertext/wrapping material, internal security signals, legacy draft internals, and other accounts' rows are not selected.
+`GET /v1/privacy/exports/:token` requires the rotated human session. The opaque token is stored only as a SHA-256 digest. The JSON response contains a readable index and explicitly selected account-owned data, including bounded Envoy tool results. Explicit inbox reads may include owner-visible private game prose within these results; automatic convenience context does not. Password hashes, token hashes, MFA material, provider ciphertext/wrapping material, internal security signals, legacy draft internals, and other accounts' rows are not selected.
 
 ## Account closure
 

@@ -179,6 +179,7 @@ const mcp = new McpTransport({
   clock,
   worldViews,
   reports,
+  inbox,
   runLeases: runs,
 });
 const approvals = new ApprovalService(pool, {
