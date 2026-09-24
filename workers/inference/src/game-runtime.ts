@@ -1,11 +1,20 @@
 import { CommandDispatcher, dispatchRunCommandTools, GameCommandHandler, pactRunCommandTool } from "@pact/application";
 import { ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
-import { InboxReadQuerySchema, ProductScopeSchema, pactInboxReadTool } from "@pact/contracts";
+import {
+  InboxReadQuerySchema,
+  ProductScopeSchema,
+  pactInboxReadTool,
+  pactReportReadTool,
+  pactWorldReadTool,
+  ReportReadQuerySchema,
+  WorldViewQuerySchema,
+} from "@pact/contracts";
 import { InboxService } from "@pact/inbox";
 import {
   ActionLimitService,
   BuildingEngine,
   ConstructionExposureAdapter,
+  GameReportReader,
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomService,
@@ -26,6 +35,7 @@ import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { ownerRunContext } from "./run-context.js";
+import { boundedReportResult, boundedWorldResult } from "./run-read-results.js";
 
 export interface InferenceGameRuntimeOptions {
   readonly pool: Pool;
@@ -52,11 +62,17 @@ export async function createInferenceGameRuntime(
   await world.bootstrap();
   let dispatcher: CommandDispatcher;
   let kingdom: KingdomService;
+  let reports: GameReportReader;
   const views = new WorldViewService(pool, productScope);
   const inbox = new InboxService(pool, { productScope, clock });
   const inboxReadTool = {
     ...pactInboxReadTool,
     parseArguments: (input: unknown) => InboxReadQuerySchema.parse(input),
+  };
+  const worldReadTool = { ...pactWorldReadTool, parseArguments: (input: unknown) => WorldViewQuerySchema.parse(input) };
+  const reportReadTool = {
+    ...pactReportReadTool,
+    parseArguments: (input: unknown) => ReportReadQuerySchema.parse(input),
   };
   const runs = new RunService(pool, {
     productScope,
@@ -64,10 +80,30 @@ export async function createInferenceGameRuntime(
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
     messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox),
-    tools: [pactRunCommandTool, inboxReadTool],
+    tools: [pactRunCommandTool, inboxReadTool, worldReadTool, reportReadTool],
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        if (call.name === worldReadTool.name) {
+          const query = WorldViewQuerySchema.parse(call.arguments);
+          const view = await views.read(input.run.accountId, query.targetKingdomId, query.forecastMinutes);
+          results.push({
+            callId: call.id,
+            content: view ? boundedWorldResult(view) : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
+        if (call.name === reportReadTool.name) {
+          const query = ReportReadQuerySchema.parse(call.arguments);
+          const report = await reports.read(input.run.accountId, query.kind, query.recordId);
+          results.push({
+            callId: call.id,
+            content: report
+              ? boundedReportResult(query.kind, query.recordId, report)
+              : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
         if (call.name === inboxReadTool.name) {
           const query = InboxReadQuerySchema.parse(call.arguments);
           const page = await inbox.readBounded(input.run.accountId, query.cursor, query.limit);
@@ -140,6 +176,7 @@ export async function createInferenceGameRuntime(
         garrison,
       )
     : undefined;
+  reports = new GameReportReader(pool, scouts, raids);
   const handler = new GameCommandHandler(
     social,
     (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),

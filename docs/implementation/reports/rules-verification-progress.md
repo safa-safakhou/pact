@@ -37,3 +37,6 @@ The next PACT-049 read fixture adds one partial R06 cross-account check: model a
 The earlier cross-route fixture had passed with 149 PostgreSQL integration tests. It does not replace the missing generated authority races.
 
 PACT-051 remains open: the [R01–R06 matrix](../../architecture/rules-verification.md#r01r06-evidence-matrix-incomplete) maps current fixtures and gaps, but generated cross-module scenarios and fault injection around every durable command/tick transition have not been completed. This rehearsal is not a full VPS base/WAL backup restore, hosted CI run, or pilot observation.
+# World/report read isolation increment
+
+`game-command-social.test.ts` now compares in-app fake-model and MCP report/world read boundaries. An owner sees private balances and a synthetic completed scout report; an outsider receives only the public world projection and `NOT_FOUND` for the private report. MCP rejects a supplied viewer account. The unit suite also checks explicit truncation of oversized read results. Node 24 build/typecheck/lint, 112 unit, and 153 local PostgreSQL integration tests pass. This adds R04/R06 cross-account evidence, not a generated state-space proof or full restore rehearsal.

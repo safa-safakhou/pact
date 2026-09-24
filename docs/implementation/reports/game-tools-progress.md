@@ -66,6 +66,12 @@ The shared contracts package now defines strict `pact_inbox_read_v1` arguments: 
 
 ## Checks and documentation
 
+## Explicit world and report model-read increment
+
+The inference worker now offers the shared strict `pact_world_read_v1` and `pact_report_read_v1` definitions used by MCP. It derives the viewer from the active run and calls `WorldViewService` and the domain-owned `GameReportReader`; model arguments have no account field. Results are capped at 3,600 UTF-8 bytes with an explicit truncation marker, below the run persistence ceiling. A PostgreSQL fixture observes owner balances versus an outsider's public-only view, the owner's completed scout report versus an outsider's `NOT_FOUND`, and MCP rejection of a caller-supplied account ID. The API remains a compatibility re-export of the moved reader. This closes the explicit read-path gap but not full PACT-049 acceptance: broader command-route equivalence, selected conversation content, and adversarial model-route coverage remain.
+
+Local Node 24 build, typecheck, lint, 112 unit tests, and 153 PostgreSQL integration tests passed. No live provider, hosted CI, or VPS deployment was exercised.
+
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (134 tests against PostgreSQL 17), and `npm run lint` passed after report-read integration. The domain integration fixtures recheck scout owner/share and raid participant/public separation through `GameReportReader`; HTTP/MCP/SDK tests verify scoped adapter behavior. These checks do not establish hosted CI, deployment, client certification, or a player pilot. Updated [MCP API](../../api/mcp.md), [client SDK](../../api/client-sdk.md), [raid module](../../architecture/raids.md), [world views](../../architecture/world-views.md), [social service](../../architecture/social.md), [troop training](../../architecture/troop-training.md), [building queues](../../architecture/building-queues.md), and [module boundaries](../../architecture/modules.md).
 
 ## Remaining work

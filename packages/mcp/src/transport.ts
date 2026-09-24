@@ -5,11 +5,11 @@ import {
   InboxReadQuerySchema,
   ProductScopeSchema,
   pactInboxReadTool,
+  pactReportReadTool,
+  pactWorldReadTool,
   ReportReadQuerySchema,
-  reportReadQueryJsonSchema,
   SCHEMA_VERSION,
   WorldViewQuerySchema,
-  worldViewQueryJsonSchema,
 } from "@pact/contracts";
 import type { Pool } from "pg";
 
@@ -118,16 +118,6 @@ const SANDBOX_TOOLS = [
   },
 ] as const;
 
-const WORLD_READ_TOOL = {
-  name: "pact_world_read_v1",
-  description: "Read an authorized factual kingdom view. Other players' hidden state is never returned.",
-  inputSchema: worldViewQueryJsonSchema,
-} as const;
-const REPORT_READ_TOOL = {
-  name: "pact_report_read_v1",
-  description: "Read one authorized scout or raid report; private reports require participation.",
-  inputSchema: reportReadQueryJsonSchema,
-} as const;
 const RUN_OPEN_TOOL = {
   name: "run.open",
   description: "Open one bounded write lease for this authenticated MCP session; this does not start model inference.",
@@ -159,8 +149,8 @@ export class McpTransport {
         return {
           response: this.result(body.id, {
             tools: [
-              ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [WORLD_READ_TOOL] : []),
-              ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [REPORT_READ_TOOL] : []),
+              ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
+              ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
@@ -245,7 +235,7 @@ export class McpTransport {
       const result = { leaseId: lease.leaseId, expiresAt: lease.expiresAt.toISOString() };
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
-    if (name === WORLD_READ_TOOL.name) {
+    if (name === pactWorldReadTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.worldViews)
         throw new McpError("FORBIDDEN", 403);
       const query = WorldViewQuerySchema.safeParse(args);
@@ -261,7 +251,7 @@ export class McpTransport {
         structuredContent: view as Record<string, unknown>,
       };
     }
-    if (name === REPORT_READ_TOOL.name) {
+    if (name === pactReportReadTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.reports) throw new McpError("FORBIDDEN", 403);
       const query = ReportReadQuerySchema.safeParse(args);
       if (!query.success) throw new McpError("INVALID_REQUEST");

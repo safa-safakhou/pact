@@ -21,6 +21,7 @@ import {
   ActionLimitService,
   BuildingEngine,
   ConstructionExposureAdapter,
+  GameReportReader,
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomService,
@@ -32,6 +33,7 @@ import {
   SupplyService,
   SupplySettlementService,
   TroopService,
+  WorldViewService,
 } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
@@ -377,6 +379,120 @@ describe("shared gameplay command admission", () => {
       mcp.handlePost(
         principal,
         { method: "tools/call", id: 8, params: { name: "pact_inbox_read_v1", arguments: { limit: 100 } } },
+        initialized.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+  });
+
+  it("uses credential-derived world and report visibility for model and MCP reads", async () => {
+    const owner = await kingdom();
+    const target = await kingdom();
+    const outsider = await kingdom();
+    const reportId = randomUUID();
+    const report = {
+      kind: "engine_report",
+      operationId: reportId,
+      scoutKingdomId: owner.kingdomId,
+      targetKingdomId: target.kingdomId,
+      observedGameTimeMs: 1,
+      staleAfterObservation: true,
+      wallLevel: 1,
+      homeTroops: { infantry: "0" },
+      ordinaryStock: { iron: "1-100", silver: "0", grain: "0" },
+    };
+    await pool.query(
+      `INSERT INTO scout_operations(id, product_scope, scout_kingdom_id, target_kingdom_id, operation_key,
+        status, started_game_time_ms, due_game_time_ms, completed_game_time_ms, completed_at, report)
+       VALUES ($1, 'pact', $2, $3, $4, 'completed', 0, 1, 1, clock_timestamp(), $5)`,
+      [reportId, owner.kingdomId, target.kingdomId, randomUUID(), report],
+    );
+    const clock = { now: () => new Date() };
+    async function modelRead(accountId: string, toolName: string, toolArguments: object): Promise<string> {
+      const runtime = await createInferenceGameRuntime({
+        pool,
+        productScope: "pact",
+        clock,
+        providerRouter: new ProviderRouter([
+          new DeterministicFakeProvider({ scenario: "success", toolName, toolArguments }),
+        ]),
+        termsVersion: "terms-v1",
+      });
+      const run = await runtime.runs.start({
+        accountId,
+        objective: "Read game state",
+        provider: "fixture",
+        model: fakeProviderModel.id,
+        limits: { maxCalls: 1 },
+      });
+      expect(await runtime.runs.executeModelCall(run.runId)).toMatchObject({ status: "finished" });
+      const rows = await pool.query<{ summary: string }>(
+        "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+        [run.runId],
+      );
+      return rows.rows[0]?.summary ?? "";
+    }
+    const ownerWorld = await modelRead(owner.accountId, "pact_world_read_v1", {
+      targetKingdomId: owner.kingdomId,
+      forecastMinutes: 1,
+    });
+    expect(ownerWorld).toContain('"audience":"owner"');
+    expect(ownerWorld).toContain('"balances"');
+    const otherWorld = await modelRead(outsider.accountId, "pact_world_read_v1", {
+      targetKingdomId: owner.kingdomId,
+      forecastMinutes: 1,
+    });
+    expect(otherWorld).toContain('"audience":"public"');
+    expect(otherWorld).not.toContain('"balances"');
+    const ownerReport = await modelRead(owner.accountId, "pact_report_read_v1", { kind: "scout", recordId: reportId });
+    expect(ownerReport).toContain('"wallLevel":1');
+    const otherReport = await modelRead(outsider.accountId, "pact_report_read_v1", {
+      kind: "scout",
+      recordId: reportId,
+    });
+    expect(otherReport).toContain('"code":"NOT_FOUND"');
+    expect(otherReport).not.toContain("wallLevel");
+
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher,
+      origin: "https://pact.example",
+      clock,
+      worldViews: new WorldViewService(pool, "pact"),
+      reports: new GameReportReader(pool, scouts),
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["world:read" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const mcpReport = await mcp.handlePost(
+      principal,
+      {
+        method: "tools/call",
+        id: 2,
+        params: { name: "pact_report_read_v1", arguments: { kind: "scout", recordId: reportId } },
+      },
+      initialized.sessionId,
+    );
+    expect(JSON.stringify(mcpReport.response)).toContain('"wallLevel":1');
+    await expect(
+      mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 3,
+          params: {
+            name: "pact_report_read_v1",
+            arguments: { kind: "scout", recordId: reportId, accountId: outsider.accountId },
+          },
+        },
         initialized.sessionId,
       ),
     ).rejects.toMatchObject({ code: "INVALID_REQUEST" });

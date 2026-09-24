@@ -19,6 +19,18 @@ export const worldViewQueryJsonSchema = z.toJSONSchema(WorldViewQuerySchema, { t
 export const reportReadQueryJsonSchema = z.toJSONSchema(ReportReadQuerySchema, { target: "draft-7" });
 export const inboxReadQueryJsonSchema = z.toJSONSchema(InboxReadQuerySchema, { target: "draft-7" });
 
+export const pactWorldReadTool = {
+  name: "pact_world_read_v1",
+  description: "Read an authorized factual kingdom view. Other players' hidden state is never returned.",
+  inputSchema: worldViewQueryJsonSchema,
+} as const;
+
+export const pactReportReadTool = {
+  name: "pact_report_read_v1",
+  description: "Read one authorized scout or raid report; private reports require participation.",
+  inputSchema: reportReadQueryJsonSchema,
+} as const;
+
 export const pactInboxReadTool = {
   name: "pact_inbox_read_v1",
   description:

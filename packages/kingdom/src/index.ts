@@ -7,6 +7,7 @@ export * from "./fortune.js";
 export * from "./garrison.js";
 export * from "./raid-randomness.js";
 export * from "./raids.js";
+export * from "./report-reader.js";
 export * from "./retirement.js";
 export * from "./scouting.js";
 export * from "./service.js";
