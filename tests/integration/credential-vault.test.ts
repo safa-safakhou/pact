@@ -15,10 +15,13 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
+import { OpenAiResponsesAdapter, ProviderRouter } from "@pact/model-provider";
 import { OnboardingService } from "@pact/onboarding";
+import { RunService } from "@pact/runs";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { buildServer } from "../../services/api/src/server.js";
+import { createVaultBoundCredentialUse } from "../../workers/inference/src/credential-access.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 const origin = "https://pact.example";
@@ -102,6 +105,103 @@ function headers(fixture: { sessionToken: string; csrfToken: string }, write = t
 }
 
 describe("model credential vault", () => {
+  it("executes a bounded run through a vault-scoped adapter without network access", async () => {
+    now = new Date(baseTime);
+    const owner = await accountFixture();
+    const saved = await vault.save(owner.accountId, {
+      provider: "openai",
+      label: "Synthetic model connection",
+      credential: "sk-synthetic-local-only",
+    });
+    const requests: string[] = [];
+    const runs = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => new Date(now) },
+      providerRouter: new ProviderRouter([
+        new OpenAiResponsesAdapter({
+          fetch: async (_url, init) => {
+            requests.push(String(new Headers(init.headers).get("authorization")));
+            return Response.json({
+              id: "local-fixture",
+              status: "completed",
+              output: [{ type: "message", content: [{ type: "output_text", text: "Local fixture response" }] }],
+              usage: { input_tokens: 21, output_tokens: 8 },
+            });
+          },
+        }),
+      ]),
+      withCredential: createVaultBoundCredentialUse(resolver),
+    });
+    const started = await runs.start({
+      accountId: owner.accountId,
+      objective: "Local fixture only",
+      provider: "openai",
+      model: "gpt-4.1-mini",
+      credentialId: saved.id,
+      limits: { maxCalls: 1 },
+    });
+    const completed = await runs.executeModelCall(started.runId);
+    const uses = await pool.query<{ status: string }>(
+      "SELECT status FROM model_credential_uses WHERE credential_id = $1",
+      [saved.id],
+    );
+    expect(uses.rows).toEqual([{ status: "completed" }]);
+    expect(requests).toEqual(["Bearer sk-synthetic-local-only"]);
+    expect(completed).toMatchObject({ status: "finished", modelCalls: 1, lastErrorCode: null });
+
+    const wrongProvider = await vault.save(owner.accountId, {
+      provider: "anthropic",
+      label: "Wrong provider fixture",
+      credential: "synthetic-anthropic-only",
+    });
+    const mismatched = await runs.start({
+      accountId: owner.accountId,
+      objective: "Do not send this to OpenAI",
+      provider: "openai",
+      model: "gpt-4.1-mini",
+      credentialId: wrongProvider.id,
+      limits: { maxCalls: 1 },
+    });
+    await expect(runs.executeModelCall(mismatched.runId)).resolves.toMatchObject({
+      status: "failed",
+      lastErrorCode: "INVALID_CREDENTIAL",
+      ambiguousCrash: false,
+    });
+    expect(requests).toHaveLength(1);
+  });
+
+  it("binds inference use to the authenticated owner and selected provider", async () => {
+    now = new Date(baseTime);
+    const owner = await accountFixture();
+    const other = await accountFixture();
+    const saved = await vault.save(owner.accountId, {
+      provider: "openai",
+      label: "Synthetic only",
+      credential: "sk-synthetic-fixture",
+    });
+    const use = createVaultBoundCredentialUse(resolver);
+    let invoked = 0;
+    const invoke = async (credential: Uint8Array) => {
+      invoked += 1;
+      expect(Buffer.from(credential).toString("utf8")).toBe("sk-synthetic-fixture");
+      return "local-fixture-response";
+    };
+    await expect(use(other.accountId, saved.id, "openai", invoke)).rejects.toMatchObject({
+      code: "INVALID_CREDENTIAL",
+    });
+    await expect(use(owner.accountId, saved.id, "anthropic", invoke)).rejects.toMatchObject({
+      code: "INVALID_CREDENTIAL",
+    });
+    expect(invoked).toBe(0);
+    await expect(use(owner.accountId, saved.id, "openai", invoke)).resolves.toBe("local-fixture-response");
+    expect(invoked).toBe(1);
+    const uses = await pool.query<{ status: string }>(
+      "SELECT status FROM model_credential_uses WHERE credential_id = $1 ORDER BY admitted_at, id",
+      [saved.id],
+    );
+    expect(uses.rows.map((row) => row.status).sort()).toEqual(["completed", "failed"]);
+  });
+
   it("returns summaries only, requires recent human auth for replacement, and isolates accounts", async () => {
     now = new Date(baseTime);
     const owner = await accountFixture();

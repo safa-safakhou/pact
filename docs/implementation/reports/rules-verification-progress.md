@@ -16,4 +16,8 @@ The overlapping-raid R05/R06 fixture now resolves two battles inside one transac
 
 Revision `1ef8025` adds a complementary R06 handoff fixture: a fake-provider tool receipt is stored with the run step, appears exactly once in the next provider request, remains nonduplicated on a finished-run retry, and cascades with run retention. The worker-composition fixture confirms the stored receipt omits message prose. Local Node 24 build, typecheck, lint, 108 unit tests, and 144 PostgreSQL integration tests passed. This does not recover an in-flight request after an actual worker process death, so R06 remains incomplete.
 
+The next R06 credential-boundary fixture admits a synthetic API credential only for its owner and stored provider, invokes the adapter through an injected HTTP response with no network, and verifies a wrong-provider run fails as `INVALID_CREDENTIAL` before transport invocation. It also records completed/failed vault uses. This is one provider-admission/replay safety boundary, not a full process-death recovery drill or real-provider certification.
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (146 on PostgreSQL 17), and `npm run lint` passed for this increment. No hosted CI, full VPS restore, or actual worker kill was run.
+
 PACT-051 remains open: the [R01–R06 matrix](../../architecture/rules-verification.md#r01r06-evidence-matrix-incomplete) maps current fixtures and gaps, but generated cross-module scenarios and fault injection around every durable command/tick transition have not been completed. This rehearsal is not a full VPS base/WAL backup restore, hosted CI run, or pilot observation.

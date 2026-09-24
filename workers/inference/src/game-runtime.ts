@@ -29,6 +29,12 @@ export interface InferenceGameRuntimeOptions {
   readonly productScope: string;
   readonly clock: { now(): Date };
   readonly providerRouter: ProviderRouter;
+  readonly withCredential?: <T>(
+    accountId: string,
+    credentialId: string,
+    provider: string,
+    operation: (credential: Uint8Array) => Promise<T>,
+  ) => Promise<T>;
   readonly termsVersion: string;
   readonly raidSeed?: Uint8Array;
 }
@@ -46,6 +52,7 @@ export async function createInferenceGameRuntime(
     productScope,
     clock,
     providerRouter: options.providerRouter,
+    ...(options.withCredential ? { withCredential: options.withCredential } : {}),
     tools: [pactRunCommandTool],
     executeToolCalls: async (input) => {
       const receipts = await dispatchRunCommandTools(dispatcher, scope, input);

@@ -119,7 +119,12 @@ export class RunService {
       clock: { now(): Date };
       inbox?: InboxService;
       providerRouter?: ProviderRouter;
-      credentialResolver?: (credentialId: string, accountId: string) => Promise<Uint8Array>;
+      withCredential?: <T>(
+        accountId: string,
+        credentialId: string,
+        provider: string,
+        operation: (credential: Uint8Array) => Promise<T>,
+      ) => Promise<T>;
       tools?: readonly ProviderToolDefinition[];
       messagesForRun?: (run: RunView) => readonly ProviderMessage[];
       executeToolCalls?: (input: {
@@ -419,9 +424,6 @@ export class RunService {
     let ambiguous = false;
     let toolResults: readonly RunToolResult[] = [];
     try {
-      const credential = prepared.row.credential_id
-        ? await this.options.credentialResolver?.(prepared.row.credential_id, prepared.row.account_id)
-        : new Uint8Array();
       const route = {
         provider: prepared.row.provider,
         model: prepared.row.model,
@@ -433,13 +435,21 @@ export class RunService {
         prepared.outputCeiling,
         new AbortController().signal,
       );
-      const result = await router.run(preparedRoute, {
-        requestId: prepared.requestId,
-        messages: prepared.messages,
-        tools: prepared.tools,
-        credential: credential ?? new Uint8Array(),
-        signal: new AbortController().signal,
-      });
+      const invoke = (credential: Uint8Array) =>
+        router.run(preparedRoute, {
+          requestId: prepared.requestId,
+          messages: prepared.messages,
+          tools: prepared.tools,
+          credential,
+          signal: new AbortController().signal,
+        });
+      const credentialId = prepared.row.credential_id;
+      const result = credentialId
+        ? await (async () => {
+            if (!this.options.withCredential) throw new ProviderError("INVALID_CREDENTIAL", false);
+            return this.options.withCredential(prepared.row.account_id, credentialId, prepared.row.provider, invoke);
+          })()
+        : await invoke(new Uint8Array());
       if ("inputTokens" in result.usage) {
         usageTokens = result.usage.inputTokens + result.usage.outputTokens;
       }
