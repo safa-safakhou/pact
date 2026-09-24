@@ -2,7 +2,7 @@
 
 Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
 
-Implementation revisions: `7eccf06`, `75224bf`, `d1457ed`, `cdf7c89`, `804198c`, and the run tool-admission increment containing this report. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
+Implementation revisions: `7eccf06`, `75224bf`, `d1457ed`, `cdf7c89`, `804198c`, and `ca94561`. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
 
 ## Result
 
