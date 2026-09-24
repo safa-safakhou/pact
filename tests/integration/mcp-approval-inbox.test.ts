@@ -12,6 +12,7 @@ import {
 } from "@pact/identity";
 import { InboxService } from "@pact/inbox";
 import { MCP_PROTOCOL_PRIMARY, McpError, McpTransport } from "@pact/mcp";
+import { RunService } from "@pact/runs";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -45,7 +46,18 @@ beforeAll(async () => {
     compromisedPasswords: new LocalCompromisedPasswordChecker(baselineCompromisedPasswordDigests),
   });
   dispatcher = new CommandDispatcher({ pool, clock, productScope });
-  mcp = new McpTransport({ pool, productScope: "pact", dispatcher, origin, clock });
+  const runs = new RunService(pool, { productScope: "pact", clock });
+  mcp = new McpTransport({
+    pool,
+    productScope: "pact",
+    dispatcher,
+    origin,
+    clock,
+    runLeases: runs,
+    worldViews: {
+      read: async (viewer, target, minutes) => ({ audience: "public", viewer, target, minutes }),
+    },
+  });
   approvals = new ApprovalService(pool, {
     productScope: "pact",
     identity,
@@ -78,8 +90,13 @@ describe("PACT-017 MCP transport", () => {
   it("initializes supported protocols, isolates sessions, and binds tools to the actor", async () => {
     const { accountId } = await verifiedAccount(`mcp-${randomUUID()}@example.com`);
     const other = await verifiedAccount(`mcp-other-${randomUUID()}@example.com`);
-    const principal = { accountId, productScope, audience: "agent" as const };
-    const otherPrincipal = { accountId: other.accountId, productScope, audience: "agent" as const };
+    const principal = { accountId, productScope, audience: "agent" as const, agentScopes: ["game:act" as const] };
+    const otherPrincipal = {
+      accountId: other.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
 
     await expect(
       mcp.handlePost(principal, { method: "initialize", id: 1, params: { protocolVersion: "1999-01-01" } }),
@@ -95,6 +112,20 @@ describe("PACT-017 MCP transport", () => {
 
     const listed = await mcp.handlePost(principal, { method: "tools/list", id: 2 }, init.sessionId);
     expect(JSON.stringify(listed.response)).toContain("sandbox.echo");
+    expect(JSON.stringify(listed.response)).toContain("run.open");
+    const lease = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 8, params: { name: "run.open", arguments: {} } },
+      init.sessionId,
+    );
+    expect(JSON.stringify(lease.response)).toContain("leaseId");
+    await expect(
+      mcp.handlePost(
+        principal,
+        { method: "tools/call", id: 9, params: { name: "run.open", arguments: {} } },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "RUN_ALREADY_ACTIVE" });
 
     const called = await mcp.handlePost(
       principal,
@@ -106,6 +137,39 @@ describe("PACT-017 MCP transport", () => {
       init.sessionId,
     );
     expect(JSON.stringify(called.response)).toContain("COMMITTED");
+
+    const readOnly = { accountId, productScope, audience: "agent" as const, agentScopes: ["world:read" as const] };
+    const readOnlyTools = await mcp.handlePost(readOnly, { method: "tools/list", id: 4 }, init.sessionId);
+    expect(JSON.stringify(readOnlyTools.response)).toContain("pact_world_read_v1");
+    expect(JSON.stringify(readOnlyTools.response)).not.toContain("pact_command_v1");
+    const readOnlyView = await mcp.handlePost(
+      readOnly,
+      {
+        method: "tools/call",
+        id: 6,
+        params: { name: "pact_world_read_v1", arguments: { targetKingdomId: randomUUID(), forecastMinutes: 3 } },
+      },
+      init.sessionId,
+    );
+    expect(readOnlyView.response).toMatchObject({ result: { structuredContent: { viewer: accountId, minutes: 3 } } });
+    await expect(
+      mcp.handlePost(
+        readOnly,
+        {
+          method: "tools/call",
+          id: 7,
+          params: { name: "pact_world_read_v1", arguments: { targetKingdomId: randomUUID(), forecastMinutes: 61 } },
+        },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(
+      mcp.handlePost(
+        readOnly,
+        { method: "tools/call", id: 5, params: { name: "sandbox.echo", arguments: { message: "no" } } },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
 
     expect(init.sessionId).toBeTruthy();
     const sessionId = init.sessionId as string;

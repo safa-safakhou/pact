@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 6 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 21 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -169,7 +169,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-034"></a>
 ## PACT-034 — Implement upkeep, hunger recovery, and desertion
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-033](phase-1-rules.md#pact-033)
 
@@ -184,13 +184,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Recovery requires 60 consecutive funded minutes; first desertion is minute 180, then each additional underfunded hour.
-- [ ] Splitting units across contracts or display stacks changes no losses; operational locks do not create starvation immunity.
+- [x] Recovery requires 60 consecutive funded minutes; first desertion is minute 180, then each additional underfunded hour.
+- [x] Splitting units across contracts or display stacks changes no losses; operational locks do not create starvation immunity.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/upkeep.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (63 passed), npm run lint all passed locally with PostgreSQL 17. Host default settlement remains PACT-040.
 
 <a id="pact-035"></a>
 ## PACT-035 — Implement kingdom-wide charges and action limits
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-031](phase-1-rules.md#pact-031)
 
@@ -205,13 +211,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Spend from full starts the timer; further spends do not reset it; capped pools bank no extra time.
-- [ ] Provider/client swaps and retries cannot refill charges or bypass quotas; rejected/idempotent commands incur no additional fee or successful-action count.
+- [x] Spend from full starts the timer; further spends do not reset it; capped pools bank no extra time.
+- [x] Provider/client swaps and retries cannot refill charges or bypass quotas; rejected/idempotent commands incur no additional fee or successful-action count.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/action-limits.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (65 passed), npm run lint passed locally with PostgreSQL 17. Gameplay handler integration remains with later tickets.
 
 <a id="pact-036"></a>
 ## PACT-036 — Implement contacts, bounded messages, and direct transfers
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-022](phase-0-connections.md#pact-022), [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031), [PACT-035](phase-1-rules.md#pact-035)
 
@@ -226,13 +238,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Full queues reject before charging; blocked pairs cannot send text, new offers, or gifts in either direction.
-- [ ] A transfer charges once and never guarantees a return payment; notification traffic does not consume player-message allowance.
+- [x] Full queues reject before charging; blocked pairs cannot send text, new offers, or gifts in either direction.
+- [x] A transfer charges once and never guarantees a return payment; notification traffic does not consume player-message allowance.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/social.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (70 passed), npm run lint passed locally with PostgreSQL 17. Later gameplay handlers expose these transaction-bound ports.
 
 <a id="pact-037"></a>
 ## PACT-037 — Implement supply offers, signatures, bonds, and contract activation
 
-**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-019](phase-0-connections.md#pact-019), [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036)
 
@@ -247,13 +265,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A counteroffer invalidates old signatures; simultaneous acceptances cannot duplicate a contract or exceed bond/contract capacity.
-- [ ] Half-funded bonds, zero/zero flows, invalid notice, self-contracts, expired offers, and blocked parties fail without partial activation.
+- [x] A counteroffer invalidates old signatures; simultaneous acceptances cannot duplicate a contract or exceed bond/contract capacity.
+- [x] Half-funded bonds, zero/zero flows, invalid notice, self-contracts, expired offers, and blocked parties fail without partial activation.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/supply-offers.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (76 passed), npm run lint passed locally with PostgreSQL 17. Delivery/default settlement remains PACT-038; production agent exposure adapter remains PACT-039.
 
 <a id="pact-038"></a>
 ## PACT-038 — Implement independent contract delivery and default settlement
 
-**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-034](phase-1-rules.md#pact-034), [PACT-037](phase-1-rules.md#pact-037)
 
@@ -268,13 +292,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A six-hour contract produces exactly 360 installments; incoming funds cannot finance another outgoing obligation in the same tick.
-- [ ] Partial delivery defaults correctly without reversing an already-funded counterparty; both-default bond transfer, overflow, floor changes, and grant expiry match the rulebook.
+- [x] A six-hour contract produces exactly 360 installments; incoming funds cannot finance another outgoing obligation in the same tick.
+- [x] Partial delivery defaults correctly without reversing an already-funded counterparty; both-default bond transfer, overflow, floor changes, and grant expiry match the rulebook.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/supply-settlement.md; Node 24 build/typecheck/lint, npm test (92 passed), npm run test:integration (84 passed) on local PostgreSQL test schemas. Six-hour delivery, independent funding, proportional shortage, floor/grant changes, all close/bond states and overflow covered. Uncommitted; no VPS deployment or live player validation.
 
 <a id="pact-039"></a>
 ## PACT-039 — Complete future exposure accounting and human exceptions
 
-**Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-027](phase-0-connections.md#pact-027), [PACT-032](phase-1-rules.md#pact-032), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038)
 
@@ -289,13 +319,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Two concurrent signatures cannot each reserve the last allowance; switching providers never creates a second ledger.
-- [ ] Refunds/incoming trades do not replenish spent authority; canceled offers release once; lowered mandates and approved exceptions follow the specified existing-commitment behavior.
+- [x] Two concurrent signatures cannot each reserve the last allowance; switching providers never creates a second ledger.
+- [x] Refunds/incoming trades do not replenish spent authority; canceled offers release once; lowered mandates and approved exceptions follow the specified existing-commitment behavior.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/future-exposure.md; transaction-bound future exposure, exact human-session/OAuth permits, and real supply-signature consumption passed local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (97), npm run test:integration (99), and npm run lint. Public gameplay command/approval routing is PACT-049; garrison lifecycle is PACT-040. Uncommitted workspace.
 
 <a id="pact-040"></a>
 ## PACT-040 — Implement garrison contracts, recall, return, and seizure
 
-**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-037](phase-1-rules.md#pact-037), [PACT-039](phase-1-rules.md#pact-039)
 
@@ -310,13 +346,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Owner and host capacity remain consistent through return/death/seizure; seized units keep IDs and transfer wealth once.
-- [ ] Underfunded host default and pending return do not extend upkeep exposure beyond the prescribed lock allowance; seizure cannot bypass a lock or human approval.
+- [x] Owner and host capacity remain consistent through return/death/seizure; seized units keep IDs and transfer wealth once.
+- [x] Underfunded host default and pending return do not extend upkeep exposure beyond the prescribed lock allowance; seizure cannot bypass a lock or human approval.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/garrison.md; uncommitted transaction-bound garrison offers, bonds, visiting upkeep, default/return, mutual release, and exact human-permitted seizure. Node 24/PostgreSQL 17 local npm run build, npm run typecheck, npm test (97), npm run test:integration (103), and npm run lint passed. PACT-044 handles final overlapping combat, PACT-048 computes Fortune from ownership, and PACT-049 supplies public commands. No hosted deployment or external certification.
 
 <a id="pact-041"></a>
 ## PACT-041 — Implement scouting and private observation reports
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-033](phase-1-rules.md#pact-033), [PACT-035](phase-1-rules.md#pact-035), [PACT-039](phase-1-rules.md#pact-039)
 
@@ -331,13 +373,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Home Guard, locked units, self-targets, and insufficient resources cannot start a scout; retries never charge twice.
-- [ ] Band boundary/fractional-stock fixtures pass and no visiting-owner names, private contracts, or offsite troops leak into the report.
+- [x] Home Guard, locked units, self-targets, and insufficient resources cannot start a scout; retries never charge twice.
+- [x] Band boundary/fractional-stock fixtures pass and no visiting-owner names, private contracts, or offsite troops leak into the report.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/scouting.md; uncommitted timed scout admission/completion, one-charge/ordinary-stock atomic spend, agent troop authority, target notice, post-phase private report bands, explicit sharing, export/retention. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test, npm run test:integration (106), and npm run lint passed. PACT-044 integrates actual overlapping combat; PACT-049 adds public command routes. No hosted deployment.
 
 <a id="pact-042"></a>
 ## PACT-042 — Implement raid seed commitments and deterministic dice
 
-**Status:** todo · **Role:** Security · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Security · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028)
 
@@ -352,13 +400,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] The reference seed yields the published commitment and attacker 6 / defender 1.
-- [ ] Rejection of byte values 252–255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed.
+- [x] The reference seed yields the published commitment and attacker 6 / defender 1.
+- [x] Rejection of byte values 252–255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/raid-randomness-combat.md; encrypted seed migration, exact fixture/verifier, access-audited terminal reveal. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (97), npm run test:integration (98), npm run lint, and verifier fixture passed; uncommitted workspace.
 
 <a id="pact-043"></a>
 ## PACT-043 — Implement pure combat, casualties, and loot calculations
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-033](phase-1-rules.md#pact-033)
 
@@ -373,13 +427,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] The worked battle loses 7 attackers and 14 defenders, carries 100 Silver and 44 Iron, and wins 26 of 36 die pairs.
-- [ ] Reordering/splitting formations preserves results; same-owner troops on opposite sides remain distinct groups; no-negative and zero-power properties pass.
+- [x] The worked battle loses 7 attackers and 14 defenders, carries 100 Silver and 44 Iron, and wins 26 of 36 die pairs.
+- [x] Reordering/splitting formations preserves results; same-owner troops on opposite sides remain distinct groups; no-negative and zero-power properties pass.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 23 Sep 2026: docs/implementation/reports/raid-randomness-combat.md; exact pure calculator matches 7/14 losses, 100 Silver + 44 Iron, and 26/36 wins; formation, owner-side, tie/zero, and no-negative tests pass. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (97), npm run test:integration (98), npm run lint passed; uncommitted workspace.
 
 <a id="pact-044"></a>
 ## PACT-044 — Implement raids, contributors, locks, and overlapping resolution
 
-**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043)
 
@@ -394,13 +454,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] An earlier battle’s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.
-- [ ] Same-boundary completion/lock/withdrawal, hunger changes, leader cancellation, pinned visitors, last-second requests, and missing units resolve exactly once.
+- [x] An earlier battle’s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.
+- [x] Same-boundary completion/lock/withdrawal, hunger changes, leader cancellation, pinned visitors, last-second requests, and missing units resolve exactly once.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/raids.md; uncommitted transaction-bound raid declarations, nominations/contributors, provisions and authority, seed commitments, T-5 pinned wall/unit locks, chronological overlapping combat, leader-only loot, pending returns, and audience-specific reports. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (99), npm run test:integration (111), npm run lint, and shell syntax checks passed. Docker Compose unavailable locally; no hosted deployment or player pilot.
 
 <a id="pact-045"></a>
 ## PACT-045 — Build authorized world views and factual forecasts
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-022](phase-0-connections.md#pact-022), [PACT-027](phase-0-connections.md#pact-027), [PACT-032](phase-1-rules.md#pact-032), [PACT-038](phase-1-rules.md#pact-038), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-044](phase-1-rules.md#pact-044)
 
@@ -415,13 +481,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Unauthorized IDs and public profiles never expose live stocks, building levels, commitments, or model instructions.
-- [ ] Forecasts label assumed future deliveries, preserve founding-versus-ordinary amounts, and change correctly after default, harvest shift, and overlapping combat.
+- [x] Unauthorized IDs and public profiles never expose live stocks, building levels, commitments, or model instructions.
+- [x] Forecasts label assumed future deliveries, preserve founding-versus-ordinary amounts, and change correctly after default, harvest shift, and overlapping combat.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/world-views.md; uncommitted repeatable-read owner/participant/contact/public projections, bounded event references, current-version metadata, and explicitly conditional exact-unit forecasts. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (102), npm run test:integration (114), and npm run lint passed. After the final public-event summary change, kingdom build, targeted integration (3), and lint passed. No hosted deployment or player pilot.
 
 <a id="pact-046"></a>
 ## PACT-046 — Implement Fortune accounting and provisional standings
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-038](phase-1-rules.md#pact-038), [PACT-040](phase-1-rules.md#pact-040), [PACT-044](phase-1-rules.md#pact-044)
 
@@ -436,13 +508,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Build/train conversions preserve marked wealth; grants, Home Guard, expected income, borrowed units, and cosmetics never count.
-- [ ] Transfer, default, cancellation, loot, and seizure fixtures change the correct owner’s wealth once and allow negative Fortune.
+- [x] Build/train conversions preserve marked wealth; grants, Home Guard, expected income, borrowed units, and cosmetics never count.
+- [x] Transfer, default, cancellation, loot, and seizure fixtures change the correct owner’s wealth once and allow negative Fortune.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/fortune.md; uncommitted exact derived wealth, provisional overall/Hall-band standings, and idempotent game-hour snapshots. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (102), npm run test:integration (117), and npm run lint passed. No hosted deployment or season awards.
 
 <a id="pact-047"></a>
 ## PACT-047 — Implement achievement triggers and earned cosmetic entitlements
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-032](phase-1-rules.md#pact-032), [PACT-038](phase-1-rules.md#pact-038), [PACT-041](phase-1-rules.md#pact-041), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046)
 
@@ -457,15 +535,21 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Replayed events cannot award duplicate Gems or ornaments.
-- [ ] Achievements grant no resource/authority/production benefit; a private dev event injector is absent from public HTTP and MCP surfaces.
+- [x] Replayed events cannot award duplicate Gems or ornaments.
+- [x] Achievements grant no resource/authority/production benefit; a private dev event injector is absent from public HTTP and MCP surfaces.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/achievements.md; uncommitted private event-driven eight-trigger engine, once-only ornaments and +25 earned Gems, complete-week upkeep coverage, and no public injector. Local Node 24/PostgreSQL 17 npm run build, npm run typecheck, npm test (102), npm run test:integration (120), and npm run lint passed. Future Seal/season producer flows not claimed.
 
 <a id="pact-048"></a>
 ## PACT-048 — Build the plain rules-prototype interface
 
 **Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
 
-**Depends on:** [PACT-023](phase-0-connections.md#pact-023), [PACT-027](phase-0-connections.md#pact-027), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047)
+**Depends on:** [PACT-023](phase-0-connections.md#pact-023), [PACT-027](phase-0-connections.md#pact-027), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047), [PACT-049](phase-1-rules.md#pact-049)
 
 **Components:** functional gameplay UI.
 
@@ -484,9 +568,9 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-049"></a>
 ## PACT-049 — Expose complete game tools to every Envoy route
 
-**Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Integrations · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-021](phase-0-connections.md#pact-021), [PACT-027](phase-0-connections.md#pact-027), [PACT-039](phase-1-rules.md#pact-039), [PACT-045](phase-1-rules.md#pact-045), [PACT-048](phase-1-rules.md#pact-048)
+**Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-021](phase-0-connections.md#pact-021), [PACT-027](phase-0-connections.md#pact-027), [PACT-039](phase-1-rules.md#pact-039), [PACT-045](phase-1-rules.md#pact-045)
 
 **Components:** game tool registry, context assembly.
 
@@ -503,10 +587,16 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Malicious counterpart text cannot change identity, tool scope, model connection, or mandate; no adapter receives hidden state through a convenience summary.
 - [ ] Generated SDK, model-adapter, and MCP commands use the same product-scoped contracts and cannot gain first-party human privileges.
 
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/game-tools-progress.md records the dependency correction, scoped world-read and social/troop/building/supply/scout/garrison command integration, 104 unit and 132 PostgreSQL integration tests, and remaining PACT-049 acceptance work. Uncommitted; not Done.
+
 <a id="pact-050"></a>
 ## PACT-050 — Implement gameplay retirement and account-deletion settlement
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-024](phase-0-connections.md#pact-024), [PACT-027](phase-0-connections.md#pact-027), [PACT-038](phase-1-rules.md#pact-038), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046)
 
@@ -521,13 +611,19 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Deletion cannot cancel an already-declared enemy raid or redirect remaining wealth to a friend.
-- [ ] Both owners closing, locked visiting troops, a long world pause, and repeated retirement jobs settle once while personal data still meets real-time deletion deadlines.
+- [x] Deletion cannot cancel an already-declared enemy raid or redirect remaining wealth to a friend.
+- [x] Both owners closing, locked visiting troops, a long world pause, and repeated retirement jobs settle once while personal data still meets real-time deletion deadlines.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: docs/implementation/reports/retirement-progress.md records migration 0034, closing/retired settlement, real-time identity erasure, a real raid resolved after both owners close, long-pause/locked-unit/supply-default/retry checks, and 180-day tombstone pruning. Local build, typecheck, 104 unit, 128 integration, lint passed; uncommitted, no hosted/deployment claim.
 
 <a id="pact-051"></a>
 ## PACT-051 — Run transaction, replay, and adversarial rules tests
 
-**Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
+**Status:** in_progress · **Role:** QA · **Size:** L · **Type:** verification
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046), [PACT-050](phase-1-rules.md#pact-050)
 
@@ -544,6 +640,12 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] All R01–R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.
 - [ ] No negative stock, duplicate troop, repeated reward, partially published tick, or lost committed receipt survives a generated scenario.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 24 Sep 2026: MNI-115 claimed In Progress by Mohammad Safakhou after all 18 dependencies were verified Done in Linear. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, and a partial R01–R06 matrix. Broad cross-module fault injection remains, so not Done.
 
 <a id="pact-052"></a>
 ## PACT-052 — Build and run the allowed script baseline

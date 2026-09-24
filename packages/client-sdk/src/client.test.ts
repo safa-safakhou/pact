@@ -50,7 +50,7 @@ describe("platform-independent client SDK", () => {
     expect(prepared.commandId).toBe(commandId);
   });
 
-  it("rejects human clients with agent scopes and never manufactures human scopes for agents", () => {
+  it("rejects human clients with agent scopes and never manufactures human scopes for agents", async () => {
     expect(
       () =>
         new PactClient({
@@ -71,5 +71,24 @@ describe("platform-independent client SDK", () => {
     });
     expect(agent.agentScopes).toEqual(["world:read"]);
     expect(agent.audience).toBe("agent");
+    const prepared = agent.prepareCommand({ kind: "sandbox.echo", message: "read only" });
+    await expect(agent.submitCommand(prepared)).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      serverCode: "MISSING_GAME_ACT_SCOPE",
+    });
+  });
+
+  it("reads a bounded kingdom view through the versioned client request", async () => {
+    const transport: ClientTransport = {
+      send: async (request) => {
+        expect(request.method).toBe("GET");
+        expect(request.path).toBe("/v1/world/kingdoms/00000000-0000-4000-8000-000000000001?forecastMinutes=3");
+        expect(request.headers["x-pact-api-version"]).toBe(API_VERSION);
+        return { status: 200, body: { audience: "public" } };
+      },
+    };
+    await expect(client(transport).readKingdomView("00000000-0000-4000-8000-000000000001", 3)).resolves.toEqual({
+      audience: "public",
+    });
   });
 });

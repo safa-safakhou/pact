@@ -1,4 +1,11 @@
-import { type CommandEnvelope, CommandEnvelopeSchema, type CommandReceipt, SCHEMA_VERSION } from "@pact/contracts";
+import {
+  type CommandEnvelope,
+  CommandEnvelopeSchema,
+  type CommandReceipt,
+  type GameAction,
+  type SandboxAction,
+  SCHEMA_VERSION,
+} from "@pact/contracts";
 import { appendOutbox, withTransaction } from "@pact/db";
 import type { Clock } from "@pact/platform";
 import { type CorrelationIds, createCorrelationIds, type TraceReporter } from "@pact/telemetry";
@@ -12,6 +19,30 @@ export interface CommandDispatcherOptions {
   readonly clock: Clock;
   readonly productScope: string;
   readonly trace?: TraceReporter;
+  readonly game?: GameCommandPort;
+}
+
+export interface GameCommandMutation {
+  readonly recordVersions: Record<string, number>;
+  readonly charged: CommandReceipt["charged"];
+  readonly committedEventIds?: string[];
+}
+
+/** One transaction-bound path for human and agent gameplay writes. */
+export interface GameCommandPort {
+  admit<T>(
+    operation: (client: PoolClient, gameTimeMs: number) => Promise<T>,
+  ): Promise<{ kind: "admitted"; value: T } | { kind: "paused" | "tick_pending" }>;
+  execute(
+    client: PoolClient,
+    principal: AuthenticatedPrincipal,
+    command: CommandEnvelope & { action: GameAction },
+    gameTimeMs: number,
+  ): Promise<GameCommandMutation>;
+}
+
+function isGameAction(action: CommandEnvelope["action"]): action is GameAction {
+  return action.kind.startsWith("game.");
 }
 
 interface ReceiptRow {
@@ -64,6 +95,10 @@ export class CommandDispatcher {
       ...(correlation?.jobId ? { jobId: correlation.jobId } : {}),
     });
 
+    if (isGameAction(command.action)) {
+      return this.dispatchGame(principal, { ...command, action: command.action }, payloadHash);
+    }
+
     return withTransaction(
       this.options.pool,
       async (client) => {
@@ -81,7 +116,12 @@ export class CommandDispatcher {
         const now = this.options.clock.now();
         let mutation: Awaited<ReturnType<typeof executeSandboxAction>>;
         try {
-          mutation = await executeSandboxAction(client, principal, command, now);
+          mutation = await executeSandboxAction(
+            client,
+            principal,
+            { ...command, action: command.action as SandboxAction },
+            now,
+          );
         } catch (error) {
           if (
             typeof error === "object" &&
@@ -134,6 +174,61 @@ export class CommandDispatcher {
     );
   }
 
+  private async dispatchGame(
+    principal: AuthenticatedPrincipal,
+    command: CommandEnvelope & { action: GameAction },
+    payloadHash: string,
+  ): Promise<CommandReceipt> {
+    const game = this.options.game;
+    if (!game) throw new DispatcherError("INVALID_COMMAND");
+    // A retry can still retrieve a committed receipt during a world suspension.
+    const prior = await this.options.pool.query<ReceiptRow>(
+      "SELECT canonical_payload_hash, receipt, account_id FROM command_receipts WHERE product_scope = $1 AND command_id = $2",
+      [this.options.productScope, command.commandId],
+    );
+    if (prior.rows[0]) return this.replayed(principal, command.commandId, payloadHash, prior.rows[0]);
+    const admitted = await game.admit(async (client, gameTimeMs) => {
+      const existing = await this.loadReceipt(client, command.commandId);
+      if (existing) return this.replayed(principal, command.commandId, payloadHash, existing);
+      const mutation = await game.execute(client, principal, command, gameTimeMs);
+      const receipt: CommandReceipt = {
+        schemaVersion: SCHEMA_VERSION,
+        commandId: command.commandId,
+        code: "COMMITTED",
+        committedEventIds: mutation.committedEventIds ?? [],
+        recordVersions: mutation.recordVersions,
+        charged: mutation.charged,
+        committedAt: this.options.clock.now().toISOString(),
+      };
+      await client.query(
+        `INSERT INTO command_receipts(product_scope, command_id, account_id, canonical_payload_hash, code, receipt)
+         VALUES ($1, $2, $3, $4, $5, $6::jsonb)`,
+        [
+          this.options.productScope,
+          command.commandId,
+          principal.accountId,
+          payloadHash,
+          receipt.code,
+          JSON.stringify(receipt),
+        ],
+      );
+      return receipt;
+    });
+    return admitted.kind === "admitted" ? admitted.value : receiptSkeleton(command.commandId, "WORLD_PAUSED");
+  }
+
+  private replayed(
+    principal: AuthenticatedPrincipal,
+    commandId: string,
+    payloadHash: string,
+    existing: ReceiptRow,
+  ): CommandReceipt {
+    if (existing.account_id !== principal.accountId) throw new DispatcherError("FORBIDDEN");
+    return existing.canonical_payload_hash === payloadHash
+      ? existing.receipt
+      : receiptSkeleton(commandId, "IDEMPOTENCY_CONFLICT");
+  }
+
   async lookupReceipt(principal: AuthenticatedPrincipal, commandId: string): Promise<CommandReceipt | null> {
     this.assertPrincipal(principal);
     const result = await this.options.pool.query<ReceiptRow>(
@@ -147,6 +242,9 @@ export class CommandDispatcher {
 
   private assertPrincipal(principal: AuthenticatedPrincipal): void {
     if (principal.productScope !== this.options.productScope) {
+      throw new DispatcherError("FORBIDDEN");
+    }
+    if (principal.audience === "agent" && !principal.agentScopes?.includes("game:act")) {
       throw new DispatcherError("FORBIDDEN");
     }
   }

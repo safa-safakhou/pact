@@ -167,6 +167,43 @@ export class ResourceLedger {
     return parseBalance(row);
   }
 
+  /** Final asset disposal after every accepted engagement and bond has settled. */
+  async discardRetired(
+    client: PoolClient,
+    kingdomId: string,
+    resource: Resource,
+    gameTimeMs: number,
+  ): Promise<Movement> {
+    const movement = await this.mutate(client, {
+      kingdomId,
+      resource,
+      operationKey: `retirement:${kingdomId}:${resource}`,
+      reason: "retirement_discard",
+      requested: 0n,
+      gameTimeMs,
+      calculate: (balance) => {
+        if (balance.locked !== 0n) throw new Error("RETIREMENT_BOND_OUTSTANDING");
+        return { ordinaryDelta: -balance.ordinary, allowanceDelta: -balance.allowance };
+      },
+    });
+    await client.query(
+      `UPDATE resource_balances SET production_per_minute_units = 0
+       WHERE product_scope = $1 AND kingdom_id = $2 AND resource = $3`,
+      [this.productScope, kingdomId, resource],
+    );
+    return movement;
+  }
+
+  /** Retired kingdoms retain the balance checkpoint, not unlimited movement history. */
+  async pruneMovementHistory(client: PoolClient, kingdomId: string, before: Date): Promise<number> {
+    const result = await client.query(
+      `DELETE FROM resource_movements WHERE product_scope = $1 AND kingdom_id = $2
+       AND created_at <= $3`,
+      [this.productScope, kingdomId, before],
+    );
+    return result.rowCount ?? 0;
+  }
+
   private async mutate(client: PoolClient, input: Mutation): Promise<Movement> {
     assertOperationKey(input.operationKey);
     assertGameTime(input.gameTimeMs);
@@ -375,6 +412,22 @@ export class ResourceLedger {
         if (balance.locked < input.amount) throw new Error("INSUFFICIENT_LOCKED_FUNDS");
         const { credited, overflow } = creditToCap(balance.ordinary, balance.storageCap, input.amount);
         return { ordinaryDelta: credited, lockedDelta: -input.amount, overflow };
+      },
+    });
+  }
+
+  /** Remove a forfeited bond from its owner's protected balance. Credit the recipient separately in the same transaction. */
+  async forfeitBond(
+    client: PoolClient,
+    input: { kingdomId: string; resource: Resource; amount: bigint; operationKey: string; gameTimeMs: number },
+  ): Promise<Movement> {
+    return this.mutate(client, {
+      ...input,
+      reason: "bond_forfeit",
+      requested: input.amount,
+      calculate: (balance) => {
+        if (balance.locked < input.amount) throw new Error("INSUFFICIENT_LOCKED_FUNDS");
+        return { lockedDelta: -input.amount };
       },
     });
   }

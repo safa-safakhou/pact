@@ -1,6 +1,12 @@
 import { randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
-import { commandJsonSchema, ProductScopeSchema, SCHEMA_VERSION } from "@pact/contracts";
+import {
+  commandJsonSchema,
+  ProductScopeSchema,
+  SCHEMA_VERSION,
+  WorldViewQuerySchema,
+  worldViewQueryJsonSchema,
+} from "@pact/contracts";
 import type { Pool } from "pg";
 
 export const MCP_PROTOCOL_PRIMARY = "2025-11-25";
@@ -9,7 +15,12 @@ export const SUPPORTED_MCP_PROTOCOLS = new Set([MCP_PROTOCOL_PRIMARY, MCP_PROTOC
 
 export class McpError extends Error {
   constructor(
-    readonly code: "UNSUPPORTED_PROTOCOL" | "FORBIDDEN" | "INVALID_REQUEST" | "SESSION_NOT_FOUND",
+    readonly code:
+      | "UNSUPPORTED_PROTOCOL"
+      | "FORBIDDEN"
+      | "INVALID_REQUEST"
+      | "SESSION_NOT_FOUND"
+      | "RUN_ALREADY_ACTIVE",
     readonly httpStatus = 400,
   ) {
     super(code);
@@ -30,6 +41,15 @@ export interface McpTransportOptions {
   readonly dispatcher: CommandDispatcher;
   readonly origin: string;
   readonly clock: { now(): Date };
+  readonly worldViews?: WorldViewReader;
+  readonly runLeases?: {
+    openMcpLease(input: { accountId: string; holderId: string }): Promise<{ leaseId: string; expiresAt: Date }>;
+  };
+}
+
+/** Domain-owned projection behind a product-neutral MCP read port. */
+export interface WorldViewReader {
+  read(accountId: string, targetKingdomId: string, forecastMinutes: number): Promise<unknown>;
 }
 
 const SANDBOX_TOOLS = [
@@ -78,6 +98,17 @@ const SANDBOX_TOOLS = [
   },
 ] as const;
 
+const WORLD_READ_TOOL = {
+  name: "pact_world_read_v1",
+  description: "Read an authorized factual kingdom view. Other players' hidden state is never returned.",
+  inputSchema: worldViewQueryJsonSchema,
+} as const;
+const RUN_OPEN_TOOL = {
+  name: "run.open",
+  description: "Open one bounded write lease for this authenticated MCP session; this does not start model inference.",
+  inputSchema: { type: "object", properties: {}, additionalProperties: false },
+} as const;
+
 export class McpTransport {
   constructor(private readonly options: McpTransportOptions) {}
 
@@ -101,13 +132,19 @@ export class McpTransport {
       case "tools/list":
         await this.requireSession(principal.accountId, sessionId);
         return {
-          response: this.result(body.id, { tools: SANDBOX_TOOLS }),
+          response: this.result(body.id, {
+            tools: [
+              ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [WORLD_READ_TOOL] : []),
+              ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
+              ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
+            ],
+          }),
           ...(sessionId ? { sessionId } : {}),
         };
       case "tools/call":
         await this.requireSession(principal.accountId, sessionId);
         return {
-          response: this.result(body.id, await this.callTool(principal, body.params ?? {})),
+          response: this.result(body.id, await this.callTool(principal, body.params ?? {}, sessionId)),
           ...(sessionId ? { sessionId } : {}),
         };
       default:
@@ -155,11 +192,54 @@ export class McpTransport {
   private async callTool(
     principal: AuthenticatedPrincipal,
     params: Record<string, unknown>,
+    sessionId?: string,
   ): Promise<Record<string, unknown>> {
+    if (principal.audience !== "agent") {
+      throw new McpError("FORBIDDEN", 403);
+    }
     const name = String(params.name ?? "");
     const args = (params.arguments ?? {}) as Record<string, unknown>;
+    if (name === RUN_OPEN_TOOL.name) {
+      if (
+        !principal.agentScopes?.includes("game:act") ||
+        !this.options.runLeases ||
+        !sessionId ||
+        Object.keys(args).length !== 0
+      )
+        throw new McpError("FORBIDDEN", 403);
+      let lease: { leaseId: string; expiresAt: Date };
+      try {
+        lease = await this.options.runLeases.openMcpLease({ accountId: principal.accountId, holderId: sessionId });
+      } catch (error) {
+        if (typeof error === "object" && error !== null && "code" in error && error.code === "RUN_ALREADY_ACTIVE")
+          throw new McpError("RUN_ALREADY_ACTIVE", 409);
+        throw error;
+      }
+      const result = { leaseId: lease.leaseId, expiresAt: lease.expiresAt.toISOString() };
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === WORLD_READ_TOOL.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.worldViews)
+        throw new McpError("FORBIDDEN", 403);
+      const query = WorldViewQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const view = await this.options.worldViews.read(
+        principal.accountId,
+        query.data.targetKingdomId,
+        query.data.forecastMinutes,
+      );
+      if (!view) throw new McpError("INVALID_REQUEST", 404);
+      return {
+        content: [{ type: "text", text: JSON.stringify(view) }],
+        structuredContent: view as Record<string, unknown>,
+      };
+    }
+    if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);
     if (name === "pact_command_v1") {
-      const receipt = await this.options.dispatcher.dispatch(principal, args);
+      const receipt = await this.options.dispatcher.dispatch(
+        { ...principal, ...(sessionId ? { sessionId } : {}) },
+        args,
+      );
       return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
     }
     const action =
@@ -189,7 +269,10 @@ export class McpTransport {
       action,
       submittedAt: this.options.clock.now().toISOString(),
     };
-    const receipt = await this.options.dispatcher.dispatch(principal, command);
+    const receipt = await this.options.dispatcher.dispatch(
+      { ...principal, ...(sessionId ? { sessionId } : {}) },
+      command,
+    );
     return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
   }
 

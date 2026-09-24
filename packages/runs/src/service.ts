@@ -190,6 +190,16 @@ export class RunService {
     });
   }
 
+  /** Check the exact external host lease inside the gameplay command transaction. */
+  async assertMcpWriteLease(client: PoolClient, accountId: string, holderId: string): Promise<void> {
+    const result = await client.query(
+      `SELECT 1 FROM write_leases WHERE product_scope = $1 AND subject_id = $2
+       AND holder_kind = 'mcp' AND holder_id = $3 AND released_at IS NULL AND expires_at > $4 FOR SHARE`,
+      [this.options.productScope, accountId, holderId, this.options.clock.now()],
+    );
+    if (!result.rowCount) throw new RunError("FORBIDDEN");
+  }
+
   async stop(accountId: string, runId: string): Promise<RunView> {
     return withTransaction(this.pool, async (client) => {
       const row = await this.lockRun(client, runId);

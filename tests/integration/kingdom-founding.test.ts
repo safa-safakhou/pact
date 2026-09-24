@@ -220,13 +220,15 @@ describe("ranked kingdom founding", () => {
     ).toBe(beforeEvents);
   });
 
-  it("cascades founding state when the account is erased", async () => {
+  it("prevents raw account deletion from destroying an active kingdom", async () => {
     const accountId = await readyDraft(`erase_${randomUUID().slice(0, 8)}`);
     const active = await kingdom.activate(accountId);
-    await pool.query("DELETE FROM accounts WHERE id = $1", [accountId]);
-    expect(await count("ledger_kingdoms", active.kingdomId)).toBe(0);
-    expect(await count("kingdom_buildings", active.kingdomId)).toBe(0);
-    expect((await pool.query("SELECT 1 FROM kingdoms WHERE id = $1", [active.kingdomId])).rowCount).toBe(0);
+    await expect(pool.query("DELETE FROM accounts WHERE id = $1", [accountId])).rejects.toThrow(
+      "ACCOUNT_DELETION_REQUIRES_RETIREMENT",
+    );
+    expect(await count("ledger_kingdoms", active.kingdomId)).toBe(1);
+    expect(await count("kingdom_buildings", active.kingdomId)).toBe(7);
+    expect((await pool.query("SELECT 1 FROM kingdoms WHERE id = $1", [active.kingdomId])).rowCount).toBe(1);
   });
 
   it("requires a human cookie and CSRF for the activation route and scopes reads to the owner", async () => {

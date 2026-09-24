@@ -187,7 +187,13 @@ export class AuthorityService {
         if (!entry) throw new Error("ledger missing");
         const spent = BigInt(entry.spent_units);
         const reserved = BigInt(entry.reserved_units);
-        if (spent + reserved + units > limit) throw new AuthorityError("INSUFFICIENT_ALLOWANCE");
+        const future = await client.query<{ total: string }>(
+          `SELECT COALESCE(sum(units), 0)::text AS total FROM authority_spends
+           WHERE product_scope = $1 AND account_id = $2 AND asset = $3 AND count_against_limit`,
+          [this.options.productScope, accountId, asset],
+        );
+        if (spent + reserved + BigInt(future.rows[0]?.total ?? "0") + units > limit)
+          throw new AuthorityError("INSUFFICIENT_ALLOWANCE");
         const nextSpent = spent + units;
         await client.query(
           `UPDATE authority_ledger SET spent_units = $4, updated_at = $5
@@ -221,4 +227,20 @@ export class AuthorityService {
       sessionLimit: row.session_limit,
     };
   }
+}
+
+/** Transaction-bound read for game settlement; absent mandates have the documented zero floor. */
+export async function readReserveFloor(
+  client: PoolClient,
+  productScope: string,
+  accountId: string,
+  asset: string,
+): Promise<bigint> {
+  const result = await client.query<{ reserve_floors: Record<string, string> }>(
+    "SELECT reserve_floors FROM kingdom_mandates WHERE product_scope = $1 AND account_id = $2",
+    [productScope, accountId],
+  );
+  const raw = result.rows[0]?.reserve_floors?.[asset] ?? "0";
+  if (!/^(0|[1-9][0-9]*)$/.test(raw)) throw new Error("INVALID_RESERVE_FLOOR");
+  return BigInt(raw);
 }

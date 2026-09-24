@@ -4,6 +4,7 @@ import { rulesCatalog, wholeResources } from "@pact/domain";
 import type { ResourceLedger } from "@pact/ledger";
 import { type TickContext, timedJobDeadline } from "@pact/world";
 import type { PoolClient } from "pg";
+import type { ImmediateAuthorityPort } from "./exposure-adapters.js";
 import { uuidV7 } from "./uuid-v7.js";
 
 export type TroopKind = keyof typeof rulesCatalog.units;
@@ -124,6 +125,7 @@ export class TroopService {
   constructor(
     private readonly productScope: string,
     private readonly ledger: ResourceLedger,
+    private readonly authority?: ImmediateAuthorityPort,
   ) {}
 
   async queueTraining(
@@ -135,6 +137,8 @@ export class TroopService {
       type: string;
       count: number;
       gameTimeMs: number;
+      actorKind?: "human" | "agent";
+      mandateVersion?: number;
     },
   ): Promise<TrainingBatch> {
     if (!isTroopKind(input.type) || !Number.isInteger(input.count) || input.count < 1 || input.count > 40) {
@@ -166,6 +170,24 @@ export class TroopService {
     );
     if ((owned.rows[0]?.count ?? 0) + input.count > capacity) throw new TroopError("CAPACITY_EXCEEDED");
     const definition = rulesCatalog.units[input.type];
+    if (input.actorKind === "agent") {
+      if (!this.authority) throw new Error("IMMEDIATE_AUTHORITY_NOT_CONFIGURED");
+      for (const [asset, units] of [
+        ["iron", wholeResources(definition.iron * input.count)],
+        ["silver", wholeResources(definition.silver * input.count)],
+      ] as const) {
+        if (units > 0n)
+          await this.authority.spend(client, {
+            accountId: input.accountId,
+            asset,
+            units,
+            action: "training.queue",
+            operationKey: `training:${input.batchId}:${asset}`,
+            ...(input.mandateVersion === undefined ? {} : { mandateVersion: input.mandateVersion }),
+            gameTimeMs: input.gameTimeMs,
+          });
+      }
+    }
     const iron = await this.ledger.payCost(client, {
       kingdomId: input.kingdomId,
       resource: "iron",
@@ -406,6 +428,40 @@ export class TroopService {
     return result.rows.map((row) => row.id);
   }
 
+  /** Host seizure transfers ownership of the existing UUIDs; it cannot create capacity or bypass a battle lock. */
+  async seizeVisiting(
+    client: PoolClient,
+    input: { hostKingdomId: string; referenceId: string; gameTimeMs: number },
+  ): Promise<string[]> {
+    const units = await client.query<TroopRow>(
+      `SELECT * FROM kingdom_troops WHERE product_scope = $1 AND host_kingdom_id = $2
+       AND placement = 'visiting' AND placement_ref = $3 ORDER BY id FOR UPDATE`,
+      [this.productScope, input.hostKingdomId, input.referenceId],
+    );
+    if (units.rows.length === 0) throw new TroopError("UNITS_UNAVAILABLE");
+    for (const unit of units.rows) {
+      if (await this.hasBattleLock(client, unit.id, input.gameTimeMs)) throw new TroopError("UNIT_LOCKED");
+    }
+    const capacity = await this.capacity(client, input.hostKingdomId, "owned");
+    const owned = await client.query<{ count: number }>(
+      "SELECT count(*)::int AS count FROM kingdom_troops WHERE product_scope = $1 AND owner_kingdom_id = $2",
+      [this.productScope, input.hostKingdomId],
+    );
+    const training = await client.query<{ count: string }>(
+      `SELECT COALESCE(sum(requested_count - completed_count), 0)::text AS count
+       FROM training_batches WHERE product_scope = $1 AND kingdom_id = $2 AND status = 'active'`,
+      [this.productScope, input.hostKingdomId],
+    );
+    if ((owned.rows[0]?.count ?? 0) + Number(training.rows[0]?.count ?? 0) + units.rows.length > capacity)
+      throw new TroopError("CAPACITY_EXCEEDED");
+    await client.query(
+      `UPDATE kingdom_troops SET owner_kingdom_id = $2, placement = 'home', placement_ref = NULL
+       WHERE product_scope = $1 AND id = ANY($3::uuid[])`,
+      [this.productScope, input.hostKingdomId, units.rows.map((unit) => unit.id)],
+    );
+    return units.rows.map((unit) => unit.id);
+  }
+
   async captureBattleEligibility(
     client: PoolClient,
     input: { battleId: string; hostKingdomId: string; raidId: string; lockUntilGameTimeMs: number },
@@ -421,7 +477,12 @@ export class TroopService {
         `SELECT id, CASE WHEN placement = 'attacking' THEN 'attacker' ELSE 'defender' END AS side
          FROM kingdom_troops WHERE product_scope = $1 AND
            ((placement = 'attacking' AND placement_ref = $2)
-             OR (host_kingdom_id = $3 AND placement IN ('home', 'visiting')))
+             OR (host_kingdom_id = $3 AND placement = 'home')
+             OR (host_kingdom_id = $3 AND placement = 'visiting'
+               AND NOT EXISTS (
+                 SELECT 1 FROM garrison_contracts g WHERE g.product_scope = kingdom_troops.product_scope
+                   AND g.id = kingdom_troops.placement_ref AND g.status = 'exit_pending'
+               )))
          ORDER BY id FOR UPDATE`,
         [this.productScope, input.raidId, input.hostKingdomId],
       );

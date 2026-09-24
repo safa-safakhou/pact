@@ -22,5 +22,5 @@ export function createApplication(
 }
 
 export { canonicalPayloadHash } from "./canonical.js";
-export { CommandDispatcher } from "./dispatcher.js";
+export { CommandDispatcher, type GameCommandMutation, type GameCommandPort } from "./dispatcher.js";
 export { type AuthenticatedPrincipal, DispatcherError, type DispatcherFailureCode } from "./types.js";

@@ -1,0 +1,20 @@
+# Transaction and recovery verification
+
+PACT-051 is in progress. Run the deterministic database suite with `npm run test:integration` on Node 24 and PostgreSQL 17. The seeded scenario in `tests/integration/rules-adversarial.test.ts` uses seed `0x51c0ffee` for 120 ledger operations. Each successful operation is retried under the same idempotency key; every eleventh eligible operation first throws before commit. After each step, it compares committed ordinary, locked, and restricted balances to an independent state model, then reconciles the final balances to the movement journal. A failed transaction must leave no movement.
+
+Run `npm run build:packages` then `node scripts/rehearse-rules-restore.mjs` to exercise a separate temporary database schema. The script writes a synthetic kingdom, stock movement, troop, command receipt, and outbox event; uses `pg_dump` and `psql` to restore that schema; compares recovered balances to movement sums and troop placement to the pre-dump identity; then claims and delivers the outbox event twice to prove consumer deduplication. It drops only its temporary schema in cleanup. It requires PostgreSQL client tools compatible with the server and `TEST_DATABASE_URL` pointing at a disposable test database. Never run it against a production database. A schema-level restore verifies these records, not the full single-VPS backup/WAL runbook.
+
+Existing focused fixtures cover clock rollback and lease fencing (`world-clock.test.ts`), grant/provenance/overflow and concurrent overspend (`resource-ledger.test.ts`), authority reservations (`authority-exposure.test.ts`), exact 360 supply installments and defaults (`supply-settlement.test.ts`), troop ownership and locks (`troops.test.ts`), overlapping raid order (`raids.test.ts`), combat/dice fixtures (`packages/domain/src/combat.test.ts` and `raid-randomness.test.ts`), account closing (`retirement.test.ts`), and receipt/outbox rollback (`persistence.test.ts`). The matrix below maps those fixtures to release criteria and identifies the missing verification.
+
+## R01–R06 evidence matrix (incomplete)
+
+| Criterion | Reproducible local fixtures | Remaining verification |
+| --- | --- | --- |
+| R01 conservation | `resource-ledger.test.ts`, `buildings.test.ts`, `troops.test.ts`, `supply-settlement.test.ts`, `fortune.test.ts`, and the seeded journal reconciliation fixture | Generate mixed cross-module sequences and compare total marked value after every transition. |
+| R02 time | `world-clock.test.ts`, `action-limits.test.ts`, `supply-settlement.test.ts` (360 installments), and `upkeep.test.ts` | Record one end-to-end phase-order trace across harvest, contracts, battles, scouts, and pause/resume. |
+| R03 units | `troops.test.ts`, `upkeep.test.ts`, `garrison-admission.test.ts`, `raids.test.ts`, and `combat.test.ts` | Generate cross-module ownership/placement sequences, including split-detachment loss invariance. |
+| R04 authority | `authority-exposure.test.ts`, `authority.test.ts`, and `game-command-social.test.ts` | Exercise simultaneous signatures through the full shared HTTP/MCP command path. |
+| R05 combat | `combat.test.ts`, `raid-randomness.test.ts`, `raids.test.ts`, and `retirement.test.ts` | Consolidate all die-pair, cancellation, overlapping-lock, and closing-account fixture assertions into a release evidence run. |
+| R06 reliability | `world-clock.test.ts`, `persistence.test.ts`, `rules-adversarial.test.ts`, and `scripts/rehearse-rules-restore.mjs` | Inject failure around every durable command/tick transition and rehearse full base/WAL recovery, not only an isolated schema. |
+
+All rows are partial until the listed checks are performed; passing the current suite is not a release-gate claim.

@@ -7,5 +7,7 @@ export interface KingdomDraft {
   readonly version: number;
 }
 
+export * from "./combat.js";
 export * from "./rational.js";
 export * from "./rules-catalog.js";
+export * from "./upkeep.js";

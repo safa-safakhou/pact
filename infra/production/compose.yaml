@@ -115,6 +115,11 @@ services:
   rules:
     <<: *runtime
     command: ["npm", "run", "start", "--workspace", "@pact/rules-worker"]
+    secrets:
+      - postgres_password
+      - identity_token_pepper
+      - identity_encryption_key
+      - raid_seed_encryption_key
     depends_on:
       privacy-replay:
         condition: service_completed_successfully
@@ -203,6 +208,8 @@ secrets:
     file: ${PACT_SECRETS_DIR}/identity_token_pepper
   identity_encryption_key:
     file: ${PACT_SECRETS_DIR}/identity_encryption_key
+  raid_seed_encryption_key:
+    file: ${PACT_SECRETS_DIR}/raid_seed_encryption_key
   model_credential_public_key:
     file: ${PACT_SECRETS_DIR}/model_credential_public.pem
   model_credential_private_key:

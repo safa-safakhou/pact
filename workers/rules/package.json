@@ -10,6 +10,7 @@
     "start": "node dist/main.js"
   },
   "dependencies": {
+    "@pact/authority": "0.1.0",
     "@pact/db": "0.1.0",
     "@pact/kingdom": "0.1.0",
     "@pact/ledger": "0.1.0",

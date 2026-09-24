@@ -54,6 +54,7 @@ export interface ConstructionAuthorityPort {
       mandateVersion?: number;
       iron: bigint;
       silver: bigint;
+      gameTimeMs: number;
     },
   ): Promise<string>;
   recheckAndStart(
@@ -67,9 +68,10 @@ export interface ConstructionAuthorityPort {
       mandateVersion: number | null;
       ordinaryIron: bigint;
       ordinarySilver: bigint;
+      gameTimeMs: number;
     },
   ): Promise<boolean>;
-  releaseWaiting(client: PoolClient, authorityRef: string, instructionId: string): Promise<void>;
+  releaseWaiting(client: PoolClient, authorityRef: string, instructionId: string, gameTimeMs: number): Promise<void>;
   recordActiveCancellation(client: PoolClient, authorityRef: string, instructionId: string): Promise<void>;
 }
 
@@ -190,6 +192,7 @@ export class BuildingEngine {
       ...(input.mandateVersion === undefined ? {} : { mandateVersion: input.mandateVersion }),
       iron: quote.iron,
       silver: quote.silver,
+      gameTimeMs: input.gameTimeMs,
     });
     if (!authorityRef) throw new BuildingError("INSTRUCTION_CONFLICT");
     await client.query(
@@ -229,7 +232,7 @@ export class BuildingEngine {
     if (row.state === "canceled") return view(row);
     if (row.state === "completed") throw new BuildingError("ALREADY_COMPLETED");
     if (row.state === "waiting") {
-      await this.authority.releaseWaiting(client, row.authority_ref, row.id);
+      await this.authority.releaseWaiting(client, row.authority_ref, row.id, input.gameTimeMs);
     } else {
       if (!row.iron_cost_id || !row.silver_cost_id) throw new Error("BUILDING_COST_MISSING");
       await this.ledger.cancelCost(client, row.kingdom_id, row.iron_cost_id, input.gameTimeMs);
@@ -309,6 +312,7 @@ export class BuildingEngine {
         mandateVersion: row.mandate_version,
         ordinaryIron,
         ordinarySilver,
+        gameTimeMs,
       }))
     )
       return false;

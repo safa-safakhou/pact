@@ -1,7 +1,8 @@
 import { randomUUID } from "node:crypto";
+import { ExposureService } from "@pact/authority";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { wholeResources } from "@pact/domain";
-import { TroopService } from "@pact/kingdom";
+import { ImmediateExposureAdapter, TroopService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -505,5 +506,54 @@ describe("training, unit identity, and placement", () => {
         )
       ).rows[0]?.count,
     ).toBe(12);
+  });
+
+  it("charges agent training to immediate authority and leaves spent intact after cancellation", async () => {
+    const owner = await foundingFixture();
+    await credit(owner.kingdomId, 20, 8);
+    await pool.query(
+      `INSERT INTO kingdom_mandates(product_scope, account_id, allowed_actions, resource_limits)
+       VALUES ('pact', $1, ARRAY['training.queue'], $2::jsonb)`,
+      [owner.accountId, JSON.stringify({ iron: String(wholeResources(10)), silver: String(wholeResources(4)) })],
+    );
+    const agentTroops = new TroopService("pact", ledger, new ImmediateExposureAdapter(new ExposureService("pact")));
+    const batchId = randomUUID();
+    await withTransaction(pool, (client) =>
+      agentTroops.queueTraining(client, {
+        ...owner,
+        batchId,
+        type: "spearman",
+        count: 1,
+        gameTimeMs: 60_000,
+        actorKind: "agent",
+      }),
+    );
+    await withTransaction(pool, (client) =>
+      agentTroops.cancelTraining(client, {
+        ...owner,
+        batchId,
+        gameTimeMs: 120_000,
+      }),
+    );
+    const spent = await pool.query<{ asset: string; units: string }>(
+      "SELECT asset, units FROM authority_spends WHERE account_id = $1 ORDER BY asset",
+      [owner.accountId],
+    );
+    expect(spent.rows).toEqual([
+      { asset: "iron", units: String(wholeResources(10)) },
+      { asset: "silver", units: String(wholeResources(4)) },
+    ]);
+    await expect(
+      withTransaction(pool, (client) =>
+        agentTroops.queueTraining(client, {
+          ...owner,
+          batchId: randomUUID(),
+          type: "spearman",
+          count: 1,
+          gameTimeMs: 180_000,
+          actorKind: "agent",
+        }),
+      ),
+    ).rejects.toMatchObject({ code: "INSUFFICIENT_ALLOWANCE" });
   });
 });

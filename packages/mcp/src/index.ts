@@ -6,4 +6,5 @@ export {
   McpTransport,
   type McpTransportOptions,
   SUPPORTED_MCP_PROTOCOLS,
+  type WorldViewReader,
 } from "./transport.js";

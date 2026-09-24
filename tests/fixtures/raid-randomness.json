@@ -1,0 +1,8 @@
+{
+  "raid_id": "00000000-0000-7000-8000-000000000001",
+  "rules_version": "pact-s1-v1",
+  "seed": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8",
+  "commitment": "ededa106baaea39037285ffd2cf311d2285b220865378e5883bcc8e2f047866f",
+  "attacker_die": 6,
+  "defender_die": 1
+}

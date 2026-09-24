@@ -37,16 +37,18 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
       return reply.code(status).send({ error: { code: error.code, message: "The request could not be completed." } });
     }
     if (error instanceof DispatcherError) {
-      const status = error.code === "FORBIDDEN" ? 403 : error.code === "STALE_VERSION" ? 409 : 400;
+      const status =
+        error.code === "FORBIDDEN"
+          ? 403
+          : error.code === "STALE_VERSION"
+            ? 409
+            : error.code === "RATE_LIMITED"
+              ? 429
+              : 400;
       return reply.code(status).send({
         schemaVersion: "pact.command.v1",
         commandId: "00000000-0000-4000-8000-000000000000",
-        code:
-          error.code === "STALE_VERSION"
-            ? "STALE_VERSION"
-            : error.code === "FORBIDDEN"
-              ? "FORBIDDEN"
-              : "INVALID_COMMAND",
+        code: error.code,
         committedEventIds: [],
         recordVersions: {},
         charged: [],

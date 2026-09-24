@@ -1,6 +1,6 @@
-import type { CommandDispatcher } from "@pact/application";
+import { type CommandDispatcher, DispatcherError } from "@pact/application";
 import { ApprovalError, type ApprovalService } from "@pact/approvals";
-import { ProductScopeSchema } from "@pact/contracts";
+import { AgentScopeSchema, ProductScopeSchema } from "@pact/contracts";
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
 import { InboxError, type InboxService } from "@pact/inbox";
@@ -41,6 +41,19 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
     }
     if (error instanceof McpError) {
       return reply.code(error.httpStatus).send({ error: { code: error.code } });
+    }
+    if (error instanceof DispatcherError) {
+      return reply
+        .code(
+          error.code === "FORBIDDEN"
+            ? 403
+            : error.code === "STALE_VERSION"
+              ? 409
+              : error.code === "RATE_LIMITED"
+                ? 429
+                : 400,
+        )
+        .send({ error: { code: error.code } });
     }
     if (error instanceof ApprovalError) {
       const status =
@@ -89,6 +102,7 @@ export function registerMcpRoutes(
         accountId: token.accountId,
         productScope: ProductScopeSchema.parse("pact"),
         audience: "agent" as const,
+        agentScopes: z.array(AgentScopeSchema).parse(token.scopes),
       };
       const sessionHeader = request.headers["mcp-session-id"];
       const sessionId = typeof sessionHeader === "string" ? sessionHeader : undefined;
@@ -113,6 +127,7 @@ export function registerMcpRoutes(
           accountId: token.accountId,
           productScope: ProductScopeSchema.parse("pact"),
           audience: "agent",
+          agentScopes: z.array(AgentScopeSchema).parse(token.scopes),
         },
         sessionHeader,
       );

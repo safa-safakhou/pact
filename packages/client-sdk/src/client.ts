@@ -111,6 +111,9 @@ export class PactClient<A extends ClientAudience> {
   }
 
   async submitCommand(command: PreparedCommand): Promise<CommandReceipt> {
+    if (this.audience === "agent" && !this.agentScopes.includes("game:act")) {
+      throw new PactClientError("FORBIDDEN", undefined, "MISSING_GAME_ACT_SCOPE");
+    }
     const response = await this.send({
       method: "POST",
       path: "/v1/commands",
@@ -135,6 +138,17 @@ export class PactClient<A extends ClientAudience> {
     if (response.status === 404) return null;
     if (response.status < 200 || response.status >= 300) throw responseError(response.status, response.body);
     return parseReceipt(response.body);
+  }
+
+  /** Read the same server-authorized projection used by the MCP world-read tool. */
+  async readKingdomView(targetKingdomId: string, forecastMinutes = 60): Promise<unknown> {
+    const response = await this.send({
+      method: "GET",
+      path: `/v1/world/kingdoms/${encodeURIComponent(targetKingdomId)}?forecastMinutes=${encodeURIComponent(String(forecastMinutes))}`,
+      headers: { "x-pact-api-version": API_VERSION },
+    });
+    if (response.status < 200 || response.status >= 300) throw responseError(response.status, response.body);
+    return response.body;
   }
 
   async capabilities(): Promise<CapabilityDocument> {

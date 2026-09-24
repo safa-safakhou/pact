@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
 import { CommandDispatcher } from "@pact/application";
 import { ApprovalService } from "@pact/approvals";
-import { AuthorityService } from "@pact/authority";
+import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
 import { CredentialVaultService, RsaOaepPublicKeyWrapper } from "@pact/credential-vault";
 import { createPool } from "@pact/db";
@@ -14,7 +14,22 @@ import {
   TokenDigester,
 } from "@pact/identity";
 import { InboxService } from "@pact/inbox";
-import { KingdomService } from "@pact/kingdom";
+import {
+  ActionLimitService,
+  BuildingEngine,
+  ConstructionExposureAdapter,
+  GarrisonService,
+  ImmediateExposureAdapter,
+  KingdomRetirementService,
+  KingdomService,
+  ScoutService,
+  SocialService,
+  SupplyExposureAdapter,
+  SupplyService,
+  SupplySettlementService,
+  TroopService,
+  WorldViewService,
+} from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
@@ -25,6 +40,7 @@ import { RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { readEnvironment } from "./config.js";
+import { GameCommandHandler } from "./game-command-handler.js";
 import { loadOperatorPreflight } from "./operator-preflight.js";
 import { buildServer } from "./server.js";
 
@@ -64,10 +80,67 @@ const kingdom = new KingdomService(pool, {
   world,
   ledger: new ResourceLedger("pact"),
 });
+const worldViews = new WorldViewService(pool, "pact");
+const inbox = new InboxService(pool, { productScope: "pact", clock });
+const runs = new RunService(pool, { productScope: "pact", clock, inbox });
+const social = new SocialService(
+  "pact",
+  new ResourceLedger("pact"),
+  new ActionLimitService("pact"),
+  clock,
+  new ImmediateExposureAdapter(new ExposureService("pact")),
+);
+const troops = new TroopService(
+  "pact",
+  new ResourceLedger("pact"),
+  new ImmediateExposureAdapter(new ExposureService("pact")),
+);
+const humanPermits = new ExactHumanPermitService("pact");
+const buildingLedger = new ResourceLedger("pact");
+const buildings = new BuildingEngine(
+  "pact",
+  buildingLedger,
+  new ConstructionExposureAdapter("pact", new ExposureService("pact", humanPermits), buildingLedger),
+);
+const retirementLedger = new ResourceLedger("pact");
+const retirementExposure = new ExposureService("pact", humanPermits);
+const retirementSupplyAuthority = new SupplyExposureAdapter(retirementExposure);
+const supply = new SupplyService(
+  "pact",
+  retirementLedger,
+  new ActionLimitService("pact"),
+  social,
+  retirementSupplyAuthority,
+);
+const supplySettlement = new SupplySettlementService(
+  "pact",
+  retirementLedger,
+  { read: (client, accountId, resource) => readReserveFloor(client, "pact", accountId, resource) },
+  retirementSupplyAuthority,
+);
+const scouts = new ScoutService("pact", retirementLedger, troops, new ActionLimitService("pact"), retirementExposure);
+const garrison = new GarrisonService("pact", retirementLedger, troops, retirementExposure, humanPermits);
+const gameCommands = new GameCommandHandler(
+  social,
+  (client, accountId, holderId) => runs.assertMcpWriteLease(client, accountId, holderId),
+  kingdom,
+  troops,
+  buildings,
+  humanPermits,
+  supply,
+  supplySettlement,
+  retirementExposure,
+  scouts,
+  garrison,
+);
 const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
+  game: {
+    admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
+    execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
+  },
 });
 const oauth = new OAuthService(pool, {
   productScope: "pact",
@@ -89,6 +162,8 @@ const mcp = new McpTransport({
   dispatcher,
   origin: environment.PACT_ORIGIN,
   clock,
+  worldViews,
+  runLeases: runs,
 });
 const approvals = new ApprovalService(pool, {
   productScope: "pact",
@@ -97,8 +172,6 @@ const approvals = new ApprovalService(pool, {
   clock,
   origin: environment.PACT_ORIGIN,
 });
-const inbox = new InboxService(pool, { productScope: "pact", clock });
-const runs = new RunService(pool, { productScope: "pact", clock, inbox });
 const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
   ? new CredentialVaultService(pool, {
       productScope: "pact",
@@ -110,9 +183,20 @@ const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
     })
   : undefined;
 const openRouter = new OpenRouterAuthService(pool, { productScope: "pact", clock });
+const retirement = new KingdomRetirementService(
+  "pact",
+  world,
+  retirementLedger,
+  supply,
+  supplySettlement,
+  garrison,
+  buildings,
+  troops,
+);
 const privacy = new PrivacyService(pool, {
   productScope: "pact",
   clock,
+  retirement,
   ...(environment.PACT_DELETION_REGISTRY_FILE
     ? { deletionRegistry: new FileDeletionRegistry(environment.PACT_DELETION_REGISTRY_FILE) }
     : {}),
@@ -133,6 +217,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   identity,
   onboarding,
   kingdom,
+  worldViews,
   dispatcher,
   oauth,
   authority,

@@ -19,6 +19,13 @@ export interface PrivacyServiceOptions {
   readonly productScope: string;
   readonly clock: PrivacyClock;
   readonly deletionRegistry?: DeletionRegistryStore;
+  /** Product-owned game cleanup, committed with credential/session revocation. */
+  readonly retirement?: {
+    begin(client: PoolClient, accountId: string): Promise<void>;
+    eraseIdentity(client: PoolClient, accountId: string): Promise<void>;
+    pruneHistory(client: PoolClient, before: Date): Promise<number>;
+    pruneKingdoms(client: PoolClient, before: Date): Promise<number>;
+  };
 }
 
 export interface DeletionTombstone {
@@ -164,6 +171,7 @@ export class PrivacyService {
            completed_at = NULL`,
         [tombstone.deletionId, this.options.productScope, accountId, now, purgeDueAt, suppressUntil],
       );
+      await this.beginRetirement(client, accountId);
       await this.closeAccount(client, accountId, now);
       await appendOutbox(client, {
         productScope: this.options.productScope,
@@ -232,6 +240,7 @@ export class PrivacyService {
       for (const record of records.rows) {
         const exists = await client.query("SELECT 1 FROM accounts WHERE id = $1", [record.account_id]);
         if (exists.rowCount === 1) {
+          await this.beginRetirement(client, record.account_id);
           await this.closeAccount(client, record.account_id, now);
           closed += 1;
           if (record.live_purge_due_at <= now && !(await this.hasLegalHold(client, record.account_id))) {
@@ -291,6 +300,77 @@ export class PrivacyService {
       const inbox = await client.query("DELETE FROM inbox_events WHERE created_at <= $1", [
         new Date(now.getTime() - days(90)),
       ]);
+      const directMessages = await client.query("DELETE FROM direct_messages WHERE created_at <= $1", [
+        new Date(now.getTime() - days(90)),
+      ]);
+      const coldRequests = await client.query("DELETE FROM cold_contact_requests WHERE created_at <= $1", [
+        new Date(now.getTime() - days(90)),
+      ]);
+      const directTransfers = await client.query("DELETE FROM direct_transfers WHERE created_at <= $1", [
+        new Date(now.getTime() - days(180)),
+      ]);
+      const contactInvitations = await client.query("DELETE FROM direct_contact_invitations WHERE expires_at <= $1", [
+        new Date(now.getTime() - days(1)),
+      ]);
+      const closedSupplyOffers = await client.query(
+        "DELETE FROM supply_offers WHERE status IN ('withdrawn', 'expired') AND closed_at <= $1",
+        [new Date(now.getTime() - days(180))],
+      );
+      const closedSupplyContracts = await client.query<{ offer_id: string }>(
+        "DELETE FROM supply_contracts WHERE status <> 'active' AND closed_at <= $1 RETURNING offer_id",
+        [new Date(now.getTime() - days(180))],
+      );
+      if (closedSupplyContracts.rows.length) {
+        await client.query("DELETE FROM supply_offers WHERE id = ANY($1::uuid[])", [
+          closedSupplyContracts.rows.map((row) => row.offer_id),
+        ]);
+      }
+      await client.query("DELETE FROM garrison_offers WHERE status IN ('withdrawn', 'expired') AND closed_at <= $1", [
+        new Date(now.getTime() - days(180)),
+      ]);
+      const closedGarrisons = await client.query<{ offer_id: string; id: string }>(
+        "DELETE FROM garrison_contracts WHERE status = 'closed' AND closed_at <= $1 RETURNING offer_id, id",
+        [new Date(now.getTime() - days(180))],
+      );
+      if (closedGarrisons.rows.length) {
+        await client.query("DELETE FROM garrison_offers WHERE id = ANY($1::uuid[])", [
+          closedGarrisons.rows.map((row) => row.offer_id),
+        ]);
+        await client.query("DELETE FROM garrison_upkeep_defaults WHERE detachment_ref = ANY($1::uuid[])", [
+          closedGarrisons.rows.map((row) => row.id),
+        ]);
+      }
+      await client.query("DELETE FROM scout_operations WHERE status = 'completed' AND completed_at <= $1", [
+        new Date(now.getTime() - days(180)),
+      ]);
+      const closedRaids = await client.query<{ id: string }>(
+        "DELETE FROM raids WHERE status IN ('resolved','canceled') AND closed_at <= $1 RETURNING id",
+        [new Date(now.getTime() - days(180))],
+      );
+      if (closedRaids.rows.length) {
+        await client.query("DELETE FROM battle_eligibility_snapshots WHERE battle_id = ANY($1::uuid[])", [
+          closedRaids.rows.map((row) => row.id),
+        ]);
+      }
+      const authoritySpends = await client.query("DELETE FROM authority_spends WHERE created_at <= $1", [
+        new Date(now.getTime() - days(180)),
+      ]);
+      const closedAuthorityCommitments = await client.query(
+        "DELETE FROM authority_commitments WHERE status = 'closed' AND closed_at <= $1",
+        [new Date(now.getTime() - days(180))],
+      );
+      const authorityHumanPermits = await client.query(
+        "DELETE FROM authority_human_permits WHERE expires_at <= $1 AND created_at <= $2",
+        [now, new Date(now.getTime() - days(1))],
+      );
+      const oldRaidEvidence = await client.query(
+        "DELETE FROM raid_seed_commitments WHERE status <> 'committed' AND revealed_at <= $1",
+        [new Date(now.getTime() - days(180))],
+      );
+      const retiredMovements =
+        (await this.options.retirement?.pruneHistory(client, new Date(now.getTime() - days(180)))) ?? 0;
+      const retiredKingdoms =
+        (await this.options.retirement?.pruneKingdoms(client, new Date(now.getTime() - days(180)))) ?? 0;
       const bootstraps = await client.query("DELETE FROM telegram_link_bootstraps WHERE expires_at <= $1", [now]);
       const deletionRegistry = await client.query(
         "DELETE FROM privacy_deletion_registry WHERE backup_suppress_until <= $1",
@@ -305,6 +385,18 @@ export class PrivacyService {
         drafts: drafts.rowCount ?? 0,
         runs: runs.rowCount ?? 0,
         inbox: inbox.rowCount ?? 0,
+        directMessages: directMessages.rowCount ?? 0,
+        coldRequests: coldRequests.rowCount ?? 0,
+        directTransfers: directTransfers.rowCount ?? 0,
+        contactInvitations: contactInvitations.rowCount ?? 0,
+        closedSupplyOffers: closedSupplyOffers.rowCount ?? 0,
+        closedSupplyContracts: closedSupplyContracts.rowCount ?? 0,
+        authoritySpends: authoritySpends.rowCount ?? 0,
+        closedAuthorityCommitments: closedAuthorityCommitments.rowCount ?? 0,
+        authorityHumanPermits: authorityHumanPermits.rowCount ?? 0,
+        raidEvidence: oldRaidEvidence.rowCount ?? 0,
+        retiredMovements,
+        retiredKingdoms,
         telegramBootstraps: bootstraps.rowCount ?? 0,
         deletionRegistry: deletionRegistry.rowCount ?? 0,
       };
@@ -375,6 +467,22 @@ export class PrivacyService {
     const ledger =
       await query(`SELECT asset, spent_units AS "spentUnits", reserved_units AS "reservedUnits", updated_at AS "updatedAt"
              FROM authority_ledger WHERE product_scope = $1 AND account_id = $2`);
+    const authorityCommitments = await query(`SELECT c.id, c.operation_key AS "operationKey", c.action,
+                    c.actor_kind AS "actorKind", c.subject_ref AS "subjectRef", c.troop_count AS "troopCount",
+                    c.status, c.created_game_time_ms AS "createdGameTimeMs",
+                    c.closed_game_time_ms AS "closedGameTimeMs",
+                    COALESCE(jsonb_agg(jsonb_build_object('asset', a.asset, 'originalUnits', a.original_units,
+                      'remainingUnits', a.remaining_units, 'spentUnits', a.spent_units))
+                      FILTER (WHERE a.asset IS NOT NULL), '[]'::jsonb) AS assets
+             FROM authority_commitments c LEFT JOIN authority_commitment_assets a ON a.commitment_id = c.id
+             WHERE c.product_scope = $1 AND c.account_id = $2 GROUP BY c.id`);
+    const authoritySpends = await query(`SELECT asset, units, game_time_ms AS "gameTimeMs",
+                    operation_key AS "operationKey", count_against_limit AS "countAgainstLimit"
+             FROM authority_spends WHERE product_scope = $1 AND account_id = $2`);
+    const authorityHumanPermits = await query(`SELECT id, action, operation_key AS "operationKey",
+                    assets, troop_count AS "troopCount", used_at AS "usedAt",
+                    expires_at AS "expiresAt"
+             FROM authority_human_permits WHERE product_scope = $1 AND account_id = $2`);
     const runs = await query(`SELECT run_id AS "runId", subject_id AS "subjectId", status, objective, provider, model,
                     client_kind AS "clientKind", used_conversations AS "usedConversations",
                     used_messages AS "usedMessages", used_calls AS "usedCalls", used_tokens AS "usedTokens",
@@ -385,6 +493,75 @@ export class PrivacyService {
     const telegram =
       await query(`SELECT display_username AS "displayUsername", linked_at AS "linkedAt", revoked_at AS "revokedAt"
              FROM telegram_account_links WHERE product_scope = $1 AND account_id = $2`);
+    const messages = await query(`SELECT m.id, m.sender_kingdom_id AS "senderKingdomId",
+                    m.recipient_kingdom_id AS "recipientKingdomId", m.body,
+                    m.sent_game_time_ms AS "sentGameTimeMs", m.read_game_time_ms AS "readGameTimeMs"
+             FROM direct_messages m JOIN kingdoms k ON k.product_scope = m.product_scope
+             WHERE m.product_scope = $1 AND k.account_id = $2
+               AND (k.id = m.sender_kingdom_id OR k.id = m.recipient_kingdom_id)`);
+    const contacts = await query(`SELECT c.kingdom_a AS "kingdomA", c.kingdom_b AS "kingdomB",
+                    c.accepted_game_time_ms AS "acceptedGameTimeMs"
+             FROM social_contacts c JOIN kingdoms k ON k.product_scope = c.product_scope
+             WHERE c.product_scope = $1 AND k.account_id = $2 AND (k.id = c.kingdom_a OR k.id = c.kingdom_b)`);
+    const transfers = await query(`SELECT t.id, t.sender_kingdom_id AS "senderKingdomId",
+                    t.recipient_kingdom_id AS "recipientKingdomId", t.resource,
+                    t.requested_units AS "requestedUnits", t.credited_units AS "creditedUnits",
+                    t.overflow_units AS "overflowUnits", t.game_time_ms AS "gameTimeMs"
+             FROM direct_transfers t JOIN kingdoms k ON k.product_scope = t.product_scope
+             WHERE t.product_scope = $1 AND k.account_id = $2
+               AND (k.id = t.sender_kingdom_id OR k.id = t.recipient_kingdom_id)`);
+    const supplyOffers = await query(`SELECT o.id, o.kingdom_a AS "kingdomA", o.kingdom_b AS "kingdomB",
+                    o.version, o.terms, o.status, o.created_game_time_ms AS "createdGameTimeMs",
+                    o.expires_game_time_ms AS "expiresGameTimeMs"
+             FROM supply_offers o JOIN kingdoms k ON k.product_scope = o.product_scope
+             WHERE o.product_scope = $1 AND k.account_id = $2 AND (k.id = o.kingdom_a OR k.id = o.kingdom_b)`);
+    const supplyContracts = await query(`SELECT c.id, c.offer_id AS "offerId", c.offer_version AS "offerVersion",
+                    c.kingdom_a AS "kingdomA", c.kingdom_b AS "kingdomB", c.terms, c.status,
+                    c.start_game_time_ms AS "startGameTimeMs", c.end_game_time_ms AS "endGameTimeMs",
+                    c.close_reason AS "closeReason", c.closed_game_time_ms AS "closedGameTimeMs"
+             FROM supply_contracts c JOIN kingdoms k ON k.product_scope = c.product_scope
+             WHERE c.product_scope = $1 AND k.account_id = $2 AND (k.id = c.kingdom_a OR k.id = c.kingdom_b)`);
+    const supplyInstallments = await query(`SELECT i.contract_id AS "contractId", i.game_time_ms AS "gameTimeMs",
+                    i.payer_kingdom_id AS "payerKingdomId", i.recipient_kingdom_id AS "recipientKingdomId",
+                    i.resource, i.due_units AS "dueUnits", i.delivered_units AS "deliveredUnits",
+                    i.overflow_units AS "overflowUnits", i.failure_reason AS "failureReason"
+             FROM supply_installments i JOIN supply_contracts c ON c.id = i.contract_id
+             JOIN kingdoms k ON k.product_scope = c.product_scope
+             WHERE i.product_scope = $1 AND k.account_id = $2 AND (k.id = c.kingdom_a OR k.id = c.kingdom_b)`);
+    const garrisonOffers = await query(`SELECT o.id, o.lender_kingdom_id AS "lenderKingdomId",
+                    o.host_kingdom_id AS "hostKingdomId", o.version, o.terms, o.status,
+                    o.created_game_time_ms AS "createdGameTimeMs", o.expires_game_time_ms AS "expiresGameTimeMs"
+             FROM garrison_offers o JOIN kingdoms k ON k.product_scope = o.product_scope
+             WHERE o.product_scope = $1 AND k.account_id = $2
+               AND (k.id = o.lender_kingdom_id OR k.id = o.host_kingdom_id)`);
+    const garrisonContracts = await query(`SELECT c.id, c.offer_id AS "offerId",
+                    c.lender_kingdom_id AS "lenderKingdomId", c.host_kingdom_id AS "hostKingdomId",
+                    c.terms, c.status, c.start_game_time_ms AS "startGameTimeMs",
+                    c.end_game_time_ms AS "endGameTimeMs", c.lender_default AS "lenderDefault",
+                    c.host_default AS "hostDefault", c.close_reason AS "closeReason",
+                    c.closed_game_time_ms AS "closedGameTimeMs"
+             FROM garrison_contracts c JOIN kingdoms k ON k.product_scope = c.product_scope
+             WHERE c.product_scope = $1 AND k.account_id = $2
+               AND (k.id = c.lender_kingdom_id OR k.id = c.host_kingdom_id)`);
+    const scoutReports = await query(`SELECT o.id, o.scout_kingdom_id AS "scoutKingdomId",
+                    o.target_kingdom_id AS "targetKingdomId", o.status,
+                    o.started_game_time_ms AS "startedGameTimeMs",
+                    o.due_game_time_ms AS "dueGameTimeMs",
+                    o.completed_game_time_ms AS "completedGameTimeMs", o.report
+             FROM scout_operations o JOIN kingdoms k ON k.product_scope = o.product_scope
+             WHERE o.product_scope = $1 AND k.account_id = $2
+               AND (k.id = o.scout_kingdom_id OR EXISTS (
+                 SELECT 1 FROM scout_report_shares s WHERE s.product_scope = o.product_scope
+                   AND s.operation_id = o.id AND s.recipient_kingdom_id = k.id))`);
+    const raidReports = await query(`SELECT r.id, r.leader_kingdom_id AS "leaderKingdomId",
+                    r.target_kingdom_id AS "targetKingdomId", r.status,
+                    r.declared_game_time_ms AS "declaredGameTimeMs",
+                    r.resolution_game_time_ms AS "resolutionGameTimeMs", r.participant_report AS "participantReport"
+             FROM raids r JOIN kingdoms k ON k.product_scope = r.product_scope
+             WHERE r.product_scope = $1 AND k.account_id = $2
+               AND (k.id = r.target_kingdom_id OR EXISTS (
+                 SELECT 1 FROM raid_contributions c WHERE c.product_scope = r.product_scope
+                   AND c.raid_id = r.id AND c.kingdom_id = k.id AND c.status = 'committed'))`);
     return {
       account: account.rows[0],
       drafts,
@@ -393,10 +570,32 @@ export class PrivacyService {
       approvals,
       mandates,
       authorityLedger: ledger,
+      authorityCommitments,
+      authoritySpends,
+      authorityHumanPermits,
       runs,
       inbox,
       telegram,
+      messages,
+      contacts,
+      transfers,
+      supplyOffers,
+      supplyContracts,
+      supplyInstallments,
+      garrisonOffers,
+      garrisonContracts,
+      scoutReports,
+      raidReports,
     };
+  }
+
+  private async beginRetirement(client: PoolClient, accountId: string): Promise<void> {
+    if (this.options.retirement) return this.options.retirement.begin(client, accountId);
+    const kingdom = await client.query("SELECT 1 FROM kingdoms WHERE product_scope = $1 AND account_id = $2 LIMIT 1", [
+      this.options.productScope,
+      accountId,
+    ]);
+    if (kingdom.rowCount) throw new Error("RETIREMENT_PORT_REQUIRED");
   }
 
   private async closeAccount(client: PoolClient, accountId: string, now: Date): Promise<void> {
@@ -449,6 +648,7 @@ export class PrivacyService {
   }
 
   private async purgeAccount(client: PoolClient, accountId: string, now: Date): Promise<void> {
+    await this.options.retirement?.eraseIdentity(client, accountId);
     await client.query("DELETE FROM outbox_events WHERE product_scope = $1 AND payload->>'accountId' = $2", [
       this.options.productScope,
       accountId,

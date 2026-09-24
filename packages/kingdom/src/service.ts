@@ -70,6 +70,14 @@ export class KingdomService {
     return result.rows[0] ? fromRow(result.rows[0]) : null;
   }
 
+  async getByAccountInTransaction(client: PoolClient, accountId: string): Promise<KingdomActivation | null> {
+    const result = await client.query<KingdomRow>(
+      "SELECT * FROM kingdoms WHERE product_scope = $1 AND account_id = $2 AND status = 'ranked'",
+      [this.options.productScope, accountId],
+    );
+    return result.rows[0] ? fromRow(result.rows[0]) : null;
+  }
+
   async activate(accountId: string): Promise<KingdomActivation> {
     const already = await this.getByAccount(accountId);
     if (already) return already;

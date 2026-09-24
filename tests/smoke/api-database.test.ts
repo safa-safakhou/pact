@@ -51,6 +51,19 @@ describe("API/database smoke", () => {
       { name: "0019_kingdom_founding.sql" },
       { name: "0020_building_queues.sql" },
       { name: "0021_troop_training.sql" },
+      { name: "0022_upkeep_hunger.sql" },
+      { name: "0023_action_limits.sql" },
+      { name: "0024_social_contacts.sql" },
+      { name: "0025_supply_offers.sql" },
+      { name: "0026_supply_settlement.sql" },
+      { name: "0027_future_exposure.sql" },
+      { name: "0028_raid_randomness.sql" },
+      { name: "0029_garrison_contracts.sql" },
+      { name: "0030_scout_reports.sql" },
+      { name: "0031_raids.sql" },
+      { name: "0032_fortune.sql" },
+      { name: "0033_achievements.sql" },
+      { name: "0034_kingdom_retirement.sql" },
     ]);
     await server.close();
   });

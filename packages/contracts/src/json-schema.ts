@@ -1,10 +1,17 @@
 import { z } from "zod";
-import { CommandEnvelopeSchema, CommandReceiptSchema, EventEnvelopeSchema, ToolCallSchema } from "./schemas.js";
+import {
+  CommandEnvelopeSchema,
+  CommandReceiptSchema,
+  EventEnvelopeSchema,
+  ToolCallSchema,
+  WorldViewQuerySchema,
+} from "./schemas.js";
 
 export const commandJsonSchema = z.toJSONSchema(CommandEnvelopeSchema, { target: "draft-7" });
 export const receiptJsonSchema = z.toJSONSchema(CommandReceiptSchema, { target: "draft-7" });
 export const eventJsonSchema = z.toJSONSchema(EventEnvelopeSchema, { target: "draft-7" });
 export const toolCallJsonSchema = z.toJSONSchema(ToolCallSchema, { target: "draft-7" });
+export const worldViewQueryJsonSchema = z.toJSONSchema(WorldViewQuerySchema, { target: "draft-7" });
 
 export const httpCommandContract = {
   method: "POST",

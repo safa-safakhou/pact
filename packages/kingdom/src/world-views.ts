@@ -1,0 +1,485 @@
+import { withTransaction } from "@pact/db";
+import { rulesCatalog } from "@pact/domain";
+import type { Pool, PoolClient } from "pg";
+import type { SupplyTerms } from "./supply-terms.js";
+
+type Resource = "iron" | "silver" | "grain";
+const resources: readonly Resource[] = ["iron", "silver", "grain"];
+const minuteMs = 60_000;
+
+interface KingdomRow {
+  id: string;
+  account_id: string;
+  handle: string;
+  display_name: string;
+  portrait: string;
+  status: string;
+}
+interface BalanceRow {
+  resource: Resource;
+  ordinary_units: string;
+  allowance_units: string;
+  locked_units: string;
+  storage_cap_units: string;
+  production_per_minute_units: string;
+  version: string;
+  grant_expires_game_time_ms: string;
+}
+interface ContractRow {
+  id: string;
+  kingdom_a: string;
+  kingdom_b: string;
+  terms: SupplyTerms;
+  end_game_time_ms: string;
+  notice_end_game_time_ms: string | null;
+}
+interface ClockRow {
+  committed_game_time_ms: string;
+  tick_sequence: string;
+  status: string;
+}
+
+export interface PublicKingdomView {
+  audience: "public" | "contact" | "participant";
+  profile: { kingdomId: string; handle: string; displayName: string; portrait: string };
+  asOfGameTimeMs: number;
+  committedTickSequence: string;
+  worldStatus: string;
+  sharedRecords?: { kind: "supply" | "garrison" | "raid"; id: string; status: string }[];
+  publicEvents: {
+    kind: "default" | "battle";
+    id: string;
+    gameTimeMs: number;
+    parties: [string, string];
+    outcome: string;
+  }[];
+}
+
+export interface OwnerKingdomView {
+  audience: "owner";
+  profile: PublicKingdomView["profile"];
+  asOfGameTimeMs: number;
+  committedTickSequence: string;
+  lastCommittedEventId: string;
+  worldStatus: string;
+  balances: Record<
+    Resource,
+    {
+      ordinaryUnits: string;
+      foundingAllowanceUnits: string;
+      lockedUnits: string;
+      capacityUnits: string;
+      productionPerMinuteUnits: string;
+      version: string;
+    }
+  >;
+  buildings: { kind: string; level: number }[];
+  builders: {
+    slot: number;
+    instructionId: string | null;
+    kind: string | null;
+    state: string | null;
+    dueGameTimeMs: number | null;
+  }[];
+  troops: { type: string; placement: string; ownerKingdomId: string; hostKingdomId: string; count: number }[];
+  upkeep: { perMinuteUnits: string; hungry: boolean };
+  contracts: {
+    id: string;
+    counterpartyKingdomId: string;
+    endsGameTimeMs: number;
+    noticeEndsGameTimeMs: number | null;
+    terms: SupplyTerms;
+  }[];
+  threats: { kind: "raid" | "scout"; id: string; dueGameTimeMs: number }[];
+  records: { kind: string; id: string; occurredAt: string }[];
+  forecast: {
+    throughGameTimeMs: number;
+    assumption: string;
+    harvestPercentByMinute: number[];
+    expected: Record<Resource, { ordinaryUnits: string; foundingAllowanceUnits: string }>;
+    assumedDeliveries: { contractId: string; direction: "incoming" | "outgoing"; resource: Resource; units: string }[];
+  };
+}
+
+export type KingdomWorldView = PublicKingdomView | OwnerKingdomView;
+
+function validId(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
+
+/** A conditional projection: the caller supplies only an authenticated account ID, never an audience. */
+export class WorldViewService {
+  constructor(
+    private readonly pool: Pool,
+    private readonly productScope: string,
+    private readonly harvestPercentAt: (gameTimeMs: number) => number = () => 100,
+  ) {}
+
+  async read(
+    accountId: string | null,
+    targetKingdomId: string,
+    forecastMinutes = 60,
+  ): Promise<KingdomWorldView | null> {
+    if (!validId(targetKingdomId) || (accountId !== null && !validId(accountId))) return null;
+    if (!Number.isSafeInteger(forecastMinutes) || forecastMinutes < 1 || forecastMinutes > 60)
+      throw new Error("INVALID_FORECAST_HORIZON");
+    return withTransaction(
+      this.pool,
+      (client) => this.readSnapshot(client, accountId, targetKingdomId, forecastMinutes),
+      {
+        isolation: "REPEATABLE READ",
+      },
+    );
+  }
+
+  private async readSnapshot(
+    client: PoolClient,
+    accountId: string | null,
+    targetId: string,
+    minutes: number,
+  ): Promise<KingdomWorldView | null> {
+    const kingdom = (
+      await client.query<KingdomRow>(
+        "SELECT id, account_id, handle, display_name, portrait, status FROM kingdoms WHERE product_scope = $1 AND id = $2 AND status = 'ranked'",
+        [this.productScope, targetId],
+      )
+    ).rows[0];
+    if (!kingdom) return null;
+    const clock = (
+      await client.query<ClockRow>(
+        "SELECT committed_game_time_ms, tick_sequence, status FROM world_clocks WHERE product_scope = $1",
+        [this.productScope],
+      )
+    ).rows[0];
+    if (!clock) throw new Error("WORLD_NOT_BOOTSTRAPPED");
+    const gameTimeMs = Number(clock.committed_game_time_ms);
+    const profile = {
+      kingdomId: kingdom.id,
+      handle: kingdom.handle,
+      displayName: kingdom.display_name,
+      portrait: kingdom.portrait,
+    };
+    const common = {
+      profile,
+      asOfGameTimeMs: gameTimeMs,
+      committedTickSequence: clock.tick_sequence,
+      worldStatus: clock.status,
+    };
+    const viewer =
+      accountId === null
+        ? null
+        : ((
+            await client.query<{ id: string }>(
+              "SELECT id FROM kingdoms WHERE product_scope = $1 AND account_id = $2 AND status = 'ranked'",
+              [this.productScope, accountId],
+            )
+          ).rows[0]?.id ?? null);
+    if (accountId !== kingdom.account_id) {
+      const related = viewer
+        ? await client.query<{ kind: "supply" | "garrison" | "raid"; id: string; status: string }>(
+            `SELECT 'supply' AS kind, id, status FROM supply_contracts WHERE product_scope = $1
+           AND (kingdom_a = $2 AND kingdom_b = $3 OR kingdom_a = $3 AND kingdom_b = $2)
+         UNION ALL SELECT 'garrison', id, status FROM garrison_contracts WHERE product_scope = $1
+           AND (lender_kingdom_id = $2 AND host_kingdom_id = $3 OR lender_kingdom_id = $3 AND host_kingdom_id = $2)
+         UNION ALL SELECT 'raid', r.id, r.status FROM raids r WHERE r.product_scope = $1
+           AND (r.target_kingdom_id = $3 OR EXISTS (SELECT 1 FROM raid_contributions c
+             WHERE c.product_scope = $1 AND c.raid_id = r.id AND c.kingdom_id = $3))
+           AND (r.leader_kingdom_id = $2 OR r.target_kingdom_id = $2 OR EXISTS
+             (SELECT 1 FROM raid_contributions c WHERE c.product_scope = $1 AND c.raid_id = r.id AND c.kingdom_id = $2))
+         ORDER BY kind, id LIMIT 20`,
+            [this.productScope, targetId, viewer],
+          )
+        : null;
+      const contact = viewer
+        ? (
+            await client.query(
+              "SELECT 1 FROM social_contacts WHERE product_scope = $1 AND kingdom_a = LEAST($2::uuid,$3::uuid) AND kingdom_b = GREATEST($2::uuid,$3::uuid)",
+              [this.productScope, viewer, targetId],
+            )
+          ).rowCount !== 0
+        : false;
+      return {
+        audience: related?.rows.length ? "participant" : contact ? "contact" : "public",
+        ...common,
+        ...(related?.rows.length ? { sharedRecords: related.rows } : {}),
+        publicEvents: await this.publicEvents(client, targetId),
+      };
+    }
+    const balances = (
+      await client.query<BalanceRow>(
+        `SELECT b.resource, b.ordinary_units, b.allowance_units, b.locked_units,
+         b.storage_cap_units, b.production_per_minute_units, b.version, l.grant_expires_game_time_ms
+       FROM resource_balances b JOIN ledger_kingdoms l USING (product_scope, kingdom_id)
+       WHERE b.product_scope = $1 AND b.kingdom_id = $2 ORDER BY b.resource`,
+        [this.productScope, targetId],
+      )
+    ).rows;
+    if (balances.length !== 3) throw new Error("KINGDOM_BALANCES_INCOMPLETE");
+    const buildings = (
+      await client.query<{ kind: string; level: number }>(
+        "SELECT kind, level FROM kingdom_buildings WHERE product_scope = $1 AND kingdom_id = $2 ORDER BY kind",
+        [this.productScope, targetId],
+      )
+    ).rows;
+    const builders = (
+      await client.query<{
+        slot: number;
+        instruction_id: string | null;
+        kind: string | null;
+        state: string | null;
+        due_game_time_ms: string | null;
+      }>(
+        `SELECT s.slot, i.id AS instruction_id, i.building_kind AS kind, i.state, i.due_game_time_ms
+       FROM kingdom_builder_slots s LEFT JOIN building_instructions i ON i.product_scope = s.product_scope
+         AND i.kingdom_id = s.kingdom_id AND i.builder_slot = s.slot AND i.state IN ('active','waiting')
+       WHERE s.product_scope = $1 AND s.kingdom_id = $2 ORDER BY s.slot, i.state`,
+        [this.productScope, targetId],
+      )
+    ).rows.map((row) => ({
+      slot: row.slot,
+      instructionId: row.instruction_id,
+      kind: row.kind,
+      state: row.state,
+      dueGameTimeMs: row.due_game_time_ms === null ? null : Number(row.due_game_time_ms),
+    }));
+    const troops = (
+      await client.query<{
+        type: string;
+        placement: string;
+        owner_kingdom_id: string;
+        host_kingdom_id: string;
+        count: string;
+      }>(
+        `SELECT type, placement, owner_kingdom_id, host_kingdom_id, count(*)::text FROM kingdom_troops
+       WHERE product_scope = $1 AND (owner_kingdom_id = $2 OR host_kingdom_id = $2)
+       GROUP BY type, placement, owner_kingdom_id, host_kingdom_id ORDER BY type, placement, owner_kingdom_id, host_kingdom_id`,
+        [this.productScope, targetId],
+      )
+    ).rows.map((row) => ({
+      type: row.type,
+      placement: row.placement,
+      ownerKingdomId: row.owner_kingdom_id,
+      hostKingdomId: row.host_kingdom_id,
+      count: Number(row.count),
+    }));
+    const activeContracts = (
+      await client.query<ContractRow>(
+        `SELECT id, kingdom_a, kingdom_b, terms, end_game_time_ms, notice_end_game_time_ms
+       FROM supply_contracts WHERE product_scope = $1 AND status = 'active'
+         AND (kingdom_a = $2 OR kingdom_b = $2) ORDER BY id LIMIT 32`,
+        [this.productScope, targetId],
+      )
+    ).rows;
+    const upkeepState = (
+      await client.query<{ hungry: boolean }>(
+        "SELECT hungry FROM kingdom_upkeep_state WHERE product_scope = $1 AND payer_kingdom_id = $2",
+        [this.productScope, targetId],
+      )
+    ).rows[0];
+    const upkeep = troops.reduce((sum, troop) => {
+      const pays =
+        troop.placement === "visiting" ? troop.hostKingdomId === targetId : troop.ownerKingdomId === targetId;
+      return (
+        sum +
+        (pays
+          ? BigInt(
+              troop.count * (rulesCatalog.units[troop.type as keyof typeof rulesCatalog.units]?.grainPerHour ?? 0),
+            ) * 10n
+          : 0n)
+      );
+    }, 0n);
+    const visitingUpkeep = troops.reduce((sum, troop) => {
+      if (troop.placement !== "visiting" || troop.hostKingdomId !== targetId) return sum;
+      return (
+        sum +
+        BigInt(troop.count * (rulesCatalog.units[troop.type as keyof typeof rulesCatalog.units]?.grainPerHour ?? 0)) *
+          10n
+      );
+    }, 0n);
+    const threats = (
+      await client.query<{ kind: "raid" | "scout"; id: string; due_game_time_ms: string }>(
+        `SELECT 'raid' AS kind, id, resolution_game_time_ms AS due_game_time_ms FROM raids
+         WHERE product_scope = $1 AND target_kingdom_id = $2 AND status IN ('declared','locked')
+       UNION ALL SELECT 'scout', id, due_game_time_ms FROM scout_operations
+         WHERE product_scope = $1 AND target_kingdom_id = $2 AND status = 'active'
+       ORDER BY due_game_time_ms, id LIMIT 20`,
+        [this.productScope, targetId],
+      )
+    ).rows.map((row) => ({ kind: row.kind, id: row.id, dueGameTimeMs: Number(row.due_game_time_ms) }));
+    const records = (
+      await client.query<{ type: string; event_id: string; occurred_at: Date }>(
+        `SELECT type, event_id, occurred_at FROM inbox_events WHERE product_scope = $1 AND account_id = $2
+       ORDER BY sequence DESC LIMIT 20`,
+        [this.productScope, accountId],
+      )
+    ).rows.map((row) => ({ kind: row.type, id: row.event_id, occurredAt: row.occurred_at.toISOString() }));
+    const forecast = forecastBalances({
+      now: gameTimeMs,
+      minutes,
+      balances,
+      contracts: activeContracts,
+      kingdomId: targetId,
+      upkeep,
+      visitingUpkeep,
+      harvestPercentAt: this.harvestPercentAt,
+    });
+    const lastCommittedEventId =
+      (
+        await client.query<{ id: string }>(
+          "SELECT COALESCE(max(id), 0)::text AS id FROM outbox_events WHERE product_scope = $1",
+          [this.productScope],
+        )
+      ).rows[0]?.id ?? "0";
+    return {
+      audience: "owner",
+      ...common,
+      lastCommittedEventId,
+      balances: Object.fromEntries(
+        balances.map((row) => [
+          row.resource,
+          {
+            ordinaryUnits: row.ordinary_units,
+            foundingAllowanceUnits: row.allowance_units,
+            lockedUnits: row.locked_units,
+            capacityUnits: row.storage_cap_units,
+            productionPerMinuteUnits: row.production_per_minute_units,
+            version: row.version,
+          },
+        ]),
+      ) as OwnerKingdomView["balances"],
+      buildings,
+      builders,
+      troops,
+      upkeep: { perMinuteUnits: upkeep.toString(), hungry: upkeepState?.hungry ?? false },
+      contracts: activeContracts.map((row) => ({
+        id: row.id,
+        counterpartyKingdomId: row.kingdom_a === targetId ? row.kingdom_b : row.kingdom_a,
+        endsGameTimeMs: Number(row.end_game_time_ms),
+        noticeEndsGameTimeMs: row.notice_end_game_time_ms === null ? null : Number(row.notice_end_game_time_ms),
+        terms: row.terms,
+      })),
+      threats,
+      records,
+      forecast,
+    };
+  }
+
+  private async publicEvents(client: PoolClient, targetId: string): Promise<PublicKingdomView["publicEvents"]> {
+    const events = await client.query<{
+      kind: "default" | "battle";
+      id: string;
+      game_time_ms: string;
+      party_a: string;
+      party_b: string;
+      outcome: string;
+    }>(
+      `SELECT 'default' AS kind, id, closed_game_time_ms AS game_time_ms,
+         kingdom_a AS party_a, kingdom_b AS party_b, 'defaulted' AS outcome FROM supply_contracts
+         WHERE product_scope = $1 AND (kingdom_a = $2 OR kingdom_b = $2)
+           AND status = 'defaulted' AND closed_game_time_ms IS NOT NULL
+       UNION ALL SELECT 'battle', id, resolved_game_time_ms, leader_kingdom_id,
+         target_kingdom_id, public_report->>'winner' FROM raids
+         WHERE product_scope = $1 AND (leader_kingdom_id = $2 OR target_kingdom_id = $2)
+           AND status = 'resolved' AND resolved_game_time_ms IS NOT NULL
+       ORDER BY game_time_ms DESC, id DESC LIMIT 20`,
+      [this.productScope, targetId],
+    );
+    return events.rows.map((row) => ({
+      kind: row.kind,
+      id: row.id,
+      gameTimeMs: Number(row.game_time_ms),
+      parties: [row.party_a, row.party_b],
+      outcome: row.outcome,
+    }));
+  }
+}
+
+export function forecastBalances(input: {
+  now: number;
+  minutes: number;
+  balances: readonly BalanceRow[];
+  contracts: readonly ContractRow[];
+  kingdomId: string;
+  upkeep: bigint;
+  visitingUpkeep?: bigint;
+  harvestPercentAt: (gameTimeMs: number) => number;
+}): OwnerKingdomView["forecast"] {
+  const state = Object.fromEntries(
+    input.balances.map((row) => [
+      row.resource,
+      {
+        ordinary: BigInt(row.ordinary_units),
+        allowance: BigInt(row.allowance_units),
+        cap: BigInt(row.storage_cap_units),
+        rate: BigInt(row.production_per_minute_units),
+        expiry: Number(row.grant_expires_game_time_ms),
+      },
+    ]),
+  ) as Record<Resource, { ordinary: bigint; allowance: bigint; cap: bigint; rate: bigint; expiry: number }>;
+  const deliveries = new Map<string, OwnerKingdomView["forecast"]["assumedDeliveries"][number]>();
+  const harvestPercentByMinute: number[] = [];
+  for (let step = 1; step <= input.minutes; step += 1) {
+    const at = input.now + step * minuteMs;
+    const percent = input.harvestPercentAt(at);
+    if (!Number.isSafeInteger(percent) || percent < 0 || percent > 100) throw new Error("INVALID_HARVEST_PERCENT");
+    harvestPercentByMinute.push(percent);
+    for (const resource of resources) {
+      const item = state[resource];
+      if (at >= item.expiry) item.allowance = 0n;
+      const produced = resource === "grain" ? (item.rate * BigInt(percent)) / 100n : item.rate;
+      item.ordinary = item.ordinary + produced > item.cap ? item.cap : item.ordinary + produced;
+    }
+    const grain = state.grain;
+    const visiting = input.visitingUpkeep ?? 0n;
+    if (visiting < 0n || input.upkeep < visiting) throw new Error("INVALID_UPKEEP_FORECAST");
+    const owned = input.upkeep - visiting;
+    const ordinaryOwned = grain.ordinary < owned ? grain.ordinary : owned;
+    grain.ordinary -= ordinaryOwned;
+    const allowanceNeeded = owned - ordinaryOwned;
+    grain.allowance -= grain.allowance < allowanceNeeded ? grain.allowance : allowanceNeeded;
+    grain.ordinary = grain.ordinary > visiting ? grain.ordinary - visiting : 0n;
+    // These are conditional promises, not guaranteed transfers. No hidden future stock or combat is inferred.
+    for (const contract of input.contracts) {
+      if (
+        at >= Number(contract.end_game_time_ms) ||
+        (contract.notice_end_game_time_ms !== null && at >= Number(contract.notice_end_game_time_ms))
+      )
+        continue;
+      for (const [flow, payer, recipient] of [
+        [contract.terms.aToB, contract.kingdom_a, contract.kingdom_b],
+        [contract.terms.bToA, contract.kingdom_b, contract.kingdom_a],
+      ] as const) {
+        if (!flow || (payer !== input.kingdomId && recipient !== input.kingdomId)) continue;
+        const units = BigInt(flow.wholePerHour) * 10n;
+        const direction = payer === input.kingdomId ? "outgoing" : "incoming";
+        const item = state[flow.resource];
+        if (direction === "outgoing") item.ordinary = item.ordinary > units ? item.ordinary - units : 0n;
+        else item.ordinary = item.ordinary + units > item.cap ? item.cap : item.ordinary + units;
+        const key = `${contract.id}:${direction}:${flow.resource}`;
+        const prior = deliveries.get(key);
+        deliveries.set(key, {
+          contractId: contract.id,
+          direction,
+          resource: flow.resource,
+          units: ((prior ? BigInt(prior.units) : 0n) + units).toString(),
+        });
+      }
+    }
+  }
+  return {
+    throughGameTimeMs: input.now + input.minutes * minuteMs,
+    assumption:
+      "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+    harvestPercentByMinute,
+    expected: Object.fromEntries(
+      resources.map((resource) => [
+        resource,
+        {
+          ordinaryUnits: state[resource].ordinary.toString(),
+          foundingAllowanceUnits: state[resource].allowance.toString(),
+        },
+      ]),
+    ) as OwnerKingdomView["forecast"]["expected"],
+    assumedDeliveries: [...deliveries.values()],
+  };
+}

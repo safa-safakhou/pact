@@ -29,7 +29,7 @@ export const ActorContextSchema = z
 
 export const AssetAmountSchema = z
   .object({
-    asset: z.enum(["grain", "ore", "influence", "gems"]),
+    asset: z.enum(["iron", "silver", "grain", "ore", "influence", "gems"]),
     units: z.string().regex(/^(0|[1-9][0-9]{0,17})$/, "units must be an unsigned base-10 integer string"),
   })
   .strict();
@@ -52,13 +52,157 @@ export const SandboxActionSchema = z.discriminatedUnion("kind", [
     .strict(),
 ]);
 
+const gameResource = z.enum(["iron", "silver", "grain"]);
+const supplyFlow = z.object({ resource: gameResource, wholePerHour: z.number().int().positive() }).strict();
+const supplyBond = z.object({ resource: gameResource, wholeAmount: z.number().int().positive() }).strict();
+const supplyTerms = z
+  .object({
+    aToB: supplyFlow.nullable(),
+    bToA: supplyFlow.nullable(),
+    aBond: supplyBond.nullable(),
+    bBond: supplyBond.nullable(),
+    durationHours: z.union([z.literal(1), z.literal(6), z.literal(24), z.literal(72)]),
+    noticeHours: z.union([z.literal(0), z.literal(1), z.literal(6)]),
+  })
+  .strict();
+const garrisonTerms = z
+  .object({
+    units: z
+      .array(
+        z.object({ type: z.enum(["spearman", "archer", "rider", "ram"]), count: z.number().int().positive() }).strict(),
+      )
+      .min(1)
+      .max(4),
+    durationHours: z.union([z.literal(1), z.literal(6), z.literal(24)]),
+    lenderBond: supplyBond.nullable(),
+    hostBond: supplyBond.nullable(),
+  })
+  .strict();
+export const GameActionSchema = z.discriminatedUnion("kind", [
+  z
+    .object({
+      kind: z.literal("game.contact.request"),
+      recipientKingdomId: z.uuid(),
+      note: z.string().min(1).max(1_000),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.contact.answer"), requestId: z.uuid(), accept: z.boolean() }).strict(),
+  z
+    .object({ kind: z.literal("game.message.send"), recipientKingdomId: z.uuid(), body: z.string().min(1).max(4_000) })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.transfer"),
+      recipientKingdomId: z.uuid(),
+      resource: gameResource,
+      wholeAmount: z.number().int().positive().max(1_000_000_000),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.training.queue"),
+      type: z.enum(["spearman", "archer", "rider", "ram"]),
+      count: z.number().int().min(1).max(40),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.training.cancel"), batchId: z.uuid() }).strict(),
+  z.object({ kind: z.literal("game.troop.disband"), troopId: z.uuid() }).strict(),
+  z
+    .object({
+      kind: z.literal("game.building.queue"),
+      building: z.enum(["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"]),
+      targetLevel: z.number().int().min(2).max(6),
+      slot: z.union([z.literal(1), z.literal(2)]),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.building.cancel"), instructionId: z.uuid() }).strict(),
+  z
+    .object({
+      kind: z.literal("game.supply.offer"),
+      counterpartyKingdomId: z.uuid(),
+      terms: supplyTerms,
+      expiryMinutes: z.number().int().min(5).max(60).optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.supply.counter"),
+      offerId: z.uuid(),
+      expectedVersion: z.number().int().positive(),
+      terms: supplyTerms,
+      expiryMinutes: z.number().int().min(5).max(60).optional(),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.supply.sign"), offerId: z.uuid(), version: z.number().int().positive() }).strict(),
+  z.object({ kind: z.literal("game.supply.withdraw"), offerId: z.uuid() }).strict(),
+  z
+    .object({
+      kind: z.literal("game.supply.notice"),
+      contractId: z.uuid(),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.supply.refuse"),
+      contractId: z.uuid(),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.supply.release"),
+      contractId: z.uuid(),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.scout.start"),
+      targetKingdomId: z.uuid(),
+      unitIds: z.array(z.uuid()).length(2).optional(),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.scout.share"), operationId: z.uuid(), recipientKingdomId: z.uuid() }).strict(),
+  z
+    .object({
+      kind: z.literal("game.garrison.offer"),
+      hostKingdomId: z.uuid(),
+      terms: garrisonTerms,
+      expiryMinutes: z.number().int().min(5).max(60).optional(),
+    })
+    .strict(),
+  z.object({ kind: z.literal("game.garrison.sign"), offerId: z.uuid(), version: z.number().int().positive() }).strict(),
+  z.object({ kind: z.literal("game.garrison.withdraw"), offerId: z.uuid() }).strict(),
+  z
+    .object({
+      kind: z.literal("game.garrison.exit"),
+      contractId: z.uuid(),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("game.garrison.release"),
+      contractId: z.uuid(),
+      mandateVersion: z.number().int().nonnegative().optional(),
+    })
+    .strict(),
+]);
+export const CommandActionSchema = z.union([SandboxActionSchema, GameActionSchema]);
+export type SandboxAction = z.infer<typeof SandboxActionSchema>;
+export type GameAction = z.infer<typeof GameActionSchema>;
+
 export const CommandEnvelopeSchema = z
   .object({
     schemaVersion: z.literal(SCHEMA_VERSION),
     commandId: z.uuid(),
     actor: ActorContextSchema,
     expectedVersion: z.number().int().nonnegative().optional(),
-    action: SandboxActionSchema,
+    action: CommandActionSchema,
     submittedAt: z.iso.datetime({ offset: true }),
   })
   .strict();
@@ -170,6 +314,15 @@ export const ToolCallSchema = z
     arguments: z.record(z.string(), z.unknown()),
   })
   .strict();
+
+/** Viewer identity is deliberately absent; every adapter supplies it from authentication. */
+export const WorldViewQuerySchema = z
+  .object({
+    targetKingdomId: z.uuid(),
+    forecastMinutes: z.number().int().min(1).max(60).default(60),
+  })
+  .strict();
+export type WorldViewQuery = z.infer<typeof WorldViewQuerySchema>;
 
 export type ActorContext = z.infer<typeof ActorContextSchema>;
 export type ProductScope = z.infer<typeof ProductScopeSchema>;

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { CommandEnvelope, EventEnvelope } from "@pact/contracts";
+import type { CommandEnvelope, EventEnvelope, SandboxAction } from "@pact/contracts";
 import type { PoolClient } from "pg";
 import { type AuthenticatedPrincipal, DispatcherError } from "./types.js";
 
@@ -33,7 +33,7 @@ function eventBase(
 export async function executeSandboxAction(
   client: PoolClient,
   principal: AuthenticatedPrincipal,
-  command: CommandEnvelope,
+  command: CommandEnvelope & { action: SandboxAction },
   occurredAt: Date,
 ): Promise<SandboxMutationResult> {
   const action = command.action;

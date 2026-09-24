@@ -2,11 +2,13 @@ export type Resource = "iron" | "silver" | "grain";
 export type SpendPurpose =
   | "construction"
   | "upkeep"
+  | "visiting_upkeep"
   | "training"
   | "trade"
   | "bond"
   | "scout"
   | "raid_provisions"
+  | "loot"
   | "transfer";
 
 export function assertAmount(value: bigint): void {
@@ -48,6 +50,6 @@ export function allocateSpend(input: {
     allowanceSpent = purpose === "upkeep" ? (allowance < remaining ? allowance : remaining) : 0n;
   }
   const fullyFunded = ordinarySpent + allowanceSpent === requested;
-  if (!fullyFunded && purpose !== "upkeep") throw new Error("INSUFFICIENT_STOCK");
+  if (!fullyFunded && purpose !== "upkeep" && purpose !== "visiting_upkeep") throw new Error("INSUFFICIENT_STOCK");
   return { ordinarySpent, allowanceSpent, fullyFunded };
 }
