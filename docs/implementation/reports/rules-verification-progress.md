@@ -26,6 +26,10 @@ Local Node 24 build, typecheck, lint, 110 unit tests, and 147 PostgreSQL 17 inte
 
 The next R04/R06 cross-route fixture uses a live web session, one fake-provider run, and one MCP session against the same dispatcher. It proves an MCP write lease is denied during the PACT run, then admitted after that run completes; all three routes commit one equivalent message receipt without impersonating the recipient named in agent arguments. This is one lease-interleaving and social action, not the full authority-race matrix.
 
+A further R06 fixture launches a separate Node ledger writer and sends `SIGKILL` on either side of `COMMIT`. PostgreSQL rolls back the pre-commit movement and keeps ordinary stock at zero. The post-commit movement and 600-unit stock survive; replaying the same operation key leaves exactly one movement and the same stock. This is real process death at a ledger writer boundary, but not an inference-worker kill, whole-server failure, or base/WAL restore.
+
+The full integration run initially crossed a real-minute boundary in the separate game-command fixture, causing its isolated world clock to pause and unrelated command assertions to see `WORLD_PAUSED`. That fixture now holds its synthetic next tick ten minutes ahead; clock-boundary behavior remains tested in `world-clock.test.ts`. Node 24 `npm run build`, `npm run typecheck`, `npm test` (110), `npm run test:integration` (150 on PostgreSQL 17), and `npm run lint` pass after this correction.
+
 Local Node 24 build, typecheck, lint, 110 unit tests, and 149 PostgreSQL 17 integration tests passed for this fixture. It does not replace the missing generated authority races or actual process-death drill.
 
 PACT-051 remains open: the [R01–R06 matrix](../../architecture/rules-verification.md#r01r06-evidence-matrix-incomplete) maps current fixtures and gaps, but generated cross-module scenarios and fault injection around every durable command/tick transition have not been completed. This rehearsal is not a full VPS base/WAL backup restore, hosted CI run, or pilot observation.

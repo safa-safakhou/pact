@@ -1,4 +1,6 @@
+import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
+import { once } from "node:events";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { ResourceLedger } from "@pact/ledger";
 import type { Pool, PoolClient } from "pg";
@@ -31,6 +33,100 @@ function seeded(seed: number): () => number {
 }
 
 describe("seeded transaction and replay invariants", () => {
+  it("survives a ledger writer killed before and after commit without losing or repeating stock", async () => {
+    const scope = "killed_writer_51";
+    const kingdomId = randomUUID();
+    const ledger = new ResourceLedger(scope);
+    await withTransaction(pool, (client) => ledger.initializeKingdom(client, kingdomId, gameTimeMs));
+    const childScript = `
+      const { createSchemaPool } = await import('@pact/db');
+      const { ResourceLedger } = await import('@pact/ledger');
+      const db = createSchemaPool(process.env.PACT_TEST_DATABASE_URL, process.env.PACT_TEST_SCHEMA);
+      const client = await db.connect();
+      await client.query('BEGIN');
+      await new ResourceLedger('${scope}').creditOrdinary(client, {
+        kingdomId: '${kingdomId}', resource: 'iron', amount: 600n,
+        operationKey: process.env.PACT_TEST_OPERATION, reason: 'killed_writer_fixture', gameTimeMs: ${gameTimeMs}
+      });
+      if (process.env.PACT_TEST_COMMIT === '1') await client.query('COMMIT');
+      process.stdout.write('READY\\n');
+      setInterval(() => {}, 1000);
+    `;
+    const killAt = async (operationKey: string, committed: boolean) => {
+      const child = spawn(process.execPath, ["--input-type=module", "-e", childScript], {
+        cwd: process.cwd(),
+        env: {
+          ...process.env,
+          PACT_TEST_DATABASE_URL: connectionString,
+          PACT_TEST_SCHEMA: schema,
+          PACT_TEST_OPERATION: operationKey,
+          PACT_TEST_COMMIT: committed ? "1" : "0",
+        },
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+      let readinessTimeout: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const ready = await Promise.race([
+          once(child.stdout, "data").then(([data]) => String(data)),
+          once(child, "exit").then(([code]) => {
+            throw new Error(`Writer exited before ready: ${code}`);
+          }),
+          new Promise<never>((_, reject) => {
+            readinessTimeout = setTimeout(() => reject(new Error("Writer readiness timeout")), 10_000);
+          }),
+        ]);
+        expect(ready).toContain("READY");
+      } finally {
+        if (readinessTimeout) clearTimeout(readinessTimeout);
+        if (child.exitCode === null) {
+          const exited = once(child, "exit");
+          child.kill("SIGKILL");
+          await exited;
+        }
+      }
+    };
+
+    await killAt("precommit", false);
+    expect(
+      (
+        await pool.query("SELECT 1 FROM resource_movements WHERE product_scope = $1 AND operation_key = 'precommit'", [
+          scope,
+        ])
+      ).rowCount,
+    ).toBe(0);
+    expect((await withTransaction(pool, (client) => ledger.readBalance(client, kingdomId, "iron"))).ordinary).toBe(0n);
+
+    await killAt("postcommit", true);
+    expect(
+      (
+        await pool.query("SELECT 1 FROM resource_movements WHERE product_scope = $1 AND operation_key = 'postcommit'", [
+          scope,
+        ])
+      ).rowCount,
+    ).toBe(1);
+    const replay = await withTransaction(pool, (client) =>
+      ledger.creditOrdinary(client, {
+        kingdomId,
+        resource: "iron",
+        amount: 600n,
+        operationKey: "postcommit",
+        reason: "killed_writer_fixture",
+        gameTimeMs,
+      }),
+    );
+    expect(replay.ordinaryDelta).toBe(600n);
+    expect((await withTransaction(pool, (client) => ledger.readBalance(client, kingdomId, "iron"))).ordinary).toBe(
+      600n,
+    );
+    expect(
+      (
+        await pool.query("SELECT 1 FROM resource_movements WHERE product_scope = $1 AND operation_key = 'postcommit'", [
+          scope,
+        ])
+      ).rowCount,
+    ).toBe(1);
+  });
+
   it("reconciles a generated credit/spend/bond sequence across rollback and idempotent replay", async () => {
     const scope = "seeded_rules_51";
     const ledger = new ResourceLedger(scope);

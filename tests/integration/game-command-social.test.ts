@@ -63,6 +63,11 @@ beforeAll(async () => {
   pool = createSchemaPool(databaseUrl, schema);
   world = new WorldClockService(pool, "pact");
   await world.bootstrap();
+  // Command admission is under test here, not the minute-boundary tick. Keep
+  // this isolated schema away from a real-minute rollover during the full suite.
+  await pool.query(
+    "UPDATE world_clocks SET next_tick_due_at = clock_timestamp() + interval '10 minutes' WHERE product_scope = 'pact'",
+  );
   const clock = { now: () => new Date() };
   runs = new RunService(pool, { productScope: "pact", clock });
   social = new SocialService(
