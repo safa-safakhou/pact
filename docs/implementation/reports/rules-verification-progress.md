@@ -68,3 +68,7 @@ Local Node 24 build/typecheck/lint, 115 unit tests, and 161 PostgreSQL integrati
 The next R06 fixture kills a separate inference process after the game dispatcher has committed one owner-authored message and command receipt, but before the model step can persist its tool result. A replacement job claimant conservatively fails the run, keeps its one outgoing-message charge, and makes no second provider call or fabricated result. This is actual local process death after command commit, unlike the earlier injected exception. It does not cover every command/tick transition or a full VPS base/WAL restore. PACT-051 remains In Progress.
 
 Local Node 24 build/typecheck/lint, 115 unit tests, and 162 PostgreSQL integration tests pass. The process fixture requires the built inference worker and a disposable PostgreSQL 17 database.
+
+The next R04/R06 fixture exercises newly enabled mandated cold-contact requests through fake-provider and MCP paths. Two allowed requests consume exactly two Silver each in both the authority-spend and stock ledgers; an MCP replay returns its existing receipt, while stale-version and exhausted-allowance attempts create no third request or spend. The server derives the sender despite forged human actor fields, and the agent cannot answer a contact request. This is a bounded cross-route/rollback scenario, not the complete generated authority matrix. PACT-051 remains In Progress.
+
+Local Node 24 build/typecheck/lint, 115 unit tests, and 163 PostgreSQL integration tests pass for this increment.

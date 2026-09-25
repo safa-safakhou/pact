@@ -134,7 +134,15 @@ export class SocialService {
 
   async requestContact(
     client: PoolClient,
-    input: { accountId: string; recipientKingdomId: string; note: string; operationKey: string; gameTimeMs: number },
+    input: {
+      accountId: string;
+      recipientKingdomId: string;
+      note: string;
+      operationKey: string;
+      gameTimeMs: number;
+      actorKind?: "human" | "agent";
+      mandateVersion?: number;
+    },
   ): Promise<string> {
     validText(input.note, rulesCatalog.actionLimits.messageCodePoints, "INVALID_NOTE");
     const sender = await this.ownerKingdom(client, input.accountId);
@@ -182,6 +190,18 @@ export class SocialService {
       operationKey: input.operationKey,
       gameTimeMs: input.gameTimeMs,
     });
+    if (input.actorKind === "agent") {
+      if (!this.authority) throw new Error("IMMEDIATE_AUTHORITY_NOT_CONFIGURED");
+      await this.authority.spend(client, {
+        accountId: input.accountId,
+        asset: "silver",
+        units: wholeResources(rulesCatalog.actionLimits.coldContactSilver),
+        action: "contact.request",
+        operationKey: `cold-contact:${input.operationKey}`,
+        ...(input.mandateVersion === undefined ? {} : { mandateVersion: input.mandateVersion }),
+        gameTimeMs: input.gameTimeMs,
+      });
+    }
     await this.ledger.debit(client, {
       kingdomId: sender,
       resource: "silver",

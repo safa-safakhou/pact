@@ -69,13 +69,14 @@ export class GameCommandHandler {
     try {
       switch (action.kind) {
         case "game.contact.request": {
-          if (principal.audience !== "human") throw new DispatcherError("FORBIDDEN");
           const id = await this.social.requestContact(client, {
             accountId,
             recipientKingdomId: action.recipientKingdomId,
             note: action.note,
             operationKey,
             gameTimeMs,
+            actorKind: principal.audience === "agent" ? "agent" : "human",
+            ...(action.mandateVersion === undefined ? {} : { mandateVersion: action.mandateVersion }),
           });
           return {
             recordVersions: { [`contact-request:${id}`]: 1 },

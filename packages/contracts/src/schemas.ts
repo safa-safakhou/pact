@@ -96,6 +96,7 @@ export const GameActionSchema = z.discriminatedUnion("kind", [
       kind: z.literal("game.contact.request"),
       recipientKingdomId: z.uuid(),
       note: z.string().min(1).max(1_000),
+      mandateVersion: z.number().int().nonnegative().optional(),
     })
     .strict(),
   z.object({ kind: z.literal("game.contact.answer"), requestId: z.uuid(), accept: z.boolean() }).strict(),

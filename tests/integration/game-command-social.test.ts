@@ -2312,6 +2312,136 @@ describe("shared gameplay command admission", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
+  it("admits mandated cold contacts through model and MCP but denies stale, over-budget, and human-only actions", async () => {
+    const owner = await kingdom();
+    const recipients = [await kingdom(), await kingdom(), await kingdom()];
+    const [first, second, third] = recipients;
+    if (!first || !second || !third) throw new Error("Missing cold-contact recipients");
+    await pool.query(
+      `INSERT INTO kingdom_mandates(product_scope, account_id, allowed_actions, resource_limits)
+       VALUES ('pact', $1, ARRAY['contact.request'], '{"silver":"2400"}'::jsonb)`,
+      [owner.accountId],
+    );
+    const requested = (recipientKingdomId: string, mandateVersion: number) => ({
+      kind: "game.contact.request" as const,
+      recipientKingdomId,
+      note: "Synthetic cold contact",
+      mandateVersion,
+    });
+    const provider = new DeterministicFakeProvider({
+      scenario: "success",
+      toolName: pactRunCommandTool.name,
+      toolArguments: command(first.accountId, requested(first.kingdomId, 1)),
+    });
+    const runtime = await createInferenceGameRuntime({
+      pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([provider]),
+      termsVersion: "terms-v1",
+    });
+    const started = await runtime.runs.start({
+      accountId: owner.accountId,
+      objective: "Request one authorized contact",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished" });
+    const modelResult = await pool.query<{ summary: string }>(
+      "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+      [started.runId],
+    );
+    const modelReceipt = JSON.parse(modelResult.rows[0]?.summary ?? "null") as {
+      code: string;
+      charged: unknown[];
+      recordVersions: Record<string, number>;
+    };
+    expect(modelReceipt).toMatchObject({ code: "COMMITTED", charged: [{ asset: "silver", units: "1200" }] });
+    expect(Object.keys(modelReceipt.recordVersions)).toHaveLength(1);
+
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher: runtime.dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runtime.runs,
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      initialized.sessionId,
+    );
+    const call = async (envelope: CommandEnvelope, id: number) =>
+      mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id,
+          params: { name: "pact_command_v1", arguments: envelope },
+        },
+        initialized.sessionId,
+      );
+    const secondCommand = command(second.accountId, requested(second.kingdomId, 1));
+    const mcpResult = await call(secondCommand, 3);
+    const mcpReceipt = (mcpResult.response.result as { structuredContent: { code: string; charged: unknown[] } })
+      .structuredContent;
+    expect(mcpReceipt).toMatchObject({ code: "COMMITTED", charged: [{ asset: "silver", units: "1200" }] });
+    expect(
+      ((await call(secondCommand, 7)).response.result as { structuredContent: unknown }).structuredContent,
+    ).toEqual(mcpReceipt);
+    await pool.query("UPDATE kingdom_mandates SET version = 2 WHERE account_id = $1", [owner.accountId]);
+    await expect(call(command(third.accountId, requested(third.kingdomId, 1)), 4)).rejects.toMatchObject({
+      code: "STALE_VERSION",
+    });
+    await expect(call(command(third.accountId, requested(third.kingdomId, 2)), 5)).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+    const modelRequestId = Object.keys(modelReceipt.recordVersions)[0]?.slice("contact-request:".length);
+    if (!modelRequestId) throw new Error("Missing committed contact request");
+    await expect(
+      call(command(second.accountId, { kind: "game.contact.answer", requestId: modelRequestId, accept: true }), 6),
+    ).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+    const contacts = await pool.query<{ sender_kingdom_id: string; recipient_kingdom_id: string }>(
+      "SELECT sender_kingdom_id, recipient_kingdom_id FROM cold_contact_requests WHERE sender_kingdom_id = $1 ORDER BY recipient_kingdom_id",
+      [owner.kingdomId],
+    );
+    expect(contacts.rows).toEqual(
+      [first.kingdomId, second.kingdomId]
+        .sort()
+        .map((recipient_kingdom_id) => ({ sender_kingdom_id: owner.kingdomId, recipient_kingdom_id })),
+    );
+    const spends = await pool.query<{ units: string }>(
+      "SELECT units FROM authority_spends WHERE account_id = $1 AND asset = 'silver' ORDER BY operation_key",
+      [owner.accountId],
+    );
+    expect(spends.rows).toEqual([{ units: "1200" }, { units: "1200" }]);
+    const balance = await pool.query<{ ordinary_units: string }>(
+      "SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'",
+      [owner.kingdomId],
+    );
+    expect(balance.rows).toEqual([{ ordinary_units: "3600" }]);
+    const actions = await pool.query<{ count: number }>(
+      "SELECT count(*)::int AS count FROM kingdom_action_events WHERE kingdom_id = $1 AND kind = 'cold_contact'",
+      [owner.kingdomId],
+    );
+    expect(actions.rows).toEqual([{ count: 2 }]);
+  });
+
   it("rejects unscoped agents, unfunded transfers, and changed idempotency payloads", async () => {
     const a = await kingdom();
     const b = await kingdom();
