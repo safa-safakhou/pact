@@ -2442,6 +2442,162 @@ describe("shared gameplay command admission", () => {
     expect(actions.rows).toEqual([{ count: 2 }]);
   });
 
+  it("keeps contact acceptance human-only across the web SDK, fake model, and MCP", async () => {
+    const requester = await kingdom();
+    const recipient = await kingdom();
+    const request = await dispatcher.dispatch(
+      { accountId: requester.accountId, productScope, audience: "human" },
+      command(requester.accountId, {
+        kind: "game.contact.request",
+        recipientKingdomId: recipient.kingdomId,
+        note: "Please connect",
+      }),
+    );
+    const requestId = Object.keys(request.recordVersions)[0]?.slice("contact-request:".length);
+    if (!requestId) throw new Error("Missing contact request");
+    const answer = { kind: "game.contact.answer" as const, requestId, accept: true };
+    const provider = new DeterministicFakeProvider({
+      scenario: "success",
+      toolName: pactRunCommandTool.name,
+      toolArguments: command(requester.accountId, answer),
+    });
+    const runtime = await createInferenceGameRuntime({
+      pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([provider]),
+      termsVersion: "terms-v1",
+    });
+    const started = await runtime.runs.start({
+      accountId: recipient.accountId,
+      objective: "Try to accept a contact request",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished" });
+    const result = await pool.query<{ summary: string }>(
+      "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+      [started.runId],
+    );
+    expect(JSON.parse(result.rows[0]?.summary ?? "null")).toMatchObject({ code: "FORBIDDEN", charged: [] });
+    expect((await pool.query("SELECT status FROM cold_contact_requests WHERE id = $1", [requestId])).rows).toEqual([
+      { status: "pending" },
+    ]);
+
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher: runtime.dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runtime.runs,
+    });
+    const principal = {
+      accountId: recipient.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      initialized.sessionId,
+    );
+    await expect(
+      mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 3,
+          params: { name: "pact_command_v1", arguments: command(requester.accountId, answer) },
+        },
+        initialized.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect((await pool.query("SELECT status FROM cold_contact_requests WHERE id = $1", [requestId])).rows).toEqual([
+      { status: "pending" },
+    ]);
+
+    const digest = new TokenDigester(Buffer.alloc(32, 61));
+    const identity = new IdentityService(pool, {
+      productScope: "pact",
+      currentTermsVersion: "terms-v1",
+      allowedOrigins: new Set(["https://pact.example"]),
+      clock: { now: () => new Date() },
+      digester: digest,
+      secretBox: new AesGcmSecretBox(Buffer.alloc(32, 67)),
+      compromisedPasswords: new LocalCompromisedPasswordChecker(baselineCompromisedPasswordDigests),
+    });
+    const sessionToken = randomUUID();
+    const csrfToken = randomUUID();
+    const expiresAt = new Date(Date.now() + 60_000);
+    await pool.query(
+      `INSERT INTO sessions(product_scope, account_id, audience, token_hash, csrf_token_hash,
+         expires_at, idle_expires_at, authenticated_at, last_seen_at)
+       VALUES ('pact', $1, 'human', $2, $3, $4, $4, $5, $5)`,
+      [recipient.accountId, digest.digest(sessionToken), digest.digest(csrfToken), expiresAt, new Date()],
+    );
+    const server = buildServer(pool, false, undefined, {
+      identity,
+      onboarding: new OnboardingService(pool, {
+        productScope: "pact",
+        currentTermsVersion: "terms-v1",
+        now: () => new Date(),
+      }),
+      dispatcher: runtime.dispatcher,
+    });
+    try {
+      const web = createWebPactClient({
+        apiOrigin: "https://pact.example",
+        csrfToken: () => csrfToken,
+        randomUuid: randomUUID,
+        now: () => new Date(),
+        fetch: async (input, init) => {
+          const url = new URL(String(input));
+          const response = await server.inject({
+            method: (init?.method ?? "GET") as "GET" | "POST",
+            url: `${url.pathname}${url.search}`,
+            headers: {
+              ...Object.fromEntries(new Headers(init?.headers).entries()),
+              cookie: `pact_session=${encodeURIComponent(sessionToken)}`,
+              origin: "https://pact.example",
+              "x-csrf-token": csrfToken,
+            },
+            ...(typeof init?.body === "string" ? { payload: init.body } : {}),
+          });
+          return new Response(response.body, {
+            status: response.statusCode,
+            headers: { "content-type": "application/json" },
+          });
+        },
+      });
+      const prepared = web.prepareCommand(answer);
+      const accepted = await web.submitCommand(prepared);
+      expect(accepted).toMatchObject({ code: "COMMITTED", charged: [] });
+      expect(await web.retryCommand(prepared)).toEqual(accepted);
+      expect((await pool.query("SELECT status FROM cold_contact_requests WHERE id = $1", [requestId])).rows).toEqual([
+        { status: "accepted" },
+      ]);
+      const [kingdomA, kingdomB] = [requester.kingdomId, recipient.kingdomId].sort();
+      expect(
+        (
+          await pool.query("SELECT kingdom_a, kingdom_b FROM social_contacts WHERE kingdom_a = $1 AND kingdom_b = $2", [
+            kingdomA,
+            kingdomB,
+          ])
+        ).rows,
+      ).toEqual([{ kingdom_a: kingdomA, kingdom_b: kingdomB }]);
+    } finally {
+      await server.close();
+    }
+  });
+
   it("rejects unscoped agents, unfunded transfers, and changed idempotency payloads", async () => {
     const a = await kingdom();
     const b = await kingdom();

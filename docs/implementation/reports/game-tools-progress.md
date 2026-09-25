@@ -134,6 +134,14 @@ The shared `game.contact.request` envelope now accepts an optional `mandateVersi
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (163 against PostgreSQL 17) pass. No hosted CI, live provider, or VPS deployment was exercised.
 
+## Human-only contact acceptance across routes — 25 Sep 2026
+
+An authenticated web SDK session accepts a pending cold-contact request and receives a replay-stable `COMMITTED` receipt. The same recipient's in-app fake-provider run and MCP agent lease each submit the exact `game.contact.answer` action with a forged human actor; both receive `FORBIDDEN`, and the request stays pending until the human acts. The fixture then verifies the accepted contact pair. This extends the product-scoped privilege boundary to a state-changing social command across all three routes; it does not prove every command group or live-model prompt-injection resistance.
+
+An approval-flow audit found a remaining PACT-049 gap: `ApprovalService.createRequest` has no production caller, so an unmandated agent command is denied rather than producing the approval request/deep link required by the execution contract. Wire and verify a scoped, exact-command proposal path before closing this ticket or unblocking dependent UI work. Do not confuse a human-only contact answer with an approvable agent action.
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (164 against PostgreSQL 17) pass. No hosted CI, live provider, or VPS deployment was exercised. PACT-049 remains In Progress.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.
