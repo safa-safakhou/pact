@@ -894,6 +894,15 @@ describe("shared gameplay command admission", () => {
       [summary.commandId],
     );
     expect(offer.rows).toEqual([{ kingdom_a: sender.kingdomId, kingdom_b: recipient.kingdomId }]);
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished", modelCalls: 1 });
+    const replay = await pool.query<{ offers: string; receipts: string; results: string }>(
+      `SELECT
+         (SELECT count(*)::text FROM supply_offers WHERE id = $1) AS offers,
+         (SELECT count(*)::text FROM command_receipts WHERE product_scope = 'pact' AND command_id = $1) AS receipts,
+         (SELECT count(*)::text FROM envoy_run_tool_results WHERE run_id = $2) AS results`,
+      [summary.commandId, started.runId],
+    );
+    expect(replay.rows).toEqual([{ offers: "1", receipts: "1", results: "1" }]);
   });
 
   it("routes a fake-provider command through the agent dispatcher with server identity and one receipt", async () => {
