@@ -1,0 +1,40 @@
+# PACT handoff — 25 September 2026
+
+This is a navigation and state snapshot for agents continuing without prior chat. The authoritative behavior is in [`docs/pact/`](../pact/README.md); ticket scope and acceptance live in [`tasks.json`](tasks.json); **Linear owns live execution status** under [PACT — Season One](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d). Re-read the issue before claiming or closing it, then follow [the tracking workflow](linear-workflow.md) and repository `AGENTS.md`. This snapshot is not a substitute for fresh verification.
+
+## Founder constraints and immediate objective
+
+- One existing EU VPS only for the private MVP, at `agentic@2.28.57.254`; public origin `https://safa.dedyn.io/pact`. Do not introduce AWS, another server, or paid managed services. The [VPS runbook](../operations/vps-deployment.md) owns deployment, rollback, backups, and secret mounts.
+- Keep this a zero-cost, synthetic-data MVP. Test identities, temporary operator facts, captured email, and fake model provider are intentional. Do not present them as production facts. Real provider calls require explicit opt-in and route certification; they may incur costs. Native signing/stores, payment integrations, outbound email, off-host disaster recovery, and actual production legal/operator facts remain later work under the specified tickets.
+- The founder wants the work pushed toward a weekend finish. A truthful near-term target is a privately playable rules prototype on web first, **not** complete Telegram gameplay, the social MVP, or the Season One release. PACT-088 owns the complete Telegram Mini App later. PACT-067 requires an actual three-week, 50-player pilot, so the full backlog cannot honestly close in one weekend. Report partial progress explicitly instead of weakening acceptance or inventing observations.
+- Commit every completed batch. Preserve existing changes; run relevant tests, backlog render/check, and `git diff --check`. Reconcile Linear comments/status and the local snapshot. Do not mark a ticket Done until every acceptance item and its report pass.
+
+## Tracker snapshot
+
+On 25 September 2026, Linear and `tasks.json` were compared across all 98 PACT IDs: no ID, status, or phase mismatch. **52 Done, 2 In Progress, 44 Backlog.** Phase 0 Connections is 31/31 Done; Phase 1 Rules is 21/27 Done; Phase 2 Social is 0/20; Phase 3 Season One is 0/20. PACT-098 was placed in the Phase 3 Linear milestone during this audit. The six open Phase 1 tickets are:
+
+| Ticket | State | Dependency/next action |
+| --- | --- | --- |
+| [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) | In Progress | Finish cross-route game-tool equivalence, adversarial context/authority evidence, and acceptance; [progress report](reports/game-tools-progress.md). |
+| [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) | In Progress | Finish generated R01–R06 failure/authority matrix and recovery evidence; [progress report](reports/rules-verification-progress.md). |
+| PACT-048 | Backlog | Plain two-player rules UI; depends on PACT-049 plus completed tickets. |
+| PACT-052 | Backlog | Allowed script baseline; depends on PACT-049 and PACT-051. |
+| PACT-096 | Backlog | Independent non-game platform reuse proof; depends on PACT-049 and PACT-051. |
+| PACT-053 | Backlog | Rules acceptance gate; depends on all five preceding open Rules tickets and recorded R01–R08 evidence. |
+
+Phase 2 is blocked by PACT-053 and contains all 20 social/Telegram gameplay, notifications, moderation, load, and pilot tickets. Phase 3's 20 tickets include deliberately deferred native devices, commerce, distribution, off-host recovery, and PACT-098 production facts. PACT-084 is deferred but not Done. Do not bypass dependency edges merely to improve the count.
+
+## Code and verification boundary
+
+The repository is a Node 24/TypeScript modular monolith with React clients, Fastify API, PostgreSQL 17, and separate rules/inference/notification/channel processes. The latest local increment added authorized `pact_world_read_v1` and `pact_report_read_v1` to in-app Envoy runs, using the same strict schemas and PACT-owned read authorization as MCP/HTTP. Local Node 24 build, typecheck, lint, 112 unit tests, 153 PostgreSQL integration tests, and backlog validation passed; see [PACT-049 progress](reports/game-tools-progress.md). This is **local evidence**, not hosted CI, a live provider run, or a deployed gameplay release.
+
+The last verified running VPS containers on 25 September 2026 still used image tag `mvp-20260923-2` (API healthy). Recent local commits, including Envoy world/report reads, have **not** been shown to be deployed. Verify the checkout, tag, migration compatibility, Compose state, and synthetic smoke checks before any deployment; use the runbook's immutable release/rollback procedure. No deploy is implied by a local commit.
+
+The Telegram test bot is [`@test_pact1211_bot`](https://t.me/test_pact1211_bot/PactGameTest), short name `PactGameTest`; the VPS runbook has the public Mini App and webhook paths. The bot token, webhook secret, synthetic account password, model keys, and wrapping/raid secrets must never enter Git, Linear, reports, logs, or a handoff message. Their host-only locations and rotation procedure are in the [runbook](../operations/vps-deployment.md). A bot token was shared in earlier chat and should be rotated before broader testing. Secret values are the deliberate exception to “everything in the repository”; only references and handling rules belong here.
+
+## Resuming safely
+
+1. Inspect `git status`, the current Linear assignments/dependencies, and the two progress reports. Do not overwrite another agent's claim.
+2. Continue PACT-049 and PACT-051 in dependency order. For the next product-visible milestone, complete their acceptance, then PACT-048; PACT-052 and PACT-096 are also required before PACT-053 can close.
+3. Verify with documented Node 24 commands: `npm run build`, `npm run typecheck`, `npm test`, `npm run test:integration` against disposable PostgreSQL 17, `npm run lint`, then `python3 docs/implementation/backlog.py render`, `python3 docs/implementation/backlog.py check`, and `git diff --check`. Report actual results, not assumed ones.
+4. Update module/API/operations instructions and a completion or progress report, reconcile Linear and local task evidence, and commit the batch. Reserve live provider, paid, production, deployment, and player-pilot claims for their own observed evidence.

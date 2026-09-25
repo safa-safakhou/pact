@@ -4,6 +4,8 @@
 
 The backlog turns the design into dependency-ordered engineering work. Every ticket contains a concrete deliverable, acceptance checks, component ownership, specification links, and prerequisites. Creating a planning record alone is never completion evidence; consult Linear and the linked reports for implemented work.
 
+Agents resuming work from another session should read the [current handoff](HANDOFF.md) after the engineering instructions and before selecting a ticket. It records the current deployment boundary, open work, and deliberate MVP deferrals without copying secrets from conversation history.
+
 ## Delivery order
 
 | Milestone | Tickets | Deliverable | Exit |

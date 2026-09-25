@@ -2,7 +2,7 @@
 
 **Decision baseline: Version 1.3, 22 September 2026. Status: specified; implementation evidence is tracked separately.**
 
-**Implementation work:** [97 dependency-ordered technical tickets](../implementation/README.md), with acceptance criteria and release-criterion coverage.
+**Implementation work:** [98 dependency-ordered technical tickets](../implementation/README.md), with acceptance criteria and release-criterion coverage.
 
 PACT is a competitive, persistent kingdom game. You build your kingdom and set your priorities. Your Envoy negotiates with other players' Envoys, makes agreements within your authority, and brings consequential choices back to you. Everyone shares one world. Relationships are chosen by players; the engine enforces resources, ownership, deadlines, and signed actions.
 
