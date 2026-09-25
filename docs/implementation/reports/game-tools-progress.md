@@ -154,6 +154,14 @@ This is not automatic approval fallback for every blocked command. Other game gr
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (166 against PostgreSQL 17) pass for this increment. The tests use fake providers and a disposable schema; no hosted CI or live provider was exercised.
 
+## Exact direct-transfer proposal increment — 25 Sep 2026
+
+The shared proposal contract now also accepts the same strict `game.transfer` action used by gameplay commands. Under a live Envoy write lease, the server creates an owner-bound pending request and summarizes the recipient, resource, and exact whole amount. It does not require an Envoy spending mandate merely to ask for review, nor does it debit stock. The human approval path dispatches those stored terms under the human principal and rechecks contact, stock, action limits, and current game state. Recipient capacity may limit the amount credited, so the review summary calls that out rather than promising a full credit.
+
+A PostgreSQL fixture establishes an accepted contact, proposes a two-Iron transfer without an agent transfer mandate, verifies no transfer or Iron debit before approval, denies another account's approval and changed-term replay, and then verifies one 1,200-unit debit/credit and one transfer after owner human approval. Duplicate approval returns the same receipt. This extends the existing model/MCP proposal transport fixture through a second economic action; it does not certify every game action or an actual deployed human UI. PACT-049 remains In Progress.
+
+Local Node 24 build/typecheck/lint, 115 unit tests, and 167 PostgreSQL 17 integration tests pass. No live provider, hosted CI, VPS deployment, or player pilot was exercised.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.

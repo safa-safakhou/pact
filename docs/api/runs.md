@@ -28,7 +28,7 @@ An in-app `pact_conversation_read_v1` may read only a thread in that run's immut
 
 The same inference composition also exposes `pact_receipt_read_v1` and `pact_approval_status_v1`. A receipt read uses the shared dispatcher's account-scoped history, while an approval-status read selects only the run owner's request and returns its state, summary, expiry, receipt, and human review path. The summary is labeled `untrustedContent`; neither tool can approve or reject. Results are bounded to 3,600 UTF-8 bytes, with explicit truncation for oversized records, and persist under the same private 30-day run history. Both return `NOT_FOUND` for an unknown or different account's ID.
 
-The in-app Envoy also receives the shared `pact_approval_propose_v1` schema for a cold-contact request. It proposes exact terms under its live run lease and receives a bounded `APPROVAL_REQUIRED` result with a human review path; proposal creation never executes the contact or changes the mandate. The server-rendered summary and pending approval are owner-scoped. Approval remains a separate human action through PACT. Other command groups are not yet wired to this proposal tool.
+The in-app Envoy also receives the shared `pact_approval_propose_v1` schema for a cold-contact or direct-transfer request. It proposes exact terms under its live run lease and receives a bounded `APPROVAL_REQUIRED` result with a human review path; proposal creation never executes the action or changes the mandate. The server-rendered summary and pending approval are owner-scoped. Approval remains a separate human action through PACT. Other command groups are not yet wired to this proposal tool.
 
 ## Inference worker
 

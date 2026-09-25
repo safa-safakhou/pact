@@ -99,7 +99,22 @@ export const ColdContactActionSchema = z
   })
   .strict();
 
-export const ApprovalProposalSchema = z.object({ commandId: z.uuid(), action: ColdContactActionSchema }).strict();
+export const DirectTransferActionSchema = z
+  .object({
+    kind: z.literal("game.transfer"),
+    recipientKingdomId: z.uuid(),
+    resource: gameResource,
+    wholeAmount: z.number().int().positive().max(1_000_000_000),
+    mandateVersion: z.number().int().nonnegative().optional(),
+  })
+  .strict();
+
+export const ApprovalProposalSchema = z
+  .object({
+    commandId: z.uuid(),
+    action: z.discriminatedUnion("kind", [ColdContactActionSchema, DirectTransferActionSchema]),
+  })
+  .strict();
 
 export const GameActionSchema = z.discriminatedUnion("kind", [
   ColdContactActionSchema,
@@ -107,15 +122,7 @@ export const GameActionSchema = z.discriminatedUnion("kind", [
   z
     .object({ kind: z.literal("game.message.send"), recipientKingdomId: z.uuid(), body: z.string().min(1).max(4_000) })
     .strict(),
-  z
-    .object({
-      kind: z.literal("game.transfer"),
-      recipientKingdomId: z.uuid(),
-      resource: gameResource,
-      wholeAmount: z.number().int().positive().max(1_000_000_000),
-      mandateVersion: z.number().int().nonnegative().optional(),
-    })
-    .strict(),
+  DirectTransferActionSchema,
   z
     .object({
       kind: z.literal("game.training.queue"),

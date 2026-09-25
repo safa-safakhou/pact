@@ -103,7 +103,10 @@ export class ApprovalService {
       action,
       submittedAt: this.options.clock.now().toISOString(),
     };
-    const effectsSummary = `Request contact with kingdom ${action.recipientKingdomId}; charge 2 Silver and one cold-contact action if valid at human approval. Note: ${JSON.stringify(action.note)}`;
+    const effectsSummary =
+      action.kind === "game.contact.request"
+        ? `Request contact with kingdom ${action.recipientKingdomId}; charge 2 Silver and one cold-contact action if valid at human approval. Note: ${JSON.stringify(action.note)}`
+        : `Transfer ${action.wholeAmount} ${action.resource} to kingdom ${action.recipientKingdomId}; debit sender and consume one transfer action if valid at human approval. Recipient capacity may limit the credited amount.`;
     return withTransaction(this.pool, async (client) => {
       await this.options.assertAgentWriteLease?.(client, principal.accountId, holderId);
       return this.createRequestInTransaction(client, {

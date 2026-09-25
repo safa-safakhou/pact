@@ -508,6 +508,109 @@ describe("shared gameplay command admission", () => {
       { type: "approval.resolved.v1", count: 1 },
     ]);
   });
+  it("requires exact human approval before an Envoy transfer moves stock", async () => {
+    const sender = await kingdom();
+    const recipient = await kingdom();
+    const outsider = await kingdom();
+    const contact = await dispatcher.dispatch(
+      { accountId: sender.accountId, productScope, audience: "human" },
+      command(sender.accountId, {
+        kind: "game.contact.request",
+        recipientKingdomId: recipient.kingdomId,
+        note: "Synthetic transfer contact",
+      }),
+    );
+    const requestId = Object.keys(contact.recordVersions)[0]?.slice("contact-request:".length);
+    if (!requestId) throw new Error("Missing contact request");
+    expect(
+      (
+        await dispatcher.dispatch(
+          { accountId: recipient.accountId, productScope, audience: "human" },
+          command(recipient.accountId, { kind: "game.contact.answer", requestId, accept: true }),
+        )
+      ).code,
+    ).toBe("COMMITTED");
+
+    const holderId = randomUUID();
+    await runs.openMcpLease({ accountId: sender.accountId, holderId });
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      dispatcher,
+      clock: { now: () => new Date() },
+      assertAgentWriteLease: (client, accountId, sessionId) => runs.assertAgentWriteLease(client, accountId, sessionId),
+      inbox: new InboxService(pool, { productScope: "pact", clock: { now: () => new Date() } }),
+    });
+    const principal = {
+      accountId: sender.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+      sessionId: holderId,
+    };
+    const proposal = {
+      commandId: randomUUID(),
+      action: {
+        kind: "game.transfer" as const,
+        recipientKingdomId: recipient.kingdomId,
+        resource: "iron" as const,
+        wholeAmount: 2,
+      },
+    };
+    const pending = await approvals.proposeAgent(principal, proposal);
+    expect(pending).toMatchObject({ status: "pending", effectsSummary: expect.stringContaining("2 iron") });
+    expect(await approvals.proposeAgent(principal, proposal)).toMatchObject({ approvalId: pending.approvalId });
+    await expect(
+      approvals.proposeAgent(principal, { ...proposal, action: { ...proposal.action, wholeAmount: 3 } }),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    await expect(
+      approvals.approveForHumanPrincipal(outsider.accountId, randomUUID(), pending.approvalId),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(
+      (
+        await pool.query("SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'iron'", [
+          sender.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ ordinary_units: "6000" }]);
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM direct_transfers WHERE operation_key = $1", [
+          proposal.commandId,
+        ])
+      ).rows,
+    ).toEqual([{ count: 0 }]);
+
+    const humanSessionId = randomUUID();
+    const committed = await approvals.approveForHumanPrincipal(sender.accountId, humanSessionId, pending.approvalId);
+    expect(committed).toMatchObject({
+      status: "approved",
+      receipt: { code: "COMMITTED", charged: [{ asset: "iron", units: "1200" }] },
+    });
+    expect(await approvals.approveForHumanPrincipal(sender.accountId, humanSessionId, pending.approvalId)).toEqual(
+      committed,
+    );
+    expect(
+      (
+        await pool.query("SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'iron'", [
+          sender.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ ordinary_units: "4800" }]);
+    expect(
+      (
+        await pool.query("SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'iron'", [
+          recipient.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ ordinary_units: "7200" }]);
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM direct_transfers WHERE operation_key = $1", [
+          proposal.commandId,
+        ])
+      ).rows,
+    ).toEqual([{ count: 1 }]);
+  });
   it("persists only owner-selected conversation context within the run cap", async () => {
     const owner = await kingdom();
     const selected = await kingdom();
