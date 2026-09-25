@@ -1,5 +1,5 @@
 import type { CommandReceipt } from "@pact/contracts";
-import type { KingdomWorldView } from "@pact/kingdom";
+import type { ConversationPage, KingdomWorldView } from "@pact/kingdom";
 
 const maxBytes = 3_600;
 
@@ -48,4 +48,15 @@ export function boundedCommandReceiptResult(receipt: CommandReceipt): string {
   const complete = JSON.stringify(summary);
   if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
   return JSON.stringify({ commandId: receipt.commandId, code: receipt.code, truncated: true });
+}
+
+export function boundedConversationResult(page: ConversationPage): string {
+  const complete = JSON.stringify(page);
+  if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
+  return JSON.stringify({
+    counterpartyKingdomId: page.counterpartyKingdomId,
+    messageIds: page.messages.map((message) => message.messageId),
+    untrustedContent: true,
+    truncated: true,
+  });
 }

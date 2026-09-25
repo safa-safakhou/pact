@@ -381,6 +381,15 @@ export const InboxReadQuerySchema = z
   .strict();
 export type InboxReadQuery = z.infer<typeof InboxReadQuerySchema>;
 
+/** Owner identity is never an argument; at most five private messages are read per call. */
+export const ConversationReadQuerySchema = z
+  .object({
+    counterpartyKingdomId: z.uuid(),
+    limit: z.number().int().min(1).max(5).default(5),
+  })
+  .strict();
+export type ConversationReadQuery = z.infer<typeof ConversationReadQuerySchema>;
+
 export type ActorContext = z.infer<typeof ActorContextSchema>;
 export type ProductScope = z.infer<typeof ProductScopeSchema>;
 export type SubjectRef = z.infer<typeof SubjectRefSchema>;

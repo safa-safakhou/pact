@@ -1,7 +1,8 @@
-import type { KingdomWorldView } from "@pact/kingdom";
+import type { ConversationPage, KingdomWorldView } from "@pact/kingdom";
 import { describe, expect, it } from "vitest";
 import {
   boundedCommandReceiptResult,
+  boundedConversationResult,
   boundedRecordResult,
   boundedReportResult,
   boundedWorldResult,
@@ -62,5 +63,22 @@ describe("bounded model read results", () => {
     });
     expect(JSON.parse(oversized)).toEqual({ commandId, code: "COMMITTED", truncated: true });
     expect(Buffer.byteLength(oversized, "utf8")).toBeLessThanOrEqual(3_600);
+  });
+
+  it("marks oversized conversation prose as untrusted and omits it", () => {
+    const page: ConversationPage = {
+      counterpartyKingdomId: "11111111-1111-4111-8111-111111111111",
+      messages: Array.from({ length: 5 }, (_, index) => ({
+        messageId: `22222222-2222-4222-8222-${String(index).padStart(12, "0")}`,
+        sender: "counterparty" as const,
+        sentGameTimeMs: "0",
+        body: "\\".repeat(512),
+      })),
+      untrustedContent: true,
+    };
+    const result = boundedConversationResult(page);
+    expect(Buffer.byteLength(result, "utf8")).toBeLessThanOrEqual(3_600);
+    expect(JSON.parse(result)).toMatchObject({ untrustedContent: true, truncated: true });
+    expect(result).not.toContain(page.messages[0]?.body);
   });
 });

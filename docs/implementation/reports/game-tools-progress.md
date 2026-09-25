@@ -86,6 +86,12 @@ The inference worker now persists bounded, server-issued `recordVersions` and `c
 
 Local Node 24 build, typecheck, lint, all 114 unit and 155 PostgreSQL integration tests, backlog render/check, and diff check passed. No hosted CI, VPS deployment, or live model call was exercised.
 
+## Owner direct-conversation read increment — 25 Sep 2026
+
+`pact_conversation_read_v1` now uses one strict schema in MCP and the in-app fake-provider route. The domain-owned reader derives the owner kingdom from the authenticated account, selects at most five messages involving that kingdom and the named counterparty, omits bodies over 512 UTF-8 bytes, and labels the result untrusted. Model results are capped at 3,600 bytes with message IDs retained if truncation is needed. A PostgreSQL fixture compares model and read-only MCP results, checks a different account sees no messages, rejects caller-supplied account IDs and excessive limits, and confirms hostile counterpart prose appears only in user-role result data on the next provider step. Automatic context still excludes message bodies. Run-start conversation selection and six/twelve allowance accounting remain open; this does not complete PACT-049 or certify a live provider.
+
+Local Node 24 build, typecheck, lint, 115 unit tests, 156 PostgreSQL integration tests, backlog render/check, and diff check passed. No hosted CI, VPS deployment, or paid model call was exercised.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.

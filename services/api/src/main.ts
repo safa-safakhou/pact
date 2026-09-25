@@ -18,6 +18,7 @@ import {
   ActionLimitService,
   BuildingEngine,
   ConstructionExposureAdapter,
+  ConversationReader,
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomRetirementService,
@@ -180,6 +181,7 @@ const mcp = new McpTransport({
   worldViews,
   reports,
   inbox,
+  conversations: new ConversationReader(pool, "pact"),
   approvals: new ApprovalStatusReader(pool, "pact", clock),
   runLeases: runs,
 });

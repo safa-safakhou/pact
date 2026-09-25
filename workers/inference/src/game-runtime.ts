@@ -3,9 +3,11 @@ import { ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import {
   ApprovalStatusQuerySchema,
+  ConversationReadQuerySchema,
   InboxReadQuerySchema,
   ProductScopeSchema,
   pactApprovalStatusTool,
+  pactConversationReadTool,
   pactInboxReadTool,
   pactReceiptReadTool,
   pactReportReadTool,
@@ -19,6 +21,7 @@ import {
   ActionLimitService,
   BuildingEngine,
   ConstructionExposureAdapter,
+  ConversationReader,
   GameReportReader,
   GarrisonService,
   ImmediateExposureAdapter,
@@ -42,6 +45,7 @@ import type { Pool } from "pg";
 import { ownerRunContext } from "./run-context.js";
 import {
   boundedCommandReceiptResult,
+  boundedConversationResult,
   boundedRecordResult,
   boundedReportResult,
   boundedWorldResult,
@@ -75,10 +79,15 @@ export async function createInferenceGameRuntime(
   let reports: GameReportReader;
   const views = new WorldViewService(pool, productScope);
   const inbox = new InboxService(pool, { productScope, clock });
+  const conversations = new ConversationReader(pool, productScope);
   const approvalStatuses = new ApprovalStatusReader(pool, productScope, clock);
   const inboxReadTool = {
     ...pactInboxReadTool,
     parseArguments: (input: unknown) => InboxReadQuerySchema.parse(input),
+  };
+  const conversationReadTool = {
+    ...pactConversationReadTool,
+    parseArguments: (input: unknown) => ConversationReadQuerySchema.parse(input),
   };
   const worldReadTool = { ...pactWorldReadTool, parseArguments: (input: unknown) => WorldViewQuerySchema.parse(input) };
   const reportReadTool = {
@@ -99,10 +108,27 @@ export async function createInferenceGameRuntime(
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
     messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox),
-    tools: [pactRunCommandTool, inboxReadTool, worldReadTool, reportReadTool, receiptReadTool, approvalStatusTool],
+    tools: [
+      pactRunCommandTool,
+      inboxReadTool,
+      conversationReadTool,
+      worldReadTool,
+      reportReadTool,
+      receiptReadTool,
+      approvalStatusTool,
+    ],
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        if (call.name === conversationReadTool.name) {
+          const query = ConversationReadQuerySchema.parse(call.arguments);
+          const page = await conversations.read(input.run.accountId, query.counterpartyKingdomId, query.limit);
+          results.push({
+            callId: call.id,
+            content: page ? boundedConversationResult(page) : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
         if (call.name === receiptReadTool.name) {
           const query = ReceiptReadQuerySchema.parse(call.arguments);
           const receipt = await dispatcher.lookupReceipt(
