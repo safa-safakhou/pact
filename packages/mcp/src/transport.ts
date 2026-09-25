@@ -1,12 +1,16 @@
 import { randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
 import {
+  ApprovalStatusQuerySchema,
   commandJsonSchema,
   InboxReadQuerySchema,
   ProductScopeSchema,
+  pactApprovalStatusTool,
   pactInboxReadTool,
+  pactReceiptReadTool,
   pactReportReadTool,
   pactWorldReadTool,
+  ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   SCHEMA_VERSION,
   WorldViewQuerySchema,
@@ -48,6 +52,7 @@ export interface McpTransportOptions {
   readonly worldViews?: WorldViewReader;
   readonly reports?: ReportReader;
   readonly inbox?: InboxReader;
+  readonly approvals?: ApprovalStatusPort;
   readonly runLeases?: {
     openMcpLease(input: { accountId: string; holderId: string }): Promise<{ leaseId: string; expiresAt: Date }>;
   };
@@ -70,6 +75,11 @@ export interface ReportReader {
 /** Owner identity is supplied by MCP authentication, never tool arguments. */
 export interface InboxReader {
   readBounded(accountId: string, cursor: string | undefined, limit: number): Promise<unknown>;
+}
+
+/** Approval status is a read-only, owner-scoped port; commits stay human-only. */
+export interface ApprovalStatusPort {
+  read(accountId: string, approvalId: string): Promise<unknown | null>;
 }
 
 const SANDBOX_TOOLS = [
@@ -152,6 +162,10 @@ export class McpTransport {
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
+              ...(principal.agentScopes?.includes("world:read") ? [pactReceiptReadTool] : []),
+              ...(this.options.approvals && principal.agentScopes?.includes("world:read")
+                ? [pactApprovalStatusTool]
+                : []),
               ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
             ],
@@ -270,6 +284,26 @@ export class McpTransport {
       return {
         content: [{ type: "text", text: JSON.stringify(page) }],
         structuredContent: page as Record<string, unknown>,
+      };
+    }
+    if (name === pactReceiptReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read")) throw new McpError("FORBIDDEN", 403);
+      const query = ReceiptReadQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const receipt = await this.options.dispatcher.lookupReceipt(principal, query.data.commandId);
+      if (!receipt) throw new McpError("INVALID_REQUEST", 404);
+      return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
+    }
+    if (name === pactApprovalStatusTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.approvals)
+        throw new McpError("FORBIDDEN", 403);
+      const query = ApprovalStatusQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const status = await this.options.approvals.read(principal.accountId, query.data.approvalId);
+      if (!status) throw new McpError("INVALID_REQUEST", 404);
+      return {
+        content: [{ type: "text", text: JSON.stringify(status) }],
+        structuredContent: status as Record<string, unknown>,
       };
     }
     if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);

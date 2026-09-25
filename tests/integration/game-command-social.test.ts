@@ -6,6 +6,7 @@ import {
   pactRunCommandTool,
   runToolCommandId,
 } from "@pact/application";
+import { ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService } from "@pact/authority";
 import { type CommandEnvelope, ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
@@ -492,6 +493,137 @@ describe("shared gameplay command admission", () => {
             name: "pact_report_read_v1",
             arguments: { kind: "scout", recordId: reportId, accountId: outsider.accountId },
           },
+        },
+        initialized.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+  });
+
+  it("reads only owner receipts and approval status without giving agents human approval rights", async () => {
+    const owner = await kingdom();
+    const outsider = await kingdom();
+    const commandId = randomUUID();
+    const approvalId = randomUUID();
+    const receipt = {
+      schemaVersion: "pact.command.v1",
+      commandId,
+      code: "COMMITTED",
+      committedEventIds: [],
+      recordVersions: {},
+      charged: [],
+    };
+    await pool.query(
+      `INSERT INTO command_receipts(product_scope, command_id, account_id, canonical_payload_hash, code, receipt)
+       VALUES ('pact', $1, $2, $3, 'COMMITTED', $4)`,
+      [commandId, owner.accountId, "a".repeat(64), receipt],
+    );
+    await pool.query(
+      `INSERT INTO approval_requests(approval_id, product_scope, account_id, command_id,
+         canonical_command_hash, action, effects_summary, expires_at)
+       VALUES ($1, 'pact', $2, $3, $4, $5, 'Synthetic owner approval', clock_timestamp() + interval '10 minutes')`,
+      [approvalId, owner.accountId, randomUUID(), "b".repeat(64), { kind: "sandbox.echo", message: "test" }],
+    );
+    const clock = { now: () => new Date() };
+    async function modelRead(accountId: string, toolName: string, toolArguments: object): Promise<string> {
+      const runtime = await createInferenceGameRuntime({
+        pool,
+        productScope: "pact",
+        clock,
+        providerRouter: new ProviderRouter([
+          new DeterministicFakeProvider({ scenario: "success", toolName, toolArguments }),
+        ]),
+        termsVersion: "terms-v1",
+      });
+      const run = await runtime.runs.start({
+        accountId,
+        objective: "Check a result",
+        provider: "fixture",
+        model: fakeProviderModel.id,
+        limits: { maxCalls: 1 },
+      });
+      const outcome = await runtime.runs.executeModelCall(run.runId);
+      expect(outcome.status, JSON.stringify(outcome)).toBe("finished");
+      const rows = await pool.query<{ summary: string }>(
+        "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+        [run.runId],
+      );
+      return rows.rows[0]?.summary ?? "";
+    }
+    expect(await modelRead(owner.accountId, "pact_receipt_read_v1", { commandId })).toContain('"code":"COMMITTED"');
+    expect(await modelRead(outsider.accountId, "pact_receipt_read_v1", { commandId })).toContain('"code":"NOT_FOUND"');
+    const ownerApproval = await modelRead(owner.accountId, "pact_approval_status_v1", { approvalId });
+    expect(ownerApproval).toContain("Synthetic owner approval");
+    expect(ownerApproval).toContain('"untrustedContent":true');
+    expect(await modelRead(outsider.accountId, "pact_approval_status_v1", { approvalId })).toContain(
+      '"code":"NOT_FOUND"',
+    );
+
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher,
+      origin: "https://pact.example",
+      clock,
+      approvals: new ApprovalStatusReader(pool, "pact", clock),
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["world:read" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const listed = await mcp.handlePost(principal, { method: "tools/list", id: 2 }, initialized.sessionId);
+    expect(JSON.stringify(listed.response)).toContain("pact_receipt_read_v1");
+    expect(JSON.stringify(listed.response)).toContain("pact_approval_status_v1");
+    expect(JSON.stringify(listed.response)).not.toContain("pact_command_v1");
+    const mcpReceipt = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: "pact_receipt_read_v1", arguments: { commandId } } },
+      initialized.sessionId,
+    );
+    expect(JSON.stringify(mcpReceipt.response)).toContain('"code":"COMMITTED"');
+    const mcpApproval = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 4, params: { name: "pact_approval_status_v1", arguments: { approvalId } } },
+      initialized.sessionId,
+    );
+    expect(JSON.stringify(mcpApproval.response)).toContain("Synthetic owner approval");
+    const outsiderPrincipal = { ...principal, accountId: outsider.accountId };
+    const outsiderSession = await mcp.handlePost(outsiderPrincipal, {
+      method: "initialize",
+      id: 7,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    for (const [name, args] of [
+      ["pact_receipt_read_v1", { commandId }],
+      ["pact_approval_status_v1", { approvalId }],
+    ] as const)
+      await expect(
+        mcp.handlePost(
+          outsiderPrincipal,
+          { method: "tools/call", id: 8, params: { name, arguments: args } },
+          outsiderSession.sessionId,
+        ),
+      ).rejects.toMatchObject({ code: "INVALID_REQUEST", httpStatus: 404 });
+    await expect(
+      mcp.handlePost(
+        outsiderPrincipal,
+        { method: "tools/call", id: 5, params: { name: "pact_receipt_read_v1", arguments: { commandId } } },
+        initialized.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 6,
+          params: { name: "pact_approval_status_v1", arguments: { approvalId, accountId: outsider.accountId } },
         },
         initialized.sessionId,
       ),

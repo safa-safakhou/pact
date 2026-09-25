@@ -111,6 +111,9 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
       reason: "synthetic-test",
       gameTimeMs: 0,
     });
+    // The fixture's privacy clock is historical; PostgreSQL defaults to real wall time.
+    // Align the synthetic journal dates so the 180-day retention boundary is stable.
+    await client.query("UPDATE resource_movements SET created_at = $2 WHERE kingdom_id = $1", [kingdomId, now]);
   });
   return { accountId, kingdomId };
 }
@@ -188,6 +191,14 @@ it("keeps accepted raids through real-time erasure in a paused world, then retir
     [attacker.kingdomId],
   );
   expect(balance.rows[0]).toMatchObject({ ordinary_units: "0", production_per_minute_units: "0" });
+  // Domain retirement and raid closure use database wall time; align this synthetic
+  // history with the fixture clock before advancing its retention window.
+  await pool.query("UPDATE raids SET closed_at = $2 WHERE id = $1", [raidId, baseTime]);
+  await pool.query("UPDATE kingdoms SET retired_at = $3 WHERE id IN ($1, $2)", [
+    attacker.kingdomId,
+    defender.kingdomId,
+    baseTime,
+  ]);
   now = new Date(baseTime.getTime() + 181 * 86_400_000);
   const retention = await privacy.runRetention();
   expect(retention.retiredMovements).toBeGreaterThan(0);

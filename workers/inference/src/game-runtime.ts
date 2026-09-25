@@ -1,11 +1,16 @@
 import { CommandDispatcher, dispatchRunCommandTools, GameCommandHandler, pactRunCommandTool } from "@pact/application";
+import { ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import {
+  ApprovalStatusQuerySchema,
   InboxReadQuerySchema,
   ProductScopeSchema,
+  pactApprovalStatusTool,
   pactInboxReadTool,
+  pactReceiptReadTool,
   pactReportReadTool,
   pactWorldReadTool,
+  ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   WorldViewQuerySchema,
 } from "@pact/contracts";
@@ -35,7 +40,7 @@ import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { ownerRunContext } from "./run-context.js";
-import { boundedReportResult, boundedWorldResult } from "./run-read-results.js";
+import { boundedRecordResult, boundedReportResult, boundedWorldResult } from "./run-read-results.js";
 
 export interface InferenceGameRuntimeOptions {
   readonly pool: Pool;
@@ -65,6 +70,7 @@ export async function createInferenceGameRuntime(
   let reports: GameReportReader;
   const views = new WorldViewService(pool, productScope);
   const inbox = new InboxService(pool, { productScope, clock });
+  const approvalStatuses = new ApprovalStatusReader(pool, productScope, clock);
   const inboxReadTool = {
     ...pactInboxReadTool,
     parseArguments: (input: unknown) => InboxReadQuerySchema.parse(input),
@@ -74,16 +80,55 @@ export async function createInferenceGameRuntime(
     ...pactReportReadTool,
     parseArguments: (input: unknown) => ReportReadQuerySchema.parse(input),
   };
+  const receiptReadTool = {
+    ...pactReceiptReadTool,
+    parseArguments: (input: unknown) => ReceiptReadQuerySchema.parse(input),
+  };
+  const approvalStatusTool = {
+    ...pactApprovalStatusTool,
+    parseArguments: (input: unknown) => ApprovalStatusQuerySchema.parse(input),
+  };
   const runs = new RunService(pool, {
     productScope,
     clock,
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
     messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox),
-    tools: [pactRunCommandTool, inboxReadTool, worldReadTool, reportReadTool],
+    tools: [pactRunCommandTool, inboxReadTool, worldReadTool, reportReadTool, receiptReadTool, approvalStatusTool],
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        if (call.name === receiptReadTool.name) {
+          const query = ReceiptReadQuerySchema.parse(call.arguments);
+          const receipt = await dispatcher.lookupReceipt(
+            {
+              accountId: input.run.accountId,
+              productScope: scope,
+              audience: "agent",
+              sessionId: input.run.runId,
+              agentScopes: ["world:read"],
+            },
+            query.commandId,
+          );
+          results.push({
+            callId: call.id,
+            content: receipt
+              ? boundedRecordResult("receipt", query.commandId, receipt)
+              : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
+        if (call.name === approvalStatusTool.name) {
+          const query = ApprovalStatusQuerySchema.parse(call.arguments);
+          const approval = await approvalStatuses.read(input.run.accountId, query.approvalId);
+          results.push({
+            callId: call.id,
+            content: approval
+              ? boundedRecordResult("approval", query.approvalId, approval)
+              : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
         if (call.name === worldReadTool.name) {
           const query = WorldViewQuerySchema.parse(call.arguments);
           const view = await views.read(input.run.accountId, query.targetKingdomId, query.forecastMinutes);

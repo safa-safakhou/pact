@@ -66,6 +66,12 @@ The shared contracts package now defines strict `pact_inbox_read_v1` arguments: 
 
 ## Checks and documentation
 
+## Owner receipt and approval-status read increment
+
+The in-app Envoy and MCP now share strict `pact_receipt_read_v1` and `pact_approval_status_v1` schemas. The receipt lookup is the shared dispatcher history, newly permitting a `world:read`-only agent for this read without relaxing game-command admission. The approval selector is a read-only owner-scoped service; it returns current status, effects summary, expiry, optional committed receipt, and the human review path, with no approve/reject capability. In-app results are capped at 3,600 UTF-8 bytes. A PostgreSQL fixture checks owner versus outsider model/MCP reads, strict rejection of a supplied viewer ID, and that the read-only MCP grant cannot list the write tool. This improves result reconciliation, but does not complete PACT-049's full cross-route command and hostile-content acceptance.
+
+Local Node 24 build, typecheck, lint, 113 unit tests, and 154 PostgreSQL integration tests passed after stabilizing the synthetic retirement retention clock. No live provider, hosted CI, or VPS deployment was exercised.
+
 ## Explicit world and report model-read increment
 
 The inference worker now offers the shared strict `pact_world_read_v1` and `pact_report_read_v1` definitions used by MCP. It derives the viewer from the active run and calls `WorldViewService` and the domain-owned `GameReportReader`; model arguments have no account field. Results are capped at 3,600 UTF-8 bytes with an explicit truncation marker, below the run persistence ceiling. A PostgreSQL fixture observes owner balances versus an outsider's public-only view, the owner's completed scout report versus an outsider's `NOT_FOUND`, and MCP rejection of a caller-supplied account ID. The API remains a compatibility re-export of the moved reader. This closes the explicit read-path gap but not full PACT-049 acceptance: broader command-route equivalence, selected conversation content, and adversarial model-route coverage remain.

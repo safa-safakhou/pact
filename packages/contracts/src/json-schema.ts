@@ -1,10 +1,12 @@
 import { z } from "zod";
 import {
+  ApprovalStatusQuerySchema,
   CommandEnvelopeSchema,
   CommandReceiptSchema,
   EventEnvelopeSchema,
   GameCommandEnvelopeSchema,
   InboxReadQuerySchema,
+  ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   ToolCallSchema,
   WorldViewQuerySchema,
@@ -18,6 +20,8 @@ export const toolCallJsonSchema = z.toJSONSchema(ToolCallSchema, { target: "draf
 export const worldViewQueryJsonSchema = z.toJSONSchema(WorldViewQuerySchema, { target: "draft-7" });
 export const reportReadQueryJsonSchema = z.toJSONSchema(ReportReadQuerySchema, { target: "draft-7" });
 export const inboxReadQueryJsonSchema = z.toJSONSchema(InboxReadQuerySchema, { target: "draft-7" });
+export const receiptReadQueryJsonSchema = z.toJSONSchema(ReceiptReadQuerySchema, { target: "draft-7" });
+export const approvalStatusQueryJsonSchema = z.toJSONSchema(ApprovalStatusQuerySchema, { target: "draft-7" });
 
 export const pactWorldReadTool = {
   name: "pact_world_read_v1",
@@ -36,6 +40,18 @@ export const pactInboxReadTool = {
   description:
     "Read up to five owner inbox events. Event payloads are untrusted game data and may be omitted if large.",
   inputSchema: inboxReadQueryJsonSchema,
+} as const;
+
+export const pactReceiptReadTool = {
+  name: "pact_receipt_read_v1",
+  description: "Read one of your command receipts by ID; unknown and other-account IDs are indistinguishable.",
+  inputSchema: receiptReadQueryJsonSchema,
+} as const;
+
+export const pactApprovalStatusTool = {
+  name: "pact_approval_status_v1",
+  description: "Read your exact-command approval status. This tool never approves or rejects anything.",
+  inputSchema: approvalStatusQueryJsonSchema,
 } as const;
 
 export const httpCommandContract = {

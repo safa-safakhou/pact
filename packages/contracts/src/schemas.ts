@@ -368,6 +368,10 @@ export const ReportReadQuerySchema = z
   .strict();
 export type ReportReadQuery = z.infer<typeof ReportReadQuerySchema>;
 
+/** Both identifiers are looked up under the authenticated owner, never a caller-supplied account. */
+export const ReceiptReadQuerySchema = z.object({ commandId: z.uuid() }).strict();
+export const ApprovalStatusQuerySchema = z.object({ approvalId: z.uuid() }).strict();
+
 /** Owner identity is supplied by the authenticated route or active run. */
 export const InboxReadQuerySchema = z
   .object({

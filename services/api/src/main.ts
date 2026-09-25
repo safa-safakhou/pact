@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
 import { CommandDispatcher, GameCommandHandler } from "@pact/application";
-import { ApprovalService } from "@pact/approvals";
+import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
 import { CredentialVaultService, RsaOaepPublicKeyWrapper } from "@pact/credential-vault";
@@ -180,6 +180,7 @@ const mcp = new McpTransport({
   worldViews,
   reports,
   inbox,
+  approvals: new ApprovalStatusReader(pool, "pact", clock),
   runLeases: runs,
 });
 const approvals = new ApprovalService(pool, {

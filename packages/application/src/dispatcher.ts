@@ -245,7 +245,13 @@ export class CommandDispatcher {
   }
 
   async lookupReceipt(principal: AuthenticatedPrincipal, commandId: string): Promise<CommandReceipt | null> {
-    this.assertPrincipal(principal);
+    if (
+      principal.productScope !== this.options.productScope ||
+      (principal.audience === "agent" &&
+        !principal.agentScopes?.includes("world:read") &&
+        !principal.agentScopes?.includes("game:act"))
+    )
+      throw new DispatcherError("FORBIDDEN");
     const result = await this.options.pool.query<ReceiptRow>(
       `SELECT canonical_payload_hash, receipt, account_id
        FROM command_receipts

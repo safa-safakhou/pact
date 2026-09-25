@@ -1,6 +1,6 @@
 import type { KingdomWorldView } from "@pact/kingdom";
 import { describe, expect, it } from "vitest";
-import { boundedReportResult, boundedWorldResult } from "./run-read-results.js";
+import { boundedRecordResult, boundedReportResult, boundedWorldResult } from "./run-read-results.js";
 
 describe("bounded model read results", () => {
   it("omits oversized private report content with an explicit truncation marker", () => {
@@ -27,5 +27,13 @@ describe("bounded model read results", () => {
     const result = boundedWorldResult(view);
     expect(JSON.parse(result)).toMatchObject({ audience: "public", truncated: true });
     expect(Buffer.byteLength(result, "utf8")).toBeLessThanOrEqual(3_600);
+  });
+
+  it("does not persist oversized approval or receipt content", () => {
+    for (const kind of ["receipt", "approval"] as const) {
+      const result = boundedRecordResult(kind, "record-id", { text: "x".repeat(10_000) });
+      expect(JSON.parse(result)).toEqual({ kind, recordId: "record-id", truncated: true });
+      expect(Buffer.byteLength(result, "utf8")).toBeLessThanOrEqual(3_600);
+    }
   });
 });

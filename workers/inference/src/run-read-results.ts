@@ -27,3 +27,9 @@ export function boundedReportResult(kind: string, recordId: string, report: unkn
   if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
   return JSON.stringify({ kind, recordId, truncated: true });
 }
+
+export function boundedRecordResult(kind: "receipt" | "approval", recordId: string, record: unknown): string {
+  const complete = JSON.stringify(record);
+  if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
+  return JSON.stringify({ kind, recordId, truncated: true });
+}
