@@ -80,6 +80,12 @@ Local Node 24 build, typecheck, lint, 112 unit tests, and 153 PostgreSQL integra
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (107 tests), `npm run test:integration` (134 tests against PostgreSQL 17), and `npm run lint` passed after report-read integration. The domain integration fixtures recheck scout owner/share and raid participant/public separation through `GameReportReader`; HTTP/MCP/SDK tests verify scoped adapter behavior. These checks do not establish hosted CI, deployment, client certification, or a player pilot. Updated [MCP API](../../api/mcp.md), [client SDK](../../api/client-sdk.md), [raid module](../../architecture/raids.md), [world views](../../architecture/world-views.md), [social service](../../architecture/social.md), [troop training](../../architecture/troop-training.md), [building queues](../../architecture/building-queues.md), and [module boundaries](../../architecture/modules.md).
 
+## Versioned command-result handoff increment — 25 Sep 2026
+
+The inference worker now persists bounded, server-issued `recordVersions` and `committedEventIds` alongside each command outcome. This lets an in-app Envoy identify the exact offer ID and version needed for a subsequent supply counter or signature; oversized summaries explicitly say `truncated` and retain the command ID for the owner-scoped full receipt read. A fake-provider PostgreSQL fixture submits a supply offer with a forged actor, verifies the proposer is the authenticated run owner, and checks that the stored tool result contains the offer's version 1 reference. This is not a live-provider certification or complete cross-route equivalence. PACT-049 remains In Progress.
+
+Local Node 24 build, typecheck, lint, all 114 unit and 155 PostgreSQL integration tests, backlog render/check, and diff check passed. No hosted CI, VPS deployment, or live model call was exercised.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.

@@ -1,3 +1,4 @@
+import type { CommandReceipt } from "@pact/contracts";
 import type { KingdomWorldView } from "@pact/kingdom";
 
 const maxBytes = 3_600;
@@ -32,4 +33,19 @@ export function boundedRecordResult(kind: "receipt" | "approval", recordId: stri
   const complete = JSON.stringify(record);
   if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
   return JSON.stringify({ kind, recordId, truncated: true });
+}
+
+/** Persist only server-issued receipt metadata needed for a later versioned command. */
+export function boundedCommandReceiptResult(receipt: CommandReceipt): string {
+  const summary = {
+    commandId: receipt.commandId,
+    code: receipt.code,
+    charged: receipt.charged,
+    recordVersions: receipt.recordVersions,
+    committedEventIds: receipt.committedEventIds,
+    ...(receipt.approvalId ? { approvalId: receipt.approvalId } : {}),
+  };
+  const complete = JSON.stringify(summary);
+  if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
+  return JSON.stringify({ commandId: receipt.commandId, code: receipt.code, truncated: true });
 }

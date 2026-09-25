@@ -1,6 +1,11 @@
 import type { KingdomWorldView } from "@pact/kingdom";
 import { describe, expect, it } from "vitest";
-import { boundedRecordResult, boundedReportResult, boundedWorldResult } from "./run-read-results.js";
+import {
+  boundedCommandReceiptResult,
+  boundedRecordResult,
+  boundedReportResult,
+  boundedWorldResult,
+} from "./run-read-results.js";
 
 describe("bounded model read results", () => {
   it("omits oversized private report content with an explicit truncation marker", () => {
@@ -35,5 +40,27 @@ describe("bounded model read results", () => {
       expect(JSON.parse(result)).toEqual({ kind, recordId: "record-id", truncated: true });
       expect(Buffer.byteLength(result, "utf8")).toBeLessThanOrEqual(3_600);
     }
+  });
+
+  it("keeps versioned command references and explicitly truncates oversized receipts", () => {
+    const commandId = "11111111-1111-4111-8111-111111111111";
+    const receipt = {
+      schemaVersion: "pact.command.v1" as const,
+      commandId,
+      code: "COMMITTED" as const,
+      charged: [],
+      recordVersions: { [`supply-offer:${commandId}`]: 1 },
+      committedEventIds: ["22222222-2222-4222-8222-222222222222"],
+    };
+    expect(JSON.parse(boundedCommandReceiptResult(receipt))).toMatchObject({
+      commandId,
+      recordVersions: { [`supply-offer:${commandId}`]: 1 },
+    });
+    const oversized = boundedCommandReceiptResult({
+      ...receipt,
+      recordVersions: Object.fromEntries(Array.from({ length: 400 }, (_, index) => [`record-${index}`, index])),
+    });
+    expect(JSON.parse(oversized)).toEqual({ commandId, code: "COMMITTED", truncated: true });
+    expect(Buffer.byteLength(oversized, "utf8")).toBeLessThanOrEqual(3_600);
   });
 });

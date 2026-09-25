@@ -841,6 +841,61 @@ describe("shared gameplay command admission", () => {
     expect(toolResult.rows[0]?.summary).not.toContain(body);
   });
 
+  it("hands a versioned supply offer reference back to the in-app Envoy without trusting its actor", async () => {
+    const sender = await kingdom();
+    const recipient = await kingdom();
+    const provider = new DeterministicFakeProvider({
+      scenario: "success",
+      toolName: pactRunCommandTool.name,
+      toolArguments: command(recipient.accountId, {
+        kind: "game.supply.offer",
+        counterpartyKingdomId: recipient.kingdomId,
+        terms: {
+          aToB: { resource: "silver", wholePerHour: 8 },
+          bToA: null,
+          aBond: { resource: "silver", wholeAmount: 2 },
+          bBond: null,
+          durationHours: 6,
+          noticeHours: 1,
+        },
+      }),
+    });
+    const runtime = await createInferenceGameRuntime({
+      pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([provider]),
+      termsVersion: "terms-v1",
+    });
+    const started = await runtime.runs.start({
+      accountId: sender.accountId,
+      objective: "Offer a supply treaty",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished" });
+    const result = await pool.query<{ summary: string }>(
+      "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+      [started.runId],
+    );
+    expect(result.rows).toHaveLength(1);
+    const summary = JSON.parse(result.rows[0]?.summary ?? "null") as {
+      commandId: string;
+      code: string;
+      recordVersions: Record<string, number>;
+      committedEventIds: string[];
+    };
+    expect(summary.code).toBe("COMMITTED");
+    expect(summary.recordVersions[`supply-offer:${summary.commandId}`]).toBe(1);
+    expect(summary.committedEventIds).toEqual([]);
+    const offer = await pool.query<{ kingdom_a: string; kingdom_b: string }>(
+      "SELECT kingdom_a, kingdom_b FROM supply_offers WHERE id = $1",
+      [summary.commandId],
+    );
+    expect(offer.rows).toEqual([{ kingdom_a: sender.kingdomId, kingdom_b: recipient.kingdomId }]);
+  });
+
   it("routes a fake-provider command through the agent dispatcher with server identity and one receipt", async () => {
     const sender = await kingdom();
     const recipient = await kingdom();

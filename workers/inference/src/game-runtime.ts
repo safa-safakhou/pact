@@ -40,7 +40,12 @@ import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { ownerRunContext } from "./run-context.js";
-import { boundedRecordResult, boundedReportResult, boundedWorldResult } from "./run-read-results.js";
+import {
+  boundedCommandReceiptResult,
+  boundedRecordResult,
+  boundedReportResult,
+  boundedWorldResult,
+} from "./run-read-results.js";
 
 export interface InferenceGameRuntimeOptions {
   readonly pool: Pool;
@@ -162,12 +167,7 @@ export async function createInferenceGameRuntime(
         if (!receipt) throw new Error("Missing command receipt after tool dispatch");
         results.push({
           callId: call.id,
-          content: JSON.stringify({
-            commandId: receipt.commandId,
-            code: receipt.code,
-            charged: receipt.charged,
-            ...(receipt.approvalId ? { approvalId: receipt.approvalId } : {}),
-          }),
+          content: boundedCommandReceiptResult(receipt),
         });
       }
       return results;
