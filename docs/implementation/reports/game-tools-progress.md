@@ -140,6 +140,8 @@ An authenticated web SDK session accepts a pending cold-contact request and rece
 
 An approval-flow audit found a remaining PACT-049 gap: `ApprovalService.createRequest` has no production caller, so an unmandated agent command is denied rather than producing the approval request/deep link required by the execution contract. Wire and verify a scoped, exact-command proposal path before closing this ticket or unblocking dependent UI work. Do not confuse a human-only contact answer with an approvable agent action.
 
+The existing request-creation primitive now validates product/account ownership and rejects a reused command ID with changed canonical terms or a different owner. Its PostgreSQL fixture checks exact replay, changed-term denial, and cross-account denial. Full local Node 24 build/typecheck/lint, 115 unit, and 164 PostgreSQL integration tests pass after this correction. This hardens the future proposal route but does not wire it.
+
 Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (164 against PostgreSQL 17) pass. No hosted CI, live provider, or VPS deployment was exercised. PACT-049 remains In Progress.
 
 ## Remaining work

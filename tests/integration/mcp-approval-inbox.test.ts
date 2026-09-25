@@ -228,6 +228,31 @@ describe("PACT-020 approvals", () => {
       command,
       effectsSummary: "Echo sandbox message",
     });
+    expect(
+      (await approvals.createRequest({ accountId, command, effectsSummary: "Echo sandbox message" })).approvalId,
+    ).toBe(created.approvalId);
+    await expect(
+      approvals.createRequest({
+        accountId,
+        command: { ...command, action: { kind: "sandbox.echo", message: "changed terms" } },
+        effectsSummary: "Changed",
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    const outsider = await verifiedAccount(`approval-outsider-${randomUUID()}@example.com`);
+    await expect(
+      approvals.createRequest({
+        accountId: outsider.accountId,
+        command: {
+          ...command,
+          actor: {
+            ...command.actor,
+            principalId: outsider.accountId,
+            subject: { type: "account", id: outsider.accountId },
+          },
+        },
+        effectsSummary: "Outsider",
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     const reviewed = await approvals.review(created.approvalId, accountId);
     expect(reviewed.status).toBe("pending");
     expect(reviewed.deepLinkPath).toContain(created.approvalId);

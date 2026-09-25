@@ -1,6 +1,12 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
-import { type CommandEnvelope, type CommandReceipt, ProductScopeSchema, SCHEMA_VERSION } from "@pact/contracts";
+import {
+  type CommandEnvelope,
+  CommandEnvelopeSchema,
+  type CommandReceipt,
+  ProductScopeSchema,
+  SCHEMA_VERSION,
+} from "@pact/contracts";
 import { appendOutbox, withTransaction } from "@pact/db";
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
@@ -56,7 +62,16 @@ export class ApprovalService {
     runId?: string;
     mandateVersion?: number;
   }): Promise<ApprovalView> {
-    const hash = hashCommand(input.command);
+    const command = CommandEnvelopeSchema.parse(input.command);
+    if (
+      command.actor.principalId !== input.accountId ||
+      command.actor.productScope !== this.options.productScope ||
+      command.actor.subject.type !== "account" ||
+      command.actor.subject.id !== input.accountId
+    ) {
+      throw new ApprovalError("FORBIDDEN");
+    }
+    const hash = hashCommand(command);
     const now = this.options.clock.now();
     const expiresAt = new Date(now.getTime() + 15 * 60_000);
     const inserted = await this.pool.query<ApprovalRow>(
@@ -69,9 +84,9 @@ export class ApprovalService {
       [
         this.options.productScope,
         input.accountId,
-        input.command.commandId,
+        command.commandId,
         hash,
-        JSON.stringify(input.command.action),
+        JSON.stringify(command.action),
         input.effectsSummary,
         input.mandateVersion ?? null,
         input.requestingClientId ?? null,
@@ -84,10 +99,12 @@ export class ApprovalService {
       (
         await this.pool.query<ApprovalRow>(
           `SELECT * FROM approval_requests WHERE product_scope = $1 AND command_id = $2`,
-          [this.options.productScope, input.command.commandId],
+          [this.options.productScope, command.commandId],
         )
       ).rows[0];
     if (!row) throw new Error("approval insert failed");
+    if (row.account_id !== input.accountId) throw new ApprovalError("FORBIDDEN");
+    if (row.canonical_command_hash !== hash) throw new ApprovalError("INVALID_TERMS");
     return this.toView(row);
   }
 

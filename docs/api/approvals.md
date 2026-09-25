@@ -15,4 +15,6 @@ Tickets: PACT-020.
 
 Double approve returns the original receipt. Expired or changed terms fail. Chatbot text and host tool confirmations are not approval credentials—only the human POST path commits.
 
+Request creation is idempotent only for the same product, account, command ID, and canonical action terms. Reusing a command ID with changed terms fails `INVALID_TERMS`; a different account cannot retrieve the existing request through that ID. The stored effects summary is server-owned in any production proposal path. As of 25 Sep 2026, the production agent proposal entry point is not yet wired; an unmandated game command is denied rather than returning an approval deep link. Do not represent this as completed approval-inbox behavior for PACT-049.
+
 Private responses set `Cache-Control: no-store`.
