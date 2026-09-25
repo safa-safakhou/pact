@@ -162,6 +162,8 @@ A PostgreSQL fixture establishes an accepted contact, proposes a two-Iron transf
 
 Local Node 24 build/typecheck/lint, 115 unit tests, and 167 PostgreSQL 17 integration tests pass. No live provider, hosted CI, VPS deployment, or player pilot was exercised.
 
+The next fixture exercises this transfer proposal through the actual MCP `game:act` tool under `run.open`, then checks exact replay and the same owner-only human commit. This verifies the generated transfer proposal reaches the shared service through MCP, rather than only calling the service directly. Local Node 24 build/typecheck/lint, 115 unit tests, and 167 PostgreSQL 17 integration tests pass after this addition. It still does not prove every command group or a live external client. PACT-049 remains In Progress.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.

@@ -531,8 +531,6 @@ describe("shared gameplay command admission", () => {
       ).code,
     ).toBe("COMMITTED");
 
-    const holderId = randomUUID();
-    await runs.openMcpLease({ accountId: sender.accountId, holderId });
     const approvals = new ApprovalService(pool, {
       productScope: "pact",
       dispatcher,
@@ -540,6 +538,21 @@ describe("shared gameplay command admission", () => {
       assertAgentWriteLease: (client, accountId, sessionId) => runs.assertAgentWriteLease(client, accountId, sessionId),
       inbox: new InboxService(pool, { productScope: "pact", clock: { now: () => new Date() } }),
     });
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runs,
+      approvalProposals: approvals,
+    });
+    const initialized = await mcp.handlePost(
+      { accountId: sender.accountId, productScope, audience: "agent", agentScopes: ["game:act"] },
+      { method: "initialize", id: 1, params: { protocolVersion: MCP_PROTOCOL_PRIMARY } },
+    );
+    const holderId = initialized.sessionId;
+    if (!holderId) throw new Error("Missing MCP session");
     const principal = {
       accountId: sender.accountId,
       productScope,
@@ -547,6 +560,11 @@ describe("shared gameplay command admission", () => {
       agentScopes: ["game:act" as const],
       sessionId: holderId,
     };
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      holderId,
+    );
     const proposal = {
       commandId: randomUUID(),
       action: {
@@ -556,6 +574,14 @@ describe("shared gameplay command admission", () => {
         wholeAmount: 2,
       },
     };
+    const mcpProposal = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+      holderId,
+    );
+    expect(mcpProposal.response.result).toMatchObject({
+      structuredContent: { code: "APPROVAL_REQUIRED", effectsSummary: expect.stringContaining("2 iron") },
+    });
     const pending = await approvals.proposeAgent(principal, proposal);
     expect(pending).toMatchObject({ status: "pending", effectsSummary: expect.stringContaining("2 iron") });
     expect(await approvals.proposeAgent(principal, proposal)).toMatchObject({ approvalId: pending.approvalId });
