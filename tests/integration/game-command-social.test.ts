@@ -2743,6 +2743,131 @@ describe("shared gameplay command admission", () => {
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
+  it("reconciles seeded cross-kingdom transfers, failed spends, and receipt replay", async () => {
+    const players = [await kingdom(), await kingdom(), await kingdom()];
+    for (let senderIndex = 0; senderIndex < players.length; senderIndex += 1) {
+      for (let recipientIndex = senderIndex + 1; recipientIndex < players.length; recipientIndex += 1) {
+        const sender = players[senderIndex];
+        const recipient = players[recipientIndex];
+        if (!sender || !recipient) throw new Error("Missing transfer fixture kingdom");
+        const requested = await dispatcher.dispatch(
+          { accountId: sender.accountId, productScope, audience: "human" },
+          command(sender.accountId, {
+            kind: "game.contact.request",
+            recipientKingdomId: recipient.kingdomId,
+            note: "Seeded transfer fixture",
+          }),
+        );
+        const requestId = Object.keys(requested.recordVersions)[0]?.slice("contact-request:".length);
+        if (!requestId) throw new Error("Missing seeded contact request");
+        expect(
+          (
+            await dispatcher.dispatch(
+              { accountId: recipient.accountId, productScope, audience: "human" },
+              command(recipient.accountId, { kind: "game.contact.answer", requestId, accept: true }),
+            )
+          ).code,
+        ).toBe("COMMITTED");
+      }
+    }
+
+    const balances = new Map<string, bigint>();
+    const key = (kingdomId: string, resource: string) => `${kingdomId}:${resource}`;
+    for (const player of players) {
+      for (const resource of ["iron", "silver"] as const) {
+        const state = await pool.query<{ ordinary_units: string }>(
+          "SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = $2",
+          [player?.kingdomId, resource],
+        );
+        if (!player || !state.rows[0]) throw new Error("Missing seeded balance");
+        balances.set(key(player.kingdomId, resource), BigInt(state.rows[0].ordinary_units));
+      }
+    }
+    const initialTotals = Object.fromEntries(
+      (["iron", "silver"] as const).map((resource) => [
+        resource,
+        players.reduce((total, player) => total + (balances.get(key(player.kingdomId, resource)) ?? 0n), 0n),
+      ]),
+    );
+
+    let seed = 0x51c0ffee;
+    const random = () => {
+      seed ^= seed << 13;
+      seed ^= seed >>> 17;
+      seed ^= seed << 5;
+      return seed >>> 0;
+    };
+    const commandIds: string[] = [];
+    let committed = 0;
+    let insufficient = 0;
+    for (let step = 0; step < 30; step += 1) {
+      const senderIndex = random() % players.length;
+      const recipientIndex = (senderIndex + 1 + (random() % 2)) % players.length;
+      const sender = players[senderIndex];
+      const recipient = players[recipientIndex];
+      if (!sender || !recipient) throw new Error("Missing seeded transfer participant");
+      const resource = random() % 2 === 0 ? "iron" : "silver";
+      const wholeAmount = step % 7 === 0 ? 100 : 1 + (random() % 3);
+      const units = BigInt(wholeAmount) * 600n;
+      const senderKey = key(sender.kingdomId, resource);
+      const recipientKey = key(recipient.kingdomId, resource);
+      const prepared = command(sender.accountId, {
+        kind: "game.transfer",
+        recipientKingdomId: recipient.kingdomId,
+        resource,
+        wholeAmount,
+      });
+      commandIds.push(prepared.commandId);
+      const principal = { accountId: sender.accountId, productScope, audience: "human" as const };
+      if ((balances.get(senderKey) ?? 0n) < units) {
+        await expect(dispatcher.dispatch(principal, prepared)).rejects.toMatchObject({ code: "INSUFFICIENT_STOCK" });
+        insufficient += 1;
+      } else {
+        const receipt = await dispatcher.dispatch(principal, prepared);
+        expect(receipt).toMatchObject({ code: "COMMITTED", charged: [{ asset: resource, units: units.toString() }] });
+        expect(await dispatcher.dispatch(principal, prepared)).toEqual(receipt);
+        balances.set(senderKey, (balances.get(senderKey) ?? 0n) - units);
+        balances.set(recipientKey, (balances.get(recipientKey) ?? 0n) + units);
+        committed += 1;
+      }
+      const actualTotals = { iron: 0n, silver: 0n };
+      for (const player of players) {
+        const actual = await pool.query<{ resource: string; ordinary_units: string }>(
+          "SELECT resource, ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource IN ('iron', 'silver')",
+          [player.kingdomId],
+        );
+        for (const row of actual.rows) {
+          expect(BigInt(row.ordinary_units)).toBe(balances.get(key(player.kingdomId, row.resource)));
+          expect(BigInt(row.ordinary_units)).toBeGreaterThanOrEqual(0n);
+          actualTotals[row.resource as "iron" | "silver"] += BigInt(row.ordinary_units);
+        }
+      }
+      expect(actualTotals).toEqual(initialTotals);
+    }
+    expect(insufficient).toBeGreaterThan(0);
+    expect(committed).toBeGreaterThan(0);
+    const persisted = await pool.query<{ count: number }>(
+      "SELECT count(*)::int AS count FROM direct_transfers WHERE operation_key = ANY($1::text[])",
+      [commandIds],
+    );
+    expect(persisted.rows).toEqual([{ count: committed }]);
+    const receipts = await pool.query<{ count: number }>(
+      "SELECT count(*)::int AS count FROM command_receipts WHERE command_id = ANY($1::uuid[])",
+      [commandIds],
+    );
+    expect(receipts.rows).toEqual([{ count: committed }]);
+    for (const player of players) {
+      for (const resource of ["iron", "silver"] as const) {
+        const journal = await pool.query<{ total: string }>(
+          `SELECT coalesce(sum(ordinary_delta), 0)::text AS total FROM resource_movements
+           WHERE kingdom_id = $1 AND resource = $2`,
+          [player.kingdomId, resource],
+        );
+        expect(BigInt(journal.rows[0]?.total ?? "0")).toBe(balances.get(key(player.kingdomId, resource)));
+      }
+    }
+  });
+
   it("admits mandated cold contacts through model and MCP but denies stale, over-budget, and human-only actions", async () => {
     const owner = await kingdom();
     const recipients = [await kingdom(), await kingdom(), await kingdom()];
