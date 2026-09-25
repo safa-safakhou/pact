@@ -46,6 +46,9 @@ export interface RunView {
   readonly maxTokens: number;
   readonly maxMessages: number;
   readonly usedMessages: number;
+  readonly maxConversations: number;
+  readonly usedConversations: number;
+  readonly selectedContextIds: readonly string[];
   readonly modelCalls: number;
   readonly reservedTokens: number;
   readonly lastErrorCode: string | null;
@@ -81,6 +84,7 @@ interface RunRow {
   max_calls: number;
   max_tokens: number;
   used_conversations: number;
+  selected_context_ids: string[];
   used_messages: number;
   used_calls: number;
   used_tokens: number;
@@ -129,6 +133,7 @@ export class RunService {
       ) => Promise<T>;
       tools?: readonly ProviderToolDefinition[];
       messagesForRun?: (run: RunView) => readonly ProviderMessage[] | Promise<readonly ProviderMessage[]>;
+      validateContextSelection?: (accountId: string, contextIds: readonly string[]) => Promise<void>;
       executeToolCalls?: (input: {
         run: RunView;
         requestId: string;
@@ -146,12 +151,25 @@ export class RunService {
     credentialId?: string;
     limits?: RunLimits;
     clientKind?: "pact" | "mcp";
+    selectedContextIds?: readonly string[];
   }): Promise<RunView> {
     const subjectId = input.subjectId ?? input.accountId;
     const now = this.options.clock.now();
     const limits = input.limits ?? {};
     const durationMs = limits.durationMs ?? DEFAULT_DURATION_MS;
     const deadlineAt = new Date(now.getTime() + durationMs);
+    const maxConversations = clamp(limits.maxConversations ?? DEFAULT_MAX_CONVERSATIONS, 1, 12);
+    const selectedContextIds = input.selectedContextIds ?? [];
+    if (
+      selectedContextIds.length > maxConversations ||
+      new Set(selectedContextIds).size !== selectedContextIds.length ||
+      selectedContextIds.some((id) => typeof id !== "string" || id.length < 1 || id.length > 128)
+    ) {
+      throw new RunError("INVALID_STATE");
+    }
+    if (selectedContextIds.length && this.options.validateContextSelection) {
+      await this.options.validateContextSelection(input.accountId, selectedContextIds);
+    }
     const runId = randomUUID();
     return withTransaction(this.pool, async (client) => {
       await this.acquireLease(client, {
@@ -164,8 +182,9 @@ export class RunService {
       const inserted = await client.query<RunRow>(
         `INSERT INTO envoy_runs(
            run_id, product_scope, account_id, subject_id, status, objective, provider, model, credential_id,
-           client_kind, deadline_at, max_conversations, max_messages, max_calls, max_tokens, started_at, updated_at
-         ) VALUES ($1,$2,$3,$4,'running',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$15)
+           client_kind, deadline_at, max_conversations, used_conversations, selected_context_ids,
+           max_messages, max_calls, max_tokens, started_at, updated_at
+         ) VALUES ($1,$2,$3,$4,'running',$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$17)
          RETURNING *`,
         [
           runId,
@@ -178,7 +197,9 @@ export class RunService {
           input.credentialId ?? null,
           input.clientKind ?? "pact",
           deadlineAt,
-          clamp(limits.maxConversations ?? DEFAULT_MAX_CONVERSATIONS, 1, 12),
+          maxConversations,
+          selectedContextIds.length,
+          selectedContextIds,
           clamp(limits.maxMessages ?? DEFAULT_MAX_MESSAGES, 1, 24),
           limits.maxCalls ?? DEFAULT_MAX_CALLS,
           limits.maxTokens ?? DEFAULT_MAX_TOKENS,
@@ -718,6 +739,9 @@ function toView(row: RunRow): RunView {
     maxTokens: row.max_tokens,
     maxMessages: row.max_messages,
     usedMessages: row.used_messages,
+    maxConversations: row.max_conversations,
+    usedConversations: row.used_conversations,
+    selectedContextIds: row.selected_context_ids,
     modelCalls: row.model_calls,
     reservedTokens: row.reserved_tokens,
     lastErrorCode: row.last_error_code,

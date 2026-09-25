@@ -63,6 +63,8 @@ export function registerRunRoutes(server: FastifyInstance, identity: IdentitySer
           maxCalls: z.number().int().positive().max(100).optional(),
           maxTokens: z.number().int().positive().max(200_000).optional(),
           maxMessages: z.number().int().min(1).max(24).optional(),
+          maxConversations: z.number().int().min(1).max(12).optional(),
+          conversationKingdomIds: z.array(z.uuid()).max(12).optional(),
         })
         .parse(request.body);
       return runs.start({
@@ -70,11 +72,13 @@ export function registerRunRoutes(server: FastifyInstance, identity: IdentitySer
         objective: body.objective,
         provider: body.provider,
         model: body.model,
+        ...(body.conversationKingdomIds ? { selectedContextIds: body.conversationKingdomIds } : {}),
         ...(body.credentialId ? { credentialId: body.credentialId } : {}),
         limits: {
           ...(body.maxCalls !== undefined ? { maxCalls: body.maxCalls } : {}),
           ...(body.maxTokens !== undefined ? { maxTokens: body.maxTokens } : {}),
           ...(body.maxMessages !== undefined ? { maxMessages: body.maxMessages } : {}),
+          ...(body.maxConversations !== undefined ? { maxConversations: body.maxConversations } : {}),
         },
       });
     }),

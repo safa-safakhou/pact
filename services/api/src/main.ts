@@ -39,7 +39,7 @@ import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { OpenRouterAuthService } from "@pact/openrouter";
 import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
-import { RunService } from "@pact/runs";
+import { RunError, RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { readEnvironment } from "./config.js";
@@ -85,7 +85,16 @@ const kingdom = new KingdomService(pool, {
 });
 const worldViews = new WorldViewService(pool, "pact");
 const inbox = new InboxService(pool, { productScope: "pact", clock });
-const runs = new RunService(pool, { productScope: "pact", clock, inbox });
+const runs = new RunService(pool, {
+  productScope: "pact",
+  clock,
+  inbox,
+  validateContextSelection: async (accountId, contextIds) => {
+    if (!(await new ConversationReader(pool, "pact").assertSelectable(accountId, contextIds))) {
+      throw new RunError("FORBIDDEN");
+    }
+  },
+});
 const social = new SocialService(
   "pact",
   new ResourceLedger("pact"),

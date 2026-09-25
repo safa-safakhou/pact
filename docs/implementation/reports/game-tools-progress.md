@@ -98,6 +98,12 @@ The default 12-message (maximum 24-message) in-app Envoy allowance now applies t
 
 Local Node 24 build, typecheck, lint, 115 unit tests, 157 PostgreSQL integration tests, backlog render/check, and diff check passed. No hosted CI, VPS deployment, or paid model call was exercised.
 
+## Human-selected conversation context increment — 25 Sep 2026
+
+The human run-start API now accepts distinct, owner-involved direct-message counterpart IDs within a six-conversation default and twelve-conversation maximum. The selection is validated before the write lease, persisted for resume, and reflected in owner-only run status. The inference worker sends at most three newest messages per selected thread, omits bodies over 512 UTF-8 bytes, and caps the combined selection at 12 KiB. It labels the excerpts untrusted user-role data; the fixed system message never includes them. The PostgreSQL fake-provider fixture rejects an unrelated thread, duplicate or over-cap selection, then confirms only selected owner-involved prose reaches the provider. This is local fake-provider evidence, not proof a live model cannot be manipulated. PACT-049 stays In Progress pending broader adversarial and cross-route acceptance.
+
+The migration, run API, and database runbook are documented in `docs/api/runs.md` and `docs/operations/database.md`. Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (115), `npm run test:integration` (158 against PostgreSQL 17), and `npm run lint` pass. Backlog render/check and diff check are recorded with this batch. No hosted CI, live provider, VPS deployment, or player pilot was exercised.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.
@@ -108,4 +114,4 @@ For the worker-composition increment, Node 24 `npm run build`, `npm run typechec
 
 For the receipt-handoff increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108), `npm run test:integration` (144 against local PostgreSQL 17), and `npm run lint` passed after updating the hard-coded migration smoke list. `git diff --check` and backlog render/check passed before commit. No hosted CI or live provider was exercised.
 
-Automatic context still lacks selected conversation prose; only an explicit, bounded inbox read exposes it. Compare additional command groups across routes, add richer approval/record-read behavior and adversarial route checks, and run a process-kill drill after a committed game tool. Verify any explicitly enabled real API route separately before claiming provider compatibility. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.
+Compare additional command groups across routes, complete adversarial route checks, and run a process-kill drill after a committed game tool. Verify any explicitly enabled real API route separately before claiming provider compatibility. PACT-048 remains dependent on this ticket and must not be marked Done from the current setup UI. Single-VPS MVP only; no native store, paid infrastructure, hosted CI, deployment, or real player pilot is claimed.

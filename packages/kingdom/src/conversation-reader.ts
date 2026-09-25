@@ -21,6 +21,22 @@ export class ConversationReader {
     private readonly productScope: string,
   ) {}
 
+  /** A selectable thread must already contain an owner-involved message. */
+  async assertSelectable(accountId: string, counterpartyKingdomIds: readonly string[]): Promise<boolean> {
+    if (counterpartyKingdomIds.length === 0) return true;
+    const result = await this.pool.query<{ counterparty_kingdom_id: string }>(
+      `SELECT DISTINCT CASE WHEN dm.sender_kingdom_id = k.id
+         THEN dm.recipient_kingdom_id ELSE dm.sender_kingdom_id END AS counterparty_kingdom_id
+       FROM kingdoms k JOIN direct_messages dm ON dm.product_scope = k.product_scope
+         AND (dm.sender_kingdom_id = k.id OR dm.recipient_kingdom_id = k.id)
+       WHERE k.product_scope = $1 AND k.account_id = $2 AND k.status = 'ranked'
+         AND CASE WHEN dm.sender_kingdom_id = k.id
+           THEN dm.recipient_kingdom_id ELSE dm.sender_kingdom_id END = ANY($3::uuid[])`,
+      [this.productScope, accountId, counterpartyKingdomIds],
+    );
+    return result.rows.length === counterpartyKingdomIds.length;
+  }
+
   async read(accountId: string, counterpartyKingdomId: string, limit = 5): Promise<ConversationPage | null> {
     const owner = await this.pool.query<{ id: string }>(
       "SELECT id FROM kingdoms WHERE product_scope = $1 AND account_id = $2 AND status = 'ranked'",

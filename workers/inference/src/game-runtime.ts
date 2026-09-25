@@ -39,7 +39,7 @@ import {
 import { ResourceLedger } from "@pact/ledger";
 import type { ProviderRouter } from "@pact/model-provider";
 import { OnboardingService } from "@pact/onboarding";
-import { RunService } from "@pact/runs";
+import { RunError, RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { ownerRunContext } from "./run-context.js";
@@ -107,7 +107,10 @@ export async function createInferenceGameRuntime(
     clock,
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
-    messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox),
+    messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox, conversations),
+    validateContextSelection: async (accountId, contextIds) => {
+      if (!(await conversations.assertSelectable(accountId, contextIds))) throw new RunError("FORBIDDEN");
+    },
     tools: [
       pactRunCommandTool,
       inboxReadTool,
