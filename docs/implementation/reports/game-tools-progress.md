@@ -118,6 +118,10 @@ The human API and shared run service now enforce the execution contract's immuta
 
 Local Node 24 build/typecheck/lint, 115 unit tests, and 160 PostgreSQL integration tests pass. Backlog render/check and diff check are recorded with the batch. No live provider or VPS deployment was exercised.
 
+A selected-thread adversarial fixture passes counterpart prose instructing an Envoy to impersonate another account, alter its model and transfer mandate, send Silver, and take a human-only contact action. The fake provider receives the prose only in a user-role message and deliberately submits forged transfer and contact tool calls. The run stays bound to its original owner/provider/model; neither tool call commits and the database has no transfer, mandate, or contact-request effect. The advertised game tools do not include model connection or mandate update. This verifies server authority for this scenario, not a real model's resistance to prompt injection or every command group. PACT-049 remains In Progress.
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (161 against PostgreSQL 17) pass for this increment. No live provider or VPS deployment was exercised.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.
