@@ -1,11 +1,13 @@
 import { randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
 import {
+  ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ConversationReadQuerySchema,
   commandJsonSchema,
   InboxReadQuerySchema,
   ProductScopeSchema,
+  pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactConversationReadTool,
   pactInboxReadTool,
@@ -56,6 +58,7 @@ export interface McpTransportOptions {
   readonly inbox?: InboxReader;
   readonly conversations?: ConversationReaderPort;
   readonly approvals?: ApprovalStatusPort;
+  readonly approvalProposals?: ApprovalProposalPort;
   readonly runLeases?: {
     openMcpLease(input: { accountId: string; holderId: string }): Promise<{ leaseId: string; expiresAt: Date }>;
   };
@@ -88,6 +91,19 @@ export interface ConversationReaderPort {
 /** Approval status is a read-only, owner-scoped port; commits stay human-only. */
 export interface ApprovalStatusPort {
   read(accountId: string, approvalId: string): Promise<unknown | null>;
+}
+
+/** Proposals may request human review; this port never executes approval. */
+export interface ApprovalProposalPort {
+  proposeAgent(
+    principal: AuthenticatedPrincipal,
+    proposal: unknown,
+  ): Promise<{
+    approvalId: string;
+    deepLinkPath: string;
+    effectsSummary: string;
+    expiresAt: Date;
+  }>;
 }
 
 const SANDBOX_TOOLS = [
@@ -178,6 +194,9 @@ export class McpTransport {
                 ? [pactApprovalStatusTool]
                 : []),
               ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
+              ...(this.options.approvalProposals && principal.agentScopes?.includes("game:act")
+                ? [pactApprovalProposalTool]
+                : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
             ],
           }),
@@ -332,6 +351,21 @@ export class McpTransport {
         content: [{ type: "text", text: JSON.stringify(status) }],
         structuredContent: status as Record<string, unknown>,
       };
+    }
+    if (name === pactApprovalProposalTool.name) {
+      if (!principal.agentScopes?.includes("game:act") || !this.options.approvalProposals || !sessionId)
+        throw new McpError("FORBIDDEN", 403);
+      const parsed = ApprovalProposalSchema.safeParse(args);
+      if (!parsed.success) throw new McpError("INVALID_REQUEST");
+      const approval = await this.options.approvalProposals.proposeAgent({ ...principal, sessionId }, parsed.data);
+      const result = {
+        code: "APPROVAL_REQUIRED",
+        approvalId: approval.approvalId,
+        deepLink: `${this.options.origin}${approval.deepLinkPath}`,
+        effectsSummary: approval.effectsSummary,
+        expiresAt: approval.expiresAt.toISOString(),
+      };
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);
     if (name === "pact_command_v1") {

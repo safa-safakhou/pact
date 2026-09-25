@@ -182,6 +182,15 @@ await oauth.registerPreregisteredClient({
   redirectUris: [`${publicBaseUrl}/native/callback`],
 });
 const authority = new AuthorityService(pool, { productScope: "pact", identity, now: clock.now });
+const approvals = new ApprovalService(pool, {
+  productScope: "pact",
+  identity,
+  dispatcher,
+  clock,
+  origin: environment.PACT_ORIGIN,
+  assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
+  inbox,
+});
 const mcp = new McpTransport({
   pool,
   productScope: "pact",
@@ -193,14 +202,8 @@ const mcp = new McpTransport({
   inbox,
   conversations: new ConversationReader(pool, "pact"),
   approvals: new ApprovalStatusReader(pool, "pact", clock),
+  approvalProposals: approvals,
   runLeases: runs,
-});
-const approvals = new ApprovalService(pool, {
-  productScope: "pact",
-  identity,
-  dispatcher,
-  clock,
-  origin: environment.PACT_ORIGIN,
 });
 const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
   ? new CredentialVaultService(pool, {

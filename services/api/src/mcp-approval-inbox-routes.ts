@@ -61,7 +61,7 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
           ? 403
           : error.code === "NOT_FOUND"
             ? 404
-            : error.code === "EXPIRED" || error.code === "ALREADY_RESOLVED"
+            : error.code === "EXPIRED" || error.code === "ALREADY_RESOLVED" || error.code === "NOT_COMMITTED"
               ? 409
               : 400;
       return reply.code(status).send({ error: { code: error.code } });

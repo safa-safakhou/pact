@@ -208,6 +208,51 @@ describe("PACT-017 MCP transport", () => {
 });
 
 describe("PACT-020 approvals", () => {
+  it("keeps an exact request pending when the world cannot commit its approved command", async () => {
+    const { accountId, sessionToken } = await verifiedAccount(`approval-paused-${randomUUID()}@example.com`);
+    const pausedDispatcher = new CommandDispatcher({
+      pool,
+      clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+      productScope,
+      game: {
+        admit: async () => ({ kind: "paused" }),
+        execute: async () => {
+          throw new Error("Paused game command must not execute");
+        },
+      },
+    });
+    const pausedApprovals = new ApprovalService(pool, {
+      productScope: "pact",
+      identity,
+      dispatcher: pausedDispatcher,
+      clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+    });
+    const commandId = randomUUID();
+    const created = await pausedApprovals.createRequest({
+      accountId,
+      command: {
+        schemaVersion: SCHEMA_VERSION,
+        commandId,
+        actor: {
+          principalId: accountId,
+          productScope,
+          audience: "agent",
+          subject: { type: "account", id: accountId },
+        },
+        action: { kind: "game.contact.request", recipientKingdomId: randomUUID(), note: "Wait for world" },
+        submittedAt: "2026-09-20T20:00:00.000Z",
+      },
+      effectsSummary: "Pending world command",
+    });
+    await expect(pausedApprovals.approve(sessionToken, created.approvalId)).rejects.toMatchObject({
+      code: "NOT_COMMITTED",
+    });
+    expect((await pausedApprovals.review(created.approvalId, accountId)).status).toBe("pending");
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM command_receipts WHERE command_id = $1", [commandId])).rows,
+    ).toEqual([{ count: 0 }]);
+  });
+
   it("rejects GET-as-commit, commits once on double POST, and keeps status after disconnect", async () => {
     const { accountId, sessionToken } = await verifiedAccount(`approval-${randomUUID()}@example.com`);
     const commandId = randomUUID();

@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
 import {
+  ApprovalProposalSchema,
   type CommandEnvelope,
   CommandEnvelopeSchema,
   type CommandReceipt,
@@ -10,10 +11,12 @@ import {
 import { appendOutbox, withTransaction } from "@pact/db";
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
-import type { Pool } from "pg";
+import type { Pool, PoolClient } from "pg";
 
 export class ApprovalError extends Error {
-  constructor(readonly code: "FORBIDDEN" | "NOT_FOUND" | "EXPIRED" | "INVALID_TERMS" | "ALREADY_RESOLVED") {
+  constructor(
+    readonly code: "FORBIDDEN" | "NOT_FOUND" | "EXPIRED" | "INVALID_TERMS" | "ALREADY_RESOLVED" | "NOT_COMMITTED",
+  ) {
     super(code);
     this.name = "ApprovalError";
   }
@@ -47,10 +50,17 @@ export class ApprovalService {
     private readonly pool: Pool,
     private readonly options: {
       productScope: string;
-      identity: IdentityService;
+      identity?: IdentityService;
       dispatcher: CommandDispatcher;
       clock: { now(): Date };
-      origin: string;
+      origin?: string;
+      assertAgentWriteLease?: (client: PoolClient, accountId: string, holderId: string) => Promise<void>;
+      inbox?: {
+        publishForAccount(
+          client: PoolClient,
+          input: { accountId: string; type: string; payload: unknown },
+        ): Promise<string>;
+      };
     },
   ) {}
 
@@ -62,6 +72,62 @@ export class ApprovalService {
     runId?: string;
     mandateVersion?: number;
   }): Promise<ApprovalView> {
+    return withTransaction(this.pool, (client) => this.createRequestInTransaction(client, input));
+  }
+
+  /** Agent proposal is not a human approval or an agent game command. */
+  async proposeAgent(principal: AuthenticatedPrincipal, rawProposal: unknown, runId?: string): Promise<ApprovalView> {
+    const holderId = principal.sessionId;
+    if (
+      principal.audience !== "agent" ||
+      principal.productScope !== this.options.productScope ||
+      !principal.agentScopes?.includes("game:act") ||
+      !holderId ||
+      !this.options.assertAgentWriteLease
+    ) {
+      throw new ApprovalError("FORBIDDEN");
+    }
+    const parsed = ApprovalProposalSchema.safeParse(rawProposal);
+    if (!parsed.success) throw new ApprovalError("INVALID_TERMS");
+    const { commandId, action } = parsed.data;
+    const command: CommandEnvelope = {
+      schemaVersion: SCHEMA_VERSION,
+      commandId,
+      actor: {
+        principalId: principal.accountId,
+        productScope: principal.productScope,
+        audience: "agent",
+        subject: { type: "account", id: principal.accountId },
+        sessionId: holderId,
+      },
+      action,
+      submittedAt: this.options.clock.now().toISOString(),
+    };
+    const effectsSummary = `Request contact with kingdom ${action.recipientKingdomId}; charge 2 Silver and one cold-contact action if valid at human approval. Note: ${JSON.stringify(action.note)}`;
+    return withTransaction(this.pool, async (client) => {
+      await this.options.assertAgentWriteLease?.(client, principal.accountId, holderId);
+      return this.createRequestInTransaction(client, {
+        accountId: principal.accountId,
+        command,
+        effectsSummary,
+        requestingClientId: holderId,
+        ...(runId ? { runId } : {}),
+        ...(action.mandateVersion !== undefined ? { mandateVersion: action.mandateVersion } : {}),
+      });
+    });
+  }
+
+  private async createRequestInTransaction(
+    client: PoolClient,
+    input: {
+      accountId: string;
+      command: CommandEnvelope;
+      effectsSummary: string;
+      requestingClientId?: string;
+      runId?: string;
+      mandateVersion?: number;
+    },
+  ): Promise<ApprovalView> {
     const command = CommandEnvelopeSchema.parse(input.command);
     if (
       command.actor.principalId !== input.accountId ||
@@ -74,7 +140,7 @@ export class ApprovalService {
     const hash = hashCommand(command);
     const now = this.options.clock.now();
     const expiresAt = new Date(now.getTime() + 15 * 60_000);
-    const inserted = await this.pool.query<ApprovalRow>(
+    const inserted = await client.query<ApprovalRow>(
       `INSERT INTO approval_requests(
          product_scope, account_id, command_id, canonical_command_hash, action, effects_summary,
          mandate_version, requesting_client_id, run_id, expires_at
@@ -97,7 +163,7 @@ export class ApprovalService {
     const row =
       inserted.rows[0] ??
       (
-        await this.pool.query<ApprovalRow>(
+        await client.query<ApprovalRow>(
           `SELECT * FROM approval_requests WHERE product_scope = $1 AND command_id = $2`,
           [this.options.productScope, command.commandId],
         )
@@ -105,6 +171,19 @@ export class ApprovalService {
     if (!row) throw new Error("approval insert failed");
     if (row.account_id !== input.accountId) throw new ApprovalError("FORBIDDEN");
     if (row.canonical_command_hash !== hash) throw new ApprovalError("INVALID_TERMS");
+    if (inserted.rows[0]) {
+      await this.options.inbox?.publishForAccount(client, {
+        accountId: input.accountId,
+        type: "approval.requested.v1",
+        payload: { approvalId: row.approval_id, commandId: command.commandId, actionKind: command.action.kind },
+      });
+      await appendOutbox(client, {
+        productScope: this.options.productScope,
+        eventId: randomUUID(),
+        type: "approval.requested.v1",
+        payload: { approvalId: row.approval_id, commandId: command.commandId },
+      });
+    }
     return this.toView(row);
   }
 
@@ -174,6 +253,11 @@ export class ApprovalService {
       sessionId,
     };
     const receipt = await this.options.dispatcher.dispatch(principal, command);
+    if (receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED") {
+      // A paused world (or another non-committing receipt) cannot consume the
+      // human's one exact approval. Leave it pending for a later retry.
+      throw new ApprovalError("NOT_COMMITTED");
+    }
     return withTransaction(this.pool, async (client) => {
       const updated = await client.query<ApprovalRow>(
         `UPDATE approval_requests SET status = 'approved', receipt = $2::jsonb, resolved_at = $3
@@ -186,6 +270,11 @@ export class ApprovalService {
           .rows[0];
       if (!next) throw new Error("approval update failed");
       if (updated.rowCount === 1) {
+        await this.options.inbox?.publishForAccount(client, {
+          accountId,
+          type: "approval.resolved.v1",
+          payload: { approvalId, status: "approved", commandId: prepared.row.command_id },
+        });
         await appendOutbox(client, {
           productScope: this.options.productScope,
           eventId: randomUUID(),
@@ -225,12 +314,24 @@ export class ApprovalService {
       );
       const next = updated.rows[0];
       if (!next) throw new Error("reject update failed");
+      await this.options.inbox?.publishForAccount(client, {
+        accountId: session.accountId,
+        type: "approval.resolved.v1",
+        payload: { approvalId, status: "rejected", commandId: row.command_id },
+      });
+      await appendOutbox(client, {
+        productScope: this.options.productScope,
+        eventId: randomUUID(),
+        type: "approval.resolved.v1",
+        payload: { approvalId, status: "rejected", commandId: row.command_id },
+      });
       return this.toView(next);
     });
   }
 
   private async requireHuman(sessionToken: string) {
     try {
+      if (!this.options.identity) throw new ApprovalError("FORBIDDEN");
       return await this.options.identity.authenticate(sessionToken);
     } catch (error) {
       if (error instanceof IdentityError) throw new ApprovalError("FORBIDDEN");
@@ -269,7 +370,10 @@ export class ApprovalService {
 }
 
 function hashCommand(command: CommandEnvelope): string {
+  // JSONB reorders object keys. Parse into the versioned schema's key order
+  // before hashing both a submitted proposal and the stored approval action.
+  const parsed = CommandEnvelopeSchema.parse(command);
   return createHash("sha256")
-    .update(JSON.stringify({ commandId: command.commandId, action: command.action }), "utf8")
+    .update(JSON.stringify({ commandId: parsed.commandId, action: parsed.action }), "utf8")
     .digest("hex");
 }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   CommandEnvelopeSchema,
   CommandReceiptSchema,
@@ -24,6 +25,7 @@ export const inboxReadQueryJsonSchema = z.toJSONSchema(InboxReadQuerySchema, { t
 export const conversationReadQueryJsonSchema = z.toJSONSchema(ConversationReadQuerySchema, { target: "draft-7" });
 export const receiptReadQueryJsonSchema = z.toJSONSchema(ReceiptReadQuerySchema, { target: "draft-7" });
 export const approvalStatusQueryJsonSchema = z.toJSONSchema(ApprovalStatusQuerySchema, { target: "draft-7" });
+export const approvalProposalJsonSchema = z.toJSONSchema(ApprovalProposalSchema, { target: "draft-7" });
 
 export const pactWorldReadTool = {
   name: "pact_world_read_v1",
@@ -60,6 +62,12 @@ export const pactApprovalStatusTool = {
   name: "pact_approval_status_v1",
   description: "Read your exact-command approval status. This tool never approves or rejects anything.",
   inputSchema: approvalStatusQueryJsonSchema,
+} as const;
+
+export const pactApprovalProposalTool = {
+  name: "pact_approval_propose_v1",
+  description: "Propose one exact cold-contact request for human review; this never approves or executes it.",
+  inputSchema: approvalProposalJsonSchema,
 } as const;
 
 export const httpCommandContract = {

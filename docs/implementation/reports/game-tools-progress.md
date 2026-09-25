@@ -138,11 +138,21 @@ Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (
 
 An authenticated web SDK session accepts a pending cold-contact request and receives a replay-stable `COMMITTED` receipt. The same recipient's in-app fake-provider run and MCP agent lease each submit the exact `game.contact.answer` action with a forged human actor; both receive `FORBIDDEN`, and the request stays pending until the human acts. The fixture then verifies the accepted contact pair. This extends the product-scoped privilege boundary to a state-changing social command across all three routes; it does not prove every command group or live-model prompt-injection resistance.
 
-An approval-flow audit found a remaining PACT-049 gap: `ApprovalService.createRequest` has no production caller, so an unmandated agent command is denied rather than producing the approval request/deep link required by the execution contract. Wire and verify a scoped, exact-command proposal path before closing this ticket or unblocking dependent UI work. Do not confuse a human-only contact answer with an approvable agent action.
+At this checkpoint an approval-flow audit found that `ApprovalService.createRequest` had no production caller, so an unmandated agent command was denied rather than producing an approval request/deep link. The later cold-contact proposal increment below closes that narrow gap only; do not confuse a human-only contact answer with an approvable agent action.
 
 The existing request-creation primitive now validates product/account ownership and rejects a reused command ID with changed canonical terms or a different owner. Its PostgreSQL fixture checks exact replay, changed-term denial, and cross-account denial. Full local Node 24 build/typecheck/lint, 115 unit, and 164 PostgreSQL integration tests pass after this correction. This hardens the future proposal route but does not wire it.
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (164 against PostgreSQL 17) pass. No hosted CI, live provider, or VPS deployment was exercised. PACT-049 remains In Progress.
+
+## Exact cold-contact proposal increment — 25 Sep 2026
+
+The shared `pact_approval_propose_v1` schema accepts one command ID and typed `game.contact.request` action, never an actor/account field. The in-app fake-provider route and MCP `game:act` route both use `ApprovalService.proposeAgent`; it derives the owner from the active run or grant and checks that exact write lease inside the request-creation transaction. The server renders the conditional two-Silver/one-action effects summary. The pending approval, owner inbox event, and outbox event commit together without touching stock or creating a contact request. MCP returns an HTTPS human-review link; the model records a bounded review-path result. Only human approval dispatches the stored command, and owner inbox resolution is recorded once.
+
+The PostgreSQL fixture covers missing lease and read-only MCP denial, a human-only `contact.answer` proposal rejected by the strict schema, same-command MCP replay yielding one request/event, changed terms rejected, no contact or Silver debit before human approval, and one committed request with exactly 1,200 internal Silver units charged. The approval HTTP route returns 403 without a human session, commits with the authenticated human cookie/Origin/CSRF, and returns the same receipt on duplicate POST. A separate paused-world fixture verifies that a noncommitting dispatcher receipt leaves the approval pending. The fixture also exposed JSONB key reordering in the prior hash comparison; the service now normalizes actions through the versioned schema before hashing both submitted and stored terms.
+
+This is not automatic approval fallback for every blocked command. Other game groups still require accurate server-rendered effects, preconditions, earlier deadlines, and relevant exact human permits before exposing proposal entry points. PACT-049 remains In Progress; PACT-048 is not unblocked. No paid provider, hosted client, or VPS gameplay deployment was exercised.
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (166 against PostgreSQL 17) pass for this increment. The tests use fake providers and a disposable schema; no hosted CI or live provider was exercised.
 
 ## Remaining work
 

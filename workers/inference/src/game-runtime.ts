@@ -1,11 +1,13 @@
 import { CommandDispatcher, dispatchRunCommandTools, GameCommandHandler, pactRunCommandTool } from "@pact/application";
-import { ApprovalStatusReader } from "@pact/approvals";
+import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import {
+  ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ConversationReadQuerySchema,
   InboxReadQuerySchema,
   ProductScopeSchema,
+  pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactConversationReadTool,
   pactInboxReadTool,
@@ -75,6 +77,7 @@ export async function createInferenceGameRuntime(
   const world = new WorldClockService(pool, productScope);
   await world.bootstrap();
   let dispatcher: CommandDispatcher;
+  let approvals: ApprovalService;
   let kingdom: KingdomService;
   let reports: GameReportReader;
   const views = new WorldViewService(pool, productScope);
@@ -102,6 +105,10 @@ export async function createInferenceGameRuntime(
     ...pactApprovalStatusTool,
     parseArguments: (input: unknown) => ApprovalStatusQuerySchema.parse(input),
   };
+  const approvalProposalTool = {
+    ...pactApprovalProposalTool,
+    parseArguments: (input: unknown) => ApprovalProposalSchema.parse(input),
+  };
   const runs = new RunService(pool, {
     productScope,
     clock,
@@ -119,6 +126,7 @@ export async function createInferenceGameRuntime(
       reportReadTool,
       receiptReadTool,
       approvalStatusTool,
+      approvalProposalTool,
     ],
     executeToolCalls: async (input) => {
       const results = [];
@@ -164,6 +172,31 @@ export async function createInferenceGameRuntime(
             content: approval
               ? boundedRecordResult("approval", query.approvalId, approval)
               : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
+        if (call.name === approvalProposalTool.name) {
+          const proposal = ApprovalProposalSchema.parse(call.arguments);
+          const approval = await approvals.proposeAgent(
+            {
+              accountId: input.run.accountId,
+              productScope: scope,
+              audience: "agent",
+              sessionId: input.run.runId,
+              agentScopes: ["game:act"],
+            },
+            proposal,
+            input.run.runId,
+          );
+          results.push({
+            callId: call.id,
+            content: boundedRecordResult("approval", approval.approvalId, {
+              code: "APPROVAL_REQUIRED",
+              approvalId: approval.approvalId,
+              deepLinkPath: approval.deepLinkPath,
+              effectsSummary: approval.effectsSummary,
+              expiresAt: approval.expiresAt.toISOString(),
+            }),
           });
           continue;
         }
@@ -278,6 +311,13 @@ export async function createInferenceGameRuntime(
       admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
       execute: (client, principal, command, gameTimeMs) => handler.execute(client, principal, command, gameTimeMs),
     },
+  });
+  approvals = new ApprovalService(pool, {
+    productScope,
+    dispatcher,
+    clock,
+    assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
+    inbox,
   });
   return { runs, dispatcher };
 }

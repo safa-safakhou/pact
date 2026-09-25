@@ -6,9 +6,9 @@ import {
   pactRunCommandTool,
   runToolCommandId,
 } from "@pact/application";
-import { ApprovalStatusReader } from "@pact/approvals";
+import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService } from "@pact/authority";
-import { type CommandEnvelope, ProductScopeSchema } from "@pact/contracts";
+import { type CommandEnvelope, ProductScopeSchema, pactApprovalProposalTool } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -206,6 +206,308 @@ function command(
 }
 
 describe("shared gameplay command admission", () => {
+  it("creates a review-only cold-contact proposal through model and MCP without agent approval privilege", async () => {
+    const modelOwner = await kingdom();
+    const modelTarget = await kingdom();
+    const modelCommandId = randomUUID();
+    const runtime = await createInferenceGameRuntime({
+      pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([
+        new DeterministicFakeProvider({
+          scenario: "success",
+          toolName: pactApprovalProposalTool.name,
+          toolArguments: {
+            commandId: modelCommandId,
+            action: {
+              kind: "game.contact.request",
+              recipientKingdomId: modelTarget.kingdomId,
+              note: "Review this contact request",
+            },
+          },
+        }),
+      ]),
+      termsVersion: "terms-v1",
+    });
+    const started = await runtime.runs.start({
+      accountId: modelOwner.accountId,
+      objective: "Ask the player to approve a contact request",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished" });
+    const modelApproval = await pool.query<{ approval_id: string; status: string; account_id: string }>(
+      "SELECT approval_id, status, account_id FROM approval_requests WHERE product_scope = 'pact' AND command_id = $1",
+      [modelCommandId],
+    );
+    expect(modelApproval.rows).toEqual([
+      { approval_id: expect.any(String), status: "pending", account_id: modelOwner.accountId },
+    ]);
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM cold_contact_requests WHERE sender_kingdom_id = $1", [
+          modelOwner.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ count: 0 }]);
+    expect(
+      (
+        await pool.query("SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'", [
+          modelOwner.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ ordinary_units: "6000" }]);
+    const modelResult = await pool.query<{ summary: string }>(
+      "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1",
+      [started.runId],
+    );
+    expect(modelResult.rows[0]?.summary).toContain("APPROVAL_REQUIRED");
+    expect(modelResult.rows[0]?.summary).toContain(modelApproval.rows[0]?.approval_id);
+
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      dispatcher: runtime.dispatcher,
+      clock: { now: () => new Date() },
+      assertAgentWriteLease: (client, accountId, holderId) =>
+        runtime.runs.assertAgentWriteLease(client, accountId, holderId),
+      inbox: new InboxService(pool, { productScope: "pact", clock: { now: () => new Date() } }),
+    });
+    const mcpOwner = await kingdom();
+    const mcpTarget = await kingdom();
+    const mcpCommandId = randomUUID();
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher: runtime.dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runtime.runs,
+      approvalProposals: approvals,
+    });
+    const agent = {
+      accountId: mcpOwner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(agent, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const sessionId = initialized.sessionId;
+    if (!sessionId) throw new Error("Missing MCP session");
+    const agentTools = await mcp.handlePost(agent, { method: "tools/list", id: 10 }, sessionId);
+    expect(JSON.stringify(agentTools.response)).toContain(pactApprovalProposalTool.name);
+    const readOnly = { ...agent, agentScopes: ["world:read" as const] };
+    const readOnlyInit = await mcp.handlePost(readOnly, {
+      method: "initialize",
+      id: 11,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const readOnlyTools = await mcp.handlePost(readOnly, { method: "tools/list", id: 12 }, readOnlyInit.sessionId);
+    expect(JSON.stringify(readOnlyTools.response)).not.toContain(pactApprovalProposalTool.name);
+    await expect(
+      mcp.handlePost(
+        readOnly,
+        {
+          method: "tools/call",
+          id: 13,
+          params: {
+            name: pactApprovalProposalTool.name,
+            arguments: {
+              commandId: randomUUID(),
+              action: { kind: "game.contact.request", recipientKingdomId: mcpTarget.kingdomId, note: "Denied" },
+            },
+          },
+        },
+        readOnlyInit.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const proposal = {
+      commandId: mcpCommandId,
+      action: {
+        kind: "game.contact.request",
+        recipientKingdomId: mcpTarget.kingdomId,
+        note: "Review MCP request",
+      },
+    };
+    await expect(
+      mcp.handlePost(
+        agent,
+        {
+          method: "tools/call",
+          id: 14,
+          params: {
+            name: pactApprovalProposalTool.name,
+            arguments: {
+              commandId: randomUUID(),
+              action: { kind: "game.contact.answer", requestId: randomUUID(), accept: true },
+            },
+          },
+        },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(
+      mcp.handlePost(
+        agent,
+        { method: "tools/call", id: 2, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await mcp.handlePost(
+      agent,
+      { method: "tools/call", id: 3, params: { name: "run.open", arguments: {} } },
+      sessionId,
+    );
+    const first = await mcp.handlePost(
+      agent,
+      { method: "tools/call", id: 4, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+      sessionId,
+    );
+    const firstResult = first.response.result as {
+      structuredContent: { approvalId: string; code: string; deepLink: string };
+    };
+    expect(firstResult.structuredContent).toMatchObject({
+      code: "APPROVAL_REQUIRED",
+      deepLink: `https://pact.example/approvals/${firstResult.structuredContent.approvalId}`,
+    });
+    const retry = await mcp.handlePost(
+      agent,
+      { method: "tools/call", id: 5, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+      sessionId,
+    );
+    expect((retry.response.result as { structuredContent: { approvalId: string } }).structuredContent.approvalId).toBe(
+      firstResult.structuredContent.approvalId,
+    );
+    await expect(
+      mcp.handlePost(
+        agent,
+        {
+          method: "tools/call",
+          id: 6,
+          params: {
+            name: pactApprovalProposalTool.name,
+            arguments: { ...proposal, action: { ...proposal.action, note: "changed" } },
+          },
+        },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM approval_requests WHERE command_id = $1", [mcpCommandId]))
+        .rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::int AS count FROM inbox_events WHERE account_id = $1 AND type = 'approval.requested.v1'",
+          [mcpOwner.accountId],
+        )
+      ).rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM cold_contact_requests WHERE sender_kingdom_id = $1", [
+          mcpOwner.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ count: 0 }]);
+
+    const digest = new TokenDigester(Buffer.alloc(32, 68));
+    const identity = new IdentityService(pool, {
+      productScope: "pact",
+      currentTermsVersion: "terms-v1",
+      allowedOrigins: new Set(["https://pact.example"]),
+      clock: { now: () => new Date() },
+      digester: digest,
+      secretBox: new AesGcmSecretBox(Buffer.alloc(32, 69)),
+      compromisedPasswords: new LocalCompromisedPasswordChecker(baselineCompromisedPasswordDigests),
+    });
+    const sessionToken = randomUUID();
+    const csrfToken = randomUUID();
+    const expiresAt = new Date(Date.now() + 60_000);
+    await pool.query(
+      `INSERT INTO sessions(product_scope, account_id, audience, token_hash, csrf_token_hash,
+         expires_at, idle_expires_at, authenticated_at, last_seen_at)
+       VALUES ('pact', $1, 'human', $2, $3, $4, $4, $5, $5)`,
+      [modelOwner.accountId, digest.digest(sessionToken), digest.digest(csrfToken), expiresAt, new Date()],
+    );
+    const humanApprovals = new ApprovalService(pool, {
+      productScope: "pact",
+      identity,
+      dispatcher: runtime.dispatcher,
+      clock: { now: () => new Date() },
+      inbox: new InboxService(pool, { productScope: "pact", clock: { now: () => new Date() } }),
+    });
+    const server = buildServer(pool, false, undefined, {
+      identity,
+      onboarding: new OnboardingService(pool, {
+        productScope: "pact",
+        currentTermsVersion: "terms-v1",
+        now: () => new Date(),
+      }),
+      dispatcher: runtime.dispatcher,
+      approvals: humanApprovals,
+    });
+    let approved: { approvalId: string; receipt: { code: string } };
+    try {
+      const approvalPath = `/v1/approvals/${modelApproval.rows[0]?.approval_id}/approve`;
+      const agentAttempt = await server.inject({
+        method: "POST",
+        url: approvalPath,
+        headers: { origin: "https://pact.example", "x-csrf-token": csrfToken },
+      });
+      expect(agentAttempt.statusCode).toBe(403);
+      const request = () =>
+        server.inject({
+          method: "POST",
+          url: approvalPath,
+          headers: {
+            origin: "https://pact.example",
+            "x-csrf-token": csrfToken,
+            cookie: `pact_session=${encodeURIComponent(sessionToken)}`,
+          },
+        });
+      const first = await request();
+      expect(first.statusCode).toBe(200);
+      approved = first.json();
+      expect(approved.receipt.code).toBe("COMMITTED");
+      const retry = await request();
+      expect(retry.statusCode).toBe(200);
+      expect(retry.json().receipt).toEqual(approved.receipt);
+    } finally {
+      await server.close();
+    }
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM cold_contact_requests WHERE sender_kingdom_id = $1", [
+          modelOwner.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (
+        await pool.query("SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'", [
+          modelOwner.kingdomId,
+        ])
+      ).rows,
+    ).toEqual([{ ordinary_units: "4800" }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT type, count(*)::int AS count FROM inbox_events WHERE account_id = $1 AND type LIKE 'approval.%' GROUP BY type ORDER BY type",
+          [modelOwner.accountId],
+        )
+      ).rows,
+    ).toEqual([
+      { type: "approval.requested.v1", count: 1 },
+      { type: "approval.resolved.v1", count: 1 },
+    ]);
+  });
   it("persists only owner-selected conversation context within the run cap", async () => {
     const owner = await kingdom();
     const selected = await kingdom();
