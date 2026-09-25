@@ -127,6 +127,7 @@ beforeAll(async () => {
     scouts,
     garrison,
     raids,
+    (client, accountId, holderId) => runs.consumeOutgoingMessageAllowance(client, accountId, holderId),
   );
   dispatcher = new CommandDispatcher({
     pool,
@@ -361,6 +362,57 @@ describe("shared gameplay command admission", () => {
     expect(
       (outsiderResponse.response.result as { structuredContent: { messages: unknown[] } }).structuredContent.messages,
     ).toEqual([]);
+  });
+
+  it("charges the in-app run message cap atomically but leaves failed sends uncharged", async () => {
+    const sender = await kingdom();
+    const contact = await kingdom();
+    const stranger = await kingdom();
+    const [kingdomA, kingdomB] = [sender.kingdomId, contact.kingdomId].sort();
+    await pool.query(
+      `INSERT INTO social_contacts(product_scope, kingdom_a, kingdom_b, accepted_game_time_ms)
+       VALUES ('pact', $1, $2, 0)`,
+      [kingdomA, kingdomB],
+    );
+    const run = await runs.start({
+      accountId: sender.accountId,
+      objective: "Send at most one message",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxMessages: 1, maxCalls: 1 },
+    });
+    expect(run).toMatchObject({ maxMessages: 1, usedMessages: 0 });
+    const send = (recipientKingdomId: string, callId: string, requestId = randomUUID()) =>
+      dispatchRunCommandTools(dispatcher, productScope, {
+        run,
+        requestId,
+        calls: [
+          {
+            id: callId,
+            name: pactRunCommandTool.name,
+            arguments: command(stranger.accountId, {
+              kind: "game.message.send",
+              recipientKingdomId,
+              body: `Allowance fixture ${callId}`,
+            }),
+          },
+        ],
+      });
+    expect((await send(stranger.kingdomId, "failed"))[0]?.code).toBe("FORBIDDEN");
+    const firstRequestId = randomUUID();
+    const first = await send(contact.kingdomId, "first", firstRequestId);
+    expect(first[0]?.code).toBe("COMMITTED");
+    expect(await send(contact.kingdomId, "first", firstRequestId)).toEqual(first);
+    expect((await send(contact.kingdomId, "second"))[0]?.code).toBe("RATE_LIMITED");
+    const state = await pool.query<{ used_messages: number; count: string }>(
+      `SELECT r.used_messages,
+         (SELECT count(*)::text FROM direct_messages WHERE product_scope = 'pact'
+           AND sender_kingdom_id = $2 AND recipient_kingdom_id = $3) AS count
+       FROM envoy_runs r WHERE r.run_id = $1`,
+      [run.runId, sender.kingdomId, contact.kingdomId],
+    );
+    expect(state.rows).toEqual([{ used_messages: 1, count: "1" }]);
+    expect(await runs.get(run.runId, sender.accountId)).toMatchObject({ maxMessages: 1, usedMessages: 1 });
   });
 
   it("selects bounded owner context without promoting counterpart instructions", async () => {

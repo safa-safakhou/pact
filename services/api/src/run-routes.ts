@@ -62,6 +62,7 @@ export function registerRunRoutes(server: FastifyInstance, identity: IdentitySer
           credentialId: z.string().uuid().optional(),
           maxCalls: z.number().int().positive().max(100).optional(),
           maxTokens: z.number().int().positive().max(200_000).optional(),
+          maxMessages: z.number().int().min(1).max(24).optional(),
         })
         .parse(request.body);
       return runs.start({
@@ -73,6 +74,7 @@ export function registerRunRoutes(server: FastifyInstance, identity: IdentitySer
         limits: {
           ...(body.maxCalls !== undefined ? { maxCalls: body.maxCalls } : {}),
           ...(body.maxTokens !== undefined ? { maxTokens: body.maxTokens } : {}),
+          ...(body.maxMessages !== undefined ? { maxMessages: body.maxMessages } : {}),
         },
       });
     }),

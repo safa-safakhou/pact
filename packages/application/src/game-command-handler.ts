@@ -41,6 +41,11 @@ export class GameCommandHandler {
     private readonly scouts?: ScoutService,
     private readonly garrison?: GarrisonService,
     private readonly raids?: RaidService,
+    private readonly consumeRunMessageAllowance?: (
+      client: PoolClient,
+      accountId: string,
+      holderId: string,
+    ) => Promise<boolean>,
   ) {}
 
   async execute(
@@ -90,6 +95,11 @@ export class GameCommandHandler {
           return { recordVersions: { [`contact-request:${action.requestId}`]: 1 }, charged: [] };
         }
         case "game.message.send": {
+          if (principal.audience === "agent") {
+            if (!principal.sessionId || !this.consumeRunMessageAllowance) throw new DispatcherError("FORBIDDEN");
+            if (!(await this.consumeRunMessageAllowance(client, accountId, principal.sessionId)))
+              throw new DispatcherError("RATE_LIMITED");
+          }
           const id = await this.social.sendMessage(client, {
             accountId,
             recipientKingdomId: action.recipientKingdomId,

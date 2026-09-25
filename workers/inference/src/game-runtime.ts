@@ -261,6 +261,7 @@ export async function createInferenceGameRuntime(
     scouts,
     garrison,
     raids,
+    (client, accountId, holderId) => runs.consumeOutgoingMessageAllowance(client, accountId, holderId),
   );
   dispatcher = new CommandDispatcher({
     pool,

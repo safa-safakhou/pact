@@ -44,6 +44,8 @@ export interface RunView {
   readonly usedTokens: number;
   readonly maxCalls: number;
   readonly maxTokens: number;
+  readonly maxMessages: number;
+  readonly usedMessages: number;
   readonly modelCalls: number;
   readonly reservedTokens: number;
   readonly lastErrorCode: string | null;
@@ -256,6 +258,22 @@ export class RunService {
       [this.options.productScope, accountId, holderId, this.options.clock.now()],
     );
     if (!result.rowCount) throw new RunError("FORBIDDEN");
+  }
+
+  /** Charge an in-app run's outgoing-message cap in the command transaction. MCP hosts have no PACT run row. */
+  async consumeOutgoingMessageAllowance(client: PoolClient, accountId: string, holderId: string): Promise<boolean> {
+    const run = await client.query<{ run_id: string }>(
+      "SELECT run_id FROM envoy_runs WHERE product_scope = $1 AND run_id::text = $2 AND account_id = $3",
+      [this.options.productScope, holderId, accountId],
+    );
+    if (!run.rows[0]) return true;
+    const updated = await client.query(
+      `UPDATE envoy_runs SET used_messages = used_messages + 1, updated_at = $4
+       WHERE product_scope = $1 AND run_id = $2 AND account_id = $3
+         AND status = 'running' AND used_messages < max_messages`,
+      [this.options.productScope, run.rows[0].run_id, accountId, this.options.clock.now()],
+    );
+    return Boolean(updated.rowCount);
   }
 
   async stop(accountId: string, runId: string): Promise<RunView> {
@@ -698,6 +716,8 @@ function toView(row: RunRow): RunView {
     usedTokens: row.used_tokens,
     maxCalls: row.max_calls,
     maxTokens: row.max_tokens,
+    maxMessages: row.max_messages,
+    usedMessages: row.used_messages,
     modelCalls: row.model_calls,
     reservedTokens: row.reserved_tokens,
     lastErrorCode: row.last_error_code,

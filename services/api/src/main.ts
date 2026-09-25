@@ -148,6 +148,7 @@ const gameCommands = new GameCommandHandler(
   scouts,
   garrison,
   raids,
+  (client, accountId, holderId) => runs.consumeOutgoingMessageAllowance(client, accountId, holderId),
 );
 const dispatcher = new CommandDispatcher({
   pool,

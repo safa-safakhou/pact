@@ -88,9 +88,15 @@ Local Node 24 build, typecheck, lint, all 114 unit and 155 PostgreSQL integratio
 
 ## Owner direct-conversation read increment — 25 Sep 2026
 
-`pact_conversation_read_v1` now uses one strict schema in MCP and the in-app fake-provider route. The domain-owned reader derives the owner kingdom from the authenticated account, selects at most five messages involving that kingdom and the named counterparty, omits bodies over 512 UTF-8 bytes, and labels the result untrusted. Model results are capped at 3,600 bytes with message IDs retained if truncation is needed. A PostgreSQL fixture compares model and read-only MCP results, checks a different account sees no messages, rejects caller-supplied account IDs and excessive limits, and confirms hostile counterpart prose appears only in user-role result data on the next provider step. Automatic context still excludes message bodies. Run-start conversation selection and six/twelve allowance accounting remain open; this does not complete PACT-049 or certify a live provider.
+`pact_conversation_read_v1` now uses one strict schema in MCP and the in-app fake-provider route. The domain-owned reader derives the owner kingdom from the authenticated account, selects at most five messages involving that kingdom and the named counterparty, omits bodies over 512 UTF-8 bytes, and labels the result untrusted. Model results are capped at 3,600 bytes with message IDs retained if truncation is needed. A PostgreSQL fixture compares model and read-only MCP results, checks a different account sees no messages, rejects caller-supplied account IDs and excessive limits, and confirms hostile counterpart prose appears only in user-role result data on the next provider step. Automatic context still excludes message bodies. Run-start conversation selection and its cap remain open; this does not complete PACT-049 or certify a live provider.
 
 Local Node 24 build, typecheck, lint, 115 unit tests, 156 PostgreSQL integration tests, backlog render/check, and diff check passed. No hosted CI, VPS deployment, or paid model call was exercised.
+
+## Atomic in-app message allowance increment — 25 Sep 2026
+
+The default 12-message (maximum 24-message) in-app Envoy allowance now applies to `game.message.send` in the same transaction as the shared command and domain message. The authenticated run lease selects the counter; an MCP holder has no in-app run counter. A PostgreSQL fixture starts a one-message run: a failed noncontact send leaves `used_messages` at zero, a valid send commits once, a same-command replay returns the receipt without another count, and a new send is `RATE_LIMITED`. `POST /v1/runs` accepts `maxMessages`, and the owner run view exposes `maxMessages`/`usedMessages`. This covers outgoing-message count, not selected-conversation count or every concurrent sender interleaving. PACT-049 remains In Progress.
+
+Local Node 24 build, typecheck, lint, 115 unit tests, 157 PostgreSQL integration tests, backlog render/check, and diff check passed. No hosted CI, VPS deployment, or paid model call was exercised.
 
 ## Remaining work
 
