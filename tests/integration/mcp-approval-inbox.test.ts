@@ -328,6 +328,119 @@ describe("PACT-020 approvals", () => {
       new Date("2026-09-20T19:00:00.000Z"),
     ]);
     await expect(approvals.approve(sessionToken, expired.approvalId)).rejects.toMatchObject({ code: "EXPIRED" });
+    expect(
+      (
+        await pool.query(
+          "SELECT status, resolved_at IS NOT NULL AS resolved FROM approval_requests WHERE approval_id = $1",
+          [expired.approvalId],
+        )
+      ).rows,
+    ).toEqual([{ status: "expired", resolved: true }]);
+    await expect(approvals.approve(sessionToken, expired.approvalId)).rejects.toMatchObject({ code: "EXPIRED" });
+    const expiredRejection = await approvals.createRequest({
+      accountId,
+      command: {
+        ...command,
+        commandId: randomUUID(),
+        action: { kind: "sandbox.echo", message: "too late to reject" },
+      },
+      effectsSummary: "Expired rejection",
+    });
+    await pool.query("UPDATE approval_requests SET expires_at = $2 WHERE approval_id = $1", [
+      expiredRejection.approvalId,
+      new Date("2026-09-20T19:00:00.000Z"),
+    ]);
+    await expect(approvals.reject(sessionToken, expiredRejection.approvalId)).rejects.toMatchObject({
+      code: "EXPIRED",
+    });
+    expect(
+      (
+        await pool.query(
+          "SELECT status, resolved_at IS NOT NULL AS resolved FROM approval_requests WHERE approval_id = $1",
+          [expiredRejection.approvalId],
+        )
+      ).rows,
+    ).toEqual([{ status: "expired", resolved: true }]);
+  });
+
+  it("serializes rejection behind an in-flight human approval", async () => {
+    const { accountId, sessionToken } = await verifiedAccount(`approval-race-${randomUUID()}@example.com`);
+    const commandId = randomUUID();
+    let releaseDispatch = () => {};
+    let signalDispatch = () => {};
+    const dispatchGate = new Promise<void>((resolve) => {
+      releaseDispatch = resolve;
+    });
+    const dispatchEntered = new Promise<void>((resolve) => {
+      signalDispatch = resolve;
+    });
+    const pausedDispatcher = {
+      dispatch: async (...args: Parameters<CommandDispatcher["dispatch"]>) => {
+        signalDispatch();
+        await dispatchGate;
+        return dispatcher.dispatch(...args);
+      },
+    } as CommandDispatcher;
+    const racingApprovals = new ApprovalService(pool, {
+      productScope: "pact",
+      identity,
+      dispatcher: pausedDispatcher,
+      clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+      inbox,
+    });
+    const created = await racingApprovals.createRequest({
+      accountId,
+      command: {
+        schemaVersion: SCHEMA_VERSION,
+        commandId,
+        actor: { principalId: accountId, productScope, audience: "human", subject: { type: "account", id: accountId } },
+        action: { kind: "sandbox.echo", message: "one resolution" },
+        submittedAt: "2026-09-20T20:00:00.000Z",
+      },
+      effectsSummary: "Echo once",
+    });
+    const approving = racingApprovals.approve(sessionToken, created.approvalId);
+    await dispatchEntered;
+    const rejecting = racingApprovals.reject(sessionToken, created.approvalId);
+    const approvingAgain = racingApprovals.approve(sessionToken, created.approvalId);
+    try {
+      const early = await Promise.race([
+        rejecting.then(
+          () => "resolved",
+          () => "resolved",
+        ),
+        new Promise<string>((resolve) => setTimeout(() => resolve("waiting"), 75)),
+      ]);
+      expect(early).toBe("waiting");
+    } finally {
+      releaseDispatch();
+    }
+    const first = await approving;
+    expect(first.status).toBe("approved");
+    expect((await approvingAgain).receipt).toEqual(first.receipt);
+    await expect(rejecting).rejects.toMatchObject({ code: "ALREADY_RESOLVED" });
+    expect(
+      (await pool.query("SELECT status FROM approval_requests WHERE approval_id = $1", [created.approvalId])).rows,
+    ).toEqual([{ status: "approved" }]);
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM command_receipts WHERE command_id = $1", [commandId])).rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT payload->>'status' AS status FROM outbox_events WHERE type = 'approval.resolved.v1' AND payload->>'approvalId' = $1",
+          [created.approvalId],
+        )
+      ).rows,
+    ).toEqual([{ status: "approved" }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT payload->'payload'->>'status' AS status FROM inbox_events WHERE type = 'approval.resolved.v1' AND account_id = $1 AND payload->'payload'->>'approvalId' = $2",
+          [accountId, created.approvalId],
+        )
+      ).rows,
+    ).toEqual([{ status: "approved" }]);
   });
 });
 

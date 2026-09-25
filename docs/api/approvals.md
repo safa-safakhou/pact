@@ -13,7 +13,7 @@ Tickets: PACT-020; PACT-049 in progress.
 | `POST` | `/v1/approvals/:approvalId/approve` | Human session cookie, exact Origin, and CSRF token required; commits the exact stored command once |
 | `POST` | `/v1/approvals/:approvalId/reject` | Human session cookie, exact Origin, and CSRF token required; records a rejected receipt |
 
-Double approve returns the original receipt. Expired or changed terms fail. Chatbot text and host tool confirmations are not approval credentials—only the human POST path commits.
+Double approve returns the original receipt. The approval row remains locked from human admission through command dispatch and resolution recording: a simultaneous rejection cannot overwrite a committed approval, and a second approval reads the same receipt. Expired approve/reject attempts persist `expired` with a resolution timestamp before returning `EXPIRED`; changed terms fail. Chatbot text and host tool confirmations are not approval credentials—only the human POST path commits.
 
 Request creation is idempotent only for the same product, account, command ID, and canonical action terms. Reusing a command ID with changed terms fails `INVALID_TERMS`; a different account cannot retrieve the existing request through that ID. Hashing normalizes the versioned action schema before comparing a submitted proposal with PostgreSQL's reordered JSONB action.
 

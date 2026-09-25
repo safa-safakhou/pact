@@ -203,7 +203,7 @@ export class ApprovalService {
 
   /** First-party human transports may call this only after authenticating a human-scoped principal. */
   async approveForHumanPrincipal(accountId: string, sessionId: string, approvalId: string): Promise<ApprovalView> {
-    const prepared = await withTransaction(this.pool, async (client) => {
+    const outcome = await withTransaction(this.pool, async (client) => {
       const loaded = await client.query<ApprovalRow>(
         `SELECT * FROM approval_requests WHERE approval_id = $1 AND product_scope = $2 FOR UPDATE`,
         [approvalId, this.options.productScope],
@@ -212,56 +212,40 @@ export class ApprovalService {
       if (!row) throw new ApprovalError("NOT_FOUND");
       if (row.account_id !== accountId) throw new ApprovalError("FORBIDDEN");
       row = this.maybeExpire(row);
-      if (row.status === "approved" && row.receipt) return { kind: "done" as const, row };
+      if (row.status === "approved" && row.receipt) return { kind: "done" as const, view: this.toView(row) };
       if (row.status === "expired") {
         await client.query(
           `UPDATE approval_requests SET status = 'expired', resolved_at = COALESCE(resolved_at, $2) WHERE approval_id = $1`,
           [approvalId, this.options.clock.now()],
         );
-        throw new ApprovalError("EXPIRED");
+        return { kind: "expired" as const };
       }
       if (row.status !== "pending") throw new ApprovalError("ALREADY_RESOLVED");
-      if (row.expires_at <= this.options.clock.now()) {
-        await client.query(`UPDATE approval_requests SET status = 'expired', resolved_at = $2 WHERE approval_id = $1`, [
-          approvalId,
-          this.options.clock.now(),
-        ]);
-        throw new ApprovalError("EXPIRED");
+      // Keep the approval row locked through command dispatch and resolution.
+      // A concurrent reject or second approval must observe the final status,
+      // never race between a committed game command and its approval receipt.
+      const productScope = ProductScopeSchema.parse(this.options.productScope);
+      const command: CommandEnvelope = {
+        schemaVersion: SCHEMA_VERSION,
+        commandId: row.command_id,
+        actor: {
+          principalId: accountId,
+          productScope,
+          audience: "human",
+          subject: { type: "account", id: accountId },
+          sessionId,
+        },
+        action: row.action,
+        submittedAt: this.options.clock.now().toISOString(),
+      };
+      if (hashCommand(command) !== row.canonical_command_hash) throw new ApprovalError("INVALID_TERMS");
+      const principal: AuthenticatedPrincipal = { accountId, productScope, audience: "human", sessionId };
+      const receipt = await this.options.dispatcher.dispatch(principal, command);
+      if (receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED") {
+        // A paused world cannot consume the exact approval. Roll back this
+        // transaction so it stays pending for a later human retry.
+        throw new ApprovalError("NOT_COMMITTED");
       }
-      return { kind: "run" as const, row };
-    });
-    if (prepared.kind === "done") return this.toView(prepared.row);
-
-    const productScope = ProductScopeSchema.parse(this.options.productScope);
-    const command: CommandEnvelope = {
-      schemaVersion: SCHEMA_VERSION,
-      commandId: prepared.row.command_id,
-      actor: {
-        principalId: accountId,
-        productScope,
-        audience: "human",
-        subject: { type: "account", id: accountId },
-        sessionId,
-      },
-      action: prepared.row.action,
-      submittedAt: this.options.clock.now().toISOString(),
-    };
-    if (hashCommand(command) !== prepared.row.canonical_command_hash) {
-      throw new ApprovalError("INVALID_TERMS");
-    }
-    const principal: AuthenticatedPrincipal = {
-      accountId,
-      productScope,
-      audience: "human",
-      sessionId,
-    };
-    const receipt = await this.options.dispatcher.dispatch(principal, command);
-    if (receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED") {
-      // A paused world (or another non-committing receipt) cannot consume the
-      // human's one exact approval. Leave it pending for a later retry.
-      throw new ApprovalError("NOT_COMMITTED");
-    }
-    return withTransaction(this.pool, async (client) => {
       const updated = await client.query<ApprovalRow>(
         `UPDATE approval_requests SET status = 'approved', receipt = $2::jsonb, resolved_at = $3
          WHERE approval_id = $1 AND status = 'pending' RETURNING *`,
@@ -276,30 +260,40 @@ export class ApprovalService {
         await this.options.inbox?.publishForAccount(client, {
           accountId,
           type: "approval.resolved.v1",
-          payload: { approvalId, status: "approved", commandId: prepared.row.command_id },
+          payload: { approvalId, status: "approved", commandId: row.command_id },
         });
         await appendOutbox(client, {
           productScope: this.options.productScope,
           eventId: randomUUID(),
           type: "approval.resolved.v1",
-          payload: { approvalId, status: "approved", commandId: prepared.row.command_id },
+          payload: { approvalId, status: "approved", commandId: row.command_id },
         });
       }
-      return this.toView(next);
+      return { kind: "done" as const, view: this.toView(next) };
     });
+    if (outcome.kind === "expired") throw new ApprovalError("EXPIRED");
+    return outcome.view;
   }
 
   async reject(sessionToken: string, approvalId: string): Promise<ApprovalView> {
     const session = await this.requireHuman(sessionToken);
-    return withTransaction(this.pool, async (client) => {
+    const outcome = await withTransaction(this.pool, async (client) => {
       const loaded = await client.query<ApprovalRow>(
         `SELECT * FROM approval_requests WHERE approval_id = $1 AND product_scope = $2 FOR UPDATE`,
         [approvalId, this.options.productScope],
       );
-      const row = loaded.rows[0];
+      let row = loaded.rows[0];
       if (!row) throw new ApprovalError("NOT_FOUND");
       if (row.account_id !== session.accountId) throw new ApprovalError("FORBIDDEN");
-      if (row.status === "rejected" && row.receipt) return this.toView(row);
+      row = this.maybeExpire(row);
+      if (row.status === "rejected" && row.receipt) return { kind: "done" as const, view: this.toView(row) };
+      if (row.status === "expired") {
+        await client.query(
+          `UPDATE approval_requests SET status = 'expired', resolved_at = COALESCE(resolved_at, $2) WHERE approval_id = $1`,
+          [approvalId, this.options.clock.now()],
+        );
+        return { kind: "expired" as const };
+      }
       if (row.status !== "pending") throw new ApprovalError("ALREADY_RESOLVED");
       const receipt: CommandReceipt = {
         schemaVersion: SCHEMA_VERSION,
@@ -328,8 +322,10 @@ export class ApprovalService {
         type: "approval.resolved.v1",
         payload: { approvalId, status: "rejected", commandId: row.command_id },
       });
-      return this.toView(next);
+      return { kind: "done" as const, view: this.toView(next) };
     });
+    if (outcome.kind === "expired") throw new ApprovalError("EXPIRED");
+    return outcome.view;
   }
 
   private async requireHuman(sessionToken: string) {

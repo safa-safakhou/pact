@@ -164,6 +164,10 @@ Local Node 24 build/typecheck/lint, 115 unit tests, and 167 PostgreSQL 17 integr
 
 The next fixture exercises this transfer proposal through the actual MCP `game:act` tool under `run.open`, then checks exact replay and the same owner-only human commit. This verifies the generated transfer proposal reaches the shared service through MCP, rather than only calling the service directly. Local Node 24 build/typecheck/lint, 115 unit tests, and 167 PostgreSQL 17 integration tests pass after this addition. It still does not prove every command group or a live external client. PACT-049 remains In Progress.
 
+## Approval resolution race and expiry increment — 25 Sep 2026
+
+The approval resolution path now keeps the approval row locked while its exact command dispatches and records the result. Concurrent rejection cannot turn a committed command into a rejected approval, and a duplicate approval returns the same receipt. Expired approve/reject requests now persist their terminal state rather than rolling it back when returning `EXPIRED`. A PostgreSQL fixture holds dispatch open, races rejection and duplicate approval, and checks one command receipt plus one approved inbox/outbox event. Local Node 24 build/typecheck/lint, 115 unit tests, and 168 PostgreSQL 17 integration tests pass. This hardens the existing proposal route; it does not add new action groups. PACT-049 remains In Progress.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.

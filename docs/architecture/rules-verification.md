@@ -27,6 +27,8 @@ All rows are partial until the listed checks are performed; passing the current 
 
 The cold-contact proposal fixture adds a narrow R04/R06 bridge: fake-model and MCP agent requests are lease-bound and create one owner approval event without spending stock; only a human-authenticated HTTP POST commits the exact contact request and two-Silver debit. Replay and changed-term denial are explicit. A paused dispatcher returns a noncommitting receipt and leaves the approval pending. This does not replace the generated transition matrix or single-VPS base/WAL recovery rehearsal.
 
+`mcp-approval-inbox.test.ts` also holds a sandbox approval dispatch between admission and receipt persistence while the same human attempts rejection and duplicate approval. The approval row lock spans that interval: the command has one receipt, the duplicate approval sees it, the rejection fails as already resolved, and exactly one approved inbox/outbox resolution exists. Separate expired approve and reject attempts persist `expired` before returning the error. This is one approval-state race and expiry fixture, not exhaustive all-command fault injection.
+
 `runs.test.ts` additionally exercises the Version 1 start ceiling: over-limit calls, tokens, duration, selected conversations, and messages, plus invalid numeric inputs, leave no run, write lease, or inference job. Exact maxima remain valid. This is admission evidence for R06, not a provider-billing guarantee.
 
 The `world-clock.test.ts` serialization fixture waits for `next_tick_due_at <= clock_timestamp()` rather than assuming a host timer crossed the database's due time. It still holds a command transaction across tick admission and verifies publication waits for that command before the next sequence is visible.
