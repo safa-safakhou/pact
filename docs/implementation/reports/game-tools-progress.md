@@ -2,6 +2,12 @@
 
 Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
 
+## Troop-training approval increment — 25 September 2026
+
+The shared `pact_approval_propose_v1` contract now admits exact `game.training.queue` terms. The PACT application layer derives the review summary from the authoritative unit catalog, including count and conditional Iron/Silver debit; the reusable approval service does not maintain a second cost table. MCP and in-app Envoy use that same proposal schema and lease-bound service, while only a first-party human approval dispatches the stored command. A PostgreSQL fixture covers no pre-approval training row, missing lease, changed terms, disallowed cancel proposal, outsider rejection, exact human commit, same-receipt replay, and a later unaffordable proposal that remains pending without a batch. This is one additional action group, not complete approval coverage or full PACT-049 certification. See [approval API](../../api/approvals.md).
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (115), `npm run test:integration` (170 on PostgreSQL 17), and `npm run lint` passed. Backlog render/check and `git diff --check` passed. No hosted CI, deployment, live provider, or player pilot is claimed.
+
 Implementation revisions: `7eccf06`, `75224bf`, `d1457ed`, `cdf7c89`, `804198c`, `ca94561`, `e1401b3`, `988b63e`, `e116fb8`, and `1ef8025`. Verification: 24 Sep 2026, Node 24 and local PostgreSQL 17.
 
 ## Result

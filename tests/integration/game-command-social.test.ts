@@ -637,6 +637,118 @@ describe("shared gameplay command admission", () => {
       ).rows,
     ).toEqual([{ count: 1 }]);
   });
+  it("requires exact human approval before an Envoy training proposal debits resources", async () => {
+    const owner = await kingdom();
+    const outsider = await kingdom();
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      dispatcher,
+      clock: { now: () => new Date() },
+      assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
+    });
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runs,
+      approvalProposals: approvals,
+    });
+    const agent = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(agent, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const sessionId = initialized.sessionId;
+    if (!sessionId) throw new Error("Missing MCP session");
+    const principal = { ...agent, sessionId };
+    const proposal = {
+      commandId: randomUUID(),
+      action: { kind: "game.training.queue" as const, type: "spearman" as const, count: 1 },
+    };
+    await expect(approvals.proposeAgent(principal, proposal)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      sessionId,
+    );
+    const result = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+      sessionId,
+    );
+    expect(result.response.result).toMatchObject({
+      structuredContent: {
+        code: "APPROVAL_REQUIRED",
+        effectsSummary: expect.stringContaining("10 Iron and 4 Silver"),
+      },
+    });
+    const pending = await approvals.proposeAgent(principal, proposal);
+    expect(pending).toMatchObject({
+      status: "pending",
+      effectsSummary: expect.stringContaining("10 Iron and 4 Silver"),
+    });
+    await expect(
+      approvals.proposeAgent(principal, { ...proposal, action: { ...proposal.action, count: 2 } }),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    await expect(
+      approvals.proposeAgent(principal, {
+        commandId: randomUUID(),
+        action: { kind: "game.training.cancel", batchId: randomUUID() },
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    await expect(
+      approvals.approveForHumanPrincipal(outsider.accountId, randomUUID(), pending.approvalId),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM training_batches WHERE id = $1", [proposal.commandId]))
+        .rows,
+    ).toEqual([{ count: 0 }]);
+    const humanSessionId = randomUUID();
+    const committed = await approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, pending.approvalId);
+    expect(committed).toMatchObject({
+      status: "approved",
+      receipt: {
+        code: "COMMITTED",
+        charged: [
+          { asset: "iron", units: "6000" },
+          { asset: "silver", units: "2400" },
+        ],
+      },
+    });
+    expect(await approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, pending.approvalId)).toEqual(
+      committed,
+    );
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM training_batches WHERE id = $1", [proposal.commandId]))
+        .rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (
+        await dispatcher.dispatch(
+          { accountId: owner.accountId, productScope, audience: "human" },
+          command(owner.accountId, { kind: "game.training.cancel", batchId: proposal.commandId }),
+        )
+      ).code,
+    ).toBe("COMMITTED");
+    const unaffordable = { ...proposal, commandId: randomUUID() };
+    const second = await approvals.proposeAgent(principal, unaffordable);
+    await expect(
+      approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, second.approvalId),
+    ).rejects.toMatchObject({ code: "INSUFFICIENT_STOCK" });
+    expect((await approvals.review(second.approvalId, owner.accountId)).status).toBe("pending");
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM training_batches WHERE id = $1", [unaffordable.commandId]))
+        .rows,
+    ).toEqual([{ count: 0 }]);
+  });
   it("persists only owner-selected conversation context within the run cap", async () => {
     const owner = await kingdom();
     const selected = await kingdom();
