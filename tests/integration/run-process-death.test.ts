@@ -1,9 +1,11 @@
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { once } from "node:events";
+import { runToolCommandId } from "@pact/application";
 import { acquireJob, completeJob, createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
 import { fakeProviderModel, ProviderRouter } from "@pact/model-provider";
 import { RunService } from "@pact/runs";
+import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -25,6 +27,170 @@ afterAll(async () => {
 });
 
 describe("PACT-051 inference process death", () => {
+  it("retains a committed game command when its inference process dies before step reconciliation", async () => {
+    const ownerAccountId = randomUUID();
+    const peerAccountId = randomUUID();
+    const ownerKingdomId = randomUUID();
+    const peerKingdomId = randomUUID();
+    for (const [accountId, kingdomId] of [
+      [ownerAccountId, ownerKingdomId],
+      [peerAccountId, peerKingdomId],
+    ]) {
+      await pool.query(
+        `INSERT INTO accounts(id, product_scope, email, password_hash, email_verified_at, terms_version)
+         VALUES ($1, 'pact', $2, 'fixture-only', clock_timestamp(), 'terms-v1')`,
+        [accountId, `${accountId}@example.test`],
+      );
+      await pool.query(
+        `INSERT INTO kingdoms(id, product_scope, account_id, handle, display_name, portrait,
+           activated_at, activated_game_time_ms, activated_tick_sequence, first_tick_game_time_ms, activation_event_id)
+         VALUES ($1, 'pact', $2, $3, 'Death Fixture', 'portrait.wolf', clock_timestamp(), 0, 0, 60000, $4)`,
+        [kingdomId, accountId, `death_${randomUUID().slice(0, 8)}`, randomUUID()],
+      );
+    }
+    const [kingdomA, kingdomB] = [ownerKingdomId, peerKingdomId].sort();
+    await pool.query(
+      `INSERT INTO social_contacts(product_scope, kingdom_a, kingdom_b, accepted_game_time_ms)
+       VALUES ('pact', $1, $2, 0)`,
+      [kingdomA, kingdomB],
+    );
+    await new WorldClockService(pool, "pact").bootstrap();
+    await pool.query(
+      "UPDATE world_clocks SET next_tick_due_at = clock_timestamp() + interval '10 minutes' WHERE product_scope = 'pact'",
+    );
+    let recoveryInvocations = 0;
+    const service = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([
+        {
+          provider: "fixture",
+          listModels: async () => [fakeProviderModel],
+          invoke: async () => {
+            recoveryInvocations += 1;
+            return { stopReason: "completed" as const, toolCalls: [], usage: { inputTokens: 10, outputTokens: 5 } };
+          },
+        },
+      ]),
+    });
+    const run = await service.start({
+      accountId: ownerAccountId,
+      objective: "Send one synthetic message",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 2 },
+    });
+    const childScript = `
+      import { randomUUID } from 'node:crypto';
+      import { pactRunCommandTool, dispatchRunCommandTools } from '@pact/application';
+      import { acquireJob, createSchemaPool } from '@pact/db';
+      import { fakeProviderModel, ProviderRouter } from '@pact/model-provider';
+      import { RunService } from '@pact/runs';
+      import { createInferenceGameRuntime } from './workers/inference/dist/game-runtime.js';
+      const db = createSchemaPool(process.env.PACT_TEST_DATABASE_URL, process.env.PACT_TEST_SCHEMA);
+      const job = await acquireJob(db, 'killed-after-tool', 100);
+      if (!job || job.type !== 'envoy.run.tick') throw new Error('expected run job');
+      const router = new ProviderRouter([{
+        provider: 'fixture', listModels: async () => [fakeProviderModel],
+        invoke: async () => ({
+          stopReason: 'tool_calls', usage: { inputTokens: 20, outputTokens: 10 },
+          toolCalls: [{ id: 'committed-message', name: pactRunCommandTool.name, arguments: {
+            schemaVersion: 'pact.command.v1', commandId: randomUUID(),
+            actor: { principalId: process.env.PACT_TEST_PEER_ACCOUNT, productScope: 'pact',
+              audience: 'human', subject: { type: 'account', id: process.env.PACT_TEST_PEER_ACCOUNT } },
+            action: { kind: 'game.message.send', recipientKingdomId: process.env.PACT_TEST_PEER_KINGDOM,
+              body: 'survives killed inference process' },
+            submittedAt: new Date().toISOString()
+          }}]
+        })
+      }]);
+      const runtime = await createInferenceGameRuntime({
+        pool: db, productScope: 'pact', clock: { now: () => new Date() },
+        providerRouter: router, termsVersion: 'terms-v1'
+      });
+      const service = new RunService(db, {
+        productScope: 'pact', clock: { now: () => new Date() }, providerRouter: router,
+        tools: [pactRunCommandTool],
+        executeToolCalls: async (input) => {
+          const [receipt] = await dispatchRunCommandTools(runtime.dispatcher, 'pact', input);
+          if (receipt?.code !== 'COMMITTED') throw new Error('game command did not commit');
+          process.stdout.write('TOOL_COMMITTED\\n');
+          await new Promise(() => {});
+        }
+      });
+      await service.executeModelCall(job.payload.runId);
+    `;
+    const child = spawn(process.execPath, ["--input-type=module", "-e", childScript], {
+      cwd: process.cwd(),
+      env: {
+        ...process.env,
+        PACT_TEST_DATABASE_URL: databaseUrl,
+        PACT_TEST_SCHEMA: schema,
+        PACT_TEST_PEER_ACCOUNT: peerAccountId,
+        PACT_TEST_PEER_KINGDOM: peerKingdomId,
+      },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    let readinessTimeout: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const ready = await Promise.race([
+        once(child.stdout, "data").then(([data]) => String(data)),
+        once(child, "exit").then(([code]) => {
+          throw new Error(`Inference process exited before tool commit: ${code}`);
+        }),
+        new Promise<never>((_, reject) => {
+          readinessTimeout = setTimeout(() => reject(new Error("Tool commit readiness timeout")), 10_000);
+        }),
+      ]);
+      expect(ready).toContain("TOOL_COMMITTED");
+    } finally {
+      if (readinessTimeout) clearTimeout(readinessTimeout);
+      if (child.exitCode === null) {
+        const exited = once(child, "exit");
+        child.kill("SIGKILL");
+        await exited;
+      }
+    }
+    const inFlight = await pool.query<{ in_flight_request_id: string; used_messages: number }>(
+      "SELECT in_flight_request_id, used_messages FROM envoy_runs WHERE run_id = $1",
+      [run.runId],
+    );
+    const requestId = inFlight.rows[0]?.in_flight_request_id;
+    expect(requestId).toBeTruthy();
+    if (!requestId) throw new Error("Missing in-flight provider request");
+    expect(inFlight.rows[0]?.used_messages).toBe(1);
+    const commandId = runToolCommandId(run.runId, requestId, "committed-message");
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM command_receipts WHERE command_id = $1", [commandId])).rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (
+        await pool.query<{ sender_kingdom_id: string; recipient_kingdom_id: string }>(
+          "SELECT sender_kingdom_id, recipient_kingdom_id FROM direct_messages WHERE operation_key = $1",
+          [commandId],
+        )
+      ).rows,
+    ).toEqual([{ sender_kingdom_id: ownerKingdomId, recipient_kingdom_id: peerKingdomId }]);
+    expect((await pool.query("SELECT 1 FROM envoy_run_tool_results WHERE run_id = $1", [run.runId])).rowCount).toBe(0);
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    const reclaimed = await acquireJob(pool, "replacement-after-tool", 1_000);
+    expect(reclaimed).toMatchObject({ type: "envoy.run.tick", attempts: 2 });
+    if (!reclaimed) throw new Error("Missing reclaimed job");
+    const recovered = await service.failInterruptedModelCall(run.runId);
+    expect(recovered).toMatchObject({ status: "failed", ambiguousCrash: true, usedMessages: 1, usedCalls: 0 });
+    expect(await service.executeModelCall(run.runId)).toMatchObject({ status: "failed", usedMessages: 1 });
+    expect(recoveryInvocations).toBe(0);
+    await completeJob(pool, reclaimed.id, "replacement-after-tool");
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM command_receipts WHERE command_id = $1", [commandId])).rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM direct_messages WHERE operation_key = $1", [commandId]))
+        .rows,
+    ).toEqual([{ count: 1 }]);
+    expect((await pool.query("SELECT 1 FROM envoy_run_tool_results WHERE run_id = $1", [run.runId])).rowCount).toBe(0);
+  });
+
   it("reclaims a killed in-flight model job without invoking the provider twice", async () => {
     const accountId = randomUUID();
     await pool.query(

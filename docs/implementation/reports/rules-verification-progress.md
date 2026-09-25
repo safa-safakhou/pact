@@ -64,3 +64,7 @@ The full integration run first exposed a timing assumption in `world-clock.test.
 The next R04 adversarial fixture puts hostile counterpart instructions in a human-selected conversation and uses a fake provider to submit a forged-account transfer and human-only contact request. Neither commits, the model and account binding stay unchanged, and no transfer, mandate, or contact request is created. The fixture also checks the hostile prose is user-role data, not system authority. This is a single server-boundary scenario, not generated coverage of every command or evidence that a live model ignores prompt injection. PACT-051 remains In Progress.
 
 Local Node 24 build/typecheck/lint, 115 unit tests, and 161 PostgreSQL integration tests pass for this increment.
+
+The next R06 fixture kills a separate inference process after the game dispatcher has committed one owner-authored message and command receipt, but before the model step can persist its tool result. A replacement job claimant conservatively fails the run, keeps its one outgoing-message charge, and makes no second provider call or fabricated result. This is actual local process death after command commit, unlike the earlier injected exception. It does not cover every command/tick transition or a full VPS base/WAL restore. PACT-051 remains In Progress.
+
+Local Node 24 build/typecheck/lint, 115 unit tests, and 162 PostgreSQL integration tests pass. The process fixture requires the built inference worker and a disposable PostgreSQL 17 database.
