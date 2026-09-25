@@ -125,7 +125,11 @@ export async function createInferenceGameRuntime(
       for (const call of input.calls) {
         if (call.name === conversationReadTool.name) {
           const query = ConversationReadQuerySchema.parse(call.arguments);
-          const page = await conversations.read(input.run.accountId, query.counterpartyKingdomId, query.limit);
+          // The human fixes the in-app run's thread set at start. An explicit
+          // tool read must not widen that set or bypass its conversation cap.
+          const page = input.run.selectedContextIds.includes(query.counterpartyKingdomId)
+            ? await conversations.read(input.run.accountId, query.counterpartyKingdomId, query.limit)
+            : null;
           results.push({
             callId: call.id,
             content: page ? boundedConversationResult(page) : JSON.stringify({ code: "NOT_FOUND" }),
