@@ -157,8 +157,20 @@ export class RunService {
     const now = this.options.clock.now();
     const limits = input.limits ?? {};
     const durationMs = limits.durationMs ?? DEFAULT_DURATION_MS;
+    const maxConversations = limits.maxConversations ?? DEFAULT_MAX_CONVERSATIONS;
+    const maxMessages = limits.maxMessages ?? DEFAULT_MAX_MESSAGES;
+    const maxCalls = limits.maxCalls ?? DEFAULT_MAX_CALLS;
+    const maxTokens = limits.maxTokens ?? DEFAULT_MAX_TOKENS;
+    if (
+      !withinRunLimit(durationMs, DEFAULT_DURATION_MS) ||
+      !withinRunLimit(maxConversations, 12) ||
+      !withinRunLimit(maxMessages, 24) ||
+      !withinRunLimit(maxCalls, DEFAULT_MAX_CALLS) ||
+      !withinRunLimit(maxTokens, DEFAULT_MAX_TOKENS)
+    ) {
+      throw new RunError("INVALID_STATE");
+    }
     const deadlineAt = new Date(now.getTime() + durationMs);
-    const maxConversations = clamp(limits.maxConversations ?? DEFAULT_MAX_CONVERSATIONS, 1, 12);
     const selectedContextIds = input.selectedContextIds ?? [];
     if (
       selectedContextIds.length > maxConversations ||
@@ -200,9 +212,9 @@ export class RunService {
           maxConversations,
           selectedContextIds.length,
           selectedContextIds,
-          clamp(limits.maxMessages ?? DEFAULT_MAX_MESSAGES, 1, 24),
-          limits.maxCalls ?? DEFAULT_MAX_CALLS,
-          limits.maxTokens ?? DEFAULT_MAX_TOKENS,
+          maxMessages,
+          maxCalls,
+          maxTokens,
           now,
         ],
       );
@@ -749,6 +761,6 @@ function toView(row: RunRow): RunView {
   };
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
+function withinRunLimit(value: number, max: number): boolean {
+  return Number.isSafeInteger(value) && value >= 1 && value <= max;
 }

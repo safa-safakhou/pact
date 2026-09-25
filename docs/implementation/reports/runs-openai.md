@@ -39,3 +39,7 @@ Write leases are keyed by `(product_scope, subject_id)` with account ID as the p
 ## Handoff
 
 PACT-023 and PACT-024 still wait on remaining deps (015/084/085 for some). PACT-012–015 remain ready for other provider adapters. PACT-004 remains blocked on AWS/VPS credentials.
+
+## Run-ceiling regression — 25 Sep 2026
+
+A later audit found that `POST /v1/runs` allowed 100 calls and 200 000 tokens, and an internal caller could request a duration beyond 15 minutes, contrary to the Version 1 execution contract. The run service now rejects any invalid or over-ceiling duration, call, token, conversation, or message limit before acquiring a lease or queuing a job; the HTTP schema enforces 20 calls and 40 000 tokens. A PostgreSQL fixture exercises over-ceiling, zero, fractional, and non-finite inputs, confirms no run, lease, or inference job, and admits the exact Version 1 maxima. This corrects a bounded-run defect; it does not change the external MCP host's separate 15-minute lease. Local Node 24 build/typecheck/lint, 115 unit tests, and 160 PostgreSQL integration tests pass. No live provider or VPS deployment was exercised.

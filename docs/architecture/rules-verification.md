@@ -23,4 +23,8 @@ Existing focused fixtures cover clock rollback and lease fencing (`world-clock.t
 
 All rows are partial until the listed checks are performed; passing the current suite is not a release-gate claim.
 
+`runs.test.ts` additionally exercises the Version 1 start ceiling: over-limit calls, tokens, duration, selected conversations, and messages, plus invalid numeric inputs, leave no run, write lease, or inference job. Exact maxima remain valid. This is admission evidence for R06, not a provider-billing guarantee.
+
+The `world-clock.test.ts` serialization fixture waits for `next_tick_due_at <= clock_timestamp()` rather than assuming a host timer crossed the database's due time. It still holds a command transaction across tick admission and verifies publication waits for that command before the next sequence is visible.
+
 The retirement retention fixture uses a synthetic September 2026 clock, whereas PostgreSQL stamps movements, raid closure, and retirement with its real wall clock. The fixture explicitly aligns those synthetic history timestamps before advancing 181 days. This keeps the 180-day boundary reproducible after the real test date moves beyond the fixture date; it does not change production timestamp behavior.

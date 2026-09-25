@@ -69,6 +69,53 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("rejects run-limit escalation before acquiring a lease or queuing inference", async () => {
+    const accountId = await verifiedAccount(`run-ceiling-${randomUUID()}@example.com`);
+    const service = runs();
+    const base = {
+      accountId,
+      objective: "Bounded synthetic run",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+    };
+    const jobsBefore = await pool.query<{ count: number }>(
+      "SELECT count(*)::int AS count FROM durable_jobs WHERE type = 'envoy.run.tick'",
+    );
+    for (const limits of [
+      { maxCalls: 21 },
+      { maxTokens: 40_001 },
+      { durationMs: 15 * 60_000 + 1 },
+      { maxMessages: 25 },
+      { maxConversations: 13 },
+      { maxCalls: 0 },
+      { maxTokens: 1.5 },
+      { durationMs: Number.POSITIVE_INFINITY },
+    ]) {
+      await expect(service.start({ ...base, limits })).rejects.toMatchObject({ code: "INVALID_STATE" });
+    }
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM envoy_runs WHERE account_id = $1", [accountId])).rows,
+    ).toEqual([{ count: 0 }]);
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM write_leases WHERE subject_id = $1", [accountId])).rows,
+    ).toEqual([{ count: 0 }]);
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM durable_jobs WHERE type = 'envoy.run.tick'")).rows,
+    ).toEqual(jobsBefore.rows);
+    const allowed = await service.start({
+      ...base,
+      limits: {
+        maxCalls: 20,
+        maxTokens: 40_000,
+        durationMs: 15 * 60_000,
+        maxMessages: 24,
+        maxConversations: 12,
+      },
+    });
+    expect(allowed).toMatchObject({ maxCalls: 20, maxTokens: 40_000, maxMessages: 24, maxConversations: 12 });
+    expect(allowed.deadlineAt).toEqual(new Date(clockNow.getTime() + 15 * 60_000));
+  });
+
   it("fails an unresolved redelivered model step without a second provider call", async () => {
     const accountId = await verifiedAccount(`run-redelivery-${randomUUID()}@example.com`);
     let entered!: () => void;

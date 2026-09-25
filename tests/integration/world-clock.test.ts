@@ -183,7 +183,18 @@ describe("atomic world clock", () => {
       return committed.sequence;
     });
     await entered;
-    await new Promise((resolve) => setTimeout(resolve, 120));
+    // Use PostgreSQL's authoritative clock rather than assuming a host timer
+    // has advanced past the due timestamp under a loaded integration suite.
+    let due = false;
+    for (let attempt = 0; attempt < 30 && !due; attempt += 1) {
+      const result = await pool.query<{ due: boolean }>(
+        `SELECT next_tick_due_at <= clock_timestamp() AS due FROM world_clocks
+         WHERE product_scope = 'world_serialized'`,
+      );
+      due = result.rows[0]?.due ?? false;
+      if (!due) await new Promise((resolve) => setTimeout(resolve, 20));
+    }
+    expect(due).toBe(true);
     let published = false;
     const tick = world.advance("worker-serialized", token ?? "").then((value) => {
       published = true;

@@ -657,6 +657,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - docs/implementation/reports/runs-openai.md
 - npm run lint; npm run typecheck; npm test (27); npm run test:integration (runs + suite); npm run build:packages; api/inference builds
 - tests/integration/runs.test.ts
+- 25 Sep 2026: bounded-run regression correction rejects starts above the Version 1 15-minute, 20-call, and 40,000-token ceilings, and invalid conversation/message or numeric limits, before creating a run, lease, or inference job. Exact maxima remain valid. Local Node 24 build/typecheck/lint, 115 unit and 160 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/runs-openai.md. PACT-021 remains Done; no live provider or VPS deployment claimed.
 
 <a id="pact-022"></a>
 ## PACT-022 — Implement the durable inbox and live event delivery

@@ -112,6 +112,12 @@ A second recorded scenario creates equivalent version-1 supply offers through th
 
 Local Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (115), and `npm run test:integration` (159 against PostgreSQL 17) pass. Backlog render/check and diff check are recorded with the batch. No live provider or VPS deployment was exercised.
 
+## Fixed Version 1 run-ceiling increment — 25 Sep 2026
+
+The human API and shared run service now enforce the execution contract's immutable maximum of 15 minutes, 20 model calls, and 40 000 tokens. Optional human limits can reduce call/token budgets; they cannot raise them. The service also rejects invalid conversation/message limits rather than silently clamping them. A PostgreSQL fixture proves over-ceiling requests create no run, lease, or inference job, while the exact maxima remain valid. This is a PACT-021 bounded-run regression correction supporting PACT-049 safety, not evidence that all game-tool acceptance is complete.
+
+Local Node 24 build/typecheck/lint, 115 unit tests, and 160 PostgreSQL integration tests pass. Backlog render/check and diff check are recorded with the batch. No live provider or VPS deployment was exercised.
+
 ## Remaining work
 
 For the latest fake-provider bridge increment, Node 24 `npm run build`, `npm run typecheck`, `npm test` (108 tests), `npm run test:integration` (139 PostgreSQL integration tests), `npm run lint`, and `git diff --check` passed. The run/provider API documentation now states the generated game-tool subset and lease boundary. No real-provider or hosted scenario was exercised.
