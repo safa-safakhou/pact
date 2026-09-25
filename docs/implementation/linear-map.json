@@ -40,7 +40,7 @@
     "3": {
       "id": "80a160f5-7996-41db-b281-470ae9541ba6",
       "name": "3 — Season One release",
-      "description": "19 tickets. Native clients and signing, seasons/honors, art/audio/accessibility, cosmetics and platform purchases, operations/distribution certification, and release rehearsal. Exit: PACT-081, criteria L01–L06.",
+      "description": "20 tickets. Native clients and signing, seasons/honors, art/audio/accessibility, cosmetics and platform purchases, production operator facts, operations/distribution certification, and release rehearsal. Exit: PACT-081, criteria L01–L06.",
       "progress": 0,
       "sortOrder": 2933
     }
@@ -591,7 +591,7 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-24T23:38:45Z",
+  "last_synced_at": "2026-09-25T09:59:44Z",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",

@@ -1,8 +1,8 @@
 # PACT implementation backlog
 
-**97 tickets · Planned, not implemented · Based on the [Version 1.1 specification](../pact/README.md).**
+**98 tickets · 52 Done, 2 In Progress, 44 Backlog as of 25 September 2026 · Based on the [current specification](../pact/README.md).** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
 
-The backlog turns the design into dependency-ordered engineering work. Every ticket contains a concrete deliverable, acceptance checks, component ownership, specification links, and prerequisites. No application tasks have been executed by creating these documents.
+The backlog turns the design into dependency-ordered engineering work. Every ticket contains a concrete deliverable, acceptance checks, component ownership, specification links, and prerequisites. Creating a planning record alone is never completion evidence; consult Linear and the linked reports for implemented work.
 
 ## Delivery order
 
@@ -11,7 +11,7 @@ The backlog turns the design into dependency-ordered engineering work. Every tic
 | [0 — Connections](phase-0-connections.md) | PACT-001–027 + 082–083 + 085–086 · 31 tickets | Reusable foundations, five model adapters, MCP, web/Telegram sandbox access, approvals, bounded runs, and privacy | A01–A09 pass |
 | [1 — Rules](phase-1-rules.md) | PACT-028–053 + 096 · 27 tickets | Transactional world, economy, troops, contracts, combat, plain UI, and independent module-reuse proof | R01–R08 pass |
 | [2 — Social slice](phase-2-social.md) | PACT-054–068 + 088–092 · 20 tickets | Web/Telegram gameplay, society, sharing, bot delivery, moderation, and the 50-player pilot | S01–S08 pass |
-| [3 — Season One](phase-3-season-one.md) | PACT-069–081 + 084 + 087 + 093–095, 097 · 19 tickets | Native clients, season, presentation, store/Stars payments, all-channel distribution, and release rehearsal | L01–L06 pass |
+| [3 — Season One](phase-3-season-one.md) | PACT-069–081 + 084 + 087 + 093–095 + 097–098 · 20 tickets | Native clients, season, presentation, store/Stars payments, production operator facts, all-channel distribution, and release rehearsal | L01–L06 pass |
 
 ```mermaid
 flowchart LR
@@ -30,7 +30,7 @@ Tasks inside a milestone can proceed independently once their listed dependencie
 
 Agents follow the repository [engineering instructions](../../AGENTS.md). Use the [first implementation prompt](kickoff.md) to assign the foundation batch: PACT-001 → PACT-082 → PACT-002 → PACT-003. These are four checkpoints within one assignment, not four required agents.
 
-The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 97 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the first assignment.
+The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 98 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the first assignment.
 
 1. **[PACT-001 — Workspace and CI](phase-0-connections.md#pact-001):** establish a reproducible local application and database environment.
 2. **[PACT-082 — Reusable module boundaries](phase-0-connections.md#pact-082):** define package ownership, product scoping, and forbidden dependencies before contracts spread through clients.
@@ -39,11 +39,11 @@ The active [PACT — Season One Linear project](https://linear.app/mnim/project/
 5. After those, take **[PACT-004 — Test infrastructure](phase-0-connections.md#pact-004)** and **[PACT-005 — Redacted telemetry](phase-0-connections.md#pact-005)** as independent work streams.
 6. Follow the graph into accounts, provider credentials, OAuth/MCP, approvals, and runs. **PACT-011–015** are independent provider-adapter tickets after the shared adapter interface is ready.
 
-Existing IDs are preserved; new tickets PACT-082–097 are placed by dependency order within the existing milestones. Only PACT-001 is dependency-ready at the initial state. The first user-visible milestone is a connected assistant completing a harmless sandbox action and an authenticated human approval. Phase 0 never starts the live economy. Phase 1 reuses that actual dispatcher and account system; it does not build a second throwaway backend.
+Existing IDs are preserved; later tickets PACT-082–098 are placed by dependency order within the existing milestones. At the original planning state only PACT-001 was dependency-ready. The first user-visible milestone was a connected assistant completing a harmless sandbox action and an authenticated human approval. Phase 0 did not start the live economy. Phase 1 reuses that dispatcher and account system; it does not build a second throwaway backend.
 
 ## Component boundaries
 
-These are implementation ownership boundaries to establish in PACT-001, PACT-082, and PACT-002, not existing source paths:
+These are the implementation ownership boundaries established by PACT-001, PACT-082, and PACT-002:
 
 | Component | Owns | Must not own |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ All persisted features require their migration and retention registration. Every
 
 ## Planning files
 
-- [tasks.json](tasks.json): complete machine-readable tickets, dependencies, roles, sizes, source snapshots, and evidence fields. No real assignees or invented completion dates.
+- [tasks.json](tasks.json): complete machine-readable tickets, dependencies, roles, sizes, source snapshots, and reconciled execution evidence. No invented completion dates.
 - [tasks.csv](tasks.csv): compact tracker-import/index view with IDs and dependencies. Full descriptions remain in JSON and the phase documents.
 - [coverage.md](coverage.md): maps all **31** release criteria to implementation/verification tickets and their closing gates.
 
