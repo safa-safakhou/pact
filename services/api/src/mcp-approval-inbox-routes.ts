@@ -101,7 +101,6 @@ export function registerMcpRoutes(
       if (!auth?.startsWith("Bearer ")) throw new McpError("FORBIDDEN", 401);
       const token = await oauth.introspectAccessToken(auth.slice("Bearer ".length));
       if (token?.audience !== "mcp") throw new McpError("FORBIDDEN", 401);
-      oauth.assertNotHumanOnly(token.scopes, "approval.commit", "mcp");
       const principal = {
         accountId: token.accountId,
         productScope: ProductScopeSchema.parse("pact"),

@@ -111,6 +111,33 @@ describe("PACT-017 MCP transport", () => {
     await server.close();
   });
 
+  it("accepts an authorized MCP initialize request without attempting a human-only approval", async () => {
+    const { accountId } = await verifiedAccount(`mcp-route-${randomUUID()}@example.com`);
+    const server = Fastify();
+    const oauth = {
+      authorizationServerMetadata: () => ({ issuer: `${origin}/pact` }),
+      introspectAccessToken: async () => ({
+        accountId,
+        audience: "mcp",
+        scopes: ["world:read", "messages:write", "game:act"],
+      }),
+      assertNotHumanOnly: () => {
+        throw new Error("MCP initialization must not attempt a human-only approval");
+      },
+    } as unknown as OAuthService;
+    registerMcpRoutes(server, mcp, oauth, origin);
+    const response = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: { origin, authorization: "Bearer synthetic-test-token" },
+      payload: { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: MCP_PROTOCOL_PRIMARY } },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ result: { protocolVersion: MCP_PROTOCOL_PRIMARY } });
+    expect(response.headers["mcp-session-id"]).toBeTruthy();
+    await server.close();
+  });
+
   it("initializes supported protocols, isolates sessions, and binds tools to the actor", async () => {
     const { accountId } = await verifiedAccount(`mcp-${randomUUID()}@example.com`);
     const other = await verifiedAccount(`mcp-other-${randomUUID()}@example.com`);
