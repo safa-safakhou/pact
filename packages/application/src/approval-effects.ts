@@ -1,9 +1,9 @@
 import type { CommandEnvelope } from "@pact/contracts";
-import { rulesCatalog } from "@pact/domain";
+import { rulesCatalog, upgradeCost } from "@pact/domain";
 
 type ProposalAction = Extract<
   CommandEnvelope["action"],
-  { kind: "game.contact.request" | "game.transfer" | "game.training.queue" }
+  { kind: "game.contact.request" | "game.transfer" | "game.training.queue" | "game.building.queue" }
 >;
 
 /** PACT-specific, conditional effects shown before the shared human command dispatch. */
@@ -16,6 +16,10 @@ export function describeApprovalEffects(action: ProposalAction): string {
     case "game.training.queue": {
       const unit = rulesCatalog.units[action.type];
       return `Queue ${action.count} ${action.type} for training; debit ${unit.iron * action.count} Iron and ${unit.silver * action.count} Silver if stock, hall unlock, troop capacity, and queue space remain valid at human approval.`;
+    }
+    case "game.building.queue": {
+      const cost = upgradeCost(action.building, action.targetLevel);
+      return `Queue ${action.building} level ${action.targetLevel} in builder slot ${action.slot}; construction costs ${cost.iron / 600n} Iron and ${cost.silver / 600n} Silver if eligible when work starts. Founding allowance may cover some or all of the cost; an unstarted waiting instruction debits no stock. Human approval issues an exact one-use construction permit.`;
     }
   }
 }

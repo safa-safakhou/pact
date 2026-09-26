@@ -749,6 +749,101 @@ describe("shared gameplay command admission", () => {
         .rows,
     ).toEqual([{ count: 0 }]);
   });
+  it("issues one exact human permit only when an Envoy construction proposal is approved", async () => {
+    const owner = await kingdom();
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      dispatcher,
+      clock: { now: () => new Date() },
+      assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
+    });
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runs,
+      approvalProposals: approvals,
+    });
+    const agent = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(agent, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const sessionId = initialized.sessionId;
+    if (!sessionId) throw new Error("Missing MCP session");
+    const principal = { ...agent, sessionId };
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      sessionId,
+    );
+    const proposal = {
+      commandId: randomUUID(),
+      action: { kind: "game.building.queue" as const, building: "farm" as const, targetLevel: 2, slot: 1 as const },
+    };
+    const mcpResult = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+      sessionId,
+    );
+    expect(mcpResult.response.result).toMatchObject({
+      structuredContent: {
+        code: "APPROVAL_REQUIRED",
+        effectsSummary: expect.stringContaining("40 Iron and 20 Silver"),
+      },
+    });
+    const pending = await approvals.proposeAgent(principal, proposal);
+    expect(pending.status).toBe("pending");
+    await expect(
+      approvals.proposeAgent(principal, { ...proposal, action: { ...proposal.action, slot: 2 } }),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM building_instructions WHERE id = $1", [proposal.commandId]))
+        .rows,
+    ).toEqual([{ count: 0 }]);
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM authority_human_permits WHERE operation_key = $1", [
+          `building:${proposal.commandId}`,
+        ])
+      ).rows,
+    ).toEqual([{ count: 0 }]);
+    await expect(
+      approvals.approveForHumanPrincipal(owner.accountId, randomUUID(), pending.approvalId),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect((await approvals.review(pending.approvalId, owner.accountId)).status).toBe("pending");
+    const humanSessionId = randomUUID();
+    await pool.query(
+      `INSERT INTO sessions(id, product_scope, account_id, audience, token_hash, expires_at, idle_expires_at)
+       VALUES ($1, 'pact', $2, 'human', $3, clock_timestamp() + interval '1 hour',
+         clock_timestamp() + interval '1 hour')`,
+      [humanSessionId, owner.accountId, randomUUID()],
+    );
+    const committed = await approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, pending.approvalId);
+    expect(committed).toMatchObject({ status: "approved", receipt: { code: "COMMITTED" } });
+    expect(await approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, pending.approvalId)).toEqual(
+      committed,
+    );
+    expect(
+      (await pool.query("SELECT state FROM building_instructions WHERE id = $1", [proposal.commandId])).rows,
+    ).toEqual([{ state: "active" }]);
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::int AS count FROM authority_human_permits WHERE operation_key = $1 AND used_at IS NOT NULL",
+          [`building:${proposal.commandId}`],
+        )
+      ).rows,
+    ).toEqual([{ count: 1 }]);
+  });
   it("persists only owner-selected conversation context within the run cap", async () => {
     const owner = await kingdom();
     const selected = await kingdom();

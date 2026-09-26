@@ -67,7 +67,7 @@ export const pactApprovalStatusTool = {
 export const pactApprovalProposalTool = {
   name: "pact_approval_propose_v1",
   description:
-    "Propose an exact cold-contact, direct-transfer, or troop-training action for human review; this never executes it.",
+    "Propose an exact cold-contact, direct-transfer, troop-training, or building-queue action for human review; this never executes it.",
   inputSchema: approvalProposalJsonSchema,
 } as const;
 

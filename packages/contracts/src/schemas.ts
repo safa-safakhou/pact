@@ -118,6 +118,16 @@ export const TrainingQueueActionSchema = z
   })
   .strict();
 
+export const BuildingQueueActionSchema = z
+  .object({
+    kind: z.literal("game.building.queue"),
+    building: z.enum(["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"]),
+    targetLevel: z.number().int().min(2).max(6),
+    slot: z.union([z.literal(1), z.literal(2)]),
+    mandateVersion: z.number().int().nonnegative().optional(),
+  })
+  .strict();
+
 export const ApprovalProposalSchema = z
   .object({
     commandId: z.uuid(),
@@ -125,6 +135,7 @@ export const ApprovalProposalSchema = z
       ColdContactActionSchema,
       DirectTransferActionSchema,
       TrainingQueueActionSchema,
+      BuildingQueueActionSchema,
     ]),
   })
   .strict();
@@ -139,15 +150,7 @@ export const GameActionSchema = z.discriminatedUnion("kind", [
   TrainingQueueActionSchema,
   z.object({ kind: z.literal("game.training.cancel"), batchId: z.uuid() }).strict(),
   z.object({ kind: z.literal("game.troop.disband"), troopId: z.uuid() }).strict(),
-  z
-    .object({
-      kind: z.literal("game.building.queue"),
-      building: z.enum(["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"]),
-      targetLevel: z.number().int().min(2).max(6),
-      slot: z.union([z.literal(1), z.literal(2)]),
-      mandateVersion: z.number().int().nonnegative().optional(),
-    })
-    .strict(),
+  BuildingQueueActionSchema,
   z.object({ kind: z.literal("game.building.cancel"), instructionId: z.uuid() }).strict(),
   z
     .object({
