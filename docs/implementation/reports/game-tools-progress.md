@@ -2,6 +2,10 @@
 
 Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
 
+## Single-VPS gameplay deployment — 26 September 2026
+
+Release `mvp-20260926-1` is running the current game-command backend on the existing VPS, with public deployment verification passing. A clean Docker build initially failed because `build:packages` built kingdom/application before identity/authority; revision `99cf2fa` corrected the topological order and added a lint guard. The host-only synthetic account activated a kingdom and received a COMMITTED Farm II construction receipt through the public gateway. The web/Telegram clients still lack the plain gameplay surface of PACT-048, and PACT-049 cross-route/adversarial acceptance remains open. No live model provider was invoked.
+
 ## Scouting approval increment — 26 September 2026
 
 The shared proposal contract now admits `game.scout.start` without a parallel scout implementation. The review summary includes the target, catalog fees, charge, ordinary troop commitment, duration, and either exact selected troop IDs or the server-selection rule. A PostgreSQL MCP fixture checks no scout or troop placement before review, changed troop-ID order and outsider denial, one human-approved scout with exact charges and placements, and stable duplicate receipt. The shared proposal service now reads an optional mandate version only from actions that carry one; scouting has none. This is a focused path, not complete PACT-049 acceptance. See [approval API](../../api/approvals.md).

@@ -43,7 +43,16 @@ sudo ./infra/production/bin/install-backup-timer.sh \
   /srv/pact/secrets/connection-test/backup.env
 ```
 
-Run `restore-drill.sh` with an explicit Restic snapshot ID before accepting the environment. It requires at least 2 GiB free on Docker's filesystem, restores into disposable volumes, verifies the base-backup manifest and WAL, boots PostgreSQL 17 without a network or host port, checks migration tables and (when present) game balances against movement sums, then exercises synthetic outbox delivery and replay on the recovered copy. The trap removes only those drill volumes/container; it never mounts or writes the live data volume. It reports when a snapshot predates gameplay tables instead of claiming game-state certification. Snapshot `9a320c36` (25 September 2026, 18:29 UTC) passed this physical boot/replay drill using the updated script sent over SSH; its deployed database predates gameplay tables, so full R06 gameplay restore is still open. The `pact-backup.timer` runs every six hours and preserves snapshots within the 35-day window.
+Run `restore-drill.sh` with an explicit Restic snapshot ID before accepting the environment. It requires at least 2 GiB free on Docker's filesystem, restores into disposable volumes, verifies the base-backup manifest and WAL, boots PostgreSQL 17 without a network or host port, checks migration tables and (when present) game balances against movement sums, then exercises synthetic outbox delivery and replay on the recovered copy. Optional `KINGDOM_ID COMMAND_ID` arguments assert one recovered fixture kingdom, eight home guards, its building instruction, and one committed receipt. The trap removes only drill volumes/container; it never mounts or writes the live data volume. Snapshot `2ba99a33` (26 September 2026, 00:26 UTC), taken after release `mvp-20260926-1`, passed all gameplay fixture, ledger, and outbox replay checks. The `pact-backup.timer` runs every six hours and preserves snapshots within the 35-day window. The local Restic repository does not protect against loss of the VPS itself.
+
+The fixture can be reproduced only with the host-only synthetic account password (never copy it into a command argument or log):
+
+```sh
+cd /srv/pact/source
+PACT_FIXTURE_PASSWORD_FILE=/srv/pact/secrets/connection-test/operator_test_password node scripts/seed-vps-gameplay-restore.mjs
+./infra/production/bin/backup.sh infra/production/vps-connection-test.env /srv/pact/secrets/connection-test/backup.env
+./infra/production/bin/restore-drill.sh infra/production/vps-connection-test.env /srv/pact/secrets/connection-test/backup.env SNAPSHOT_ID 448cc513-b464-4881-8892-259a963f124a 2dcc93b2-84be-4084-95d2-ddfcb802e331
+```
 
 The opaque deletion registry is `/srv/pact/state/privacy/deletion-registry.ndjson`, mode `0600` after its first write. It is deliberately outside PostgreSQL's base/WAL volumes and is not replaced during a database restore. It contains no email, credentials, or content. Every restore must apply current migrations and run `privacy-replay` before any API or worker starts; the normal deployment path enforces this. Do not roll back to an image that predates `@pact/privacy` while an unexpired deletion tombstone exists.
 

@@ -1,16 +1,29 @@
 #!/bin/sh
 set -eu
 
-if [ "$#" -ne 3 ]; then echo "usage: restore-drill.sh DEPLOY_ENV BACKUP_ENV SNAPSHOT" >&2; exit 2; fi
+if [ "$#" -ne 3 ] && [ "$#" -ne 5 ]; then
+  echo "usage: restore-drill.sh DEPLOY_ENV BACKUP_ENV SNAPSHOT [KINGDOM_ID COMMAND_ID]" >&2
+  exit 2
+fi
 deploy_env="$1"
 backup_env="$2"
 snapshot="$3"
+expected_kingdom="${4:-}"
+expected_command="${5:-}"
 set -a
 . "$deploy_env"
 . "$backup_env"
 set +a
 
 case "$snapshot" in *[!A-Fa-f0-9]*|'') echo "snapshot must be a restic snapshot id" >&2; exit 2;; esac
+if [ -n "$expected_kingdom" ]; then
+  for expected_id in "$expected_kingdom" "$expected_command"; do
+    if ! printf '%s' "$expected_id" | grep -Eq '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'; then
+      echo "fixture identifiers must be UUIDs" >&2
+      exit 2
+    fi
+  done
+fi
 : "${RESTIC_REPOSITORY:?}"
 : "${RESTIC_PASSWORD_FILE:?}"
 
@@ -106,6 +119,23 @@ if [ "$game_tables" = t ]; then
     exit 1
   fi
   echo "Recovered game balances reconcile with their movement journal."
+  if [ -n "$expected_kingdom" ]; then
+    fixture_state=$(docker exec -u postgres "$recovered_container" \
+      psql -X -v ON_ERROR_STOP=1 -U pact -d pact -Atqc \
+      "SELECT
+         (SELECT count(*) FROM kingdoms WHERE product_scope = 'pact' AND id = '$expected_kingdom'::uuid),
+         (SELECT count(*) FROM kingdom_troops WHERE product_scope = 'pact'
+            AND owner_kingdom_id = '$expected_kingdom'::uuid AND home_guard AND placement = 'home'),
+         (SELECT count(*) FROM building_instructions WHERE product_scope = 'pact'
+            AND kingdom_id = '$expected_kingdom'::uuid AND id = '$expected_command'::uuid),
+         (SELECT count(*) FROM command_receipts WHERE product_scope = 'pact'
+            AND command_id = '$expected_command'::uuid AND code = 'COMMITTED')")
+    if [ "$fixture_state" != '1|8|1|1' ]; then
+      echo "recovered gameplay fixture does not match kingdom, troop, build, and receipt expectations" >&2
+      exit 1
+    fi
+    echo "Recovered gameplay fixture: one kingdom, eight home guards, one build, one committed receipt."
+  fi
 else
   echo "Gameplay tables are absent from this older snapshot; game-state recovery is not certified."
 fi
