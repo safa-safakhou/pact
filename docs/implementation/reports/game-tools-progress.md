@@ -2,6 +2,10 @@
 
 Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
 
+## Human-only route matrix and schema coverage — 26 September 2026
+
+A new PostgreSQL fixture submits all seven human-only game actions through both the in-app fake-provider command tool and MCP after `run.open`, forging a human actor and another account in every envelope. The model receives seven `FORBIDDEN` results; MCP denies the same seven; no command receipt or exact human permit appears for either path. A unit contract fixture locks all 28 game action kinds to the shared web, MCP, and model schemas and confirms the model tool omits sandbox actions. Node 24 build, typecheck, lint, 119 unit tests, and 174 PostgreSQL 17 integration tests pass. These tests prevent a missing guard or schema drift from silently widening authority, but do not prove every permitted action has web/model/MCP behavioral equivalence. PACT-049 remains In Progress.
+
 ## Owner-context boundary fixture — 26 September 2026
 
 `workers/inference/src/run-context.test.ts` now checks that hostile counterpart prose enters only a user-role, explicitly untrusted selected-conversation excerpt; arbitrary inbox payload is not included in the metadata convenience summary. A non-owner world projection fails closed before inbox or conversation reads, and an oversized selected excerpt is replaced with IDs and a truncation marker rather than leaking its text. Node 24 build, typecheck, lint, 118 unit tests, and 173 PostgreSQL 17 integration tests passed for the batch. These are deterministic construction-boundary checks, not evidence that a live model obeys the warning or that every game command has cross-route parity. PACT-049 remains In Progress.

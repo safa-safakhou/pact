@@ -3301,6 +3301,112 @@ describe("shared gameplay command admission", () => {
     expect(actions.rows).toEqual([{ count: 2 }]);
   });
 
+  it("denies every human-only game action through model and MCP despite forged human envelopes", async () => {
+    const owner = await kingdom();
+    const forged = await kingdom();
+    const recordId = randomUUID();
+    const humanOnlyActions: CommandEnvelope["action"][] = [
+      { kind: "game.contact.answer", requestId: recordId, accept: true },
+      { kind: "game.training.cancel", batchId: recordId },
+      { kind: "game.troop.disband", troopId: recordId },
+      { kind: "game.building.cancel", instructionId: recordId },
+      { kind: "game.garrison.seize", contractId: recordId },
+      { kind: "game.raid.nominate", raidId: recordId, slot: 1, kingdomId: forged.kingdomId },
+      { kind: "game.raid.withdraw", raidId: recordId },
+    ];
+    const modelCommands = humanOnlyActions.map((action) => command(forged.accountId, action));
+    const runtime = await createInferenceGameRuntime({
+      pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      providerRouter: new ProviderRouter([
+        {
+          provider: "fixture",
+          listModels: async () => [fakeProviderModel],
+          invoke: async () => ({
+            stopReason: "tool_calls" as const,
+            toolCalls: modelCommands.map((envelope, index) => ({
+              id: `human-only-${index}`,
+              name: pactRunCommandTool.name,
+              arguments: envelope,
+            })),
+            usage: { inputTokens: 20, outputTokens: 10 },
+          }),
+        },
+      ]),
+      termsVersion: "terms-v1",
+    });
+    const started = await runtime.runs.start({
+      accountId: owner.accountId,
+      objective: "Verify the agent cannot take human decisions",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+      limits: { maxCalls: 1 },
+    });
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished" });
+    const modelResults = await pool.query<{ summary: string }>(
+      "SELECT summary FROM envoy_run_tool_results WHERE run_id = $1 ORDER BY call_id",
+      [started.runId],
+    );
+    expect(modelResults.rows).toHaveLength(humanOnlyActions.length);
+    const deniedModelReceipts = modelResults.rows.map(
+      (row) => JSON.parse(row.summary) as { commandId: string; code: string },
+    );
+    expect(deniedModelReceipts.map((receipt) => receipt.code)).toEqual(
+      Array(humanOnlyActions.length).fill("FORBIDDEN"),
+    );
+
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher: runtime.dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runtime.runs,
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      initialized.sessionId,
+    );
+    for (const [index, envelope] of modelCommands.entries()) {
+      await expect(
+        mcp.handlePost(
+          principal,
+          { method: "tools/call", id: index + 3, params: { name: "pact_command_v1", arguments: envelope } },
+          initialized.sessionId,
+        ),
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    }
+    const deniedCommandIds = [
+      ...deniedModelReceipts.map((receipt) => receipt.commandId),
+      ...modelCommands.map((envelope) => envelope.commandId),
+    ];
+    const receipts = await pool.query<{ count: string }>(
+      "SELECT count(*) AS count FROM command_receipts WHERE product_scope = 'pact' AND command_id = ANY($1::uuid[])",
+      [deniedCommandIds],
+    );
+    expect(receipts.rows).toEqual([{ count: "0" }]);
+    expect(
+      (
+        await pool.query("SELECT count(*) AS count FROM authority_human_permits WHERE account_id = $1", [
+          owner.accountId,
+        ])
+      ).rows,
+    ).toEqual([{ count: "0" }]);
+  });
+
   it("keeps contact acceptance human-only across the web SDK, fake model, and MCP", async () => {
     const requester = await kingdom();
     const recipient = await kingdom();
