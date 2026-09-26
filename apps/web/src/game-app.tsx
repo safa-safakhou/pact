@@ -481,7 +481,7 @@ export function GameApp(): React.JSX.Element {
           hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
         />
       )}
-      {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} />}
+      {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} social={social} />}
     </main>
   );
 }
@@ -1529,10 +1529,12 @@ function Chronicle({
   view,
   client,
   inbox,
+  social,
 }: {
   view: OwnerView;
   client: ReturnType<typeof createWebPactClient>;
   inbox: { sequence: string; type: string; event: unknown }[];
+  social: SocialOverview | null;
 }): React.JSX.Element {
   const [report, setReport] = useState<unknown>(null);
   const [reportId, setReportId] = useState("");
@@ -1585,10 +1587,55 @@ function Chronicle({
       {report !== null && (
         <article className="game-card">
           <h3>Report</h3>
-          <pre>{JSON.stringify(report, null, 2)}</pre>
+          <GameReport value={report} social={social} />
         </article>
       )}
       <p>{inbox.length} recent inbox events. Open Envoy for details.</p>
     </section>
+  );
+}
+
+function GameReport({ value, social }: { value: unknown; social: SocialOverview | null }): React.JSX.Element {
+  if (!value || typeof value !== "object") return <p>Report unavailable.</p>;
+  const item = value as Json;
+  if (item.error) return <p role="status">Report not available yet, or not visible to this kingdom.</p>;
+  if (item.kind !== "engine_report") return <pre>{JSON.stringify(value, null, 2)}</pre>;
+  const targetId = String(item.targetKingdomId ?? "");
+  const targetName = social?.contacts.find((contact) => contact.kingdomId === targetId)?.displayName ?? targetId;
+  const stock = item.ordinaryStock as Record<string, string> | undefined;
+  const troops = item.homeTroops as Record<string, string> | undefined;
+  return (
+    <div className="game-report">
+      <p>
+        Scouted <strong>{targetName}</strong> at {new Date(Number(item.observedGameTimeMs)).toLocaleString()}.
+        {item.staleAfterObservation ? " This is a snapshot; the kingdom may have changed since then." : ""}
+      </p>
+      <div className="game-grid">
+        <section className="game-report-card">
+          <h4>Defenses</h4>
+          <p>Wall level {String(item.wallLevel ?? "unknown")}</p>
+        </section>
+        <section className="game-report-card">
+          <h4>Home troops</h4>
+          <ul>
+            {Object.entries(troops ?? {}).map(([type, band]) => (
+              <li key={type}>
+                {type}: {band}
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section className="game-report-card">
+          <h4>Ordinary stores</h4>
+          <ul>
+            {Object.entries(stock ?? {}).map(([resource, band]) => (
+              <li key={resource}>
+                {resource}: {band}
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+    </div>
   );
 }

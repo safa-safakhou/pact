@@ -189,6 +189,19 @@ main {
   background: #eff2eb;
   border-radius: 0.5rem;
 }
+.game-report-card {
+  padding: 0.85rem 1rem;
+  border: 1px solid #dce2d8;
+  border-radius: 0.7rem;
+  background: #f3f6f0;
+}
+.game-report-card h4 {
+  margin: 0 0 0.45rem;
+}
+.game-report-card p,
+.game-report-card ul {
+  margin: 0;
+}
 .game-confirm {
   position: sticky;
   top: 0.5rem;
