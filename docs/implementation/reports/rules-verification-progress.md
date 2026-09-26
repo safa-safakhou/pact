@@ -2,6 +2,10 @@
 
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) — in progress. Implementation revisions: `7eccf06`, `804198c`, `b38c5f5`, and `f7febfc`. Verification: 24 Sep 2026, Node 24, PostgreSQL 17 with PostgreSQL client 18.4.
 
+## Seeded troop lifecycle — 26 September 2026
+
+A 12-step deterministic training fixture now varies batch size, immediate versus partial cancellation, one- versus two-unit completion, and disbanding. Every queue is replayed under its original batch ID; after each transition an independent count model, the eight Home Guards, troop-ID uniqueness, and home placement are checked. One due settlement is deliberately rolled back after troop and resource work, with troop rows, balances, and movement count unchanged before a successful retry. Node 24 build, typecheck, lint, 118 unit tests, and 173 PostgreSQL 17 integration tests passed for the batch. This expands R03/R06 coverage but does not prove every ownership/placement transition or the all-command fault matrix. `tests/integration/troops.test.ts` owns the fixture.
+
 ## Single-VPS gameplay-state recovery — 26 September 2026
 
 After deploying release `mvp-20260926-1`, a host-only synthetic account activated one kingdom and committed one Farm II instruction. `restore-drill.sh` now accepts optional expected kingdom/command UUIDs and checks recovered kingdom identity, eight home-placed home guards, the building instruction, and its committed receipt in addition to journal reconciliation and outbox replay. Encrypted Restic snapshot `2ba99a33` passed a physical PostgreSQL 17 boot and all of these assertions on the single VPS without touching the live data volume. Local Node 24 lint/typecheck, 115 unit tests, and 172 PostgreSQL 17 integration tests pass; `sh -n` validates the drill. This proves one representative game-state recovery, not the generated all-command R01–R06 fault matrix. Keep PACT-051 In Progress.

@@ -95,6 +95,120 @@ async function tick(gameTimeMs: number): Promise<void> {
 }
 
 describe("training, unit identity, and placement", () => {
+  it("preserves unique troop identity through a seeded queue, cancel, rollback, and disband sequence", async () => {
+    const owner = await foundingFixture({ homeGuard: 8 });
+    await credit(owner.kingdomId, 300, 150);
+    let state = 0x51a11ce;
+    const next = () => {
+      state = (Math.imul(state, 1664525) + 1013904223) >>> 0;
+      return state;
+    };
+    const expected = new Set<string>();
+    let expectedOrdinaryCount = 0;
+
+    for (let step = 0; step < 12; step += 1) {
+      const gameTimeMs = step * 600_000;
+      const count = 1 + (next() % 2);
+      const batchId = randomUUID();
+      const input = { ...owner, batchId, type: "spearman", count, gameTimeMs };
+      const queued = await withTransaction(pool, (client) => troops.queueTraining(client, input));
+      expect(await withTransaction(pool, (client) => troops.queueTraining(client, input))).toEqual(queued);
+
+      if (step % 3 === 0) {
+        const canceled = await withTransaction(pool, (client) =>
+          troops.cancelTraining(client, { ...owner, batchId, gameTimeMs }),
+        );
+        expect(canceled.completed).toBe(0);
+      } else {
+        const due = gameTimeMs + 240_000;
+        if (step === 5) {
+          const before = await pool.query("SELECT id FROM kingdom_troops WHERE owner_kingdom_id = $1 ORDER BY id", [
+            owner.kingdomId,
+          ]);
+          const balanceBefore = await pool.query(
+            "SELECT resource, ordinary_units, allowance_units, locked_units FROM resource_balances WHERE kingdom_id = $1 ORDER BY resource",
+            [owner.kingdomId],
+          );
+          const movementCountBefore = await pool.query<{ count: string }>(
+            "SELECT count(*) AS count FROM resource_movements WHERE kingdom_id = $1",
+            [owner.kingdomId],
+          );
+          await expect(
+            withTransaction(pool, async (client) => {
+              await troops.settleMinute(client, {
+                productScope: "pact",
+                sequence: BigInt(due / 60_000),
+                gameTimeMs: due,
+                dueAt: new Date(),
+              });
+              throw new Error("injected pre-commit troop failure");
+            }),
+          ).rejects.toThrow("injected pre-commit troop failure");
+          expect(
+            (
+              await pool.query("SELECT id FROM kingdom_troops WHERE owner_kingdom_id = $1 ORDER BY id", [
+                owner.kingdomId,
+              ])
+            ).rows,
+          ).toEqual(before.rows);
+          expect(
+            (
+              await pool.query(
+                "SELECT resource, ordinary_units, allowance_units, locked_units FROM resource_balances WHERE kingdom_id = $1 ORDER BY resource",
+                [owner.kingdomId],
+              )
+            ).rows,
+          ).toEqual(balanceBefore.rows);
+          expect(
+            (
+              await pool.query<{ count: string }>(
+                "SELECT count(*) AS count FROM resource_movements WHERE kingdom_id = $1",
+                [owner.kingdomId],
+              )
+            ).rows,
+          ).toEqual(movementCountBefore.rows);
+        }
+        await tick(due);
+        if (count === 2 && step % 3 === 2) await tick(gameTimeMs + 420_000);
+        if (count === 2 && step % 3 === 1)
+          await withTransaction(pool, (client) =>
+            troops.cancelTraining(client, { ...owner, batchId, gameTimeMs: due }),
+          );
+        expectedOrdinaryCount += step % 3 === 2 ? count : 1;
+      }
+
+      const rows = await pool.query<{ id: string; home_guard: boolean; placement: string }>(
+        "SELECT id, home_guard, placement FROM kingdom_troops WHERE owner_kingdom_id = $1 ORDER BY id",
+        [owner.kingdomId],
+      );
+      const ordinary = rows.rows.filter((row) => !row.home_guard);
+      expect(ordinary).toHaveLength(expectedOrdinaryCount);
+      expect(rows.rows.filter((row) => row.home_guard)).toHaveLength(8);
+      expect(new Set(rows.rows.map((row) => row.id)).size).toBe(rows.rows.length);
+      expect(rows.rows.every((row) => row.placement === "home")).toBe(true);
+      for (const row of ordinary) expected.add(row.id);
+      expect(new Set(ordinary.map((row) => row.id))).toEqual(expected);
+
+      if (step % 4 === 3 && ordinary.length > 0) {
+        const troopId = ordinary[next() % ordinary.length]?.id;
+        if (!troopId) throw new Error("seeded troop selection is empty");
+        expect(
+          await withTransaction(pool, (client) =>
+            troops.disband(client, { ...owner, troopId, gameTimeMs: gameTimeMs + 420_000 }),
+          ),
+        ).toBe(true);
+        expected.delete(troopId);
+        expectedOrdinaryCount -= 1;
+      }
+    }
+
+    const final = await pool.query<{ id: string }>(
+      "SELECT id FROM kingdom_troops WHERE owner_kingdom_id = $1 AND home_guard = false",
+      [owner.kingdomId],
+    );
+    expect(new Set(final.rows.map((row) => row.id))).toEqual(expected);
+  });
+
   it("consumes only completed unit costs and refunds 80% of the remaining reserved batch", async () => {
     const owner = await foundingFixture({ homeGuard: 8 });
     await credit(owner.kingdomId, 40, 16);
