@@ -569,7 +569,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Evidence**
 
-- 26 Sep 2026: In Progress in Linear MNI-112, assigned to Mohammad Safakhou (Codex). Text-first web Alpha increment implemented; docs/implementation/reports/rules-ui-progress.md records local build/typecheck/lint/unit/integration results and the still-unmet two-player browser acceptance.
+- 26 Sep 2026: In Progress in Linear MNI-112, assigned to Mohammad Safakhou (Codex). Text-first web Alpha increment implemented in a126587 and 23223ef; release alpha-20260926-2 passed VPS verify, browser login/registration rendering, and authenticated owner-view/command/receipt/inbox smoke. docs/implementation/reports/rules-ui-progress.md records local build/typecheck/lint/unit/integration results and the still-unmet two-player browser acceptance.
 
 <a id="pact-049"></a>
 ## PACT-049 — Expose complete game tools to every Envoy route

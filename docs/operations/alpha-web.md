@@ -2,7 +2,7 @@
 
 The web root at `https://safa.dedyn.io/pact/` is the first human gameplay client. It uses the existing first-party session and CSRF-protected API; it does not run a separate game engine. Use synthetic test accounts only. The registration notice is temporary MVP test data, not a production legal identity. Verification mail is captured inside the VPS, so the operator must deliver each synthetic account's one-time token through a private channel. Do not put passwords or tokens in Git, Linear, screenshots, or logs. See [VPS deployment](vps-deployment.md) and [identity operations](identity.md).
 
-The first text-first release is `alpha-20260926-1` (26 September 2026). The immutable deployment verifier and authenticated API smoke passed. Browser verification so far covers the unauthenticated login screen only; the full two-account workflow remains unobserved.
+The current text-first release is `alpha-20260926-2` (26 September 2026). The immutable deployment verifier and authenticated API smoke passed. Browser verification so far covers the unauthenticated login/registration screens only; the full two-account workflow remains unobserved.
 
 Sign in, or create and verify a synthetic test account. An unactivated account saves its kingdom name and handle, submits a harmless sandbox echo, records the connection check, and presses **Found kingdom**. Founding is server-idempotent. Returning accounts read `/v1/kingdom/me` and the owner-scoped `/v1/world/kingdoms/:id` view. The browser keeps only the CSRF token in tab session storage; passwords are not persisted. Refreshing the world and inbox uses a 15-second fallback poll plus the authenticated inbox event stream.
 

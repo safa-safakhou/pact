@@ -15,7 +15,7 @@ The original shared-edge Caddyfile backup is `/srv/agentic-world/infra/productio
 
 ## Deploy and rollback
 
-The text-first private web Alpha increment deployed as `alpha-20260926-1` on 26 September 2026. `verify.sh` and authenticated `scripts/smoke-alpha-api.mjs` passed. This verifies infrastructure and a harmless command, **not** the PACT-048 two-player browser acceptance; track that in [Alpha web controls](alpha-web.md).
+The text-first private web Alpha increment deployed as `alpha-20260926-2` on 26 September 2026. `verify.sh` and authenticated `scripts/smoke-alpha-api.mjs` passed. This verifies infrastructure and a harmless command, **not** the PACT-048 two-player browser acceptance; track that in [Alpha web controls](alpha-web.md).
 
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
