@@ -64,6 +64,17 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
 }
 
 export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService, identity: IdentityService): void {
+  server.addContentTypeParser("application/x-www-form-urlencoded", { parseAs: "string" }, (_request, body, done) => {
+    const values: Record<string, string> = {};
+    for (const [key, value] of new URLSearchParams(typeof body === "string" ? body : body.toString("utf8"))) {
+      if (Object.hasOwn(values, key)) {
+        done(Object.assign(new Error("Duplicate OAuth form parameter"), { statusCode: 400 }));
+        return;
+      }
+      values[key] = value;
+    }
+    done(null, values);
+  });
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url.startsWith("/.well-known/") || request.url.startsWith("/oauth/")) {
       reply.header("cache-control", "no-store");

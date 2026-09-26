@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { CommandDispatcher } from "@pact/application";
 import { ApprovalService } from "@pact/approvals";
 import { AuthorityService } from "@pact/authority";
@@ -144,12 +144,14 @@ describe("shared client SDK", () => {
     });
     expect(registered.statusCode).toBe(200);
     const clientId = registered.json<{ client_id: string }>().client_id;
+    const verifier = "v".repeat(43);
+    const challenge = createHash("sha256").update(verifier).digest("base64url");
     const params = new URLSearchParams({
       client_id: clientId,
       redirect_uri: "http://127.0.0.1:43123/callback",
       response_type: "code",
       scope: "world:read messages:write game:act",
-      code_challenge: "a".repeat(43),
+      code_challenge: challenge,
       code_challenge_method: "S256",
       resource: `${origin}/pact/mcp`,
       state: "test-state-12345678",
@@ -163,6 +165,35 @@ describe("shared client SDK", () => {
     params.set("redirect_uri", "https://evil.example/callback");
     const rejected = await server.inject({ method: "GET", url: `/oauth/authorize?${params}` });
     expect(rejected.statusCode).toBe(400);
+
+    params.set("redirect_uri", "http://127.0.0.1:43123/callback");
+    const authorization = await server.inject({
+      method: "POST",
+      url: "/oauth/authorize",
+      headers: authenticatedHeaders(),
+      payload: {
+        ...Object.fromEntries(params),
+        audience: "mcp",
+        subject_label: "Test kingdom",
+      },
+    });
+    expect(authorization.statusCode).toBe(200);
+    const code = authorization.json<{ code: string }>().code;
+    const token = await server.inject({
+      method: "POST",
+      url: "/oauth/token",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      payload: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: clientId,
+        code,
+        redirect_uri: "http://127.0.0.1:43123/callback",
+        code_verifier: verifier,
+        resource: `${origin}/pact/mcp`,
+      }).toString(),
+    });
+    expect(token.statusCode).toBe(200);
+    expect(token.json<{ access_token: string }>().access_token).toBeTruthy();
   });
 
   it("reuses one command across web and non-browser clients after a lost response", async () => {
