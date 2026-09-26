@@ -4,7 +4,7 @@ import type { AuthorityService } from "@pact/authority";
 import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
 import type { InboxService } from "@pact/inbox";
-import type { KingdomService, WorldViewService } from "@pact/kingdom";
+import type { KingdomService, SocialOverviewReader, WorldViewService } from "@pact/kingdom";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
@@ -36,6 +36,7 @@ import { registerOperatorRoutes } from "./operator-routes.js";
 import { registerPrivacyRoutes } from "./privacy-routes.js";
 import { registerReportRoutes } from "./report-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
+import { registerSocialOverviewRoutes } from "./social-overview-routes.js";
 import { registerTelegramRoutes } from "./telegram-routes.js";
 import { registerWorldViewRoutes } from "./world-view-routes.js";
 
@@ -58,6 +59,7 @@ export interface ApiModules {
   onboarding: OnboardingService;
   kingdom?: KingdomService;
   worldViews?: WorldViewService;
+  socialOverview?: SocialOverviewReader;
   reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
@@ -152,6 +154,7 @@ export function buildServer(
     registerOperatorRoutes(server, operatorPreflight);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);
     if (modules.reports) registerReportRoutes(server, modules.identity, modules.reports, modules.oauth);
     if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);
     if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);

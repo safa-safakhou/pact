@@ -1,0 +1,7 @@
+# Human social overview
+
+`GET /v1/game/social` is the private Alpha web client's bounded social read. It requires a first-party `pact_session` cookie. A bearer OAuth world-read grant is not accepted because this view contains message bodies and private contract terms. The server derives the owner's ranked kingdom from the authenticated account and product scope; it ignores caller-supplied account or kingdom identifiers. The response uses `Cache-Control: no-store`. Missing/invalid sessions return 403; an account without a ranked kingdom returns 404.
+
+The result contains the owner's `kingdomId` plus at most 50 rows each of accepted contacts, pending incoming/outgoing contact requests, direct messages involving the owner, open supply and garrison offers involving the owner (including exact version, terms, and signer IDs), and supply/garrison contracts involving the owner. Each other party is labelled with its public handle and display name. Messages are ordered newest-first by game time; the web conversation reverses that bounded slice for reading. This is not a public discovery endpoint, a general message search, or the Envoy inbox. No counterparty balances, armies, or unrelated private threads are returned.
+
+The UI signs offers through the shared `game.supply.sign` and `game.garrison.sign` commands with the exact returned ID and version. Reads authorize no action; command handlers recheck ownership, current terms, resources, locks, and capacity transactionally. The list is a UI convenience projection, not an independent rules or permission engine.

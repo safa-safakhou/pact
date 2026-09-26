@@ -13,6 +13,7 @@ export * from "./retirement.js";
 export * from "./scouting.js";
 export * from "./service.js";
 export * from "./social.js";
+export * from "./social-overview.js";
 export * from "./supply.js";
 export * from "./supply-settlement.js";
 export * from "./supply-terms.js";

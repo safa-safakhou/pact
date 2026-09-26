@@ -2251,9 +2251,10 @@
       "components": [
         "functional gameplay UI"
       ],
-  "evidence": [
-    "26 Sep 2026: In Progress in Linear MNI-112, assigned to Mohammad Safakhou (Codex). Text-first web Alpha increment implemented in a126587 and 23223ef; release alpha-20260926-2 passed VPS verify, browser login/registration rendering, and authenticated owner-view/command/receipt/inbox smoke. docs/implementation/reports/rules-ui-progress.md records local build/typecheck/lint/unit/integration results and the still-unmet two-player browser acceptance."
-  ],
+      "evidence": [
+        "26 Sep 2026: In Progress in Linear MNI-112, assigned to Mohammad Safakhou (Codex). Text-first web Alpha increment implemented in a126587 and 23223ef; release alpha-20260926-2 passed VPS verify, browser login/registration rendering, and authenticated owner-view/command/receipt/inbox smoke. docs/implementation/reports/rules-ui-progress.md records local build/typecheck/lint/unit/integration results and the still-unmet two-player browser acceptance.",
+        "26 Sep 2026: Release alpha-20260926-4 passed VPS verify and Chrome two-account contact/message/supply-offer/sign/active-contract checks; local build, typecheck, lint, 122 unit and 174 integration tests pass for the follow-up UI. Release alpha-20260926-5 improved prerequisites and tab/account state; Briar then started a scout, transferred Grain, and hit INSUFFICIENT_STOCK on an overspend. Release alpha-20260926-6 raises contract visibility. Full report/garrison/raid/loss/rebuild UI acceptance remains open; see docs/implementation/reports/rules-ui-progress.md and docs/operations/alpha-web.md."
+      ],
   "assignee": "Mohammad Safakhou (Codex)",
       "blocked_by_external": [],
       "block_reason": null

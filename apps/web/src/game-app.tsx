@@ -2,11 +2,24 @@ import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createWebPactClient } from "./pact-client.js";
+import { wholeResourceAmount } from "./resource-units.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 
 type Json = Record<string, unknown>;
 type Tab = "Kingdom" | "Envoy" | "People" | "Chronicle";
 type Draft = { displayName: string | null; proposedHandle: string | null; version: number };
+type Party = { kingdomId: string; handle: string; displayName: string };
+type Offer = Party & { id: string; version: number; terms: Json; signedBy: string[] };
+type Contract = Party & { id: string; terms: Json; status: string; endGameTimeMs: string };
+type SocialOverview = {
+  contacts: Party[];
+  requests: (Party & { id: string; direction: "incoming" | "outgoing"; note: string })[];
+  messages: (Party & { id: string; senderKingdomId: string; body: string; sentGameTimeMs: string })[];
+  supplyOffers: (Offer & { kingdomA: string; kingdomB: string })[];
+  supplyContracts: (Contract & { kingdomA: string; kingdomB: string })[];
+  garrisonOffers: (Offer & { lenderKingdomId: string; hostKingdomId: string })[];
+  garrisonContracts: (Contract & { lenderKingdomId: string; hostKingdomId: string })[];
+};
 type OwnerView = {
   audience: "owner";
   profile: { kingdomId: string; handle: string; displayName: string };
@@ -42,8 +55,26 @@ function failure(error: unknown): string {
   if (error instanceof PactClientError) return error.serverCode ?? error.code;
   return error instanceof Error ? error.message : String(error);
 }
+function actionFailure(action: SandboxAction, error: unknown): string {
+  const code = failure(error);
+  if (code === "INVALID_COMMAND" && action.kind === "game.scout.start")
+    return "Scout unavailable. You need two trained ordinary Spearmen (the eight founding Home Guard cannot scout), 10 Silver, 5 Grain, and a scout charge.";
+  return code;
+}
 function units(value: string): string {
-  return (Number(value) / 1_000).toLocaleString(undefined, { maximumFractionDigits: 3 });
+  return wholeResourceAmount(value).toLocaleString(undefined, { maximumFractionDigits: 3 });
+}
+function supplyTerms(terms: Json, sendA: boolean): string {
+  const direction = (value: unknown): string => {
+    if (!value || typeof value !== "object") return "nothing";
+    const item = value as { wholePerHour?: number; resource?: string };
+    return `${item.wholePerHour ?? 0} ${item.resource ?? "resource"}/h`;
+  };
+  return `You send ${direction(terms[sendA ? "aToB" : "bToA"])} · receive ${direction(terms[sendA ? "bToA" : "aToB"])} · ${terms.durationHours ?? "?"}h`;
+}
+function garrisonTerms(terms: Json): string {
+  const units = Array.isArray(terms.units) ? terms.units : [];
+  return `${units.map((unit: { count?: number; type?: string }) => `${unit.count ?? 0} ${unit.type ?? "troops"}`).join(", ") || "No units"} · ${terms.durationHours ?? "?"}h`;
 }
 function owner(value: unknown): OwnerView {
   if (!value || typeof value !== "object" || (value as Json).audience !== "owner")
@@ -69,6 +100,9 @@ export function GameApp(): React.JSX.Element {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [kingdomId, setKingdomId] = useState("");
   const [view, setView] = useState<OwnerView | null>(null);
+  const [social, setSocial] = useState<SocialOverview | null>(null);
+  const [target, setTarget] = useState("");
+  const [pendingAction, setPendingAction] = useState<{ summary: string; action: SandboxAction } | null>(null);
   const [inbox, setInbox] = useState<{ sequence: string; type: string; event: unknown }[]>([]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -102,6 +136,11 @@ export function GameApp(): React.JSX.Element {
       setKingdomId(id);
       setView(owner(await client.readKingdomView(id)));
       setAuth("ready");
+      try {
+        setSocial((await request("/v1/game/social")) as unknown as SocialOverview);
+      } catch {
+        setSocial(null);
+      }
       try {
         setInbox(
           (await client.readInbox(undefined, 50)).events.map((event) => ({
@@ -210,11 +249,14 @@ export function GameApp(): React.JSX.Element {
             ? `${action.kind}: ${receipt.code} · ${receipt.commandId}`
             : `Network uncertain. Command ${command.commandId} must be reconciled before retry.`,
         );
-      } else setNotice(`${action.kind}: ${failure(error)}`);
+      } else setNotice(`${action.kind}: ${actionFailure(action, error)}`);
     } finally {
       setBusy(false);
       await refresh();
     }
+  }
+  function confirmAction(summary: string, action: SandboxAction): void {
+    setPendingAction({ summary, action });
   }
 
   if (telegramBootstrap)
@@ -352,6 +394,10 @@ export function GameApp(): React.JSX.Element {
             className="secondary"
             onClick={() => {
               setNotice("");
+              setTarget("");
+              setSocial(null);
+              setView(null);
+              setPendingAction(null);
               setAuth("login");
             }}
           >
@@ -377,7 +423,38 @@ export function GameApp(): React.JSX.Element {
           {notice}
         </p>
       )}
-      {tab === "Kingdom" && view && <Kingdom view={view} busy={busy} act={act} />}
+      {pendingAction && (
+        <section className="game-confirm" aria-label="Confirm game action">
+          <div>
+            <strong>Confirm this action</strong>
+            <p>{pendingAction.summary}</p>
+          </div>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => {
+              const action = pendingAction.action;
+              setPendingAction(null);
+              void act(action);
+            }}
+          >
+            Confirm
+          </button>
+          <button type="button" className="secondary" onClick={() => setPendingAction(null)}>
+            Cancel
+          </button>
+        </section>
+      )}
+      {tab === "Kingdom" && view && (
+        <Kingdom
+          view={view}
+          busy={busy}
+          act={act}
+          social={social}
+          kingdomId={kingdomId}
+          onPeople={() => setTab("People")}
+        />
+      )}
       {tab === "Envoy" && (
         <Envoy
           inbox={inbox}
@@ -391,7 +468,19 @@ export function GameApp(): React.JSX.Element {
           }}
         />
       )}
-      {tab === "People" && <People client={client} act={act} busy={busy} kingdomId={kingdomId} />}
+      {tab === "People" && (
+        <People
+          client={client}
+          act={act}
+          busy={busy}
+          kingdomId={kingdomId}
+          social={social}
+          target={target}
+          setTarget={setTarget}
+          confirmAction={confirmAction}
+          hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
+        />
+      )}
       {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} />}
     </main>
   );
@@ -511,10 +600,16 @@ function Kingdom({
   view,
   busy,
   act,
+  social,
+  kingdomId,
+  onPeople,
 }: {
   view: OwnerView;
   busy: boolean;
   act: (action: SandboxAction) => Promise<void>;
+  social: SocialOverview | null;
+  kingdomId: string;
+  onPeople: () => void;
 }): React.JSX.Element {
   const [building, setBuilding] = useState("farm");
   const [level, setLevel] = useState(2);
@@ -524,7 +619,10 @@ function Kingdom({
   return (
     <section>
       <h2>Kingdom</h2>
-      <p>Committed {new Date(view.asOfGameTimeMs).toLocaleString()}. Server rules decide all costs and limits.</p>
+      <p>
+        Committed {new Date(view.asOfGameTimeMs).toLocaleString()}. Resource amounts below use whole game units; the
+        server decides costs and limits.
+      </p>
       <div className="game-grid">
         {["iron", "silver", "grain"].map((resource) => {
           const balance = view.balances[resource];
@@ -546,10 +644,7 @@ function Kingdom({
         })}
       </div>
       <article className="game-card">
-        <h3>Forecast</h3>
-        <p>
-          Assumption: {view.forecast.assumption}. Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()}.
-        </p>
+        <h3>Next-hour forecast</h3>
         <ul>
           {Object.entries(view.forecast.expected).map(([resource, amount]) => (
             <li key={resource}>
@@ -558,6 +653,11 @@ function Kingdom({
             </li>
           ))}
         </ul>
+        <details>
+          <summary>What this forecast assumes</summary>
+          <p>{view.forecast.assumption}</p>
+          <small>Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()}</small>
+        </details>
       </article>
       <div className="game-grid">
         <article className="game-card">
@@ -640,6 +740,7 @@ function Kingdom({
           <p>
             Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
           </p>
+          <p>The eight founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -673,15 +774,22 @@ function Kingdom({
       <div className="game-grid">
         <article className="game-card">
           <h3>Contracts</h3>
-          {view.contracts.length ? (
-            view.contracts.map((item) => (
-              <p key={item.id}>
-                <code>{item.id}</code> with {item.counterpartyKingdomId}
-              </p>
-            ))
+          {social?.supplyContracts.filter((item) => item.status === "active").length ? (
+            social.supplyContracts
+              .filter((item) => item.status === "active")
+              .map((item) => (
+                <div className="game-list-item" key={item.id}>
+                  <strong>Supply with {item.displayName}</strong>
+                  <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
+                  <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
+                </div>
+              ))
           ) : (
             <p>No active contracts.</p>
           )}
+          <button type="button" className="secondary" onClick={onPeople}>
+            See offers and all contracts
+          </button>
         </article>
         <article className="game-card">
           <h3>Threats</h3>
@@ -883,23 +991,95 @@ function People({
   act,
   busy,
   kingdomId,
+  social,
+  target,
+  setTarget,
+  confirmAction,
+  hallLevel,
 }: {
   client: ReturnType<typeof createWebPactClient>;
   act: (action: SandboxAction) => Promise<void>;
   busy: boolean;
   kingdomId: string;
+  social: SocialOverview | null;
+  target: string;
+  setTarget: (value: string) => void;
+  confirmAction: (summary: string, action: SandboxAction) => void;
+  hallLevel: number;
 }): React.JSX.Element {
-  const [target, setTarget] = useState("");
   const [profile, setProfile] = useState<unknown>(null);
   const [message, setMessage] = useState("");
   const [resource, setResource] = useState<"iron" | "silver" | "grain">("grain");
   const [amount, setAmount] = useState(1);
-  const [contactRequestId, setContactRequestId] = useState("");
+  const selected = social?.contacts.find((item) => item.kingdomId === target);
+  const messages = social?.messages.filter((item) => item.kingdomId === target).reverse() ?? [];
   return (
     <section>
       <h2>People</h2>
-      <p>Enter another test kingdom’s ID. Public profiles do not reveal private resources or armies.</p>
+      <p>Talk, trade, and make alliances with other kingdoms. Private details are shown only to the parties.</p>
+      {!social && <p role="status">Social activity is temporarily unavailable. Your kingdom is still playable.</p>}
+      <div className="game-grid">
+        <article className="game-card">
+          <h3>Contacts</h3>
+          {social?.contacts.length ? (
+            social.contacts.map((item) => (
+              <button
+                type="button"
+                className="game-person"
+                key={item.kingdomId}
+                onClick={() => {
+                  setTarget(item.kingdomId);
+                  setProfile(null);
+                }}
+              >
+                <strong>{item.displayName}</strong>
+                <span>@{item.handle}</span>
+              </button>
+            ))
+          ) : (
+            <p>No contacts yet. Send a contact request to start talking.</p>
+          )}
+        </article>
+        <article className="game-card">
+          <h3>Contact requests</h3>
+          {social?.requests.length ? (
+            social.requests.map((item) => (
+              <div className="game-list-item" key={item.id}>
+                <strong>
+                  {item.direction === "incoming" ? "From" : "To"} {item.displayName}
+                </strong>
+                <p>{item.note}</p>
+                {item.direction === "incoming" ? (
+                  <div className="game-inline-actions">
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void act({ kind: "game.contact.answer", requestId: item.id, accept: true })}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() => void act({ kind: "game.contact.answer", requestId: item.id, accept: false })}
+                    >
+                      Decline
+                    </button>
+                  </div>
+                ) : (
+                  <small>Awaiting response</small>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No pending requests.</p>
+          )}
+        </article>
+      </div>
+      <ContractBoard social={social} kingdomId={kingdomId} busy={busy} confirmAction={confirmAction} />
       <article className="game-card">
+        <h3>{selected ? `Conversation with ${selected.displayName}` : "Find a kingdom"}</h3>
         <form
           onSubmit={(event) => {
             event.preventDefault();
@@ -910,12 +1090,32 @@ function People({
           }}
         >
           <label>
-            Other kingdom ID
+            Kingdom ID (or choose a contact above)
             <input required value={target} onChange={(event) => setTarget(event.target.value.trim())} />
           </label>
           <button type="submit">Inspect profile</button>
         </form>
-        {profile !== null && <pre>{JSON.stringify(profile, null, 2)}</pre>}
+        {profile !== null && <PublicProfile value={profile} />}
+        {target && (
+          <div className="game-messages" role="log" aria-label="Conversation">
+            {messages.length ? (
+              messages.map((item) => (
+                <div
+                  className={`game-message ${item.senderKingdomId === kingdomId ? "outgoing" : "incoming"}`}
+                  key={item.id}
+                >
+                  <small>
+                    {item.senderKingdomId === kingdomId ? "You" : item.displayName} ·{" "}
+                    {new Date(Number(item.sentGameTimeMs)).toLocaleString()}
+                  </small>
+                  <p>{item.body}</p>
+                </div>
+              ))
+            ) : (
+              <p>No messages with this kingdom yet.</p>
+            )}
+          </div>
+        )}
       </article>
       <div className="game-grid">
         <article className="game-card">
@@ -943,30 +1143,6 @@ function People({
           >
             Send message
           </button>
-          <label>
-            Incoming contact request ID
-            <input value={contactRequestId} onChange={(event) => setContactRequestId(event.target.value.trim())} />
-          </label>
-          <button
-            type="button"
-            className="secondary"
-            disabled={busy || !contactRequestId}
-            onClick={() => {
-              void act({ kind: "game.contact.answer", requestId: contactRequestId, accept: true });
-            }}
-          >
-            Accept contact
-          </button>
-          <button
-            type="button"
-            className="secondary"
-            disabled={busy || !contactRequestId}
-            onClick={() => {
-              void act({ kind: "game.contact.answer", requestId: contactRequestId, accept: false });
-            }}
-          >
-            Decline contact
-          </button>
         </article>
         <article className="game-card">
           <h3>Direct transfer</h3>
@@ -987,15 +1163,145 @@ function People({
             type="button"
             disabled={busy || !target || target === kingdomId}
             onClick={() => {
-              if (window.confirm(`Transfer ${amount} ${resource} to ${target}?`))
-                void act({ kind: "game.transfer", recipientKingdomId: target, resource, wholeAmount: amount });
+              confirmAction(`Transfer ${amount} ${resource} to ${selected?.displayName ?? target}?`, {
+                kind: "game.transfer",
+                recipientKingdomId: target,
+                resource,
+                wholeAmount: amount,
+              });
             }}
           >
             Transfer
           </button>
         </article>
       </div>
-      <DiplomacyForms target={target} busy={busy} act={act} />
+      <DiplomacyForms target={target} busy={busy} act={act} confirmAction={confirmAction} hallLevel={hallLevel} />
+    </section>
+  );
+}
+
+function PublicProfile({ value }: { value: unknown }): React.JSX.Element {
+  if (!value || typeof value !== "object") return <p>Profile unavailable.</p>;
+  const result = value as { profile?: { displayName?: string; handle?: string }; worldStatus?: string; error?: string };
+  if (result.error) return <p role="alert">{result.error}</p>;
+  return (
+    <p className="game-profile">
+      <strong>{result.profile?.displayName ?? "Kingdom"}</strong> · @{result.profile?.handle ?? "unknown"} ·{" "}
+      {result.worldStatus ?? "in the world"}
+    </p>
+  );
+}
+
+function ContractBoard({
+  social,
+  kingdomId,
+  busy,
+  confirmAction,
+}: {
+  social: SocialOverview | null;
+  kingdomId: string;
+  busy: boolean;
+  confirmAction: (summary: string, action: SandboxAction) => void;
+}): React.JSX.Element {
+  return (
+    <section className="game-section">
+      <h2>Offers & contracts</h2>
+      <p>Review the exact terms before signing. A contract activates only when both kingdoms sign the same version.</p>
+      <div className="game-grid">
+        <article className="game-card">
+          <h3>Supply offers</h3>
+          {social?.supplyOffers.length ? (
+            social.supplyOffers.map((item) => (
+              <div className="game-list-item" key={item.id}>
+                <strong>{item.displayName}</strong>
+                <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
+                <small>
+                  Version {item.version} · {item.signedBy.includes(kingdomId) ? "You signed" : "Your signature needed"}
+                </small>
+                {!item.signedBy.includes(kingdomId) && (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() =>
+                      confirmAction(
+                        `Sign supply offer from ${item.displayName}: ${supplyTerms(item.terms, item.kingdomA === kingdomId)}?`,
+                        { kind: "game.supply.sign", offerId: item.id, version: item.version },
+                      )
+                    }
+                  >
+                    Sign offer
+                  </button>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No open supply offers.</p>
+          )}
+        </article>
+        <article className="game-card">
+          <h3>Supply contracts</h3>
+          {social?.supplyContracts.length ? (
+            social.supplyContracts.map((item) => (
+              <div className="game-list-item" key={item.id}>
+                <strong>
+                  {item.displayName} · {item.status}
+                </strong>
+                <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
+                <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
+              </div>
+            ))
+          ) : (
+            <p>No supply contracts yet.</p>
+          )}
+        </article>
+        <article className="game-card">
+          <h3>Garrison offers</h3>
+          {social?.garrisonOffers.length ? (
+            social.garrisonOffers.map((item) => (
+              <div className="game-list-item" key={item.id}>
+                <strong>{item.displayName}</strong>
+                <p>{garrisonTerms(item.terms)}</p>
+                <small>
+                  Version {item.version} · {item.signedBy.includes(kingdomId) ? "You signed" : "Your signature needed"}
+                </small>
+                {!item.signedBy.includes(kingdomId) && (
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() =>
+                      confirmAction(`Sign garrison offer with ${item.displayName}: ${garrisonTerms(item.terms)}?`, {
+                        kind: "game.garrison.sign",
+                        offerId: item.id,
+                        version: item.version,
+                      })
+                    }
+                  >
+                    Sign offer
+                  </button>
+                )}
+              </div>
+            ))
+          ) : (
+            <p>No open garrison offers.</p>
+          )}
+        </article>
+        <article className="game-card">
+          <h3>Garrison contracts</h3>
+          {social?.garrisonContracts.length ? (
+            social.garrisonContracts.map((item) => (
+              <div className="game-list-item" key={item.id}>
+                <strong>
+                  {item.displayName} · {item.status}
+                </strong>
+                <p>{garrisonTerms(item.terms)}</p>
+                <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
+              </div>
+            ))
+          ) : (
+            <p>No garrison contracts yet.</p>
+          )}
+        </article>
+      </div>
     </section>
   );
 }
@@ -1004,10 +1310,14 @@ function DiplomacyForms({
   target,
   busy,
   act,
+  confirmAction,
+  hallLevel,
 }: {
   target: string;
   busy: boolean;
   act: (action: SandboxAction) => Promise<void>;
+  confirmAction: (summary: string, action: SandboxAction) => void;
+  hallLevel: number;
 }): React.JSX.Element {
   const [sendResource, setSendResource] = useState<"iron" | "silver" | "grain">("grain");
   const [receiveResource, setReceiveResource] = useState<"iron" | "silver" | "grain">("silver");
@@ -1015,8 +1325,6 @@ function DiplomacyForms({
   const [receiveRate, setReceiveRate] = useState(0);
   const [duration, setDuration] = useState<1 | 6 | 24 | 72>(6);
   const [noticeHours, setNoticeHours] = useState<0 | 1 | 6>(0);
-  const [offerId, setOfferId] = useState("");
-  const [offerVersion, setOfferVersion] = useState(1);
   const [troopType, setTroopType] = useState<"spearman" | "archer" | "rider" | "ram">("spearman");
   const [troopCount, setTroopCount] = useState(1);
   const [raidId, setRaidId] = useState("");
@@ -1032,12 +1340,12 @@ function DiplomacyForms({
   };
   const selectedUnits = [{ type: troopType, count: troopCount }];
   return (
-    <div className="game-grid">
+    <div className="game-grid game-actions-grid">
       <article className="game-card">
-        <h3>Supply agreement</h3>
+        <h3>Create a supply offer</h3>
         <p>
           For a new offer, you send A→B and receive B→A each game hour. No bond in this Alpha sheet. The other player
-          signs the exact offer ID and version.
+          can review and sign it in Offers & contracts above.
         </p>
         <label>
           You send
@@ -1094,56 +1402,38 @@ function DiplomacyForms({
           type="button"
           disabled={busy || !target || (!sendRate && !receiveRate)}
           onClick={() => {
-            if (
-              window.confirm(
-                `Offer to ${target}: send ${sendRate} ${sendResource}/h, receive ${receiveRate} ${receiveResource}/h for ${duration}h?`,
-              )
-            )
-              void act({ kind: "game.supply.offer", counterpartyKingdomId: target, terms });
+            confirmAction(
+              `Offer to ${target}: send ${sendRate} ${sendResource}/h, receive ${receiveRate} ${receiveResource}/h for ${duration}h?`,
+              { kind: "game.supply.offer", counterpartyKingdomId: target, terms },
+            );
           }}
         >
           Offer supply terms
         </button>
-        <label>
-          Offer ID
-          <input value={offerId} onChange={(event) => setOfferId(event.target.value.trim())} />
-        </label>
-        <label>
-          Version
-          <input
-            type="number"
-            min={1}
-            value={offerVersion}
-            onChange={(event) => setOfferVersion(Number(event.target.value))}
-          />
-        </label>
-        <button
-          type="button"
-          className="secondary"
-          disabled={busy || !offerId}
-          onClick={() => {
-            if (window.confirm(`Sign exact supply offer ${offerId} version ${offerVersion}?`))
-              void act({ kind: "game.supply.sign", offerId, version: offerVersion });
-          }}
-        >
-          Sign offer
-        </button>
       </article>
       <article className="game-card">
         <h3>Scout</h3>
-        <p>Scouting uses two eligible ordinary spearmen and server-checked Silver, Grain, and one charge.</p>
+        <p>
+          Requires two trained ordinary Spearmen (not founding Home Guard), 10 Silver, 5 Grain, and one scout charge.
+          They return after ten game minutes.
+        </p>
         <button
           type="button"
           disabled={busy || !target}
           onClick={() => {
-            if (window.confirm(`Scout kingdom ${target}?`))
-              void act({ kind: "game.scout.start", targetKingdomId: target });
+            confirmAction(`Scout kingdom ${target}? This spends resources and a charge.`, {
+              kind: "game.scout.start",
+              targetKingdomId: target,
+            });
           }}
         >
           Start scout
         </button>
         <h3>Garrison lending</h3>
-        <p>Lend the selected units to the target for a fixed duration, with no bond in this Alpha sheet.</p>
+        <p>
+          Lending requires Hall level 3 and ordinary (non-Home Guard) troops. Lend the selected units for a fixed
+          duration, with no bond in this Alpha sheet.
+        </p>
         <label>
           Troop type
           <select value={troopType} onChange={(event) => setTroopType(event.target.value as typeof troopType)}>
@@ -1175,39 +1465,33 @@ function DiplomacyForms({
         </label>
         <button
           type="button"
-          disabled={busy || !target}
+          disabled={busy || !target || hallLevel < 3}
           onClick={() => {
-            if (window.confirm(`Offer ${troopCount} ${troopType} to ${target} for ${garrisonDuration}h?`))
-              void act({
-                kind: "game.garrison.offer",
-                hostKingdomId: target,
-                terms: { units: selectedUnits, durationHours: garrisonDuration, lenderBond: null, hostBond: null },
-              });
+            confirmAction(`Offer ${troopCount} ${troopType} to ${target} for ${garrisonDuration}h?`, {
+              kind: "game.garrison.offer",
+              hostKingdomId: target,
+              terms: { units: selectedUnits, durationHours: garrisonDuration, lenderBond: null, hostBond: null },
+            });
           }}
         >
           Offer garrison
         </button>
-        <button
-          type="button"
-          className="secondary"
-          disabled={busy || !offerId}
-          onClick={() => {
-            if (window.confirm(`Sign exact garrison offer ${offerId} version ${offerVersion}?`))
-              void act({ kind: "game.garrison.sign", offerId, version: offerVersion });
-          }}
-        >
-          Sign garrison offer
-        </button>
       </article>
       <article className="game-card">
         <h3>Raid</h3>
-        <p>Attacking risks these troops. The server determines locks, combat, losses, and loot.</p>
+        <p>
+          Raids require at least eight trained ordinary troops; founding Home Guard cannot attack. The server determines
+          locks, combat, losses, and loot.
+        </p>
         <button
           type="button"
-          disabled={busy || !target}
+          disabled={busy || !target || troopCount < 8}
           onClick={() => {
-            if (window.confirm(`Declare raid on ${target} with ${troopCount} ${troopType}? This can cause losses.`))
-              void act({ kind: "game.raid.declare", targetKingdomId: target, units: selectedUnits });
+            confirmAction(`Declare raid on ${target} with ${troopCount} ${troopType}? This can cause losses.`, {
+              kind: "game.raid.declare",
+              targetKingdomId: target,
+              units: selectedUnits,
+            });
           }}
         >
           Declare raid

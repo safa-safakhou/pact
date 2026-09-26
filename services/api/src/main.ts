@@ -26,6 +26,7 @@ import {
   RaidRandomnessService,
   RaidService,
   ScoutService,
+  SocialOverviewReader,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -84,6 +85,7 @@ const kingdom = new KingdomService(pool, {
   ledger: new ResourceLedger("pact"),
 });
 const worldViews = new WorldViewService(pool, "pact");
+const socialOverview = new SocialOverviewReader(pool, "pact");
 const inbox = new InboxService(pool, { productScope: "pact", clock });
 const runs = new RunService(pool, {
   productScope: "pact",
@@ -251,6 +253,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   onboarding,
   kingdom,
   worldViews,
+  socialOverview,
   reports,
   dispatcher,
   oauth,
