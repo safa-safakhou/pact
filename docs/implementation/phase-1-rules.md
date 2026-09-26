@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 21 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 22 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -568,7 +568,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-049"></a>
 ## PACT-049 — Expose complete game tools to every Envoy route
 
-**Status:** in_progress · **Role:** Integrations · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
 **Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-021](phase-0-connections.md#pact-021), [PACT-027](phase-0-connections.md#pact-027), [PACT-039](phase-1-rules.md#pact-039), [PACT-045](phase-1-rules.md#pact-045)
 
@@ -583,9 +583,9 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] A recorded scenario produces equivalent game commands/receipts from web, adapter, and MCP paths.
-- [ ] Malicious counterpart text cannot change identity, tool scope, model connection, or mandate; no adapter receives hidden state through a convenience summary.
-- [ ] Generated SDK, model-adapter, and MCP commands use the same product-scoped contracts and cannot gain first-party human privileges.
+- [x] A recorded scenario produces equivalent game commands/receipts from web, adapter, and MCP paths.
+- [x] Malicious counterpart text cannot change identity, tool scope, model connection, or mandate; no adapter receives hidden state through a convenience summary.
+- [x] Generated SDK, model-adapter, and MCP commands use the same product-scoped contracts and cannot gain first-party human privileges.
 
 **Assignee:** Mohammad Safakhou
 
@@ -625,7 +625,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - 26 Sep 2026: exact game.scout.start proposals now use the shared model/MCP schema and lease-bound approval service, rendering catalog fees, duration, charge, and selected troops. PostgreSQL fixture proves no early scout or troop movement, changed-ID/outsider denial, exact human commit with 10 Silver/5 Grain charge, and stable replay. Node 24 build/typecheck/lint, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Full route/adversarial acceptance remains; keep In Progress.
 - 26 Sep 2026: release mvp-20260926-1 deployed the current gameplay backend after revision 99cf2fa fixed clean Docker workspace build ordering and added a dependency guard. Public deployment verification passed; the host-only synthetic account activated one kingdom and submitted a committed Farm II construction command via the gateway. Local lint/typecheck, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/operations/vps-deployment.md and docs/implementation/reports/game-tools-progress.md. Web gameplay and full PACT-049 route/adversarial acceptance remain; keep In Progress.
 - 26 Sep 2026: workers/inference/src/run-context.test.ts adds owner-context boundary checks: hostile counterpart prose stays user-role data, arbitrary inbox payload does not enter metadata summary, non-owner projection stops all later private reads, and oversized conversation text is omitted with a truncation marker. Node 24 typecheck/lint and focused three-test unit suite pass. See docs/implementation/reports/game-tools-progress.md. This is one context-construction fixture, not full cross-route/adversarial acceptance; keep In Progress.
-- 26 Sep 2026: PostgreSQL fake-provider/MCP matrix denied all seven human-only game actions with forged human/other-account envelopes and no committed receipts or exact human permits. Unit contract fixture locks all 28 game action kinds to generated web, MCP, and model schemas; model schema excludes sandbox actions. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Other permitted-action parity and full PACT-049 acceptance remain; keep In Progress.
+- 26 Sep 2026: PostgreSQL fake-provider/MCP matrix denied all seven human-only game actions with forged human/other-account envelopes and no committed receipts or exact human permits. Unit contract fixture locks all 28 game action kinds to generated web, MCP, and model schemas; model schema excludes sandbox actions. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. At this checkpoint broader acceptance review remained open.
+- 26 Sep 2026: final acceptance review in docs/implementation/reports/game-tools-completion.md (revision 0b0ca8a) matches all three PACT-049 criteria to recorded web/model/MCP message and versioned supply-offer scenarios, hostile-context/private-read isolation, shared 28-action schemas, and seven-action human-only denial. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. Linear MNI-113 is Done. No live paid-model/consumer-host certification or playable PACT-048 UI is claimed.
 
 <a id="pact-050"></a>
 ## PACT-050 — Implement gameplay retirement and account-deletion settlement
