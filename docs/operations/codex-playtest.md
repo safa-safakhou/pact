@@ -6,6 +6,16 @@ This is a private Alpha procedure, not external-client certification or a public
 
 Create and verify three separate synthetic PACT accounts at `https://safa.dedyn.io/pact/`, then found one kingdom under each. The Alpha's email is captured in VPS Mailpit, so an operator must privately deliver each verification token. Each human owner signs in, opens **Envoy → Enable bounded agent playtest**, and confirms the authority preset. The preset allows contacts, transfer, training, construction, scouting, supply and garrison signing, and raid commitment within 500 whole Iron/Silver/Grain units per 24 game hours, a 20-whole-Grain reserve floor, and 40 committed troops. It cannot create stock, bypass prerequisites, approve exceptions, change authority, or perform human-only actions. Disable new game actions from the same screen when the test ends. Existing signed obligations still settle normally.
 
+The private VPS currently has these **synthetic** fixtures already created and authorized; reuse the matching Codex profile, not a copied password:
+
+| Kingdom | Codex MCP profile | Kingdom ID | Synthetic account |
+| --- | --- | --- | --- |
+| Aster | `pact_aster` | `448cc513-b464-4881-8892-259a963f124a` | `pact-mvp-owner@example.test` |
+| Briar | `pact_briar` | `d40baf9e-f75e-4ce4-a949-2461032ae86f` | `pact-codex-briar@example.test` |
+| Cinder | `pact_cinder` | `80ca2ca9-619c-4027-a895-94a1748a1f91` | `pact-codex-cinder@example.test` |
+
+Each account's synthetic password is a mode-0600 file under `/srv/pact/secrets/connection-test/` on the VPS, not in this repository or any agent prompt. The three Codex OAuth logins were completed on the operator's local Codex installation on 26 September 2026. If using a different Codex installation, do the account-matched login procedure below; do not ask a playing chat for a password.
+
 For each account, configure a distinct Codex MCP connection name and a distinct URL identity. The harmless `profile` query is only a Codex credential-cache discriminator; the server ignores it for identity and always derives ownership from the separate OAuth grant. Keep the OAuth resource canonical:
 
 ```sh
