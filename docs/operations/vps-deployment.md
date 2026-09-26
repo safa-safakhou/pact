@@ -16,7 +16,7 @@ The original shared-edge Caddyfile backup is `/srv/agentic-world/infra/productio
 
 ## Deploy and rollback
 
-The private web Alpha social/UI increment deployed as `alpha-20260926-7` on 26 September 2026. The later Codex MCP/OAuth playtest increment deployed through `alpha-20260926-14`; its `verify.sh` passed, and live synthetic Codex moves are recorded in the [Codex playtest progress report](../implementation/reports/codex-playtest-progress.md). `alpha-20260926-2` also passed authenticated `scripts/smoke-alpha-api.mjs`. Live synthetic Chrome play is recorded in [Alpha web controls](alpha-web.md) and the [PACT-048 progress report](../implementation/reports/rules-ui-progress.md). The full PACT-048 two-player browser acceptance remains open.
+The private web Alpha social/UI increment deployed as `alpha-20260926-7` on 26 September 2026. The later Codex MCP/OAuth playtest increment deployed through `alpha-20260926-15`; its `verify.sh` passed, and live synthetic Codex moves and a fully settled supply contract are recorded in the [Codex playtest progress report](../implementation/reports/codex-playtest-progress.md). `alpha-20260926-2` also passed authenticated `scripts/smoke-alpha-api.mjs`. Live synthetic Chrome play is recorded in [Alpha web controls](alpha-web.md) and the [PACT-048 progress report](../implementation/reports/rules-ui-progress.md). The full PACT-048 two-player browser acceptance remains open.
 
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 

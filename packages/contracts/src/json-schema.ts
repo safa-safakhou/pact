@@ -76,7 +76,7 @@ export const pactApprovalProposalTool = {
 export const pactGameActionTool = {
   name: "pact_game_action_v1",
   description:
-    "Submit one typed game action using a new UUID commandId. The authenticated account is the actor; the server checks the live run lease, mandate, game rules, stock, and retries. Human-only actions remain forbidden. After uncertain results, read the receipt by the same commandId before retrying.",
+    "Submit one typed game action using a new UUID commandId. The authenticated account is the actor; the server checks the live run lease, mandate, rules, stock, and retries. IMPORTANT: world-view balances/costs are in marked units, but wholeAmount and wholePerHour are whole units (600 marked = 1 whole). For a direct one-time gift use action {kind:'game.transfer',recipientKingdomId,resource:'iron'|'silver'|'grain',wholeAmount}. For a timed reciprocal contract use action {kind:'game.supply.offer',counterpartyKingdomId,terms:{aToB:{resource,wholePerHour}|null,bToA:{resource,wholePerHour}|null,aBond:null,bBond:null,durationHours:1|6|24|72,noticeHours:0|1|6}}; A is the offering kingdom and B the recipient. Both parties must sign the same offer version to activate. Scouting needs two available Spearman UUIDs in unitIds, not just a target. Human-only actions remain forbidden. After an uncertain result, read the receipt by the SAME commandId; a validation denial has no receipt.",
   inputSchema: agentGameActionJsonSchema,
 } as const;
 
