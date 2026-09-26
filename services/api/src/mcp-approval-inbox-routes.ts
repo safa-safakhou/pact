@@ -83,11 +83,12 @@ export function registerMcpRoutes(
   oauth: OAuthService,
   origin: string,
 ): void {
+  const resourceMetadataUrl = `${String(oauth.authorizationServerMetadata().issuer)}/.well-known/oauth-protected-resource`;
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url === "/mcp" || request.url.startsWith("/mcp?")) {
       reply.header("cache-control", "no-store");
       if (reply.statusCode === 401) {
-        reply.header("www-authenticate", `Bearer resource_metadata="${origin}/.well-known/oauth-protected-resource"`);
+        reply.header("www-authenticate", `Bearer resource_metadata="${resourceMetadataUrl}"`);
       }
     }
     return payload;

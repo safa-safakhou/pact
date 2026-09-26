@@ -12,9 +12,12 @@ import {
 } from "@pact/identity";
 import { InboxService } from "@pact/inbox";
 import { MCP_PROTOCOL_PRIMARY, McpError, McpTransport } from "@pact/mcp";
+import { OAuthService } from "@pact/oauth";
 import { RunService } from "@pact/runs";
+import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { registerMcpRoutes } from "../../services/api/src/mcp-approval-inbox-routes.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 const password = "A long test password 123!";
@@ -90,6 +93,24 @@ async function verifiedAccount(email: string): Promise<{ accountId: string; sess
 }
 
 describe("PACT-017 MCP transport", () => {
+  it("advertises the PACT subpath OAuth discovery URL to unauthenticated Codex clients", async () => {
+    const server = Fastify();
+    const oauth = new OAuthService(pool, {
+      productScope: "pact",
+      issuer: `${origin}/pact`,
+      mcpResource: `${origin}/pact/mcp`,
+      humanResource: `${origin}/pact/native`,
+      clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+    });
+    registerMcpRoutes(server, mcp, oauth, origin);
+    const response = await server.inject({ method: "GET", url: "/mcp" });
+    expect(response.statusCode).toBe(401);
+    expect(response.headers["www-authenticate"]).toBe(
+      `Bearer resource_metadata="${origin}/pact/.well-known/oauth-protected-resource"`,
+    );
+    await server.close();
+  });
+
   it("initializes supported protocols, isolates sessions, and binds tools to the actor", async () => {
     const { accountId } = await verifiedAccount(`mcp-${randomUUID()}@example.com`);
     const other = await verifiedAccount(`mcp-other-${randomUUID()}@example.com`);

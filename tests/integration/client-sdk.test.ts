@@ -60,9 +60,9 @@ beforeAll(async () => {
   });
   oauth = new OAuthService(pool, {
     productScope: "pact",
-    issuer: origin,
-    mcpResource: `${origin}/mcp`,
-    humanResource: `${origin}/native`,
+    issuer: `${origin}/pact`,
+    mcpResource: `${origin}/pact/mcp`,
+    humanResource: `${origin}/pact/native`,
     clock: { now: () => now },
   });
   const authority = new AuthorityService(pool, { productScope: "pact", identity, now: () => now });
@@ -151,7 +151,7 @@ describe("shared client SDK", () => {
       scope: "world:read messages:write game:act",
       code_challenge: "a".repeat(43),
       code_challenge_method: "S256",
-      resource: `${origin}/mcp`,
+      resource: `${origin}/pact/mcp`,
       state: "test-state-12345678",
     });
     const page = await server.inject({ method: "GET", url: `/oauth/authorize?${params}` });

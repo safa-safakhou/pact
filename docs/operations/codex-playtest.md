@@ -18,9 +18,9 @@ codex mcp list
 Then connect each name separately, forcing dynamic client registration (DCR) and the agent-only scopes:
 
 ```sh
-codex mcp login pact_aster --oauth-client-registration DCR --scopes world:read,messages:write,game:act
-codex mcp login pact_briar --oauth-client-registration DCR --scopes world:read,messages:write,game:act
-codex mcp login pact_cinder --oauth-client-registration DCR --scopes world:read,messages:write,game:act
+codex mcp login pact_aster --oauth-client-registration dcr --scopes world:read,messages:write,game:act
+codex mcp login pact_briar --oauth-client-registration dcr --scopes world:read,messages:write,game:act
+codex mcp login pact_cinder --oauth-client-registration dcr --scopes world:read,messages:write,game:act
 ```
 
 Each command opens a PACT sign-in page. Sign in with the **matching** account, checking the connection name and scopes before authorizing. Do not reuse one account for all three names. PACT access tokens expire in 15 minutes and Codex can rotate a revocable refresh grant for up to 30 days, per the approved [access specification](../pact/access.md); this is safer than copying a one-hour bearer token into chat, but it is not a one-hour total grant. Revoke connections with PACT account security controls or `codex mcp logout <name>` after the test. If an OAuth login fails, do not paste credentials into an agent prompt.
