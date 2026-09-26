@@ -1,0 +1,1269 @@
+import { PactClientError, type SandboxAction } from "@pact/client-sdk";
+import type React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { createWebPactClient } from "./pact-client.js";
+import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
+
+type Json = Record<string, unknown>;
+type Tab = "Kingdom" | "Envoy" | "People" | "Chronicle";
+type Draft = { displayName: string | null; proposedHandle: string | null; version: number };
+type OwnerView = {
+  audience: "owner";
+  profile: { kingdomId: string; handle: string; displayName: string };
+  asOfGameTimeMs: number;
+  committedTickSequence: string;
+  worldStatus: string;
+  balances: Record<
+    string,
+    {
+      ordinaryUnits: string;
+      foundingAllowanceUnits: string;
+      lockedUnits: string;
+      capacityUnits: string;
+      productionPerMinuteUnits: string;
+      version: string;
+    }
+  >;
+  buildings: { kind: string; level: number }[];
+  builders: { slot: number; instructionId: string | null; kind: string | null; state: string | null }[];
+  troops: { type: string; placement: string; count: number }[];
+  upkeep: { perMinuteUnits: string; hungry: boolean };
+  contracts: { id: string; counterpartyKingdomId: string; endsGameTimeMs: number; terms: Json }[];
+  threats: { kind: string; id: string; dueGameTimeMs: number }[];
+  records: { kind: string; id: string; occurredAt: string }[];
+  forecast: {
+    throughGameTimeMs: number;
+    assumption: string;
+    expected: Record<string, { ordinaryUnits: string; foundingAllowanceUnits: string }>;
+  };
+};
+
+function failure(error: unknown): string {
+  if (error instanceof PactClientError) return error.serverCode ?? error.code;
+  return error instanceof Error ? error.message : String(error);
+}
+function units(value: string): string {
+  return (Number(value) / 1_000).toLocaleString(undefined, { maximumFractionDigits: 3 });
+}
+function owner(value: unknown): OwnerView {
+  if (!value || typeof value !== "object" || (value as Json).audience !== "owner")
+    throw new Error("OWNER_VIEW_UNAVAILABLE");
+  return value as OwnerView;
+}
+
+export function GameApp(): React.JSX.Element {
+  const apiOrigin = useMemo(() => new URL(import.meta.env.BASE_URL, window.location.origin), []);
+  const telegramBootstrap = useMemo(() => readTelegramBootstrap(window.location.search), []);
+  const [csrf, setCsrf] = useState(() => sessionStorage.getItem("pact_csrf") ?? "");
+  const client = useMemo(
+    () =>
+      createWebPactClient({
+        apiOrigin: apiOrigin.toString(),
+        csrfToken: () => csrf || undefined,
+        fetch: window.fetch.bind(window),
+      }),
+    [apiOrigin, csrf],
+  );
+  const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
+  const [tab, setTab] = useState<Tab>("Kingdom");
+  const [draft, setDraft] = useState<Draft | null>(null);
+  const [kingdomId, setKingdomId] = useState("");
+  const [view, setView] = useState<OwnerView | null>(null);
+  const [inbox, setInbox] = useState<{ sequence: string; type: string; event: unknown }[]>([]);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [telegramLinked, setTelegramLinked] = useState(false);
+  const [notice, setNotice] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const request = useCallback(
+    async (path: string, method = "GET", body?: unknown): Promise<Json> => {
+      const response = await fetch(new URL(path.replace(/^\//, ""), apiOrigin), {
+        method,
+        credentials: "include",
+        headers: {
+          ...(body !== undefined ? { "content-type": "application/json" } : {}),
+          ...(method !== "GET" && csrf ? { "x-csrf-token": csrf } : {}),
+        },
+        ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+      });
+      const value = (await response.json()) as Json;
+      if (!response.ok)
+        throw new Error(String((value.error as { code?: string } | undefined)?.code ?? `HTTP_${response.status}`));
+      return value;
+    },
+    [apiOrigin, csrf],
+  );
+
+  const refresh = useCallback(async () => {
+    try {
+      const current = await request("/v1/kingdom/me");
+      const id = String(current.kingdomId);
+      setKingdomId(id);
+      setView(owner(await client.readKingdomView(id)));
+      setAuth("ready");
+      try {
+        setInbox(
+          (await client.readInbox(undefined, 50)).events.map((event) => ({
+            sequence: event.sequence,
+            type: event.type,
+            event: event.event,
+          })),
+        );
+      } catch {
+        /* The world remains playable during inbox interruptions. */
+      }
+    } catch (error) {
+      if (failure(error) === "KINGDOM_NOT_FOUND") {
+        try {
+          setDraft((await request("/v1/setup/draft")) as unknown as Draft);
+          setAuth("draft");
+        } catch {
+          setAuth("login");
+        }
+      } else if (["FORBIDDEN", "AUTHENTICATION_REQUIRED", "INVALID_CREDENTIALS"].includes(failure(error))) {
+        setAuth("login");
+      } else {
+        setNotice(`World refresh failed: ${failure(error)}`);
+        setAuth((current) => (current === "checking" ? "login" : current));
+      }
+    }
+  }, [client, request]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+  useEffect(() => {
+    if (auth !== "ready") return;
+    const timer = window.setInterval(() => {
+      void refresh();
+    }, 15_000);
+    const stream = new EventSource(new URL("v1/inbox/stream", apiOrigin).toString(), { withCredentials: true });
+    stream.addEventListener("inbox", () => {
+      void refresh();
+    });
+    return () => {
+      clearInterval(timer);
+      stream.close();
+    };
+  }, [auth, apiOrigin, refresh]);
+
+  async function login(event: React.FormEvent): Promise<void> {
+    event.preventDefault();
+    setBusy(true);
+    setNotice("");
+    try {
+      const result = await request("/v1/auth/login", "POST", { email, password, label: "PACT Alpha web" });
+      const token = String(result.csrfToken);
+      sessionStorage.setItem("pact_csrf", token);
+      setCsrf(token);
+      setPassword("");
+      setNotice("Signed in. Loading your kingdom…");
+    } catch (error) {
+      setNotice(`Sign-in failed: ${failure(error)}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function found(event: React.FormEvent): Promise<void> {
+    event.preventDefault();
+    if (!draft) return;
+    setBusy(true);
+    setNotice("");
+    try {
+      const form = new FormData(event.currentTarget as HTMLFormElement);
+      await request("/v1/setup/draft", "PATCH", {
+        displayName: String(form.get("displayName")),
+        proposedHandle: String(form.get("handle")),
+        portrait: "alpha-default",
+        expectedVersion: draft.version,
+      });
+      await client.submitCommand(client.prepareCommand({ kind: "sandbox.echo", message: "Alpha connection check" }));
+      await request("/v1/setup/connection-check", "POST");
+      await request("/v1/setup/activate", "POST");
+      await refresh();
+    } catch (error) {
+      setNotice(`Founding failed: ${failure(error)}`);
+      try {
+        setDraft((await request("/v1/setup/draft")) as unknown as Draft);
+      } catch {
+        /* Show original error. */
+      }
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function act(action: SandboxAction): Promise<void> {
+    setBusy(true);
+    setNotice("");
+    const command = client.prepareCommand(action);
+    try {
+      const receipt = await client.submitCommand(command);
+      setNotice(`${action.kind}: ${receipt.code} · ${receipt.commandId}`);
+    } catch (error) {
+      if (failure(error) === "NETWORK_UNCERTAIN") {
+        const receipt = await client.reconcileReceipt(command.commandId).catch(() => null);
+        setNotice(
+          receipt
+            ? `${action.kind}: ${receipt.code} · ${receipt.commandId}`
+            : `Network uncertain. Command ${command.commandId} must be reconciled before retry.`,
+        );
+      } else setNotice(`${action.kind}: ${failure(error)}`);
+    } finally {
+      setBusy(false);
+      await refresh();
+    }
+  }
+
+  if (telegramBootstrap)
+    return (
+      <main className="game-shell auth-shell">
+        <h1>Confirm Telegram link</h1>
+        {telegramLinked ? (
+          <p>Linked. Return to the Mini App and exchange the confirmed link.</p>
+        ) : (
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              setBusy(true);
+              void confirmTelegramLink(window.fetch.bind(window), apiOrigin, telegramBootstrap, { email, password })
+                .then(() => {
+                  setTelegramLinked(true);
+                  setPassword("");
+                })
+                .catch((error: unknown) => setNotice(`Telegram link failed: ${failure(error)}`))
+                .finally(() => setBusy(false));
+            }}
+          >
+            <p>Sign in to the PACT account you want to use with this private Telegram chat.</p>
+            <label>
+              Email
+              <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
+            </label>
+            <label>
+              Password
+              <input type="password" required value={password} onChange={(event) => setPassword(event.target.value)} />
+            </label>
+            <button type="submit" disabled={busy}>
+              Sign in and confirm
+            </button>
+          </form>
+        )}
+        {notice && <p role="alert">{notice}</p>}
+      </main>
+    );
+  if (auth === "checking")
+    return (
+      <main className="game-shell">
+        <h1>PACT Alpha</h1>
+        <p>Loading…</p>
+      </main>
+    );
+  if (auth === "login")
+    return (
+      <main className="game-shell auth-shell">
+        <h1>PACT Alpha</h1>
+        <p>Sign in with a private test account. Manual play does not require a model provider.</p>
+        <form
+          onSubmit={(event) => {
+            void login(event);
+          }}
+        >
+          <label>
+            Email
+            <input
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </label>
+          <label>
+            Password
+            <input
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </label>
+          <button type="submit" disabled={busy}>
+            Sign in
+          </button>
+        </form>
+        {notice && <p role="status">{notice}</p>}
+        <Registration request={request} onNotice={setNotice} />
+      </main>
+    );
+  if (auth === "draft")
+    return (
+      <main className="game-shell auth-shell">
+        <h1>Found your kingdom</h1>
+        <p>Your name and handle become public on entry. This private Alpha uses a test portrait.</p>
+        <form
+          onSubmit={(event) => {
+            void found(event);
+          }}
+        >
+          <label>
+            Kingdom name
+            <input name="displayName" minLength={2} maxLength={40} required defaultValue={draft?.displayName ?? ""} />
+          </label>
+          <label>
+            Public handle
+            <input name="handle" pattern="[a-z][a-z0-9_]{2,23}" required defaultValue={draft?.proposedHandle ?? ""} />
+          </label>
+          <button type="submit" disabled={busy}>
+            Found kingdom
+          </button>
+        </form>
+        {notice && <p role="status">{notice}</p>}
+      </main>
+    );
+  return (
+    <main className="game-shell">
+      <header className="game-header">
+        <div>
+          <p className="eyebrow">PACT · private Alpha</p>
+          <h1>{view?.profile.displayName ?? "Kingdom"}</h1>
+          <p>
+            @{view?.profile.handle} · {view?.worldStatus} · tick {view?.committedTickSequence}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            void refresh();
+          }}
+          disabled={busy}
+        >
+          Refresh
+        </button>
+      </header>
+      <nav className="game-nav" aria-label="Game areas">
+        {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
+          <button
+            type="button"
+            key={item}
+            aria-current={tab === item ? "page" : undefined}
+            onClick={() => setTab(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </nav>
+      {notice && (
+        <p className="game-notice" role="status">
+          {notice}
+        </p>
+      )}
+      {tab === "Kingdom" && view && <Kingdom view={view} busy={busy} act={act} />}
+      {tab === "Envoy" && <Envoy inbox={inbox} request={request} onNotice={setNotice} onRefresh={refresh} />}
+      {tab === "People" && <People client={client} act={act} busy={busy} kingdomId={kingdomId} />}
+      {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} />}
+    </main>
+  );
+}
+
+function Registration({
+  request,
+  onNotice,
+}: {
+  request: (path: string, method?: string, body?: unknown) => Promise<Json>;
+  onNotice: (message: string) => void;
+}): React.JSX.Element {
+  const [open, setOpen] = useState(false);
+  const [legal, setLegal] = useState<Json | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [age, setAge] = useState(false);
+  const [accepted, setAccepted] = useState(false);
+  useEffect(() => {
+    if (open)
+      void request("/v1/legal/notices")
+        .then(setLegal)
+        .catch((error: unknown) => onNotice(failure(error)));
+  }, [open, request, onNotice]);
+  const documents = legal?.documents as { termsVersion?: string; termsUrl?: string; privacyUrl?: string } | undefined;
+  return (
+    <section className="game-card">
+      <button type="button" className="secondary" onClick={() => setOpen(!open)}>
+        {open ? "Hide test registration" : "Create a synthetic test account"}
+      </button>
+      {open && (
+        <>
+          <p>
+            This private Alpha captures verification email on the VPS; ask the test operator for your one-time token. Do
+            not use a personal email or password.
+          </p>
+          {legal?.registrationEnabled === false && <p role="alert">Registration is currently closed.</p>}
+          {documents && (
+            <p>
+              Read the <a href={documents.termsUrl}>test terms</a> and{" "}
+              <a href={documents.privacyUrl}>test privacy notice</a> before signing up.
+            </p>
+          )}
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!documents?.termsVersion) return;
+              void request("/v1/auth/signup", "POST", {
+                email,
+                password,
+                age18Declared: age,
+                acceptedTermsVersion: documents.termsVersion,
+              })
+                .then(() => {
+                  setPassword("");
+                  onNotice(
+                    "Signup accepted. Get the captured verification token from the operator, then verify below.",
+                  );
+                })
+                .catch((error: unknown) => onNotice(failure(error)));
+            }}
+          >
+            <label>
+              Test email
+              <input type="email" required value={email} onChange={(event) => setEmail(event.target.value)} />
+            </label>
+            <label>
+              Test password
+              <input
+                type="password"
+                minLength={12}
+                required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </label>
+            <label>
+              <input type="checkbox" checked={age} onChange={(event) => setAge(event.target.checked)} />I declare I am
+              18 or older
+            </label>
+            <label>
+              <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />I
+              accept the test terms and privacy notice
+            </label>
+            <button
+              type="submit"
+              disabled={!age || !accepted || !documents?.termsVersion || legal?.registrationEnabled !== true}
+            >
+              Request test account
+            </button>
+          </form>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void request("/v1/auth/verify", "POST", { token })
+                .then(() => {
+                  setToken("");
+                  onNotice("Verified. Sign in above.");
+                })
+                .catch((error: unknown) => onNotice(failure(error)));
+            }}
+          >
+            <label>
+              One-time verification token
+              <input required value={token} onChange={(event) => setToken(event.target.value.trim())} />
+            </label>
+            <button type="submit">Verify account</button>
+          </form>
+        </>
+      )}
+    </section>
+  );
+}
+
+function Kingdom({
+  view,
+  busy,
+  act,
+}: {
+  view: OwnerView;
+  busy: boolean;
+  act: (action: SandboxAction) => Promise<void>;
+}): React.JSX.Element {
+  const [building, setBuilding] = useState("farm");
+  const [level, setLevel] = useState(2);
+  const [slot, setSlot] = useState(1);
+  const [troopType, setTroopType] = useState("spearman");
+  const [troopCount, setTroopCount] = useState(1);
+  return (
+    <section>
+      <h2>Kingdom</h2>
+      <p>Committed {new Date(view.asOfGameTimeMs).toLocaleString()}. Server rules decide all costs and limits.</p>
+      <div className="game-grid">
+        {["iron", "silver", "grain"].map((resource) => {
+          const balance = view.balances[resource];
+          return (
+            balance && (
+              <article className="game-card" key={resource}>
+                <h3>{resource}</h3>
+                <strong>{units(balance.ordinaryUnits)}</strong>
+                <p>
+                  Founding allowance {units(balance.foundingAllowanceUnits)} · locked {units(balance.lockedUnits)}
+                </p>
+                <small>
+                  +{units(balance.productionPerMinuteUnits)} / min · cap {units(balance.capacityUnits)} · version{" "}
+                  {balance.version}
+                </small>
+              </article>
+            )
+          );
+        })}
+      </div>
+      <article className="game-card">
+        <h3>Forecast</h3>
+        <p>
+          Assumption: {view.forecast.assumption}. Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()}.
+        </p>
+        <ul>
+          {Object.entries(view.forecast.expected).map(([resource, amount]) => (
+            <li key={resource}>
+              {resource}: {units(amount.ordinaryUnits)} ordinary + {units(amount.foundingAllowanceUnits)} founding
+              allowance
+            </li>
+          ))}
+        </ul>
+      </article>
+      <div className="game-grid">
+        <article className="game-card">
+          <h3>Buildings</h3>
+          <ul>
+            {view.buildings.map((item) => (
+              <li key={item.kind}>
+                {item.kind} {item.level}
+              </li>
+            ))}
+          </ul>
+          <p>
+            {view.builders.map((item) => `slot ${item.slot}: ${item.kind ?? "free"} ${item.state ?? ""}`).join(" · ")}
+          </p>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void act({
+                kind: "game.building.queue",
+                building: building as "farm",
+                targetLevel: level,
+                slot: slot as 1 | 2,
+              });
+            }}
+          >
+            <label>
+              Building
+              <select value={building} onChange={(event) => setBuilding(event.target.value)}>
+                {["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Target level
+              <input
+                type="number"
+                min={2}
+                max={6}
+                value={level}
+                onChange={(event) => setLevel(Number(event.target.value))}
+              />
+            </label>
+            <label>
+              Builder slot
+              <select value={slot} onChange={(event) => setSlot(Number(event.target.value))}>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+              </select>
+            </label>
+            <button type="submit" disabled={busy}>
+              Queue upgrade
+            </button>
+          </form>
+          {view.builders
+            .filter((item) => item.instructionId)
+            .map((item) => (
+              <button
+                type="button"
+                key={item.instructionId}
+                className="secondary"
+                disabled={busy}
+                onClick={() => {
+                  if (item.instructionId) void act({ kind: "game.building.cancel", instructionId: item.instructionId });
+                }}
+              >
+                Cancel slot {item.slot}
+              </button>
+            ))}
+        </article>
+        <article className="game-card">
+          <h3>Troops</h3>
+          <ul>
+            {view.troops.map((item) => (
+              <li key={`${item.type}-${item.placement}`}>
+                {item.count} {item.type} · {item.placement}
+              </li>
+            ))}
+          </ul>
+          <p>
+            Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
+          </p>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void act({ kind: "game.training.queue", type: troopType as "spearman", count: troopCount });
+            }}
+          >
+            <label>
+              Type
+              <select value={troopType} onChange={(event) => setTroopType(event.target.value)}>
+                {["spearman", "archer", "rider", "ram"].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Count
+              <input
+                type="number"
+                min={1}
+                max={40}
+                value={troopCount}
+                onChange={(event) => setTroopCount(Number(event.target.value))}
+              />
+            </label>
+            <button type="submit" disabled={busy}>
+              Queue training
+            </button>
+          </form>
+        </article>
+      </div>
+      <div className="game-grid">
+        <article className="game-card">
+          <h3>Contracts</h3>
+          {view.contracts.length ? (
+            view.contracts.map((item) => (
+              <p key={item.id}>
+                <code>{item.id}</code> with {item.counterpartyKingdomId}
+              </p>
+            ))
+          ) : (
+            <p>No active contracts.</p>
+          )}
+        </article>
+        <article className="game-card">
+          <h3>Threats</h3>
+          {view.threats.length ? (
+            view.threats.map((item) => (
+              <p key={item.id}>
+                {item.kind} · {item.id}
+              </p>
+            ))
+          ) : (
+            <p>No known incoming operations.</p>
+          )}
+        </article>
+      </div>
+    </section>
+  );
+}
+
+function Envoy({
+  inbox,
+  request,
+  onNotice,
+  onRefresh,
+}: {
+  inbox: { sequence: string; type: string; event: unknown }[];
+  request: (path: string, method?: string, body?: unknown) => Promise<Json>;
+  onNotice: (message: string) => void;
+  onRefresh: () => Promise<void>;
+}): React.JSX.Element {
+  const [approvalId, setApprovalId] = useState("");
+  const [review, setReview] = useState<Json | null>(null);
+  async function decide(approve: boolean): Promise<void> {
+    if (!review || !window.confirm(`${approve ? "Approve" : "Reject"} this exact server-rendered request?`)) return;
+    try {
+      const result = await request(
+        `/v1/approvals/${encodeURIComponent(approvalId)}/${approve ? "approve" : "reject"}`,
+        "POST",
+      );
+      onNotice(`${approve ? "Approved" : "Rejected"}: ${JSON.stringify(result)}`);
+      setReview(null);
+      await onRefresh();
+    } catch (error) {
+      onNotice(failure(error));
+    }
+  }
+  return (
+    <section>
+      <h2>Envoy</h2>
+      <p>Manual actions remain available without a model connection. Reading an approval never commits it.</p>
+      <article className="game-card">
+        <h3>Exact approval review</h3>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void request(`/v1/approvals/${encodeURIComponent(approvalId)}`)
+              .then(setReview)
+              .catch((error: unknown) => onNotice(failure(error)));
+          }}
+        >
+          <label>
+            Approval ID
+            <input required value={approvalId} onChange={(event) => setApprovalId(event.target.value)} />
+          </label>
+          <button type="submit">Preview</button>
+        </form>
+        {review && (
+          <div>
+            <pre>{JSON.stringify(review, null, 2)}</pre>
+            <button
+              type="button"
+              onClick={() => {
+                void decide(true);
+              }}
+            >
+              Approve
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => {
+                void decide(false);
+              }}
+            >
+              Reject
+            </button>
+          </div>
+        )}
+      </article>
+      <article className="game-card">
+        <h3>Inbox</h3>
+        {inbox.length ? (
+          <ul>
+            {inbox.map((item) => (
+              <li key={item.sequence}>
+                {item.type} · {item.sequence}
+                <details>
+                  <summary>Recorded event</summary>
+                  <pre>{JSON.stringify(item.event, null, 2)}</pre>
+                </details>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No events yet.</p>
+        )}
+      </article>
+      <PrivacySettings request={request} onNotice={onNotice} />
+    </section>
+  );
+}
+
+function PrivacySettings({
+  request,
+  onNotice,
+}: {
+  request: (path: string, method?: string, body?: unknown) => Promise<Json>;
+  onNotice: (message: string) => void;
+}): React.JSX.Element {
+  const [password, setPassword] = useState("");
+  const [downloadUrl, setDownloadUrl] = useState("");
+  async function exportData(): Promise<void> {
+    try {
+      const result = await request("/v1/privacy/exports", "POST", { password });
+      setDownloadUrl(String(result.downloadUrl ?? ""));
+      setPassword("");
+      onNotice("Account export ready.");
+    } catch (error) {
+      onNotice(`Export failed: ${failure(error)}`);
+    }
+  }
+  async function closeAccount(): Promise<void> {
+    if (!window.confirm("Close this PACT account now? Access will be revoked immediately.")) return;
+    try {
+      await request("/v1/privacy/deletion", "POST", { password });
+      setPassword("");
+      setDownloadUrl("");
+      sessionStorage.removeItem("pact_csrf");
+      onNotice("Account closed. Access revoked.");
+    } catch (error) {
+      onNotice(`Closure failed: ${failure(error)}`);
+    }
+  }
+  return (
+    <article className="game-card">
+      <h3>Privacy and account data</h3>
+      <p>Export account data or close the account. Both require your current password.</p>
+      <label>
+        Current password
+        <input
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
+      </label>
+      <button
+        type="button"
+        disabled={!password}
+        onClick={() => {
+          void exportData();
+        }}
+      >
+        Prepare export
+      </button>
+      <button
+        type="button"
+        className="secondary"
+        disabled={!password}
+        onClick={() => {
+          void closeAccount();
+        }}
+      >
+        Close account
+      </button>
+      {downloadUrl && (
+        <p>
+          <a href={downloadUrl}>Download JSON export</a>
+        </p>
+      )}
+    </article>
+  );
+}
+
+function People({
+  client,
+  act,
+  busy,
+  kingdomId,
+}: {
+  client: ReturnType<typeof createWebPactClient>;
+  act: (action: SandboxAction) => Promise<void>;
+  busy: boolean;
+  kingdomId: string;
+}): React.JSX.Element {
+  const [target, setTarget] = useState("");
+  const [profile, setProfile] = useState<unknown>(null);
+  const [message, setMessage] = useState("");
+  const [resource, setResource] = useState<"iron" | "silver" | "grain">("grain");
+  const [amount, setAmount] = useState(1);
+  const [contactRequestId, setContactRequestId] = useState("");
+  return (
+    <section>
+      <h2>People</h2>
+      <p>Enter another test kingdom’s ID. Public profiles do not reveal private resources or armies.</p>
+      <article className="game-card">
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void client
+              .readKingdomView(target)
+              .then(setProfile)
+              .catch((error: unknown) => setProfile({ error: failure(error) }));
+          }}
+        >
+          <label>
+            Other kingdom ID
+            <input required value={target} onChange={(event) => setTarget(event.target.value.trim())} />
+          </label>
+          <button type="submit">Inspect profile</button>
+        </form>
+        {profile !== null && <pre>{JSON.stringify(profile, null, 2)}</pre>}
+      </article>
+      <div className="game-grid">
+        <article className="game-card">
+          <h3>Contact and message</h3>
+          <label>
+            Text
+            <textarea maxLength={1000} value={message} onChange={(event) => setMessage(event.target.value)} />
+          </label>
+          <button
+            type="button"
+            disabled={busy || !target || !message || target === kingdomId}
+            onClick={() => {
+              void act({ kind: "game.contact.request", recipientKingdomId: target, note: message });
+            }}
+          >
+            Request contact
+          </button>
+          <button
+            type="button"
+            className="secondary"
+            disabled={busy || !target || !message}
+            onClick={() => {
+              void act({ kind: "game.message.send", recipientKingdomId: target, body: message });
+            }}
+          >
+            Send message
+          </button>
+          <label>
+            Incoming contact request ID
+            <input value={contactRequestId} onChange={(event) => setContactRequestId(event.target.value.trim())} />
+          </label>
+          <button
+            type="button"
+            className="secondary"
+            disabled={busy || !contactRequestId}
+            onClick={() => {
+              void act({ kind: "game.contact.answer", requestId: contactRequestId, accept: true });
+            }}
+          >
+            Accept contact
+          </button>
+          <button
+            type="button"
+            className="secondary"
+            disabled={busy || !contactRequestId}
+            onClick={() => {
+              void act({ kind: "game.contact.answer", requestId: contactRequestId, accept: false });
+            }}
+          >
+            Decline contact
+          </button>
+        </article>
+        <article className="game-card">
+          <h3>Direct transfer</h3>
+          <p>Review the recipient and amount. Server rules enforce available stock.</p>
+          <label>
+            Resource
+            <select value={resource} onChange={(event) => setResource(event.target.value as typeof resource)}>
+              {["grain", "iron", "silver"].map((item) => (
+                <option key={item}>{item}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Whole amount
+            <input type="number" min={1} value={amount} onChange={(event) => setAmount(Number(event.target.value))} />
+          </label>
+          <button
+            type="button"
+            disabled={busy || !target || target === kingdomId}
+            onClick={() => {
+              if (window.confirm(`Transfer ${amount} ${resource} to ${target}?`))
+                void act({ kind: "game.transfer", recipientKingdomId: target, resource, wholeAmount: amount });
+            }}
+          >
+            Transfer
+          </button>
+        </article>
+      </div>
+      <DiplomacyForms target={target} busy={busy} act={act} />
+    </section>
+  );
+}
+
+function DiplomacyForms({
+  target,
+  busy,
+  act,
+}: {
+  target: string;
+  busy: boolean;
+  act: (action: SandboxAction) => Promise<void>;
+}): React.JSX.Element {
+  const [sendResource, setSendResource] = useState<"iron" | "silver" | "grain">("grain");
+  const [receiveResource, setReceiveResource] = useState<"iron" | "silver" | "grain">("silver");
+  const [sendRate, setSendRate] = useState(0);
+  const [receiveRate, setReceiveRate] = useState(0);
+  const [duration, setDuration] = useState<1 | 6 | 24 | 72>(6);
+  const [noticeHours, setNoticeHours] = useState<0 | 1 | 6>(0);
+  const [offerId, setOfferId] = useState("");
+  const [offerVersion, setOfferVersion] = useState(1);
+  const [troopType, setTroopType] = useState<"spearman" | "archer" | "rider" | "ram">("spearman");
+  const [troopCount, setTroopCount] = useState(1);
+  const [raidId, setRaidId] = useState("");
+  const [garrisonDuration, setGarrisonDuration] = useState<1 | 6 | 24>(6);
+  const resourceOptions = ["grain", "iron", "silver"] as const;
+  const terms = {
+    aToB: sendRate > 0 ? { resource: sendResource, wholePerHour: sendRate } : null,
+    bToA: receiveRate > 0 ? { resource: receiveResource, wholePerHour: receiveRate } : null,
+    aBond: null,
+    bBond: null,
+    durationHours: duration,
+    noticeHours,
+  };
+  const selectedUnits = [{ type: troopType, count: troopCount }];
+  return (
+    <div className="game-grid">
+      <article className="game-card">
+        <h3>Supply agreement</h3>
+        <p>
+          For a new offer, you send A→B and receive B→A each game hour. No bond in this Alpha sheet. The other player
+          signs the exact offer ID and version.
+        </p>
+        <label>
+          You send
+          <select value={sendResource} onChange={(event) => setSendResource(event.target.value as typeof sendResource)}>
+            {resourceOptions.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Whole per hour
+          <input type="number" min={0} value={sendRate} onChange={(event) => setSendRate(Number(event.target.value))} />
+        </label>
+        <label>
+          You receive
+          <select
+            value={receiveResource}
+            onChange={(event) => setReceiveResource(event.target.value as typeof receiveResource)}
+          >
+            {resourceOptions.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Whole per hour
+          <input
+            type="number"
+            min={0}
+            value={receiveRate}
+            onChange={(event) => setReceiveRate(Number(event.target.value))}
+          />
+        </label>
+        <label>
+          Duration hours
+          <select value={duration} onChange={(event) => setDuration(Number(event.target.value) as typeof duration)}>
+            {[1, 6, 24, 72].map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Notice hours
+          <select
+            value={noticeHours}
+            onChange={(event) => setNoticeHours(Number(event.target.value) as typeof noticeHours)}
+          >
+            {[0, 1, 6].map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="button"
+          disabled={busy || !target || (!sendRate && !receiveRate)}
+          onClick={() => {
+            if (
+              window.confirm(
+                `Offer to ${target}: send ${sendRate} ${sendResource}/h, receive ${receiveRate} ${receiveResource}/h for ${duration}h?`,
+              )
+            )
+              void act({ kind: "game.supply.offer", counterpartyKingdomId: target, terms });
+          }}
+        >
+          Offer supply terms
+        </button>
+        <label>
+          Offer ID
+          <input value={offerId} onChange={(event) => setOfferId(event.target.value.trim())} />
+        </label>
+        <label>
+          Version
+          <input
+            type="number"
+            min={1}
+            value={offerVersion}
+            onChange={(event) => setOfferVersion(Number(event.target.value))}
+          />
+        </label>
+        <button
+          type="button"
+          className="secondary"
+          disabled={busy || !offerId}
+          onClick={() => {
+            if (window.confirm(`Sign exact supply offer ${offerId} version ${offerVersion}?`))
+              void act({ kind: "game.supply.sign", offerId, version: offerVersion });
+          }}
+        >
+          Sign offer
+        </button>
+      </article>
+      <article className="game-card">
+        <h3>Scout</h3>
+        <p>Scouting uses two eligible ordinary spearmen and server-checked Silver, Grain, and one charge.</p>
+        <button
+          type="button"
+          disabled={busy || !target}
+          onClick={() => {
+            if (window.confirm(`Scout kingdom ${target}?`))
+              void act({ kind: "game.scout.start", targetKingdomId: target });
+          }}
+        >
+          Start scout
+        </button>
+        <h3>Garrison lending</h3>
+        <p>Lend the selected units to the target for a fixed duration, with no bond in this Alpha sheet.</p>
+        <label>
+          Troop type
+          <select value={troopType} onChange={(event) => setTroopType(event.target.value as typeof troopType)}>
+            {["spearman", "archer", "rider", "ram"].map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Count
+          <input
+            type="number"
+            min={1}
+            max={40}
+            value={troopCount}
+            onChange={(event) => setTroopCount(Number(event.target.value))}
+          />
+        </label>
+        <label>
+          Duration hours
+          <select
+            value={garrisonDuration}
+            onChange={(event) => setGarrisonDuration(Number(event.target.value) as typeof garrisonDuration)}
+          >
+            {[1, 6, 24].map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <button
+          type="button"
+          disabled={busy || !target}
+          onClick={() => {
+            if (window.confirm(`Offer ${troopCount} ${troopType} to ${target} for ${garrisonDuration}h?`))
+              void act({
+                kind: "game.garrison.offer",
+                hostKingdomId: target,
+                terms: { units: selectedUnits, durationHours: garrisonDuration, lenderBond: null, hostBond: null },
+              });
+          }}
+        >
+          Offer garrison
+        </button>
+        <button
+          type="button"
+          className="secondary"
+          disabled={busy || !offerId}
+          onClick={() => {
+            if (window.confirm(`Sign exact garrison offer ${offerId} version ${offerVersion}?`))
+              void act({ kind: "game.garrison.sign", offerId, version: offerVersion });
+          }}
+        >
+          Sign garrison offer
+        </button>
+      </article>
+      <article className="game-card">
+        <h3>Raid</h3>
+        <p>Attacking risks these troops. The server determines locks, combat, losses, and loot.</p>
+        <button
+          type="button"
+          disabled={busy || !target}
+          onClick={() => {
+            if (window.confirm(`Declare raid on ${target} with ${troopCount} ${troopType}? This can cause losses.`))
+              void act({ kind: "game.raid.declare", targetKingdomId: target, units: selectedUnits });
+          }}
+        >
+          Declare raid
+        </button>
+        <label>
+          Raid ID
+          <input value={raidId} onChange={(event) => setRaidId(event.target.value.trim())} />
+        </label>
+        <button
+          type="button"
+          className="secondary"
+          disabled={busy || !raidId}
+          onClick={() => {
+            void act({ kind: "game.raid.accept", raidId, units: selectedUnits });
+          }}
+        >
+          Join nominated raid
+        </button>
+        <button
+          type="button"
+          className="secondary"
+          disabled={busy || !raidId}
+          onClick={() => {
+            void act({ kind: "game.raid.withdraw", raidId });
+          }}
+        >
+          Withdraw raid
+        </button>
+      </article>
+    </div>
+  );
+}
+
+function Chronicle({
+  view,
+  client,
+  inbox,
+}: {
+  view: OwnerView;
+  client: ReturnType<typeof createWebPactClient>;
+  inbox: { sequence: string; type: string; event: unknown }[];
+}): React.JSX.Element {
+  const [report, setReport] = useState<unknown>(null);
+  const [reportId, setReportId] = useState("");
+  const [reportKind, setReportKind] = useState<"scout" | "raid_participant" | "raid_public">("scout");
+  return (
+    <section>
+      <h2>Chronicle</h2>
+      <p>Committed records and authorized private reports.</p>
+      <article className="game-card">
+        <h3>Records</h3>
+        {view.records.length ? (
+          <ul>
+            {view.records.map((item) => (
+              <li key={`${item.kind}-${item.id}`}>
+                {item.kind} · {item.occurredAt} · <code>{item.id}</code>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No records yet.</p>
+        )}
+      </article>
+      <article className="game-card">
+        <h3>Open a report</h3>
+        <p>Use a scout operation or raid ID from a receipt or inbox event. Event IDs above are not report IDs.</p>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void client
+              .readReport(reportKind, reportId)
+              .then(setReport)
+              .catch((error: unknown) => setReport({ error: failure(error) }));
+          }}
+        >
+          <label>
+            Report type
+            <select value={reportKind} onChange={(event) => setReportKind(event.target.value as typeof reportKind)}>
+              <option value="scout">Scout</option>
+              <option value="raid_participant">Raid participant</option>
+              <option value="raid_public">Raid public</option>
+            </select>
+          </label>
+          <label>
+            Operation or raid ID
+            <input required value={reportId} onChange={(event) => setReportId(event.target.value.trim())} />
+          </label>
+          <button type="submit">Read report</button>
+        </form>
+      </article>
+      {report !== null && (
+        <article className="game-card">
+          <h3>Report</h3>
+          <pre>{JSON.stringify(report, null, 2)}</pre>
+        </article>
+      )}
+      <p>{inbox.length} recent inbox events. Open Envoy for details.</p>
+    </section>
+  );
+}

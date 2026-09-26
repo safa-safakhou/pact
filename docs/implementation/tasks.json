@@ -2216,10 +2216,10 @@
       "block_reason": null
     },
     {
-      "id": "PACT-048",
+  "id": "PACT-048",
       "title": "Build the plain rules-prototype interface",
       "phase": 1,
-      "status": "todo",
+  "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -2251,8 +2251,10 @@
       "components": [
         "functional gameplay UI"
       ],
-      "evidence": [],
-      "assignee": null,
+  "evidence": [
+    "26 Sep 2026: In Progress in Linear MNI-112, assigned to Mohammad Safakhou (Codex). Text-first web Alpha increment implemented; docs/implementation/reports/rules-ui-progress.md records local build/typecheck/lint/unit/integration results and the still-unmet two-player browser acceptance."
+  ],
+  "assignee": "Mohammad Safakhou (Codex)",
       "blocked_by_external": [],
       "block_reason": null
     },

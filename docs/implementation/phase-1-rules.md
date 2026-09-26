@@ -547,7 +547,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-048"></a>
 ## PACT-048 — Build the plain rules-prototype interface
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-023](phase-0-connections.md#pact-023), [PACT-027](phase-0-connections.md#pact-027), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047), [PACT-049](phase-1-rules.md#pact-049)
 
@@ -564,6 +564,12 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] Two test players can found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild using the UI.
 - [ ] Manual actions remain usable with disconnected providers and cannot bypass stock, charge, lock, or shared action limits.
+
+**Assignee:** Mohammad Safakhou (Codex)
+
+**Evidence**
+
+- 26 Sep 2026: In Progress in Linear MNI-112, assigned to Mohammad Safakhou (Codex). Text-first web Alpha increment implemented; docs/implementation/reports/rules-ui-progress.md records local build/typecheck/lint/unit/integration results and the still-unmet two-player browser acceptance.
 
 <a id="pact-049"></a>
 ## PACT-049 — Expose complete game tools to every Envoy route

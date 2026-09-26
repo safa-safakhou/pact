@@ -11,12 +11,12 @@ This is a navigation and state snapshot for agents continuing without prior chat
 
 ## Tracker snapshot
 
-On 25 September 2026, Linear and `tasks.json` were compared across all 98 PACT IDs: no ID, status, or phase mismatch. On 26 September, PACT-049 completed in both trackers after its [acceptance review](reports/game-tools-completion.md): **53 Done, 1 In Progress, 44 Backlog.** Phase 0 Connections is 31/31 Done; Phase 1 Rules is 22/27 Done; Phase 2 Social is 0/20; Phase 3 Season One is 0/20. PACT-098 was placed in the Phase 3 Linear milestone during the earlier audit. The five open Phase 1 tickets are:
+On 25 September 2026, Linear and `tasks.json` were compared across all 98 PACT IDs: no ID, status, or phase mismatch. On 26 September, PACT-049 completed in both trackers after its [acceptance review](reports/game-tools-completion.md), and PACT-048 started: **53 Done, 2 In Progress, 43 Backlog.** Phase 0 Connections is 31/31 Done; Phase 1 Rules is 22/27 Done; Phase 2 Social is 0/20; Phase 3 Season One is 0/20. PACT-098 was placed in the Phase 3 Linear milestone during the earlier audit. The five open Phase 1 tickets are:
 
 | Ticket | State | Dependency/next action |
 | --- | --- | --- |
 | [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) | In Progress | Finish generated R01–R06 failure/authority matrix and recovery evidence; [progress report](reports/rules-verification-progress.md). |
-| PACT-048 | Backlog | Plain two-player rules UI; PACT-049 is Done, so it is dependency-ready and is the playable-Alpha path. |
+| [PACT-048 / MNI-112](https://linear.app/mnim/issue/MNI-112/pact-048-build-the-plain-rules-prototype-interface) | In Progress | [Text-first UI progress](reports/rules-ui-progress.md) builds locally; needs deployed two-account browser walkthrough before Done. |
 | PACT-052 | Backlog | Allowed script baseline; now waits on PACT-051. |
 | PACT-096 | Backlog | Independent non-game platform reuse proof; now waits on PACT-051. |
 | PACT-053 | Backlog | Rules acceptance gate; depends on all five preceding open Rules tickets and recorded R01–R08 evidence. |
@@ -36,6 +36,6 @@ The Telegram test bot is [`@test_pact1211_bot`](https://t.me/test_pact1211_bot/P
 ## Resuming safely
 
 1. Inspect `git status`, the current Linear assignments/dependencies, and the two progress reports. Do not overwrite another agent's claim.
-2. Continue PACT-051's generated verification matrix. For the next product-visible milestone, claim and build dependency-ready PACT-048; PACT-052 and PACT-096 still require PACT-051 before PACT-053 can close.
+2. Continue PACT-051's generated verification matrix and PACT-048's two-player Alpha UI walkthrough. PACT-052 and PACT-096 still require PACT-051 before PACT-053 can close.
 3. Verify with documented Node 24 commands: `npm run build`, `npm run typecheck`, `npm test`, `npm run test:integration` against disposable PostgreSQL 17, `npm run lint`, then `python3 docs/implementation/backlog.py render`, `python3 docs/implementation/backlog.py check`, and `git diff --check`. Report actual results, not assumed ones.
 4. Update module/API/operations instructions and a completion or progress report, reconcile Linear and local task evidence, and commit the batch. Reserve live provider, paid, production, deployment, and player-pilot claims for their own observed evidence.

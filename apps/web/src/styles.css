@@ -1,6 +1,6 @@
 :root {
-  color: #e8e1d0;
-  background: #121713;
+  color: #202a30;
+  background: #f4ebdd;
   font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -48,7 +48,115 @@ body {
   padding: 1.5rem 0 3rem;
 }
 main {
-  width: min(42rem, calc(100vw - 3rem));
+  width: min(70rem, calc(100vw - 2rem));
+}
+.game-shell {
+  margin: 0 auto;
+  line-height: 1.45;
+}
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.game-header h1 {
+  margin: 0;
+}
+.eyebrow {
+  margin-bottom: 0.2rem;
+  color: #174a4b;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.game-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+.game-nav button[aria-current="page"] {
+  background: #174a4b;
+  color: white;
+}
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.game-card,
+.game-notice {
+  background: #fffdf8;
+  border: 1px solid #bdad91;
+  border-radius: 0.7rem;
+  padding: 1rem;
+  margin: 0.75rem 0;
+}
+.game-card h3 {
+  margin-top: 0;
+  text-transform: capitalize;
+}
+.game-card strong {
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+}
+.game-shell form,
+.game-shell label {
+  display: grid;
+  gap: 0.4rem;
+}
+.game-shell form {
+  gap: 0.8rem;
+}
+.game-shell input,
+.game-shell select,
+.game-shell textarea,
+.game-shell button {
+  box-sizing: border-box;
+  min-height: 2.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #6a7d78;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+.game-shell textarea {
+  min-height: 6rem;
+}
+.game-shell button {
+  background: #174a4b;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+.game-shell button.secondary {
+  background: transparent;
+  color: #174a4b;
+  margin: 0.4rem;
+}
+.game-shell button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.game-shell button:focus-visible,
+.game-shell input:focus-visible,
+.game-shell select:focus-visible,
+.game-shell textarea:focus-visible {
+  outline: 3px solid #ad7834;
+  outline-offset: 2px;
+}
+.game-shell pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 24rem;
+  overflow: auto;
+}
+.game-shell code {
+  overflow-wrap: anywhere;
+}
+.auth-shell {
+  max-width: 32rem;
 }
 .telegram-link-card {
   background: #1b241d;
