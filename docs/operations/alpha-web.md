@@ -4,6 +4,8 @@ The web root at `https://safa.dedyn.io/pact/` is the first human gameplay client
 
 The current text-first release is `alpha-20260926-7` (26 September 2026). The web client now provides an owner-only social board and clearer desktop/mobile layout. The full two-account UI walkthrough remains in progress; do not claim the pilot gate from a build alone.
 
+For three-account external-agent play, use the [Codex playtest procedure](codex-playtest.md). Its bounded human mandate control is on the Envoy tab; model inference in PACT remains a separate, default-off route.
+
 Sign in, or create and verify a synthetic test account. An unactivated account saves its kingdom name and handle, submits a harmless sandbox echo, records the connection check, and presses **Found kingdom**. Founding is server-idempotent. Returning accounts read `/v1/kingdom/me` and the owner-scoped `/v1/world/kingdoms/:id` view. The browser keeps only the CSRF token in tab session storage; passwords are not persisted. Refreshing the world and inbox uses a 15-second fallback poll plus the authenticated inbox event stream.
 
 The four tabs currently expose:

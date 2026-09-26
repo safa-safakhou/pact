@@ -86,6 +86,9 @@ export function registerMcpRoutes(
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url === "/mcp" || request.url.startsWith("/mcp?")) {
       reply.header("cache-control", "no-store");
+      if (reply.statusCode === 401) {
+        reply.header("www-authenticate", `Bearer resource_metadata="${origin}/.well-known/oauth-protected-resource"`);
+      }
     }
     return payload;
   });

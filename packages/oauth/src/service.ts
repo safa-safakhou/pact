@@ -182,12 +182,7 @@ export class OAuthService {
     if (input.codeChallengeMethod !== "S256" || input.codeChallenge.length < 43) {
       throw new OAuthError("INVALID_REQUEST");
     }
-    const scopes = parseScopes(input.scopes);
-    const client = await this.requireClient(input.clientId);
-    if (client.audience !== input.expectedAudience) throw new OAuthError("UNAUTHORIZED_CLIENT");
-    assertExactRedirect(client.redirect_uris, input.redirectUri);
-    const expectedResource = client.audience === "mcp" ? this.options.mcpResource : this.options.humanResource;
-    if (input.resource !== expectedResource) throw new OAuthError("INVALID_REQUEST");
+    const consent = await this.describeAuthorization(input);
     const code = issueToken();
     const now = this.options.clock.now();
     await this.pool.query(
@@ -198,10 +193,10 @@ export class OAuthService {
       [
         this.options.productScope,
         code.hash,
-        client.client_id,
+        consent.clientId,
         input.accountId,
         input.redirectUri,
-        scopes,
+        consent.scopes,
         input.codeChallenge,
         input.resource,
         input.subjectLabel,
@@ -211,12 +206,31 @@ export class OAuthService {
     return {
       code: code.raw,
       consent: {
-        clientId: client.client_id,
-        clientName: client.display_name,
-        subjectLabel: input.subjectLabel,
-        scopes,
-        audience: client.audience,
+        ...consent,
       },
+    };
+  }
+
+  async describeAuthorization(input: {
+    clientId: string;
+    redirectUri: string;
+    scopes: string;
+    resource: string;
+    subjectLabel: string;
+    expectedAudience: OAuthAudience;
+  }): Promise<ConsentView> {
+    const scopes = parseScopes(input.scopes);
+    const client = await this.requireClient(input.clientId);
+    if (client.audience !== input.expectedAudience) throw new OAuthError("UNAUTHORIZED_CLIENT");
+    assertExactRedirect(client.redirect_uris, input.redirectUri);
+    const expectedResource = client.audience === "mcp" ? this.options.mcpResource : this.options.humanResource;
+    if (input.resource !== expectedResource) throw new OAuthError("INVALID_REQUEST");
+    return {
+      clientId: client.client_id,
+      clientName: client.display_name,
+      subjectLabel: input.subjectLabel,
+      scopes,
+      audience: client.audience,
     };
   }
 
@@ -232,6 +246,7 @@ export class OAuthService {
       const codeHash = hashToken(input.code);
       const row = await db.query<{
         id: string;
+        client_id: string;
         redirect_uri: string;
         scopes: string[];
         code_challenge: string;
@@ -248,6 +263,7 @@ export class OAuthService {
       if (!auth || auth.used_at || auth.expires_at <= this.options.clock.now()) {
         throw new OAuthError("INVALID_GRANT");
       }
+      if (auth.client_id !== client.client_id) throw new OAuthError("INVALID_GRANT");
       if (auth.redirect_uri !== input.redirectUri) throw new OAuthError("INVALID_GRANT");
       if (!verifyPkceS256(input.codeVerifier, auth.code_challenge)) throw new OAuthError("INVALID_GRANT");
       if (input.resource && input.resource !== auth.resource) throw new OAuthError("INVALID_GRANT");

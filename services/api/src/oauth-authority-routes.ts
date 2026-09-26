@@ -29,6 +29,10 @@ function writeContext(request: FastifyRequest): { sessionToken: string; csrfToke
   return { sessionToken: sessionToken(request), csrfToken: csrf, origin };
 }
 
+function escapeHtml(value: string): string {
+  return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+}
+
 async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Promise<unknown> {
   try {
     return await operation();
@@ -71,31 +75,43 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
   server.get("/.well-known/oauth-protected-resource", async () => oauth.protectedResourceMetadata("mcp"));
   server.get("/.well-known/oauth-protected-resource/human", async () => oauth.protectedResourceMetadata("human"));
 
-  server.get("/oauth/authorize", async (request, reply) => {
-    const query = z
-      .object({
-        client_id: z.string().min(1),
-        redirect_uri: z.url(),
-        scope: z.string().min(1),
-        code_challenge: z.string().min(43),
-        code_challenge_method: z.literal("S256"),
-        resource: z.string().min(1),
-        state: z.string().min(16),
-        audience: z.literal("human"),
-        subject_label: z.string().min(1).max(200),
-        response_type: z.literal("code"),
-      })
-      .parse(request.query);
-    const encoded = JSON.stringify(query).replaceAll("<", "\\u003c");
-    reply
-      .header(
-        "content-security-policy",
-        "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
-      )
-      .header("referrer-policy", "no-referrer")
-      .type("text/html; charset=utf-8");
-    return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize PACT native</title><style>body{font:16px system-ui;max-width:28rem;margin:3rem auto;padding:1rem}label{display:block;margin:.8rem 0}input,button{box-sizing:border-box;width:100%;padding:.7rem}#error{color:#a00}</style><h1>Sign in to PACT</h1><p>Authorize the first-party native app to read your world and submit your explicit actions. Approval requests still require their own exact confirmation.</p><form id="login"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in and authorize</button></form><p id="error" role="alert"></p><script>const q=${encoded};document.getElementById('login').addEventListener('submit',async(e)=>{e.preventDefault();const f=new FormData(e.currentTarget);const login=await fetch('../v1/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:f.get('email'),password:f.get('password'),label:'PACT native app'})});const l=await login.json();if(!login.ok){document.getElementById('error').textContent='Sign-in failed.';return}const auth=await fetch('authorize',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':l.csrfToken},body:JSON.stringify(q)});const a=await auth.json();if(!auth.ok){document.getElementById('error').textContent='Authorization failed.';return}const u=new URL(q.redirect_uri);u.searchParams.set('code',a.code);u.searchParams.set('state',q.state);location.replace(u.toString())});</script></html>`;
-  });
+  server.get("/oauth/authorize", async (request, reply) =>
+    safe(reply, async () => {
+      const query = z
+        .object({
+          client_id: z.string().min(1),
+          redirect_uri: z.url(),
+          scope: z.string().min(1),
+          code_challenge: z.string().min(43),
+          code_challenge_method: z.literal("S256"),
+          resource: z.string().min(1),
+          state: z.string().min(16),
+          audience: z.enum(["human", "mcp"]).default("mcp"),
+          subject_label: z.string().min(1).max(200).default("Your PACT kingdom"),
+          response_type: z.literal("code"),
+        })
+        .parse(request.query);
+      const consent = await oauth.describeAuthorization({
+        clientId: query.client_id,
+        redirectUri: query.redirect_uri,
+        scopes: query.scope,
+        resource: query.resource,
+        subjectLabel: query.subject_label,
+        expectedAudience: query.audience,
+      });
+      const encoded = JSON.stringify(query).replaceAll("<", "\\u003c");
+      const clientName = escapeHtml(consent.clientName);
+      const scopes = escapeHtml(consent.scopes.join(", "));
+      reply
+        .header(
+          "content-security-policy",
+          "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+        )
+        .header("referrer-policy", "no-referrer")
+        .type("text/html; charset=utf-8");
+      return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize PACT connection</title><style>body{font:16px system-ui;max-width:28rem;margin:3rem auto;padding:1rem}label{display:block;margin:.8rem 0}input,button{box-sizing:border-box;width:100%;padding:.7rem}#error{color:#a00}</style><h1>Connect ${clientName} to PACT</h1><p>This client requests: ${scopes}. It can act only within your kingdom mandate. It cannot approve its own exceptions or change that mandate.</p><form id="login"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in and authorize</button></form><p id="error" role="alert"></p><script>const q=${encoded};document.getElementById('login').addEventListener('submit',async(e)=>{e.preventDefault();const f=new FormData(e.currentTarget);const login=await fetch('../v1/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:f.get('email'),password:f.get('password'),label:'PACT connection'})});const l=await login.json();if(!login.ok){document.getElementById('error').textContent='Sign-in failed.';return}const auth=await fetch('authorize',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':l.csrfToken},body:JSON.stringify(q)});const a=await auth.json();if(!auth.ok){document.getElementById('error').textContent='Authorization failed.';return}const u=new URL(q.redirect_uri);u.searchParams.set('code',a.code);u.searchParams.set('state',q.state);location.replace(u.toString())});</script></html>`;
+    }),
+  );
 
   server.post("/oauth/register", async (request, reply) =>
     safe(reply, async () => {
@@ -116,6 +132,9 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
         client_name: client.displayName,
         redirect_uris: client.redirectUris,
         audience: client.audience,
+        token_endpoint_auth_method: "none",
+        grant_types: ["authorization_code", "refresh_token"],
+        response_types: ["code"],
       };
     }),
   );

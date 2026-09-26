@@ -130,6 +130,16 @@ describe("PACT OAuth", () => {
     expect(auth.consent.clientName).toBe("MCP Fixture");
     expect(auth.consent.subjectLabel).toBe("Draft North");
 
+    await expect(
+      oauth.exchangeAuthorizationCode({
+        clientId: "native-fixture",
+        code: auth.code,
+        redirectUri: "https://client.example/cb",
+        codeVerifier: challenge.verifier,
+        resource: mcpResource,
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_GRANT" });
+
     const tokens = await oauth.exchangeAuthorizationCode({
       clientId: mcp.clientId,
       code: auth.code,

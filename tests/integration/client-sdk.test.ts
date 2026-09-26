@@ -28,6 +28,7 @@ let admin: Pool;
 let pool: Pool;
 let schema: string;
 let identity: IdentityService;
+let oauth: OAuthService;
 let secretBox: AesGcmSecretBox;
 let server: ReturnType<typeof buildServer>;
 let sessionToken: string;
@@ -57,7 +58,7 @@ beforeAll(async () => {
     clock: { now: () => now },
     productScope: ProductScopeSchema.parse("pact"),
   });
-  const oauth = new OAuthService(pool, {
+  oauth = new OAuthService(pool, {
     productScope: "pact",
     issuer: origin,
     mcpResource: `${origin}/mcp`,
@@ -132,6 +133,38 @@ class InjectTransport implements ClientTransport {
 }
 
 describe("shared client SDK", () => {
+  it("renders a validated MCP authorization page for a dynamically registered Codex client", async () => {
+    const registered = await server.inject({
+      method: "POST",
+      url: "/oauth/register",
+      payload: {
+        client_name: "Codex Playtest <script>",
+        redirect_uris: ["http://127.0.0.1:43123/callback"],
+      },
+    });
+    expect(registered.statusCode).toBe(200);
+    const clientId = registered.json<{ client_id: string }>().client_id;
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: "http://127.0.0.1:43123/callback",
+      response_type: "code",
+      scope: "world:read messages:write game:act",
+      code_challenge: "a".repeat(43),
+      code_challenge_method: "S256",
+      resource: `${origin}/mcp`,
+      state: "test-state-12345678",
+    });
+    const page = await server.inject({ method: "GET", url: `/oauth/authorize?${params}` });
+    expect(page.statusCode).toBe(200);
+    expect(page.headers["content-type"]).toContain("text/html");
+    expect(page.body).toContain("Codex Playtest &lt;script&gt;");
+    expect(page.body).not.toContain("Codex Playtest <script>");
+    expect(page.body).toContain("game:act");
+    params.set("redirect_uri", "https://evil.example/callback");
+    const rejected = await server.inject({ method: "GET", url: `/oauth/authorize?${params}` });
+    expect(rejected.statusCode).toBe(400);
+  });
+
   it("reuses one command across web and non-browser clients after a lost response", async () => {
     let loseFirstCommandResponse = true;
     const browserFetch: typeof fetch = async (input, init) => {

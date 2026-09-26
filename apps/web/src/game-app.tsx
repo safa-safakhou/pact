@@ -825,6 +825,63 @@ function Envoy({
 }): React.JSX.Element {
   const [approvalId, setApprovalId] = useState("");
   const [review, setReview] = useState<Json | null>(null);
+  const [mandate, setMandate] = useState<{
+    version: number;
+    allowedActions: string[];
+    resourceLimits: Record<string, string>;
+  } | null>(null);
+  useEffect(() => {
+    void request("/v1/mandate")
+      .then((value) =>
+        setMandate(
+          value as unknown as { version: number; allowedActions: string[]; resourceLimits: Record<string, string> },
+        ),
+      )
+      .catch((error: unknown) => onNotice(`Mandate read failed: ${failure(error)}`));
+  }, [request, onNotice]);
+
+  async function setPlaytestMandate(enabled: boolean): Promise<void> {
+    if (!mandate) return;
+    if (
+      enabled &&
+      !window.confirm(
+        "Allow this kingdom's authorized agents to spend up to 500 whole units of each ordinary resource per 24 game hours, commit up to 40 troops, and initiate raids? Game stock and rules still apply.",
+      )
+    )
+      return;
+    try {
+      const next = await request("/v1/mandate", "POST", {
+        allowedActions: enabled
+          ? [
+              "world.read",
+              "inbox.read",
+              "message.send.contact",
+              "contact.request",
+              "transfer",
+              "training.queue",
+              "building.queue",
+              "scout.start",
+              "supply.sign",
+              "supply.break",
+              "garrison.sign",
+              "garrison.break",
+              "raid.commit",
+            ]
+          : ["world.read", "inbox.read", "message.send.contact"],
+        resourceLimits: enabled
+          ? { iron: "300000", silver: "300000", grain: "300000" }
+          : { iron: "0", silver: "0", grain: "0" },
+        reserveFloors: { grain: "12000" },
+        troopLimit: enabled ? 40 : 0,
+        sessionLimit: 1,
+        expectedVersion: mandate.version,
+      });
+      setMandate(next as unknown as typeof mandate);
+      onNotice(enabled ? "Agent playtest authority enabled for this kingdom." : "New agent game actions disabled.");
+    } catch (error) {
+      onNotice(`Mandate update failed: ${failure(error)}. Sign in again if recent authentication is required.`);
+    }
+  }
   async function decide(approve: boolean): Promise<void> {
     if (!review || !window.confirm(`${approve ? "Approve" : "Reject"} this exact server-rendered request?`)) return;
     try {
@@ -843,6 +900,27 @@ function Envoy({
     <section>
       <h2>Envoy</h2>
       <p>Manual actions remain available without a model connection. Reading an approval never commits it.</p>
+      <article className="game-card">
+        <h3>Codex agent playtest</h3>
+        <p>
+          Connect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15
+          minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.
+        </p>
+        <p>
+          Current authority:{" "}
+          {mandate?.allowedActions.includes("raid.commit") ? "bounded playtest" : "read and contact messages only"}.
+        </p>
+        <button type="button" disabled={!mandate} onClick={() => void setPlaytestMandate(true)}>
+          Enable bounded agent playtest
+        </button>{" "}
+        <button type="button" className="secondary" disabled={!mandate} onClick={() => void setPlaytestMandate(false)}>
+          Disable new agent game actions
+        </button>
+        <p>
+          Only the human can change this authority or approve an exact exception. The game still enforces stock,
+          charges, and locks.
+        </p>
+      </article>
       <article className="game-card">
         <h3>Exact approval review</h3>
         <form

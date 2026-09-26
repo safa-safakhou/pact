@@ -4,6 +4,8 @@ Tickets: PACT-017; PACT-049 in progress.
 
 `POST /mcp` and `GET /mcp` are the single Streamable HTTP surface. Clients authenticate with an MCP-audience Bearer access token from `@pact/oauth`. Origin must match `PACT_ORIGIN`. Supported protocol versions are `2025-11-25` and `2025-06-18`; unknown versions fail with `UNSUPPORTED_PROTOCOL`.
 
+For a private Codex playtest, the browser OAuth authorization page accepts DCR-registered MCP clients, displays the client and requested scopes, and requires a human PACT sign-in before issuing a PKCE-bound code. Invalid redirect, resource, audience, or scope requests fail before a page is shown. An authorization code is bound to the registering client; another client cannot exchange it. Unauthenticated MCP requests advertise the protected-resource metadata in `WWW-Authenticate`. See [Codex playtest](../operations/codex-playtest.md) for the operator sequence. This does not certify a consumer host or make a pasted bearer token harmless.
+
 ## Sessions
 
 `initialize` creates an `mcp_sessions` row and returns `Mcp-Session-Id`. Later `tools/list` / `tools/call` and `GET /mcp` streams require that session and bind it to the authenticated account. Another account cannot resume the session.
