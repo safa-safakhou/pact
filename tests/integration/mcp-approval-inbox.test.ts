@@ -265,6 +265,61 @@ describe("PACT-017 MCP transport", () => {
     mcp.assertOrigin(origin);
     expect(() => mcp.assertOrigin("https://evil.example")).toThrow(McpError);
   });
+
+  it("derives the actor for agent game actions and rejects caller-supplied identity", async () => {
+    const { accountId } = await verifiedAccount(`mcp-action-${randomUUID()}@example.com`);
+    let captured: { principal: unknown; command: unknown } | undefined;
+    const actionMcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      origin,
+      clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+      dispatcher: {
+        dispatch: async (principal: unknown, command: unknown) => {
+          captured = { principal, command };
+          return { code: "COMMITTED", commandId: (command as { commandId: string }).commandId };
+        },
+      } as unknown as CommandDispatcher,
+    });
+    const principal = { accountId, productScope, audience: "agent" as const, agentScopes: ["game:act" as const] };
+    const initialized = await actionMcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const sessionId = initialized.sessionId;
+    const listed = await actionMcp.handlePost(principal, { method: "tools/list", id: 2 }, sessionId);
+    expect(JSON.stringify(listed.response)).toContain("pact_game_action_v1");
+    const commandId = randomUUID();
+    const args = {
+      commandId,
+      action: { kind: "game.building.queue", building: "farm", targetLevel: 2, slot: 1 },
+    };
+    const result = await actionMcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: "pact_game_action_v1", arguments: args } },
+      sessionId,
+    );
+    expect(result.response).toMatchObject({ result: { structuredContent: { code: "COMMITTED", commandId } } });
+    expect(captured).toMatchObject({
+      principal: { accountId, sessionId },
+      command: {
+        commandId,
+        actor: { principalId: accountId, audience: "agent", subject: { type: "account", id: accountId } },
+      },
+    });
+    await expect(
+      actionMcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 4,
+          params: { name: "pact_game_action_v1", arguments: { ...args, accountId: randomUUID() } },
+        },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+  });
 });
 
 describe("PACT-020 approvals", () => {

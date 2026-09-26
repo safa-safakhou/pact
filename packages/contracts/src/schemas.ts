@@ -252,6 +252,15 @@ export const CommandActionSchema = z.union([SandboxActionSchema, GameActionSchem
 export type SandboxAction = z.infer<typeof SandboxActionSchema>;
 export type GameAction = z.infer<typeof GameActionSchema>;
 
+/** MCP clients provide an action, never the authenticated actor envelope. */
+export const AgentGameActionSchema = z
+  .object({
+    commandId: z.uuid(),
+    action: GameActionSchema,
+    expectedVersion: z.number().int().nonnegative().optional(),
+  })
+  .strict();
+
 export const CommandEnvelopeSchema = z
   .object({
     schemaVersion: z.literal(SCHEMA_VERSION),

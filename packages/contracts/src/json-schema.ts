@@ -1,5 +1,6 @@
 import { z } from "zod";
 import {
+  AgentGameActionSchema,
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   CommandEnvelopeSchema,
@@ -26,6 +27,7 @@ export const conversationReadQueryJsonSchema = z.toJSONSchema(ConversationReadQu
 export const receiptReadQueryJsonSchema = z.toJSONSchema(ReceiptReadQuerySchema, { target: "draft-7" });
 export const approvalStatusQueryJsonSchema = z.toJSONSchema(ApprovalStatusQuerySchema, { target: "draft-7" });
 export const approvalProposalJsonSchema = z.toJSONSchema(ApprovalProposalSchema, { target: "draft-7" });
+export const agentGameActionJsonSchema = z.toJSONSchema(AgentGameActionSchema, { target: "draft-7" });
 
 export const pactWorldReadTool = {
   name: "pact_world_read_v1",
@@ -67,8 +69,15 @@ export const pactApprovalStatusTool = {
 export const pactApprovalProposalTool = {
   name: "pact_approval_propose_v1",
   description:
-    "Propose an exact cold-contact, direct-transfer, troop-training, building-queue, or scouting action for human review; this never executes it.",
+    "Propose an exact cold-contact, direct-transfer, troop-training, building-queue, or scouting action for human review; this never executes it. commandId must be a new UUID.",
   inputSchema: approvalProposalJsonSchema,
+} as const;
+
+export const pactGameActionTool = {
+  name: "pact_game_action_v1",
+  description:
+    "Submit one typed game action using a new UUID commandId. The authenticated account is the actor; the server checks the live run lease, mandate, game rules, stock, and retries. Human-only actions remain forbidden. After uncertain results, read the receipt by the same commandId before retrying.",
+  inputSchema: agentGameActionJsonSchema,
 } as const;
 
 export const httpCommandContract = {

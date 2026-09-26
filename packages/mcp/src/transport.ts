@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
 import {
+  AgentGameActionSchema,
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ConversationReadQuerySchema,
@@ -10,6 +11,7 @@ import {
   pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactConversationReadTool,
+  pactGameActionTool,
   pactInboxReadTool,
   pactReceiptReadTool,
   pactReportReadTool,
@@ -197,6 +199,7 @@ export class McpTransport {
               ...(this.options.approvalProposals && principal.agentScopes?.includes("game:act")
                 ? [pactApprovalProposalTool]
                 : []),
+              ...(principal.agentScopes?.includes("game:act") ? [pactGameActionTool] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
             ],
           }),
@@ -368,6 +371,28 @@ export class McpTransport {
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);
+    if (name === pactGameActionTool.name) {
+      const parsed = AgentGameActionSchema.safeParse(args);
+      if (!parsed.success) throw new McpError("INVALID_REQUEST");
+      const command = {
+        schemaVersion: SCHEMA_VERSION,
+        commandId: parsed.data.commandId,
+        actor: {
+          principalId: principal.accountId,
+          productScope: ProductScopeSchema.parse(this.options.productScope),
+          audience: principal.audience,
+          subject: { type: "account" as const, id: principal.accountId },
+        },
+        ...(parsed.data.expectedVersion === undefined ? {} : { expectedVersion: parsed.data.expectedVersion }),
+        action: parsed.data.action,
+        submittedAt: this.options.clock.now().toISOString(),
+      };
+      const receipt = await this.options.dispatcher.dispatch(
+        { ...principal, ...(sessionId ? { sessionId } : {}) },
+        command,
+      );
+      return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
+    }
     if (name === "pact_command_v1") {
       const receipt = await this.options.dispatcher.dispatch(
         { ...principal, ...(sessionId ? { sessionId } : {}) },
