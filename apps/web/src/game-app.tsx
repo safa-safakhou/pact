@@ -362,7 +362,19 @@ export function GameApp(): React.JSX.Element {
         </p>
       )}
       {tab === "Kingdom" && view && <Kingdom view={view} busy={busy} act={act} />}
-      {tab === "Envoy" && <Envoy inbox={inbox} request={request} onNotice={setNotice} onRefresh={refresh} />}
+      {tab === "Envoy" && (
+        <Envoy
+          inbox={inbox}
+          request={request}
+          onNotice={setNotice}
+          onRefresh={refresh}
+          apiOrigin={apiOrigin}
+          onCsrfChange={(token) => {
+            sessionStorage.setItem("pact_csrf", token);
+            setCsrf(token);
+          }}
+        />
+      )}
       {tab === "People" && <People client={client} act={act} busy={busy} kingdomId={kingdomId} />}
       {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} />}
     </main>
@@ -677,11 +689,15 @@ function Envoy({
   request,
   onNotice,
   onRefresh,
+  apiOrigin,
+  onCsrfChange,
 }: {
   inbox: { sequence: string; type: string; event: unknown }[];
   request: (path: string, method?: string, body?: unknown) => Promise<Json>;
   onNotice: (message: string) => void;
   onRefresh: () => Promise<void>;
+  apiOrigin: URL;
+  onCsrfChange: (token: string) => void;
 }): React.JSX.Element {
   const [approvalId, setApprovalId] = useState("");
   const [review, setReview] = useState<Json | null>(null);
@@ -760,7 +776,7 @@ function Envoy({
           <p>No events yet.</p>
         )}
       </article>
-      <PrivacySettings request={request} onNotice={onNotice} />
+      <PrivacySettings request={request} onNotice={onNotice} apiOrigin={apiOrigin} onCsrfChange={onCsrfChange} />
     </section>
   );
 }
@@ -768,16 +784,25 @@ function Envoy({
 function PrivacySettings({
   request,
   onNotice,
+  apiOrigin,
+  onCsrfChange,
 }: {
   request: (path: string, method?: string, body?: unknown) => Promise<Json>;
   onNotice: (message: string) => void;
+  apiOrigin: URL;
+  onCsrfChange: (token: string) => void;
 }): React.JSX.Element {
   const [password, setPassword] = useState("");
   const [downloadUrl, setDownloadUrl] = useState("");
   async function exportData(): Promise<void> {
     try {
       const result = await request("/v1/privacy/exports", "POST", { password });
-      setDownloadUrl(String(result.downloadUrl ?? ""));
+      if (typeof result.csrfToken === "string") onCsrfChange(result.csrfToken);
+      setDownloadUrl(
+        typeof result.downloadUrl === "string"
+          ? new URL(result.downloadUrl.replace(/^\//, ""), apiOrigin).toString()
+          : "",
+      );
       setPassword("");
       onNotice("Account export ready.");
     } catch (error) {
