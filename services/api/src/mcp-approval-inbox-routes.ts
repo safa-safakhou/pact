@@ -112,6 +112,7 @@ export function registerMcpRoutes(
       const body = request.body as { method: string; id?: string | number | null; params?: Record<string, unknown> };
       const result = await mcp.handlePost(principal, body, sessionId);
       if (result.sessionId) reply.header("mcp-session-id", result.sessionId);
+      if (body.method === "notifications/initialized") return reply.code(202).send();
       return result.response;
     }),
   );

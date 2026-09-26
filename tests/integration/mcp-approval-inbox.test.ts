@@ -135,6 +135,18 @@ describe("PACT-017 MCP transport", () => {
     expect(response.statusCode).toBe(200);
     expect(response.json()).toMatchObject({ result: { protocolVersion: MCP_PROTOCOL_PRIMARY } });
     expect(response.headers["mcp-session-id"]).toBeTruthy();
+    const initialized = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: {
+        origin,
+        authorization: "Bearer synthetic-test-token",
+        "mcp-session-id": String(response.headers["mcp-session-id"]),
+      },
+      payload: { jsonrpc: "2.0", method: "notifications/initialized" },
+    });
+    expect(initialized.statusCode).toBe(202);
+    expect(initialized.body).toBe("");
     await server.close();
   });
 
