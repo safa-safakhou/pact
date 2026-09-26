@@ -104,6 +104,7 @@ export class ApprovalService {
       submittedAt: this.options.clock.now().toISOString(),
     };
     const effectsSummary = describeApprovalEffects(action);
+    const mandateVersion = "mandateVersion" in action ? action.mandateVersion : undefined;
     return withTransaction(this.pool, async (client) => {
       await this.options.assertAgentWriteLease?.(client, principal.accountId, holderId);
       return this.createRequestInTransaction(client, {
@@ -112,7 +113,7 @@ export class ApprovalService {
         effectsSummary,
         requestingClientId: holderId,
         ...(runId ? { runId } : {}),
-        ...(action.mandateVersion !== undefined ? { mandateVersion: action.mandateVersion } : {}),
+        ...(mandateVersion !== undefined ? { mandateVersion } : {}),
       });
     });
   }

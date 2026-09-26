@@ -2,6 +2,10 @@
 
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) — in progress. Implementation revisions: `7eccf06`, `804198c`, `b38c5f5`, and `f7febfc`. Verification: 24 Sep 2026, Node 24, PostgreSQL 17 with PostgreSQL client 18.4.
 
+## Scout approval transition — 26 September 2026
+
+The R04/R06 exact scout fixture verifies that a proposal alone leaves both ordinary Spearmen at home and creates no operation. Changing the selected troop IDs or approving as an outsider fails. Owner human approval creates one operation, moves exactly those IDs to scouting, charges 10 Silver/5 Grain, and returns the original receipt on replay. Local Node 24 build, typecheck, lint, 115 unit and 172 PostgreSQL 17 integration tests pass. This does not replace the generated all-command fault matrix or full VPS game-state restore.
+
 ## Construction approval transition — 26 September 2026
 
 The R04/R06 MCP construction fixture proposes a Farm II instruction with a catalog quote but no early instruction or human permit. Changed builder-slot terms are rejected. A human identity without an active first-party session cannot approve and the request remains pending. A valid session commits one active instruction with one consumed exact permit; duplicate approval returns the same receipt. Local Node 24 build, typecheck, lint, 115 unit and 171 PostgreSQL 17 integration tests pass. This is a focused authority and replay transition, not the generated all-command fault matrix or full VPS game-state restore.

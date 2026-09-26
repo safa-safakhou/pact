@@ -844,6 +844,102 @@ describe("shared gameplay command admission", () => {
       ).rows,
     ).toEqual([{ count: 1 }]);
   });
+  it("commits an exact Envoy scout proposal only after human review", async () => {
+    const owner = await kingdom();
+    const target = await kingdom();
+    const outsider = await kingdom();
+    const ids = [randomUUID(), randomUUID()];
+    for (const id of ids)
+      await pool.query(
+        `INSERT INTO kingdom_troops(id, product_scope, owner_kingdom_id, host_kingdom_id,
+           type, placement, created_game_time_ms, created_at)
+         VALUES ($1, 'pact', $2, $2, 'spearman', 'home', 0, clock_timestamp())`,
+        [id, owner.kingdomId],
+      );
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      dispatcher,
+      clock: { now: () => new Date() },
+      assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
+    });
+    const mcp = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      runLeases: runs,
+      approvalProposals: approvals,
+    });
+    const agent = {
+      accountId: owner.accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["game:act" as const],
+    };
+    const initialized = await mcp.handlePost(agent, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const sessionId = initialized.sessionId;
+    if (!sessionId) throw new Error("Missing MCP session");
+    const principal = { ...agent, sessionId };
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      sessionId,
+    );
+    const proposal = {
+      commandId: randomUUID(),
+      action: { kind: "game.scout.start" as const, targetKingdomId: target.kingdomId, unitIds: ids },
+    };
+    const result = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: pactApprovalProposalTool.name, arguments: proposal } },
+      sessionId,
+    );
+    expect(result.response.result).toMatchObject({
+      structuredContent: { code: "APPROVAL_REQUIRED", effectsSummary: expect.stringContaining("10 Silver, 5 Grain") },
+    });
+    const pending = await approvals.proposeAgent(principal, proposal);
+    expect(pending.effectsSummary).toContain(ids[0]);
+    await expect(
+      approvals.proposeAgent(principal, { ...proposal, action: { ...proposal.action, unitIds: [ids[1], ids[0]] } }),
+    ).rejects.toMatchObject({ code: "INVALID_TERMS" });
+    await expect(
+      approvals.approveForHumanPrincipal(outsider.accountId, randomUUID(), pending.approvalId),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM scout_operations WHERE id = $1", [proposal.commandId]))
+        .rows,
+    ).toEqual([{ count: 0 }]);
+    expect(
+      (await pool.query("SELECT placement FROM kingdom_troops WHERE id = ANY($1::uuid[]) ORDER BY id", [ids])).rows,
+    ).toEqual([{ placement: "home" }, { placement: "home" }]);
+    const humanSessionId = randomUUID();
+    const committed = await approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, pending.approvalId);
+    expect(committed).toMatchObject({
+      status: "approved",
+      receipt: {
+        code: "COMMITTED",
+        charged: [
+          { asset: "silver", units: "6000" },
+          { asset: "grain", units: "3000" },
+        ],
+      },
+    });
+    expect(await approvals.approveForHumanPrincipal(owner.accountId, humanSessionId, pending.approvalId)).toEqual(
+      committed,
+    );
+    expect(
+      (await pool.query("SELECT count(*)::int AS count FROM scout_operations WHERE id = $1", [proposal.commandId]))
+        .rows,
+    ).toEqual([{ count: 1 }]);
+    expect(
+      (await pool.query("SELECT placement FROM kingdom_troops WHERE id = ANY($1::uuid[]) ORDER BY id", [ids])).rows,
+    ).toEqual([{ placement: "scouting" }, { placement: "scouting" }]);
+  });
   it("persists only owner-selected conversation context within the run cap", async () => {
     const owner = await kingdom();
     const selected = await kingdom();

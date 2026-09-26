@@ -2,6 +2,12 @@
 
 Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
 
+## Scouting approval increment — 26 September 2026
+
+The shared proposal contract now admits `game.scout.start` without a parallel scout implementation. The review summary includes the target, catalog fees, charge, ordinary troop commitment, duration, and either exact selected troop IDs or the server-selection rule. A PostgreSQL MCP fixture checks no scout or troop placement before review, changed troop-ID order and outsider denial, one human-approved scout with exact charges and placements, and stable duplicate receipt. The shared proposal service now reads an optional mandate version only from actions that carry one; scouting has none. This is a focused path, not complete PACT-049 acceptance. See [approval API](../../api/approvals.md).
+
+Local Node 24 `npm run build`, `npm run typecheck`, `npm test` (115), `npm run test:integration` (172 on PostgreSQL 17), and `npm run lint` passed. Backlog render/check and `git diff --check` passed. No hosted CI, VPS deploy, provider call, or player pilot is claimed.
+
 ## Construction approval increment — 26 September 2026
 
 The generated shared proposal contract now admits exact `game.building.queue` terms. PACT's application layer quotes the catalog cost and explains the founding-allowance/waiting-instruction distinction; the reusable approval service still performs only owner/lease admission and immutable request storage. The human-approved command goes through the existing dispatcher and receives the same exact one-use session permit as direct human construction. A PostgreSQL fixture covers the MCP proposal, no instruction or permit before review, changed slot denial, failed approval without a live human session, one active build and consumed permit after approval, and stable duplicate receipt. This is not complete PACT-049 approval or route coverage. See [approval API](../../api/approvals.md).

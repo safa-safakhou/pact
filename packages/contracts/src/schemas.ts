@@ -128,6 +128,14 @@ export const BuildingQueueActionSchema = z
   })
   .strict();
 
+export const ScoutStartActionSchema = z
+  .object({
+    kind: z.literal("game.scout.start"),
+    targetKingdomId: z.uuid(),
+    unitIds: z.array(z.uuid()).length(2).optional(),
+  })
+  .strict();
+
 export const ApprovalProposalSchema = z
   .object({
     commandId: z.uuid(),
@@ -136,6 +144,7 @@ export const ApprovalProposalSchema = z
       DirectTransferActionSchema,
       TrainingQueueActionSchema,
       BuildingQueueActionSchema,
+      ScoutStartActionSchema,
     ]),
   })
   .strict();
@@ -192,13 +201,7 @@ export const GameActionSchema = z.discriminatedUnion("kind", [
       mandateVersion: z.number().int().nonnegative().optional(),
     })
     .strict(),
-  z
-    .object({
-      kind: z.literal("game.scout.start"),
-      targetKingdomId: z.uuid(),
-      unitIds: z.array(z.uuid()).length(2).optional(),
-    })
-    .strict(),
+  ScoutStartActionSchema,
   z.object({ kind: z.literal("game.scout.share"), operationId: z.uuid(), recipientKingdomId: z.uuid() }).strict(),
   z
     .object({
