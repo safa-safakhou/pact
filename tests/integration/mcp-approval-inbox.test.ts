@@ -147,6 +147,30 @@ describe("PACT-017 MCP transport", () => {
     });
     expect(initialized.statusCode).toBe(202);
     expect(initialized.body).toBe("");
+    const denied = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: {
+        origin,
+        authorization: "Bearer synthetic-test-token",
+        "mcp-session-id": String(response.headers["mcp-session-id"]),
+      },
+      payload: { jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "unknown.tool", arguments: {} } },
+    });
+    expect(denied.statusCode).toBe(200);
+    expect(denied.json()).toMatchObject({ result: { isError: true } });
+    const ping = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: {
+        origin,
+        authorization: "Bearer synthetic-test-token",
+        "mcp-session-id": String(response.headers["mcp-session-id"]),
+      },
+      payload: { jsonrpc: "2.0", id: 3, method: "ping" },
+    });
+    expect(ping.statusCode).toBe(200);
+    expect(ping.json()).toMatchObject({ result: {} });
     await server.close();
   });
 

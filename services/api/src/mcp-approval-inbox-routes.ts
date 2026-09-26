@@ -110,7 +110,30 @@ export function registerMcpRoutes(
       const sessionHeader = request.headers["mcp-session-id"];
       const sessionId = typeof sessionHeader === "string" ? sessionHeader : undefined;
       const body = request.body as { method: string; id?: string | number | null; params?: Record<string, unknown> };
-      const result = await mcp.handlePost(principal, body, sessionId);
+      let result: Awaited<ReturnType<McpTransport["handlePost"]>>;
+      try {
+        result = await mcp.handlePost(principal, body, sessionId);
+      } catch (error) {
+        if (
+          body.method === "tools/call" &&
+          ((error instanceof McpError && error.code !== "SESSION_NOT_FOUND") ||
+            error instanceof DispatcherError ||
+            error instanceof ApprovalError ||
+            error instanceof InboxError ||
+            error instanceof z.ZodError)
+        ) {
+          const code = error instanceof z.ZodError ? "INVALID_INPUT" : error.code;
+          return {
+            jsonrpc: "2.0",
+            id: body.id ?? null,
+            result: {
+              content: [{ type: "text", text: JSON.stringify({ error: { code } }) }],
+              isError: true,
+            },
+          };
+        }
+        throw error;
+      }
       if (result.sessionId) reply.header("mcp-session-id", result.sessionId);
       if (body.method === "notifications/initialized") return reply.code(202).send();
       return result.response;

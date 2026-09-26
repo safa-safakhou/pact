@@ -1915,17 +1915,25 @@ describe("shared gameplay command admission", () => {
         { method: "tools/call", id: 4, params: { name: "run.open", arguments: {} } },
         initialized.sessionId,
       );
+      const mcpCommandId = randomUUID();
+      const mcpArguments = { commandId: mcpCommandId, action };
       const mcpCall = await mcp.handlePost(
         principal,
         {
           method: "tools/call",
           id: 3,
-          params: { name: "pact_command_v1", arguments: command(recipient.accountId, action) },
+          params: { name: "pact_game_action_v1", arguments: mcpArguments },
         },
         initialized.sessionId,
       );
       const mcpReceipt = (mcpCall.response.result as { structuredContent: { code: string; charged: unknown[] } })
         .structuredContent;
+      const replay = await mcp.handlePost(
+        principal,
+        { method: "tools/call", id: 5, params: { name: "pact_game_action_v1", arguments: mcpArguments } },
+        initialized.sessionId,
+      );
+      expect((replay.response.result as { structuredContent: unknown }).structuredContent).toEqual(mcpReceipt);
 
       expect([webReceipt.code, modelSummary.code, mcpReceipt.code]).toEqual(["COMMITTED", "COMMITTED", "COMMITTED"]);
       expect([webReceipt.charged, modelSummary.charged, mcpReceipt.charged]).toEqual([[], [], []]);
