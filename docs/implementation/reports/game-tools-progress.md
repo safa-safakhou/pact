@@ -1,6 +1,6 @@
 # Game tools integration — progress record
 
-Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route) — **in progress**, not complete.
+Ticket: [PACT-049 / MNI-113](https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route). This historical progress log is superseded for status by the [completion report](game-tools-completion.md); statements below describing unfinished acceptance were accurate at their respective checkpoints.
 
 ## Human-only route matrix and schema coverage — 26 September 2026
 
