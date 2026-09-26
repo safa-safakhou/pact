@@ -92,6 +92,27 @@ describe("platform-independent client SDK", () => {
     });
   });
 
+  it("surfaces rejected game commands using the server receipt code", async () => {
+    const transport: ClientTransport = {
+      send: async () => ({
+        status: 400,
+        body: {
+          schemaVersion: "pact.command.v1",
+          commandId: "00000000-0000-4000-8000-000000000000",
+          code: "INSUFFICIENT_STOCK",
+          committedEventIds: [],
+          recordVersions: {},
+          charged: [],
+        },
+      }),
+    };
+    const prepared = client(transport).prepareCommand({ kind: "game.training.queue", type: "spearman", count: 2 });
+    await expect(client(transport).submitCommand(prepared)).rejects.toMatchObject({
+      status: 400,
+      serverCode: "INSUFFICIENT_STOCK",
+    });
+  });
+
   it("reads a typed report through the same authenticated transport", async () => {
     const transport: ClientTransport = {
       send: async (request) => {

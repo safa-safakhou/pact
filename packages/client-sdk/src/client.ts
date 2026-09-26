@@ -49,11 +49,15 @@ export class PactClientError extends Error {
 
 function responseError(status: number, body: unknown): PactClientError {
   const serverCode =
-    typeof body === "object" && body !== null && "error" in body
-      ? typeof body.error === "string"
-        ? body.error
-        : typeof body.error === "object" && body.error !== null && "code" in body.error
-          ? String(body.error.code)
+    typeof body === "object" && body !== null
+      ? "error" in body
+        ? typeof body.error === "string"
+          ? body.error
+          : typeof body.error === "object" && body.error !== null && "code" in body.error
+            ? String(body.error.code)
+            : undefined
+        : "code" in body && typeof body.code === "string"
+          ? body.code
           : undefined
       : undefined;
   const code: ClientErrorCode =

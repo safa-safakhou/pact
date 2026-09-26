@@ -333,17 +333,33 @@ export function GameApp(): React.JSX.Element {
           <p>
             @{view?.profile.handle} · {view?.worldStatus} · tick {view?.committedTickSequence}
           </p>
+          <p>
+            Your kingdom ID: <code>{kingdomId}</code>
+          </p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            void refresh();
-          }}
-          disabled={busy}
-        >
-          Refresh
-        </button>
+        <div className="game-header-actions">
+          <button
+            type="button"
+            onClick={() => {
+              void refresh();
+            }}
+            disabled={busy}
+          >
+            Refresh
+          </button>
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => {
+              setNotice("");
+              setAuth("login");
+            }}
+          >
+            Switch test player
+          </button>
+        </div>
       </header>
+      {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
       <nav className="game-nav" aria-label="Game areas">
         {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
           <button
