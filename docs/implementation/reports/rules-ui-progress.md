@@ -1,5 +1,11 @@
 # PACT-048 — rules UI progress
 
+## Chrome training visibility — 27 September 2026
+
+On the live private Alpha, Briar and Cinder signed in as separate synthetic players in Chrome and each queued eight ordinary Spearmen. Briar's command `ce89289b-a0c4-4482-91bf-bfab474b0f48` charged 80 Iron/32 Silver; Cinder's `96d61a93-33fd-476a-bab6-f5c133ebda83` did the same. The Troops panel showed only the preexisting eight Home Guards after each committed receipt, with no queue or deadline. This is a concrete playability gap, not an observed training failure.
+
+The owner world view and Kingdom panel now expose the active batch ID, completed/requested count, troop type, next due **game-time** minute, minutes per unit, and a cancel-remaining control. The read is from the same repeatable-read snapshot as troops and balances; public and other-account views do not receive batch details. `world-views.test.ts` verifies owner visibility, outsider/public exclusion, and removal after cancellation. Node 24 build/typecheck/lint, 124 unit tests, and 180 PostgreSQL integration tests passed. Deployment and live recheck are recorded separately below when complete. Garrison lending, raid/loss/rebuild, and deployed accessibility remain open; PACT-048 stays In Progress.
+
 Ticket: [PACT-048 / MNI-112](https://linear.app/mnim/issue/MNI-112/pact-048-build-the-plain-rules-prototype-interface). In Progress, 26 September 2026. Implementation revision: see repository history.
 
 ## Implemented increment

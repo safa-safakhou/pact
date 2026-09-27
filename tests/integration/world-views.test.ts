@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
-import { WorldViewService } from "@pact/kingdom";
+import { rulesCatalog } from "@pact/domain";
+import { TroopService, WorldViewService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
@@ -52,6 +53,63 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("shows active training progress only to its owner and removes it after cancellation", async () => {
+    const owner = await kingdom();
+    const outsider = await kingdom();
+    const now = (await new WorldClockService(pool, scope).read()).gameTimeMs;
+    const ledger = new ResourceLedger(scope);
+    const troops = new TroopService(scope, ledger);
+    const batchId = randomUUID();
+    const batch = await withTransaction(pool, async (client) => {
+      await client.query(
+        "INSERT INTO kingdom_buildings(product_scope, kingdom_id, kind, level) VALUES ('pact', $1, 'barracks', 1)",
+        [owner.kingdomId],
+      );
+      for (const resource of ["iron", "silver"] as const) {
+        await ledger.creditOrdinary(client, {
+          kingdomId: owner.kingdomId,
+          resource,
+          amount: 100n * 600n,
+          operationKey: `view-training:${resource}:${batchId}`,
+          reason: "synthetic_training_stock",
+          gameTimeMs: now,
+        });
+      }
+      return troops.queueTraining(client, {
+        ...owner,
+        batchId,
+        type: "spearman",
+        count: 3,
+        gameTimeMs: now,
+      });
+    });
+
+    const service = new WorldViewService(pool, scope);
+    const ownView = await service.read(owner.accountId, owner.kingdomId);
+    expect(ownView?.audience).toBe("owner");
+    if (ownView?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(ownView.training).toEqual([
+      {
+        batchId,
+        type: "spearman",
+        requestedCount: 3,
+        completedCount: 0,
+        nextUnitDueGameTimeMs: batch.nextUnitDueGameTimeMs,
+        unitMinutes: rulesCatalog.units.spearman.trainingMinutes,
+      },
+    ]);
+    for (const viewer of [null, outsider.accountId]) {
+      const view = await service.read(viewer, owner.kingdomId);
+      expect(view?.audience).toBe("public");
+      expect(JSON.stringify(view)).not.toMatch(/training|batchId|nextUnitDueGameTimeMs/);
+    }
+    await withTransaction(pool, (client) => troops.cancelTraining(client, { ...owner, batchId, gameTimeMs: now }));
+    const canceledView = await service.read(owner.accountId, owner.kingdomId);
+    expect(canceledView?.audience).toBe("owner");
+    if (canceledView?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(canceledView.training).toEqual([]);
+  });
+
   it("returns only a public profile for arbitrary IDs, then distinct contact and participant records", async () => {
     const a = await kingdom();
     const b = await kingdom();
@@ -101,7 +159,13 @@ describe("authorized world views", () => {
     expect(view.forecast.harvestPercentByMinute).toHaveLength(1);
     expect(view.forecast.assumption).toMatch(/Scenario only/);
     expect(view.committedTickSequence).toBe("0");
-    expect(view.lastCommittedEventId).toBe("0");
+    const lastOutboxId = (
+      await pool.query<{ id: string }>(
+        "SELECT COALESCE(max(id), 0)::text AS id FROM outbox_events WHERE product_scope = $1",
+        [scope],
+      )
+    ).rows[0]?.id;
+    expect(view.lastCommittedEventId).toBe(lastOutboxId);
     await expect(new WorldViewService(pool, scope).read(owner.accountId, owner.kingdomId, 61)).rejects.toThrow(
       "INVALID_FORECAST_HORIZON",
     );

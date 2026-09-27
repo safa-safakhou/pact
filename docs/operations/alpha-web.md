@@ -10,7 +10,7 @@ Sign in, or create and verify a synthetic test account. An unactivated account s
 
 The four tabs currently expose:
 
-- **Kingdom:** server balances and versions in whole game units (600 internal units each), buildings, two builder slots, training, upkeep, active supply contracts, threats, and forecast assumptions.
+- **Kingdom:** server balances and versions in whole game units (600 internal units each), buildings, two builder slots, living troops, owner-only active training progress with the next game-time deadline and a cancel control, upkeep, active supply contracts, threats, and forecast assumptions. Training deadlines use game time: a paused world does not advance them.
 - **Envoy:** owner inbox, exact approval preview/decision, account export and closure. Manual gameplay does not require a working model provider.
 - **People:** contact list, incoming/outgoing requests with direct answer controls, messages, public kingdom lookup by ID, direct transfers, open supply/garrison offers with exact-version signing, active and past contracts with terms, scouting, garrison lending, and raids. Sensitive game actions use an inline confirmation panel rather than a browser dialog.
 - **Chronicle:** committed event summaries and report lookup by an operation/raid ID from a receipt or inbox event. Scout reports present observed defenses, troop bands, and ordinary stock bands as readable cards; other report types still fall back to structured data. Event IDs are not report IDs.

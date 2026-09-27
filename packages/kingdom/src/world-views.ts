@@ -82,6 +82,14 @@ export interface OwnerKingdomView {
     dueGameTimeMs: number | null;
   }[];
   troops: { type: string; placement: string; ownerKingdomId: string; hostKingdomId: string; count: number }[];
+  training: {
+    batchId: string;
+    type: string;
+    requestedCount: number;
+    completedCount: number;
+    nextUnitDueGameTimeMs: number;
+    unitMinutes: number;
+  }[];
   upkeep: { perMinuteUnits: string; hungry: boolean };
   contracts: {
     id: string;
@@ -262,6 +270,28 @@ export class WorldViewService {
       hostKingdomId: row.host_kingdom_id,
       count: Number(row.count),
     }));
+    const training = (
+      await client.query<{
+        id: string;
+        troop_type: string;
+        requested_count: number;
+        completed_count: number;
+        next_unit_due_game_time_ms: string;
+        unit_minutes: number;
+      }>(
+        `SELECT id, troop_type, requested_count, completed_count, next_unit_due_game_time_ms, unit_minutes
+         FROM training_batches WHERE product_scope = $1 AND kingdom_id = $2 AND status = 'active'
+         ORDER BY next_unit_due_game_time_ms, id LIMIT 1`,
+        [this.productScope, targetId],
+      )
+    ).rows.map((row) => ({
+      batchId: row.id,
+      type: row.troop_type,
+      requestedCount: row.requested_count,
+      completedCount: row.completed_count,
+      nextUnitDueGameTimeMs: Number(row.next_unit_due_game_time_ms),
+      unitMinutes: row.unit_minutes,
+    }));
     const activeContracts = (
       await client.query<ContractRow>(
         `SELECT id, kingdom_a, kingdom_b, terms, end_game_time_ms, notice_end_game_time_ms
@@ -350,6 +380,7 @@ export class WorldViewService {
       buildings,
       builders,
       troops,
+      training,
       upkeep: { perMinuteUnits: upkeep.toString(), hungry: upkeepState?.hungry ?? false },
       contracts: activeContracts.map((row) => ({
         id: row.id,

@@ -40,6 +40,14 @@ type OwnerView = {
   buildings: { kind: string; level: number }[];
   builders: { slot: number; instructionId: string | null; kind: string | null; state: string | null }[];
   troops: { type: string; placement: string; count: number }[];
+  training: {
+    batchId: string;
+    type: string;
+    requestedCount: number;
+    completedCount: number;
+    nextUnitDueGameTimeMs: number;
+    unitMinutes: number;
+  }[];
   upkeep: { perMinuteUnits: string; hungry: boolean };
   contracts: { id: string; counterpartyKingdomId: string; endsGameTimeMs: number; terms: Json }[];
   threats: { kind: string; id: string; dueGameTimeMs: number }[];
@@ -741,6 +749,28 @@ function Kingdom({
             Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
           </p>
           <p>The eight founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
+          {view.training.length > 0 && (
+            <div>
+              <h4>Training in progress</h4>
+              {view.training.map((batch) => (
+                <div className="game-list-item" key={batch.batchId}>
+                  <strong>
+                    {batch.completedCount} of {batch.requestedCount} {batch.type} ready
+                  </strong>
+                  <p>Next unit: {new Date(batch.nextUnitDueGameTimeMs).toLocaleString()} game time</p>
+                  <small>One unit every {batch.unitMinutes} game minutes. The clock stops if the world pauses.</small>
+                  <button
+                    type="button"
+                    className="secondary"
+                    disabled={busy}
+                    onClick={() => void act({ kind: "game.training.cancel", batchId: batch.batchId })}
+                  >
+                    Cancel remaining training
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -765,8 +795,8 @@ function Kingdom({
                 onChange={(event) => setTroopCount(Number(event.target.value))}
               />
             </label>
-            <button type="submit" disabled={busy}>
-              Queue training
+            <button type="submit" disabled={busy || view.training.length > 0}>
+              {view.training.length > 0 ? "Training queue occupied" : "Queue training"}
             </button>
           </form>
         </article>
