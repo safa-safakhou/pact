@@ -20,6 +20,7 @@ Scopes: `world:read`, `messages:write`, `game:act`. None authorize human approva
 ## Routes
 
 - `POST /oauth/register` — dynamic registration
+- `GET /oauth/authorize` — validated browser sign-in page for PKCE consent. Repeated identical `resource` query parameters from an MCP client are normalized to one exact resource; conflicting values fail. Other duplicate parameters still fail schema validation.
 - `POST /oauth/authorize` — cookie-authenticated Origin/CSRF write; human session issues a code; response includes consent `{ clientName, subjectLabel, scopes }`
 - `POST /oauth/token` — `authorization_code` or `refresh_token`
 - `POST /oauth/revoke`

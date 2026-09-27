@@ -31,6 +31,26 @@ export const approvalProposalJsonSchema = z.toJSONSchema(ApprovalProposalSchema,
 export const agentGameActionJsonSchema = z.toJSONSchema(AgentGameActionSchema, { target: "draft-7" });
 export const agentGuideQueryJsonSchema = z.toJSONSchema(AgentGuideQuerySchema, { target: "draft-7" });
 
+export const pactProfileTool = {
+  name: "pact_profile_v1",
+  description:
+    "Identify the PACT account represented by this authenticated connection. The opaque ID stays stable across OAuth refresh and reconnection; no account selector is accepted.",
+  inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  outputSchema: {
+    $schema: "https://json-schema.org/draft/2020-12/schema",
+    type: "object",
+    properties: {
+      id: { type: "string", minLength: 1, pattern: "\\S" },
+      nickname: { type: "string" },
+    },
+    required: ["id"],
+    additionalProperties: false,
+  },
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+  securitySchemes: [{ type: "oauth2", scopes: ["world:read"] }],
+  _meta: { "openai/profile": true },
+} as const;
+
 export const pactAgentGuideTool = {
   name: "pact_agent_guide_v1",
   description:

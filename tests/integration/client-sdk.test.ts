@@ -162,6 +162,14 @@ describe("shared client SDK", () => {
     expect(page.body).toContain("Codex Playtest &lt;script&gt;");
     expect(page.body).not.toContain("Codex Playtest <script>");
     expect(page.body).toContain("game:act");
+    const repeatedResource = new URLSearchParams(params);
+    repeatedResource.append("resource", `${origin}/pact/mcp`);
+    const repeatedPage = await server.inject({ method: "GET", url: `/oauth/authorize?${repeatedResource}` });
+    expect(repeatedPage.statusCode).toBe(200);
+    const conflictingResource = new URLSearchParams(params);
+    conflictingResource.append("resource", "https://evil.example/mcp");
+    const conflict = await server.inject({ method: "GET", url: `/oauth/authorize?${conflictingResource}` });
+    expect(conflict.statusCode).toBe(400);
     params.set("redirect_uri", "https://evil.example/callback");
     const rejected = await server.inject({ method: "GET", url: `/oauth/authorize?${params}` });
     expect(rejected.statusCode).toBe(400);

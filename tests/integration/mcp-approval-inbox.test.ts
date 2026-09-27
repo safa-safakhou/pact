@@ -368,6 +368,7 @@ describe("PACT-017 MCP transport", () => {
       origin,
       clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
       agentGuide: { read: async (owner, topic) => ({ owner, topic, state: "active" }) },
+      profile: { read: async () => ({ nickname: "aster — PACT kingdom" }) },
       dispatcher: {
         dispatch: async (principal: unknown, command: unknown) => {
           captured = { principal, command };
@@ -388,6 +389,67 @@ describe("PACT-017 MCP transport", () => {
     const guideTools = await actionMcp.handlePost(reader, { method: "tools/list", id: 20 }, sessionId);
     expect(JSON.stringify(guideTools.response)).toContain("pact_agent_guide_v1");
     expect(JSON.stringify(guideTools.response)).not.toContain("pact_game_action_v1");
+    const tools = (guideTools.response.result as { tools: { name: string; _meta?: Record<string, unknown> }[] }).tools;
+    expect(tools.find((tool) => tool.name === "pact_profile_v1")?._meta).toEqual({ "openai/profile": true });
+    const profile = await actionMcp.handlePost(
+      reader,
+      { method: "tools/call", id: 23, params: { name: "pact_profile_v1", arguments: {} } },
+      sessionId,
+    );
+    expect(profile.response).toMatchObject({
+      result: { structuredContent: { id: accountId, nickname: "aster — PACT kingdom" } },
+    });
+    const repeated = await actionMcp.handlePost(
+      reader,
+      { method: "tools/call", id: 24, params: { name: "pact_profile_v1", arguments: {} } },
+      sessionId,
+    );
+    expect(repeated.response).toMatchObject({ result: { structuredContent: { id: accountId } } });
+    const reconnected = await actionMcp.handlePost(reader, {
+      method: "initialize",
+      id: 27,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const afterReconnect = await actionMcp.handlePost(
+      reader,
+      { method: "tools/call", id: 28, params: { name: "pact_profile_v1", arguments: {} } },
+      reconnected.sessionId,
+    );
+    expect(afterReconnect.response).toMatchObject({ result: { structuredContent: { id: accountId } } });
+    const { accountId: otherAccountId } = await verifiedAccount(`mcp-profile-${randomUUID()}@example.com`);
+    const otherReader = { ...reader, accountId: otherAccountId };
+    const otherSession = await actionMcp.handlePost(otherReader, {
+      method: "initialize",
+      id: 29,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const otherProfile = await actionMcp.handlePost(
+      otherReader,
+      { method: "tools/call", id: 30, params: { name: "pact_profile_v1", arguments: {} } },
+      otherSession.sessionId,
+    );
+    expect(otherProfile.response).toMatchObject({ result: { structuredContent: { id: otherAccountId } } });
+    await expect(
+      actionMcp.handlePost(
+        otherReader,
+        { method: "tools/call", id: 31, params: { name: "pact_profile_v1", arguments: {} } },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      actionMcp.handlePost(
+        reader,
+        { method: "tools/call", id: 25, params: { name: "pact_profile_v1", arguments: { accountId: randomUUID() } } },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(
+      actionMcp.handlePost(
+        principal,
+        { method: "tools/call", id: 26, params: { name: "pact_profile_v1", arguments: {} } },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     const guide = await actionMcp.handlePost(
       reader,
       { method: "tools/call", id: 21, params: { name: "pact_agent_guide_v1", arguments: {} } },

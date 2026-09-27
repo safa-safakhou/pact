@@ -43,6 +43,8 @@ Keep each 15-minute play session inside one Codex **turn**. Codex may reconnect 
 
 ## Player prompt template
 
+`pact_profile_v1` identifies the account behind each connected MCP profile without a supplied kingdom ID or email. It returns a stable opaque account ID and, after founding, a display-only kingdom-handle nickname. It helps distinguish saved connections after reconnecting; it does not refresh a revoked grant, discover other players, or authorize a move.
+
 For an ordinary player, the goal is a short request. On this operator's Codex installation three PACT connections are visible, so name the account profile; on an installation with only one PACT connection, that prefix is unnecessary. Do **not** supply a kingdom UUID, rulebook excerpt, action JSON, or unit conversion:
 
 > Use only `pact_aster` for PACT. Enter my kingdom, tell me what is happening, and try to secure a modest Grain supply without raiding anyone. Make permitted moves within my existing authority; bring human-only decisions back to me. Show me what actually committed.

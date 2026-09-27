@@ -88,6 +88,14 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
 
   server.get("/oauth/authorize", async (request, reply) =>
     safe(reply, async () => {
+      const rawQuery = request.query as Record<string, unknown>;
+      const requestedResource = rawQuery.resource;
+      if (
+        Array.isArray(requestedResource) &&
+        (requestedResource.length === 0 ||
+          requestedResource.some((value) => typeof value !== "string" || value !== requestedResource[0]))
+      )
+        throw new OAuthError("INVALID_REQUEST");
       const query = z
         .object({
           client_id: z.string().min(1),
@@ -101,7 +109,7 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
           subject_label: z.string().min(1).max(200).default("Your PACT kingdom"),
           response_type: z.literal("code"),
         })
-        .parse(request.query);
+        .parse({ ...rawQuery, resource: Array.isArray(requestedResource) ? requestedResource[0] : requestedResource });
       const consent = await oauth.describeAuthorization({
         clientId: query.client_id,
         redirectUri: query.redirect_uri,

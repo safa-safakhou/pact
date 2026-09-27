@@ -202,6 +202,12 @@ const mcp = new McpTransport({
   clock,
   worldViews,
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
+  profile: {
+    read: async (accountId) => {
+      const owner = await kingdom.getByAccount(accountId);
+      return owner ? { nickname: `${owner.handle} — PACT kingdom` } : {};
+    },
+  },
   reports,
   inbox,
   conversations: new ConversationReader(pool, "pact"),

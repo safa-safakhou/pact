@@ -15,6 +15,7 @@ import {
   pactConversationReadTool,
   pactGameActionTool,
   pactInboxReadTool,
+  pactProfileTool,
   pactReceiptReadTool,
   pactReportReadTool,
   pactWorldReadTool,
@@ -59,6 +60,7 @@ export interface McpTransportOptions {
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
   readonly agentGuide?: AgentGuideReader;
+  readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
   readonly inbox?: InboxReader;
   readonly conversations?: ConversationReaderPort;
@@ -81,6 +83,11 @@ export interface AgentGuideReader {
     accountId: string,
     topic: "start" | "development" | "diplomacy" | "military" | "authority",
   ): Promise<Record<string, unknown>>;
+}
+
+/** Product-owned display label; stable account identity comes from the validated grant. */
+export interface ProfileReader {
+  read(accountId: string): Promise<{ nickname?: string }>;
 }
 
 /** Product-owned authorization behind a product-neutral MCP read port. */
@@ -197,6 +204,7 @@ export class McpTransport {
         return {
           response: this.result(body.id, {
             tools: [
+              ...(this.options.profile && principal.agentScopes?.includes("world:read") ? [pactProfileTool] : []),
               ...(this.options.agentGuide && principal.agentScopes?.includes("world:read") ? [pactAgentGuideTool] : []),
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
@@ -287,6 +295,22 @@ export class McpTransport {
     }
     const name = String(params.name ?? "");
     const args = (params.arguments ?? {}) as Record<string, unknown>;
+    if (name === pactProfileTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.profile) throw new McpError("FORBIDDEN", 403);
+      if (
+        (params.arguments !== undefined &&
+          (params.arguments === null || typeof params.arguments !== "object" || Array.isArray(params.arguments))) ||
+        Object.keys(args).length !== 0
+      )
+        throw new McpError("INVALID_REQUEST");
+      const details = await this.options.profile.read(principal.accountId);
+      const profile = { id: principal.accountId, ...(details.nickname ? { nickname: details.nickname } : {}) };
+      return {
+        content: [{ type: "text", text: JSON.stringify(profile) }],
+        structuredContent: profile,
+        isError: false,
+      };
+    }
     if (name === pactAgentGuideTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.agentGuide)
         throw new McpError("FORBIDDEN", 403);
