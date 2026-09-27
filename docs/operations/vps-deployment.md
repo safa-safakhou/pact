@@ -20,6 +20,8 @@ The private web Alpha social/UI increment deployed as `alpha-20260926-7` on 26 S
 
 The 27 September agent-native releases through `alpha-20260927-4` add an owner-resolving MCP guide, specific construction denials, and authenticated MCP session termination that releases only the closing session's write lease. `alpha-20260927-4` passed public `verify.sh`; a fresh Luna chat then committed Storehouse II through MCP and its lease was released on exit. Release `alpha-20260927-5` adds the authenticated MCP profile tool and accepts identical repeated OAuth `resource` query parameters while rejecting conflicts; public `verify.sh` passed and Briar/Cinder synthetic Codex grants were reauthorized and read-only checked. See [agent-native entry progress](../implementation/reports/agent-native-entry.md) for the observations and remaining social-discovery gap. This is not certification of a completed agent-first game.
 
+Release `alpha-20260927-6` adds owner-only active-training progress to the shared world view and web Kingdom panel. Its public `verify.sh` passed, and a fresh Chrome read showed Cinder's 3/8 Spearmen progress and next game-time deadline. The full two-player browser acceptance remains open; see [PACT-048 progress](../implementation/reports/rules-ui-progress.md).
+
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
 ```sh
