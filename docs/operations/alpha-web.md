@@ -2,7 +2,7 @@
 
 The web root at `https://safa.dedyn.io/pact/` is the first human gameplay client. It uses the existing first-party session and CSRF-protected API; it does not run a separate game engine. Use synthetic test accounts only. The registration notice is temporary MVP test data, not a production legal identity. Verification mail is captured inside the VPS, so the operator must deliver each synthetic account's one-time token through a private channel. Do not put passwords or tokens in Git, Linear, screenshots, or logs. See [VPS deployment](vps-deployment.md) and [identity operations](identity.md).
 
-The current text-first web release is `alpha-20260927-7` (27 September 2026). The web client provides an owner-only social board, training progress, per-slot construction status, and a desktop/mobile layout. The full two-account UI walkthrough remains in progress; do not claim the pilot gate from a build alone.
+The current text-first web release is `alpha-20260928-1` (28 September 2026). The web client provides an owner-only social board, training progress, per-slot construction status, battle summaries, and a desktop/mobile layout. The full two-account UI walkthrough remains in progress; do not claim the pilot gate from a build alone.
 
 For three-account external-agent play, use the [Codex playtest procedure](codex-playtest.md). Its bounded human mandate control is on the Envoy tab; model inference in PACT remains a separate, default-off route.
 

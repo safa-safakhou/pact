@@ -24,6 +24,8 @@ Release `alpha-20260927-6` adds owner-only active-training progress to the share
 
 Release `alpha-20260927-7` makes each builder slot's active game-time deadline and waiting state visible and explains Hall prerequisites. Its public `verify.sh` passed. In Chrome, Cinder showed Hall II waiting in slot 1 for prerequisites, Barracks II active in slot 2 with a 6:57 PM game-time deadline, and 7/8 ordinary Spearmen trained. The eighth then completed; Cinder declared a synthetic raid against Briar from the People panel. A command receipt is not a resolved battle report, so the raid/loss/rebuild acceptance remains open.
 
+Release `alpha-20260928-1` separates ordinary troops from defensive-only Home Guard, adds a bounded owner raid index, and presents resolved battle summaries with full proof collapsed. The public `verify.sh` passed. Chrome showed Cinder's 2 ordinary and 8 Home Guard Spearmen after one replacement completed, one resolved raid with a direct report action, and the correct defender win, 7/8 attacker losses, 2/16 defender losses, and zero loot. This verifies one synthetic raid/loss/rebuild sequence, not garrison lending, simultaneous two-player browser acceptance, or the accessibility pass.
+
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
 ```sh
