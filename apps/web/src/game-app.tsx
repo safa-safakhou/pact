@@ -38,7 +38,13 @@ type OwnerView = {
     }
   >;
   buildings: { kind: string; level: number }[];
-  builders: { slot: number; instructionId: string | null; kind: string | null; state: string | null }[];
+  builders: {
+    slot: number;
+    instructionId: string | null;
+    kind: string | null;
+    state: string | null;
+    dueGameTimeMs: number | null;
+  }[];
   troops: { type: string; placement: string; count: number }[];
   training: {
     batchId: string;
@@ -677,9 +683,19 @@ function Kingdom({
               </li>
             ))}
           </ul>
-          <p>
-            {view.builders.map((item) => `slot ${item.slot}: ${item.kind ?? "free"} ${item.state ?? ""}`).join(" · ")}
-          </p>
+          {view.builders.map((item) => (
+            <p key={item.slot}>
+              Slot {item.slot}: {item.kind ?? "free"} {item.state ?? ""}
+              {item.dueGameTimeMs !== null
+                ? ` · due ${new Date(item.dueGameTimeMs).toLocaleString()} game time`
+                : item.state === "waiting"
+                  ? " · waiting for level prerequisites, stock, authority, or a builder slot"
+                  : ""}
+            </p>
+          ))}
+          {(building === "hall" || view.builders.some((item) => item.kind === "hall" && item.state === "waiting")) && (
+            <p>Hall upgrades require Farm and Barracks at the target level and Storehouse one level below it.</p>
+          )}
           <form
             onSubmit={(event) => {
               event.preventDefault();
