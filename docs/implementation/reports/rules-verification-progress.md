@@ -2,6 +2,10 @@
 
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) — in progress. Implementation revisions: `7eccf06`, `804198c`, `b38c5f5`, and `f7febfc`. Verification: 24 Sep 2026, Node 24, PostgreSQL 17 with PostgreSQL client 18.4.
 
+## Full-phase clock trace — 27 September 2026
+
+`tests/integration/world-clock.test.ts` now persists a nine-phase trace for one tick after pause/resume. Every handler reads the transaction's preceding phase rows before writing its own, so an order change or omitted phase fails. While paused, no handler runs and game time stays frozen. The resumed tick advances exactly one game minute and publishes one tick/outbox event; immediate replay publishes no second trace. The focused PostgreSQL integration suite passed 8 tests; Node 24 typecheck, lint, 124 unit tests, and 179 PostgreSQL integration tests passed. This is synthetic clock-orchestration evidence for R02/R06, not the missing real-domain harvest/contract/battle/scout trace or the generated all-command fault matrix. PACT-051 remains In Progress.
+
 ## Seeded troop lifecycle — 26 September 2026
 
 A 12-step deterministic training fixture now varies batch size, immediate versus partial cancellation, one- versus two-unit completion, and disbanding. Every queue is replayed under its original batch ID; after each transition an independent count model, the eight Home Guards, troop-ID uniqueness, and home placement are checked. One due settlement is deliberately rolled back after troop and resource work, with troop rows, balances, and movement count unchanged before a successful retry. Node 24 build, typecheck, lint, 118 unit tests, and 173 PostgreSQL 17 integration tests passed for the batch. This expands R03/R06 coverage but does not prove every ownership/placement transition or the all-command fault matrix. `tests/integration/troops.test.ts` owns the fixture.

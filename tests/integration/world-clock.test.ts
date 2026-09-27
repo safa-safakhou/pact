@@ -13,6 +13,15 @@ beforeAll(async () => {
   schema = await createTestSchema(admin, "world_clock");
   pool = createSchemaPool(connectionString, schema);
   await pool.query("CREATE TABLE world_test_phase_effects(phase text NOT NULL)");
+  await pool.query(
+    `CREATE TABLE world_test_phase_trace(
+       product_scope text NOT NULL,
+       tick_sequence bigint NOT NULL,
+       phase_order integer NOT NULL,
+       phase text NOT NULL,
+       PRIMARY KEY(product_scope, tick_sequence, phase_order)
+     )`,
+  );
 });
 
 afterAll(async () => {
@@ -31,6 +40,62 @@ async function makeDue(scope: string): Promise<void> {
 }
 
 describe("atomic world clock", () => {
+  it("publishes every phase in order exactly once after a paused boundary resumes", async () => {
+    const scope = "world_full_phase_trace";
+    const handlers: TickHandlers = {};
+    for (const [phaseOrder, phase] of TICK_PHASES.entries()) {
+      handlers[phase] = async (client, context) => {
+        const seen = await client.query<{ phase: string }>(
+          `SELECT phase FROM world_test_phase_trace
+           WHERE product_scope = $1 AND tick_sequence = $2 ORDER BY phase_order`,
+          [scope, context.sequence.toString()],
+        );
+        expect(seen.rows.map((row) => row.phase)).toEqual(TICK_PHASES.slice(0, phaseOrder));
+        await client.query(
+          `INSERT INTO world_test_phase_trace(product_scope, tick_sequence, phase_order, phase)
+           VALUES ($1, $2, $3, $4)`,
+          [scope, context.sequence.toString(), phaseOrder, phase],
+        );
+      };
+    }
+
+    const world = new WorldClockService(pool, scope, handlers);
+    const before = await world.bootstrap();
+    await world.pause("PHASE_TRACE_OUTAGE");
+    expect((await world.read()).gameTimeMs).toBe(before.gameTimeMs);
+    expect((await world.advance("worker-trace", "no-lease")).kind).toBe("paused");
+    expect(
+      (await pool.query("SELECT phase FROM world_test_phase_trace WHERE product_scope = $1", [scope])).rowCount,
+    ).toBe(0);
+
+    const resumed = await world.resume();
+    expect(resumed.gameTimeMs).toBe(before.gameTimeMs);
+    const token = await world.acquireLease("worker-trace");
+    expect(token).toBeTruthy();
+    await makeDue(scope);
+    const first = await world.advance("worker-trace", token ?? "");
+    expect(first.kind).toBe("committed");
+    expect((await world.advance("worker-trace", token ?? "")).kind).toBe("not_due");
+
+    const trace = await pool.query<{ tick_sequence: string; phase_order: number; phase: string }>(
+      `SELECT tick_sequence, phase_order, phase FROM world_test_phase_trace
+       WHERE product_scope = $1 ORDER BY phase_order`,
+      [scope],
+    );
+    expect(trace.rows).toEqual(
+      TICK_PHASES.map((phase, phaseOrder) => ({ tick_sequence: "1", phase_order: phaseOrder, phase })),
+    );
+    expect((await world.read()).gameTimeMs).toBe(before.gameTimeMs + 60_000);
+    expect((await pool.query("SELECT 1 FROM world_ticks WHERE product_scope = $1", [scope])).rowCount).toBe(1);
+    expect(
+      (
+        await pool.query("SELECT 1 FROM outbox_events WHERE product_scope = $1 AND type = 'world.tick.committed.v1'", [
+          scope,
+        ])
+      ).rowCount,
+    ).toBe(1);
+  });
+
   it("fences a second worker and cannot publish the same minute twice", async () => {
     const world = new WorldClockService(pool, "world_one");
     const initial = await world.bootstrap();
