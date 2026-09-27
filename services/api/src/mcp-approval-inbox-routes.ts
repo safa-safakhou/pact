@@ -6,6 +6,7 @@ import { IdentityError } from "@pact/identity";
 import { InboxError, type InboxService } from "@pact/inbox";
 import { McpError, type McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
+import { RunError } from "@pact/runs";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -66,6 +67,11 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
               : 400;
       return reply.code(status).send({ error: { code: error.code } });
     }
+    if (error instanceof RunError) {
+      return reply
+        .code(error.code === "FORBIDDEN" ? 403 : error.code === "NOT_FOUND" ? 404 : 409)
+        .send({ error: { code: error.code } });
+    }
     if (error instanceof InboxError) {
       const status = error.code === "CURSOR_EXPIRED" ? 410 : 400;
       return reply.code(status).send({ error: { code: error.code } });
@@ -119,6 +125,7 @@ export function registerMcpRoutes(
           ((error instanceof McpError && error.code !== "SESSION_NOT_FOUND") ||
             error instanceof DispatcherError ||
             error instanceof ApprovalError ||
+            error instanceof RunError ||
             error instanceof InboxError ||
             error instanceof z.ZodError)
         ) {
@@ -161,6 +168,28 @@ export function registerMcpRoutes(
       reply.header("content-type", "text/event-stream");
       reply.header("cache-control", "no-store");
       return `event: ready\ndata: ${JSON.stringify(stream)}\n\n`;
+    }),
+  );
+
+  server.delete("/mcp", async (request, reply) =>
+    safe(reply, async () => {
+      mcp.assertOrigin(typeof request.headers.origin === "string" ? request.headers.origin : origin);
+      const auth = request.headers.authorization;
+      if (!auth?.startsWith("Bearer ")) throw new McpError("FORBIDDEN", 401);
+      const token = await oauth.introspectAccessToken(auth.slice("Bearer ".length));
+      if (token?.audience !== "mcp") throw new McpError("FORBIDDEN", 401);
+      const sessionHeader = request.headers["mcp-session-id"];
+      if (typeof sessionHeader !== "string") throw new McpError("SESSION_NOT_FOUND", 404);
+      await mcp.closeSession(
+        {
+          accountId: token.accountId,
+          productScope: ProductScopeSchema.parse("pact"),
+          audience: "agent",
+          agentScopes: z.array(AgentScopeSchema).parse(token.scopes),
+        },
+        sessionHeader,
+      );
+      return reply.code(204).send();
     }),
   );
 }

@@ -43,6 +43,7 @@ import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
 import { RunError, RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
+import { AgentGuideReader } from "./agent-guide.js";
 import { readEnvironment } from "./config.js";
 import { GameReportReader } from "./game-report-reader.js";
 import { loadOperatorPreflight } from "./operator-preflight.js";
@@ -200,6 +201,7 @@ const mcp = new McpTransport({
   origin: environment.PACT_ORIGIN,
   clock,
   worldViews,
+  agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   reports,
   inbox,
   conversations: new ConversationReader(pool, "pact"),

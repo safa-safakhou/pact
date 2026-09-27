@@ -18,7 +18,10 @@ export type DispatcherFailureCode =
   | "EXPIRED"
   | "INSUFFICIENT_STOCK"
   | "RESERVE_FLOOR"
-  | "UNIT_LOCKED";
+  | "UNIT_LOCKED"
+  | "BUILDING_BUSY"
+  | "SLOT_BUSY"
+  | "INVALID_LEVEL";
 
 export class DispatcherError extends Error {
   constructor(readonly code: DispatcherFailureCode) {

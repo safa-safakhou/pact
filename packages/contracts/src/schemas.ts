@@ -136,6 +136,10 @@ export const ScoutStartActionSchema = z
   })
   .strict();
 
+export const AgentGuideQuerySchema = z
+  .object({ topic: z.enum(["start", "development", "diplomacy", "military", "authority"]).default("start") })
+  .strict();
+
 export const ApprovalProposalSchema = z
   .object({
     commandId: z.uuid(),
@@ -289,6 +293,9 @@ export const ReceiptCodeSchema = z.enum([
   "WORLD_PAUSED",
   "IDEMPOTENCY_CONFLICT",
   "INVALID_COMMAND",
+  "BUILDING_BUSY",
+  "SLOT_BUSY",
+  "INVALID_LEVEL",
 ]);
 
 export const CommandReceiptSchema = z

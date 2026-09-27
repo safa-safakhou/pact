@@ -516,7 +516,13 @@ export class GameCommandHandler {
           error.code === "UNIT_LOCKED" ? "UNIT_LOCKED" : error.code === "NOT_OWNER" ? "FORBIDDEN" : "INVALID_COMMAND",
         );
       if (error instanceof BuildingError)
-        throw new DispatcherError(error.code === "NOT_OWNER" ? "FORBIDDEN" : "INVALID_COMMAND");
+        throw new DispatcherError(
+          error.code === "NOT_OWNER"
+            ? "FORBIDDEN"
+            : error.code === "BUILDING_BUSY" || error.code === "SLOT_BUSY" || error.code === "INVALID_LEVEL"
+              ? error.code
+              : "INVALID_COMMAND",
+        );
       if (error instanceof SupplyError)
         throw new DispatcherError(
           error.code === "NOT_PARTY"

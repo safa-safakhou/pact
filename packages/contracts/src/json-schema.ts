@@ -1,6 +1,7 @@
 import { z } from "zod";
 import {
   AgentGameActionSchema,
+  AgentGuideQuerySchema,
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   CommandEnvelopeSchema,
@@ -28,6 +29,14 @@ export const receiptReadQueryJsonSchema = z.toJSONSchema(ReceiptReadQuerySchema,
 export const approvalStatusQueryJsonSchema = z.toJSONSchema(ApprovalStatusQuerySchema, { target: "draft-7" });
 export const approvalProposalJsonSchema = z.toJSONSchema(ApprovalProposalSchema, { target: "draft-7" });
 export const agentGameActionJsonSchema = z.toJSONSchema(AgentGameActionSchema, { target: "draft-7" });
+export const agentGuideQueryJsonSchema = z.toJSONSchema(AgentGuideQuerySchema, { target: "draft-7" });
+
+export const pactAgentGuideTool = {
+  name: "pact_agent_guide_v1",
+  description:
+    "START HERE when entering PACT. No kingdom ID is needed. Read your own kingdom, contacts, pending offers, authority, and next steps; choose a topic for exact development, diplomacy, military, or authority rules. Read-only; it never opens a run or commits a move.",
+  inputSchema: agentGuideQueryJsonSchema,
+} as const;
 
 export const pactWorldReadTool = {
   name: "pact_world_read_v1",
@@ -76,7 +85,7 @@ export const pactApprovalProposalTool = {
 export const pactGameActionTool = {
   name: "pact_game_action_v1",
   description:
-    "Submit one typed game action using a new UUID commandId. The authenticated account is the actor; the server checks the live run lease, mandate, rules, stock, and retries. IMPORTANT: world-view balances/costs are in marked units, but wholeAmount and wholePerHour are whole units (600 marked = 1 whole). For a direct one-time gift use action {kind:'game.transfer',recipientKingdomId,resource:'iron'|'silver'|'grain',wholeAmount}. For a timed reciprocal contract use action {kind:'game.supply.offer',counterpartyKingdomId,terms:{aToB:{resource,wholePerHour}|null,bToA:{resource,wholePerHour}|null,aBond:null,bBond:null,durationHours:1|6|24|72,noticeHours:0|1|6}}; A is the offering kingdom and B the recipient. Both parties must sign the same offer version to activate. Scouting needs two available Spearman UUIDs in unitIds, not just a target. Human-only actions remain forbidden. After an uncertain result, read the receipt by the SAME commandId; a validation denial has no receipt.",
+    "Submit one typed game action using a new UUID commandId. First call pact_agent_guide_v1 to learn your kingdom, action shapes, and limits. The authenticated account is the actor; the server checks the live run lease, mandate, rules, stock, and retries. Balances are in marked units but wholeAmount and wholePerHour are whole units (600 marked = 1 whole). Scouting automatically selects two available Spearmen when unitIds is omitted. Human-only actions remain forbidden. After an uncertain result, read the receipt by the SAME commandId; a validation denial has no receipt.",
   inputSchema: agentGameActionJsonSchema,
 } as const;
 

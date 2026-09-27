@@ -256,6 +256,16 @@ export class RunService {
     });
   }
 
+  /** Closing one MCP session releases only the lease held by that same authenticated session. */
+  async releaseMcpLease(input: { accountId: string; holderId: string }): Promise<void> {
+    await this.pool.query(
+      `UPDATE write_leases SET released_at = $4
+       WHERE product_scope = $1 AND subject_id = $2 AND holder_kind = 'mcp'
+         AND holder_id = $3 AND released_at IS NULL`,
+      [this.options.productScope, input.accountId, input.holderId, this.options.clock.now()],
+    );
+  }
+
   /** Check the exact external host lease inside the gameplay command transaction. */
   async assertMcpWriteLease(client: PoolClient, accountId: string, holderId: string): Promise<void> {
     const result = await client.query(

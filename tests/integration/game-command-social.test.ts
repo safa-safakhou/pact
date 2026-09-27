@@ -2909,6 +2909,12 @@ describe("shared gameplay command admission", () => {
     expect(receipt.code).toBe("COMMITTED");
     expect(receipt.charged).toHaveLength(2);
     expect(await dispatcher.dispatch(ownerPrincipal, queued)).toEqual(receipt);
+    await expect(
+      dispatcher.dispatch(
+        ownerPrincipal,
+        command(owner.accountId, { kind: "game.building.queue", building: "farm", targetLevel: 2, slot: 2 }),
+      ),
+    ).rejects.toMatchObject({ code: "BUILDING_BUSY" });
     const row = await pool.query<{ state: string }>("SELECT state FROM building_instructions WHERE id = $1", [
       queued.commandId,
     ]);

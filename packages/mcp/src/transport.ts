@@ -2,12 +2,14 @@ import { randomUUID } from "node:crypto";
 import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
 import {
   AgentGameActionSchema,
+  AgentGuideQuerySchema,
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ConversationReadQuerySchema,
   commandJsonSchema,
   InboxReadQuerySchema,
   ProductScopeSchema,
+  pactAgentGuideTool,
   pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactConversationReadTool,
@@ -56,6 +58,7 @@ export interface McpTransportOptions {
   readonly origin: string;
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
+  readonly agentGuide?: AgentGuideReader;
   readonly reports?: ReportReader;
   readonly inbox?: InboxReader;
   readonly conversations?: ConversationReaderPort;
@@ -63,12 +66,21 @@ export interface McpTransportOptions {
   readonly approvalProposals?: ApprovalProposalPort;
   readonly runLeases?: {
     openMcpLease(input: { accountId: string; holderId: string }): Promise<{ leaseId: string; expiresAt: Date }>;
+    releaseMcpLease(input: { accountId: string; holderId: string }): Promise<void>;
   };
 }
 
 /** Domain-owned projection behind a product-neutral MCP read port. */
 export interface WorldViewReader {
   read(accountId: string, targetKingdomId: string, forecastMinutes: number): Promise<unknown>;
+}
+
+/** Product-owned owner projection and learning guide; MCP never accepts a caller-supplied account. */
+export interface AgentGuideReader {
+  read(
+    accountId: string,
+    topic: "start" | "development" | "diplomacy" | "military" | "authority",
+  ): Promise<Record<string, unknown>>;
 }
 
 /** Product-owned authorization behind a product-neutral MCP read port. */
@@ -185,6 +197,7 @@ export class McpTransport {
         return {
           response: this.result(body.id, {
             tools: [
+              ...(this.options.agentGuide && principal.agentScopes?.includes("world:read") ? [pactAgentGuideTool] : []),
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
@@ -228,6 +241,17 @@ export class McpTransport {
     return { protocolVersion: row.protocol_version };
   }
 
+  /** MCP HTTP DELETE: terminate only the authenticated session and its matching write lease. */
+  async closeSession(principal: AuthenticatedPrincipal, sessionId: string): Promise<void> {
+    await this.requireSession(principal.accountId, sessionId);
+    await this.options.runLeases?.releaseMcpLease({ accountId: principal.accountId, holderId: sessionId });
+    await this.options.pool.query(`DELETE FROM mcp_sessions WHERE id = $1 AND product_scope = $2 AND account_id = $3`, [
+      sessionId,
+      this.options.productScope,
+      principal.accountId,
+    ]);
+  }
+
   private async initialize(
     principal: AuthenticatedPrincipal,
     body: McpJsonRpcRequest,
@@ -263,6 +287,17 @@ export class McpTransport {
     }
     const name = String(params.name ?? "");
     const args = (params.arguments ?? {}) as Record<string, unknown>;
+    if (name === pactAgentGuideTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.agentGuide)
+        throw new McpError("FORBIDDEN", 403);
+      const query = AgentGuideQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const guide = await this.options.agentGuide.read(principal.accountId, query.data.topic);
+      return {
+        content: [{ type: "text", text: JSON.stringify(guide) }],
+        structuredContent: guide,
+      };
+    }
     if (name === RUN_OPEN_TOOL.name) {
       if (
         !principal.agentScopes?.includes("game:act") ||

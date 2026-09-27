@@ -13,7 +13,7 @@ import {
 import { InboxService } from "@pact/inbox";
 import { MCP_PROTOCOL_PRIMARY, McpError, McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
-import { RunService } from "@pact/runs";
+import { RunError, RunService } from "@pact/runs";
 import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -57,6 +57,11 @@ beforeAll(async () => {
     origin,
     clock,
     runLeases: runs,
+    approvalProposals: {
+      proposeAgent: async () => {
+        throw new RunError("FORBIDDEN");
+      },
+    },
     worldViews: {
       read: async (viewer, target, minutes) => ({ audience: "public", viewer, target, minutes }),
     },
@@ -159,6 +164,30 @@ describe("PACT-017 MCP transport", () => {
     });
     expect(denied.statusCode).toBe(200);
     expect(denied.json()).toMatchObject({ result: { isError: true } });
+    const noLeaseProposal = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: {
+        origin,
+        authorization: "Bearer synthetic-test-token",
+        "mcp-session-id": String(response.headers["mcp-session-id"]),
+      },
+      payload: {
+        jsonrpc: "2.0",
+        id: 7,
+        method: "tools/call",
+        params: {
+          name: "pact_approval_propose_v1",
+          arguments: {
+            commandId: randomUUID(),
+            action: { kind: "game.building.queue", building: "storehouse", targetLevel: 2, slot: 2 },
+          },
+        },
+      },
+    });
+    expect(noLeaseProposal.statusCode).toBe(200);
+    expect(noLeaseProposal.json()).toMatchObject({ result: { isError: true } });
+    expect(JSON.stringify(noLeaseProposal.json())).toContain("FORBIDDEN");
     const ping = await server.inject({
       method: "POST",
       url: "/mcp",
@@ -171,6 +200,45 @@ describe("PACT-017 MCP transport", () => {
     });
     expect(ping.statusCode).toBe(200);
     expect(ping.json()).toMatchObject({ result: {} });
+    const sessionId = String(response.headers["mcp-session-id"]);
+    const opened = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: { origin, authorization: "Bearer synthetic-test-token", "mcp-session-id": sessionId },
+      payload: { jsonrpc: "2.0", id: 4, method: "tools/call", params: { name: "run.open", arguments: {} } },
+    });
+    expect(opened.statusCode).toBe(200);
+    expect(JSON.stringify(opened.json())).toContain("leaseId");
+    const closed = await server.inject({
+      method: "DELETE",
+      url: "/mcp",
+      headers: { origin, authorization: "Bearer synthetic-test-token", "mcp-session-id": sessionId },
+    });
+    expect(closed.statusCode).toBe(204);
+    const released = await pool.query<{ released_at: Date | null }>(
+      `SELECT released_at FROM write_leases WHERE product_scope = 'pact' AND subject_id = $1`,
+      [accountId],
+    );
+    expect(released.rows[0]?.released_at).not.toBeNull();
+    expect((await pool.query("SELECT 1 FROM mcp_sessions WHERE id = $1", [sessionId])).rowCount).toBe(0);
+    const second = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: { origin, authorization: "Bearer synthetic-test-token" },
+      payload: { jsonrpc: "2.0", id: 5, method: "initialize", params: { protocolVersion: MCP_PROTOCOL_PRIMARY } },
+    });
+    const reopened = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: {
+        origin,
+        authorization: "Bearer synthetic-test-token",
+        "mcp-session-id": String(second.headers["mcp-session-id"]),
+      },
+      payload: { jsonrpc: "2.0", id: 6, method: "tools/call", params: { name: "run.open", arguments: {} } },
+    });
+    expect(reopened.statusCode).toBe(200);
+    expect(JSON.stringify(reopened.json())).toContain("leaseId");
     await server.close();
   });
 
@@ -286,6 +354,7 @@ describe("PACT-017 MCP transport", () => {
     expect(init.sessionId).toBeTruthy();
     const sessionId = init.sessionId as string;
     await expect(mcp.openStream(otherPrincipal, sessionId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(mcp.closeSession(otherPrincipal, sessionId)).rejects.toMatchObject({ code: "FORBIDDEN" });
     mcp.assertOrigin(origin);
     expect(() => mcp.assertOrigin("https://evil.example")).toThrow(McpError);
   });
@@ -298,6 +367,7 @@ describe("PACT-017 MCP transport", () => {
       productScope: "pact",
       origin,
       clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+      agentGuide: { read: async (owner, topic) => ({ owner, topic, state: "active" }) },
       dispatcher: {
         dispatch: async (principal: unknown, command: unknown) => {
           captured = { principal, command };
@@ -314,6 +384,27 @@ describe("PACT-017 MCP transport", () => {
     const sessionId = initialized.sessionId;
     const listed = await actionMcp.handlePost(principal, { method: "tools/list", id: 2 }, sessionId);
     expect(JSON.stringify(listed.response)).toContain("pact_game_action_v1");
+    const reader = { accountId, productScope, audience: "agent" as const, agentScopes: ["world:read" as const] };
+    const guideTools = await actionMcp.handlePost(reader, { method: "tools/list", id: 20 }, sessionId);
+    expect(JSON.stringify(guideTools.response)).toContain("pact_agent_guide_v1");
+    expect(JSON.stringify(guideTools.response)).not.toContain("pact_game_action_v1");
+    const guide = await actionMcp.handlePost(
+      reader,
+      { method: "tools/call", id: 21, params: { name: "pact_agent_guide_v1", arguments: {} } },
+      sessionId,
+    );
+    expect(guide.response).toMatchObject({ result: { structuredContent: { owner: accountId, topic: "start" } } });
+    await expect(
+      actionMcp.handlePost(
+        reader,
+        {
+          method: "tools/call",
+          id: 22,
+          params: { name: "pact_agent_guide_v1", arguments: { accountId: randomUUID() } },
+        },
+        sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
     const commandId = randomUUID();
     const args = {
       commandId,
