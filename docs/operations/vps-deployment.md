@@ -22,6 +22,8 @@ The 27 September agent-native releases through `alpha-20260927-4` add an owner-r
 
 Release `alpha-20260927-6` adds owner-only active-training progress to the shared world view and web Kingdom panel. Its public `verify.sh` passed, and a fresh Chrome read showed Cinder's 3/8 Spearmen progress and next game-time deadline. The full two-player browser acceptance remains open; see [PACT-048 progress](../implementation/reports/rules-ui-progress.md).
 
+Release `alpha-20260927-7` makes each builder slot's active game-time deadline and waiting state visible and explains Hall prerequisites. Its public `verify.sh` passed. In Chrome, Cinder showed Hall II waiting in slot 1 for prerequisites, Barracks II active in slot 2 with a 6:57 PM game-time deadline, and 7/8 ordinary Spearmen trained. The eighth then completed; Cinder declared a synthetic raid against Briar from the People panel. A command receipt is not a resolved battle report, so the raid/loss/rebuild acceptance remains open.
+
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
 ```sh

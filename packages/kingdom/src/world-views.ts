@@ -81,7 +81,14 @@ export interface OwnerKingdomView {
     state: string | null;
     dueGameTimeMs: number | null;
   }[];
-  troops: { type: string; placement: string; ownerKingdomId: string; hostKingdomId: string; count: number }[];
+  troops: {
+    type: string;
+    placement: string;
+    ownerKingdomId: string;
+    hostKingdomId: string;
+    homeGuard: boolean;
+    count: number;
+  }[];
   training: {
     batchId: string;
     type: string;
@@ -97,6 +104,13 @@ export interface OwnerKingdomView {
     endsGameTimeMs: number;
     noticeEndsGameTimeMs: number | null;
     terms: SupplyTerms;
+  }[];
+  raids: {
+    raidId: string;
+    status: "declared" | "locked" | "resolved" | "canceled";
+    side: "attacker" | "defender";
+    otherKingdomId: string;
+    dueGameTimeMs: number;
   }[];
   threats: { kind: "raid" | "scout"; id: string; dueGameTimeMs: number }[];
   records: { kind: string; id: string; occurredAt: string }[];
@@ -256,11 +270,13 @@ export class WorldViewService {
         placement: string;
         owner_kingdom_id: string;
         host_kingdom_id: string;
+        home_guard: boolean;
         count: string;
       }>(
-        `SELECT type, placement, owner_kingdom_id, host_kingdom_id, count(*)::text FROM kingdom_troops
+        `SELECT type, placement, owner_kingdom_id, host_kingdom_id, home_guard, count(*)::text FROM kingdom_troops
        WHERE product_scope = $1 AND (owner_kingdom_id = $2 OR host_kingdom_id = $2)
-       GROUP BY type, placement, owner_kingdom_id, host_kingdom_id ORDER BY type, placement, owner_kingdom_id, host_kingdom_id`,
+       GROUP BY type, placement, owner_kingdom_id, host_kingdom_id, home_guard
+       ORDER BY type, placement, owner_kingdom_id, host_kingdom_id, home_guard`,
         [this.productScope, targetId],
       )
     ).rows.map((row) => ({
@@ -268,6 +284,7 @@ export class WorldViewService {
       placement: row.placement,
       ownerKingdomId: row.owner_kingdom_id,
       hostKingdomId: row.host_kingdom_id,
+      homeGuard: row.home_guard,
       count: Number(row.count),
     }));
     const training = (
@@ -336,6 +353,30 @@ export class WorldViewService {
         [this.productScope, targetId],
       )
     ).rows.map((row) => ({ kind: row.kind, id: row.id, dueGameTimeMs: Number(row.due_game_time_ms) }));
+    const raids = (
+      await client.query<{
+        id: string;
+        status: "declared" | "locked" | "resolved" | "canceled";
+        leader_kingdom_id: string;
+        target_kingdom_id: string;
+        resolution_game_time_ms: string;
+      }>(
+        `SELECT id, status, leader_kingdom_id, target_kingdom_id, resolution_game_time_ms
+         FROM raids WHERE product_scope = $1 AND (
+           leader_kingdom_id = $2 OR target_kingdom_id = $2 OR EXISTS (
+             SELECT 1 FROM raid_contributions c WHERE c.product_scope = $1 AND c.raid_id = raids.id
+               AND c.kingdom_id = $2 AND c.status = 'committed'
+           )
+         ) ORDER BY declared_game_time_ms DESC, id DESC LIMIT 20`,
+        [this.productScope, targetId],
+      )
+    ).rows.map((row) => ({
+      raidId: row.id,
+      status: row.status,
+      side: row.target_kingdom_id === targetId ? ("defender" as const) : ("attacker" as const),
+      otherKingdomId: row.target_kingdom_id === targetId ? row.leader_kingdom_id : row.target_kingdom_id,
+      dueGameTimeMs: Number(row.resolution_game_time_ms),
+    }));
     const records = (
       await client.query<{ type: string; event_id: string; occurred_at: Date }>(
         `SELECT type, event_id, occurred_at FROM inbox_events WHERE product_scope = $1 AND account_id = $2
@@ -389,6 +430,7 @@ export class WorldViewService {
         noticeEndsGameTimeMs: row.notice_end_game_time_ms === null ? null : Number(row.notice_end_game_time_ms),
         terms: row.terms,
       })),
+      raids,
       threats,
       records,
       forecast,

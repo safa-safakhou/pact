@@ -238,6 +238,90 @@ describe("authorized world views", () => {
       outcome: "defaulted",
     });
   });
+
+  it("separates defensive Home Guard from ordinary troops only in the owner projection", async () => {
+    const owner = await kingdom();
+    const outsider = await kingdom();
+    for (const homeGuard of [true, false]) {
+      await pool.query(
+        `INSERT INTO kingdom_troops(id, product_scope, owner_kingdom_id, host_kingdom_id,
+          type, home_guard, placement, created_game_time_ms, created_at)
+         VALUES ($1, 'pact', $2, $2, 'spearman', $3, 'home', 0, clock_timestamp())`,
+        [randomUUID(), owner.kingdomId, homeGuard],
+      );
+    }
+    const service = new WorldViewService(pool, scope);
+    const ownView = await service.read(owner.accountId, owner.kingdomId);
+    expect(ownView?.audience).toBe("owner");
+    if (ownView?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(ownView.troops).toEqual([
+      {
+        type: "spearman",
+        placement: "home",
+        ownerKingdomId: owner.kingdomId,
+        hostKingdomId: owner.kingdomId,
+        homeGuard: false,
+        count: 1,
+      },
+      {
+        type: "spearman",
+        placement: "home",
+        ownerKingdomId: owner.kingdomId,
+        hostKingdomId: owner.kingdomId,
+        homeGuard: true,
+        count: 1,
+      },
+    ]);
+    for (const viewer of [null, outsider.accountId]) {
+      const view = await service.read(viewer, owner.kingdomId);
+      expect(JSON.stringify(view)).not.toMatch(/homeGuard|troops/);
+    }
+  });
+
+  it("lists only an owner's participating raids with side and game-time deadline", async () => {
+    const owner = await kingdom();
+    const other = await kingdom();
+    const outsider = await kingdom();
+    const attackingRaidId = randomUUID();
+    const defendingRaidId = randomUUID();
+    for (const [raidId, leaderId, targetId, status, declaredAt] of [
+      [attackingRaidId, owner.kingdomId, other.kingdomId, "resolved", 0],
+      [defendingRaidId, other.kingdomId, owner.kingdomId, "declared", 1],
+    ]) {
+      await pool.query(
+        `INSERT INTO raids(id, product_scope, leader_kingdom_id, target_kingdom_id, rules_version,
+          declared_game_time_ms, lock_game_time_ms, resolution_game_time_ms, status, loot_priority, declaration_terms)
+         VALUES ($1, 'pact', $2, $3, 'pact-s1-v1', $5, 60000, 120000, $4, ARRAY['grain'], '{}'::jsonb)`,
+        [raidId, leaderId, targetId, status, declaredAt],
+      );
+    }
+    const service = new WorldViewService(pool, scope);
+    const ownView = await service.read(owner.accountId, owner.kingdomId);
+    expect(ownView?.audience).toBe("owner");
+    if (ownView?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(ownView.raids).toEqual([
+      {
+        raidId: defendingRaidId,
+        status: "declared",
+        side: "defender",
+        otherKingdomId: other.kingdomId,
+        dueGameTimeMs: 120000,
+      },
+      {
+        raidId: attackingRaidId,
+        status: "resolved",
+        side: "attacker",
+        otherKingdomId: other.kingdomId,
+        dueGameTimeMs: 120000,
+      },
+    ]);
+    const unrelated = await service.read(outsider.accountId, outsider.kingdomId);
+    expect(unrelated?.audience).toBe("owner");
+    if (unrelated?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(unrelated.raids).toEqual([]);
+    const publicView = await service.read(null, owner.kingdomId);
+    expect(JSON.stringify(publicView)).not.toMatch(/raids|dueGameTimeMs/);
+  });
 });
 
 async function offer(a: string, b: string): Promise<string> {

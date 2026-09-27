@@ -45,7 +45,7 @@ type OwnerView = {
     state: string | null;
     dueGameTimeMs: number | null;
   }[];
-  troops: { type: string; placement: string; count: number }[];
+  troops: { type: string; placement: string; homeGuard: boolean; count: number }[];
   training: {
     batchId: string;
     type: string;
@@ -56,6 +56,7 @@ type OwnerView = {
   }[];
   upkeep: { perMinuteUnits: string; hungry: boolean };
   contracts: { id: string; counterpartyKingdomId: string; endsGameTimeMs: number; terms: Json }[];
+  raids: { raidId: string; status: string; side: string; otherKingdomId: string; dueGameTimeMs: number }[];
   threats: { kind: string; id: string; dueGameTimeMs: number }[];
   records: { kind: string; id: string; occurredAt: string }[];
   forecast: {
@@ -756,8 +757,9 @@ function Kingdom({
           <h3>Troops</h3>
           <ul>
             {view.troops.map((item) => (
-              <li key={`${item.type}-${item.placement}`}>
-                {item.count} {item.type} · {item.placement}
+              <li key={`${item.type}-${item.placement}-${item.homeGuard}`}>
+                {item.count} {item.type} · {item.placement} ·{" "}
+                {item.homeGuard ? "Home Guard (defense only)" : "ordinary"}
               </li>
             ))}
           </ul>
@@ -1668,6 +1670,37 @@ function Chronicle({
       <h2>Chronicle</h2>
       <p>Committed records and authorized private reports.</p>
       <article className="game-card">
+        <h3>Your raids</h3>
+        {view.raids.length ? (
+          <ul>
+            {view.raids.map((raid) => (
+              <li key={raid.raidId}>
+                {raid.side} · {raid.status} · {raid.otherKingdomId} · {raid.status === "resolved" ? "resolved" : "due"}{" "}
+                {new Date(raid.dueGameTimeMs).toLocaleString()} game time · <code>{raid.raidId}</code>{" "}
+                {raid.status === "resolved" && (
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      setReportKind("raid_participant");
+                      setReportId(raid.raidId);
+                      void client
+                        .readReport("raid_participant", raid.raidId)
+                        .then(setReport)
+                        .catch((error: unknown) => setReport({ error: failure(error) }));
+                    }}
+                  >
+                    Read battle report
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No raids yet.</p>
+        )}
+      </article>
+      <article className="game-card">
         <h3>Records</h3>
         {view.records.length ? (
           <ul>
@@ -1711,7 +1744,7 @@ function Chronicle({
       {report !== null && (
         <article className="game-card">
           <h3>Report</h3>
-          <GameReport value={report} social={social} />
+          <GameReport value={report} social={social} viewerKingdomId={view.profile.kingdomId} />
         </article>
       )}
       <p>{inbox.length} recent inbox events. Open Envoy for details.</p>
@@ -1719,10 +1752,84 @@ function Chronicle({
   );
 }
 
-function GameReport({ value, social }: { value: unknown; social: SocialOverview | null }): React.JSX.Element {
+function GameReport({
+  value,
+  social,
+  viewerKingdomId,
+}: {
+  value: unknown;
+  social: SocialOverview | null;
+  viewerKingdomId: string;
+}): React.JSX.Element {
   if (!value || typeof value !== "object") return <p>Report unavailable.</p>;
   const item = value as Json;
   if (item.error) return <p role="status">Report not available yet, or not visible to this kingdom.</p>;
+  if (item.status === "resolved" && typeof item.raidId === "string") {
+    const trace = item.trace && typeof item.trace === "object" ? (item.trace as Json) : null;
+    const winner = String(trace?.winner ?? item.winner ?? "unknown");
+    const groups = Array.isArray(trace?.casualtyGroups)
+      ? (trace.casualtyGroups as {
+          side: string;
+          ownerId: string;
+          casualties: number;
+          participating: number;
+          byType: Record<string, number>;
+        }[])
+      : [];
+    const ownGroup = groups.find((group) => group.ownerId === viewerKingdomId);
+    const loot = trace?.lootTaken && typeof trace.lootTaken === "object" ? (trace.lootTaken as Json) : null;
+    const lootEntries = Object.entries(loot ?? {}).filter(([, amount]) => Number(amount) > 0);
+    return (
+      <div className="game-report">
+        <p>
+          <strong>
+            {winner === "attacker" ? "Attackers" : winner === "defender" ? "Defenders" : "Neither side"} won.
+          </strong>{" "}
+          The battle resolved at {new Date(Number(item.gameTimeMs)).toLocaleString()} game time.
+        </p>
+        <div className="game-grid">
+          <section className="game-report-card">
+            <h4>Your outcome</h4>
+            {ownGroup ? (
+              <p>
+                You were on the {ownGroup.side} side and lost {ownGroup.casualties} of {ownGroup.participating} troops.
+                {winner === ownGroup.side ? " Your side won." : " Your side lost."}
+              </p>
+            ) : (
+              <p>This is the public result; individual losses are private to participants.</p>
+            )}
+          </section>
+          {groups.length > 0 && (
+            <section className="game-report-card">
+              <h4>Losses by kingdom</h4>
+              <ul>
+                {groups.map((group) => (
+                  <li key={`${group.side}-${group.ownerId}`}>
+                    {group.ownerId === viewerKingdomId ? "You" : group.ownerId} ({group.side}): {group.casualties} of{" "}
+                    {group.participating} lost
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {loot && (
+            <section className="game-report-card">
+              <h4>Loot taken</h4>
+              <p>
+                {lootEntries.length
+                  ? lootEntries.map(([resource, amount]) => `${units(String(amount))} ${resource}`).join(", ")
+                  : "None"}
+              </p>
+            </section>
+          )}
+        </div>
+        <details>
+          <summary>Battle proof and full trace</summary>
+          <pre>{JSON.stringify(value, null, 2)}</pre>
+        </details>
+      </div>
+    );
+  }
   if (item.kind !== "engine_report") return <pre>{JSON.stringify(value, null, 2)}</pre>;
   const targetId = String(item.targetKingdomId ?? "");
   const targetName = social?.contacts.find((contact) => contact.kingdomId === targetId)?.displayName ?? targetId;
