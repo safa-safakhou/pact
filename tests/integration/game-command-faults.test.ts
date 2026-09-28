@@ -720,6 +720,72 @@ function expectedBalances(before: BalanceRow[], kind: GameAction["kind"], a: Own
 }
 
 const kinds = GameActionSchema.options.map((option) => option.shape.kind.value);
+describe("uncertain command completion", () => {
+  it("recovers a caller timeout with the original ID, one receipt and one resource debit", async () => {
+    await pool.query(`UPDATE world_clocks SET last_heartbeat_at=clock_timestamp(),
+      next_tick_due_at=clock_timestamp()+interval '1 hour'`);
+    const a = await kingdom(),
+      b = await kingdom();
+    const command = envelope(a, {
+      kind: "game.contact.request",
+      recipientKingdomId: b.kingdomId,
+      note: "Timeout recovery fixture",
+    });
+    const before = await snapshot();
+    const stock = await balances();
+    const blocker = await pool.connect();
+    let pending: ReturnType<CommandDispatcher["dispatch"]> | undefined;
+    try {
+      await blocker.query("BEGIN");
+      const pid = (await blocker.query<{ pid: number }>("SELECT pg_backend_pid() AS pid")).rows[0]?.pid;
+      if (!pid) throw new Error("Missing blocking PID");
+      await blocker.query("SELECT product_scope FROM world_clocks WHERE product_scope='pact' FOR UPDATE");
+      pending = dispatcher.dispatch(principal(a), command);
+      // A caller abandoning its wait does not imply PostgreSQL rolled back.
+      void pending.catch(() => {});
+      await expect
+        .poll(
+          async () =>
+            (await pool.query("SELECT 1 FROM pg_stat_activity WHERE $1::int = ANY(pg_blocking_pids(pid))", [pid]))
+              .rowCount,
+          { timeout: 5000 },
+        )
+        .toBeGreaterThan(0);
+      expect(
+        await Promise.race([
+          pending.then(() => "COMPLETED"),
+          new Promise<string>((resolve) => setTimeout(() => resolve("CLIENT_TIMEOUT"), 10)),
+        ]),
+      ).toBe("CLIENT_TIMEOUT");
+      expect(await snapshot()).toEqual(before);
+      await blocker.query("COMMIT");
+      const receipt = await pending;
+      expect(receipt.code).toBe("COMMITTED");
+      expect(await balances()).toEqual(expectedBalances(stock, "game.contact.request", a, b, b));
+      const after = await snapshot();
+      expect(await dispatcher.lookupReceipt(principal(a), command.commandId)).toEqual(receipt);
+      expect(await dispatcher.dispatch(principal(a), command)).toEqual(receipt);
+      expect(await snapshot()).toEqual(after);
+      expect(
+        (await pool.query("SELECT 1 FROM command_receipts WHERE command_id=$1", [command.commandId])).rowCount,
+      ).toBe(1);
+      expect(
+        (
+          await pool.query(
+            "SELECT 1 FROM cold_contact_requests WHERE sender_kingdom_id=$1 AND recipient_kingdom_id=$2",
+            [a.kingdomId, b.kingdomId],
+          )
+        ).rowCount,
+      ).toBe(1);
+      await invariants();
+    } finally {
+      await blocker.query("ROLLBACK");
+      blocker.release();
+      if (pending) await pending.catch(() => {});
+    }
+  });
+});
+
 type ModelTroop = {
   id: string;
   owner_kingdom_id: string;

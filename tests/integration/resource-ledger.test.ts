@@ -36,6 +36,44 @@ function tick(scope: string, gameTimeMs: number): TickContext {
 }
 
 describe("resource ledger and provenance", () => {
+  it("applies harvest changes to new production only, including the exact week boundary", async () => {
+    const scope = "ledger_harvest_boundaries";
+    const { ledger, kingdomId } = await founded(scope);
+    let grain = 0n,
+      iron = 0n,
+      silver = 0n;
+    const weekMilliseconds = 7 * 24 * 60 * 60 * 1000;
+    const produced = [300n, 300n, 270n, 240n, 240n, 300n];
+    // Explicit season-week input: automatic season scheduling belongs to PACT-069.
+    for (let week = 1; week < 6; week++) {
+      const boundary = start + week * weekMilliseconds;
+      for (const [time, selectedWeek] of [
+        [boundary - 60000, week],
+        [boundary, week + 1],
+      ]) {
+        if (time === undefined || selectedWeek === undefined) throw new Error("Missing harvest case");
+        await withTransaction(pool, (client) => ledger.settleProductionMinute(client, tick(scope, time), selectedWeek));
+        grain += produced[selectedWeek - 1] ?? 0n;
+        iron += 200n;
+        silver += 100n;
+        for (const [resource, expected] of [
+          ["grain", grain],
+          ["iron", iron],
+          ["silver", silver],
+        ] as const) {
+          expect(
+            (await withTransaction(pool, (client) => ledger.readBalance(client, kingdomId, resource))).ordinary,
+          ).toBe(expected);
+        }
+        // Replaying the same boundary cannot multiply stock or add production.
+        await withTransaction(pool, (client) => ledger.settleProductionMinute(client, tick(scope, time), selectedWeek));
+        expect((await withTransaction(pool, (client) => ledger.readBalance(client, kingdomId, "grain"))).ordinary).toBe(
+          grain,
+        );
+      }
+    }
+  });
+
   it("publishes production and grant boundary effects only with the atomic world tick", async () => {
     const scope = "ledger_world_tick";
     const ledger = new ResourceLedger(scope);

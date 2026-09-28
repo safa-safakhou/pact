@@ -11,6 +11,7 @@ import {
   markOutboxDelivered,
   withTransaction,
 } from "@pact/db";
+import { FortuneService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
@@ -33,9 +34,11 @@ try {
   fixtureSchema = await createTestSchema(admin, "rules_restore");
   fixturePool = createSchemaPool(connectionString, fixtureSchema);
   const ledger = new ResourceLedger(scope);
+  const fortune = new FortuneService(scope);
   const accountId = randomUUID();
   const kingdomId = randomUUID();
   const troopId = randomUUID();
+  const guardId = randomUUID();
   const commandId = randomUUID();
   const eventId = randomUUID();
 
@@ -59,11 +62,54 @@ try {
       reason: "synthetic_import",
       gameTimeMs,
     });
+    for (const [resource, amount] of [
+      ["silver", 7200n],
+      ["grain", 4800n],
+    ]) {
+      await ledger.creditOrdinary(client, {
+        kingdomId,
+        resource,
+        amount,
+        operationKey: `restore-credit-${resource}`,
+        reason: "synthetic_import",
+        gameTimeMs,
+      });
+    }
+    await ledger.lockBond(client, {
+      kingdomId,
+      resource: "silver",
+      amount: 1800n,
+      operationKey: "restore-bond",
+      gameTimeMs,
+    });
+    const installed = await ledger.payCost(client, {
+      kingdomId,
+      resource: "iron",
+      kind: "construction",
+      amount: 126000n,
+      operationKey: "restore-installed",
+      gameTimeMs,
+    });
+    await ledger.completeCost(client, kingdomId, installed.id, gameTimeMs);
+    await ledger.payCost(client, {
+      kingdomId,
+      resource: "iron",
+      kind: "training",
+      amount: 2400n,
+      operationKey: "restore-active",
+      gameTimeMs,
+    });
     await client.query(
       `INSERT INTO kingdom_troops(id, product_scope, owner_kingdom_id, host_kingdom_id,
          type, placement, created_game_time_ms, created_at)
        VALUES ($1, $2, $3, $3, 'spearman', 'home', $4, now())`,
       [troopId, scope, kingdomId, gameTimeMs],
+    );
+    await client.query(
+      `INSERT INTO kingdom_troops(id, product_scope, owner_kingdom_id, host_kingdom_id,
+         type, home_guard, placement, created_game_time_ms, created_at)
+       VALUES ($1, $2, $3, $3, 'spearman', true, 'home', $4, now())`,
+      [guardId, scope, kingdomId, gameTimeMs],
     );
     await client.query(
       `INSERT INTO command_receipts(product_scope, command_id, canonical_payload_hash, code, receipt)
@@ -73,6 +119,30 @@ try {
     await appendOutbox(client, { productScope: scope, eventId, type: "restore.fixture.v1", payload: { commandId } });
   });
 
+  // Independent rulebook values (quarter-units, 2,400 = one marked unit).
+  // Initial ordinary resources: 20 Iron + 12 Silver + 8 Grain = 46.
+  // Construction spends 200 grant Iron + 10 ordinary; active training holds 4.
+  // Bond locking preserves the Silver value; the ordinary Spearman adds 18.
+  // Founding allowances, grant-funded construction and the guard add nothing.
+  const expectedWealth = {
+    stockQuarterUnits: 76800n,
+    activeCostQuarterUnits: 9600n,
+    installedQuarterUnits: 24000n,
+    troopsQuarterUnits: 43200n,
+    totalQuarterUnits: 153600n,
+  };
+  const beforeWealth = await withTransaction(fixturePool, (client) => fortune.wealth(client, kingdomId));
+  assert.deepEqual(beforeWealth, expectedWealth);
+  const beforeBalances = (
+    await fixturePool.query(
+      "SELECT resource, ordinary_units, allowance_units, locked_units FROM resource_balances ORDER BY resource",
+    )
+  ).rows;
+  const beforeTroops = (
+    await fixturePool.query(
+      "SELECT id,owner_kingdom_id,host_kingdom_id,type,home_guard,placement,placement_ref FROM kingdom_troops ORDER BY id",
+    )
+  ).rows;
   const dump = runProgram("pg_dump", ["--no-owner", "--no-privileges", `--schema=${fixtureSchema}`, connectionString]);
   await fixturePool.end();
   fixturePool = undefined;
@@ -88,14 +158,21 @@ try {
   );
   assert.equal(balance.ordinary, BigInt(movements.rows[0].ordinary));
   assert.equal(balance.allowance, BigInt(movements.rows[0].allowance));
-  assert.equal(balance.ordinary, 12_000n);
+  assert.equal(balance.ordinary, 3_600n);
+  assert.deepEqual(
+    (
+      await fixturePool.query(
+        "SELECT resource, ordinary_units, allowance_units, locked_units FROM resource_balances ORDER BY resource",
+      )
+    ).rows,
+    beforeBalances,
+  );
+  assert.deepEqual(await withTransaction(fixturePool, (client) => fortune.wealth(client, kingdomId)), beforeWealth);
   const troops = await fixturePool.query(
-    "SELECT id, owner_kingdom_id, host_kingdom_id, placement FROM kingdom_troops WHERE product_scope = $1",
+    "SELECT id,owner_kingdom_id,host_kingdom_id,type,home_guard,placement,placement_ref FROM kingdom_troops WHERE product_scope = $1 ORDER BY id",
     [scope],
   );
-  assert.deepEqual(troops.rows, [
-    { id: troopId, owner_kingdom_id: kingdomId, host_kingdom_id: kingdomId, placement: "home" },
-  ]);
+  assert.deepEqual(troops.rows, beforeTroops);
   assert.equal(
     (
       await fixturePool.query("SELECT 1 FROM command_receipts WHERE product_scope = $1 AND command_id = $2", [
@@ -112,7 +189,7 @@ try {
     assert.equal(await claimOutboxDelivery(client, delivery), false);
   });
   process.stdout.write(
-    "PASS: restored stock matches movements, unit placement and receipt survive, outbox replay deduplicates.\n",
+    "PASS: restored stock matches movements; marked wealth (64 units), exact troop placement and receipt survive; outbox replay deduplicates.\n",
   );
 } finally {
   if (fixturePool) await fixturePool.end();

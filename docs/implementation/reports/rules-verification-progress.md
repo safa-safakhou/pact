@@ -1,5 +1,7 @@
 # PACT-051 rules verification — progress record
 
+The 28 September [consolidated acceptance report](rules-verification-completion.md) supersedes the incomplete-status conclusions below. This file preserves dated intermediate evidence, including the representative physical VPS recovery.
+
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) — in progress. Implementation revisions: `7eccf06`, `804198c`, `b38c5f5`, and `f7febfc`. Verification: 24 Sep 2026, Node 24, PostgreSQL 17 with PostgreSQL client 18.4.
 
 ## Combined runtime, generated combat, and authenticated race — 28 September 2026
