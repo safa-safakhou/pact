@@ -58,6 +58,7 @@ type OwnerView = {
   upkeep: { perMinuteUnits: string; hungry: boolean };
   contracts: { id: string; counterpartyKingdomId: string; endsGameTimeMs: number; terms: Json }[];
   raids: { raidId: string; status: string; side: string; otherKingdomId: string; dueGameTimeMs: number }[];
+  scouts: { operationId: string; status: "active" | "completed"; targetKingdomId: string; dueGameTimeMs: number }[];
   threats: { kind: string; id: string; dueGameTimeMs: number }[];
   records: { kind: string; id: string; occurredAt: string }[];
   forecast: {
@@ -827,7 +828,7 @@ function Kingdom({
       </div>
       <div className="game-grid">
         <article className="game-card">
-          <h3>Contracts</h3>
+          <h3>Supply contracts</h3>
           {social?.supplyContracts.filter((item) => item.status === "active").length ? (
             social.supplyContracts
               .filter((item) => item.status === "active")
@@ -839,7 +840,7 @@ function Kingdom({
                 </div>
               ))
           ) : (
-            <p>No active contracts.</p>
+            <p>No active supply contracts. Garrison contracts appear in People.</p>
           )}
           <button type="button" className="secondary" onClick={onPeople}>
             See offers and all contracts
@@ -1739,6 +1740,37 @@ function Chronicle({
       <h2>Chronicle</h2>
       <p>Committed records and authorized private reports.</p>
       <article className="game-card">
+        <h3>Your scouts</h3>
+        {view.scouts.length ? (
+          <ul>
+            {view.scouts.map((scout) => (
+              <li key={scout.operationId}>
+                {scout.status} · target {scout.targetKingdomId} · due {new Date(scout.dueGameTimeMs).toLocaleString()}{" "}
+                game time · <code>{scout.operationId}</code>{" "}
+                {scout.status === "completed" && (
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      setReportKind("scout");
+                      setReportId(scout.operationId);
+                      void client
+                        .readReport("scout", scout.operationId)
+                        .then(setReport)
+                        .catch((error: unknown) => setReport({ error: failure(error) }));
+                    }}
+                  >
+                    Read scout report
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No scouts yet.</p>
+        )}
+      </article>
+      <article className="game-card">
         <h3>Your raids</h3>
         {view.raids.length ? (
           <ul>
@@ -1785,7 +1817,7 @@ function Chronicle({
       </article>
       <article className="game-card">
         <h3>Open a report</h3>
-        <p>Use a scout operation or raid ID from a receipt or inbox event. Event IDs above are not report IDs.</p>
+        <p>Use an operation or raid ID from a receipt or inbox event. Event IDs above are not report IDs.</p>
         <form
           onSubmit={(event) => {
             event.preventDefault();

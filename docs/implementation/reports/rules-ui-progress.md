@@ -1,5 +1,25 @@
 # PACT-048 — rules UI progress
 
+## Live scout, lending, and mutual release — 28 September 2026
+
+After the normal clock advanced, Chrome showed Cinder's Hall III complete and all eight ordinary Spearmen home. Scout `664d0843-3d7c-43b6-aebf-37ac57d873a8` completed at game time 13:15 UTC: its private report showed the synthetic host's wall level 2, Spearman band `11-25`, and coarse ordinary-stock bands with a stale-observation warning. Earlier pending lookup correctly showed no available report. An impossible 999,999-Grain transfer was rejected as `INSUFFICIENT_STOCK` without a committed receipt.
+
+Cinder then offered one ordinary Spearman to PACT MVP Owner for one game hour, no bonds, with host-paid upkeep. All writes used the Chrome People confirmation panel and shared human dispatcher:
+
+- Offer: `08b2f28a-6eb2-4519-a457-3a9ba765675d`.
+- Cinder signature: `8fd607c5-aaa4-4464-a132-e81fb0863aad`.
+- Host signature: `d4fad6d9-ebfa-4b54-90c1-2daea8adcd1a`; the host saw an active contract, one visiting Spearman, and upkeep `0.217` Grain/min.
+- Host mutual-release request: `bf31c0a8-411e-418e-ab0a-096a18301224`; the contract remained active until Cinder agreed.
+- Cinder mutual-release request: `1d4fe5ae-646f-433a-8460-cc1235f52c50`; the contract became closed and Cinder again showed eight ordinary Spearmen home, separately from eight founding Home Guard.
+
+These were successive authenticated accounts in the same Chrome profile, not simultaneous isolated browser sessions. No model provider was connected or called. The game clock was not skipped and no stock or troop rows were manually edited for this walkthrough. The required live lending/signing/return gap is now covered; the broader complete two-player/founding walkthrough and lock/charge-limit browser failure checks remain open.
+
+The walkthrough exposed a remaining navigation gap: scout operation IDs disappeared on reload. The owner world view now has a bounded private scout index, and Chronicle provides a direct completed-report button. `world-views.test.ts` verifies active/completed ordering, unrelated-owner emptiness, and exclusion from target/outsider/anonymous reads. The Kingdom card now says **Supply contracts** and directs players to People for garrisons instead of incorrectly implying that an active garrison did not exist.
+
+Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (129), and `npm run test:integration` (186) passed. This remains a progress report: PACT-048 is **In Progress**, not an Alpha release gate or WCAG certification.
+
+Immutable release `alpha-20260928-4` passed the VPS container build/migrations and public `verify.sh`. A fresh Chrome tab loaded Cinder, retained the completed scout in **Your scouts**, and opened its private report with **Read scout report** without pasted IDs. The Kingdom card displayed the corrected supply-only wording. The world stayed active through deployment (tick 3715, game time 14:14 UTC) and the disk had 13 GB available. [Synthetic Chrome evidence](evidence/alpha-20260928-scout-report.png) contains no credential or message body. A newly opened tab correctly warns that it must sign in again for a tab-local CSRF token before writes; authenticated read-only report navigation still works.
+
 ## Chrome access restored; single-VPS outage recovered — 28 September 2026
 
 The founder changed networks, and Chrome reached `https://safa.dedyn.io/pact/` at a desktop ratio. The initial static page loaded but both login and world APIs returned 502: PostgreSQL could not write WAL because the 38 GB VPS was full. The browser had displayed a raw `Unexpected end of JSON input` notice for the empty gateway response. The web request parser now preserves structured API codes, converts an empty 5xx response into its HTTP status, and distinguishes malformed successful JSON; a focused unit fixture covers those cases. The UI maps 5xx to a temporary-server-unavailable message and clears the stale “Loading your kingdom” notice after a successful refresh.
@@ -50,7 +70,7 @@ Replaced the synthetic setup demo at the web root with account login/verificatio
 
 | Criterion | Evidence | Result |
 | --- | --- | --- |
-| Two test players found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild through UI | Two-account supply signing, completed scout/report, transfer/overspend rejection, and a resolved raid/loss/rebuild start were observed in Chrome. The Hall III garrison flow is still pending. | **Not yet passed.** Simultaneous two-player browser writes and live lending/signing remain unobserved. |
+| Two test players found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild through UI | Recorded supply signing, scouting/report, transfer/overspend, resolved raid/losses, completed replacement training, and the live one-Spearman lending/signing/mutual-release flow above. | **Partial end-to-end evidence.** Aster founded in UI; Briar's founding used the API. A complete two-player UI-only founding/play walkthrough remains unrecorded. Successive sessions work; simultaneous isolated sessions were not tested. |
 | Manual actions usable without providers; cannot bypass stock, charge, lock, or limits | The deployed fake-only provider setting did not stop the Chrome construction, trade, scout, raid, and rebuild commands. UI uses the shared human command SDK; server integration fixtures cover stock, authority, and battle-lock behavior. | **Partially evidenced.** The live browser has not exercised every lock/limit failure path. |
 
 Local checks: `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (120 passing), and `npm run test:integration` (174 passing) on PostgreSQL 17 passed on 26 September. Release `alpha-20260926-3` is live on the single VPS and `verify.sh` passed. PACT-048 remains In Progress in Linear and the local snapshot.

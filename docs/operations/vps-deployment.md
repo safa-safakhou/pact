@@ -28,6 +28,8 @@ Release `alpha-20260928-1` separates ordinary troops from defensive-only Home Gu
 
 Release `alpha-20260928-2` adds explicit garrison food/bond/seizure terms and active-contract withdrawal, mutual release, recall/return, and host seizure controls. Node 24 build/typecheck/lint, 126 unit, and 182 PostgreSQL integration tests passed locally; public `verify.sh` passed on the single VPS, and Chrome showed the new lending warning. Cinder has queued Farm III and Barracks III under the normal clock; live garrison signing and two-player browser acceptance remain open. See [PACT-048 progress](../implementation/reports/rules-ui-progress.md).
 
+Release `alpha-20260928-4` adds a bounded owner-only scout index and Chronicle report shortcut, and labels the Kingdom card as supply-only. Container builds, current migrations, and public `verify.sh` passed; fresh Chrome read/report navigation passed with Cinder's completed scout. Hall III and replacement troops completed normally; successive Cinder/host Chrome sessions offered, jointly signed, and mutually released one Spearman with no unilateral default. The clock remained active after deployment (tick 3715, game time 14:14 UTC), with 13 GB disk free. Latest local checks: Node 24 build/typecheck/lint, 129 unit and 186 PostgreSQL integration tests. The full UI-only founding/play walkthrough and broad rule fault matrix remain open.
+
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
 ```sh

@@ -322,6 +322,38 @@ describe("authorized world views", () => {
     const publicView = await service.read(null, owner.kingdomId);
     expect(JSON.stringify(publicView)).not.toMatch(/raids|dueGameTimeMs/);
   });
+
+  it("lists recent scout operations only to the scouting kingdom", async () => {
+    const scout = await kingdom();
+    const target = await kingdom();
+    const unrelated = await kingdom();
+    const completedId = randomUUID();
+    const activeId = randomUUID();
+    await pool.query(
+      `INSERT INTO scout_operations(id, product_scope, scout_kingdom_id, target_kingdom_id,
+        operation_key, status, started_game_time_ms, due_game_time_ms)
+       VALUES ($1, 'pact', $3, $4, 'completed', 'completed', 0, 600000),
+              ($2, 'pact', $3, $4, 'active', 'active', 60000, 660000)`,
+      [completedId, activeId, scout.kingdomId, target.kingdomId],
+    );
+    const service = new WorldViewService(pool, scope);
+    const ownView = await service.read(scout.accountId, scout.kingdomId);
+    expect(ownView?.audience).toBe("owner");
+    if (ownView?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(ownView.scouts).toEqual([
+      { operationId: activeId, status: "active", targetKingdomId: target.kingdomId, dueGameTimeMs: 660000 },
+      { operationId: completedId, status: "completed", targetKingdomId: target.kingdomId, dueGameTimeMs: 600000 },
+    ]);
+    const otherView = await service.read(unrelated.accountId, unrelated.kingdomId);
+    expect(otherView?.audience).toBe("owner");
+    if (otherView?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(otherView.scouts).toEqual([]);
+    for (const viewer of [null, target.accountId, unrelated.accountId]) {
+      const view = await service.read(viewer, scout.kingdomId);
+      expect(JSON.stringify(view)).not.toContain(completedId);
+      expect(JSON.stringify(view)).not.toContain(activeId);
+    }
+  });
 });
 
 async function offer(a: string, b: string): Promise<string> {

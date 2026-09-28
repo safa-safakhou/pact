@@ -112,6 +112,12 @@ export interface OwnerKingdomView {
     otherKingdomId: string;
     dueGameTimeMs: number;
   }[];
+  scouts: {
+    operationId: string;
+    status: "active" | "completed";
+    targetKingdomId: string;
+    dueGameTimeMs: number;
+  }[];
   threats: { kind: "raid" | "scout"; id: string; dueGameTimeMs: number }[];
   records: { kind: string; id: string; occurredAt: string }[];
   forecast: {
@@ -377,6 +383,24 @@ export class WorldViewService {
       otherKingdomId: row.target_kingdom_id === targetId ? row.leader_kingdom_id : row.target_kingdom_id,
       dueGameTimeMs: Number(row.resolution_game_time_ms),
     }));
+    const scouts = (
+      await client.query<{
+        id: string;
+        status: "active" | "completed";
+        target_kingdom_id: string;
+        due_game_time_ms: string;
+      }>(
+        `SELECT id, status, target_kingdom_id, due_game_time_ms FROM scout_operations
+         WHERE product_scope = $1 AND scout_kingdom_id = $2
+         ORDER BY started_game_time_ms DESC, id DESC LIMIT 20`,
+        [this.productScope, targetId],
+      )
+    ).rows.map((row) => ({
+      operationId: row.id,
+      status: row.status,
+      targetKingdomId: row.target_kingdom_id,
+      dueGameTimeMs: Number(row.due_game_time_ms),
+    }));
     const records = (
       await client.query<{ type: string; event_id: string; occurred_at: Date }>(
         `SELECT type, event_id, occurred_at FROM inbox_events WHERE product_scope = $1 AND account_id = $2
@@ -431,6 +455,7 @@ export class WorldViewService {
         terms: row.terms,
       })),
       raids,
+      scouts,
       threats,
       records,
       forecast,

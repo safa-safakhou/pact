@@ -591,7 +591,8 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-26T01:31:22Z",
+  "last_synced_at": "2026-09-28T15:15:28Z",
+  "last_sync_scope": "PACT-048/MNI-112 and PACT-051/MNI-115 assignment/status readback and progress comments only; this is not a fresh 98-issue audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
