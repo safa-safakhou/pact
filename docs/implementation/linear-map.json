@@ -591,8 +591,8 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-28T22:04:28Z",
-  "last_sync_scope": "PACT-048/MNI-112 continued after all six fresh Done dependency readbacks; corrected stale unimplemented description, progress comment 7e102986-146d-43d4-81ae-1bec3d290f69, and In Progress/assignee readback; revision a2ca7b3 and verified release alpha-20260928-5. Not a fresh 98-issue audit.",
+  "last_synced_at": "2026-09-28T22:31:36Z",
+  "last_sync_scope": "PACT-048/MNI-112 continued after six fresh Done dependency readbacks; charge visibility revision b119d60 and verified release alpha-20260928-6, live Chrome scout-charge denial, progress comment 4b70b5fb-e807-4089-8c8d-e0ea47a9533d and updated description/In Progress/assignee readback. Not a fresh 98-issue audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
