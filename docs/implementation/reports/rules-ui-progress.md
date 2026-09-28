@@ -1,5 +1,11 @@
 # PACT-048 — rules UI progress
 
+## Replacement completion and remaining founding prerequisite — 29 September 2026 (28 September UTC)
+
+Fresh Linear readback retains In Progress / Mohammad Safakhou. Chrome at tick 4210 / displayed 12:29 AM game time showed all seven replacements from normal training receipt `23c22977-fd63-4769-89f6-a8e5ae74a726` complete: eight ordinary Spearmen home, eight separate Home Guard, no active training batch, and **Queue training** enabled again. At tick 4211 the same roster remained; [readable completed-rebuild evidence](evidence/alpha-20260928-rebuild-complete.png) includes the now-free queue. No further order, clock skip, resource/troop edit, account/grant/credential change or model call. This closes the preceding batch's pending finish observation, not the full UI acceptance.
+
+Linear comment `ad606063-edde-422b-a0e2-b94778d6b043` records this observation. Current backlog dependency evaluation finds no unstarted ready ticket: PACT-053 waits on PACT-048/052, and downstream tickets remain gated. The remaining PACT-048 check is the complete UI-only two-player founding/play walkthrough. Existing active kingdoms cannot honestly be founded again. The next requested input is explicit founder approval to create two disposable synthetic test accounts for that walkthrough (or two existing verified, unactivated synthetic accounts). No accounts were created, existing kingdoms reset, security protections changed or terms accepted in this turn. Account setup/verification and game development must use normal paths; preserve game timers and separate fresh-player evidence from the earlier existing-player loop. The current immutable application remains `alpha-20260928-8` / `6a4be89`; this is an acceptance/documentation-only checkpoint, not a new deployment or code check run.
+
 ## Report selection and battle-to-rebuild flow — 29 September 2026 (28 September UTC)
 
 Fresh Linear readback retained In Progress / Mohammad Safakhou; all six prerequisites are Done. Start comment `c1a3af9e-fabc-4cdf-8cd7-660270334c5c` records this bounded continuation. Graph discovery was attempted first, but its Chronicle snippet mapped to outdated People lines; current source was read directly rather than trusting stale offsets.

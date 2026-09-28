@@ -6,6 +6,12 @@ Verification: 28 September 2026, local Node 24.19.0 / PostgreSQL 17.11. No deplo
 
 ## Result
 
+### Acceptance checkpoint — 29 September 2026 (28 September UTC)
+
+Focused reruns on Node 24.19.0 / PostgreSQL 17.11 passed: `node node_modules/vitest/vitest.mjs run --config vitest.config.ts tests/unit/script-baseline.test.ts` (9 tests) and, with `TEST_DATABASE_URL` pointing to the disposable local database, `node node_modules/vitest/vitest.mjs run --config vitest.integration.config.ts tests/integration/script-baseline.test.ts` (1 matched scenario). The fixture still produces the recorded Farm II/120 installments/identical both-player balances, with a fake provider and no purchased API calls. No source change or live HTTP/model certification in this checkpoint; the preceding complete suite remains 169 unit / 226 integration, not rerun in full here.
+
+Linear comment `96b2c786-b4d7-4402-a20e-f02b979f2bf1` and checklist/status/assignee readback confirm the first acceptance item (no hidden state, private admin APIs, free resources or privileged rates) checked. The actual comparison criterion remains unchecked pending the separately authorized matched real-model trial. Status remains In Progress / Mohammad Safakhou; no ticket or gate closure. Use the current public-tool run instructions and recorded matched conditions; do not reset live kingdoms or reuse personal model credentials silently.
+
 A deterministic player can discover its kingdom/contact, queue Farm II, negotiate a specified exchange and sign using published MCP tools. The CLI uses a normal OAuth grant, fourteen-call ceiling, same-command receipt reconciliation and authenticated session closure. It has no admin/database interface, resource grant, partner-private read or privilege bypass.
 
 Separate schemas run the same policy through the script and the real inference/application composition with a **fake provider**. Both complete Farm II and the one-hour 12 Grain/hour ↔ 4 Silver/hour contract, with 120 settled installments and natural expiry. Initial/final stocks match for both players. All four fake-provider command receipts must explicitly be COMMITTED. Closed sessions/finished runs leave no unreleased live write lease.
