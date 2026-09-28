@@ -358,14 +358,18 @@ describe("authorized world views", () => {
         raidId: defendingRaidId,
         status: "declared",
         side: "defender",
+        role: "defender",
         otherKingdomId: other.kingdomId,
+        lockGameTimeMs: 60000,
         dueGameTimeMs: 120000,
       },
       {
         raidId: attackingRaidId,
         status: "resolved",
         side: "attacker",
+        role: "leader",
         otherKingdomId: other.kingdomId,
+        lockGameTimeMs: 60000,
         dueGameTimeMs: 120000,
       },
     ]);
@@ -373,8 +377,27 @@ describe("authorized world views", () => {
     expect(unrelated?.audience).toBe("owner");
     if (unrelated?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
     expect(unrelated.raids).toEqual([]);
+    await pool.query(
+      `INSERT INTO raid_contributions(product_scope, raid_id, kingdom_id, role, status,
+        committed_game_time_ms, provision_units, selection)
+       VALUES ('pact', $1, $2, 'contributor', 'committed', 0, 0, '[]'::jsonb)`,
+      [attackingRaidId, outsider.kingdomId],
+    );
+    const contributed = await service.read(outsider.accountId, outsider.kingdomId);
+    if (contributed?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(contributed.raids).toEqual([{ ...ownView.raids[1], role: "contributor" }]);
+    await pool.query(
+      "UPDATE raid_contributions SET status = 'withdrawn' WHERE product_scope = 'pact' AND raid_id = $1 AND kingdom_id = $2",
+      [attackingRaidId, outsider.kingdomId],
+    );
+    const withdrawn = await service.read(outsider.accountId, outsider.kingdomId);
+    if (withdrawn?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(withdrawn.raids).toEqual([]);
+    const participantView = await service.read(other.accountId, owner.kingdomId);
+    expect(participantView?.audience).toBe("participant");
+    expect(JSON.stringify(participantView)).not.toMatch(/lockGameTimeMs|"role"/);
     const publicView = await service.read(null, owner.kingdomId);
-    expect(JSON.stringify(publicView)).not.toMatch(/raids|dueGameTimeMs/);
+    expect(JSON.stringify(publicView)).not.toMatch(/raids|dueGameTimeMs|lockGameTimeMs|"role"/);
   });
 
   it("lists recent scout operations only to the scouting kingdom", async () => {

@@ -66,7 +66,15 @@ type OwnerView = {
   }[];
   upkeep: { perMinuteUnits: string; hungry: boolean };
   contracts: { id: string; counterpartyKingdomId: string; endsGameTimeMs: number; terms: Json }[];
-  raids: { raidId: string; status: string; side: string; otherKingdomId: string; dueGameTimeMs: number }[];
+  raids: {
+    raidId: string;
+    status: string;
+    side: string;
+    role?: "leader" | "contributor" | "defender";
+    otherKingdomId: string;
+    lockGameTimeMs?: number;
+    dueGameTimeMs: number;
+  }[];
   scouts: { operationId: string; status: "active" | "completed"; targetKingdomId: string; dueGameTimeMs: number }[];
   threats: { kind: string; id: string; dueGameTimeMs: number }[];
   records: { kind: string; id: string; occurredAt: string }[];
@@ -83,13 +91,22 @@ function failure(error: unknown): string {
     return `Game server temporarily unavailable (${error.message.replace("HTTP_", "HTTP ")}). Try again shortly.`;
   return error instanceof Error ? error.message : String(error);
 }
-function actionFailure(action: SandboxAction, error: unknown): string {
-  const code = failure(error);
+function actionCodeMessage(action: SandboxAction, code: string): string {
+  if (code === "WORLD_PAUSED")
+    return "WORLD_PAUSED · The world is paused or a tick is pending. This action did not commit. Refresh the game state before deciding whether to retry.";
   if (code === "RATE_LIMITED")
     return "RATE_LIMITED · A shared action limit or charge pool is exhausted. Check your charges and game-time deadline; switching clients does not refill them.";
+  if (code === "EXPIRED" && action.kind === "game.raid.withdraw")
+    return "EXPIRED · The withdrawal window is closed. A raid cannot be withdrawn at or after its battle lock; refresh Chronicle for the committed operation state.";
   if (code === "INVALID_COMMAND" && action.kind === "game.scout.start")
     return "Scout unavailable. You need two trained ordinary Spearmen (the eight founding Home Guard cannot scout), 10 Silver, 5 Grain, and a scout charge.";
   return code;
+}
+function actionFailure(action: SandboxAction, error: unknown): string {
+  return actionCodeMessage(action, failure(error));
+}
+export function actionReceiptNotice(action: SandboxAction, receipt: { code: string; commandId: string }): string {
+  return `${action.kind}: ${actionCodeMessage(action, receipt.code)} · ${receipt.commandId}`;
 }
 function units(value: string): string {
   return wholeResourceAmount(value).toLocaleString(undefined, { maximumFractionDigits: 3 });
@@ -323,13 +340,13 @@ export function GameApp(): React.JSX.Element {
     const command = client.prepareCommand(action);
     try {
       const receipt = await client.submitCommand(command);
-      setNotice(`${action.kind}: ${receipt.code} · ${receipt.commandId}`);
+      setNotice(actionReceiptNotice(action, receipt));
     } catch (error) {
       if (failure(error) === "NETWORK_UNCERTAIN") {
         const receipt = await client.reconcileReceipt(command.commandId).catch(() => null);
         setNotice(
           receipt
-            ? `${action.kind}: ${receipt.code} · ${receipt.commandId}`
+            ? actionReceiptNotice(action, receipt)
             : `Network uncertain. Command ${command.commandId} must be reconciled before retry.`,
         );
       } else setNotice(`${action.kind}: ${actionFailure(action, error)}`);
@@ -577,7 +594,16 @@ export function GameApp(): React.JSX.Element {
           charges={view?.charges ?? []}
         />
       )}
-      {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} social={social} />}
+      {tab === "Chronicle" && view && (
+        <Chronicle
+          view={view}
+          client={client}
+          inbox={inbox}
+          social={social}
+          busy={busy}
+          confirmAction={confirmAction}
+        />
+      )}
     </main>
   );
 }
@@ -1815,7 +1841,10 @@ function DiplomacyForms({
           className="secondary"
           disabled={busy || !raidId}
           onClick={() => {
-            void act({ kind: "game.raid.withdraw", raidId });
+            confirmAction(
+              `Withdraw your attack from raid ${raidId}? If you lead it, the whole raid is canceled. Spent provisions and charges are not refunded.`,
+              { kind: "game.raid.withdraw", raidId },
+            );
           }}
         >
           Withdraw raid
@@ -1825,16 +1854,106 @@ function DiplomacyForms({
   );
 }
 
+export function RaidOperations({
+  raids,
+  gameTimeMs,
+  worldStatus,
+  busy,
+  confirmAction,
+  readReport,
+}: {
+  raids: OwnerView["raids"];
+  gameTimeMs: number;
+  worldStatus: string;
+  busy: boolean;
+  confirmAction: (summary: string, action: SandboxAction) => void;
+  readReport: (raidId: string) => void;
+}): React.JSX.Element {
+  return (
+    <article className="game-card" aria-label="Your raid operations">
+      <h3>Your raids</h3>
+      {!raids.length && <p>No raids yet.</p>}
+      <ul>
+        {raids.map((raid) => {
+          const active = raid.status === "declared" || raid.status === "locked";
+          const locked =
+            raid.status === "locked" || (raid.lockGameTimeMs !== undefined && gameTimeMs >= raid.lockGameTimeMs);
+          const attacker = raid.role === "leader" || raid.role === "contributor";
+          return (
+            <li key={raid.raidId} className="game-list-item">
+              <strong>
+                {raid.role ?? raid.side} · {raid.status}
+              </strong>
+              <p>
+                Other kingdom: {raid.otherKingdomId} · <code>{raid.raidId}</code>
+              </p>
+              <p>Scheduled resolution: {new Date(raid.dueGameTimeMs).toLocaleString()} game time.</p>
+              {active && (
+                <>
+                  <p>
+                    {raid.lockGameTimeMs === undefined
+                      ? "Lock deadline unavailable; refresh before acting."
+                      : `Battle lock: ${new Date(raid.lockGameTimeMs).toLocaleString()} game time. ${locked ? "Locked through resolution." : "Withdrawal closes at this boundary."}`}
+                  </p>
+                  {raid.role === "defender" && <p>Defense is automatic. You cannot withdraw another kingdom's raid.</p>}
+                  {attacker && (
+                    <p>
+                      {raid.role === "leader"
+                        ? "Withdrawing cancels the entire raid."
+                        : "Withdrawing returns only your contribution."}{" "}
+                      Spent provisions and charges are not refunded.
+                    </p>
+                  )}
+                  {attacker && raid.lockGameTimeMs !== undefined && (
+                    <button
+                      type="button"
+                      className="secondary"
+                      aria-label={`Withdraw attack ${raid.raidId}`}
+                      disabled={busy || worldStatus !== "active" || locked}
+                      onClick={() =>
+                        confirmAction(
+                          `Withdraw ${raid.role === "leader" ? "the entire raid" : "your contribution to raid"} ${raid.raidId}? Spent provisions and charges are not refunded.`,
+                          { kind: "game.raid.withdraw", raidId: raid.raidId },
+                        )
+                      }
+                    >
+                      {locked ? "Withdrawal closed" : "Withdraw attack"}
+                    </button>
+                  )}
+                  {worldStatus !== "active" && <p>The world is paused; game deadlines and actions are frozen.</p>}
+                </>
+              )}
+              {raid.status === "resolved" && (
+                <button type="button" className="secondary" onClick={() => readReport(raid.raidId)}>
+                  Read battle report
+                </button>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      <small>
+        Times are committed game time, not wall-clock countdowns. Refresh before deciding; the server rechecks every
+        withdrawal.
+      </small>
+    </article>
+  );
+}
+
 function Chronicle({
   view,
   client,
   inbox,
   social,
+  busy,
+  confirmAction,
 }: {
   view: OwnerView;
   client: ReturnType<typeof createWebPactClient>;
   inbox: { sequence: string; type: string; event: unknown }[];
   social: SocialOverview | null;
+  busy: boolean;
+  confirmAction: (summary: string, action: SandboxAction) => void;
 }): React.JSX.Element {
   const [report, setReport] = useState<unknown>(null);
   const [reportId, setReportId] = useState("");
@@ -1874,37 +1993,21 @@ function Chronicle({
           <p>No scouts yet.</p>
         )}
       </article>
-      <article className="game-card">
-        <h3>Your raids</h3>
-        {view.raids.length ? (
-          <ul>
-            {view.raids.map((raid) => (
-              <li key={raid.raidId}>
-                {raid.side} · {raid.status} · {raid.otherKingdomId} · {raid.status === "resolved" ? "resolved" : "due"}{" "}
-                {new Date(raid.dueGameTimeMs).toLocaleString()} game time · <code>{raid.raidId}</code>{" "}
-                {raid.status === "resolved" && (
-                  <button
-                    type="button"
-                    className="secondary"
-                    onClick={() => {
-                      setReportKind("raid_participant");
-                      setReportId(raid.raidId);
-                      void client
-                        .readReport("raid_participant", raid.raidId)
-                        .then(setReport)
-                        .catch((error: unknown) => setReport({ error: failure(error) }));
-                    }}
-                  >
-                    Read battle report
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No raids yet.</p>
-        )}
-      </article>
+      <RaidOperations
+        raids={view.raids}
+        gameTimeMs={view.asOfGameTimeMs}
+        worldStatus={view.worldStatus}
+        busy={busy}
+        confirmAction={confirmAction}
+        readReport={(raidId) => {
+          setReportKind("raid_participant");
+          setReportId(raidId);
+          void client
+            .readReport("raid_participant", raidId)
+            .then(setReport)
+            .catch((error: unknown) => setReport({ error: failure(error) }));
+        }}
+      />
       <article className="game-card">
         <h3>Records</h3>
         {view.records.length ? (

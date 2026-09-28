@@ -111,7 +111,9 @@ export interface OwnerKingdomView {
     raidId: string;
     status: "declared" | "locked" | "resolved" | "canceled";
     side: "attacker" | "defender";
+    role: "leader" | "contributor" | "defender";
     otherKingdomId: string;
+    lockGameTimeMs: number;
     dueGameTimeMs: number;
   }[];
   scouts: {
@@ -367,9 +369,10 @@ export class WorldViewService {
         status: "declared" | "locked" | "resolved" | "canceled";
         leader_kingdom_id: string;
         target_kingdom_id: string;
+        lock_game_time_ms: string;
         resolution_game_time_ms: string;
       }>(
-        `SELECT id, status, leader_kingdom_id, target_kingdom_id, resolution_game_time_ms
+        `SELECT id, status, leader_kingdom_id, target_kingdom_id, lock_game_time_ms, resolution_game_time_ms
          FROM raids WHERE product_scope = $1 AND (
            leader_kingdom_id = $2 OR target_kingdom_id = $2 OR EXISTS (
              SELECT 1 FROM raid_contributions c WHERE c.product_scope = $1 AND c.raid_id = raids.id
@@ -382,7 +385,14 @@ export class WorldViewService {
       raidId: row.id,
       status: row.status,
       side: row.target_kingdom_id === targetId ? ("defender" as const) : ("attacker" as const),
+      role:
+        row.target_kingdom_id === targetId
+          ? ("defender" as const)
+          : row.leader_kingdom_id === targetId
+            ? ("leader" as const)
+            : ("contributor" as const),
       otherKingdomId: row.target_kingdom_id === targetId ? row.leader_kingdom_id : row.target_kingdom_id,
+      lockGameTimeMs: Number(row.lock_game_time_ms),
       dueGameTimeMs: Number(row.resolution_game_time_ms),
     }));
     const scouts = (

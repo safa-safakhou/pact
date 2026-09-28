@@ -1,5 +1,46 @@
 # PACT-048 — rules UI progress
 
+## Raid operations and withdrawal boundaries — 29 September 2026 (28 September UTC)
+
+Owner raid entries now include a server-derived leader/contributor/defender role and stored lock deadline. Chronicle shows these alongside scheduled resolution and offers direct, inline-confirmed attacker withdrawal before lock. Consequences distinguish whole-raid leader cancellation from contributor return, with no provision/charge refund. The direct control closes at the exact committed boundary and for paused/pending states; missing legacy role/deadline data does not fabricate permission. The manually entered withdrawal path now also confirms consequences. Server `EXPIRED` withdrawal failures explain the closed window. No gameplay rules, authorization, fees or timers changed.
+
+Four UI fixtures cover roles, missing older fields, exact lock boundary, locked/paused/pending controls and report visibility. The world-view fixture verifies leader/contributor/defender projection, removed withdrawn contributions, unrelated-owner emptiness and participant/public exclusion. An initial typecheck/build found an explicit `undefined` in the legacy-data test incompatible with exact optional properties; the fixture now omits the fields, matching real older JSON. Successful full check and deployment results are recorded below only after they run.
+
+Final local checks on bundled Node 24.19 passed: `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (162 / 52 files), and `npm run test:integration` (226 / 39 files, PostgreSQL 17.11). The final integration run started after the completed build. Planning consistency and diff checks pass; no hosted CI claim.
+
+Two receipt-notice fixtures additionally preserve command IDs, explain a closed withdrawal window, and describe `WORLD_PAUSED` as either pause or pending-tick admission without claiming a unique diagnosis or retrying automatically. Live transfer testing hit that code once just before a normal tick; a read-only clock query subsequently showed active tick 4169 and a fresh heartbeat, with no manual resume needed. `WorldClockService.admitCommand` refuses an overdue pending tick and `CommandDispatcher` currently uses `WORLD_PAUSED` for both outcomes; the UI preserves that published code rather than changing the command contract.
+
+Chrome then exercised the rolling one-off-transfer limit: 24 unique one-Grain transfers from Cinder to the accepted synthetic PACT MVP Owner committed. The next attempt first returned `WORLD_PAUSED` (`62f36eac-dea7-4209-a10c-9c8ef1aeb034`), then a fresh confirmed attempt after the next tick returned `RATE_LIMITED`. These were normal shared-dispatcher writes, not grants or admin state edits. [Synthetic transfer-limit screenshot](evidence/alpha-20260928-transfer-limit.png). The committed receipt IDs, in order, are:
+
+```text
+3d316207-47eb-45b7-8f3e-4cd6364ac34a
+d934f70e-c6a5-47d8-b61e-9cdac496d0b4
+19803c95-6428-4a28-a6c9-d0bd0ef7b534
+998836a2-d1bc-438a-a2c1-aae59d850584
+accb2b57-698d-4f13-b720-5d8298ced101
+816838fb-6f65-4abb-a879-7e88f25fca88
+21f03bf5-6aad-4d08-ac19-03eabc5474f0
+45eaf748-bfc4-46ca-875f-53b6847501b4
+69adc7c0-54b2-46cc-8355-cd670a0315b1
+70139b0f-a2a8-4404-b30f-74e6a1a7ec2c
+9c9ec544-60bb-488c-b046-683a3027e9a7
+650cd0c7-3a89-423c-8ee6-2a3e780d0dc9
+526c4e66-8c91-44cd-a3da-618086c3c71e
+b25dfdec-0a63-4cd0-9fa7-4add0f7c42c6
+cfe7825f-e72d-448a-8f6c-52b17eaa3f36
+cde6b6a6-54b8-41ca-b9fb-b348eba2b1a3
+4325df1c-1fab-4fca-b8aa-2f0880859419
+abbbf7f7-84a0-4644-9b77-a9bcf850ad7b
+2040fcc1-40e8-4ff8-bcef-8827128942ce
+71229e28-d6d6-410f-967b-439b40b45ab1
+60064de4-3edb-4070-ae44-1fe5557d162f
+20b2ef35-6912-44ae-b863-bd1b7b4db68a
+fae1813e-8608-4fbe-8f65-5887a61611fc
+ec0cb7fd-c45a-438d-b1b5-d1f1859a5436
+```
+
+Chrome Cinder committed raid `4a5f394a-c43c-42b6-81a3-73021984df5a` against the synthetic PACT MVP Owner with eight ordinary Spearmen. The existing Chronicle showed declared, due 12:02 AM game time; this implies the normal stored 11:57 PM lock, to be checked in the new deployed view. Raid charges fell 3/3 → 2/3. The normal game clock is not skipped; locked withdrawal is still pending at this point. No stock edits, new accounts/grants, credential changes or paid model calls.
+
 ## Charge visibility and live exhaustion — 29 September 2026 (28 September UTC)
 
 The owner snapshot now exposes scout/raid charge pools and exact game-time regeneration deadlines. Kingdom and People show availability/capacity, serial interval, full/exhausted state, and the shared human/agent and paused-clock rules. The `RATE_LIMITED` notice explains either charge exhaustion or the shared rolling limit without inventing a more specific server diagnosis. Projection reuses command admission's pure regeneration calculation and does not mutate charge rows. Two UI fixtures cover full/exhausted/missing data; a PostgreSQL fixture covers read-only transactions, serial timing, saturation, unchanged persisted rows, product scope, and non-owner exclusion.

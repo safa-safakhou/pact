@@ -1,7 +1,7 @@
 import { type ComponentProps, createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { ActionCharges, Kingdom } from "./game-app.js";
+import { ActionCharges, actionReceiptNotice, Kingdom, RaidOperations } from "./game-app.js";
 
 function kingdom(level: number, queued = false): string {
   const view: ComponentProps<typeof Kingdom>["view"] = {
@@ -64,6 +64,110 @@ describe("construction guidance", () => {
     const html = kingdom(3, true);
     expect(html).toContain('disabled="">Upgrade already queued');
     expect(html).toContain("Cancel slot 1");
+  });
+});
+
+function raidOperations(
+  overrides: Partial<ComponentProps<typeof RaidOperations>> = {},
+  raidOverrides: Partial<ComponentProps<typeof RaidOperations>["raids"][number]> = {},
+): string {
+  return renderToStaticMarkup(
+    createElement(RaidOperations, {
+      raids: [
+        {
+          raidId: "synthetic-raid",
+          status: "declared",
+          side: "attacker",
+          role: "leader",
+          otherKingdomId: "synthetic-other",
+          lockGameTimeMs: 60000,
+          dueGameTimeMs: 360000,
+          ...raidOverrides,
+        },
+      ],
+      gameTimeMs: 59999,
+      worldStatus: "active",
+      busy: false,
+      confirmAction: () => undefined,
+      readReport: () => undefined,
+      ...overrides,
+    }),
+  );
+}
+
+describe("raid withdrawal guidance", () => {
+  it("shows the exact server lock deadline and a leader's whole-raid consequences", () => {
+    const html = raidOperations();
+    expect(html).toContain("Battle lock:");
+    expect(html).toContain("Withdrawal closes at this boundary.");
+    expect(html).toContain("Withdrawing cancels the entire raid.");
+    expect(html).toContain("Spent provisions and charges are not refunded.");
+    expect(html).toContain('aria-label="Withdraw attack synthetic-raid">Withdraw attack');
+    expect(html).not.toContain("Read battle report");
+  });
+
+  it("closes withdrawal at the exact committed boundary, and when already locked", () => {
+    for (const html of [raidOperations({ gameTimeMs: 60000 }), raidOperations({}, { status: "locked" })]) {
+      expect(html).toContain('disabled="">Withdrawal closed');
+      expect(html).toContain("Locked through resolution.");
+    }
+  });
+
+  it("limits contributor consequences and exposes no withdrawal for defenders or older snapshots", () => {
+    expect(raidOperations({}, { role: "contributor" })).toContain("Withdrawing returns only your contribution.");
+    const defender = raidOperations({}, { side: "defender", role: "defender" });
+    expect(defender).toContain("Defense is automatic.");
+    expect(defender).not.toContain("Withdraw attack");
+    const legacy = raidOperations({
+      raids: [
+        {
+          raidId: "legacy-raid",
+          status: "declared",
+          side: "attacker",
+          otherKingdomId: "synthetic-other",
+          dueGameTimeMs: 360000,
+        },
+      ],
+    });
+    expect(legacy).toContain("Lock deadline unavailable");
+    expect(legacy).not.toContain("Withdraw attack");
+  });
+
+  it("blocks paused/pending actions and keeps reports on resolved operations only", () => {
+    expect(raidOperations({ worldStatus: "paused" })).toContain('disabled="">Withdraw attack');
+    expect(raidOperations({ busy: true })).toContain('disabled="">Withdraw attack');
+    const resolved = raidOperations({}, { status: "resolved" });
+    expect(resolved).toContain("Read battle report");
+    expect(resolved).not.toContain("Withdraw attack");
+    expect(raidOperations({}, { status: "canceled" })).not.toContain("Read battle report");
+  });
+});
+
+describe("command receipt guidance", () => {
+  it("keeps exact command IDs and does not confuse tick admission with a committed action", () => {
+    const action = { kind: "game.raid.withdraw" as const, raidId: "synthetic-raid" };
+    expect(actionReceiptNotice(action, { code: "COMMITTED", commandId: "synthetic-command" })).toBe(
+      "game.raid.withdraw: COMMITTED · synthetic-command",
+    );
+    const paused = actionReceiptNotice(action, { code: "WORLD_PAUSED", commandId: "synthetic-command" });
+    expect(paused).toContain("paused or a tick is pending");
+    expect(paused).toContain("This action did not commit");
+    expect(paused).toContain("synthetic-command");
+  });
+
+  it("explains a closed withdrawal window without changing other expired actions", () => {
+    expect(
+      actionReceiptNotice(
+        { kind: "game.raid.withdraw", raidId: "synthetic-raid" },
+        { code: "EXPIRED", commandId: "synthetic-command" },
+      ),
+    ).toContain("withdrawal window is closed");
+    expect(
+      actionReceiptNotice(
+        { kind: "game.scout.start", targetKingdomId: "synthetic-target" },
+        { code: "EXPIRED", commandId: "synthetic-command" },
+      ),
+    ).toBe("game.scout.start: EXPIRED · synthetic-command");
   });
 });
 
