@@ -68,7 +68,11 @@ it("denies nonowners, expired approval/session and changed replay without new ef
   expect(() => f.a.approvals.propose(f.a.sessions.authenticate(f.human), request.commandId, mutated)).toThrow(
     "IDEMPOTENCY_CONFLICT",
   );
-  f.advance(900000);
+  f.advance(1000);
+  expect(f.a.approvals.propose(f.a.sessions.authenticate(f.human), request.commandId, request.action).expiresAt).toBe(
+    request.expiresAt,
+  );
+  f.advance(899000);
   expect(() => f.a.sessions.authenticate(f.human)).toThrow("INVALID_TOKEN");
   const fresh = f.a.connectFixture("same-account", "human");
   expect(() => f.a.approve(fresh, request.commandId, request.action)).toThrow("EXPIRED");

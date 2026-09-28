@@ -1,6 +1,6 @@
 # PACT implementation backlog
 
-**98 tickets · 54 Done, 2 In Progress, 42 Backlog as of 28 September 2026 · Based on the [current specification](../pact/README.md).** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+**98 tickets · 55 Done, 2 In Progress, 41 Backlog as of 28 September 2026 · Based on the [current specification](../pact/README.md).** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
 
 The backlog turns the design into dependency-ordered engineering work. Every ticket contains a concrete deliverable, acceptance checks, component ownership, specification links, and prerequisites. Creating a planning record alone is never completion evidence; consult Linear and the linked reports for implemented work.
 

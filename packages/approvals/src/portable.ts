@@ -38,7 +38,9 @@ export class ExactApprovals<T, R> {
       expiresAt: this.now() + 900000,
     };
     this.store.put(structuredClone(request));
-    return structuredClone(request);
+    const stored = this.store.get(this.scope, commandId);
+    if (!stored) throw new Error("NOT_FOUND");
+    return structuredClone(stored);
   }
   approve(principal: ScopedPrincipal, commandId: string, raw: unknown, effect: (action: T) => R): R {
     const request = this.store.get(this.scope, commandId);

@@ -11,15 +11,15 @@ This is a navigation and state snapshot for agents continuing without prior chat
 
 ## Tracker snapshot
 
-The 25 September audit matched all 98 PACT IDs. On 28 September, PACT-051 completed after the [R01–R06 acceptance review](reports/rules-verification-completion.md), and PACT-052 was claimed with all three dependencies Done: **54 Done, 2 In Progress, 42 Backlog.** Phase 0 is 31/31 Done; Phase 1 is 23/27 Done; Phases 2/3 are 0/20 each. This is a scoped tracker update, not a fresh 98-issue audit. Four Phase 1 tickets remain:
+The 25 September audit matched all 98 PACT IDs. On 28 September, PACT-051 completed after the [R01–R06 acceptance review](reports/rules-verification-completion.md), PACT-052 added a public-tool baseline, and PACT-096 completed its [non-game reuse proof](reports/platform-reuse.md): **55 Done, 2 In Progress, 41 Backlog.** Phase 0 is 31/31 Done; Phase 1 is 24/27 Done; Phases 2/3 are 0/20 each. This is a scoped tracker update, not a fresh 98-issue audit. Three Phase 1 tickets remain:
 
 | Ticket | State | Dependency/next action |
 | --- | --- | --- |
 | [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) | Done | [Consolidated R01–R06 completion](reports/rules-verification-completion.md), revision `e6e55cd`. |
 | [PACT-048 / MNI-112](https://linear.app/mnim/issue/MNI-112/pact-048-build-the-plain-rules-prototype-interface) | In Progress | [Chrome UI progress](reports/rules-ui-progress.md) includes supply signing, scout/report, raid/losses, completed replacements, and a live garrison offer/sign/mutual-release flow. Finish a complete UI-only two-player founding/play walkthrough and meaningful lock/charge-limit failure checks. Distinct simultaneous sessions and full accessibility remain unverified. |
 | PACT-052 | In Progress | Bounded public-tool script and matched isolated fake-provider comparison pass: Farm II, 120 supply installments, identical two-player balances. [Report](reports/script-baseline-progress.md), [run instructions](../operations/script-baseline.md). A matched real-model trial remains; route execution is not model performance/fun evidence. |
-| PACT-096 | Backlog | Independent non-game platform reuse proof; now dependency-ready and unassigned. |
-| PACT-053 | Backlog | Rules acceptance gate; still waits on PACT-048/052/096 and R07–R08 evidence. |
+| PACT-096 | Done | [Portable module reuse](reports/platform-reuse.md), revision `58e6373`; independent compile/runtime closure, cross-product isolation, shared helpers, forbidden-import and fourteen published-schema guards pass. |
+| PACT-053 | Backlog | Rules acceptance gate; still waits on PACT-048/052. PACT-096 supplies the R08 reuse evidence. |
 
 Phase 2 is blocked by PACT-053 and contains all 20 social/Telegram gameplay, notifications, moderation, load, and pilot tickets. Phase 3's 20 tickets include deliberately deferred native devices, commerce, distribution, off-host recovery, and PACT-098 production facts. PACT-084 is deferred but not Done. Do not bypass dependency edges merely to improve the count.
 
@@ -50,6 +50,6 @@ The Telegram test bot is [`@test_pact1211_bot`](https://t.me/test_pact1211_bot/P
 ## Resuming safely
 
 1. Inspect `git status`, the current Linear assignments/dependencies, and the two progress reports. Do not overwrite another agent's claim.
-2. Continue PACT-052 with a separately authorized matched real-model comparison; the public script and fake-provider harness are implemented, with 139 unit / 225 integration checks passing. PACT-096 is separately ready; do not overwrite a claim. PACT-048 still needs UI-only two-player founding/play and meaningful lock/charge-limit observations despite completed live garrison play. No normal build timer or gate may be bypassed to improve counts.
+2. Continue PACT-048's UI-only two-player founding/play and meaningful lock/charge-limit observations, or PACT-052's separately authorized matched real-model comparison. The public baseline and non-game reuse proof are implemented; latest full checks are 147 unit / 225 integration tests. PACT-096 is Done. Do not bypass normal build timers, credentials, limits or dependency gates to improve counts.
 3. Verify with documented Node 24 commands: `npm run build`, `npm run typecheck`, `npm test`, `npm run test:integration` against disposable PostgreSQL 17, `npm run lint`, then `python3 docs/implementation/backlog.py render`, `python3 docs/implementation/backlog.py check`, and `git diff --check`. Report actual results, not assumed ones.
 4. Update module/API/operations instructions and a completion or progress report, reconcile Linear and local task evidence, and commit the batch. Reserve live provider, paid, production, deployment, and player-pilot claims for their own observed evidence.

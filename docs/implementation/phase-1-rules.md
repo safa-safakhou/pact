@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 23 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 24 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -767,7 +767,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-096"></a>
 ## PACT-096 — Demonstrate platform-module reuse outside PACT
 
-**Status:** in_progress · **Role:** Architecture / QA · **Size:** M · **Type:** verification
+**Status:** done · **Role:** Architecture / QA · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-039](phase-1-rules.md#pact-039), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -782,14 +782,15 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.
-- [ ] PACT’s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes.
+- [x] The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.
+- [x] PACT’s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes.
 
 **Assignee:** Mohammad Safakhou
 
 **Evidence**
 
-- 28 Sep 2026: MNI-117 claimed In Progress by Mohammad Safakhou after fresh Done readbacks of all seven dependencies. Implementing the independent non-game in-memory reuse fixture and import/contract guards.
+- 28 Sep 2026: MNI-117 claimed In Progress by Mohammad Safakhou after fresh Done readbacks of all seven dependencies.
+- 28 Sep 2026: revision 58e6373 implements public portable identity/runtime/approval/notification exports, isolated non-game application and dependency/contract guards. Independent compile/runtime proof passes with database configuration unset; product credentials/events/leases/approvals remain isolated. Local Node 24 build/typecheck/lint, 147 unit and 225 PostgreSQL 17 integration tests pass, including integrated stock-plus-authority atomicity. See docs/architecture/portable-platform.md and docs/implementation/reports/platform-reuse.md. Linear completion comment 87d6c4ef-d035-4f21-a9fb-53676579255d; both acceptance items checked and Done/assignee read back. No hosted CI, deployment or real-provider claim.
 
 <a id="pact-053"></a>
 ## PACT-053 — Accept the transactional rules prototype

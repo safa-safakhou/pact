@@ -1,7 +1,7 @@
 # PACT-096 — non-game platform reuse
 
 Ticket: [PACT-096 / MNI-117](https://linear.app/mnim/issue/MNI-117)
-Implementation revision: accompanying commit `PACT-096 prove database-free platform reuse and freeze published contracts` (uncommitted when this report was prepared).
+Implementation revision: `58e6373` (`PACT-096 prove database-free platform reuse and freeze published contracts`). Follow-up preserves the stored proposal's original expiry on exact reproposal; the expiry regression and independent proof pass. Linear completion comment `87d6c4ef-d035-4f21-a9fb-53676579255d`; both acceptance items checked and Done / Mohammad Safakhou read back.
 Verification: 28 September 2026; local Node 24.19.0, PostgreSQL 17.11 for the separate game regressions. No deployment, provider API calls or new infrastructure.
 
 ## Result and acceptance
@@ -22,7 +22,7 @@ Verification: 28 September 2026; local Node 24.19.0, PostgreSQL 17.11 for the se
 - `npm run check:non-game`: pass; separate compile and runtime cycle, no database/provider/deployment service.
 - `npm test`: **147 tests / 50 files**, including seven reuse tests and one schema-evolution guard test.
 - `npm run test:integration`: **225 tests / 39 files**, all pass after rebuilding production package output.
-- Planning render/check and diff checks recorded with final tracker synchronization.
+- `python3 docs/implementation/backlog.py render`, `python3 docs/implementation/backlog.py check`, `git diff --check`: pass, 98 tickets and consistent generated views/source snapshots.
 
 ## Documentation and boundaries
 
