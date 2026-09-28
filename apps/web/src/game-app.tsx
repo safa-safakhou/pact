@@ -1,7 +1,8 @@
 import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import type React from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createWebPactClient } from "./pact-client.js";
+import { RefreshGate } from "./refresh-gate.js";
 import { wholeResourceAmount } from "./resource-units.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 import { readWebResponse } from "./web-response.js";
@@ -132,6 +133,9 @@ export function GameApp(): React.JSX.Element {
   const [password, setPassword] = useState("");
   const [telegramLinked, setTelegramLinked] = useState(false);
   const [notice, setNotice] = useState("");
+  const [refreshFailure, setRefreshFailure] = useState("");
+  const refreshGate = useRef(new RefreshGate());
+  const visibleKingdom = useRef("");
   const [busy, setBusy] = useState(false);
 
   const request = useCallback(
@@ -151,21 +155,50 @@ export function GameApp(): React.JSX.Element {
   );
 
   const refresh = useCallback(async () => {
+    const gate = refreshGate.current;
+    const ticket = gate.begin();
+    if (ticket === null) return;
     try {
       const current = await request("/v1/kingdom/me");
+      if (!gate.isCurrent(ticket)) return;
       const id = String(current.kingdomId);
+      if (visibleKingdom.current && visibleKingdom.current !== id) {
+        gate.pause();
+        setTarget("");
+        setPendingAction(null);
+        setSocial(null);
+        setInbox([]);
+        setView(null);
+        setKingdomId("");
+        setDraft(null);
+        sessionStorage.removeItem("pact_csrf");
+        setCsrf("");
+        setRefreshFailure("");
+        setNotice("Player changed in another tab. Sign in again before taking an action.");
+        setAuth("login");
+        return;
+      }
+      const nextView = owner(await client.readKingdomView(id));
+      if (!gate.isCurrent(ticket)) return;
+      visibleKingdom.current = id;
       setKingdomId(id);
-      setView(owner(await client.readKingdomView(id)));
+      setView(nextView);
       setAuth("ready");
+      setRefreshFailure("");
       setNotice((current) => (current === "Signed in. Loading your kingdom…" ? "" : current));
       try {
-        setSocial((await request("/v1/game/social")) as unknown as SocialOverview);
+        const nextSocial = (await request("/v1/game/social")) as unknown as SocialOverview;
+        if (!gate.isCurrent(ticket)) return;
+        setSocial(nextSocial);
       } catch {
+        if (!gate.isCurrent(ticket)) return;
         setSocial(null);
       }
       try {
+        const nextInbox = await client.readInbox(undefined, 50);
+        if (!gate.isCurrent(ticket)) return;
         setInbox(
-          (await client.readInbox(undefined, 50)).events.map((event) => ({
+          nextInbox.events.map((event) => ({
             sequence: event.sequence,
             type: event.type,
             event: event.event,
@@ -175,24 +208,31 @@ export function GameApp(): React.JSX.Element {
         /* The world remains playable during inbox interruptions. */
       }
     } catch (error) {
+      if (!gate.isCurrent(ticket)) return;
       if (failure(error) === "KINGDOM_NOT_FOUND") {
         try {
-          setDraft((await request("/v1/setup/draft")) as unknown as Draft);
+          const nextDraft = (await request("/v1/setup/draft")) as unknown as Draft;
+          if (!gate.isCurrent(ticket)) return;
+          setDraft(nextDraft);
           setAuth("draft");
         } catch {
+          if (!gate.isCurrent(ticket)) return;
           setAuth("login");
         }
       } else if (["FORBIDDEN", "AUTHENTICATION_REQUIRED", "INVALID_CREDENTIALS"].includes(failure(error))) {
         setAuth("login");
       } else {
-        setNotice(`World refresh failed: ${failure(error)}`);
+        setRefreshFailure(`World refresh failed: ${failure(error)}`);
         setAuth((current) => (current === "checking" ? "login" : current));
       }
+    } finally {
+      gate.finish(ticket);
     }
   }, [client, request]);
 
   useEffect(() => {
     void refresh();
+    return () => refreshGate.current.invalidate();
   }, [refresh]);
   useEffect(() => {
     if (auth !== "ready") return;
@@ -215,6 +255,17 @@ export function GameApp(): React.JSX.Element {
     setNotice("");
     try {
       const result = await request("/v1/auth/login", "POST", { email, password, label: "PACT Alpha web" });
+      refreshGate.current.invalidate();
+      refreshGate.current.resume();
+      visibleKingdom.current = "";
+      setTarget("");
+      setPendingAction(null);
+      setView(null);
+      setSocial(null);
+      setInbox([]);
+      setKingdomId("");
+      setDraft(null);
+      setRefreshFailure("");
       const token = String(result.csrfToken);
       sessionStorage.setItem("pact_csrf", token);
       setCsrf(token);
@@ -360,6 +411,7 @@ export function GameApp(): React.JSX.Element {
           </button>
         </form>
         {notice && <p role="status">{notice}</p>}
+        {refreshFailure && <p role="status">{refreshFailure}</p>}
         <Registration request={request} onNotice={setNotice} />
       </main>
     );
@@ -414,12 +466,18 @@ export function GameApp(): React.JSX.Element {
           <button
             type="button"
             className="secondary"
+            disabled={busy}
             onClick={() => {
+              refreshGate.current.pause();
               setNotice("");
+              setRefreshFailure("");
               setTarget("");
               setSocial(null);
               setView(null);
               setPendingAction(null);
+              setInbox([]);
+              setKingdomId("");
+              setDraft(null);
               setAuth("login");
             }}
           >
@@ -443,6 +501,11 @@ export function GameApp(): React.JSX.Element {
       {notice && (
         <p className="game-notice" role="status">
           {notice}
+        </p>
+      )}
+      {refreshFailure && (
+        <p className="game-notice" role="status">
+          {refreshFailure}
         </p>
       )}
       {pendingAction && (
@@ -618,7 +681,7 @@ function Registration({
   );
 }
 
-function Kingdom({
+export function Kingdom({
   view,
   busy,
   act,
@@ -634,7 +697,10 @@ function Kingdom({
   onPeople: () => void;
 }): React.JSX.Element {
   const [building, setBuilding] = useState("farm");
-  const [level, setLevel] = useState(2);
+  const currentLevel = view.buildings.find((item) => item.kind === building)?.level ?? 1;
+  const level = Math.min(6, currentLevel + 1);
+  const maxLevel = currentLevel >= 6;
+  const alreadyQueued = view.builders.some((item) => item.kind === building && item.instructionId !== null);
   const [slot, setSlot] = useState(1);
   const [troopType, setTroopType] = useState("spearman");
   const [troopCount, setTroopCount] = useState(1);
@@ -725,13 +791,7 @@ function Kingdom({
             </label>
             <label>
               Target level
-              <input
-                type="number"
-                min={2}
-                max={6}
-                value={level}
-                onChange={(event) => setLevel(Number(event.target.value))}
-              />
+              <input type="number" value={level} readOnly />
             </label>
             <label>
               Builder slot
@@ -740,9 +800,14 @@ function Kingdom({
                 <option value={2}>2</option>
               </select>
             </label>
-            <button type="submit" disabled={busy}>
-              Queue upgrade
+            <button type="submit" disabled={busy || maxLevel || alreadyQueued}>
+              {maxLevel ? "Maximum level reached" : alreadyQueued ? "Upgrade already queued" : "Queue upgrade"}
             </button>
+            <p>
+              {maxLevel
+                ? "Level VI is the development cap."
+                : `Next upgrade: ${building} ${currentLevel} → ${level}. Missing stock or prerequisites can leave an instruction waiting; the server decides admission and costs.`}
+            </p>
           </form>
           {view.builders
             .filter((item) => item.instructionId)

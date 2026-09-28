@@ -1,5 +1,13 @@
 # PACT-048 — rules UI progress
 
+## Refresh and construction guidance — 28 September 2026
+
+Live Chrome showed Cinder's tick advancing from 4107 to 4108 while an old `World refresh failed: Failed to fetch` warning remained visible. Farm was already level III, but the build form still proposed level II. This increment separates refresh failures from command receipts, clears the refresh warning on a successful owner read, and derives the next exact building level from committed state. Level VI and a building already queued have explicit disabled explanations; insufficient stock/prerequisites may still legally produce a waiting instruction, so those are not blocked by a second client rule engine.
+
+A per-view refresh gate skips overlapping poll/stream/manual reads. Switching players pauses admission and invalidates outstanding results; queued stream callbacks cannot restore the previous player's view. Successful sign-in resumes reads and clears old private panels/targets/confirmations. A changed cookie-backed kingdom in another tab clears private panels and the stale CSRF token, and asks for sign-in again. Switching is disabled while a submitted action is still pending. These are UI protections; the server continues to own authentication, stock, charge, lock, and action limits.
+
+Seven new unit checks cover overlap, delayed completions, player-switch admission, exact next-level rendering, the level cap, and queued-building cancellation visibility. Node 24.19 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (154 tests / 52 files), and `npm run test:integration` (225 tests / 39 files, PostgreSQL 17.11) passed. The old shell's `npx` shim initially used Node 20 and failed at startup; all successful checks used the bundled Node 24 executable and npm CLI directly. PACT-048 remains **In Progress**: these checks do not replace the outstanding UI-only two-player founding/play and meaningful live charge/lock-denial observations. Deployment verification is recorded below after it runs.
+
 ## Live scout, lending, and mutual release — 28 September 2026
 
 After the normal clock advanced, Chrome showed Cinder's Hall III complete and all eight ordinary Spearmen home. Scout `664d0843-3d7c-43b6-aebf-37ac57d873a8` completed at game time 13:15 UTC: its private report showed the synthetic host's wall level 2, Spearman band `11-25`, and coarse ordinary-stock bands with a stale-observation warning. Earlier pending lookup correctly showed no available report. An impossible 999,999-Grain transfer was rejected as `INSUFFICIENT_STOCK` without a committed receipt.
