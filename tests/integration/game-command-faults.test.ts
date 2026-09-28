@@ -14,6 +14,7 @@ import {
   SupplySettlementService,
 } from "@pact/kingdom";
 import { OnboardingService } from "@pact/onboarding";
+import { RunService } from "@pact/runs";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createRulesRuntime } from "../../workers/rules/src/runtime.js";
@@ -25,6 +26,7 @@ let pool: Pool;
 let schema: string;
 let dispatcher: CommandDispatcher;
 let runtime: ReturnType<typeof createRulesRuntime>;
+let runs: RunService;
 let afterHandlerFault: string | null = null;
 type Owner = { accountId: string; kingdomId: string; sessionId: string };
 type Scenario = { owner: Owner; action: GameAction; observe: () => Promise<void> };
@@ -39,6 +41,7 @@ beforeAll(async () => {
   await pool.query(`UPDATE world_clocks SET committed_game_time_ms = 1020000,
     next_tick_due_at = clock_timestamp() + interval '1 hour'`);
   const clock = { now: () => new Date() };
+  runs = new RunService(pool, { productScope: "pact", clock });
   const permits = new ExactHumanPermitService("pact");
   const exposure = new ExposureService("pact", permits);
   const limits = new ActionLimitService("pact");
@@ -59,7 +62,7 @@ beforeAll(async () => {
   });
   const handler = new GameCommandHandler(
     social,
-    undefined,
+    (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
     kingdoms,
     runtime.troops,
     runtime.buildings,
@@ -717,6 +720,273 @@ function expectedBalances(before: BalanceRow[], kind: GameAction["kind"], a: Own
 }
 
 const kinds = GameActionSchema.options.map((option) => option.shape.kind.value);
+type ModelTroop = {
+  id: string;
+  owner_kingdom_id: string;
+  host_kingdom_id: string;
+  type: string;
+  home_guard: boolean;
+  placement: string;
+  placement_ref: string | null;
+};
+async function troopState(): Promise<ModelTroop[]> {
+  return (
+    await pool.query<ModelTroop>(`SELECT id,owner_kingdom_id,host_kingdom_id,type,home_guard,placement,placement_ref
+    FROM kingdom_troops ORDER BY id`)
+  ).rows;
+}
+
+// Mutable independent oracle: initial state only comes from the database.
+// Subsequent changes are explicit rulebook arithmetic and identity transitions,
+// never reconstructed from receipts, movements, or the resulting game state.
+class GameplayModel {
+  constructor(
+    readonly stock: BalanceRow[],
+    readonly troops: ModelTroop[],
+  ) {}
+  delta(owner: Owner, resource: string, ordinary = 0n, allowance = 0n, locked = 0n) {
+    const balance = this.stock.find((r) => r.kingdom_id === owner.kingdomId && r.resource === resource);
+    if (!balance) throw new Error("Missing model balance");
+    for (const [field, amount] of [
+      ["ordinary_units", ordinary],
+      ["allowance_units", allowance],
+      ["locked_units", locked],
+    ] as const) {
+      balance[field] = (BigInt(balance[field]) + amount).toString();
+      expect(BigInt(balance[field])).toBeGreaterThanOrEqual(0n);
+    }
+  }
+  home(owner: Owner, count: number) {
+    const ids = this.troops
+      .filter(
+        (t) =>
+          t.owner_kingdom_id === owner.kingdomId && !t.home_guard && t.placement === "home" && t.type === "spearman",
+      )
+      .slice(0, count)
+      .map((t) => t.id);
+    expect(ids).toHaveLength(count);
+    return ids;
+  }
+  move(ids: string[], owner: Owner, host: Owner, placement: string, reference: string | null) {
+    for (const id of ids) {
+      const troop = this.troops.find((t) => t.id === id);
+      if (!troop) throw new Error("Missing model troop");
+      Object.assign(troop, {
+        owner_kingdom_id: owner.kingdomId,
+        host_kingdom_id: host.kingdomId,
+        placement,
+        placement_ref: reference,
+      });
+    }
+  }
+  async check() {
+    expect(await balances()).toEqual(this.stock);
+    expect(await troopState()).toEqual(this.troops);
+    await invariants();
+  }
+}
+
+describe("seeded connected gameplay tapes", () => {
+  it.each([0x51a17e, 0xc0ffee, 0xdecaf])(
+    "seed %i preserves stock and exact identities after every command",
+    async (seed) => {
+      const a = await kingdom(),
+        b = await kingdom(),
+        c = await kingdom();
+      const model = new GameplayModel(await balances(), await troopState());
+      let randomState = seed;
+      const random = () => {
+        randomState = (Math.imul(randomState, 1664525) + 1013904223) >>> 0;
+        return randomState;
+      };
+      const count = 1 + (random() % 2);
+      const amount = BigInt(1 + (random() % 3)) * 600n;
+      let steps = 0;
+      const perform = async (
+        owner: Owner,
+        action: GameAction,
+        update: (commandId: string, versions: Record<string, number>) => void = () => {},
+      ) => {
+        await pool.query(`UPDATE world_clocks SET last_heartbeat_at=clock_timestamp(),
+        next_tick_due_at=clock_timestamp()+interval '1 hour'`);
+        const command = envelope(owner, action);
+        if (steps % 3 === 0) {
+          const before = await snapshot();
+          try {
+            afterHandlerFault = command.commandId;
+            await expect(dispatcher.dispatch(principal(owner), command)).rejects.toThrow("FAULT_AFTER_HANDLER");
+          } finally {
+            afterHandlerFault = null;
+          }
+          expect(await snapshot()).toEqual(before);
+        }
+        const receipt = await dispatcher.dispatch(principal(owner), command);
+        expect(receipt.code).toBe("COMMITTED");
+        update(command.commandId, receipt.recordVersions);
+        await model.check();
+        const after = await snapshot();
+        expect(await dispatcher.dispatch(principal(owner), command)).toEqual(receipt);
+        expect(await snapshot()).toEqual(after);
+        steps++;
+        return { id: command.commandId, versions: receipt.recordVersions };
+      };
+      const connect = async (sender: Owner, recipient: Owner) => {
+        const request = await perform(
+          sender,
+          { kind: "game.contact.request", recipientKingdomId: recipient.kingdomId, note: "Seeded connected tape" },
+          () => model.delta(sender, "silver", -1200n),
+        );
+        await perform(recipient, {
+          kind: "game.contact.answer",
+          requestId: recordId(request.versions, "contact-request"),
+          accept: true,
+        });
+      };
+      const transfer = (sender: Owner, recipient: Owner, resource: "iron" | "grain") =>
+        perform(
+          sender,
+          {
+            kind: "game.transfer",
+            recipientKingdomId: recipient.kingdomId,
+            resource,
+            wholeAmount: Number(amount / 600n),
+          },
+          () => {
+            model.delta(sender, resource, -amount);
+            model.delta(recipient, resource, amount);
+          },
+        );
+      await connect(a, b);
+      await connect(b, c);
+      const training = await perform(a, { kind: "game.training.queue", type: "spearman", count }, () => {
+        model.delta(a, "iron", -6000n * BigInt(count));
+        model.delta(a, "silver", -2400n * BigInt(count));
+      });
+      await transfer(b, a, "grain");
+      await perform(a, { kind: "game.training.cancel", batchId: training.id }, () => {
+        model.delta(a, "iron", 4800n * BigInt(count));
+        model.delta(a, "silver", 1920n * BigInt(count));
+      });
+      const building = await perform(
+        a,
+        { kind: "game.building.queue", building: "farm", targetLevel: 2, slot: 1 },
+        () => {
+          model.delta(a, "iron", 0n, -24000n);
+          model.delta(a, "silver", 0n, -12000n);
+        },
+      );
+      await transfer(a, b, "iron");
+      await perform(a, { kind: "game.building.cancel", instructionId: building.id }, () => {
+        model.delta(a, "iron", 0n, 12000n);
+        model.delta(a, "silver", 0n, 6000n);
+      });
+      const lend = async (lender: Owner, host: Owner) => {
+        const ids = model.home(lender, count);
+        const offer = await perform(lender, {
+          kind: "game.garrison.offer",
+          hostKingdomId: host.kingdomId,
+          terms: { ...garrisonTerms, units: [{ type: "spearman", count }] },
+        });
+        await perform(lender, { kind: "game.garrison.sign", offerId: offer.id, version: 1 });
+        let contractId = "";
+        await perform(host, { kind: "game.garrison.sign", offerId: offer.id, version: 1 }, (_id, versions) => {
+          contractId = recordId(versions, "garrison-contract");
+          model.delta(lender, "iron", -600n, 0n, 600n);
+          model.delta(host, "silver", -600n, 0n, 600n);
+          model.move(ids, lender, host, "visiting", contractId);
+        });
+        return { ids, contractId };
+      };
+      const first = await lend(a, b);
+      await transfer(b, a, "grain");
+      await perform(b, { kind: "game.garrison.seize", contractId: first.contractId }, () => {
+        model.delta(a, "iron", 600n, 0n, -600n);
+        model.delta(a, "silver", 600n);
+        model.delta(b, "silver", 0n, 0n, -600n);
+        model.move(first.ids, b, b, "home", null);
+      });
+      const attackers = [...first.ids, ...model.home(b, 10 + count).filter((id) => !first.ids.includes(id))].slice(
+        0,
+        8,
+      );
+      const raid = await perform(
+        b,
+        {
+          kind: "game.raid.declare",
+          targetKingdomId: c.kingdomId,
+          units: [{ type: "spearman", count: 8, explicitIds: attackers }],
+        },
+        (id) => {
+          model.delta(b, "grain", -12600n);
+          model.move(attackers, b, b, "attacking", id);
+        },
+      );
+      for (const [owner, troopId] of [
+        [a, first.ids[0]],
+        [b, attackers[0]],
+      ] as const) {
+        if (!troopId) throw new Error("Missing denied-command troop");
+        const before = await snapshot();
+        await expect(
+          dispatcher.dispatch(principal(owner), envelope(owner, { kind: "game.troop.disband", troopId })),
+        ).rejects.toThrow();
+        expect(await snapshot()).toEqual(before);
+        await model.check();
+      }
+      await perform(b, { kind: "game.raid.withdraw", raidId: raid.id }, () =>
+        model.move(attackers, b, b, "home", null),
+      );
+      const second = await lend(b, c);
+      if (seed % 2 === 0) {
+        await perform(b, { kind: "game.garrison.release", contractId: second.contractId });
+        await perform(c, { kind: "game.garrison.release", contractId: second.contractId }, () => {
+          model.delta(b, "iron", 600n, 0n, -600n);
+          model.delta(c, "silver", 600n, 0n, -600n);
+          model.move(second.ids, b, b, "home", null);
+        });
+      } else {
+        await perform(b, { kind: "game.garrison.exit", contractId: second.contractId }, () => {
+          model.delta(b, "iron", 0n, 0n, -600n);
+          model.delta(c, "iron", 600n);
+          model.delta(c, "silver", 600n, 0n, -600n);
+          model.move(second.ids, b, b, "home", null);
+        });
+      }
+      for (const troopId of first.ids)
+        await perform(b, { kind: "game.troop.disband", troopId }, () => {
+          model.troops.splice(
+            model.troops.findIndex((t) => t.id === troopId),
+            1,
+          );
+        });
+      const supply = await perform(a, {
+        kind: "game.supply.offer",
+        counterpartyKingdomId: b.kingdomId,
+        terms: supplyTerms,
+      });
+      await perform(b, {
+        kind: "game.supply.counter",
+        offerId: supply.id,
+        expectedVersion: 1,
+        terms: { ...supplyTerms, noticeHours: 0 },
+      });
+      await perform(a, { kind: "game.supply.sign", offerId: supply.id, version: 2 });
+      let supplyId = "";
+      await perform(b, { kind: "game.supply.sign", offerId: supply.id, version: 2 }, (_id, versions) => {
+        supplyId = recordId(versions, "supply-contract");
+        model.delta(a, "grain", -600n, 0n, 600n);
+        model.delta(b, "silver", -600n, 0n, 600n);
+      });
+      await perform(a, { kind: "game.supply.notice", contractId: supplyId });
+      expect(steps).toBe(seed % 2 === 0 ? 29 : 27);
+      expect(
+        (await pool.query("SELECT available FROM kingdom_charges WHERE kingdom_id=$1 AND kind='raid'", [b.kingdomId]))
+          .rows,
+      ).toEqual([{ available: 2 }]);
+    },
+  );
+});
+
 // Public targets may be attacked/contacted by anyone. Existing private objects
 // and commands on another owner's units/commitments may not be mutated.
 const ownerBoundKinds = new Set<GameAction["kind"]>([
@@ -740,6 +1010,199 @@ const ownerBoundKinds = new Set<GameAction["kind"]>([
   "game.raid.accept",
   "game.raid.withdraw",
 ]);
+async function garrisonAgent(owner: Owner) {
+  await pool.query(
+    `INSERT INTO kingdom_mandates(product_scope,account_id,allowed_actions,resource_limits,troop_limit)
+    VALUES ('pact',$1,ARRAY['garrison.sign'],'{"iron":"1200","silver":"600","grain":"1300"}'::jsonb,2)`,
+    [owner.accountId],
+  );
+  const holderId = randomUUID();
+  await runs.openMcpLease({ accountId: owner.accountId, holderId });
+  return {
+    accountId: owner.accountId,
+    productScope,
+    audience: "agent" as const,
+    agentScopes: ["game:act"] as const,
+    sessionId: holderId,
+  };
+}
+describe("agent garrison authority interleavings", () => {
+  it("revocation holding the account lock wins over a queued first signature", async () => {
+    await pool.query(
+      "UPDATE world_clocks SET last_heartbeat_at=clock_timestamp(), next_tick_due_at=clock_timestamp()+interval '1 hour'",
+    );
+    const a = await kingdom(),
+      b = await kingdom();
+    const offerId = await garrisonOffer(a, b);
+    const agent = await garrisonAgent(a);
+    const command = envelope(a, { kind: "game.garrison.sign", offerId, version: 1 });
+    const revocation = await pool.connect();
+    let pending: Promise<unknown> | undefined;
+    try {
+      await revocation.query("BEGIN");
+      const blocker = (await revocation.query<{ pid: number }>("SELECT pg_backend_pid() AS pid")).rows[0]?.pid;
+      if (!blocker) throw new Error("Missing blocker PID");
+      await revocation.query("SELECT id FROM accounts WHERE id=$1 FOR UPDATE", [a.accountId]);
+      // Attach rejection handling immediately; assert only after the lock commits.
+      pending = dispatcher.dispatch(agent, command).then(
+        (receipt) => ({ receipt }),
+        (error: unknown) => ({ error }),
+      );
+      await expect
+        .poll(
+          async () =>
+            (await pool.query("SELECT 1 FROM pg_stat_activity WHERE $1::int = ANY(pg_blocking_pids(pid))", [blocker]))
+              .rowCount,
+          { timeout: 5000 },
+        )
+        .toBeGreaterThan(0);
+      await revocation.query(
+        "UPDATE kingdom_mandates SET version=version+1, allowed_actions='{}' WHERE account_id=$1",
+        [a.accountId],
+      );
+      await revocation.query("COMMIT");
+      const afterRevocation = await snapshot();
+      expect(await pending).toMatchObject({ error: { code: "FORBIDDEN" } });
+      expect(await snapshot()).toEqual(afterRevocation);
+      expect(await dispatcher.lookupReceipt(agent, command.commandId)).toBeNull();
+      expect((await pool.query("SELECT 1 FROM garrison_offer_signatures WHERE offer_id=$1", [offerId])).rowCount).toBe(
+        0,
+      );
+      expect(
+        (await pool.query("SELECT 1 FROM authority_commitments WHERE account_id=$1", [a.accountId])).rowCount,
+      ).toBe(0);
+      await invariants();
+    } finally {
+      await revocation.query("ROLLBACK");
+      revocation.release();
+      if (pending) await pending;
+    }
+  });
+
+  it("a committed first signature survives revocation, activates once, and blocks new commitments", async () => {
+    const a = await kingdom(),
+      b = await kingdom();
+    const offerId = await garrisonOffer(a, b);
+    const agent = await garrisonAgent(a);
+    const command = envelope(a, { kind: "game.garrison.sign", offerId, version: 1 });
+    const stock = await balances();
+    const signed = await dispatcher.dispatch(agent, command);
+    expect(signed.code).toBe("COMMITTED");
+    expect(await balances()).toEqual(stock);
+    await pool.query(
+      `UPDATE kingdom_mandates SET version=version+1,allowed_actions='{}',
+      resource_limits='{}',troop_limit=0 WHERE account_id=$1`,
+      [a.accountId],
+    );
+    const revoked = await snapshot();
+    expect(await dispatcher.dispatch(agent, command)).toEqual(signed);
+    expect(await snapshot()).toEqual(revoked);
+    const activated = await commit(b, { kind: "game.garrison.sign", offerId, version: 1 });
+    const contractId = recordId(activated.receipt.recordVersions, "garrison-contract");
+    expect(await balances()).toEqual(expectedBalances(stock, "game.garrison.sign", a, b, b));
+    expect(
+      (
+        await pool.query(
+          `SELECT status,troop_count,mandate_version,subject_ref FROM authority_commitments
+      WHERE account_id=$1`,
+          [a.accountId],
+        )
+      ).rows,
+    ).toEqual([{ status: "active", troop_count: 2, mandate_version: 1, subject_ref: contractId }]);
+    expect(
+      (
+        await pool.query(
+          `SELECT asset,original_units,remaining_units,spent_units FROM authority_commitment_assets
+      WHERE commitment_id=(SELECT id FROM authority_commitments WHERE account_id=$1)`,
+          [a.accountId],
+        )
+      ).rows,
+    ).toEqual([{ asset: "iron", original_units: "600", remaining_units: "0", spent_units: "600" }]);
+    const secondOffer = await garrisonOffer(a, b);
+    const beforeDenial = await snapshot();
+    await expect(
+      dispatcher.dispatch(
+        agent,
+        envelope(a, {
+          kind: "game.garrison.sign",
+          offerId: secondOffer,
+          version: 1,
+        }),
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(await snapshot()).toEqual(beforeDenial);
+    await commit(a, { kind: "game.garrison.exit", contractId });
+    expect(
+      (await pool.query("SELECT status FROM authority_commitments WHERE account_id=$1", [a.accountId])).rows,
+    ).toEqual([{ status: "closed" }]);
+    await invariants();
+  });
+
+  it("competing signatures share one troop cap; host reserves exactly the defensive upkeep extension", async () => {
+    const a = await kingdom(),
+      b = await kingdom(),
+      c = await kingdom();
+    const firstOffer = await garrisonOffer(a, b),
+      secondOffer = await garrisonOffer(a, c);
+    const agent = await garrisonAgent(a);
+    const commands = [firstOffer, secondOffer].map((offerId) =>
+      envelope(a, { kind: "game.garrison.sign", offerId, version: 1 }),
+    );
+    const stock = await balances();
+    const results = await Promise.allSettled(commands.map((command) => dispatcher.dispatch(agent, command)));
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect(results.filter((r) => r.status === "rejected")).toHaveLength(1);
+    expect(results.find((r) => r.status === "rejected")).toMatchObject({ reason: { code: "FORBIDDEN" } });
+    expect(await balances()).toEqual(stock);
+    const winnerIndex = results.findIndex((r) => r.status === "fulfilled");
+    const winner = commands[winnerIndex];
+    if (!winner) throw new Error("Missing winning signature");
+    const result = results[winnerIndex];
+    if (result?.status !== "fulfilled") throw new Error("Missing winning receipt");
+    expect(result.value.code).toBe("COMMITTED");
+    const host = winnerIndex === 0 ? b : c;
+    const hostAgent = await garrisonAgent(host);
+    // Two Spearmen x 10 internal Grain/minute x (60 + 5) minutes = 1,300.
+    await pool.query(
+      "UPDATE kingdom_mandates SET resource_limits=jsonb_set(resource_limits,'{grain}','\"1299\"') WHERE account_id=$1",
+      [host.accountId],
+    );
+    const hostCommand = envelope(host, {
+      kind: "game.garrison.sign",
+      offerId: winnerIndex === 0 ? firstOffer : secondOffer,
+      version: 1,
+    });
+    const before = await snapshot();
+    await expect(dispatcher.dispatch(hostAgent, hostCommand)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(await snapshot()).toEqual(before);
+    await pool.query(
+      "UPDATE kingdom_mandates SET resource_limits=jsonb_set(resource_limits,'{grain}','\"1300\"') WHERE account_id=$1",
+      [host.accountId],
+    );
+    expect((await dispatcher.dispatch(hostAgent, hostCommand)).code).toBe("COMMITTED");
+    const committed = await snapshot();
+    expect(await dispatcher.dispatch(agent, winner)).toEqual(result.value);
+    expect(await snapshot()).toEqual(committed);
+    expect(
+      (await pool.query(`SELECT troop_count,status FROM authority_commitments WHERE account_id=$1`, [a.accountId]))
+        .rows,
+    ).toEqual([{ troop_count: 2, status: "active" }]);
+    expect(
+      (
+        await pool.query(
+          `SELECT asset,original_units,remaining_units,spent_units FROM authority_commitment_assets
+      WHERE commitment_id=(SELECT id FROM authority_commitments WHERE account_id=$1) ORDER BY asset`,
+          [host.accountId],
+        )
+      ).rows,
+    ).toEqual([
+      { asset: "grain", original_units: "1300", remaining_units: "1300", spent_units: "0" },
+      { asset: "silver", original_units: "600", remaining_units: "0", spent_units: "600" },
+    ]);
+    await invariants();
+  });
+});
+
 describe("all published gameplay commands: two pre-commit faults and receipt replay", () => {
   it.each(kinds)("%s rolls back every durable table and retries exactly once", async (kind) => {
     await pool.query(`UPDATE world_clocks SET last_heartbeat_at=clock_timestamp(),
