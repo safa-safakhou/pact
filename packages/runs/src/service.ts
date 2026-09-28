@@ -10,6 +10,7 @@ import type {
 } from "@pact/model-provider";
 import { ProviderError } from "@pact/model-provider";
 import type { Pool, PoolClient } from "pg";
+import { runDefaults, withinRunLimit } from "./portable.js";
 
 export class RunError extends Error {
   constructor(
@@ -95,11 +96,11 @@ interface RunRow {
   ambiguous_crash: boolean;
 }
 
-const DEFAULT_DURATION_MS = 15 * 60_000;
-const DEFAULT_MAX_CONVERSATIONS = 6;
-const DEFAULT_MAX_MESSAGES = 12;
-const DEFAULT_MAX_CALLS = 20;
-const DEFAULT_MAX_TOKENS = 40_000;
+const DEFAULT_DURATION_MS = runDefaults.durationMs;
+const DEFAULT_MAX_CONVERSATIONS = runDefaults.maxConversations;
+const DEFAULT_MAX_MESSAGES = runDefaults.maxMessages;
+const DEFAULT_MAX_CALLS = runDefaults.maxCalls;
+const DEFAULT_MAX_TOKENS = runDefaults.maxTokens;
 const MAX_OUTPUT_RESERVATION = 2_000;
 const MCP_LEASE_MS = 15 * 60_000;
 
@@ -769,8 +770,4 @@ function toView(row: RunRow): RunView {
     lastErrorCode: row.last_error_code,
     ambiguousCrash: row.ambiguous_crash,
   };
-}
-
-function withinRunLimit(value: number, max: number): boolean {
-  return Number.isSafeInteger(value) && value >= 1 && value <= max;
 }

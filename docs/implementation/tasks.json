@@ -2532,7 +2532,7 @@
       "id": "PACT-096",
       "title": "Demonstrate platform-module reuse outside PACT",
       "phase": 1,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "verification",
       "owner_role": "Architecture / QA",
       "size": "M",
@@ -2565,8 +2565,8 @@
         "non-game fixture",
         "module isolation tests"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": ["28 Sep 2026: MNI-117 claimed In Progress by Mohammad Safakhou after fresh Done readbacks of all seven dependencies. Implementing the independent non-game in-memory reuse fixture and import/contract guards."],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },

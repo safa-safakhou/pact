@@ -1,5 +1,7 @@
 # Module boundaries
 
+The [database-free platform reuse guide](portable-platform.md) documents the PACT-096 public portable entry points, isolated non-game proof, adapter contracts and CI dependency/schema guards. PostgreSQL roots remain the PACT production integration path.
+
 PACT begins as one deployable TypeScript workspace with separately runnable processes. Packages are ownership boundaries, not network services.
 
 PACT-049 integration note (in progress): the earlier sandbox-only description below is historical. The shared dispatcher admits social, construction, troop, contract, scout, garrison, and raid commands through a transaction-bound world-clock port. Authenticated HTTP/MCP adapters expose authorized world/report reads. `GameCommandHandler` is PACT-owned in `@pact/application`; both API and inference compositions use it. The inference worker exposes the generated game-command tool, durable result handoff, default-off real-provider adapters, and bounded owner-world, inbox-metadata, and human-selected conversation context. Selected counterpart prose remains untrusted user-role data. Full cross-route certification remains incomplete.

@@ -1,0 +1,16 @@
+{
+  "agentGameActionJsonSchema": "cbac41ac17daef7c2f50d43cc4809beb1ba82f6d189e38f2f70df4632f6cd217",
+  "agentGuideQueryJsonSchema": "83bc8ef226b55068400be9c828c35da826dcfdf72ffb7f36592a85b534683d4e",
+  "approvalProposalJsonSchema": "5906a1336c585c15b63bbd0782f687380c9920265f4df4f1ae96c9b82f04296a",
+  "approvalStatusQueryJsonSchema": "50128a4f7875ee36e4d179c9f36ba08ada7ed5824cbb3f35abf37377e07cd44f",
+  "commandJsonSchema": "def656beabff2bd18c65ec40ff1163523215dd58b8201e95549e66f837012e23",
+  "conversationReadQueryJsonSchema": "a5e5145c3ce935e673d119a9ca86b6a6dceea31a1b6ecc3c8a2fb3edf3d69593",
+  "eventJsonSchema": "cbaf7b0d1b228b042342c932b7378869c035234abd3f10bd3184540194e9901b",
+  "gameCommandJsonSchema": "4cc004cb9a1b29a79622f4a631f7c66dab86eee3d56fe4bdba16b93bda18b2d0",
+  "inboxReadQueryJsonSchema": "4520b07ce8cefe1e725bd9b1ce5920e49cb2cbffac60c5bac18ec0b0c7c29e96",
+  "receiptJsonSchema": "41b38a8ec8266a665781941b68d494bef8a5638098bbc20884c0670f8953fa5c",
+  "receiptReadQueryJsonSchema": "e42b4ac1a57f0510dea7fa6c3f79defb430c815652f959b51a41a4ba3eae8a0c",
+  "reportReadQueryJsonSchema": "132fda84a93cbf63b35a4c102512cfeec3c7ef461eb068c03c3e06f4d8d33d97",
+  "toolCallJsonSchema": "fcb285a7c44a5dd4e9d9ee69619706ca5141da0c5ab90e698ccdce5fe0a7fc59",
+  "worldViewQueryJsonSchema": "f81a52125f42e6fd9f96a2b9d4f5196f0f5290807206437273ddb02ed01a976d"
+}

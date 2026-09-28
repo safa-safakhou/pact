@@ -36,8 +36,8 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
+      - run: npm run check:non-game
       - run: npm run db:migrate
       - run: npm test
       - run: npm run test:integration
       - run: python3 docs/implementation/backlog.py check
-

@@ -1,7 +1,7 @@
 import { glob, readFile } from "node:fs/promises";
 
 const violations = [];
-const importPattern = /(?:from\s+|import\s*\()["'](@pact\/[^"']+)["']/g;
+const importPattern = /(?:from\s+|import\s*\(\s*|import\s+|require\s*\(\s*)["'](@pact\/[^"']+)["']/g;
 
 const roots = process.env.BOUNDARY_ROOT
   ? [process.env.BOUNDARY_ROOT]
@@ -12,7 +12,7 @@ for (const root of roots) {
     if (file.endsWith(".test.ts")) continue;
     const source = await readFile(file, "utf8");
     for (const match of source.matchAll(importPattern)) {
-      if (match[1] === "@pact/domain" || match[1]?.startsWith("@pact/domain/")) {
+      if (/^@pact\/(?:domain|kingdom|world|ledger|application)(?:\/|$)/.test(match[1] ?? "")) {
         violations.push(`${file}: reusable platform code cannot import ${match[1]}`);
       }
     }

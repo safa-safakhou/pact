@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { type AuthenticatedPrincipal, type CommandDispatcher, describeApprovalEffects } from "@pact/application";
 import {
   ApprovalProposalSchema,
@@ -12,6 +12,7 @@ import { appendOutbox, withTransaction } from "@pact/db";
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
 import type { Pool, PoolClient } from "pg";
+import { hashExactCommand } from "./portable.js";
 
 export class ApprovalError extends Error {
   constructor(
@@ -370,7 +371,5 @@ function hashCommand(command: CommandEnvelope): string {
   // JSONB reorders object keys. Parse into the versioned schema's key order
   // before hashing both a submitted proposal and the stored approval action.
   const parsed = CommandEnvelopeSchema.parse(command);
-  return createHash("sha256")
-    .update(JSON.stringify({ commandId: parsed.commandId, action: parsed.action }), "utf8")
-    .digest("hex");
+  return hashExactCommand(parsed.commandId, parsed.action);
 }

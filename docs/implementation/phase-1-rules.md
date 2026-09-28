@@ -767,7 +767,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-096"></a>
 ## PACT-096 — Demonstrate platform-module reuse outside PACT
 
-**Status:** todo · **Role:** Architecture / QA · **Size:** M · **Type:** verification
+**Status:** in_progress · **Role:** Architecture / QA · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-039](phase-1-rules.md#pact-039), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -784,6 +784,12 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.
 - [ ] PACT’s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 28 Sep 2026: MNI-117 claimed In Progress by Mohammad Safakhou after fresh Done readbacks of all seven dependencies. Implementing the independent non-game in-memory reuse fixture and import/contract guards.
 
 <a id="pact-053"></a>
 ## PACT-053 — Accept the transactional rules prototype

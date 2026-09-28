@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./portable": {
+      "types": "./dist/portable.d.ts",
+      "default": "./dist/portable.js"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"

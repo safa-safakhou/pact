@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./portable": {
+      "types": "./dist/portable.d.ts",
+      "default": "./dist/portable.js"
+    },
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
@@ -13,6 +17,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@pact/identity": "0.1.0",
     "@pact/db": "0.1.0",
     "@pact/inbox": "0.1.0",
     "@pact/model-provider": "0.1.0",
