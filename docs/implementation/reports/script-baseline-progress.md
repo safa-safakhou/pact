@@ -1,7 +1,7 @@
 # PACT-052 — public-tool baseline progress
 
 Ticket: [PACT-052 / MNI-116](https://linear.app/mnim/issue/MNI-116)
-Implementation: accompanying commit titled `PACT-052 add bounded public-tool baseline and matched synthetic comparison`.
+Implementation: `57701ac` (`PACT-052 add bounded public-tool baseline and matched synthetic comparison`). Linear progress comment `8b8fd319-7453-4402-8939-cf04f3932e27`; In Progress / Mohammad Safakhou read back after posting.
 Verification: 28 September 2026, local Node 24.19.0 / PostgreSQL 17.11. No deployment or live model calls in this increment.
 
 ## Result
@@ -47,7 +47,7 @@ Verification performed:
 - `npm run build`, `npm run typecheck`, `npm run lint`: pass.
 - `npm test`: **139 tests / 48 files**, including nine baseline unit cases (activation/contact/agreement guards, exact offer version, uncertain writes, bounds, URL/redirect/auth/session handling, rejected-content sanitization).
 - `npm run test:integration`: **225 tests / 39 files**, including the matched comparison. The integration client calls MCP in-process; new HTTP adapter behavior has mocked-fetch unit coverage, not a live HTTP certification.
-- Planning render/check and diff checks: recorded with the tracker synchronization commit.
+- `python3 docs/implementation/backlog.py render`, `python3 docs/implementation/backlog.py check`, `git diff --check`: pass (98 tickets, consistent views/source snapshots).
 
 ## Handoff
 
