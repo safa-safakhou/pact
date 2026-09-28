@@ -26,6 +26,24 @@ afterAll(async () => {
   if (admin) await admin.end();
 });
 
+async function waitForExpiredJobLease(runId: string, workerId: string): Promise<void> {
+  // The database owns lease time. A host timer is not proof that its clock has
+  // crossed the persisted deadline, especially during a parallel suite.
+  await expect
+    .poll(
+      async () => {
+        const result = await pool.query<{ eligible: boolean }>(
+          `SELECT available_at <= clock_timestamp() AND lease_expires_at <= clock_timestamp() AS eligible
+       FROM durable_jobs WHERE status='ready' AND payload->>'runId'=$1 AND leased_by=$2`,
+          [runId, workerId],
+        );
+        return result.rows[0]?.eligible;
+      },
+      { timeout: 5000, interval: 20 },
+    )
+    .toBe(true);
+}
+
 describe("PACT-051 inference process death", () => {
   it("retains a committed game command when its inference process dies before step reconciliation", async () => {
     const ownerAccountId = randomUUID();
@@ -172,15 +190,16 @@ describe("PACT-051 inference process death", () => {
       ).rows,
     ).toEqual([{ sender_kingdom_id: ownerKingdomId, recipient_kingdom_id: peerKingdomId }]);
     expect((await pool.query("SELECT 1 FROM envoy_run_tool_results WHERE run_id = $1", [run.runId])).rowCount).toBe(0);
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    await waitForExpiredJobLease(run.runId, "killed-after-tool");
     const reclaimed = await acquireJob(pool, "replacement-after-tool", 1_000);
     expect(reclaimed).toMatchObject({ type: "envoy.run.tick", attempts: 2 });
     if (!reclaimed) throw new Error("Missing reclaimed job");
+    expect((reclaimed.payload as { runId?: string }).runId).toBe(run.runId);
     const recovered = await service.failInterruptedModelCall(run.runId);
     expect(recovered).toMatchObject({ status: "failed", ambiguousCrash: true, usedMessages: 1, usedCalls: 0 });
     expect(await service.executeModelCall(run.runId)).toMatchObject({ status: "failed", usedMessages: 1 });
     expect(recoveryInvocations).toBe(0);
-    await completeJob(pool, reclaimed.id, "replacement-after-tool");
+    expect(await completeJob(pool, reclaimed.id, "replacement-after-tool")).toBe(true);
     expect(
       (await pool.query("SELECT count(*)::int AS count FROM command_receipts WHERE command_id = $1", [commandId])).rows,
     ).toEqual([{ count: 1 }]);
@@ -271,8 +290,8 @@ describe("PACT-051 inference process death", () => {
       }
     }
 
-    // Let the short lease expire; this models worker death without rewriting job state.
-    await new Promise((resolve) => setTimeout(resolve, 150));
+    // Observe actual expiry without rewriting job state or fabricating recovery.
+    await waitForExpiredJobLease(run.runId, "killed-inference");
     const reclaimed = await acquireJob(pool, "replacement-inference", 1_000);
     expect(reclaimed).toMatchObject({ type: "envoy.run.tick", attempts: 2 });
     if (!reclaimed) throw new Error("Missing reclaimed job");
@@ -286,7 +305,7 @@ describe("PACT-051 inference process death", () => {
     });
     expect(await service.executeModelCall(run.runId)).toMatchObject({ status: "failed" });
     expect(recoveryInvocations).toBe(0);
-    await completeJob(pool, reclaimed.id, "replacement-inference");
+    expect(await completeJob(pool, reclaimed.id, "replacement-inference")).toBe(true);
     const jobState = await pool.query<{ status: string }>("SELECT status FROM durable_jobs WHERE id = $1", [
       reclaimed.id,
     ]);
