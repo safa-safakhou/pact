@@ -17,7 +17,7 @@ The 25 September audit matched all 98 PACT IDs. On 28 September, PACT-051 comple
 | --- | --- | --- |
 | [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests) | Done | [Consolidated R01–R06 completion](reports/rules-verification-completion.md), revision `e6e55cd`. |
 | [PACT-048 / MNI-112](https://linear.app/mnim/issue/MNI-112/pact-048-build-the-plain-rules-prototype-interface) | In Progress | [Chrome UI progress](reports/rules-ui-progress.md) includes supply signing, scout/report, raid/losses, completed replacements, and a live garrison offer/sign/mutual-release flow. Finish a complete UI-only two-player founding/play walkthrough and meaningful lock/charge-limit failure checks. Distinct simultaneous sessions and full accessibility remain unverified. |
-| PACT-052 | In Progress | Claimed by Mohammad Safakhou. Build a bounded public-tool script and matched comparison harness; dependencies are now Done. |
+| PACT-052 | In Progress | Bounded public-tool script and matched isolated fake-provider comparison pass: Farm II, 120 supply installments, identical two-player balances. [Report](reports/script-baseline-progress.md), [run instructions](../operations/script-baseline.md). A matched real-model trial remains; route execution is not model performance/fun evidence. |
 | PACT-096 | Backlog | Independent non-game platform reuse proof; now dependency-ready and unassigned. |
 | PACT-053 | Backlog | Rules acceptance gate; still waits on PACT-048/052/096 and R07–R08 evidence. |
 
@@ -50,6 +50,6 @@ The Telegram test bot is [`@test_pact1211_bot`](https://t.me/test_pact1211_bot/P
 ## Resuming safely
 
 1. Inspect `git status`, the current Linear assignments/dependencies, and the two progress reports. Do not overwrite another agent's claim.
-2. Continue PACT-052's public-tool script/comparison work. PACT-096 is separately ready; do not overwrite a claim. PACT-048 still needs UI-only two-player founding/play and meaningful lock/charge-limit observations despite completed live garrison play. No normal build timer or gate may be bypassed to improve counts.
+2. Continue PACT-052 with a separately authorized matched real-model comparison; the public script and fake-provider harness are implemented, with 139 unit / 225 integration checks passing. PACT-096 is separately ready; do not overwrite a claim. PACT-048 still needs UI-only two-player founding/play and meaningful lock/charge-limit observations despite completed live garrison play. No normal build timer or gate may be bypassed to improve counts.
 3. Verify with documented Node 24 commands: `npm run build`, `npm run typecheck`, `npm test`, `npm run test:integration` against disposable PostgreSQL 17, `npm run lint`, then `python3 docs/implementation/backlog.py render`, `python3 docs/implementation/backlog.py check`, and `git diff --check`. Report actual results, not assumed ones.
 4. Update module/API/operations instructions and a completion or progress report, reconcile Linear and local task evidence, and commit the batch. Reserve live provider, paid, production, deployment, and player-pilot claims for their own observed evidence.

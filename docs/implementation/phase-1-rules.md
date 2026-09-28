@@ -762,6 +762,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 **Evidence**
 
 - 28 Sep 2026: MNI-116 claimed In Progress by Mohammad Safakhou after PACT-027, PACT-049 and newly completed PACT-051 were freshly read Done. Implementing a deterministic public-tool client and isolated baseline harness; no completion evidence yet.
+- 28 Sep 2026: bounded public MCP script and matched isolated fake-provider policy comparison implement normal discovery, Farm II, message/offer/sign, exact uncertain-command receipt reconciliation and session closure. Both normally founded/produced kingdoms finish with identical category balances and 120 settled supply installments; no live resources or model API calls. Node 24 build/typecheck/lint, 139 unit and 225 PostgreSQL 17 integration tests pass. See docs/operations/script-baseline.md and docs/implementation/reports/script-baseline-progress.md. Matched real-model strategy/cost comparison remains; keep In Progress, no fun claim.
 
 <a id="pact-096"></a>
 ## PACT-096 — Demonstrate platform-module reuse outside PACT

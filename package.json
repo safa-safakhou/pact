@@ -29,6 +29,7 @@
     "dev:api": "node --env-file-if-exists=.env --import tsx services/api/src/main.ts",
     "dev:web": "npm run dev --workspace @pact/web",
     "preflight:operator": "node --import tsx services/api/src/operator-preflight-cli.ts",
+    "play:baseline": "node --import tsx scripts/play-baseline.ts",
     "lint": "biome check . && npm run check:boundaries && npm run check:build-order",
     "smoke": "vitest run --config vitest.integration.config.ts tests/smoke",
     "test": "vitest run --config vitest.config.ts",
