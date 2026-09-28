@@ -91,6 +91,82 @@ describe("pure combat calculation", () => {
     expect(mixed.casualtyGroups.map((group) => group.casualties)).toEqual([7, 14]);
   });
 
+  it("preserves exact losses and loot through 32 seeded detachment splits across all 36 die pairs", () => {
+    let seed = 0x51de7ac;
+    const next = () => {
+      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+      return seed;
+    };
+    const types: CombatUnitType[] = ["spearman", "archer", "rider", "ram"];
+    for (let scenario = 0; scenario < 32; scenario++) {
+      const roster: CombatUnit[] = [];
+      for (const side of ["attacker", "defender"] as const) {
+        const count = 1 + (next() % 48);
+        for (let i = 0; i < count; i++) {
+          roster.push({
+            id: id(1000 + scenario * 100 + roster.length),
+            ownerId: `owner-${i % 3}`, // The same owner may be present on both sides.
+            side,
+            type: types[next() % types.length] ?? "spearman",
+            hungry: next() % 3 === 0,
+          });
+        }
+      }
+      const split = roster.map((unit) => ({ ...unit, detachmentId: `detachment-${next() % 13}` }));
+      for (let i = split.length - 1; i > 0; i--) {
+        const j = next() % (i + 1);
+        const current = split[i];
+        const other = split[j];
+        if (current && other) [split[i], split[j]] = [other, current];
+      }
+      const stock = {
+        iron: BigInt(next() % 200_000),
+        silver: BigInt(next() % 200_000),
+        grain: BigInt(next() % 200_000),
+      };
+      const capacity = {
+        iron: BigInt(next() % 10_000),
+        silver: BigInt(next() % 10_000),
+        grain: BigInt(next() % 10_000),
+      };
+      const wallPower = next() % 200;
+      for (let attackerDie = 1; attackerDie <= 6; attackerDie++) {
+        for (let defenderDie = 1; defenderDie <= 6; defenderDie++) {
+          const input = {
+            ...base,
+            units: roster,
+            wallPower,
+            attackerDie,
+            defenderDie,
+            ordinaryStock: stock,
+            leaderFreeCapacity: capacity,
+          };
+          const combined = calculateCombat(input);
+          expect(calculateCombat({ ...input, units: split })).toEqual(combined);
+          const lost = new Set<string>();
+          for (const group of combined.casualtyGroups) {
+            expect(group.lostUnitIds).toHaveLength(group.casualties);
+            for (const unitId of group.lostUnitIds) {
+              expect(lost.has(unitId)).toBe(false);
+              lost.add(unitId);
+              expect(roster.find((unit) => unit.id === unitId)).toMatchObject({
+                ownerId: group.ownerId,
+                side: group.side,
+              });
+            }
+          }
+          for (const resource of ["iron", "silver", "grain"] as const) {
+            expect(combined.lootTaken[resource]).toBeLessThanOrEqual(stock[resource] / 4n);
+            expect(combined.leaderReceived[resource]).toBeLessThanOrEqual(capacity[resource]);
+            expect(combined.leaderReceived[resource] + combined.leaderOverflow[resource]).toBe(
+              combined.lootTaken[resource],
+            );
+          }
+        }
+      }
+    }
+  });
+
   it("handles zero power, Ram suppression, hungry power, and storage overflow without negatives", () => {
     const noDefender = calculateCombat({
       ...base,

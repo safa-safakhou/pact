@@ -40,6 +40,7 @@ import {
 import { ResourceLedger } from "@pact/ledger";
 import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
 import { DeterministicFakeProvider, fakeProviderModel, ProviderRouter } from "@pact/model-provider";
+import { hashToken, OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
@@ -2511,6 +2512,200 @@ describe("shared gameplay command admission", () => {
         )
       ).code,
     ).toBe("IDEMPOTENCY_CONFLICT");
+  });
+
+  it("serializes authenticated HTTP/MCP signatures, bond spending, retries, and exhausted future authority", async () => {
+    const a = await kingdom();
+    const b = await kingdom();
+    const origin = "https://pact.example";
+    const clock = { now: () => new Date() };
+    const digest = new TokenDigester(Buffer.alloc(32, 71));
+    const identity = new IdentityService(pool, {
+      productScope,
+      currentTermsVersion: "terms-v1",
+      allowedOrigins: new Set([origin]),
+      clock,
+      digester: digest,
+      secretBox: new AesGcmSecretBox(Buffer.alloc(32, 73)),
+      compromisedPasswords: new LocalCompromisedPasswordChecker(baselineCompromisedPasswordDigests),
+    });
+    const credentials = new Map<string, { token: string; csrf: string }>();
+    for (const owner of [a, b]) {
+      const token = randomUUID();
+      const csrf = randomUUID();
+      credentials.set(owner.accountId, { token, csrf });
+      await pool.query(
+        `INSERT INTO sessions(product_scope, account_id, audience, token_hash, csrf_token_hash,
+           expires_at, idle_expires_at, authenticated_at, last_seen_at)
+         VALUES ('pact',$1,'human',$2,$3,clock_timestamp() + interval '1 hour',
+           clock_timestamp() + interval '1 hour',clock_timestamp(),clock_timestamp())`,
+        [owner.accountId, digest.digest(token), digest.digest(csrf)],
+      );
+    }
+    await pool.query(
+      `INSERT INTO kingdom_mandates(product_scope, account_id, allowed_actions, resource_limits)
+       VALUES ('pact',$1,ARRAY['supply.sign'],'{"silver":"1200"}'::jsonb)`,
+      [a.accountId],
+    );
+    const accessToken = randomUUID();
+    const grantId = randomUUID();
+    // Synthetic credential issuance; the HTTP route uses real OAuth hash/expiry/revocation introspection.
+    await pool.query(
+      `INSERT INTO oauth_grants(id, product_scope, account_id, client_id, token_family_id,
+         scopes, expires_at, audience, resource, subject_label, access_token_hash)
+       VALUES ($1,'pact',$2,'fixture-http-mcp',$3,ARRAY['game:act'],
+         clock_timestamp() + interval '1 hour','mcp',$4,'Synthetic envoy',$5)`,
+      [grantId, a.accountId, randomUUID(), `${origin}/mcp`, hashToken(accessToken)],
+    );
+    const oauth = new OAuthService(pool, {
+      productScope,
+      issuer: origin,
+      mcpResource: `${origin}/mcp`,
+      humanResource: `${origin}/native`,
+      clock,
+    });
+    const mcp = new McpTransport({ pool, productScope, dispatcher, origin, clock, runLeases: runs });
+    const server = buildServer(pool, false, undefined, {
+      identity,
+      onboarding: new OnboardingService(pool, { productScope, currentTermsVersion: "terms-v1", now: clock.now }),
+      dispatcher,
+      oauth,
+      mcp,
+      origin,
+    });
+    const web = (owner: typeof a, input: CommandEnvelope, csrfOverride?: string) => {
+      const credential = credentials.get(owner.accountId);
+      if (!credential) throw new Error("FIXTURE_SESSION_MISSING");
+      return server.inject({
+        method: "POST",
+        url: "/v1/commands",
+        payload: input,
+        headers: {
+          origin,
+          cookie: `pact_session=${credential.token}`,
+          "x-csrf-token": csrfOverride ?? credential.csrf,
+        },
+      });
+    };
+    let sessionId: string | undefined;
+    let requestId = 0;
+    const call = (method: string, params: Record<string, unknown>, bearer: string = accessToken) =>
+      server.inject({
+        method: "POST",
+        url: "/mcp",
+        payload: { jsonrpc: "2.0", id: ++requestId, method, params },
+        headers: { origin, authorization: `Bearer ${bearer}`, ...(sessionId ? { "mcp-session-id": sessionId } : {}) },
+      });
+    const sign = (input: CommandEnvelope) =>
+      call("tools/call", {
+        name: "pact_game_action_v1",
+        arguments: { commandId: input.commandId, action: input.action },
+      });
+    try {
+      expect(
+        (await call("initialize", { protocolVersion: MCP_PROTOCOL_PRIMARY }, "invalid-fixture-token")).statusCode,
+      ).toBe(401);
+      const initialized = await call("initialize", { protocolVersion: MCP_PROTOCOL_PRIMARY });
+      expect(initialized.statusCode).toBe(200);
+      sessionId = String(initialized.headers["mcp-session-id"]);
+      expect(sessionId).not.toBe("undefined");
+      expect((await call("tools/call", { name: "run.open", arguments: {} })).json().result.isError).not.toBe(true);
+      const terms = {
+        aToB: { resource: "silver" as const, wholePerHour: 1 },
+        bToA: null,
+        aBond: { resource: "silver" as const, wholeAmount: 1 },
+        bBond: null,
+        durationHours: 1 as const,
+        noticeHours: 0 as const,
+      };
+      const offered = command(a.accountId, { kind: "game.supply.offer", counterpartyKingdomId: b.kingdomId, terms });
+      expect((await web(a, offered)).json().code).toBe("COMMITTED");
+      const signA = command(b.accountId, {
+        kind: "game.supply.sign",
+        offerId: offered.commandId,
+        version: 1,
+      });
+      const signB = command(a.accountId, { kind: "game.supply.sign", offerId: offered.commandId, version: 1 });
+      // The command envelopes intentionally name the wrong owner; authenticated routes derive identity.
+      expect((await web(b, signB, "invalid-csrf")).statusCode).toBe(403);
+      const [firstA, retryA, firstB, retryB] = await Promise.all([
+        sign(signA),
+        sign(signA),
+        web(b, signB),
+        web(b, signB),
+      ]);
+      expect(firstA.statusCode).toBe(200);
+      expect(firstA.json().result.structuredContent.code).toBe("COMMITTED");
+      expect(firstA.json().result.structuredContent).toEqual(retryA.json().result.structuredContent);
+      expect(firstB.statusCode).toBe(200);
+      expect(firstB.json().code).toBe("COMMITTED");
+      expect(firstB.json()).toEqual(retryB.json());
+      expect(
+        (
+          await pool.query(
+            "SELECT kingdom_id, actor_kind FROM supply_offer_signatures WHERE offer_id = $1 ORDER BY actor_kind",
+            [offered.commandId],
+          )
+        ).rows,
+      ).toEqual([
+        { kingdom_id: a.kingdomId, actor_kind: "agent" },
+        { kingdom_id: b.kingdomId, actor_kind: "human" },
+      ]);
+      expect(
+        (await pool.query("SELECT 1 FROM supply_contracts WHERE offer_id = $1", [offered.commandId])).rowCount,
+      ).toBe(1);
+      expect(
+        (await pool.query("SELECT account_id FROM command_receipts WHERE command_id = $1", [signA.commandId])).rows[0]
+          ?.account_id,
+      ).toBe(a.accountId);
+      expect(
+        (
+          await pool.query("SELECT 1 FROM command_receipts WHERE command_id = ANY($1::uuid[])", [
+            [signA.commandId, signB.commandId],
+          ])
+        ).rowCount,
+      ).toBe(2);
+      expect(
+        (
+          await pool.query(
+            "SELECT ordinary_units, locked_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'",
+            [a.kingdomId],
+          )
+        ).rows[0],
+      ).toEqual({ ordinary_units: "5400", locked_units: "600" });
+      expect(
+        (
+          await pool.query(
+            `SELECT c.status, a.original_units, a.remaining_units, a.spent_units FROM authority_commitments c
+         JOIN authority_commitment_assets a ON a.commitment_id = c.id WHERE c.account_id = $1`,
+            [a.accountId],
+          )
+        ).rows,
+      ).toEqual([{ status: "active", original_units: "1200", remaining_units: "600", spent_units: "600" }]);
+      const alternate = command(a.accountId, { kind: "game.supply.offer", counterpartyKingdomId: b.kingdomId, terms });
+      expect((await web(a, alternate)).json().code).toBe("COMMITTED");
+      const deniedSign = command(a.accountId, {
+        kind: "game.supply.sign",
+        offerId: alternate.commandId,
+        version: 1,
+      });
+      const denied = await sign(deniedSign);
+      expect(denied.json().result).toMatchObject({ isError: true });
+      expect(JSON.parse(denied.json().result.content[0].text).error.code).toBe("FORBIDDEN");
+      expect(
+        (await pool.query("SELECT 1 FROM supply_offer_signatures WHERE offer_id = $1", [alternate.commandId])).rowCount,
+      ).toBe(0);
+      expect(
+        (await pool.query("SELECT 1 FROM command_receipts WHERE command_id = $1", [deniedSign.commandId])).rowCount,
+      ).toBe(0);
+      expect(
+        (await pool.query("SELECT 1 FROM authority_commitments WHERE account_id = $1", [a.accountId])).rowCount,
+      ).toBe(1);
+      await pool.query("UPDATE oauth_grants SET revoked_at = clock_timestamp() WHERE id = $1", [grantId]);
+      expect((await sign(signA)).statusCode).toBe(401);
+    } finally {
+      await server.close();
+    }
   });
   it("requires an exact human session permit to seize a visiting detachment", async () => {
     const lender = await kingdom();
