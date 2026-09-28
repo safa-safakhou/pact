@@ -1,7 +1,7 @@
 # PACT-051 gameplay command fault/replay matrix
 
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests), still In Progress.
-Implementation: the commit adding `tests/integration/game-command-faults.test.ts` and this report.
+Implementation revision: `c96b293`.
 Verified 28 September 2026 locally with Node 24.19.0 and PostgreSQL 17.11. All 18 dependencies were freshly read Done in Linear; the existing assignment was preserved.
 
 ## Result
@@ -44,3 +44,5 @@ On this host, prepend `/Users/safa.safakhou/.cache/codex-runtimes/codex-primary-
 [Verification instructions/matrix](../../architecture/rules-verification.md) and [handoff](../HANDOFF.md) now identify this coverage separately from the existing combined tick and generated combat fixtures. No public API, player UI, dependency, infrastructure, live provider, or VPS data changed; deployment remains `alpha-20260928-4`. No hosted CI or new physical restore was run.
 
 PACT-051 remains In Progress pending broader mixed command/value/placement sequences, agent-specific mandate/revocation interleavings, and the consolidated R01–R06 acceptance review. PACT-048 still needs the UI-only two-player founding/play walkthrough and meaningful lock/charge-limit checks. PACT-052 and PACT-096 wait on PACT-051; PACT-053 is still the Rules gate. This matrix narrows the reliability gap without marking incomplete tickets Done.
+
+Linear progress comment `388b9922-55f0-47e8-b652-6189feef728f` records the revision, passing checks, and remaining scope. Assignment/status were read back unchanged at 18:51 UTC; the mapping timestamp covers PACT-051 and its 18 dependency readbacks, not a fresh 98-issue audit.
