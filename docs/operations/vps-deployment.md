@@ -26,6 +26,8 @@ Release `alpha-20260927-7` makes each builder slot's active game-time deadline a
 
 Release `alpha-20260928-1` separates ordinary troops from defensive-only Home Guard, adds a bounded owner raid index, and presents resolved battle summaries with full proof collapsed. The public `verify.sh` passed. Chrome showed Cinder's 2 ordinary and 8 Home Guard Spearmen after one replacement completed, one resolved raid with a direct report action, and the correct defender win, 7/8 attacker losses, 2/16 defender losses, and zero loot. This verifies one synthetic raid/loss/rebuild sequence, not garrison lending, simultaneous two-player browser acceptance, or the accessibility pass.
 
+Release `alpha-20260928-2` adds explicit garrison food/bond/seizure terms and active-contract withdrawal, mutual release, recall/return, and host seizure controls. Node 24 build/typecheck/lint, 126 unit, and 182 PostgreSQL integration tests passed locally; public `verify.sh` passed on the single VPS, and Chrome showed the new lending warning. Cinder has queued Farm III and Barracks III under the normal clock; live garrison signing and two-player browser acceptance remain open. See [PACT-048 progress](../implementation/reports/rules-ui-progress.md).
+
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
 ```sh

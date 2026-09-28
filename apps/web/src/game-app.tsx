@@ -89,7 +89,12 @@ function supplyTerms(terms: Json, sendA: boolean): string {
 }
 function garrisonTerms(terms: Json): string {
   const units = Array.isArray(terms.units) ? terms.units : [];
-  return `${units.map((unit: { count?: number; type?: string }) => `${unit.count ?? 0} ${unit.type ?? "troops"}`).join(", ") || "No units"} · ${terms.durationHours ?? "?"}h`;
+  const bond = (value: unknown): string => {
+    if (!value || typeof value !== "object") return "none";
+    const item = value as { wholeAmount?: number; resource?: string };
+    return `${item.wholeAmount ?? "?"} ${item.resource ?? "resource"}`;
+  };
+  return `${units.map((unit: { count?: number; type?: string }) => `${unit.count ?? 0} ${unit.type ?? "troops"}`).join(", ") || "No units"} · ${terms.durationHours ?? "?"}h · host pays troop upkeep · lender bond ${bond(terms.lenderBond)} · host bond ${bond(terms.hostBond)}`;
 }
 function owner(value: unknown): OwnerView {
   if (!value || typeof value !== "object" || (value as Json).audience !== "owner")
@@ -1318,7 +1323,7 @@ function PublicProfile({ value }: { value: unknown }): React.JSX.Element {
   );
 }
 
-function ContractBoard({
+export function ContractBoard({
   social,
   kingdomId,
   busy,
@@ -1347,6 +1352,7 @@ function ContractBoard({
                 {!item.signedBy.includes(kingdomId) && (
                   <button
                     type="button"
+                    aria-label={`Sign supply offer with ${item.displayName}`}
                     disabled={busy}
                     onClick={() =>
                       confirmAction(
@@ -1393,6 +1399,7 @@ function ContractBoard({
                 {!item.signedBy.includes(kingdomId) && (
                   <button
                     type="button"
+                    aria-label={`Sign garrison offer with ${item.displayName}`}
                     disabled={busy}
                     onClick={() =>
                       confirmAction(`Sign garrison offer with ${item.displayName}: ${garrisonTerms(item.terms)}?`, {
@@ -1403,6 +1410,21 @@ function ContractBoard({
                     }
                   >
                     Sign offer
+                  </button>
+                )}
+                {item.lenderKingdomId === kingdomId && (
+                  <button
+                    type="button"
+                    className="secondary"
+                    disabled={busy}
+                    onClick={() =>
+                      confirmAction(`Withdraw your garrison offer to ${item.displayName}?`, {
+                        kind: "game.garrison.withdraw",
+                        offerId: item.id,
+                      })
+                    }
+                  >
+                    Withdraw offer
                   </button>
                 )}
               </div>
@@ -1421,6 +1443,51 @@ function ContractBoard({
                 </strong>
                 <p>{garrisonTerms(item.terms)}</p>
                 <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
+                {item.status === "active" && (
+                  <div className="game-inline-actions">
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() =>
+                        confirmAction(
+                          `Request mutual release of your garrison with ${item.displayName}? Both players must agree; there is no early-exit default if they do.`,
+                          { kind: "game.garrison.release", contractId: item.id },
+                        )
+                      }
+                    >
+                      Request mutual release
+                    </button>
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() =>
+                        confirmAction(
+                          `${item.lenderKingdomId === kingdomId ? "Recall" : "Return"} this garrison early? This defaults your promise and may transfer your bond. Battle-locked troops return after their existing battle.`,
+                          { kind: "game.garrison.exit", contractId: item.id },
+                        )
+                      }
+                    >
+                      {item.lenderKingdomId === kingdomId ? "Recall troops" : "Return troops"}
+                    </button>
+                    {item.hostKingdomId === kingdomId && (
+                      <button
+                        type="button"
+                        className="danger-button"
+                        disabled={busy}
+                        onClick={() =>
+                          confirmAction(
+                            `Seize ${item.displayName}'s visiting troops? This permanently transfers surviving units to you, publicly defaults your garrison promise, and forfeits your host bond.`,
+                            { kind: "game.garrison.seize", contractId: item.id },
+                          )
+                        }
+                      >
+                        Seize troops
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
             ))
           ) : (
@@ -1558,7 +1625,8 @@ function DiplomacyForms({
         <h3>Garrison lending</h3>
         <p>
           Lending requires Hall level 3 and ordinary (non-Home Guard) troops. Lend the selected units for a fixed
-          duration, with no bond in this Alpha sheet.
+          duration, with no bond in this Alpha sheet. The host pays their upkeep and can deliberately seize them;
+          seizure publicly defaults the host's promise. Early unilateral recall or return defaults the player who acts.
         </p>
         <label>
           Troop type

@@ -255,6 +255,11 @@ main {
   color: #22534b;
   margin: 0.25rem;
 }
+.game-shell button.danger-button {
+  color: #fff;
+  border-color: #8f1d14;
+  background: #a3261c;
+}
 .game-shell button:disabled {
   opacity: 0.5;
   cursor: not-allowed;

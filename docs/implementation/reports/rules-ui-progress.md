@@ -1,5 +1,15 @@
 # PACT-048 — rules UI progress
 
+## Garrison contract controls and Hall III preparation — 28 September 2026
+
+The People contract board now spells out the detachment count/duration, host-paid troop upkeep, and each party's bond before signing. The lending sheet warns that a host may seize troops and that unilateral early exits default the acting player. Active contract rows expose mutual release, lender recall or host return, and host-only seizure with explicit confirmation consequences; an open lender offer can be withdrawn. Distinct accessible names identify supply and garrison signature buttons. A server-rendered UI fixture covers lender/host/closed action visibility and term text. These controls still call the shared command dispatcher; no client-side authority was added.
+
+The existing VPS synthetic operator used an authenticated, owner-checked API transfer to send Cinder 320 Silver (`2ad071fa-de6e-4e12-8557-3e01569f4993`) and 400 Iron (`85d31c74-a030-4604-956c-6f5e0e53488f`). Cinder then queued Farm III through Chrome (`db45bfa0-f47c-466a-a9d3-2426b0c35c56`, slot 1 due 3:48 AM game time) and Barracks III (`8c96a195-7840-4b46-aeba-20fc263ca601`, slot 2 due 3:56 AM game time). Both were visibly active after server stock deductions. These are genuine normal-rule actions, not a clock or database shortcut. Cinder still needs Storehouse II and Hall III before lending; neither is claimed complete.
+
+The deployed Chrome Kingdom, Envoy, People, and Chronicle views had no unlabeled native inputs/buttons, missing image alternatives, or visible controls smaller than 44 CSS px in a DOM-backed audit; People was also checked in the narrow in-app browser view. Keyboard Enter activated People navigation there. A simple computed-color scan of Chrome Chronicle found no low-contrast text pairs, but this is a focused smoke, **not** full WCAG 2.2 AA certification. An isolated second browser session could read a different test kingdom, but had no tab-local CSRF token and could not be safely signed in through the available computer-use surface; no simultaneous two-player write flow is claimed.
+
+Node 24 `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (126), and `npm run test:integration` (182) passed locally on PostgreSQL 17. Release `alpha-20260928-2` passed public VPS `verify.sh`; reloaded Chrome showed the host-upkeep/seizure warning. The full live garrison offer/sign/return observation is still pending the real Hall III progression. PACT-048 stays **In Progress**.
+
 ## Chrome training visibility — 27 September 2026
 
 On the live private Alpha, Briar and Cinder signed in as separate synthetic players in Chrome and each queued eight ordinary Spearmen. Briar's command `ce89289b-a0c4-4482-91bf-bfab474b0f48` charged 80 Iron/32 Silver; Cinder's `96d61a93-33fd-476a-bab6-f5c133ebda83` did the same. The Troops panel showed only the preexisting eight Home Guards after each committed receipt, with no queue or deadline. This is a concrete playability gap, not an observed training failure.
@@ -26,8 +36,8 @@ Replaced the synthetic setup demo at the web root with account login/verificatio
 
 | Criterion | Evidence | Result |
 | --- | --- | --- |
-| Two test players found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild through UI | Browser and deployed two-account walkthrough still required; pending offers/reports currently use explicit IDs | **Not yet passed.** Static build and API integration tests alone do not prove this sequence. |
-| Manual actions usable without providers; cannot bypass stock, charge, lock, or limits | UI calls shared human command SDK; server integration suite covers authorization and transactional rules; disconnected-provider browser walkthrough pending | **Partially evidenced.** No independent client authority was added; actual browser flow not yet observed. |
+| Two test players found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild through UI | Two-account supply signing, completed scout/report, transfer/overspend rejection, and a resolved raid/loss/rebuild start were observed in Chrome. The Hall III garrison flow is still pending. | **Not yet passed.** Simultaneous two-player browser writes and live lending/signing remain unobserved. |
+| Manual actions usable without providers; cannot bypass stock, charge, lock, or limits | The deployed fake-only provider setting did not stop the Chrome construction, trade, scout, raid, and rebuild commands. UI uses the shared human command SDK; server integration fixtures cover stock, authority, and battle-lock behavior. | **Partially evidenced.** The live browser has not exercised every lock/limit failure path. |
 
 Local checks: `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (120 passing), and `npm run test:integration` (174 passing) on PostgreSQL 17 passed on 26 September. Release `alpha-20260926-3` is live on the single VPS and `verify.sh` passed. PACT-048 remains In Progress in Linear and the local snapshot.
 
