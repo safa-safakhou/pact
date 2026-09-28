@@ -60,9 +60,47 @@ function validTime(gameTimeMs: number): void {
   if (!Number.isSafeInteger(gameTimeMs) || gameTimeMs < 0) throw new ActionLimitError("INVALID_GAME_TIME");
 }
 
+function projectCharge(row: ChargeRow, kind: ChargeKind, gameTimeMs: number): ChargeStatus & { anchor: number } {
+  validTime(gameTimeMs);
+  let available = row.available;
+  let anchor = Number(row.last_regenerated_game_time_ms);
+  if (gameTimeMs < anchor) throw new ActionLimitError("INVALID_GAME_TIME");
+  if (available < row.capacity) {
+    const elapsed = Math.floor((gameTimeMs - anchor) / chargeIntervalMs[kind]);
+    if (elapsed > 0) {
+      available = Math.min(row.capacity, available + elapsed);
+      anchor = available === row.capacity ? gameTimeMs : anchor + elapsed * chargeIntervalMs[kind];
+    }
+  }
+  const next = available === row.capacity ? null : anchor + chargeIntervalMs[kind];
+  return {
+    available,
+    capacity: row.capacity,
+    nextRegenerationGameTimeMs: next,
+    retryAtGameTimeMs: available === 0 ? next : null,
+    anchor,
+  };
+}
+
+export type ChargeView = ChargeStatus & { kind: ChargeKind; regenerationHours: number };
+
 /** All methods run in the caller's gameplay transaction after action validation. */
 export class ActionLimitService {
   constructor(private readonly productScope: string) {}
+
+  /** Read-only projection; the caller must authorize the owner and provide its snapshot's game time. */
+  async readCharges(client: PoolClient, kingdomId: string, gameTimeMs: number): Promise<ChargeView[]> {
+    validTime(gameTimeMs);
+    const rows = await client.query<ChargeRow & { kind: ChargeKind }>(
+      `SELECT kind, available, capacity, last_regenerated_game_time_ms FROM kingdom_charges
+       WHERE product_scope = $1 AND kingdom_id = $2 ORDER BY kind`,
+      [this.productScope, kingdomId],
+    );
+    return rows.rows.map((row) => {
+      const { anchor: _anchor, ...status } = projectCharge(row, row.kind, gameTimeMs);
+      return { ...status, kind: row.kind, regenerationHours: chargeIntervalMs[row.kind] / 3_600_000 };
+    });
+  }
 
   private async lockKingdom(client: PoolClient, kingdomId: string): Promise<void> {
     const found = await client.query(
@@ -85,28 +123,15 @@ export class ActionLimitService {
     );
     const row = found.rows[0];
     if (!row) throw new ActionLimitError("KINGDOM_NOT_FOUND");
-    let available = row.available;
-    let anchor = Number(row.last_regenerated_game_time_ms);
-    if (gameTimeMs < anchor) throw new ActionLimitError("INVALID_GAME_TIME");
-    if (available < row.capacity) {
-      const elapsedIntervals = Math.floor((gameTimeMs - anchor) / chargeIntervalMs[kind]);
-      if (elapsedIntervals > 0) {
-        available = Math.min(row.capacity, available + elapsedIntervals);
-        anchor = available === row.capacity ? gameTimeMs : anchor + elapsedIntervals * chargeIntervalMs[kind];
-        await client.query(
-          `UPDATE kingdom_charges SET available = $4, last_regenerated_game_time_ms = $5
+    const { anchor, ...status } = projectCharge(row, kind, gameTimeMs);
+    if (status.available !== row.available || anchor !== Number(row.last_regenerated_game_time_ms)) {
+      await client.query(
+        `UPDATE kingdom_charges SET available = $4, last_regenerated_game_time_ms = $5
            WHERE product_scope = $1 AND kingdom_id = $2 AND kind = $3`,
-          [this.productScope, kingdomId, kind, available, anchor],
-        );
-      }
+        [this.productScope, kingdomId, kind, status.available, anchor],
+      );
     }
-    const next = available === row.capacity ? null : anchor + chargeIntervalMs[kind];
-    return {
-      available,
-      capacity: row.capacity,
-      nextRegenerationGameTimeMs: next,
-      retryAtGameTimeMs: available === 0 ? next : null,
-    };
+    return status;
   }
 
   async chargeStatus(

@@ -1,7 +1,7 @@
 import { type ComponentProps, createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { Kingdom } from "./game-app.js";
+import { ActionCharges, Kingdom } from "./game-app.js";
 
 function kingdom(level: number, queued = false): string {
   const view: ComponentProps<typeof Kingdom>["view"] = {
@@ -64,5 +64,43 @@ describe("construction guidance", () => {
     const html = kingdom(3, true);
     expect(html).toContain('disabled="">Upgrade already queued');
     expect(html).toContain("Cancel slot 1");
+  });
+});
+
+describe("shared action charge guidance", () => {
+  it("shows exact pools, regeneration and the exhausted warning without inventing a client-side allowance", () => {
+    const html = renderToStaticMarkup(
+      createElement(ActionCharges, {
+        charges: [
+          {
+            kind: "scout",
+            available: 0,
+            capacity: 4,
+            regenerationHours: 6,
+            nextRegenerationGameTimeMs: 1790000000000,
+            retryAtGameTimeMs: 1790000000000,
+          },
+          {
+            kind: "raid",
+            available: 3,
+            capacity: 3,
+            regenerationHours: 8,
+            nextRegenerationGameTimeMs: null,
+            retryAtGameTimeMs: null,
+          },
+        ],
+      }),
+    );
+    expect(html).toContain("scout: 0 / 4");
+    expect(html).toContain("raid: 3 / 3");
+    expect(html).toContain("No charges available");
+    expect(html).toContain("Pool full.");
+    expect(html).toContain("game time.");
+    expect(html).toContain("Shared by manual play and agents");
+    expect(html).toContain("Regenerates one every 6 game hours");
+  });
+
+  it("does not manufacture full pools when an older snapshot has no charge data", () => {
+    expect(renderToStaticMarkup(createElement(ActionCharges, { charges: [] }))).toBe("");
   });
 });

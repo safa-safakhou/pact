@@ -28,6 +28,14 @@ type OwnerView = {
   asOfGameTimeMs: number;
   committedTickSequence: string;
   worldStatus: string;
+  charges?: {
+    kind: "scout" | "raid";
+    available: number;
+    capacity: number;
+    regenerationHours: number;
+    nextRegenerationGameTimeMs: number | null;
+    retryAtGameTimeMs: number | null;
+  }[];
   balances: Record<
     string,
     {
@@ -77,6 +85,8 @@ function failure(error: unknown): string {
 }
 function actionFailure(action: SandboxAction, error: unknown): string {
   const code = failure(error);
+  if (code === "RATE_LIMITED")
+    return "RATE_LIMITED · A shared action limit or charge pool is exhausted. Check your charges and game-time deadline; switching clients does not refill them.";
   if (code === "INVALID_COMMAND" && action.kind === "game.scout.start")
     return "Scout unavailable. You need two trained ordinary Spearmen (the eight founding Home Guard cannot scout), 10 Silver, 5 Grain, and a scout charge.";
   return code;
@@ -564,6 +574,7 @@ export function GameApp(): React.JSX.Element {
           setTarget={setTarget}
           confirmAction={confirmAction}
           hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
+          charges={view?.charges ?? []}
         />
       )}
       {tab === "Chronicle" && view && <Chronicle view={view} client={client} inbox={inbox} social={social} />}
@@ -681,6 +692,30 @@ function Registration({
   );
 }
 
+export function ActionCharges({ charges }: { charges: NonNullable<OwnerView["charges"]> }): React.JSX.Element | null {
+  if (charges.length === 0) return null;
+  return (
+    <article className="game-card" aria-label="Game action charges">
+      <h3>Action charges</h3>
+      {charges.map((charge) => (
+        <div key={charge.kind}>
+          <strong>
+            {charge.kind}: {charge.available} / {charge.capacity}
+          </strong>
+          <p>
+            {charge.nextRegenerationGameTimeMs === null
+              ? "Pool full."
+              : `Next charge: ${new Date(charge.nextRegenerationGameTimeMs).toLocaleString()} game time.`}
+          </p>
+          <small>Regenerates one every {charge.regenerationHours} game hours.</small>
+          {charge.available === 0 && <p>No charges available. Wait for regeneration before trying again.</p>}
+        </div>
+      ))}
+      <p>Shared by manual play and agents. A paused world also pauses regeneration.</p>
+    </article>
+  );
+}
+
 export function Kingdom({
   view,
   busy,
@@ -707,6 +742,7 @@ export function Kingdom({
   return (
     <section>
       <h2>Kingdom</h2>
+      <ActionCharges charges={view.charges ?? []} />
       <p>
         Committed {new Date(view.asOfGameTimeMs).toLocaleString()}. Resource amounts below use whole game units; the
         server decides costs and limits.
@@ -1194,6 +1230,7 @@ function People({
   setTarget,
   confirmAction,
   hallLevel,
+  charges,
 }: {
   client: ReturnType<typeof createWebPactClient>;
   act: (action: SandboxAction) => Promise<void>;
@@ -1204,6 +1241,7 @@ function People({
   setTarget: (value: string) => void;
   confirmAction: (summary: string, action: SandboxAction) => void;
   hallLevel: number;
+  charges: NonNullable<OwnerView["charges"]>;
 }): React.JSX.Element {
   const [profile, setProfile] = useState<unknown>(null);
   const [message, setMessage] = useState("");
@@ -1215,6 +1253,7 @@ function People({
     <section>
       <h2>People</h2>
       <p>Talk, trade, and make alliances with other kingdoms. Private details are shown only to the parties.</p>
+      <ActionCharges charges={charges} />
       {!social && <p role="status">Social activity is temporarily unavailable. Your kingdom is still playable.</p>}
       <div className="game-grid">
         <article className="game-card">

@@ -1,6 +1,7 @@
 import { withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
 import type { Pool, PoolClient } from "pg";
+import { ActionLimitService, type ChargeView } from "./action-limits.js";
 import type { SupplyTerms } from "./supply-terms.js";
 
 type Resource = "iron" | "silver" | "grain";
@@ -62,6 +63,7 @@ export interface OwnerKingdomView {
   committedTickSequence: string;
   lastCommittedEventId: string;
   worldStatus: string;
+  charges: ChargeView[];
   balances: Record<
     Resource,
     {
@@ -429,6 +431,7 @@ export class WorldViewService {
       audience: "owner",
       ...common,
       lastCommittedEventId,
+      charges: await new ActionLimitService(this.productScope).readCharges(client, targetId, gameTimeMs),
       balances: Object.fromEntries(
         balances.map((row) => [
           row.resource,

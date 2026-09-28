@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
-import { TroopService, WorldViewService } from "@pact/kingdom";
+import { ActionLimitService, TroopService, WorldViewService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
@@ -53,6 +53,60 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("projects lazy-exact private charges without mutating stock, timers or charge rows", async () => {
+    const owner = await kingdom();
+    const outsider = await kingdom();
+    const now = (await new WorldClockService(pool, scope).read()).gameTimeMs;
+    await pool.query(
+      `INSERT INTO kingdom_charges(product_scope, kingdom_id, kind, available, capacity, last_regenerated_game_time_ms)
+       VALUES ('pact', $1, 'scout', 0, 4, $2), ('pact', $1, 'raid', 3, 3, $3)`,
+      [owner.kingdomId, now - 6 * 3_600_000, now - 6 * 3_600_000],
+    );
+    const service = new WorldViewService(pool, scope);
+    const before = (
+      await pool.query("SELECT * FROM kingdom_charges WHERE kingdom_id = $1 ORDER BY kind", [owner.kingdomId])
+    ).rows;
+    const own = await service.read(owner.accountId, owner.kingdomId);
+    if (own?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(own.charges).toEqual([
+      {
+        kind: "raid",
+        available: 3,
+        capacity: 3,
+        regenerationHours: 8,
+        nextRegenerationGameTimeMs: null,
+        retryAtGameTimeMs: null,
+      },
+      {
+        kind: "scout",
+        available: 1,
+        capacity: 4,
+        regenerationHours: 6,
+        nextRegenerationGameTimeMs: now + 6 * 3_600_000,
+        retryAtGameTimeMs: null,
+      },
+    ]);
+    await withTransaction(pool, async (client) => {
+      await client.query("SET TRANSACTION READ ONLY");
+      expect(await new ActionLimitService(scope).readCharges(client, owner.kingdomId, now)).toEqual(own.charges);
+      const limits = new ActionLimitService(scope);
+      expect(
+        (await limits.readCharges(client, owner.kingdomId, now - 1)).find((item) => item.kind === "scout"),
+      ).toMatchObject({ available: 0, nextRegenerationGameTimeMs: now, retryAtGameTimeMs: now });
+      expect(
+        (await limits.readCharges(client, owner.kingdomId, now + 18 * 3_600_000)).find((item) => item.kind === "scout"),
+      ).toMatchObject({ available: 4, nextRegenerationGameTimeMs: null, retryAtGameTimeMs: null });
+      expect(await new ActionLimitService("other-product").readCharges(client, owner.kingdomId, now)).toEqual([]);
+    });
+    expect(
+      (await pool.query("SELECT * FROM kingdom_charges WHERE kingdom_id = $1 ORDER BY kind", [owner.kingdomId])).rows,
+    ).toEqual(before);
+    for (const viewer of [null, outsider.accountId]) {
+      const other = await service.read(viewer, owner.kingdomId);
+      expect(JSON.stringify(other)).not.toMatch(/charges|Regeneration|regenerationHours/);
+    }
+  });
+
   it("shows active training progress only to its owner and removes it after cancellation", async () => {
     const owner = await kingdom();
     const outsider = await kingdom();

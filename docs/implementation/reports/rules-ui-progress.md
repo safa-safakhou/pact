@@ -1,5 +1,13 @@
 # PACT-048 — rules UI progress
 
+## Charge visibility and live exhaustion preparation — 29 September 2026 (28 September UTC)
+
+The owner snapshot now exposes scout/raid charge pools and exact game-time regeneration deadlines. Kingdom and People show availability/capacity, serial interval, full/exhausted state, and the shared human/agent and paused-clock rules. The `RATE_LIMITED` notice explains either charge exhaustion or the shared rolling limit without inventing a more specific server diagnosis. Projection reuses command admission's pure regeneration calculation and does not mutate charge rows. Two UI fixtures cover full/exhausted/missing data; a PostgreSQL fixture covers read-only transactions, serial timing, saturation, unchanged persisted rows, product scope, and non-owner exclusion.
+
+Bundled Node 24.19: `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (156 / 52 files), and `npm run test:integration` (226 / 39 files, PostgreSQL 17.11) passed. Build completed before the integration run. These are local checks, not hosted CI or the remaining player acceptance.
+
+In Chrome, Cinder committed four ordinary scouts against the synthetic PACT MVP Owner: `bff1806c-0701-483c-844c-8b4f8eb85852`, `cbebda79-e5d4-4df7-a871-0599e83a6044`, `1be89ed1-c2e1-4143-b1f9-3b2cc63c4712`, and `317504a3-327d-4a8d-bae2-1b874b460079`. Each normal action spends 10 Silver, 5 Grain, one scout charge and binds two ordinary Spearmen. The first return is due at 11:32 PM displayed game time; a fifth attempt before that would test unavailable troops rather than charge exhaustion. No stock edits, clock skips, account creation, credential changes, or model calls were used. A post-return denial and deployed charge-card check remain to be recorded below. PACT-048 stays **In Progress** for the full UI-only two-player founding/play and remaining live lock/limit paths.
+
 ## Refresh and construction guidance — 28 September 2026
 
 Live Chrome showed Cinder's tick advancing from 4107 to 4108 while an old `World refresh failed: Failed to fetch` warning remained visible. Farm was already level III, but the build form still proposed level II. This increment separates refresh failures from command receipts, clears the refresh warning on a successful owner read, and derives the next exact building level from committed state. Level VI and a building already queued have explicit disabled explanations; insufficient stock/prerequisites may still legally produce a waiting instruction, so those are not blocked by a second client rule engine.
