@@ -1,5 +1,11 @@
 # PACT-048 — rules UI progress
 
+## Fresh-player signup approval checkpoint — 29 September 2026
+
+The founder approved creating two disposable synthetic accounts for the remaining UI-only walkthrough. Existing players remain unchanged. Chrome's normal registration form is open with `alpha-amber-20260929@example.test`; the second planned identity is `alpha-birch-20260929@example.test`. No password, verification token, account or grant was created. Both the 18+ declaration and test terms/privacy acceptance remain unchecked, and signup is unsubmitted pending explicit action-time confirmation of those declarations. [Signup confirmation screenshot](evidence/alpha-20260929-signup-confirmation.png) contains no credentials.
+
+The public legal-notices endpoint reports registration enabled and terms/privacy version `connection-test-v1`. Its links expose synthetic operator/disclosure metadata, not a full contract text; do not claim full terms review. Opening the terms link in a separate Chrome tab was blocked by the browser, without bypass. Continue only after the founder confirms the declarations, through normal registration, captured-mail verification and authenticated gameplay. No existing kingdom reset, game timer/resource edit or paid model call. PACT-048 remains In Progress; application release remains `alpha-20260928-8` / `6a4be89`.
+
 ## Replacement completion and remaining founding prerequisite — 29 September 2026 (28 September UTC)
 
 Fresh Linear readback retains In Progress / Mohammad Safakhou. Chrome at tick 4210 / displayed 12:29 AM game time showed all seven replacements from normal training receipt `23c22977-fd63-4769-89f6-a8e5ae74a726` complete: eight ordinary Spearmen home, eight separate Home Guard, no active training batch, and **Queue training** enabled again. At tick 4211 the same roster remained; [readable completed-rebuild evidence](evidence/alpha-20260928-rebuild-complete.png) includes the now-free queue. No further order, clock skip, resource/troop edit, account/grant/credential change or model call. This closes the preceding batch's pending finish observation, not the full UI acceptance.
