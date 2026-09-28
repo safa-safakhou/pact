@@ -1,5 +1,13 @@
 # PACT-048 — rules UI progress
 
+## Chrome access restored; single-VPS outage recovered — 28 September 2026
+
+The founder changed networks, and Chrome reached `https://safa.dedyn.io/pact/` at a desktop ratio. The initial static page loaded but both login and world APIs returned 502: PostgreSQL could not write WAL because the 38 GB VPS was full. The browser had displayed a raw `Unexpected end of JSON input` notice for the empty gateway response. The web request parser now preserves structured API codes, converts an empty 5xx response into its HTTP status, and distinguishes malformed successful JSON; a focused unit fixture covers those cases. The UI maps 5xx to a temporary-server-unavailable message and clears the stale “Loading your kingdom” notice after a successful refresh.
+
+Only unused Docker build cache was cleared first; then a successful encrypted backup and cutoff-based archive pruning reduced the 12.8 GB completed WAL archive to 156 KB. PostgreSQL and API returned healthy, the last committed clock tick matched its one outbox event, and the paused world resumed without catching up lost wall time. The fresh snapshot `86734927` passed an isolated gameplay-state and outbox replay restore drill. See [single-VPS operations](../../operations/vps-deployment.md).
+
+Chrome then signed in as Cinder and visibly loaded the four-area game with ordinary/Home Guard troops, Storehouse II, Hall III active in slot 2, contact PACT MVP Owner, and the People garrison controls. The clock had frozen at game time 12:52 UTC during the outage, so Hall III still needed 52 **game** minutes after resume; the garrison offer/sign/return and two-player UI acceptance are not yet claimed. PACT-048 remains **In Progress**.
+
 ## Server-side garrison preparation — 28 September 2026
 
 Farm III and Barracks III finished under the normal live clock. Cinder then committed a Storehouse II queue in builder slot 1 (`aa7071f5-e3eb-4b57-a087-f12380865039`) and a Hall III queue in slot 2 (`e338ff3d-1aec-474c-90e1-e9044ed1ea57`). An authenticated owner read at 11:43 UTC showed Storehouse II completed and the waiting Hall III instruction automatically active, due at game time `1790603040000` (13:44 UTC on 28 September). These are server-side API observations with owner-derived identity, not browser acceptance or a completed garrison contract.

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createWebPactClient } from "./pact-client.js";
 import { wholeResourceAmount } from "./resource-units.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
+import { readWebResponse } from "./web-response.js";
 
 type Json = Record<string, unknown>;
 type Tab = "Kingdom" | "Envoy" | "People" | "Chronicle";
@@ -68,6 +69,8 @@ type OwnerView = {
 
 function failure(error: unknown): string {
   if (error instanceof PactClientError) return error.serverCode ?? error.code;
+  if (error instanceof Error && /^HTTP_5\d\d$/.test(error.message))
+    return `Game server temporarily unavailable (${error.message.replace("HTTP_", "HTTP ")}). Try again shortly.`;
   return error instanceof Error ? error.message : String(error);
 }
 function actionFailure(action: SandboxAction, error: unknown): string {
@@ -141,10 +144,7 @@ export function GameApp(): React.JSX.Element {
         },
         ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       });
-      const value = (await response.json()) as Json;
-      if (!response.ok)
-        throw new Error(String((value.error as { code?: string } | undefined)?.code ?? `HTTP_${response.status}`));
-      return value;
+      return readWebResponse(response);
     },
     [apiOrigin, csrf],
   );
@@ -156,6 +156,7 @@ export function GameApp(): React.JSX.Element {
       setKingdomId(id);
       setView(owner(await client.readKingdomView(id)));
       setAuth("ready");
+      setNotice((current) => (current === "Signed in. Loading your kingdom…" ? "" : current));
       try {
         setSocial((await request("/v1/game/social")) as unknown as SocialOverview);
       } catch {

@@ -47,7 +47,7 @@ Database migrations must remain forward compatible with the previous application
 
 ## Backups
 
-PostgreSQL archives WAL into its private `postgres-wal` volume. `backup.sh` creates a consistent `pg_basebackup`, sends the base and WAL directories to an encrypted Restic repository, and applies the 35-day lifecycle. For the zero-cost private MVP, that repository is `/srv/pact/backups/restic` on the same VPS. It protects against database corruption and operator mistakes, but not server/disk loss or full-host compromise. PACT-078 must move it off-host before production hardening. Keep the repository password and environment only in root-readable files, then install the six-hour timer:
+PostgreSQL archives WAL into its private `postgres-wal` volume. `backup.sh` creates a consistent `pg_basebackup` with streamed required WAL (`-Xs`), sends the base and archive directories to an encrypted Restic repository, and applies the 35-day lifecycle. After the snapshot and Restic prune succeed, it removes only completed archive segments older than a pre-snapshot cutoff marker; newer segments remain for the next point-in-time backup. A failed backup leaves the archive intact. The live database volume and its active `pg_wal` are never pruned by this script. For the zero-cost private MVP, the repository is `/srv/pact/backups/restic` on the same VPS. It protects against database corruption and operator mistakes, but not server/disk loss or full-host compromise. PACT-078 must move it off-host before production hardening. Keep the repository password and environment only in root-readable files, then install the six-hour timer:
 
 ```sh
 sudo ./infra/production/bin/install-backup-timer.sh \
@@ -68,6 +68,8 @@ PACT_FIXTURE_PASSWORD_FILE=/srv/pact/secrets/connection-test/operator_test_passw
 ```
 
 The opaque deletion registry is `/srv/pact/state/privacy/deletion-registry.ndjson`, mode `0600` after its first write. It is deliberately outside PostgreSQL's base/WAL volumes and is not replaced during a database restore. It contains no email, credentials, or content. Every restore must apply current migrations and run `privacy-replay` before any API or worker starts; the normal deployment path enforces this. Do not roll back to an image that predates `@pact/privacy` while an unexpired deletion tombstone exists.
+
+On 28 September 2026 the 38 GB VPS reached 100% use. PostgreSQL could not write a WAL file, restart-looped, and the API returned 502 while the static page still returned 200. `docker system df -v` identified 12.8 GB of accumulated completed WAL archive files plus 3.5 GB of disposable build cache. Clearing only unused Docker build cache restored 2.8 GB free; `pg_isready`, API health, and the last committed tick/outbox row were checked before resuming the intentionally paused world clock without wall-time catch-up. The revised backup script then produced encrypted snapshot `86734927`, pruned only archived segments present before its cutoff, and left 16 GB free. An isolated PostgreSQL 17 restore of that snapshot reconciled game balances, Cinder's eight home guards, Hall III instruction and receipt, and one deduplicated outbox replay. The live data volume was not mounted by the drill. If space is tight again, inspect `df -h /`, `docker system df -v`, and the backup timer first; never prune Docker volumes or active PostgreSQL WAL to recover space.
 
 ## MVP email capture
 
