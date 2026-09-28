@@ -3,6 +3,7 @@ import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createWebPactClient } from "./pact-client.js";
 import { RefreshGate } from "./refresh-gate.js";
+import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
 import { wholeResourceAmount } from "./resource-units.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 import { readWebResponse } from "./web-response.js";
@@ -602,6 +603,7 @@ export function GameApp(): React.JSX.Element {
           social={social}
           busy={busy}
           confirmAction={confirmAction}
+          onKingdom={() => setTab("Kingdom")}
         />
       )}
     </main>
@@ -1947,6 +1949,7 @@ function Chronicle({
   social,
   busy,
   confirmAction,
+  onKingdom,
 }: {
   view: OwnerView;
   client: ReturnType<typeof createWebPactClient>;
@@ -1954,10 +1957,25 @@ function Chronicle({
   social: SocialOverview | null;
   busy: boolean;
   confirmAction: (summary: string, action: SandboxAction) => void;
+  onKingdom: () => void;
 }): React.JSX.Element {
-  const [report, setReport] = useState<unknown>(null);
+  const [report, setReport] = useState<ReportRead | null>(null);
   const [reportId, setReportId] = useState("");
-  const [reportKind, setReportKind] = useState<"scout" | "raid_participant" | "raid_public">("scout");
+  const [reportKind, setReportKind] = useState<ReportKind>("scout");
+  const reader = useRef(new ReportReader());
+  useEffect(() => {
+    const current = reader.current;
+    return () => current.invalidate();
+  }, []);
+  const readReport = (kind: ReportKind, id: string): void => {
+    setReportKind(kind);
+    setReportId(id);
+    void reader.current.read(
+      { kind, id },
+      (selectedKind, selectedId) => client.readReport(selectedKind, selectedId),
+      setReport,
+    );
+  };
   return (
     <section>
       <h2>Chronicle</h2>
@@ -1975,12 +1993,7 @@ function Chronicle({
                     type="button"
                     className="secondary"
                     onClick={() => {
-                      setReportKind("scout");
-                      setReportId(scout.operationId);
-                      void client
-                        .readReport("scout", scout.operationId)
-                        .then(setReport)
-                        .catch((error: unknown) => setReport({ error: failure(error) }));
+                      readReport("scout", scout.operationId);
                     }}
                   >
                     Read scout report
@@ -2000,12 +2013,7 @@ function Chronicle({
         busy={busy}
         confirmAction={confirmAction}
         readReport={(raidId) => {
-          setReportKind("raid_participant");
-          setReportId(raidId);
-          void client
-            .readReport("raid_participant", raidId)
-            .then(setReport)
-            .catch((error: unknown) => setReport({ error: failure(error) }));
+          readReport("raid_participant", raidId);
         }}
       />
       <article className="game-card">
@@ -2028,10 +2036,7 @@ function Chronicle({
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            void client
-              .readReport(reportKind, reportId)
-              .then(setReport)
-              .catch((error: unknown) => setReport({ error: failure(error) }));
+            readReport(reportKind, reportId);
           }}
         >
           <label>
@@ -2050,13 +2055,45 @@ function Chronicle({
         </form>
       </article>
       {report !== null && (
-        <article className="game-card">
-          <h3>Report</h3>
-          <GameReport value={report} social={social} viewerKingdomId={view.profile.kingdomId} />
-        </article>
+        <ReportPanel report={report} social={social} viewerKingdomId={view.profile.kingdomId} onRebuild={onKingdom} />
       )}
       <p>{inbox.length} recent inbox events. Open Envoy for details.</p>
     </section>
+  );
+}
+
+export function ReportPanel({
+  report,
+  social,
+  viewerKingdomId,
+  onRebuild,
+}: {
+  report: ReportRead;
+  social: SocialOverview | null;
+  viewerKingdomId: string;
+  onRebuild: () => void;
+}): React.JSX.Element {
+  const label =
+    report.kind === "scout" ? "Scout" : report.kind === "raid_participant" ? "Battle participant" : "Public battle";
+  const code = report.status === "failed" ? failure(report.error) : "";
+  return (
+    <article className="game-card" aria-label="Selected report" aria-busy={report.status === "loading"}>
+      <h3>Report</h3>
+      <p>
+        {label} · <code>{report.id}</code>
+      </p>
+      {report.status === "loading" && <p role="status">Loading the selected report…</p>}
+      {report.status === "failed" && (
+        <p role="alert">
+          {code === "NOT_FOUND" || code === "FORBIDDEN" || code === "UNAUTHORIZED"
+            ? "Report unavailable to this session. It may still be pending, missing, or not visible to this kingdom."
+            : `Report could not be loaded: ${code}. Check your connection and try reading it again; no game action was submitted.`}
+        </p>
+      )}
+      {report.status === "ready" && (
+        <GameReport value={report.value} social={social} viewerKingdomId={viewerKingdomId} onRebuild={onRebuild} />
+      )}
+    </article>
   );
 }
 
@@ -2064,10 +2101,12 @@ function GameReport({
   value,
   social,
   viewerKingdomId,
+  onRebuild,
 }: {
   value: unknown;
   social: SocialOverview | null;
   viewerKingdomId: string;
+  onRebuild: () => void;
 }): React.JSX.Element {
   if (!value || typeof value !== "object") return <p>Report unavailable.</p>;
   const item = value as Json;
@@ -2105,6 +2144,14 @@ function GameReport({
               </p>
             ) : (
               <p>This is the public result; individual losses are private to participants.</p>
+            )}
+            {ownGroup && ownGroup.casualties > 0 && (
+              <div>
+                <p>Replacements are not automatic or free. Review ordinary stock and your training queue in Kingdom.</p>
+                <button type="button" className="secondary" onClick={onRebuild}>
+                  Review replacement training
+                </button>
+              </div>
             )}
           </section>
           {groups.length > 0 && (

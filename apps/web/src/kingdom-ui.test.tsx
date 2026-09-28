@@ -1,7 +1,76 @@
 import { type ComponentProps, createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { ActionCharges, actionReceiptNotice, Kingdom, RaidOperations } from "./game-app.js";
+import { ActionCharges, actionReceiptNotice, Kingdom, RaidOperations, ReportPanel } from "./game-app.js";
+import type { ReportRead } from "./report-reader.js";
+
+function reportPanel(report: ReportRead): string {
+  return renderToStaticMarkup(
+    createElement(ReportPanel, {
+      report,
+      social: null,
+      viewerKingdomId: "synthetic-viewer",
+      onRebuild: () => undefined,
+    }),
+  );
+}
+
+describe("report identity and follow-up", () => {
+  it("labels the requested report and shows loading without an old result", () => {
+    const html = reportPanel({ kind: "scout", id: "synthetic-scout", status: "loading" });
+    expect(html).toContain('aria-busy="true"');
+    expect(html).toContain("Scout · <code>synthetic-scout</code>");
+    expect(html).toContain('role="status">Loading the selected report');
+    expect(html).not.toContain("Defenders won");
+  });
+
+  it("distinguishes inaccessible reports from transport failures without claiming pending on HTTP 503", () => {
+    for (const code of ["NOT_FOUND", "FORBIDDEN", "UNAUTHORIZED"]) {
+      const html = reportPanel({
+        kind: "raid_participant",
+        id: "synthetic-battle",
+        status: "failed",
+        error: new Error(code),
+      });
+      expect(html).toContain('role="alert"');
+      expect(html).toContain("Report unavailable to this session");
+    }
+    const outage = reportPanel({
+      kind: "scout",
+      id: "synthetic-scout",
+      status: "failed",
+      error: new Error("HTTP_503"),
+    });
+    expect(outage).toContain("HTTP 503");
+    expect(outage).toContain("no game action was submitted");
+    expect(outage).not.toContain("may still be pending");
+  });
+
+  it("offers review-only replacement navigation for the owner's losses, not public or zero-loss reports", () => {
+    const battle = (ownerId: string, casualties: number): ReportRead => ({
+      kind: "raid_participant",
+      id: "synthetic-battle",
+      status: "ready",
+      value: {
+        raidId: "synthetic-battle",
+        status: "resolved",
+        gameTimeMs: 60000,
+        trace: {
+          winner: "defender",
+          casualtyGroups: [
+            { ownerId, side: "attacker", casualties, participating: 8, byType: { spearman: casualties } },
+          ],
+        },
+      },
+    });
+    const losses = reportPanel(battle("synthetic-viewer", 7));
+    expect(losses).toContain("lost 7 of 8 troops");
+    expect(losses).toContain("Replacements are not automatic or free");
+    expect(losses).toContain("Review replacement training");
+    expect(reportPanel(battle("synthetic-other", 7))).not.toContain("Review replacement training");
+    expect(reportPanel(battle("synthetic-viewer", 0))).not.toContain("Review replacement training");
+  });
+});
 
 function kingdom(level: number, queued = false): string {
   const view: ComponentProps<typeof Kingdom>["view"] = {
