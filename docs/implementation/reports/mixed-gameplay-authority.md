@@ -1,7 +1,7 @@
 # PACT-051 connected gameplay and agent authority
 
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests), In Progress.
-Implementation revision: recorded in the accompanying Linear comment and follow-up below.
+Implementation revision: `5a748a2`.
 Verification: 28 September 2026, local Node 24.19.0 / PostgreSQL 17.11, disposable test schemas.
 
 ## Result
@@ -36,3 +36,5 @@ Use Node 24 on PATH and the disposable PostgreSQL test database, as described in
 The [verification matrix](../../architecture/rules-verification.md) and [current handoff](../HANDOFF.md) now distinguish this coverage from the previous per-command boundary matrix. Consolidated R01–R06 acceptance review remains before closing PACT-051; there is no new credential or infrastructure blocker. PACT-048 retains its UI-only two-player and lock/charge-limit observations. PACT-052 and PACT-096 are still dependency-blocked on PACT-051, and PACT-053 remains the Rules gate.
 
 Deployment remains `alpha-20260928-4`; no provider call, new physical restore, hosted CI or browser playtest ran in this batch.
+
+Linear progress comment `6b92ed91-9b75-464d-ac96-3f594f65fd4f` records this revision, evidence and remaining scope. Readback retained In Progress and the existing Mohammad Safakhou assignment.
