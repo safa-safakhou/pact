@@ -1,5 +1,11 @@
 # PACT-048 — rules UI progress
 
+## Server-side garrison preparation — 28 September 2026
+
+Farm III and Barracks III finished under the normal live clock. Cinder then committed a Storehouse II queue in builder slot 1 (`aa7071f5-e3eb-4b57-a087-f12380865039`) and a Hall III queue in slot 2 (`e338ff3d-1aec-474c-90e1-e9044ed1ea57`). An authenticated owner read at 11:43 UTC showed Storehouse II completed and the waiting Hall III instruction automatically active, due at game time `1790603040000` (13:44 UTC on 28 September). These are server-side API observations with owner-derived identity, not browser acceptance or a completed garrison contract.
+
+The local network currently resolves `safa.dedyn.io` to a Fortinet block page (`208.91.112.55`), while the VPS itself returns HTTP 200 for the public PACT page and its containers remain healthy. At the founder's direction, work continues without browser access. The two-player UI and live garrison offer/sign/return walkthrough remain unverified, so PACT-048 stays **In Progress**.
+
 ## Garrison contract controls and Hall III preparation — 28 September 2026
 
 The People contract board now spells out the detachment count/duration, host-paid troop upkeep, and each party's bond before signing. The lending sheet warns that a host may seize troops and that unilateral early exits default the acting player. Active contract rows expose mutual release, lender recall or host return, and host-only seizure with explicit confirmation consequences; an open lender offer can be withdrawn. Distinct accessible names identify supply and garrison signature buttons. A server-rendered UI fixture covers lender/host/closed action visibility and term text. These controls still call the shared command dispatcher; no client-side authority was added.
