@@ -148,6 +148,64 @@ describe("atomic world clock", () => {
     expect((await pool.query("SELECT * FROM world_ticks WHERE product_scope = 'world_crash'")).rowCount).toBe(1);
   });
 
+  it("rolls back and replays a fault at every tick phase boundary", async () => {
+    for (const failedPhase of TICK_PHASES) {
+      const scope = `world_fault_${failedPhase}`;
+      const handlers: TickHandlers = {};
+      for (const phase of TICK_PHASES) {
+        handlers[phase] = async (client) => {
+          await client.query("INSERT INTO world_test_phase_effects(phase) VALUES ($1)", [`${scope}:${phase}`]);
+          if (phase === failedPhase) throw new Error(`FAULT_AT_${phase}`);
+        };
+      }
+
+      const failing = new WorldClockService(pool, scope, handlers);
+      const before = await failing.bootstrap();
+      const token = await failing.acquireLease("worker-fault-matrix");
+      expect(token).toBeTruthy();
+      await makeDue(scope);
+      await expect(failing.advance("worker-fault-matrix", token ?? "")).rejects.toThrow(`FAULT_AT_${failedPhase}`);
+      expect(
+        (await pool.query("SELECT 1 FROM world_test_phase_effects WHERE phase LIKE $1", [`${scope}:%`])).rowCount,
+      ).toBe(0);
+      expect((await pool.query("SELECT 1 FROM world_ticks WHERE product_scope = $1", [scope])).rowCount).toBe(0);
+      expect(
+        (
+          await pool.query(
+            "SELECT 1 FROM outbox_events WHERE product_scope = $1 AND type = 'world.tick.committed.v1'",
+            [scope],
+          )
+        ).rowCount,
+      ).toBe(0);
+      expect((await failing.read()).gameTimeMs).toBe(before.gameTimeMs);
+
+      const retryHandlers: TickHandlers = {};
+      for (const phase of TICK_PHASES) {
+        retryHandlers[phase] = async (client) => {
+          await client.query("INSERT INTO world_test_phase_effects(phase) VALUES ($1)", [`${scope}:${phase}`]);
+        };
+      }
+      const recovered = new WorldClockService(pool, scope, retryHandlers);
+      expect((await recovered.advance("worker-fault-matrix", token ?? "")).kind).toBe("committed");
+      expect((await recovered.advance("worker-fault-matrix", token ?? "")).kind).toBe("not_due");
+      const effects = await pool.query<{ phase: string }>(
+        "SELECT phase FROM world_test_phase_effects WHERE phase LIKE $1 ORDER BY phase",
+        [`${scope}:%`],
+      );
+      expect(effects.rows.map((row) => row.phase)).toEqual(TICK_PHASES.map((phase) => `${scope}:${phase}`).sort());
+      expect((await pool.query("SELECT 1 FROM world_ticks WHERE product_scope = $1", [scope])).rowCount).toBe(1);
+      expect(
+        (
+          await pool.query(
+            "SELECT 1 FROM outbox_events WHERE product_scope = $1 AND type = 'world.tick.committed.v1'",
+            [scope],
+          )
+        ).rowCount,
+      ).toBe(1);
+      expect((await recovered.read()).gameTimeMs).toBe(before.gameTimeMs + 60_000);
+    }
+  });
+
   it("fences an expired lease before any phase publishes", async () => {
     const world = new WorldClockService(pool, "world_expired");
     await world.bootstrap();
