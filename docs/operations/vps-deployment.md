@@ -30,6 +30,8 @@ Release `alpha-20260928-2` adds explicit garrison food/bond/seizure terms and ac
 
 Release `alpha-20260928-4` adds a bounded owner-only scout index and Chronicle report shortcut, and labels the Kingdom card as supply-only. Container builds, current migrations, and public `verify.sh` passed; fresh Chrome read/report navigation passed with Cinder's completed scout. Hall III and replacement troops completed normally; successive Cinder/host Chrome sessions offered, jointly signed, and mutually released one Spearman with no unilateral default. The clock remained active after deployment (tick 3715, game time 14:14 UTC), with 13 GB disk free. Latest local checks: Node 24 build/typecheck/lint, 129 unit and 186 PostgreSQL integration tests. The full UI-only founding/play walkthrough and broad rule fault matrix remain open.
 
+Latest release `alpha-20260928-5`, built from pinned revision `a2ca7b3`, passed container build, current migrations, deletion-registry replay and public `verify.sh`. Chrome verified Cinder's active owner view, Farm III → IV / Market I → II targets and player-switch sign-in. This includes previously locally verified rules/reuse changes as well as the UI increment; it does not establish the remaining UI-only founding/play or live charge/lock checks. Build/prune reported ten moderate Expo/Xcode/UUID dependency findings (no high/critical in the matching local audit); record/review these before native or production work rather than applying a forced downgrade automatically.
+
 Synchronize the repository without `.git`, `node_modules`, build output, or local environment files. On the VPS:
 
 ```sh
