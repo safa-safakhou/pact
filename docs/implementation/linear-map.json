@@ -591,8 +591,8 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-28T22:56:00Z",
-  "last_sync_scope": "PACT-048/MNI-112 continued after six fresh Done dependency readbacks; raid-controls revision fdc7fb5 and verified release alpha-20260928-7, live Chrome transfer rolling-limit and post-lock stale-withdrawal denials, comment 8e94191c-3190-43e1-a712-bcaf86037ef5 and updated description/In Progress/assignee readback. Not a fresh 98-issue audit.",
+  "last_synced_at": "2026-09-28T23:10:26.723Z",
+  "last_sync_scope": "PACT-048/MNI-112 report-selection revision 6a4be89 / verified alpha-20260928-8; live resolved battle/replacement progress/report controls, comment 088d1fe7-11aa-409f-b97d-77f0bfbc739f and manual-safeguard checklist/description/status/assignee readback. PACT-052 stale description reconciled to existing baseline/fake-provider evidence, comment ecebb589-a008-413d-b44d-e4911ca997fa; real-model comparison still open. Fresh project status list and Done prerequisites read; not a full acceptance/relationship audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",

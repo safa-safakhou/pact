@@ -12,6 +12,8 @@ Separate schemas run the same policy through the script and the real inference/a
 
 **PACT-052 remains In Progress.** This is execution/route evidence, not a matched real-model strategy trial or evidence of fun. No API calls were purchased. The earlier live Luna playtests started from different conditions and are not treated as this comparison.
 
+On 29 September (28 September UTC), a fresh Linear read found the issue description still saying "Not implemented; no execution evidence yet" despite this report and the earlier progress comment. Its completion-evidence paragraph was reconciled to the existing revision/fixture and explicitly remaining real-model trial. Comment `ecebb589-a008-413d-b44d-e4911ca997fa` and description/status/assignee readback confirm In Progress / Mohammad Safakhou. The full integration rerun passed 226 tests in 39 files, including the unchanged matched comparison. This is tracker cleanup and a fixture rerun, not new model performance or fun evidence; no new provider call, account, grant or paid service.
+
 ## Reproducible conditions and actual outcome
 
 Each schema starts with two normally founded kingdoms: all level-I buildings, two free builders, eight Home Guard, no ordinary stock injection. Sixty real production/upkeep ticks precede play. Player A pays the normal 2 Silver cold-contact fee; human B accepts. Both receive fixture human mandates for `building.queue` / `supply.sign`: Iron 40,000, Silver 20,000, Grain 7,200 internal units, default reserve floors. Account/password/mandate setup is fixture provisioning, not a player-accessible capability. Clock acceleration is isolated test-worker setup, not a privileged player action rate.
