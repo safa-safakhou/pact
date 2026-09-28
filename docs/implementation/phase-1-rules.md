@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 22 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 23 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -672,7 +672,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-051"></a>
 ## PACT-051 — Run transaction, replay, and adversarial rules tests
 
-**Status:** in_progress · **Role:** QA · **Size:** L · **Type:** verification
+**Status:** done · **Role:** QA · **Size:** L · **Type:** verification
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046), [PACT-050](phase-1-rules.md#pact-050)
 
@@ -687,8 +687,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] All R01–R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.
-- [ ] No negative stock, duplicate troop, repeated reward, partially published tick, or lost committed receipt survives a generated scenario.
+- [x] All R01–R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.
+- [x] No negative stock, duplicate troop, repeated reward, partially published tick, or lost committed receipt survives a generated scenario.
 
 **Assignee:** Mohammad Safakhou
 
@@ -734,11 +734,12 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - 28 Sep 2026: revision ae5c534 shares the actual rules-worker composition with a combined real-domain hourly-boundary fixture. Faults after all nine phase positions restore every durable table; fresh-runtime retry commits construction/training, production/upkeep, supply delivery/default/bonds, battle/scout, Fortune and rewards once, with pre-publication read isolation and journal reconciliation. Season rollover is intentionally a no-op until PACT-069. Generated combat compares 32 seeded rosters across 36 dice pairs under detachment splitting/reordering. Authenticated HTTP cookie/CSRF and hash-introspected OAuth MCP signature races retain one contract/bond debit/future commitment and two receipts; exhausted mandate and invalid/revoked credentials fail. Node 24.19.0 build/typecheck/lint, 130 unit and 188 PostgreSQL 17.11 integration tests pass. See docs/implementation/reports/rules-runtime-batch.md and docs/architecture/rules-verification.md; Linear progress comment a90206f4-08cd-4481-b29a-f3efaf22d95a. Broader generated command-fault/value/placement/revocation matrix remains; keep In Progress. No new deployment or hosted CI.
 - 28 Sep 2026: revision c96b293, tests/integration/game-command-faults.test.ts covers all 28 published gameplay action kinds via real world admission, handler and dispatcher. Post-handler and deferred post-receipt COMMIT failures (56 checks) restore every durable base table, then one clean commit and stable receipt replay survive. Independent exact resource/category arithmetic covers costs, fractional refunds, bonds, provisions and compensation; exact troop IDs/owners and current placement references pass. Forged-owner attempts fail without mutation for 19 private object/party-bound kinds; outsider receipt reads/retries and changed-payload replay are checked for all 28. The process-death fixtures now wait for the specific job's database-clock lease deadline rather than a flaky fixed 150 ms host delay, and verify reclaimed run identity and fenced completion. Local Node 24.19.0 build/typecheck/lint, 130 unit and 216 PostgreSQL 17.11 integration tests pass. See docs/implementation/reports/game-command-fault-matrix.md and docs/architecture/rules-verification.md; Linear progress comment 388b9922-55f0-47e8-b652-6189feef728f. Mixed command sequences, agent-specific mandate/revocation interleavings and consolidated acceptance remain; keep PACT-051 In Progress. No deployment, provider call, new physical restore or hosted CI.
 - 28 Sep 2026: revision 5a748a2, tests/integration/game-command-faults.test.ts adds seeds 0x51a17e, 0xc0ffee and 0xdecaf (85 mixed commits/replays, 29 injected rollback checks) with independent per-category stock and exact identity/placement models, including seized units explicitly joining a raid before withdrawal. Three real-MCP-lease agent garrison cases prove PostgreSQL-confirmed revocation-first denial, prior-signature survival with new-command denial, competing-offer troop caps and exact host upkeep-plus-five-minute-extension reservation (1300 succeeds, 1299 fails). Final Node 24.19.0 build/typecheck/lint, 130 unit and 222 PostgreSQL 17.11 integration tests pass. An initial concurrent-build run failed one existing process-kill case; isolated and final full reruns passed, cause unconfirmed. See docs/implementation/reports/mixed-gameplay-authority.md and docs/architecture/rules-verification.md. Linear progress comment 6b92ed91-9b75-464d-ac96-3f594f65fd4f records this revision and evidence. Consolidated R01-R06 acceptance review remains; keep PACT-051 In Progress. No production code, deployment, live provider, new physical restore or hosted CI changed.
+- 28 Sep 2026: completed in revision e6e55cd after consolidated R01-R06 review. Added uncertain caller timeout/recovery (one receipt/contact/two-Silver debit), exact harvest input transitions and fresh schema restore with independent marked wealth 64 plus all stock categories and exact troop placements/receipt/outbox replay. Prior physical VPS snapshot 86734927 recovery remains dated evidence. All 18 dependencies freshly Done; final Node 24.19.0 build/typecheck/lint, 130 unit and 224 PostgreSQL 17.11 integration tests, restore and planning/diff checks pass. Report docs/implementation/reports/rules-verification-completion.md; Linear completion comment 36a1d2d5-2171-46a8-a50a-9ed12e98677f; readback Done. This closes Phase 1 verification, not PACT-053 or automatic season rollover (PACT-069). No new deployment, paid provider, hosted CI or whole-VPS drill.
 
 <a id="pact-052"></a>
 ## PACT-052 — Build and run the allowed script baseline
 
-**Status:** todo · **Role:** QA · **Size:** M · **Type:** verification
+**Status:** in_progress · **Role:** QA · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051)
 
@@ -755,6 +756,12 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 - [ ] The script cannot use hidden state, private administrative APIs, free resources, or privileged action rates.
 - [ ] Publish the actual comparison even when the script wins; a successful execution test is separate from proof that negotiation is fun.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 28 Sep 2026: MNI-116 claimed In Progress by Mohammad Safakhou after PACT-027, PACT-049 and newly completed PACT-051 were freshly read Done. Implementing a deterministic public-tool client and isolated baseline harness; no completion evidence yet.
 
 <a id="pact-096"></a>
 ## PACT-096 — Demonstrate platform-module reuse outside PACT

@@ -2,7 +2,7 @@
 
 Ticket: [PACT-051 / MNI-115](https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests).
 Review date: 28 September 2026. Node 24.19.0, PostgreSQL 17.11, disposable local test schemas.
-Revision: recorded in the tracker follow-up. All 18 prerequisites were freshly read Done; the existing assignee was retained.
+Revision: `e6e55cd`. All 18 prerequisites were freshly read Done; the existing assignee was retained.
 
 ## Result and acceptance decision
 
@@ -36,6 +36,8 @@ Use Node 24 on PATH. Run `npm run build` **before**, not concurrently with, test
 - Final full `npm run test:integration`: 224 tests / 38 files passed after the build finished, including both new boundary cases and both actual inference process-kill cases.
 
 Planning render/check and revision/Linear readback are recorded in the tracker follow-up below.
+
+Planning render/check and diff check passed. Linear completion comment `36a1d2d5-2171-46a8-a50a-9ed12e98677f` records the evidence; readback confirmed Done on 28 September at 19:23 UTC.
 
 ## Scope and next work
 

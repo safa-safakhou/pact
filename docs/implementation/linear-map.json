@@ -591,8 +591,8 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-28T19:08:25Z",
-  "last_sync_scope": "PACT-051/MNI-115 assignment/status readback, report/evidence update, and all 18 dependency status readbacks; this is not a fresh 98-issue audit.",
+  "last_synced_at": "2026-09-28T19:23:48Z",
+  "last_sync_scope": "PACT-051/MNI-115 completion/readback and all 18 dependency readbacks; PACT-052/MNI-116 claim after PACT-027/049/051 Done readbacks. Not a fresh 98-issue audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
