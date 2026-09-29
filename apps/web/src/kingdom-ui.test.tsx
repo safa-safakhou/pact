@@ -8,6 +8,7 @@ import {
   People,
   RaidOperations,
   ReportPanel,
+  raidUiReady,
   scoutUiReady,
 } from "./game-app.js";
 import type { ReportRead } from "./report-reader.js";
@@ -220,6 +221,43 @@ describe("scout first-play guidance", () => {
     expect(scoutUiReady({ ...ready, balances: { ...ready.balances, grain: stock("2999") } })).toBe(false);
     expect(scoutUiReady({ ...ready, charges: [{ ...scoutCharge, available: 0 }] })).toBe(false);
     expect(scoutUiReady(null)).toBe(false);
+  });
+});
+
+describe("raid first-play guidance", () => {
+  const charge = {
+    kind: "raid" as const,
+    available: 1,
+    capacity: 3,
+    regenerationHours: 8,
+    nextRegenerationGameTimeMs: null,
+    retryAtGameTimeMs: null,
+  };
+  const ordinarySpearman = { type: "spearman", placement: "home", homeGuard: false, count: 8 };
+  const troops = [ordinarySpearman];
+
+  it("uses the selected ordinary home force and remaining shared raid charge", () => {
+    expect(raidUiReady({ troops, charges: [charge] }, "spearman", 8)).toBe(true);
+    expect(raidUiReady({ troops, charges: [charge] }, "spearman", 7)).toBe(false);
+    expect(raidUiReady({ troops, charges: [charge] }, "spearman", 41)).toBe(false);
+    expect(raidUiReady({ troops, charges: [charge] }, "spearman", 9)).toBe(false);
+    expect(raidUiReady({ troops, charges: [charge] }, "archer", 8)).toBe(false);
+    expect(raidUiReady({ troops: [{ ...ordinarySpearman, homeGuard: true }], charges: [charge] }, "spearman", 8)).toBe(
+      false,
+    );
+    expect(
+      raidUiReady({ troops: [{ ...ordinarySpearman, placement: "scouting" }], charges: [charge] }, "spearman", 8),
+    ).toBe(false);
+    expect(raidUiReady({ troops, charges: [{ ...charge, available: 0 }] }, "spearman", 8)).toBe(false);
+    expect(raidUiReady(null, "spearman", 8)).toBe(false);
+  });
+
+  it("puts distinct raid-force controls in the raid card", () => {
+    const html = people(false);
+    expect(html).toContain("Raid troop type");
+    expect(html).toContain("Raid troop count");
+    expect(html).toContain('min="8" max="40" value="8"');
+    expect(html).toContain('disabled="">Declare raid');
   });
 });
 

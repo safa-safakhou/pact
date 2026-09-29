@@ -1266,6 +1266,18 @@ export function scoutUiReady(view: Pick<OwnerView, "troops" | "balances" | "char
   );
 }
 
+export function raidUiReady(
+  view: Pick<OwnerView, "troops" | "charges"> | null,
+  type: "spearman" | "archer" | "rider" | "ram",
+  count: number,
+): boolean {
+  if (!view || !Number.isInteger(count) || count < 8 || count > 40) return false;
+  const available = view.troops
+    .filter((unit) => unit.type === type && unit.placement === "home" && !unit.homeGuard)
+    .reduce((total, unit) => total + unit.count, 0);
+  return available >= count && Boolean(view.charges?.some((charge) => charge.kind === "raid" && charge.available > 0));
+}
+
 export function People({
   client,
   act,
@@ -1470,6 +1482,8 @@ export function People({
         act={act}
         confirmAction={confirmAction}
         hallLevel={hallLevel}
+        view={view}
+        kingdomId={kingdomId}
         scoutReady={scoutUiReady(view) && target !== kingdomId}
       />
     </section>
@@ -1670,6 +1684,8 @@ function DiplomacyForms({
   act,
   confirmAction,
   hallLevel,
+  view,
+  kingdomId,
   scoutReady,
 }: {
   target: string;
@@ -1677,6 +1693,8 @@ function DiplomacyForms({
   act: (action: SandboxAction) => Promise<void>;
   confirmAction: (summary: string, action: SandboxAction) => void;
   hallLevel: number;
+  view: OwnerView | null;
+  kingdomId: string;
   scoutReady: boolean;
 }): React.JSX.Element {
   const [sendResource, setSendResource] = useState<"iron" | "silver" | "grain">("grain");
@@ -1687,6 +1705,8 @@ function DiplomacyForms({
   const [noticeHours, setNoticeHours] = useState<0 | 1 | 6>(0);
   const [troopType, setTroopType] = useState<"spearman" | "archer" | "rider" | "ram">("spearman");
   const [troopCount, setTroopCount] = useState(1);
+  const [raidTroopType, setRaidTroopType] = useState<"spearman" | "archer" | "rider" | "ram">("spearman");
+  const [raidTroopCount, setRaidTroopCount] = useState(8);
   const [raidId, setRaidId] = useState("");
   const [garrisonDuration, setGarrisonDuration] = useState<1 | 6 | 24>(6);
   const resourceOptions = ["grain", "iron", "silver"] as const;
@@ -1699,6 +1719,7 @@ function DiplomacyForms({
     noticeHours,
   };
   const selectedUnits = [{ type: troopType, count: troopCount }];
+  const raidUnits = [{ type: raidTroopType, count: raidTroopCount }];
   return (
     <div className="game-grid game-actions-grid">
       <article className="game-card">
@@ -1844,14 +1865,35 @@ function DiplomacyForms({
           Raids require at least eight trained ordinary troops; founding Home Guard cannot attack. The server determines
           locks, combat, losses, and loot.
         </p>
+        <label>
+          Raid troop type
+          <select
+            value={raidTroopType}
+            onChange={(event) => setRaidTroopType(event.target.value as typeof raidTroopType)}
+          >
+            {["spearman", "archer", "rider", "ram"].map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Raid troop count
+          <input
+            type="number"
+            min={8}
+            max={40}
+            value={raidTroopCount}
+            onChange={(event) => setRaidTroopCount(Number(event.target.value))}
+          />
+        </label>
         <button
           type="button"
-          disabled={busy || !target || troopCount < 8}
+          disabled={busy || !target || target === kingdomId || !raidUiReady(view, raidTroopType, raidTroopCount)}
           onClick={() => {
-            confirmAction(`Declare raid on ${target} with ${troopCount} ${troopType}? This can cause losses.`, {
+            confirmAction(`Declare raid on ${target} with ${raidTroopCount} ${raidTroopType}? This can cause losses.`, {
               kind: "game.raid.declare",
               targetKingdomId: target,
-              units: selectedUnits,
+              units: raidUnits,
             });
           }}
         >
@@ -1866,7 +1908,7 @@ function DiplomacyForms({
           className="secondary"
           disabled={busy || !raidId}
           onClick={() => {
-            void act({ kind: "game.raid.accept", raidId, units: selectedUnits });
+            void act({ kind: "game.raid.accept", raidId, units: raidUnits });
           }}
         >
           Join nominated raid

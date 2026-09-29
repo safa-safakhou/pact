@@ -21,6 +21,8 @@ A new cold-contact request costs two ordinary Silver; founding construction allo
 
 The Scout control is guidance from the latest owner projection: it waits for two home ordinary Spearmen, 10 ordinary Silver, 5 ordinary Grain and a shared scout charge, and excludes self-targeting. Founding Home Guard and construction-only allowances never qualify. The shared server command path rechecks all conditions and remains authoritative; a refreshed view may still be stale by submission time.
 
+The Raid card has its own **Raid troop type** and **Raid troop count** controls, initially eight Spearmen; changing the separate Garrison Lending count does not configure an attack. A raid is offered only for a non-self target, at least eight selected home ordinary troops of that type, and an available shared raid charge in the latest owner projection. The same Raid controls configure **Join nominated raid** after entering an ID. The server remains authoritative over eligibility, stock, locks and receipts.
+
 Chrome tabs in the same browser profile share the PACT sign-in cookie. Signing in a different test account in one tab changes which account another tab shows after reload; use distinct browser profiles/sessions for a simultaneous two-player walkthrough. The 27 September Briar/Cinder training observations used successive sessions, not concurrent sessions.
 After a player switch in another tab, the previous account's CSRF token is invalid for writes under the new cookie. Sign in again in that tab or use the original authenticated tab; do not treat `FORBIDDEN` from stale CSRF as a game-rule denial.
 
