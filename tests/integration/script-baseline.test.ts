@@ -12,7 +12,7 @@ import {
 } from "@pact/identity";
 import { KingdomService, SocialOverviewReader, WorldViewService } from "@pact/kingdom";
 import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
-import { fakeProviderModel, ProviderRouter } from "@pact/model-provider";
+import { fakeProviderModel, type ModelProviderAdapter, type ProviderModel, ProviderRouter } from "@pact/model-provider";
 import { OnboardingService } from "@pact/onboarding";
 import { expect, it } from "vitest";
 import { type BaselineTools, playBaseline } from "../../scripts/lib/baseline-player.js";
@@ -31,10 +31,121 @@ const terms = {
   noticeHours: 0 as const,
 };
 
-async function scenario(mode: "script" | "fake-provider") {
+const localModelUrl = process.env.PACT_BASELINE_LOCAL_MODEL_URL;
+const localModelId = process.env.PACT_BASELINE_LOCAL_MODEL_ID ?? "Qwen/Qwen3-4B-GGUF:Q4_K_M";
+
+function localModelAdapter(
+  url: string,
+  accountId: string,
+  now: () => Date,
+  countCall: () => void,
+  recordAction: (kind: string) => void,
+): ModelProviderAdapter {
+  const parsed = new URL(url);
+  if (parsed.protocol !== "http:" || !["127.0.0.1", "localhost"].includes(parsed.hostname)) {
+    throw new Error("The optional model comparison accepts only a loopback HTTP server");
+  }
+  const model: ProviderModel = {
+    id: localModelId,
+    displayName: localModelId,
+    contextWindowTokens: 16384,
+    maxOutputTokens: 2000,
+    capabilities: { structuredToolCalls: true, parallelToolCalls: false },
+  };
+  return {
+    provider: "local-comparison",
+    listModels: async () => [model],
+    invoke: async (request) => {
+      countCall();
+      const response = await fetch(new URL("/v1/chat/completions", parsed), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          model: request.model,
+          messages: [
+            {
+              role: "system",
+              content:
+                "/no_think\nThis local test transport accepts the same PACT tools and server limits. For pact_command_v1, supply only {action:{kind,...}}; the transport fills authenticated envelope metadata. Make one tool call per response and inspect its server receipt before the next action. Action shapes relevant to this objective: game.building.queue {building:'farm',targetLevel:2,slot:1}; game.message.send {recipientKingdomId,body}; game.supply.offer {counterpartyKingdomId,terms}; game.supply.sign {offerId,version}. For the offer, terms has aToB/bToA {resource,wholePerHour}, aBond:null,bBond:null,durationHours:1,noticeHours:0. Server receipts, not guesses, give offer IDs and versions.",
+            },
+            ...request.messages.map((message) => ({ role: message.role, content: message.content })),
+          ],
+          tools: request.tools.map((tool) => ({
+            type: "function",
+            // llama.cpp cannot compile the full generated discriminated-union
+            // grammar. This changes only the local wire schema, not the tools
+            // or server-side validation/authority used for returned calls.
+            function: {
+              name: tool.name,
+              description: tool.description,
+              parameters:
+                tool.name === pactRunCommandTool.name
+                  ? { type: "object", properties: { action: { type: "object" } }, required: ["action"] }
+                  : { type: "object" },
+            },
+          })),
+          tool_choice: "auto",
+          parallel_tool_calls: false,
+          max_tokens: Math.min(request.maxOutputTokens, 600),
+          temperature: 0,
+        }),
+        signal: request.signal,
+      });
+      if (!response.ok) {
+        const detail = (await response.text()).slice(0, 200).replace(/[\r\n]/g, " ");
+        process.stderr.write(`Local model HTTP ${response.status}: ${detail}\n`);
+        throw new Error(`Local model returned HTTP ${response.status}`);
+      }
+      const body = (await response.json()) as {
+        choices?: {
+          message?: { content?: string; tool_calls?: { id: string; function: { name: string; arguments: string } }[] };
+        }[];
+        usage?: { prompt_tokens?: number; completion_tokens?: number };
+      };
+      const message = body.choices?.[0]?.message;
+      const toolCalls = (message?.tool_calls ?? []).map((call) => {
+        const args = JSON.parse(call.function.arguments) as Record<string, unknown>;
+        if (call.function.name === pactRunCommandTool.name) {
+          recordAction((args.action as { kind?: string } | undefined)?.kind ?? "MISSING_KIND");
+        }
+        return {
+          id: call.id,
+          name: call.function.name,
+          arguments:
+            call.function.name === pactRunCommandTool.name
+              ? {
+                  schemaVersion: "pact.command.v1",
+                  commandId: randomUUID(),
+                  action: args.action,
+                  actor: {
+                    principalId: accountId,
+                    productScope,
+                    audience: "agent",
+                    subject: { type: "account", id: accountId },
+                  },
+                  submittedAt: now().toISOString(),
+                }
+              : args,
+        };
+      });
+      return {
+        stopReason: toolCalls.length ? "tool_calls" : "completed",
+        ...(message?.content ? { text: message.content } : {}),
+        toolCalls,
+        ...(body.usage?.prompt_tokens !== undefined && body.usage.completion_tokens !== undefined
+          ? { usage: { inputTokens: body.usage.prompt_tokens, outputTokens: body.usage.completion_tokens } }
+          : {}),
+      };
+    },
+  };
+}
+
+async function scenario(mode: "script" | "fake-provider" | "local-model") {
+  const startedAt = performance.now();
   const admin = createPool(databaseUrl);
   const schema = await createTestSchema(admin, "baseline");
   const pool = createSchemaPool(databaseUrl, schema);
+  let keepRulesAlive: ReturnType<typeof setInterval> | undefined;
   try {
     const clock = { now: () => new Date() };
     const rules = createRulesRuntime(pool, "pact", Buffer.alloc(32, 7));
@@ -89,7 +200,13 @@ async function scenario(mode: "script" | "fake-provider") {
     };
     // No ordinary-stock injection: normal production and eight-guard upkeep.
     await advance(60);
+    // A real local model can take minutes. The normal rules worker would keep
+    // heartbeating while inference runs; do the same in this disposable world.
+    keepRulesAlive = setInterval(() => {
+      void rules.world.heartbeat(worker, lease).catch(() => undefined);
+    }, 10000);
     let providerCalls = 0;
+    const modelActionKinds: string[] = [];
     const router = new ProviderRouter([
       {
         provider: "fixture",
@@ -139,6 +256,17 @@ async function scenario(mode: "script" | "fake-provider") {
           };
         },
       },
+      ...(mode === "local-model" && localModelUrl
+        ? [
+            localModelAdapter(
+              localModelUrl,
+              a.accountId,
+              clock.now,
+              () => providerCalls++,
+              (kind) => modelActionKinds.push(kind),
+            ),
+          ]
+        : []),
     ]);
     const runtime = await createInferenceGameRuntime({
       pool,
@@ -238,6 +366,8 @@ async function scenario(mode: "script" | "fake-provider") {
         ]),
       );
     let scriptCalls = 0;
+    let modelRun: { status: string; usedCalls: number; usedTokens: number; lastErrorCode: string | null } | null = null;
+    let modelToolCodes: string[] = [];
     if (mode === "script") {
       const client = await connect(a.accountId);
       try {
@@ -253,19 +383,31 @@ async function scenario(mode: "script" | "fake-provider") {
     } else {
       const run = await runtime.runs.start({
         accountId: a.accountId,
-        objective: "Develop Farm II and negotiate the specified one-hour exchange.",
-        provider: "fixture",
-        model: fakeProviderModel.id,
-        limits: { maxCalls: 4 },
+        objective: `Develop Farm II in slot 1, then send accepted contact ${b.kingdomId} one message and negotiate an exact one-hour supply exchange: I send 12 Grain/hour; they send 4 Silver/hour; no bonds, zero notice. Sign only the inspected offer version. Use your provided tools and server receipts. Stop if a command is denied.`,
+        provider: mode === "local-model" ? "local-comparison" : "fixture",
+        model: mode === "local-model" ? localModelId : fakeProviderModel.id,
+        limits: { maxCalls: mode === "local-model" ? 8 : 4 },
       });
-      for (let i = 0; i < 4; i++) await runtime.runs.executeModelCall(run.runId);
-      expect(providerCalls).toBe(4);
+      let last = run;
+      for (let i = 0; i < (mode === "local-model" ? 8 : 4) && last.status === "running"; i++) {
+        last = await runtime.runs.executeModelCall(run.runId);
+      }
+      modelRun = {
+        status: last.status,
+        usedCalls: last.usedCalls,
+        usedTokens: last.usedTokens,
+        lastErrorCode: last.lastErrorCode,
+      };
+      if (mode === "fake-provider") expect(providerCalls).toBe(4);
       const recorded = (await pool.query("SELECT summary FROM envoy_run_tool_results ORDER BY call_id")).rows;
-      expect(recorded.map((r) => r.summary)).toEqual(
-        expect.arrayContaining([expect.stringContaining('"code":"COMMITTED"')]),
-      );
-      for (const record of recorded) expect(record.summary).toContain('"code":"COMMITTED"');
-      expect(recorded.map((r) => r.summary)).toHaveLength(4);
+      modelToolCodes = recorded.map((record) => /"code":"([A-Z_]+)"/.exec(record.summary)?.[1] ?? "NO_CODE");
+      if (mode === "fake-provider") {
+        expect(recorded.map((r) => r.summary)).toEqual(
+          expect.arrayContaining([expect.stringContaining('"code":"COMMITTED"')]),
+        );
+        for (const record of recorded) expect(record.summary).toContain('"code":"COMMITTED"');
+        expect(recorded.map((r) => r.summary)).toHaveLength(4);
+      }
     }
     const partner = await connect(b.accountId);
     try {
@@ -274,24 +416,25 @@ async function scenario(mode: "script" | "fake-provider") {
         openSupplyOffers: { id: string; version: number; terms: unknown }[];
       };
       const offer = guide.openSupplyOffers[0];
-      expect(offer?.terms).toEqual(terms);
-      if (!offer) throw new Error("Missing public partner offer");
-      await partner.tools.call("pact_game_action_v1", {
-        commandId: randomUUID(),
-        action: {
-          kind: "game.message.send",
-          recipientKingdomId: a.kingdomId,
-          body: "I accept the inspected exact exchange.",
-        },
-      });
-      await partner.tools.call("pact_game_action_v1", {
-        commandId: randomUUID(),
-        action: {
-          kind: "game.supply.sign",
-          offerId: offer.id,
-          version: offer.version,
-        },
-      });
+      if (mode !== "local-model") expect(offer?.terms).toEqual(terms);
+      if (offer) {
+        await partner.tools.call("pact_game_action_v1", {
+          commandId: randomUUID(),
+          action: {
+            kind: "game.message.send",
+            recipientKingdomId: a.kingdomId,
+            body: "I accept the inspected exact exchange.",
+          },
+        });
+        await partner.tools.call("pact_game_action_v1", {
+          commandId: randomUUID(),
+          action: {
+            kind: "game.supply.sign",
+            offerId: offer.id,
+            version: offer.version,
+          },
+        });
+      }
     } finally {
       await partner.close();
     }
@@ -300,10 +443,12 @@ async function scenario(mode: "script" | "fake-provider") {
     const finalPartner = await views.read(b.accountId, b.kingdomId, 1);
     if (final?.audience !== "owner") throw new Error("Missing final owner");
     if (finalPartner?.audience !== "owner") throw new Error("Missing final partner owner");
-    expect(final.buildings).toContainEqual({ kind: "farm", level: 2 });
+    if (mode !== "local-model") expect(final.buildings).toContainEqual({ kind: "farm", level: 2 });
     const contract = (await pool.query("SELECT status,close_reason FROM supply_contracts")).rows;
-    expect(contract).toEqual([{ status: "expired", close_reason: "natural_expiry" }]);
-    expect((await pool.query("SELECT count(*)::int AS count FROM supply_installments")).rows).toEqual([{ count: 120 }]);
+    if (mode !== "local-model") expect(contract).toEqual([{ status: "expired", close_reason: "natural_expiry" }]);
+    const installments =
+      (await pool.query("SELECT count(*)::int AS count FROM supply_installments")).rows[0]?.count ?? 0;
+    if (mode !== "local-model") expect(installments).toBe(120);
     expect(
       (await pool.query("SELECT 1 FROM write_leases WHERE released_at IS NULL AND expires_at>clock_timestamp()"))
         .rowCount,
@@ -313,12 +458,18 @@ async function scenario(mode: "script" | "fake-provider") {
       initial: { player: balances(initial), partner: balances(initialPartner) },
       balances: balances(final),
       partnerBalances: balances(finalPartner),
+      farmII: final.buildings.some((building) => building.kind === "farm" && building.level === 2),
       completedContracts: contract.length,
-      installments: 120,
+      installments,
       scriptCalls,
       providerCalls,
+      modelRun,
+      modelToolCodes,
+      modelActionKinds,
+      elapsedMs: Math.round(performance.now() - startedAt),
     };
   } finally {
+    if (keepRulesAlive) clearInterval(keepRulesAlive);
     await pool.end();
     await dropTestSchema(admin, schema);
     await admin.end();
@@ -338,3 +489,18 @@ it("compares a public-tool script with the same fake-provider policy from normal
     `Synthetic baseline comparison (not live model performance): ${JSON.stringify({ script, modelRoute })}\n`,
   );
 }, 60000);
+
+it.skipIf(!localModelUrl)(
+  "compares the same scripted setup with an actual loopback-hosted model, recording failure as an outcome",
+  async () => {
+    const script = await scenario("script");
+    const modelRoute = await scenario("local-model");
+    expect(modelRoute.initial).toEqual(script.initial);
+    expect(modelRoute.providerCalls).toBeGreaterThan(0);
+    expect(modelRoute.modelRun?.lastErrorCode).toBeNull();
+    process.stdout.write(
+      `Local-model baseline comparison (not player enjoyment or deployed-provider certification): ${JSON.stringify({ script, modelRoute, model: localModelId, apiCostUsd: 0 })}\n`,
+    );
+  },
+  900000,
+);
