@@ -1,7 +1,7 @@
 import { type ComponentProps, createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { ActionCharges, actionReceiptNotice, Kingdom, RaidOperations, ReportPanel } from "./game-app.js";
+import { ActionCharges, actionReceiptNotice, Kingdom, People, RaidOperations, ReportPanel } from "./game-app.js";
 import type { ReportRead } from "./report-reader.js";
 
 function reportPanel(report: ReportRead): string {
@@ -133,6 +133,48 @@ describe("construction guidance", () => {
     const html = kingdom(3, true);
     expect(html).toContain('disabled="">Upgrade already queued');
     expect(html).toContain("Cancel slot 1");
+  });
+});
+
+function people(accepted: boolean): string {
+  const social: NonNullable<ComponentProps<typeof People>["social"]> = {
+    contacts: accepted ? [{ kingdomId: "other", handle: "other", displayName: "Other" }] : [],
+    requests: [],
+    messages: [],
+    supplyOffers: [],
+    supplyContracts: [],
+    garrisonOffers: [],
+    garrisonContracts: [],
+  };
+  return renderToStaticMarkup(
+    createElement(People, {
+      client: {} as ComponentProps<typeof People>["client"],
+      act: async () => undefined,
+      busy: false,
+      kingdomId: "self",
+      social,
+      target: "other",
+      setTarget: () => undefined,
+      confirmAction: () => undefined,
+      hallLevel: 1,
+      charges: [],
+    }),
+  );
+}
+
+describe("fresh contact guidance", () => {
+  it("explains cold-contact cost and does not offer premature messages or transfers", () => {
+    const html = people(false);
+    expect(html).toContain("2 ordinary Silver, not founding allowance");
+    expect(html).toContain("Messages and direct transfers need an accepted contact");
+    expect(html).toContain('disabled="">Send message');
+    expect(html).toContain('disabled="">Transfer');
+  });
+
+  it("keeps accepted-contact messaging and transfers available, but prevents redundant cold requests", () => {
+    const html = people(true);
+    expect(html).not.toContain('disabled="">Transfer');
+    expect(html).toContain('disabled="">Request contact');
   });
 });
 

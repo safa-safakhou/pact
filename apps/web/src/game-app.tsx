@@ -1248,7 +1248,7 @@ function PrivacySettings({
   );
 }
 
-function People({
+export function People({
   client,
   act,
   busy,
@@ -1385,13 +1385,17 @@ function People({
       <div className="game-grid">
         <article className="game-card">
           <h3>Contact and message</h3>
+          <p>
+            A cold contact request costs 2 ordinary Silver, not founding allowance. Messages and direct transfers need
+            an accepted contact.
+          </p>
           <label>
             Text
             <textarea maxLength={1000} value={message} onChange={(event) => setMessage(event.target.value)} />
           </label>
           <button
             type="button"
-            disabled={busy || !target || !message || target === kingdomId}
+            disabled={busy || !target || !message || target === kingdomId || Boolean(selected)}
             onClick={() => {
               void act({ kind: "game.contact.request", recipientKingdomId: target, note: message });
             }}
@@ -1401,7 +1405,7 @@ function People({
           <button
             type="button"
             className="secondary"
-            disabled={busy || !target || !message}
+            disabled={busy || !selected || !message}
             onClick={() => {
               void act({ kind: "game.message.send", recipientKingdomId: target, body: message });
             }}
@@ -1411,7 +1415,7 @@ function People({
         </article>
         <article className="game-card">
           <h3>Direct transfer</h3>
-          <p>Review the recipient and amount. Server rules enforce available stock.</p>
+          <p>Choose an accepted contact, then review the recipient and amount. Server rules enforce available stock.</p>
           <label>
             Resource
             <select value={resource} onChange={(event) => setResource(event.target.value as typeof resource)}>
@@ -1426,7 +1430,7 @@ function People({
           </label>
           <button
             type="button"
-            disabled={busy || !target || target === kingdomId}
+            disabled={busy || !selected || target === kingdomId}
             onClick={() => {
               confirmAction(`Transfer ${amount} ${resource} to ${selected?.displayName ?? target}?`, {
                 kind: "game.transfer",
