@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 25 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 26 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -749,7 +749,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-052"></a>
 ## PACT-052 — Build and run the allowed script baseline
 
-**Status:** in_progress · **Role:** QA · **Size:** M · **Type:** verification
+**Status:** done · **Role:** QA · **Size:** M · **Type:** verification
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051)
 
@@ -764,8 +764,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] The script cannot use hidden state, private administrative APIs, free resources, or privileged action rates.
-- [ ] Publish the actual comparison even when the script wins; a successful execution test is separate from proof that negotiation is fun.
+- [x] The script cannot use hidden state, private administrative APIs, free resources, or privileged action rates.
+- [x] Publish the actual comparison even when the script wins; a successful execution test is separate from proof that negotiation is fun.
 
 **Assignee:** Mohammad Safakhou
 
@@ -774,7 +774,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - 28 Sep 2026: MNI-116 claimed In Progress by Mohammad Safakhou after PACT-027, PACT-049 and newly completed PACT-051 were freshly read Done. Implementing a deterministic public-tool client and isolated baseline harness; no completion evidence yet.
 - 28 Sep 2026: revision 57701ac, bounded public MCP script and matched isolated fake-provider policy comparison implement normal discovery, Farm II, message/offer/sign, exact uncertain-command receipt reconciliation and session closure. Both normally founded/produced kingdoms finish with identical category balances and 120 settled supply installments; no live resources or model API calls. Node 24 build/typecheck/lint, 139 unit and 225 PostgreSQL 17 integration tests pass. See docs/operations/script-baseline.md and docs/implementation/reports/script-baseline-progress.md. Matched real-model strategy/cost comparison remains; keep In Progress, no fun claim. Linear progress comment 8b8fd319-7453-4402-8939-cf04f3932e27; assignee/status freshly read back.
 - 29 Sep 2026 (28 Sep UTC): Tracker cleanup only. Fresh Linear read showed stale no-implementation description despite 57701ac/report. Updated it to the verified bounded public-tool baseline and isolated fake-provider comparison, retaining the missing separately authorized matched real-model trial. Full integration rerun passed 226 tests, including unchanged matched Farm II/120 installments/both-player balances. Comment ecebb589-a008-413d-b44d-e4911ca997fa and description/status/assignee readback confirm In Progress. No new model-performance/fun evidence or paid call; docs/implementation/reports/script-baseline-progress.md records reconciliation.
-- 29 Sep 2026 (28 Sep UTC): focused baseline rerun passed 9 unit tests and 1 matched PostgreSQL 17.11 integration scenario on Node 24.19; unchanged Farm II/120 installments/identical both-player balances. First no-hidden-state/admin/free-resource/privileged-rate acceptance checked in Linear, comment 96b2c786-b4d7-4402-a20e-f02b979f2bf1 and checklist/status/assignee readback reconciled. Second actual matched real-model comparison remains unchecked; In Progress. No new code, live model/HTTP certification, paid call or kingdom reset. docs/implementation/reports/script-baseline-progress.md.
+- 29 Sep 2026 (28 Sep UTC): focused baseline rerun passed 9 unit tests and 1 matched PostgreSQL 17.11 integration scenario on Node 24.19; unchanged Farm II/120 installments/identical both-player balances. First no-hidden-state/admin/free-resource/privileged-rate acceptance checked in Linear, comment 96b2c786-b4d7-4402-a20e-f02b979f2bf1 and checklist/status/assignee readback reconciled. Second actual matched real-model comparison remained unchecked at that checkpoint. No new code, live model/HTTP certification, paid call or kingdom reset. docs/implementation/reports/script-baseline-progress.md.
+- 29 Sep 2026: `0b144c5` implements optional loopback-hosted real-model comparison; `40433c8` publishes docs/implementation/reports/script-baseline-completion.md and rerun instructions. Matched disposable PostgreSQL 17 worlds, normal founding/production/upkeep, same accepted partner and conditional exact signing: script Farm II + one expired contract/120 installments in 10 public MCP calls; Qwen3-4B-GGUF Q4_K_M local model Farm II only, 8 provider calls/13,795 reported tokens, one COMMITTED and seven BUILDING_BUSY receipts, no offer/contract/installment. Identical initial stock and both final category balances in report. External API USD 0, hardware cost unmeasured; no fun or hosted-provider claim. Node 24 build/typecheck/lint, 175 unit, 226 PostgreSQL integration and focused 2-test actual local-model comparison passed. Linear MNI-116 both acceptance boxes checked and Done/assignee read back; completion comment a5e8e73e-186c-437f-96d9-b7dc0c537e2b. No live kingdom/VPS inference change.
 
 <a id="pact-096"></a>
 ## PACT-096 — Demonstrate platform-module reuse outside PACT
