@@ -591,8 +591,8 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-28T23:28:36.064Z",
-  "last_sync_scope": "Acceptance-only checkpoint: PACT-048 replacement completion at Chrome tick 4210, comment ad606063-edde-422b-a0e2-b94778d6b043 and fresh assignment/status readback; PACT-052 focused 9-unit/1-integration rerun, public-tool safeguard criterion checked, comment 96b2c786-b4d7-4402-a20e-f02b979f2bf1 and checklist/status/assignee readback. PACT-053 read Backlog with both dependencies open; full UI founding and matched real-model comparison remain. No new code/deployment or full 98-issue audit.",
+  "last_synced_at": "2026-09-29T00:26:16.392Z",
+  "last_sync_scope": "PACT-048 synthetic Amber/Birch founding, natural cold contact/acceptance, two-way messages, direct transfer, bilateral active supply contract, completed Farm II/Barracks II and waiting Hall II; immutable alpha-20260929-1 verified. Linear comments 52eb7fcb-5a23-404c-8e15-76fab4f283f3 and 99c727f1-b186-4028-9dfe-15184be62d6d, followed by fresh In Progress/assignee/checklist readback. First full-play criterion still unchecked; PACT-052 unchanged, PACT-053 gated. No full 98-issue audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
