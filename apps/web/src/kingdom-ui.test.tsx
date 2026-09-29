@@ -1,7 +1,15 @@
 import { type ComponentProps, createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { ActionCharges, actionReceiptNotice, Kingdom, People, RaidOperations, ReportPanel } from "./game-app.js";
+import {
+  ActionCharges,
+  actionReceiptNotice,
+  Kingdom,
+  People,
+  RaidOperations,
+  ReportPanel,
+  scoutUiReady,
+} from "./game-app.js";
 import type { ReportRead } from "./report-reader.js";
 
 function reportPanel(report: ReportRead): string {
@@ -151,6 +159,7 @@ function people(accepted: boolean): string {
       client: {} as ComponentProps<typeof People>["client"],
       act: async () => undefined,
       busy: false,
+      view: null,
       kingdomId: "self",
       social,
       target: "other",
@@ -169,12 +178,48 @@ describe("fresh contact guidance", () => {
     expect(html).toContain("Messages and direct transfers need an accepted contact");
     expect(html).toContain('disabled="">Send message');
     expect(html).toContain('disabled="">Transfer');
+    expect(html).toContain('disabled="">Start scout');
   });
 
   it("keeps accepted-contact messaging and transfers available, but prevents redundant cold requests", () => {
     const html = people(true);
     expect(html).not.toContain('disabled="">Transfer');
     expect(html).toContain('disabled="">Request contact');
+  });
+});
+
+describe("scout first-play guidance", () => {
+  const ordinarySpearmen = { type: "spearman", placement: "home", homeGuard: false, count: 2 };
+  const scoutCharge = {
+    kind: "scout" as const,
+    available: 1,
+    capacity: 4,
+    regenerationHours: 6,
+    nextRegenerationGameTimeMs: null,
+    retryAtGameTimeMs: null,
+  };
+  const stock = (ordinaryUnits: string) => ({
+    ordinaryUnits,
+    foundingAllowanceUnits: "60000",
+    lockedUnits: "0",
+    capacityUnits: "360000",
+    productionPerMinuteUnits: "0",
+    version: "1",
+  });
+  const ready = {
+    troops: [ordinarySpearmen],
+    balances: { silver: stock("6000"), grain: stock("3000") },
+    charges: [scoutCharge],
+  };
+
+  it("uses only home ordinary troops, ordinary stock, and a remaining shared charge", () => {
+    expect(scoutUiReady(ready)).toBe(true);
+    expect(scoutUiReady({ ...ready, troops: [{ ...ordinarySpearmen, homeGuard: true }] })).toBe(false);
+    expect(scoutUiReady({ ...ready, troops: [{ ...ordinarySpearmen, placement: "scouting" }] })).toBe(false);
+    expect(scoutUiReady({ ...ready, balances: { ...ready.balances, silver: stock("5999") } })).toBe(false);
+    expect(scoutUiReady({ ...ready, balances: { ...ready.balances, grain: stock("2999") } })).toBe(false);
+    expect(scoutUiReady({ ...ready, charges: [{ ...scoutCharge, available: 0 }] })).toBe(false);
+    expect(scoutUiReady(null)).toBe(false);
   });
 });
 

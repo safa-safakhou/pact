@@ -19,6 +19,8 @@ Copy the other player's kingdom ID from their own header for a first contact; th
 
 A new cold-contact request costs two ordinary Silver; founding construction allowance cannot pay it. A newly founded kingdom must allow game-time production to accrue before that request. Messages and one-off direct transfers require an accepted contact. The People UI reflects that prerequisite by disabling those controls for a merely inspected public kingdom; the server remains authoritative. The 29 September two-founder play evidence and host-local credential location (not credential values) are in the [UI progress report](../implementation/reports/rules-ui-progress.md).
 
+The Scout control is guidance from the latest owner projection: it waits for two home ordinary Spearmen, 10 ordinary Silver, 5 ordinary Grain and a shared scout charge, and excludes self-targeting. Founding Home Guard and construction-only allowances never qualify. The shared server command path rechecks all conditions and remains authoritative; a refreshed view may still be stale by submission time.
+
 Chrome tabs in the same browser profile share the PACT sign-in cookie. Signing in a different test account in one tab changes which account another tab shows after reload; use distinct browser profiles/sessions for a simultaneous two-player walkthrough. The 27 September Briar/Cinder training observations used successive sessions, not concurrent sessions.
 After a player switch in another tab, the previous account's CSRF token is invalid for writes under the new cookie. Sign in again in that tab or use the original authenticated tab; do not treat `FORBIDDEN` from stale CSRF as a game-rule denial.
 

@@ -586,6 +586,7 @@ export function GameApp(): React.JSX.Element {
           client={client}
           act={act}
           busy={busy}
+          view={view}
           kingdomId={kingdomId}
           social={social}
           target={target}
@@ -1248,10 +1249,28 @@ function PrivacySettings({
   );
 }
 
+export function scoutUiReady(view: Pick<OwnerView, "troops" | "balances" | "charges"> | null): boolean {
+  if (!view) return false;
+  const homeSpearmen = view.troops
+    .filter((unit) => unit.type === "spearman" && unit.placement === "home" && !unit.homeGuard)
+    .reduce((total, unit) => total + unit.count, 0);
+  const stockAtLeast = (resource: string, minimumUnits: bigint): boolean => {
+    const raw = view.balances[resource]?.ordinaryUnits;
+    return typeof raw === "string" && /^\d+$/.test(raw) && BigInt(raw) >= minimumUnits;
+  };
+  return (
+    homeSpearmen >= 2 &&
+    stockAtLeast("silver", 6000n) &&
+    stockAtLeast("grain", 3000n) &&
+    Boolean(view.charges?.some((charge) => charge.kind === "scout" && charge.available > 0))
+  );
+}
+
 export function People({
   client,
   act,
   busy,
+  view,
   kingdomId,
   social,
   target,
@@ -1263,6 +1282,7 @@ export function People({
   client: ReturnType<typeof createWebPactClient>;
   act: (action: SandboxAction) => Promise<void>;
   busy: boolean;
+  view: OwnerView | null;
   kingdomId: string;
   social: SocialOverview | null;
   target: string;
@@ -1444,7 +1464,14 @@ export function People({
           </button>
         </article>
       </div>
-      <DiplomacyForms target={target} busy={busy} act={act} confirmAction={confirmAction} hallLevel={hallLevel} />
+      <DiplomacyForms
+        target={target}
+        busy={busy}
+        act={act}
+        confirmAction={confirmAction}
+        hallLevel={hallLevel}
+        scoutReady={scoutUiReady(view) && target !== kingdomId}
+      />
     </section>
   );
 }
@@ -1643,12 +1670,14 @@ function DiplomacyForms({
   act,
   confirmAction,
   hallLevel,
+  scoutReady,
 }: {
   target: string;
   busy: boolean;
   act: (action: SandboxAction) => Promise<void>;
   confirmAction: (summary: string, action: SandboxAction) => void;
   hallLevel: number;
+  scoutReady: boolean;
 }): React.JSX.Element {
   const [sendResource, setSendResource] = useState<"iron" | "silver" | "grain">("grain");
   const [receiveResource, setReceiveResource] = useState<"iron" | "silver" | "grain">("silver");
@@ -1750,7 +1779,7 @@ function DiplomacyForms({
         </p>
         <button
           type="button"
-          disabled={busy || !target}
+          disabled={busy || !target || !scoutReady}
           onClick={() => {
             confirmAction(`Scout kingdom ${target}? This spends resources and a charge.`, {
               kind: "game.scout.start",
