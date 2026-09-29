@@ -591,8 +591,8 @@
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-29T00:45:31.484Z",
-  "last_sync_scope": "PACT-048 fresh Amber/Birch founding, natural contact/messaging/transfer/bilateral supply play, completed Farm II/Barracks II, waiting Hall II and Birch's first ordinary Spearman trained through UI. Verified alpha-20260929-2 Scout readiness guidance. Linear comments 52eb7fcb-5a23-404c-8e15-76fab4f283f3, 99c727f1-b186-4028-9dfe-15184be62d6d, c65d5f8c-df81-4a09-abd9-1cac4fac828a and 9e09c9e2-caf8-4674-8209-a2502ce2b1e8; fresh In Progress/assignee/checklist readback. Full fresh-pair scout/battle loop remains; PACT-052 unchanged, PACT-053 gated. No full 98-issue audit.",
+  "last_synced_at": "2026-09-29T10:19:10Z",
+  "last_sync_scope": "PACT-048 MNI-112 Done, both acceptance boxes checked and assignee Mohammad Safakhou read back after completion comment 1a3a8042-25e5-46d0-bea4-8455d8d43991. Completion report docs/implementation/reports/rules-ui-completion.md distinguishes fresh Amber/Birch founding/scout/raid/loss/rebuild from prior Cinder/Owner paired Hall III lending. Immutable alpha-20260929-4/public verify and Chrome completed rebuild evidence. PACT-052 remains In Progress with matched real-model comparison outstanding; PACT-053 remains gated. No full 98-issue audit or same-pair pilot claim.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",

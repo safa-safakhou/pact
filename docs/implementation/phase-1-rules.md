@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 24 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 25 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -547,7 +547,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-048"></a>
 ## PACT-048 — Build the plain rules-prototype interface
 
-**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Depends on:** [PACT-023](phase-0-connections.md#pact-023), [PACT-027](phase-0-connections.md#pact-027), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047), [PACT-049](phase-1-rules.md#pact-049)
 
@@ -562,10 +562,10 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] Two test players can found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild using the UI.
-- [ ] Manual actions remain usable with disconnected providers and cannot bypass stock, charge, lock, or shared action limits.
+- [x] Two test players can found, develop, negotiate, trade, scout, lend, raid, inspect losses, and rebuild using the UI.
+- [x] Manual actions remain usable with disconnected providers and cannot bypass stock, charge, lock, or shared action limits.
 
-**Assignee:** Mohammad Safakhou (Codex)
+**Assignee:** Mohammad Safakhou
 
 **Evidence**
 
@@ -587,6 +587,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - 29 Sep 2026: Fresh Amber/Birch UI sessions completed the naturally funded cold contact and acceptance, two-way message exchange, one-Grain direct transfer, version-1 one-hour Grain/Silver offer with both signatures and active contract. Farm II/Barracks II completed for both; both Hall II orders are waiting, not finished. Amber's tick 4266-to-4268 owner balances match production/upkeep plus two contract installments (inference). Linear comment 99c727f1-b186-4028-9dfe-15184be62d6d and In Progress/assignee/checklist readback reconciled. Exact IDs/screenshots: docs/implementation/reports/rules-ui-progress.md. Fresh-pair troop/scout/garrison/raid/loss/rebuild remains; no full acceptance or PACT-053 gate closure.
 - 29 Sep 2026: c526bcd adds owner-projection-based Scout guidance for two home ordinary Spearmen, 10 ordinary Silver, 5 ordinary Grain and an available charge, all exact units and non-self target. Node 24 build/typecheck/lint, 172 unit tests pass; integration not rerun. Immutable alpha-20260929-2 passed builds/migrations/privacy replay/public verify; Chrome Birch tick 4276 showed only Home Guard and Scout disabled after selecting accepted Amber. Linear comment c65d5f8c-df81-4a09-abd9-1cac4fac828a and In Progress/assignee/checklist readback reconciled. See docs/implementation/reports/rules-ui-progress.md. Full two-founder troop/scout/garrison/raid/loss/rebuild remains.
 - 29 Sep 2026: Birch naturally reached 10 ordinary Iron at tick 4282, queued one ordinary Spearman through Chrome for 10 Iron/4 Silver (receipt f2bd27cf-2f70-43b3-804a-f635b7d3f65e), and showed 0/1 due at 1:46 AM game time with queue occupied. At tick 4287 Chrome showed one ordinary Spearman home beside eight Home Guard, batch absent and training queue free. Screenshots/report: docs/implementation/reports/rules-ui-progress.md. Linear comment 9e09c9e2-caf8-4674-8209-a2502ce2b1e8 and In Progress/assignee/checklist readback reconciled. No clock/stock edit, existing-account funding or full Scout/battle-loop claim.
+- 29 Sep 2026: Completed paired-session capability matrix and both acceptance items; report docs/implementation/reports/rules-ui-completion.md. Amber/Birch founded/developed, negotiated and traded, Birch completed a scout and resolved raid, both read losses and completed ordinary replacement training. Earlier Cinder/PACT MVP Owner paired Chrome sessions completed Hall III garrison offer/sign/host/mutual release; the report explicitly distinguishes that pair from the new founders. 77fc403 separated raid and garrison force controls; 2143d92 removed fixed Home Guard count after actual casualties. Node 24.19 build/typecheck/lint and 175 unit tests passed for final code; 226 PostgreSQL 17 integration tests passed for the preceding UI change, not rerun for the final two-string display edit. Immutable alpha-20260929-4 passed builds/migrations/privacy replay/public verify; Chrome confirmed corrected hint and completed Amber training. Linear MNI-112 Done, both criteria checked, assignee readback Mohammad Safakhou; completion comment 1a3a8042-25e5-46d0-bea4-8455d8d43991. Backlog render/check and git diff --check passed (98 tickets, acyclic dependencies, source snapshots and generated views consistent). No simultaneous same-pair pilot, full accessibility, fun, PACT-053 gate, paid provider call or clock/stock bypass claimed.
 
 <a id="pact-049"></a>
 ## PACT-049 — Expose complete game tools to every Envoy route
