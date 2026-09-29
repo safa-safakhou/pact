@@ -2590,7 +2590,7 @@
       "id": "PACT-053",
       "title": "Accept the transactional rules prototype",
       "phase": 1,
-      "status": "todo",
+      "status": "done",
       "kind": "gate",
       "owner_role": "Release",
       "size": "S",
@@ -2647,8 +2647,11 @@
       "components": [
         "rules release gate"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "29 Sep 2026: MNI-118 claimed In Progress by Mohammad Safakhou after all 27 dependencies were read Done in Linear. R01–R08 gate audit and release record under way; no gate acceptance claimed yet.",
+        "29 Sep 2026: e8a2be8 records the R01–R08 gate acceptance and precise reproduction at docs/implementation/reports/rules-gate.md. Reviewed playable VPS alpha-20260929-4/2143d92, catalog pact-s1-v1, command/event/API v1 schemas and 14 fingerprint guards, R01–R06 replay/fault/conservation fixtures, R07 actual local-model script-win comparison, R08 independent non-game fixture, PACT-048 Chrome matrix, fresh local restore and prior physical VPS Restic restore. Node 24.19 build/typecheck/lint, 175 unit and 226 PostgreSQL 17.11 integration tests, npm run check:non-game, node scripts/rehearse-rules-restore.mjs, and read-only VPS verify.sh passed. No known ledger/identity corruption; no pilot/fun/production certification. Linear both acceptance items checked and Done/assignee read back; comment 76c9b9f2-ff1e-4777-973a-e942455f04c0."
+      ],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },

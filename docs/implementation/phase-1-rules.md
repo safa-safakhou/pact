@@ -1,6 +1,6 @@
 # Phase 1 — Transactional rules prototype
 
-**27 tickets · 26 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**27 tickets · 27 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
 
@@ -808,7 +808,7 @@ Dependencies are completion requirements. Later phases also depend on the preced
 <a id="pact-053"></a>
 ## PACT-053 — Accept the transactional rules prototype
 
-**Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
+**Status:** done · **Role:** Release · **Size:** S · **Type:** gate
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043), [PACT-044](phase-1-rules.md#pact-044), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047), [PACT-048](phase-1-rules.md#pact-048), [PACT-049](phase-1-rules.md#pact-049), [PACT-050](phase-1-rules.md#pact-050), [PACT-051](phase-1-rules.md#pact-051), [PACT-052](phase-1-rules.md#pact-052), [PACT-096](phase-1-rules.md#pact-096)
 
@@ -823,5 +823,12 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Acceptance**
 
-- [ ] R01–R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.
-- [ ] The release record lists precise reproduction commands and evidence; no unresolved ledger or identity corruption is carried into the social slice.
+- [x] R01–R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.
+- [x] The release record lists precise reproduction commands and evidence; no unresolved ledger or identity corruption is carried into the social slice.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- 29 Sep 2026: MNI-118 claimed In Progress by Mohammad Safakhou after all 27 dependencies were read Done in Linear. R01–R08 gate audit and release record under way; no gate acceptance claimed yet.
+- 29 Sep 2026: e8a2be8 records the R01–R08 gate acceptance and precise reproduction at docs/implementation/reports/rules-gate.md. Reviewed playable VPS alpha-20260929-4/2143d92, catalog pact-s1-v1, command/event/API v1 schemas and 14 fingerprint guards, R01–R06 replay/fault/conservation fixtures, R07 actual local-model script-win comparison, R08 independent non-game fixture, PACT-048 Chrome matrix, fresh local restore and prior physical VPS Restic restore. Node 24.19 build/typecheck/lint, 175 unit and 226 PostgreSQL 17.11 integration tests, npm run check:non-game, node scripts/rehearse-rules-restore.mjs, and read-only VPS verify.sh passed. No known ledger/identity corruption; no pilot/fun/production certification. Linear both acceptance items checked and Done/assignee read back; comment 76c9b9f2-ff1e-4777-973a-e942455f04c0.
