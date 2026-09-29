@@ -1,5 +1,7 @@
 # PACT-052 — public-tool baseline progress
 
+**Historical checkpoint:** PACT-052 later completed with a real local-model comparison. See the [completion report](script-baseline-completion.md) for the final script-win result; the In Progress statements below describe the earlier fake-provider phase.
+
 Ticket: [PACT-052 / MNI-116](https://linear.app/mnim/issue/MNI-116)
 Implementation: `57701ac` (`PACT-052 add bounded public-tool baseline and matched synthetic comparison`). Linear progress comment `8b8fd319-7453-4402-8939-cf04f3932e27`; In Progress / Mohammad Safakhou read back after posting.
 Verification: 28 September 2026, local Node 24.19.0 / PostgreSQL 17.11. No deployment or live model calls in this increment.

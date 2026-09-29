@@ -38,4 +38,15 @@ The integration harness creates and drops separate disposable PostgreSQL schemas
 
 The partner sends one acceptance message and signs the publicly inspected exact terms. The model route uses four deterministic fake provider steps, not an LLM. Its server-recorded receipts supply the offer reference; it never queries test tables for an action target. Initial/final category balances for **both** kingdoms, call counts and completed installments are printed as synthetic JSON. Owner-only reads used by assertions are test observers, not input to either player's policy.
 
-The [progress report](../implementation/reports/script-baseline-progress.md) records measured results and limits. A separately authorized matched **real-model** trial is still required for PACT-052's full comparison. Record model/version, matched initial conditions, partner policy, elapsed game time, quotas, receipts, outcomes, cost when available, and human observations. Existing unmatched live playtests cannot substitute. Publish failures or a script win honestly; successful settlement alone does not demonstrate fun.
+The [progress report](../implementation/reports/script-baseline-progress.md) records the earlier fake-provider fixture. The [completion report](../implementation/reports/script-baseline-completion.md) records a matched **actual local-model** comparison: the script won, completing the exchange while the model repeated Farm II until its run limit. Neither a successful script nor a failed model measures whether negotiation is fun.
+
+### Optional, no-API-cost local-model rerun
+
+Run the model on the development machine, not the production VPS. The recorded trial used the official `Qwen/Qwen3-4B-GGUF:Q4_K_M` model with `llama-server` 9960, bound to loopback. Its full generated tool schema is beyond this backend's grammar compiler, so the test-only transport sends compact wire schemas; PACT's command dispatcher still validates and authorizes every returned action. This does **not** enable a production model provider or use real account data.
+
+```sh
+llama-server -hf Qwen/Qwen3-4B-GGUF:Q4_K_M --jinja --host 127.0.0.1 --port 18181 -c 16384
+PACT_BASELINE_LOCAL_MODEL_URL=http://127.0.0.1:18181 PACT_BASELINE_LOCAL_MODEL_ID=Qwen/Qwen3-4B-GGUF:Q4_K_M npm run test:integration -- tests/integration/script-baseline.test.ts
+```
+
+Use Node 24 and a disposable PostgreSQL 17 test database as above. The optional trial is skipped when the loopback URL is absent; never point it at a remote URL or live database. The test's result JSON gives initial/final ordinary and allowance category balances for both players, completed installments, script/tool/model calls, token use, receipt codes and wall time. API charge is zero for this local setup; hardware/electricity costs are unmeasured. If it fails or another model wins, publish that result without adjusting stock, partner behavior or quotas to make either side look better.
