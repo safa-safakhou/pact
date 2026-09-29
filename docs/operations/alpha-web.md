@@ -23,6 +23,8 @@ The Scout control is guidance from the latest owner projection: it waits for two
 
 The Raid card has its own **Raid troop type** and **Raid troop count** controls, initially eight Spearmen; changing the separate Garrison Lending count does not configure an attack. A raid is offered only for a non-self target, at least eight selected home ordinary troops of that type, and an available shared raid charge in the latest owner projection. The same Raid controls configure **Join nominated raid** after entering an ID. The server remains authoritative over eligibility, stock, locks and receipts.
 
+Founding Home Guard are a limited initial defensive force; casualties reduce their actual count. The Kingdom troop list shows the surviving count, and replacement training recruits ordinary troops, not new Home Guard. Do not infer current Home Guard strength from the initial eight-unit grant.
+
 Before `alpha-20260929-3`, the VPS had 7.6 GB free and Docker reported 6.9 GB reclaimable build cache. Pruning only that disposable build cache raised free space to 14 GB; no game database, backups, credentials or player accounts were deleted. Monitor disk before the next immutable build.
 
 Chrome tabs in the same browser profile share the PACT sign-in cookie. Signing in a different test account in one tab changes which account another tab shows after reload; use distinct browser profiles/sessions for a simultaneous two-player walkthrough. The 27 September Briar/Cinder training observations used successive sessions, not concurrent sessions.

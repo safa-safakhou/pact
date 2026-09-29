@@ -145,6 +145,12 @@ describe("construction guidance", () => {
   });
 });
 
+it("does not claim all eight founding Home Guard survived a battle", () => {
+  const html = kingdom(2);
+  expect(html).toContain("Founding Home Guard defend only");
+  expect(html).not.toContain("The eight founding Home Guard");
+});
+
 function people(accepted: boolean): string {
   const social: NonNullable<ComponentProps<typeof People>["social"]> = {
     contacts: accepted ? [{ kingdomId: "other", handle: "other", displayName: "Other" }] : [],

@@ -100,7 +100,7 @@ function actionCodeMessage(action: SandboxAction, code: string): string {
   if (code === "EXPIRED" && action.kind === "game.raid.withdraw")
     return "EXPIRED · The withdrawal window is closed. A raid cannot be withdrawn at or after its battle lock; refresh Chronicle for the committed operation state.";
   if (code === "INVALID_COMMAND" && action.kind === "game.scout.start")
-    return "Scout unavailable. You need two trained ordinary Spearmen (the eight founding Home Guard cannot scout), 10 Silver, 5 Grain, and a scout charge.";
+    return "Scout unavailable. You need two trained ordinary Spearmen (founding Home Guard cannot scout), 10 Silver, 5 Grain, and a scout charge.";
   return code;
 }
 function actionFailure(action: SandboxAction, error: unknown): string {
@@ -903,7 +903,7 @@ export function Kingdom({
           <p>
             Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
           </p>
-          <p>The eight founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
+          <p>Founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
           {view.training.length > 0 && (
             <div>
               <h4>Training in progress</h4>
