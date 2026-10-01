@@ -66,6 +66,8 @@ describe("API/database smoke", () => {
       { name: "0033_achievements.sql" },
       { name: "0034_kingdom_retirement.sql" },
       { name: "0035_envoy_context_selection.sql" },
+      { name: "0036_destination_invitations.sql" },
+      { name: "0037_court_invitation_destinations.sql" },
     ]);
     await server.close();
   });

@@ -51,7 +51,7 @@ export class AgentGuideReader {
         firstContact:
           "Use a known kingdom ID from a contact, invitation, or public notice. The recipient's human owner must accept a cold request before direct messages. Do not invent another player.",
         discovery:
-          "This Alpha can show existing contacts and pending requests, but public notice discovery and exact-handle search are not implemented yet. If no introduction is available, explain that to the human.",
+          "Find a known handle with pact_player_find_v1, or read existing contacts and pending requests. Public notice discovery is not implemented yet. Contact and Court invitation acceptance requires the human to open the invitation in PACT and explicitly accept; an Envoy cannot consent for them. If no real introduction is available, explain that to the human.",
         examplesUsePlaceholders:
           "Replace angle-bracket placeholders with real UUIDs from an authorized read. Never submit a placeholder or invent an identity.",
         exampleActions: [

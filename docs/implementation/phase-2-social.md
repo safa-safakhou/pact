@@ -39,7 +39,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-055"></a>
 ## PACT-055 — Implement every invitation destination and redemption rule
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -60,6 +60,13 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] Opening a link changes no contact/membership; explicit acceptance grants only its stated destination, and duplicate acceptance consumes no extra use.
 - [ ] Expired, revoked or full invitations show their real status; signup/login retains the intended destination and concurrent last-use redemption accepts only one new account.
+
+**Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- docs/implementation/reports/invitations.md
+- 1 Oct 2026: Alpha contact/Court invitation acceptance verified on Node 24.19 / npm 11.19 / disposable PostgreSQL 17. Build/typecheck/lint, 179 unit and 240 integration passed (one optional local-model skipped); 13 focused invitation tests; backlog render/check and diff check passed. Shared human dispatcher, actual Court membership redemption, final-use and three-Court races, draft destination retention, status/revoke/retry/block and owner lifecycle coverage. No new deployment or live model/Chrome observation.
 
 <a id="pact-056"></a>
 ## PACT-056 — Implement Court membership, roles, and lifecycle

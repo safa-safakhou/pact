@@ -381,3 +381,19 @@ main {
   color: white;
   box-shadow: 0 2px 7px #1e3b342b;
 }
+.invitation-panel {
+  padding: 1rem;
+  margin-block: 1rem;
+  border: 1px solid #ad7834;
+  border-radius: 0.75rem;
+  overflow-wrap: anywhere;
+}
+.invitation-panel :where(button) {
+  margin: 0.5rem 0.5rem 0.5rem 0;
+}
+.invitation-panel label {
+  display: block;
+}
+.invitation-panel input {
+  width: 100%;
+}

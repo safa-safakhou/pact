@@ -26,4 +26,5 @@ export { canonicalPayloadHash } from "./canonical.js";
 export { CommandDispatcher, type GameCommandMutation, type GameCommandPort } from "./dispatcher.js";
 export { GameCommandHandler } from "./game-command-handler.js";
 export { dispatchRunCommandTools, pactRunCommandTool, runToolCommandId } from "./run-game-tools.js";
+export { SocialCommandHandler } from "./social-command-handler.js";
 export { type AuthenticatedPrincipal, DispatcherError, type DispatcherFailureCode } from "./types.js";

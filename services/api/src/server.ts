@@ -4,7 +4,7 @@ import type { AuthorityService } from "@pact/authority";
 import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
 import type { InboxService } from "@pact/inbox";
-import type { KingdomService, SocialOverviewReader, WorldViewService } from "@pact/kingdom";
+import type { InvitationService, KingdomService, SocialOverviewReader, WorldViewService } from "@pact/kingdom";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
@@ -26,6 +26,7 @@ import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
 import type { GameReportReader } from "./game-report-reader.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
+import { registerInvitationRoutes } from "./invitation-routes.js";
 import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
 import { registerModelCredentialRoutes } from "./model-credential-routes.js";
 import { registerNativeRoutes } from "./native-routes.js";
@@ -60,6 +61,8 @@ export interface ApiModules {
   kingdom?: KingdomService;
   worldViews?: WorldViewService;
   socialOverview?: SocialOverviewReader;
+  invitations?: InvitationService;
+  gameTime?: () => Promise<number>;
   reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
@@ -153,6 +156,8 @@ export function buildServer(
     registerIdentityRoutes(server, modules.identity, modules.onboarding, operatorPreflight, modules.kingdom);
     registerOperatorRoutes(server, operatorPreflight);
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
+    if (modules.invitations && modules.gameTime)
+      registerInvitationRoutes(server, modules.identity, modules.dispatcher, modules.invitations, modules.gameTime);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
     if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);
     if (modules.reports) registerReportRoutes(server, modules.identity, modules.reports, modules.oauth);

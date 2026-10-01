@@ -1,6 +1,7 @@
 import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InvitationPanel } from "./invitation-panel.js";
 import { createWebPactClient } from "./pact-client.js";
 import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
@@ -409,6 +410,7 @@ export function GameApp(): React.JSX.Element {
       <main className="game-shell auth-shell">
         <h1>PACT Alpha</h1>
         <p>Sign in with a private test account. Manual play does not require a model provider.</p>
+        <InvitationPanel request={request} authenticated={false} canWrite={false} />
         <form
           onSubmit={(event) => {
             void login(event);
@@ -448,6 +450,7 @@ export function GameApp(): React.JSX.Element {
       <main className="game-shell auth-shell">
         <h1>Found your kingdom</h1>
         <p>Your name and handle become public on entry. This private Alpha uses a test portrait.</p>
+        <InvitationPanel request={request} authenticated canWrite={Boolean(csrf)} />
         <form
           onSubmit={(event) => {
             void found(event);
@@ -470,6 +473,7 @@ export function GameApp(): React.JSX.Element {
     );
   return (
     <main className="game-shell">
+      <InvitationPanel request={request} authenticated canWrite={Boolean(csrf)} kingdomId={kingdomId} />
       <header className="game-header">
         <div>
           <p className="eyebrow">PACT · private Alpha</p>

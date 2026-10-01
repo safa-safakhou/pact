@@ -572,7 +572,16 @@ export class SocialService {
        WHERE product_scope = $1 AND issuer_kingdom_id = $2 AND issued_game_time_ms > $3`,
       [this.productScope, issuer, gameTimeMs - 86_400_000],
     );
-    if ((active.rows[0]?.count ?? 0) >= 20 || (daily.rows[0]?.count ?? 0) >= 20)
+    const destinationCounts = await client.query<{ active: number; daily: number }>(
+      `SELECT count(*) FILTER (WHERE (expires_at IS NULL OR expires_at > $3) AND (expires_game_time_ms IS NULL OR expires_game_time_ms > $4) AND revoked_at IS NULL AND redemption_count < redemption_limit)::int AS active,
+       count(*) FILTER (WHERE issued_game_time_ms > $4::bigint - 86400000)::int AS daily
+       FROM destination_invitations WHERE product_scope = $1 AND issuer_kingdom_id = $2`,
+      [this.productScope, issuer, now, gameTimeMs],
+    );
+    if (
+      (active.rows[0]?.count ?? 0) + (destinationCounts.rows[0]?.active ?? 0) >= 20 ||
+      (daily.rows[0]?.count ?? 0) + (destinationCounts.rows[0]?.daily ?? 0) >= 20
+    )
       throw new SocialError("INVITATION_FULL");
     const token = randomBytes(24).toString("base64url");
     const hash = createHash("sha256").update(token).digest();
@@ -583,6 +592,19 @@ export class SocialService {
     );
     await this.emit(client, "contact.invitation.issued.v1", { issuerKingdomId: issuer, gameTimeMs });
     return token;
+  }
+
+  /** Human-accepted contact destination; the invitation owner consumes the use in this same transaction. */
+  async acceptInvitedContact(client: PoolClient, accountId: string, issuer: string, gameTimeMs: number): Promise<void> {
+    const recipient = await this.ownerKingdom(client, accountId);
+    await this.lockPair(client, issuer, recipient);
+    await this.assertDirectCommunicationAllowed(client, issuer, recipient);
+    await this.createContact(client, issuer, recipient, gameTimeMs);
+    await this.emit(client, "contact.accepted.v1", {
+      senderKingdomId: issuer,
+      recipientKingdomId: recipient,
+      gameTimeMs,
+    });
   }
 
   async acceptDirectInvitation(

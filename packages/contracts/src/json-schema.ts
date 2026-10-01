@@ -16,8 +16,10 @@ import {
   ToolCallSchema,
   WorldViewQuerySchema,
 } from "./schemas.js";
+import { SocialCommandSchema } from "./social-schemas.js";
 
 export const commandJsonSchema = z.toJSONSchema(CommandEnvelopeSchema, { target: "draft-7" });
+export const socialCommandJsonSchema = z.toJSONSchema(SocialCommandSchema, { target: "draft-7" });
 export const gameCommandJsonSchema = z.toJSONSchema(GameCommandEnvelopeSchema, { target: "draft-7" });
 export const receiptJsonSchema = z.toJSONSchema(CommandReceiptSchema, { target: "draft-7" });
 export const eventJsonSchema = z.toJSONSchema(EventEnvelopeSchema, { target: "draft-7" });

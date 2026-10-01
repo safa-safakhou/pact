@@ -19,6 +19,13 @@ export interface PrivacyServiceOptions {
   readonly productScope: string;
   readonly clock: PrivacyClock;
   readonly deletionRegistry?: DeletionRegistryStore;
+  /** Module-owned lifecycle hooks; reusable privacy does not import product tables or types. */
+  readonly ownedData?: readonly {
+    name: string;
+    forgetAccount(client: PoolClient, accountId: string): Promise<void>;
+    prune(client: PoolClient, now: Date): Promise<number>;
+    exportAccount?(client: PoolClient, accountId: string): Promise<unknown>;
+  }[];
   /** Product-owned game cleanup, committed with credential/session revocation. */
   readonly retirement?: {
     begin(client: PoolClient, accountId: string): Promise<void>;
@@ -378,6 +385,11 @@ export class PrivacyService {
       );
       return {
         replayClosed: replay.closed,
+        ...Object.fromEntries(
+          await Promise.all(
+            (this.options.ownedData ?? []).map(async (owner) => [owner.name, await owner.prune(client, now)]),
+          ),
+        ),
         accountsPurged: replay.purged,
         exports: exports.rowCount ?? 0,
         sessions: sessions.rowCount ?? 0,
@@ -569,6 +581,18 @@ export class PrivacyService {
                    AND c.raid_id = r.id AND c.kingdom_id = k.id AND c.status = 'committed'))`);
     return {
       account: account.rows[0],
+      ...(this.options.ownedData?.length
+        ? {
+            ownedData: Object.fromEntries(
+              await Promise.all(
+                this.options.ownedData.map(async (owner) => [
+                  owner.name,
+                  (await owner.exportAccount?.(client, accountId)) ?? null,
+                ]),
+              ),
+            ),
+          }
+        : {}),
       drafts,
       modelConnections: connections,
       grants,
@@ -596,6 +620,7 @@ export class PrivacyService {
   }
 
   private async beginRetirement(client: PoolClient, accountId: string): Promise<void> {
+    for (const owner of this.options.ownedData ?? []) await owner.forgetAccount(client, accountId);
     if (this.options.retirement) return this.options.retirement.begin(client, accountId);
     const kingdom = await client.query("SELECT 1 FROM kingdoms WHERE product_scope = $1 AND account_id = $2 LIMIT 1", [
       this.options.productScope,

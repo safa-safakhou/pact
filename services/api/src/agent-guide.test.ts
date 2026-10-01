@@ -101,9 +101,9 @@ describe("agent guide", () => {
     const development = await guide.read("account-one", "development");
     expect(development).toMatchObject({ markedUnitsPerWhole: 600, builders: 2 });
     const diplomacy = await guide.read("account-one", "diplomacy");
-    expect(JSON.stringify(diplomacy)).toContain(
-      "public notice discovery and exact-handle search are not implemented yet",
-    );
+    expect(JSON.stringify(diplomacy)).toContain("Public notice discovery is not implemented yet");
+    expect(JSON.stringify(diplomacy)).toContain("pact_player_find_v1");
+    expect(JSON.stringify(diplomacy)).toContain("an Envoy cannot consent for them");
     const military = await guide.read("account-one", "military");
     expect(military).toMatchObject({ scouting: { spearmenRequired: 2, unitIdsOptional: true } });
   });

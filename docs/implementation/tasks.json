@@ -2717,7 +2717,7 @@
       "id": "PACT-055",
       "title": "Implement every invitation destination and redemption rule",
       "phase": 2,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2745,8 +2745,11 @@
       "components": [
         "invitation service and landing pages"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/invitations.md",
+        "1 Oct 2026: Alpha contact/Court invitation acceptance verified on Node 24.19 / npm 11.19 / disposable PostgreSQL 17. Build/typecheck/lint, 179 unit and 240 integration passed (one optional local-model skipped); 13 focused invitation tests; backlog render/check and diff check passed. Shared human dispatcher, actual Court membership redemption, final-use and three-Court races, draft destination retention, status/revoke/retry/block and owner lifecycle coverage. No new deployment or live model/Chrome observation."
+      ],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

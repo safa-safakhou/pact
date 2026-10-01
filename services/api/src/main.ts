@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
-import { CommandDispatcher, GameCommandHandler } from "@pact/application";
+import { CommandDispatcher, GameCommandHandler, SocialCommandHandler } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
@@ -19,8 +19,10 @@ import {
   BuildingEngine,
   ConstructionExposureAdapter,
   ConversationReader,
+  CourtInvitationDestination,
   GarrisonService,
   ImmediateExposureAdapter,
+  InvitationService,
   KingdomRetirementService,
   KingdomService,
   RaidRandomnessService,
@@ -105,6 +107,8 @@ const social = new SocialService(
   clock,
   new ImmediateExposureAdapter(new ExposureService("pact")),
 );
+const courtInvitations = new CourtInvitationDestination("pact", clock);
+const invitations = new InvitationService(pool, "pact", social, clock, { court: courtInvitations });
 const troops = new TroopService(
   "pact",
   new ResourceLedger("pact"),
@@ -166,6 +170,7 @@ const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
+  social: new SocialCommandHandler(invitations),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
     execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
@@ -241,6 +246,21 @@ const privacy = new PrivacyService(pool, {
   productScope: "pact",
   clock,
   retirement,
+  ownedData: [
+    {
+      name: "courtDestinations",
+      forgetAccount: (client, accountId) => courtInvitations.forgetAccount(client, accountId),
+      prune: (client, now) => courtInvitations.prune(client, now),
+      exportAccount: (client, accountId) => courtInvitations.exportAccount(client, accountId),
+    },
+    {
+      name: "destinationInvitations",
+      exportAccount: (client, accountId) => invitations.exportAccount(client, accountId),
+      forgetAccount: (client, accountId) => invitations.forgetAccount(client, accountId),
+      prune: async (client, now) =>
+        invitations.prune(client, new Date(now.getTime() - 30 * 86_400_000), (await world.read()).gameTimeMs),
+    },
+  ],
   ...(environment.PACT_DELETION_REGISTRY_FILE
     ? { deletionRegistry: new FileDeletionRegistry(environment.PACT_DELETION_REGISTRY_FILE) }
     : {}),
@@ -263,6 +283,8 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   kingdom,
   worldViews,
   socialOverview,
+  invitations,
+  gameTime: async () => (await world.read()).gameTimeMs,
   reports,
   dispatcher,
   oauth,

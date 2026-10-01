@@ -1,3 +1,4 @@
+import { createHash, randomUUID } from "node:crypto";
 import {
   type CommandEnvelope,
   CommandEnvelopeSchema,
@@ -5,6 +6,8 @@ import {
   type GameAction,
   type SandboxAction,
   SCHEMA_VERSION,
+  type SocialCommand,
+  SocialCommandSchema,
 } from "@pact/contracts";
 import { appendOutbox, withTransaction } from "@pact/db";
 import type { Clock } from "@pact/platform";
@@ -20,6 +23,16 @@ export interface CommandDispatcherOptions {
   readonly productScope: string;
   readonly trace?: TraceReporter;
   readonly game?: GameCommandPort;
+  readonly social?: SocialCommandPort;
+}
+
+export interface SocialCommandPort {
+  execute(
+    client: PoolClient,
+    principal: AuthenticatedPrincipal,
+    command: SocialCommand,
+    gameTimeMs: number,
+  ): Promise<{ recordVersions: Record<string, number>; result: unknown }>;
 }
 
 export interface GameCommandMutation {
@@ -78,6 +91,71 @@ function deriveEnvelope(principal: AuthenticatedPrincipal, parsed: CommandEnvelo
 
 export class CommandDispatcher {
   constructor(private readonly options: CommandDispatcherOptions) {}
+
+  /** Human-only social choices use the same transaction, receipt journal and world admission as game commands. */
+  async dispatchSocial(
+    principal: AuthenticatedPrincipal,
+    raw: unknown,
+  ): Promise<{ receipt: CommandReceipt; result: unknown }> {
+    this.assertPrincipal(principal);
+    if (principal.audience !== "human" || !this.options.social || !this.options.game)
+      throw new DispatcherError("FORBIDDEN");
+    const parsed = SocialCommandSchema.safeParse(raw);
+    if (!parsed.success) throw new DispatcherError("INVALID_COMMAND");
+    const command = parsed.data;
+    const payloadHash = createHash("sha256").update(JSON.stringify(command)).digest("hex");
+    const previous = await this.options.pool.query<ReceiptRow>(
+      "SELECT canonical_payload_hash, receipt, account_id FROM command_receipts WHERE product_scope = $1 AND command_id = $2",
+      [this.options.productScope, command.commandId],
+    );
+    if (previous.rows[0])
+      return { receipt: this.replayed(principal, command.commandId, payloadHash, previous.rows[0]), result: null };
+    const admitted = await this.options.game.admit(async (client, gameTimeMs) => {
+      const previous = await this.loadReceipt(client, command.commandId);
+      if (previous)
+        return { receipt: this.replayed(principal, command.commandId, payloadHash, previous), result: null };
+      const account = await client.query(
+        "SELECT id FROM accounts WHERE product_scope = $1 AND id = $2 AND status = 'active' AND email_verified_at IS NOT NULL FOR UPDATE",
+        [this.options.productScope, principal.accountId],
+      );
+      if (!account.rowCount) throw new DispatcherError("FORBIDDEN");
+      const mutation = await this.options.social?.execute(client, principal, command, gameTimeMs);
+      if (!mutation) throw new DispatcherError("INVALID_COMMAND");
+      const eventId = randomUUID();
+      const receipt: CommandReceipt = {
+        ...receiptSkeleton(command.commandId, "COMMITTED", this.options.clock.now()),
+        recordVersions: mutation.recordVersions,
+        committedEventIds: [eventId],
+      };
+      await client.query(
+        "INSERT INTO command_receipts(product_scope, command_id, account_id, canonical_payload_hash, code, receipt) VALUES ($1,$2,$3,$4,$5,$6::jsonb)",
+        [
+          this.options.productScope,
+          command.commandId,
+          principal.accountId,
+          payloadHash,
+          receipt.code,
+          JSON.stringify(receipt),
+        ],
+      );
+      await appendOutbox(client, {
+        productScope: this.options.productScope,
+        eventId,
+        type: "social.command.committed.v1",
+        payload: {
+          commandId: command.commandId,
+          accountId: principal.accountId,
+          kind: command.action.kind,
+          recordVersions: mutation.recordVersions,
+        },
+      });
+      // The opaque link token is returned once, not stored in receipts, events or logs.
+      return { receipt, result: mutation.result };
+    });
+    return admitted.kind === "admitted"
+      ? admitted.value
+      : { receipt: receiptSkeleton(command.commandId, "WORLD_PAUSED"), result: null };
+  }
 
   async dispatch(
     principal: AuthenticatedPrincipal,
