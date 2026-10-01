@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**21 tickets · 2 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**21 tickets · 3 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -176,7 +176,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-073"></a>
 ## PACT-073 — Finish responsive accessibility and PWA behavior
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -195,8 +195,17 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Desktop/phone and keyboard checks cover founding, objective/run controls, contracts, troops, raids, social views and reports without clipped or unreachable essential controls.
-- [ ] Disconnect/reconnect displays truthful state and does not blindly replay signatures, raids or approvals; no gameplay consequence depends on color, sound or animation alone.
+- [x] Desktop/phone and keyboard checks cover founding, objective/run controls, contracts, troops, raids, social views and reports without clipped or unreachable essential controls.
+- [x] Disconnect/reconnect displays truthful state and does not blindly replay signatures, raids or approvals; no gameplay consequence depends on color, sound or animation alone.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- dbb3fba completes scoped Alpha usability. Report: docs/implementation/reports/alpha-web-usability.md; recovery/fixtures: docs/operations/alpha-web.md. Linear MNI-144 Done, active acceptance checked, original postponed checks preserved (2026-10-01).
+- Actual isolated Chrome phone 390x844/320x740 and desktop 1280x900 checks: keyboard founding, skip link, objective/model traversal, build/training receipts, exact versioned supply preview/sign, Escape focus return, social/raid controls and truthful report failure; measured no essential input/select/textarea/button horizontal clipping. No live provider call or completed battle/settlement claimed.
+- Local API timeout with a pending offer confirmation removed it and disabled commitments; resumed API + read polling recovered without replay or offer creation. Five dedicated unit tests cover offline/reconnect generations, 503, SDK/approval/run write guard and no queued writes.
+- Node 24 npm run build/typecheck/test/lint pass: 210 unit, 282 PostgreSQL integration pass and one optional live-model skip; planner render/check and git diff --check pass. Local-only, not pushed/deployed; hosted alpha-20260929-4 / 2143d92 unchanged.
 
 <a id="pact-074"></a>
 ## PACT-074 — Implement the cosmetic catalog, wallet, and unlock flow

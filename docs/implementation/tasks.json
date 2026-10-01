@@ -3927,7 +3927,7 @@
       "id": "PACT-073",
       "title": "Finish responsive accessibility and PWA behavior",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -3956,7 +3956,12 @@
         "accessibility",
         "PWA"
       ],
-      "evidence": [],
+      "evidence": [
+        "dbb3fba completes scoped Alpha usability. Report: docs/implementation/reports/alpha-web-usability.md; recovery/fixtures: docs/operations/alpha-web.md. Linear MNI-144 Done, active acceptance checked, original postponed checks preserved (2026-10-01).",
+        "Actual isolated Chrome phone 390x844/320x740 and desktop 1280x900 checks: keyboard founding, skip link, objective/model traversal, build/training receipts, exact versioned supply preview/sign, Escape focus return, social/raid controls and truthful report failure; measured no essential input/select/textarea/button horizontal clipping. No live provider call or completed battle/settlement claimed.",
+        "Local API timeout with a pending offer confirmation removed it and disabled commitments; resumed API + read polling recovered without replay or offer creation. Five dedicated unit tests cover offline/reconnect generations, 503, SDK/approval/run write guard and no queued writes.",
+        "Node 24 npm run build/typecheck/test/lint pass: 210 unit, 282 PostgreSQL integration pass and one optional live-model skip; planner render/check and git diff --check pass. Local-only, not pushed/deployed; hosted alpha-20260929-4 / 2143d92 unchanged."
+      ],
       "assignee": "Mohammad Safakhou / Codex",
       "blocked_by_external": [],
       "block_reason": null,

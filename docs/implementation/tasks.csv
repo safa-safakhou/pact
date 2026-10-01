@@ -83,7 +83,7 @@ PACT-069,Implement the complete six-week season lifecycle,3,done,implementation,
 PACT-070,Implement seasonal honors and award review,3,done,implementation,Rules,M,PACT-053;PACT-069,G05,phase-3-season-one.md#pact-070
 PACT-071,Produce and integrate the illustrated kingdom and cosmetics,3,todo,implementation,Frontend / Art,L,PACT-068,L02,phase-3-season-one.md#pact-071
 PACT-072,"Integrate optional audio, motion, and notification feedback",3,todo,implementation,Frontend / Audio,M,PACT-068;PACT-071,L02,phase-3-season-one.md#pact-072
-PACT-073,Finish responsive accessibility and PWA behavior,3,todo,implementation,Frontend,L,PACT-053;PACT-061,G04,phase-3-season-one.md#pact-073
+PACT-073,Finish responsive accessibility and PWA behavior,3,done,implementation,Frontend,L,PACT-053;PACT-061,G04,phase-3-season-one.md#pact-073
 PACT-074,"Implement the cosmetic catalog, wallet, and unlock flow",3,todo,implementation,Backend,M,PACT-047;PACT-068;PACT-071,L03,phase-3-season-one.md#pact-074
 PACT-075,Integrate hosted payments and verified purchase receipts,3,todo,implementation,Backend,L,PACT-007;PACT-064;PACT-068;PACT-074,L03;L04,phase-3-season-one.md#pact-075
 PACT-076,"Implement refunds, reversals, and cosmetic reconciliation",3,todo,implementation,Backend,M,PACT-068;PACT-075,L03,phase-3-season-one.md#pact-076

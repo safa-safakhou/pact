@@ -1,7 +1,7 @@
 # Alpha web usability and live-only decisions
 
 Ticket: [PACT-073 / MNI-144](https://linear.app/mnim/issue/MNI-144/pact-073-finish-responsive-accessibility-and-pwa-behavior)
-Implementation revision: recorded in the ticket evidence after commit.
+Implementation revision: `dbb3fba`.
 Verification: 1 October 2026, Node 24, local PostgreSQL 17, actual Chrome extension browser session.
 
 ## Result
@@ -17,11 +17,11 @@ Readable phone/desktop controls, keyboard navigation/confirmation, truthful conn
 | Reports and agent controls communicate actual state without color/sound dependency | Missing report `00000000-0000-4000-8000-000000000099` read by keyboard; displayed unavailable/pending/missing/inaccessible ambiguity rather than fabricated results. Labels, text outcomes, focus outlines and disabled prerequisite explanations inspected in Chrome. Envoy objective/model/token controls reachable; Start disabled with explicit no-model/no-call notice. No provider key saved or inference started. | Pass for UI controls/readability. Stateful run/approval behavior additionally covered by existing integration suite; no new live provider run claimed. |
 | Disconnect/reconnect is truthful and does not blindly replay signatures, raids or approvals | With an uncommitted supply confirmation open, paused only the exact local rehearsal API process using SIGSTOP (PID verified against its listening port and command), then requested a read-only refresh. After the 10-second deadline Chrome showed “Live refresh required”, removed confirmation and disabled supply/allegiance writes. SIGCONT restored that process; the normal read poll recovered last-owner-refresh status. No open offers/contracts appeared and no confirmation returned. Only a new deliberate decision created the later offer. No source edits/reloads occurred during this final outage sequence. | Pass for actual server-disconnect recovery. Browser offline/online transitions, older-refresh rejection, 503, SDK/approval/run write blocking and zero queued submissions are also covered by five dedicated unit tests. |
 
-Disposable schema: `test_web_rehearsal_d156ee6fe3be4f839628ae662c085ecb`. Synthetic records only; not the VPS. Screenshot of narrow-phone focused confirmation: `/tmp/pact-alpha-phone-confirmation.jpg` (ephemeral local artifact, not a durable dependency). Viewport override reset after checks. An earlier HMR reload interrupted a preliminary outage check; it is not used as confirmation-clearance evidence.
+Disposable schema: `test_web_rehearsal_d156ee6fe3be4f839628ae662c085ecb`. Synthetic records only; not the VPS. Screenshot of narrow-phone focused confirmation: `/tmp/pact-alpha-phone-confirmation.jpg` (ephemeral local artifact, not a durable dependency). Viewport override reset after checks. An earlier HMR reload interrupted a preliminary outage check; it is not used as confirmation-clearance evidence. After observation, the agent-created tab and exact local API/Vite processes were closed, and only this confirmed disposable schema was removed with the guarded `dropTestSchema` helper. Its synthetic records are not recoverable; no hosted/player data was deleted.
 
 ## Automated checks
 
-Full `npm run build`, `npm run typecheck`, `npm run test`, `npm run lint`; 210 unit tests pass. `npm run test:integration`: 282 PostgreSQL tests pass, one pre-existing optional live-model skip. The integration run used no real provider calls. Planning render/check and `git diff --check` recorded in ticket evidence. No hosted CI claim.
+Full `npm run build`, `npm run typecheck`, `npm run test`, `npm run lint`; 210 unit tests pass. Lint retains two pre-existing politics warnings and one existing style info; no errors. `npm run test:integration`: 282 PostgreSQL tests pass, one pre-existing optional live-model skip. The integration run used no real provider calls. Planning render/check and `git diff --check` recorded in ticket evidence. No hosted CI claim.
 
 ## Documentation and boundaries
 
