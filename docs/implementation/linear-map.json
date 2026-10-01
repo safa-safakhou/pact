@@ -601,8 +601,8 @@
   },
   "source_revision": "1.4 — 2026-10-01 game-only Alpha",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-10-01T18:21:22.000Z",
-  "last_sync_scope": "99-issue status/label/assignment readback: 69 Done, 2 Alpha Todo (099,080), 28 Later Backlog, no active claims. PACT-073 Alpha acceptance/status closed with report alpha-web-usability.md, original postponed checks preserved; implementation dbb3fba. Node 24 build/typecheck/lint, 210 unit and 282 PostgreSQL integration pass, one optional live-model skip. Actual isolated Chrome phone/desktop keyboard and server-timeout/no-replay observations recorded; no paid model call. PACT-099 next unassigned Todo; PACT-073 dependencies 053/061 freshly Done. Project summary/overview and start guide reconciled. Local-only; hosted remains 2143d92. This is not a fresh 99-issue relationship audit.",
+  "last_synced_at": "2026-10-01T19:10:12.959Z",
+  "last_sync_scope": "PACT-099 freshly claimed/read back In Progress, Mohammad Safakhou / Codex; dependencies freshly Done. MNI-155/PACT-080 freshly Todo/unassigned. Prior 99-issue audit carried forward: 69 Done, 1 Alpha In Progress (099), 1 Alpha Todo (080), 28 Later Backlog. Partial implementation 8789315 and agent-first-progress.md linked by Linear comment 27929f12-3b6e-466a-87b3-6f94b9f072cd; no acceptance checked. Project overview/summary and start guide reconciled; start guide read back. Node 24 build/typecheck/lint, 212 unit and 283 PostgreSQL integration pass, optional live-model skip, final targeted fake-provider start/lookup test pass. External journaling/owner web activity and fresh unaided gameplay remain unfinished. Local-only; hosted 2143d92 unchanged. This is not a new 99-issue status/relationship audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",

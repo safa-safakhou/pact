@@ -456,7 +456,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-099"></a>
 ## PACT-099 — Complete agent-first access, learning, and observable play
 
-**Status:** todo · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -477,6 +477,12 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 - [ ] A fresh connected agent learns state/rules, discovers real counterparties and acts from a normal objective without repository access, supplied UUIDs or action JSON; no fabricated players.
 - [ ] New gameplay tools use the existing dispatcher/views and hand back human-only decisions rather than bypassing them; web and agent reads show the same committed records.
 - [ ] Each account's web activity/report view truthfully separates committed/proposed/failed/waiting steps and can resume from receipts after disconnect; malformed/busy actions provide useful feedback without duplicate effects.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- Partial PACT-099 learning/discovery increment: 8789315; docs/implementation/reports/agent-first-progress.md. Shared owner guide and public handle lookup across MCP/in-app worker; versioned lessons and bounded complete-field output. Node 24 build/typecheck/lint pass, 212 unit and 283 PostgreSQL integration tests pass, one optional live-model skip; final targeted owner/start/lookup fake-provider test passes. No external activity journal or fresh uncoached model play yet; acceptance remains incomplete, In Progress. Local only, hosted 2143d92 unchanged.
 
 <a id="pact-080"></a>
 ## PACT-080 — Rehearse Season One end to end

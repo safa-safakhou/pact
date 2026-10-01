@@ -4428,7 +4428,7 @@
       "id": "PACT-099",
       "title": "Complete agent-first access, learning, and observable play",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "L",
@@ -4471,8 +4471,10 @@
         "observable agent activity",
         "external and in-app result summaries"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Partial PACT-099 learning/discovery increment: 8789315; docs/implementation/reports/agent-first-progress.md. Shared owner guide and public handle lookup across MCP/in-app worker; versioned lessons and bounded complete-field output. Node 24 build/typecheck/lint pass, 212 unit and 283 PostgreSQL integration tests pass, one optional live-model skip; final targeted owner/start/lookup fake-provider test passes. No external activity journal or fresh uncoached model play yet; acceptance remains incomplete, In Progress. Local only, hosted 2143d92 unchanged."
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "alpha"
