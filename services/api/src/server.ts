@@ -23,6 +23,7 @@ import {
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
 import { registerCapabilityRoutes } from "./capability-routes.js";
+import { registerChronicleRoutes } from "./chronicle-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
 import type { GameReportReader } from "./game-report-reader.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
@@ -67,6 +68,7 @@ export interface ApiModules {
   courts?: import("@pact/kingdom").CourtService;
   politics?: import("@pact/kingdom").PoliticsService;
   seals?: import("@pact/kingdom").SealService;
+  chronicle?: import("@pact/kingdom").ChronicleService;
   reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
@@ -171,6 +173,8 @@ export function buildServer(
         modules.politics,
       );
     if (modules.seals) registerSealRoutes(server, modules.identity, modules.seals);
+    if (modules.chronicle && modules.gameTime)
+      registerChronicleRoutes(server, modules.identity, modules.chronicle, modules.gameTime);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
     if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);
     if (modules.reports) registerReportRoutes(server, modules.identity, modules.reports, modules.oauth);

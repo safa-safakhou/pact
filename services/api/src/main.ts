@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
-import { CommandDispatcher, GameCommandHandler, SocialCommandHandler } from "@pact/application";
+import { ChronicleFactReader, CommandDispatcher, GameCommandHandler, SocialCommandHandler } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
@@ -17,6 +17,8 @@ import { InboxService } from "@pact/inbox";
 import {
   ActionLimitService,
   BuildingEngine,
+  ChronicleOutcomeReader,
+  ChronicleService,
   ConstructionExposureAdapter,
   ConversationReader,
   CourtInvitationDestination,
@@ -113,7 +115,6 @@ const social = new SocialService(
 );
 const courts = new CourtService(pool, "pact", clock);
 const courtInvitations = new CourtInvitationDestination("pact", clock, courts);
-const invitations = new InvitationService(pool, "pact", social, clock, { court: courtInvitations });
 const troops = new TroopService(
   "pact",
   new ResourceLedger("pact"),
@@ -157,6 +158,19 @@ const raids = environment.RAID_SEED_ENCRYPTION_KEY_BASE64
   : undefined;
 const reports = new GameReportReader(pool, scouts, raids);
 const seals = new SealService(pool, "pact", clock, reports);
+const chronicle = new ChronicleService(
+  pool,
+  "pact",
+  clock,
+  seals,
+  new ChronicleFactReader("pact", clock, new ChronicleOutcomeReader("pact")),
+  social,
+);
+const invitations = new InvitationService(pool, "pact", social, clock, {
+  court: courtInvitations,
+  notice: chronicle.destination("notice"),
+  story: chronicle.destination("story"),
+});
 const gameCommands = new GameCommandHandler(
   social,
   (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
@@ -176,7 +190,7 @@ const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
-  social: new SocialCommandHandler(invitations, courts, politics, seals),
+  social: new SocialCommandHandler(invitations, courts, politics, seals, chronicle),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
     execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
@@ -216,6 +230,7 @@ const mcp = new McpTransport({
   publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
   seals: { read: (id, accountId) => seals.read(id, accountId) },
+  chronicle: { read: async (query, accountId) => chronicle.read(query, (await world.read()).gameTimeMs, accountId) },
   politics: {
     read: async (handle, offset, accountId) =>
       politics.read(handle, offset, accountId, (await world.read()).gameTimeMs),
@@ -259,6 +274,12 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    {
+      name: "chronicle",
+      forgetAccount: (c, id) => chronicle.forgetAccount(c, id),
+      prune: (c, now) => chronicle.prune(c, now),
+      exportAccount: (c, id) => chronicle.exportAccount(c, id),
+    },
     {
       name: "seals",
       forgetAccount: (client, accountId) => seals.forgetAccount(client, accountId),
@@ -311,6 +332,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   courts,
   politics,
   seals,
+  chronicle,
   gameTime: async () => (await world.read()).gameTimeMs,
   reports,
   dispatcher,

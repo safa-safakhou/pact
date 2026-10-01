@@ -275,6 +275,19 @@ export class SocialService {
     );
   }
 
+  /** A human redemption of an issuer-authored notice invitation grants only a conversation. */
+  async acceptNoticeConversation(
+    client: PoolClient,
+    accountId: string,
+    issuer: string,
+    gameTimeMs: number,
+  ): Promise<void> {
+    const recipient = await this.ownerKingdom(client, accountId);
+    await this.lockPair(client, recipient, issuer);
+    await this.assertDirectCommunicationAllowed(client, recipient, issuer);
+    await this.createContact(client, recipient, issuer, gameTimeMs);
+  }
+
   async endContact(client: PoolClient, accountId: string, otherKingdomId: string): Promise<void> {
     const kingdomId = await this.ownerKingdom(client, accountId);
     const [a, b] = await this.lockPair(client, kingdomId, otherKingdomId);

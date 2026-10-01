@@ -3,6 +3,7 @@ import { PoliticsReadQuerySchema, ProductScopeSchema } from "@pact/contracts";
 import { IdentityError, type IdentityService } from "@pact/identity";
 import {
   ActionLimitError,
+  ChronicleError,
   CourtError,
   CourtInvitationError,
   type CourtService,
@@ -33,6 +34,7 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
       error instanceof CourtError ||
       error instanceof PoliticsError ||
       error instanceof SealError ||
+      error instanceof ChronicleError ||
       error instanceof ActionLimitError ||
       error instanceof InvitationError ||
       error instanceof SocialError ||

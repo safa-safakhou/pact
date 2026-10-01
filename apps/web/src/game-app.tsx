@@ -1,6 +1,7 @@
 import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChroniclePanel } from "./chronicle-panel.js";
 import { CourtPanel } from "./court-panel.js";
 import { EvidencePanel } from "./evidence-panel.js";
 import { InvitationPanel } from "./invitation-panel.js";
@@ -155,6 +156,8 @@ export function GameApp(): React.JSX.Element {
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
   const [tab, setTab] = useState<Tab>(() =>
     new URLSearchParams(window.location.search).has("seal") ||
+    new URLSearchParams(window.location.search).has("post") ||
+    new URLSearchParams(window.location.search).has("chronicle") ||
     new URLSearchParams(window.location.search).has("sealSource")
       ? "Chronicle"
       : new URLSearchParams(window.location.search).has("court") ||
@@ -422,6 +425,9 @@ export function GameApp(): React.JSX.Element {
         <h1>PACT Alpha</h1>
         <p>Sign in with a private test account. Manual play does not require a model provider.</p>
         <InvitationPanel request={request} authenticated={false} canWrite={false} />
+        {new URLSearchParams(window.location.search).has("post") && (
+          <ChroniclePanel request={request} canWrite={false} />
+        )}
         {new URLSearchParams(window.location.search).has("seal") && (
           <EvidencePanel request={request} canWrite={false} />
         )}
@@ -617,6 +623,8 @@ export function GameApp(): React.JSX.Element {
         />
       )}
       {tab === "Chronicle" && <EvidencePanel request={request} canWrite={Boolean(csrf) && !busy} />}
+      {tab === "Chronicle" && <ChroniclePanel request={request} canWrite={Boolean(csrf) && !busy} />}
+      {tab === "People" && <ChroniclePanel request={request} canWrite={Boolean(csrf) && !busy} noticesOnly />}
       {tab === "Chronicle" && view && (
         <Chronicle
           view={view}

@@ -9,6 +9,8 @@ export interface InvitationDestinationView {
   id: string;
   title: string;
   public: boolean;
+  path?: string;
+  version?: number;
   available?: boolean;
   /** Notice deadlines are authoritative game time, not a browser clock. */
   expiresGameTimeMs?: number;

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 type InvitationView = {
   invitationId: string | null;
   status: string;
-  destination: { type: string; id: string; title: string } | null;
+  destination: { type: string; id: string; title: string; path?: string; version?: number } | null;
   expiresAt: string | null;
   remainingUses: number;
   accepted: boolean;
@@ -114,6 +114,7 @@ export function InvitationPanel({
             {view.destination?.title ?? "Destination unavailable"} · {view.destination?.type ?? "unknown"} ·{" "}
             {view.status}
           </p>
+          {view.destination?.path && <a href={view.destination.path}>Open the specific published destination</a>}
           <p>
             Opening this link makes no agreement. Acceptance only establishes the stated contact or membership, never
             trade, allegiance or troop access.

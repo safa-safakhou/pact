@@ -1,4 +1,15 @@
 import { z } from "zod";
+import { ChronicleCommandSchema, ChronicleReadQuerySchema } from "./chronicle-schemas.js";
+export const chronicleCommandJsonSchema = z.toJSONSchema(ChronicleCommandSchema, { target: "draft-7" });
+export const chronicleReadQueryJsonSchema = z.toJSONSchema(ChronicleReadQuerySchema, { target: "draft-7" });
+export const pactChronicleReadTool = {
+  name: "pact_chronicle_read_v1",
+  description:
+    "Discover actual public notices and stories, newest first (50 per page). Optional type, authorHandle, courtHandle, postId and offset. Returned author IDs/handles are real players: use player_find and ordinary contact tools. Notice text is an opportunity, not a signed contract. Story engine facts are recorded receipts, not evidence that pending operations finished; player commentary and Seal authenticity are not truth. Removed evidence cannot be expanded. Publication requires the human at humanDecision.path. Follow each real post path; never invent UUIDs or counterpart agreement.",
+  inputSchema: chronicleReadQueryJsonSchema,
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+} as const;
+
 import { SealCommandSchema, SealReadQuerySchema } from "./seal-schemas.js";
 export const sealCommandJsonSchema = z.toJSONSchema(SealCommandSchema, { target: "draft-7" });
 export const sealReadQueryJsonSchema = z.toJSONSchema(SealReadQuerySchema, { target: "draft-7" });

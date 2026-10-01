@@ -1,4 +1,6 @@
 {
+  "chronicleCommandJsonSchema": "a958f2a0ec89660f4c3d7e7f7fa3d285c0e9b322204932f5ff76a0e79debfe75",
+  "chronicleReadQueryJsonSchema": "c53a5a4d79c8ed104587207fef4844fc1dd0045a3a64fb12c766d362db83bb33",
   "sealCommandJsonSchema": "bee2cbc6b9a955d3e0c1e8cd2ae992129c5b47609d07d0256805b9cf557799d9",
   "sealReadQueryJsonSchema": "dff32c05e1bebd10f74111b4fb87aec6025030ae870bd2ad6dc2d73753e4c7a7",
   "politicsCommandJsonSchema": "0c5f37cdd1e5a5e4c4547b5be2c2aac6b6ab9d25436ed3710daa4ddafe42f674",

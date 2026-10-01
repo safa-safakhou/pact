@@ -2955,7 +2955,7 @@
       "id": "PACT-059",
       "title": "Implement Chronicle stories, notices, and public share pages",
       "phase": 2,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -2987,8 +2987,8 @@
       "components": [
         "Chronicle and public pages"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": ["Claimed MNI-124 in Linear on 2026-10-01 after verifying all five dependencies Done; Chronicle first, then dependency-ready PACT-061/062 in the requested batch."],
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

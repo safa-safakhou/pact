@@ -179,8 +179,11 @@ export class SealService {
     };
   }
   async read(id: string, accountId?: string) {
+    return withTransaction(this.pool, (c) => this.readInTransaction(c, id, accountId));
+  }
+  async readInTransaction(client: PoolClient, id: string, accountId?: string) {
     const row = (
-      await this.pool.query<{
+      await client.query<{
         status: string;
         creator_account_id: string | null;
         preview_payload: Record<string, unknown>;

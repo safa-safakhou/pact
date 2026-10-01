@@ -168,7 +168,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-059"></a>
 ## PACT-059 — Implement Chronicle stories, notices, and public share pages
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -189,6 +189,12 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] Agents discover actual notices/players and inspect deliberately published stories; a story link shows the recorded outcome and its real destination.
 - [ ] Publication preview and reads distinguish engine facts from player commentary and never publish private objectives, live reserves, omitted evidence or entire transcripts by default.
+
+**Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- Claimed MNI-124 in Linear on 2026-10-01 after verifying all five dependencies Done; Chronicle first, then dependency-ready PACT-061/062 in the requested batch.
 
 <a id="pact-060"></a>
 ## PACT-060 — Deliver opt-in critical email and Web Push

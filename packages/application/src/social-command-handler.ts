@@ -1,5 +1,5 @@
-import type { CourtCommand, PoliticsCommand, SealCommand, SocialCommand } from "@pact/contracts";
-import type { CourtService, InvitationService, PoliticsService, SealService } from "@pact/kingdom";
+import type { ChronicleCommand, CourtCommand, PoliticsCommand, SealCommand, SocialCommand } from "@pact/contracts";
+import type { ChronicleService, CourtService, InvitationService, PoliticsService, SealService } from "@pact/kingdom";
 import type { PoolClient } from "pg";
 import type { SocialCommandPort } from "./dispatcher.js";
 import { type AuthenticatedPrincipal, DispatcherError } from "./types.js";
@@ -11,14 +11,19 @@ export class SocialCommandHandler implements SocialCommandPort {
     private readonly courts?: CourtService,
     private readonly politics?: PoliticsService,
     private readonly seals?: SealService,
+    private readonly chronicle?: ChronicleService,
   ) {}
   async execute(
     client: PoolClient,
     principal: AuthenticatedPrincipal,
-    command: SocialCommand | CourtCommand | PoliticsCommand | SealCommand,
+    command: SocialCommand | CourtCommand | PoliticsCommand | SealCommand | ChronicleCommand,
     gameTimeMs: number,
   ): Promise<{ recordVersions: Record<string, number>; result: unknown }> {
     if (principal.audience !== "human") throw new DispatcherError("FORBIDDEN");
+    if (command.schemaVersion === "pact.chronicle-command.v1") {
+      if (!this.chronicle) throw new DispatcherError("INVALID_COMMAND");
+      return this.chronicle.execute(client, principal.accountId, command, gameTimeMs);
+    }
     if (command.schemaVersion === "pact.seal-command.v1") {
       if (!this.seals) throw new DispatcherError("INVALID_COMMAND");
       return this.seals.execute(client, principal.accountId, command, gameTimeMs);

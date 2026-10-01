@@ -23,6 +23,7 @@ export function createApplication(
 
 export { describeApprovalEffects } from "./approval-effects.js";
 export { canonicalPayloadHash } from "./canonical.js";
+export * from "./chronicle-facts.js";
 export { CommandDispatcher, type GameCommandMutation, type GameCommandPort } from "./dispatcher.js";
 export { GameCommandHandler } from "./game-command-handler.js";
 export { dispatchRunCommandTools, pactRunCommandTool, runToolCommandId } from "./run-game-tools.js";

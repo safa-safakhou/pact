@@ -1,5 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import {
+  type ChronicleCommand,
+  ChronicleCommandSchema,
   type CommandEnvelope,
   CommandEnvelopeSchema,
   type CommandReceipt,
@@ -36,7 +38,7 @@ export interface SocialCommandPort {
   execute(
     client: PoolClient,
     principal: AuthenticatedPrincipal,
-    command: SocialCommand | CourtCommand | PoliticsCommand | SealCommand,
+    command: SocialCommand | CourtCommand | PoliticsCommand | SealCommand | ChronicleCommand,
     gameTimeMs: number,
   ): Promise<{ recordVersions: Record<string, number>; result: unknown }>;
 }
@@ -109,6 +111,7 @@ export class CommandDispatcher {
     const parsed = SocialCommandSchema.or(CourtCommandSchema)
       .or(PoliticsCommandSchema)
       .or(SealCommandSchema)
+      .or(ChronicleCommandSchema)
       .safeParse(raw);
     if (!parsed.success) throw new DispatcherError("INVALID_COMMAND");
     const command = parsed.data;
