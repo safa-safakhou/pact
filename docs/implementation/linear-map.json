@@ -601,8 +601,8 @@
   },
   "source_revision": "1.4 — 2026-10-01 game-only Alpha",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-10-01T11:32:28.000Z",
-  "last_sync_scope": "99-issue scope readback; 13-ticket Alpha (PACT-054 Done, 12 Todo), 28 Later Backlog; current Alpha relation sets and milestone parity checked; PACT-054 checklist/status completion read back.",
+  "last_synced_at": "2026-10-01T12:51:44.000Z",
+  "last_sync_scope": "99-issue status/label readback: 60 Done, 11 Alpha Todo, 28 Later Backlog; PACT-055 both Alpha checks/status/assignee and original unchecked scope read back, revision 796446e; PACT-056 unclaimed with all three dependency statuses Done. Project/guide progress updated. This is not a fresh 99-issue relationship audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",

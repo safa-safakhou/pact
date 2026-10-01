@@ -1,10 +1,10 @@
 # PACT implementation backlog
 
-**99 tickets · 59 Done, 0 In Progress, 12 remaining Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+**99 tickets · 60 Done, 0 In Progress, 11 remaining Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
 
 ## Current assignment — game-only Alpha
 
-The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are in the current track. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054 is Done ([public discovery](reports/public-player-discovery.md), `8d1a2f0`); PACT-055 is next dependency-ready in backlog order. PACT-080 closes this private gameplay track, not production Season One.
+The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are in the current track. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054 is Done ([public discovery](reports/public-player-discovery.md), `8d1a2f0`); PACT-055 is Done ([invitations](reports/invitations.md), `796446e`). PACT-056 is next dependency-ready in backlog order. PACT-080 closes this private gameplay track, not production Season One.
 
 Narrowed acceptance and dependencies are explicit in tasks.json and Linear. Each changed ticket's `original_plan` preserves postponed requirements; Alpha completion does not certify original S/L gates. New PACT-099 owns complete agent-first learning/access and observable activity/reports. No payment, native/Telegram, large pilot, production or art/audio prerequisite blocks the Alpha path. The original four-phase plan below is retained for later reference, not current work selection. Historical completed evidence is unchanged.
 

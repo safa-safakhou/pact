@@ -1,7 +1,7 @@
 # PACT-055 — Contact and Court invitation destinations
 
 Ticket: [PACT-055 / MNI-120](https://linear.app/mnim/issue/MNI-120/pact-055-implement-every-invitation-destination-and-redemption-rule).
-Implementation revision: the commit containing this report; the completion comment in Linear records its exact hash.
+Implementation revision: `796446e`; Linear completion comment `f23b886e-9b0f-4a7c-bd47-96e0b3cae837`. Both current Alpha acceptance checks and Done were read back; original postponed checks remain unchecked. Tracker overview and assignment guide were reconciled to 60 Done, 11 remaining Alpha Todo and 28 postponed Backlog.
 Verified 1 October 2026 with Node 24.19.0, npm 11.19.0 and local PostgreSQL 17 on disposable schemas.
 
 ## Result
