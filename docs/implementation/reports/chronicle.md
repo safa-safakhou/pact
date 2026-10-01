@@ -2,7 +2,7 @@
 
 Ticket: PACT-059 / [MNI-124](https://linear.app/mnim/issue/MNI-124).
 Date/environment: 1 October 2026, local Node 24 / PostgreSQL 17; synthetic fixtures only.
-Revision: implementation commit containing this report (not deployed or pushed).
+Revision: `26bcb62` (not deployed or pushed).
 
 ## Result and acceptance
 

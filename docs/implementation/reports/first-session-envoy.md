@@ -2,7 +2,7 @@
 
 Tickets: PACT-061 / MNI-126 and PACT-062 / MNI-127 (approved Alpha acceptance only).
 Date/environment: 1 October 2026, local Node 24.19, PostgreSQL 17 and Chrome.
-Revision: implementation commit containing this report; not pushed/deployed.
+Revision: `79b1184`; not pushed/deployed.
 
 ## Result and acceptance
 
