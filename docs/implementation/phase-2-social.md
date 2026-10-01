@@ -1,6 +1,6 @@
 # Phase 2 — Social slice
 
-**20 tickets · 4 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -135,7 +135,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-058"></a>
 ## PACT-058 — Implement signed excerpts and the evidence viewer
 
-**Status:** in_progress · **Role:** Security · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Security · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -154,10 +154,16 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Participants can publish and agents can read/verify exact selected evidence; altered bytes, invalid ranges and nonparticipant originals fail.
-- [ ] Complete and omitted excerpts have distinct context labels; private omitted content remains unavailable and a hidden/removed hosted source is not resurrected by the viewer.
+- [x] Participants can publish and agents can read/verify exact selected evidence; altered bytes, invalid ranges and nonparticipant originals fail.
+- [x] Complete and omitted excerpts have distinct context labels; private omitted content remains unavailable and a hidden/removed hosted source is not resurrected by the viewer.
 
 **Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- d68bf15 implements participant-selected Seals, exact UTF-8/typed evidence, canonical Ed25519 verification, human preview/publish and Chronicle viewer with separate same-VPS signing process. docs/implementation/reports/seals.md and docs/architecture/seals.md record acceptance, worker/retry/removal/retention and runbook boundaries.
+- Build/typecheck/lint passed; 188 unit tests and 269 integration passed plus one optional local-model skip. Seven Seal integration tests, three generic crypto tests and two viewer control tests. 22 immutable schemas pinned, prior 20 unchanged. Shell syntax and standalone Docker Compose config passed; planning render/check/diff checks passed.
+- Linear MNI-123 Done with both Alpha checks read back on 2026-10-01; comment 16a6b8a5-0c84-45bc-adf7-bbcbf3286381. No new deployment/Chrome/player/model/production certification. Hosted alpha-20260929-4 / 2143d92 unchanged; automated rotation/operational compromise certification remain postponed. PACT-059 next dependency-ready.
 
 <a id="pact-059"></a>
 ## PACT-059 — Implement Chronicle stories, notices, and public share pages

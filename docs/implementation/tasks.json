@@ -2894,7 +2894,7 @@
       "id": "PACT-058",
       "title": "Implement signed excerpts and the evidence viewer",
       "phase": 2,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Security",
       "size": "L",
@@ -2922,7 +2922,11 @@
       "components": [
         "evidence signing and viewer"
       ],
-      "evidence": [],
+      "evidence": [
+        "d68bf15 implements participant-selected Seals, exact UTF-8/typed evidence, canonical Ed25519 verification, human preview/publish and Chronicle viewer with separate same-VPS signing process. docs/implementation/reports/seals.md and docs/architecture/seals.md record acceptance, worker/retry/removal/retention and runbook boundaries.",
+        "Build/typecheck/lint passed; 188 unit tests and 269 integration passed plus one optional local-model skip. Seven Seal integration tests, three generic crypto tests and two viewer control tests. 22 immutable schemas pinned, prior 20 unchanged. Shell syntax and standalone Docker Compose config passed; planning render/check/diff checks passed.",
+        "Linear MNI-123 Done with both Alpha checks read back on 2026-10-01; comment 16a6b8a5-0c84-45bc-adf7-bbcbf3286381. No new deployment/Chrome/player/model/production certification. Hosted alpha-20260929-4 / 2143d92 unchanged; automated rotation/operational compromise certification remain postponed. PACT-059 next dependency-ready."
+      ],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,

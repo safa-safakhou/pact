@@ -1,7 +1,7 @@
 # Source-backed Seals and evidence viewer
 
 Ticket: [PACT-058 / MNI-123](https://linear.app/mnim/issue/MNI-123/pact-058-implement-signed-excerpts-and-the-evidence-viewer).
-Revision: implementation commit pending. Verified 1 October 2026, Node 24.19 / npm 11.19 / disposable PostgreSQL 17 schemas, synthetic accounts/messages/typed report fixtures, no live inference.
+Revision: `d68bf15`. Linear Done with both Alpha checks read back; comment `16a6b8a5-0c84-45bc-adf7-bbcbf3286381`. Verified 1 October 2026, Node 24.19 / npm 11.19 / disposable PostgreSQL 17 schemas, synthetic accounts/messages/typed report fixtures, no live inference.
 
 ## Acceptance evidence
 

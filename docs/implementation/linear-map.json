@@ -601,8 +601,8 @@
   },
   "source_revision": "1.4 — 2026-10-01 game-only Alpha",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-10-01T13:47:42.000Z",
-  "last_sync_scope": "99-issue status/label readback: 61 Done, 10 Alpha Todo, 28 Later Backlog; PACT-056 both Alpha checks/status/assignee and original unchecked scope read back, revision 490f304, comment b70c7e50-9b0b-4305-9a22-cc193d6832be. PACT-057 unclaimed Todo; its two dependencies were read Done at this assignment start. Project summary/overview and guide progress updated. This is not a fresh 99-issue relationship audit.",
+  "last_synced_at": "2026-10-01T15:08:57.000Z",
+  "last_sync_scope": "99-issue status/label readback: 63 Done, 8 Alpha Todo, 28 Later Backlog, no active claims; PACT-057/058 both Alpha checks/status/assignee and original unchecked scope read back, revisions 03b5a62/d68bf15, comments 5e94ee31-7eb8-433e-b24c-d06a536b8735 / 16a6b8a5-0c84-45bc-adf7-bbcbf3286381. PACT-059 unclaimed Todo and its five dependencies Done; dependencies read before claiming this batch. Project summary/overview and guide progress updated. This is not a fresh 99-issue relationship audit.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
