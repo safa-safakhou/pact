@@ -601,7 +601,8 @@
   },
   "source_revision": "1.4 — 2026-10-01 game-only Alpha",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-10-01T19:49:27.558Z",
+  "last_synced_at": "2026-10-01T21:59:34.515Z",
+  "latest_followup_sync": "PACT-099 reopened for founder-reported OAuth button blocker and returned to Done after e07dd47 / alpha-20261001-2 deployment/public verification and fresh Chrome synthetic login feedback. Comment 97d3c0f0-7e94-4960-97f5-8949fd10fbf0; report oauth-button-fix.md. No other issue or postponed scope changed. Prior full closure sync scope below retained as history.",
   "last_sync_scope": "PACT-099/MNI-158 and PACT-080/MNI-155 freshly Done/read back with checked narrowed Alpha acceptance and linked completion reports/comments db6bb46a-bdbd-4be9-9b2c-0400ded0498a and 5cb5a440-3216-4a6c-b70a-74716d5845e5. All 13 prerequisites freshly Done before 080 claim. 13/13 Alpha complete, 71 total Done, 28 Later Backlog carried forward; not a new full 99-issue audit. Project overview/summary and start guide updated/read back; Alpha milestone 100%, original project remains unfinished for postponed production work. Implementation 8789315/88c273f deployed alpha-20261001-1, migrations 0036–0044, backup 537793fe and public verification passed. Build/typecheck/lint, 212 unit and full final 284 integration pass, optional live-model skip. Three independent fresh Luna players made five actual moves from ordinary objectives; owner reports match, pending negotiation and mixed feedback documented, temporary grants revoked. No paid PACT inference/new infrastructure/production claim. Friend connection and final rehearsal docs added; original Later acceptance preserved.",
   "status_map": {
     "Backlog": "todo",
