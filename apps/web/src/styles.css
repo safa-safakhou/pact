@@ -54,6 +54,56 @@ main {
 .game-shell {
   margin: 0 auto;
   line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.game-shell :where(section, article, div, form, label, fieldset) {
+  min-width: 0;
+}
+.game-shell :where(input, select, textarea) {
+  max-width: 100%;
+}
+.game-shell input:where([type="checkbox"], [type="radio"]) {
+  width: 1.5rem;
+  margin: 0;
+}
+.game-shell :where(a, summary):focus-visible,
+.game-confirm:focus,
+.game-nav:focus {
+  outline: 3px solid #174a4b;
+  outline-offset: 3px;
+}
+.game-shell a {
+  color: #174a4b;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 2.75rem;
+  max-width: 100%;
+}
+.game-shell summary {
+  min-height: 2.75rem;
+  padding-block: 0.5rem;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -5rem;
+  padding: 0.75rem;
+  background: #fffefa;
+  z-index: 10;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+.connection-notice {
+  border-left: 3px solid #174a4b;
+  padding: 0.25rem 0.75rem;
+  margin-block: 0.75rem;
+}
+.connection-notice p {
+  margin-block: 0.5rem;
 }
 .game-header {
   display: flex;
@@ -150,6 +200,8 @@ main {
   width: 100%;
   text-align: left;
   margin: 0.45rem 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 .game-person strong {
   font-size: 1rem;
@@ -230,6 +282,9 @@ main {
 .game-shell form {
   gap: 0.8rem;
 }
+.court-panel button {
+  margin: 0.25rem;
+}
 .game-shell input,
 .game-shell select,
 .game-shell textarea,
@@ -240,6 +295,8 @@ main {
   border: 1px solid #6a7d78;
   border-radius: 0.4rem;
   font: inherit;
+  min-width: 0;
+  max-width: 100%;
 }
 .game-shell textarea {
   min-height: 6rem;
@@ -281,6 +338,9 @@ main {
   overflow-wrap: anywhere;
 }
 @media (max-width: 640px) {
+  .game-confirm {
+    position: static;
+  }
   .game-header {
     align-items: start;
   }
@@ -418,9 +478,6 @@ main {
 .court-panel textarea {
   min-height: 4rem;
   width: min(28rem, 100%);
-}
-.court-panel button {
-  margin: 0.25rem;
 }
 .court-result {
   overflow-wrap: anywhere;

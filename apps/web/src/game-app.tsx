@@ -6,6 +6,7 @@ import { CourtPanel } from "./court-panel.js";
 import { EvidencePanel } from "./evidence-panel.js";
 import { FirstSession } from "./first-session.js";
 import { InvitationPanel } from "./invitation-panel.js";
+import { LiveConnection, liveFetch } from "./live-connection.js";
 import { createWebPactClient } from "./pact-client.js";
 import { PoliticsPanel } from "./politics-panel.js";
 import { RefreshGate } from "./refresh-gate.js";
@@ -146,15 +147,28 @@ function owner(value: unknown): OwnerView {
 export function GameApp(): React.JSX.Element {
   const apiOrigin = useMemo(() => new URL(import.meta.env.BASE_URL, window.location.origin), []);
   const telegramBootstrap = useMemo(() => readTelegramBootstrap(window.location.search), []);
+  const connection = useMemo(() => new LiveConnection(navigator.onLine), []);
+  const [connectionStatus, setConnectionStatus] = useState(connection.status);
+  const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
+  const confirmation = useRef<HTMLElement | null>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
+  const send = useMemo(
+    () =>
+      liveFetch(window.fetch.bind(window), connection, () => {
+        setConnectionStatus(connection.status);
+        setPendingAction(null);
+      }),
+    [connection],
+  );
   const [csrf, setCsrf] = useState(() => sessionStorage.getItem("pact_csrf") ?? "");
   const client = useMemo(
     () =>
       createWebPactClient({
         apiOrigin: apiOrigin.toString(),
         csrfToken: () => csrf || undefined,
-        fetch: window.fetch.bind(window),
+        fetch: send,
       }),
-    [apiOrigin, csrf],
+    [apiOrigin, csrf, send],
   );
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
   const [tab, setTab] = useState<Tab>(() =>
@@ -188,7 +202,7 @@ export function GameApp(): React.JSX.Element {
 
   const request = useCallback(
     async (path: string, method = "GET", body?: unknown): Promise<Json> => {
-      const response = await fetch(new URL(path.replace(/^\//, ""), apiOrigin), {
+      const response = await send(new URL(path.replace(/^\//, ""), apiOrigin), {
         method,
         credentials: "include",
         headers: {
@@ -199,13 +213,14 @@ export function GameApp(): React.JSX.Element {
       });
       return readWebResponse(response);
     },
-    [apiOrigin, csrf],
+    [apiOrigin, csrf, send],
   );
 
   const refresh = useCallback(async () => {
     const gate = refreshGate.current;
     const ticket = gate.begin();
     if (ticket === null) return;
+    const connectionRevision = connection.beginRefresh();
     try {
       const current = await request("/v1/kingdom/me");
       if (!gate.isCurrent(ticket)) return;
@@ -221,6 +236,7 @@ export function GameApp(): React.JSX.Element {
         setDraft(null);
         sessionStorage.removeItem("pact_csrf");
         setCsrf("");
+        setLastRefreshed(null);
         setRefreshFailure("");
         setNotice("Player changed in another tab. Sign in again before taking an action.");
         setAuth("login");
@@ -233,6 +249,10 @@ export function GameApp(): React.JSX.Element {
       setView(nextView);
       setAuth("ready");
       setRefreshFailure("");
+      if (connection.confirmRefresh(connectionRevision)) {
+        setConnectionStatus(connection.status);
+        setLastRefreshed(new Date().toLocaleTimeString());
+      }
       setNotice((current) => (current === "Signed in. Loading your kingdom…" ? "" : current));
       try {
         const nextSocial = (await request("/v1/game/social")) as unknown as SocialOverview;
@@ -263,20 +283,45 @@ export function GameApp(): React.JSX.Element {
           if (!gate.isCurrent(ticket)) return;
           setDraft(nextDraft);
           setAuth("draft");
+          if (connection.confirmRefresh(connectionRevision)) setConnectionStatus(connection.status);
         } catch {
           if (!gate.isCurrent(ticket)) return;
           setAuth("login");
         }
       } else if (["FORBIDDEN", "AUTHENTICATION_REQUIRED", "INVALID_CREDENTIALS"].includes(failure(error))) {
         setAuth("login");
+        if (connection.confirmRefresh(connectionRevision)) setConnectionStatus(connection.status);
       } else {
+        connection.invalidate();
+        setConnectionStatus(connection.status);
+        setPendingAction(null);
         setRefreshFailure(`World refresh failed: ${failure(error)}`);
         setAuth((current) => (current === "checking" ? "login" : current));
       }
     } finally {
       gate.finish(ticket);
     }
-  }, [client, request]);
+  }, [client, request, connection]);
+
+  useEffect(() => {
+    const changed = () => {
+      connection.invalidate(navigator.onLine);
+      setConnectionStatus(connection.status);
+      setPendingAction(null);
+      refreshGate.current.invalidate();
+      if (navigator.onLine) void refresh();
+    };
+    window.addEventListener("offline", changed);
+    window.addEventListener("online", changed);
+    return () => {
+      window.removeEventListener("offline", changed);
+      window.removeEventListener("online", changed);
+    };
+  }, [connection, refresh]);
+
+  useEffect(() => {
+    if (pendingAction) confirmation.current?.focus();
+  }, [pendingAction]);
 
   useEffect(() => {
     void refresh();
@@ -306,6 +351,7 @@ export function GameApp(): React.JSX.Element {
       refreshGate.current.invalidate();
       refreshGate.current.resume();
       visibleKingdom.current = "";
+      setLastRefreshed(null);
       setTarget("");
       setPendingAction(null);
       setView(null);
@@ -356,6 +402,10 @@ export function GameApp(): React.JSX.Element {
   }
 
   async function act(action: SandboxAction): Promise<void> {
+    if (!connection.writable) {
+      setNotice("Refresh live state before deciding again. No action was queued.");
+      return;
+    }
     setBusy(true);
     setNotice("");
     const command = client.prepareCommand(action);
@@ -377,8 +427,14 @@ export function GameApp(): React.JSX.Element {
     }
   }
   function confirmAction(summary: string, action: SandboxAction): void {
+    if (!connection.writable) return;
+    returnFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setPendingAction({ summary, action });
   }
+  const canWrite = Boolean(csrf) && !busy && connectionStatus === "live";
+  const connectionNotice = (
+    <ConnectionNotice status={connectionStatus} lastRefreshed={lastRefreshed} onRefresh={() => void refresh()} />
+  );
 
   if (telegramBootstrap)
     return (
@@ -391,7 +447,7 @@ export function GameApp(): React.JSX.Element {
             onSubmit={(event) => {
               event.preventDefault();
               setBusy(true);
-              void confirmTelegramLink(window.fetch.bind(window), apiOrigin, telegramBootstrap, { email, password })
+              void confirmTelegramLink(send, apiOrigin, telegramBootstrap, { email, password })
                 .then(() => {
                   setTelegramLinked(true);
                   setPassword("");
@@ -428,6 +484,7 @@ export function GameApp(): React.JSX.Element {
     return (
       <main className="game-shell auth-shell">
         <h1>PACT Alpha</h1>
+        {connectionNotice}
         <p>Sign in with a private test account. Manual play does not require a model provider.</p>
         <InvitationPanel request={request} authenticated={false} canWrite={false} />
         {new URLSearchParams(window.location.search).has("post") && (
@@ -474,8 +531,9 @@ export function GameApp(): React.JSX.Element {
     return (
       <main className="game-shell auth-shell">
         <h1>Found your kingdom</h1>
+        {connectionNotice}
         <p>Your name and handle become public on entry. This private Alpha uses a test portrait.</p>
-        <InvitationPanel request={request} authenticated canWrite={Boolean(csrf)} />
+        <InvitationPanel request={request} authenticated canWrite={canWrite} />
         <form
           onSubmit={(event) => {
             void found(event);
@@ -489,7 +547,7 @@ export function GameApp(): React.JSX.Element {
             Public handle
             <input name="handle" pattern="[a-z][a-z0-9_]{2,23}" required defaultValue={draft?.proposedHandle ?? ""} />
           </label>
-          <button type="submit" disabled={busy}>
+          <button type="submit" disabled={!canWrite}>
             Found kingdom
           </button>
         </form>
@@ -497,8 +555,11 @@ export function GameApp(): React.JSX.Element {
       </main>
     );
   return (
-    <main className="game-shell">
-      <InvitationPanel request={request} authenticated canWrite={Boolean(csrf)} kingdomId={kingdomId} />
+    <main className="game-shell" id="game-content" tabIndex={-1}>
+      <a className="skip-link" href="#game-areas">
+        Skip to game areas
+      </a>
+      <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
       <header className="game-header">
         <div>
           <p className="eyebrow">PACT · private Alpha</p>
@@ -536,6 +597,7 @@ export function GameApp(): React.JSX.Element {
               setKingdomId("");
               setDraft(null);
               setAuth("login");
+              setLastRefreshed(null);
             }}
           >
             Switch test player
@@ -543,7 +605,8 @@ export function GameApp(): React.JSX.Element {
         </div>
       </header>
       {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
-      <nav className="game-nav" aria-label="Game areas">
+      {connectionNotice}
+      <nav className="game-nav" id="game-areas" tabIndex={-1} aria-label="Game areas">
         {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
           <button
             type="button"
@@ -569,7 +632,7 @@ export function GameApp(): React.JSX.Element {
           onArea={setTab}
         />
       )}
-      {tab === "Envoy" && <RunPanel request={request} contacts={social?.contacts ?? []} />}
+      {tab === "Envoy" && <RunPanel request={request} contacts={social?.contacts ?? []} canWrite={canWrite} />}
       {notice && (
         <p className="game-notice" role="status">
           {notice}
@@ -581,14 +644,25 @@ export function GameApp(): React.JSX.Element {
         </p>
       )}
       {pendingAction && (
-        <section className="game-confirm" aria-label="Confirm game action">
+        <section
+          className="game-confirm"
+          aria-label="Confirm game action"
+          ref={confirmation}
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key === "Escape") {
+              setPendingAction(null);
+              returnFocus.current?.focus();
+            }
+          }}
+        >
           <div>
             <strong>Confirm this action</strong>
             <p>{pendingAction.summary}</p>
           </div>
           <button
             type="button"
-            disabled={busy}
+            disabled={!canWrite}
             onClick={() => {
               const action = pendingAction.action;
               setPendingAction(null);
@@ -597,7 +671,14 @@ export function GameApp(): React.JSX.Element {
           >
             Confirm
           </button>
-          <button type="button" className="secondary" onClick={() => setPendingAction(null)}>
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => {
+              setPendingAction(null);
+              returnFocus.current?.focus();
+            }}
+          >
             Cancel
           </button>
         </section>
@@ -605,7 +686,7 @@ export function GameApp(): React.JSX.Element {
       {tab === "Kingdom" && view && (
         <Kingdom
           view={view}
-          busy={busy}
+          busy={!canWrite}
           act={act}
           social={social}
           kingdomId={kingdomId}
@@ -614,6 +695,7 @@ export function GameApp(): React.JSX.Element {
       )}
       {tab === "Envoy" && (
         <Envoy
+          canWrite={canWrite}
           inbox={inbox}
           request={request}
           onNotice={setNotice}
@@ -625,14 +707,14 @@ export function GameApp(): React.JSX.Element {
           }}
         />
       )}
-      {tab === "People" && <CourtPanel request={request} kingdomId={kingdomId} canWrite={Boolean(csrf) && !busy} />}
-      {tab === "People" && <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={Boolean(csrf) && !busy} />}
+      {tab === "People" && <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />}
+      {tab === "People" && <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />}
       {tab === "People" && (
         <People
           request={request}
           client={client}
           act={act}
-          busy={busy}
+          busy={!canWrite}
           view={view}
           kingdomId={kingdomId}
           social={social}
@@ -643,10 +725,10 @@ export function GameApp(): React.JSX.Element {
           charges={view?.charges ?? []}
         />
       )}
-      {tab === "Chronicle" && <EvidencePanel request={request} canWrite={Boolean(csrf) && !busy} />}
+      {tab === "Chronicle" && <EvidencePanel request={request} canWrite={canWrite} />}
       {tab === "Kingdom" && <SeasonPanel request={request} kingdomId={kingdomId} />}
-      {tab === "Chronicle" && <ChroniclePanel request={request} canWrite={Boolean(csrf) && !busy} />}
-      {tab === "People" && <ChroniclePanel request={request} canWrite={Boolean(csrf) && !busy} noticesOnly />}
+      {tab === "Chronicle" && <ChroniclePanel request={request} canWrite={canWrite} />}
+      {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
       {tab === "Chronicle" && view && (
         <Chronicle
           view={view}
@@ -659,6 +741,35 @@ export function GameApp(): React.JSX.Element {
         />
       )}
     </main>
+  );
+}
+
+export function ConnectionNotice({
+  status,
+  lastRefreshed,
+  onRefresh,
+}: {
+  status: "live" | "offline" | "stale";
+  lastRefreshed: string | null;
+  onRefresh: () => void;
+}) {
+  return (
+    <section className="connection-notice" aria-label="Game connection" role="status" aria-live="polite">
+      <p>
+        {status === "offline"
+          ? "Offline — displayed information is stale. Game actions are disabled; nothing is queued."
+          : status === "stale"
+            ? "Live refresh required — displayed information may be stale. Review fresh state and decide again; signatures, raids and approvals are not replayed."
+            : lastRefreshed
+              ? `Last owner refresh: ${lastRefreshed}. The server rechecks every action.`
+              : "Game actions require a live server response."}
+      </p>
+      {status !== "live" && (
+        <button type="button" onClick={onRefresh}>
+          Refresh live state
+        </button>
+      )}
+    </section>
   );
 }
 
@@ -1045,6 +1156,7 @@ export function Kingdom({
 }
 
 function Envoy({
+  canWrite,
   inbox,
   request,
   onNotice,
@@ -1052,6 +1164,7 @@ function Envoy({
   apiOrigin,
   onCsrfChange,
 }: {
+  canWrite: boolean;
   inbox: { sequence: string; type: string; event: unknown }[];
   request: (path: string, method?: string, body?: unknown) => Promise<Json>;
   onNotice: (message: string) => void;
@@ -1063,6 +1176,13 @@ function Envoy({
   const approvalGeneration = useRef(0);
   const [loadedApprovalId, setLoadedApprovalId] = useState("");
   const [review, setReview] = useState<Json | null>(null);
+  useEffect(() => {
+    if (!canWrite) {
+      approvalGeneration.current++;
+      setReview(null);
+      setLoadedApprovalId("");
+    }
+  }, [canWrite]);
   const [mandate, setMandate] = useState<{
     version: number;
     allowedActions: string[];
@@ -1079,7 +1199,7 @@ function Envoy({
   }, [request, onNotice]);
 
   async function setPlaytestMandate(enabled: boolean): Promise<void> {
-    if (!mandate) return;
+    if (!canWrite || !mandate) return;
     if (
       enabled &&
       !window.confirm(
@@ -1121,7 +1241,12 @@ function Envoy({
     }
   }
   async function decide(approve: boolean): Promise<void> {
-    if (!review || !window.confirm(`${approve ? "Approve" : "Reject"} this exact server-rendered request?`)) return;
+    if (
+      !canWrite ||
+      !review ||
+      !window.confirm(`${approve ? "Approve" : "Reject"} this exact server-rendered request?`)
+    )
+      return;
     try {
       const result = await request(
         `/v1/approvals/${encodeURIComponent(loadedApprovalId)}/${approve ? "approve" : "reject"}`,
@@ -1148,10 +1273,15 @@ function Envoy({
           Current authority:{" "}
           {mandate?.allowedActions.includes("raid.commit") ? "bounded playtest" : "read and contact messages only"}.
         </p>
-        <button type="button" disabled={!mandate} onClick={() => void setPlaytestMandate(true)}>
+        <button type="button" disabled={!canWrite || !mandate} onClick={() => void setPlaytestMandate(true)}>
           Enable bounded agent playtest
         </button>{" "}
-        <button type="button" className="secondary" disabled={!mandate} onClick={() => void setPlaytestMandate(false)}>
+        <button
+          type="button"
+          className="secondary"
+          disabled={!canWrite || !mandate}
+          onClick={() => void setPlaytestMandate(false)}
+        >
           Disable new agent game actions
         </button>
         <p>
@@ -1198,6 +1328,7 @@ function Envoy({
             <pre>{JSON.stringify(review, null, 2)}</pre>
             <button
               type="button"
+              disabled={!canWrite}
               onClick={() => {
                 void decide(true);
               }}
@@ -1207,6 +1338,7 @@ function Envoy({
             <button
               type="button"
               className="secondary"
+              disabled={!canWrite}
               onClick={() => {
                 void decide(false);
               }}

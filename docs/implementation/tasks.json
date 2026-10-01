@@ -3927,7 +3927,7 @@
       "id": "PACT-073",
       "title": "Finish responsive accessibility and PWA behavior",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -3957,7 +3957,7 @@
         "PWA"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "Mohammad Safakhou / Codex",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

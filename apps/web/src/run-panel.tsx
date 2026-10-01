@@ -76,9 +76,11 @@ export function RunResult({ report }: { report: Report }) {
 export function RunPanel({
   request,
   contacts,
+  canWrite = true,
 }: {
   request: Request;
   contacts: { kingdomId: string; handle: string }[];
+  canWrite?: boolean;
 }) {
   const [runs, setRuns] = useState<Run[]>([]),
     [connections, setConnections] = useState<{ id: string; provider: string; label: string; status: string }[]>([]),
@@ -92,6 +94,9 @@ export function RunPanel({
     [report, setReport] = useState<Report | null>(null);
   const generation = useRef(0);
   const reportGeneration = useRef(0);
+  useEffect(() => {
+    if (!canWrite) setConfirmed(false);
+  }, [canWrite]);
   async function readReport(runId: string) {
     const g = ++reportGeneration.current;
     setReport(null);
@@ -136,6 +141,7 @@ export function RunPanel({
     };
   }, [request]);
   async function control(run: Run, action: string) {
+    if (!canWrite) return;
     setBusy(true);
     setError("");
     try {
@@ -160,7 +166,7 @@ export function RunPanel({
         onSubmit={async (e) => {
           e.preventDefault();
           const connection = connections.find((c) => c.id === credentialId);
-          if (!connection || !confirmed) return;
+          if (!canWrite || !connection || !confirmed) return;
           setBusy(true);
           setError("");
           try {
@@ -253,7 +259,7 @@ export function RunPanel({
           <input type="checkbox" checked={confirmed} onChange={(e) => setConfirmed(e.target.checked)} />I explicitly
           confirm this provider/model and token-bounded run.
         </label>
-        <button type="submit" disabled={busy || !confirmed || !credentialId}>
+        <button type="submit" disabled={!canWrite || busy || !confirmed || !credentialId}>
           Start bounded Envoy
         </button>
       </form>
@@ -279,17 +285,17 @@ export function RunPanel({
             Read recorded result
           </button>
           {["running", "waiting"].includes(r.status) && (
-            <button type="button" disabled={busy} onClick={() => void control(r, "stop")}>
+            <button type="button" disabled={!canWrite || busy} onClick={() => void control(r, "stop")}>
               Stop new actions
             </button>
           )}
           {r.status === "running" && (
-            <button type="button" disabled={busy} onClick={() => void control(r, "wait")}>
+            <button type="button" disabled={!canWrite || busy} onClick={() => void control(r, "wait")}>
               Wait without inference
             </button>
           )}
           {r.status === "waiting" && (
-            <button type="button" disabled={busy} onClick={() => void control(r, "resume")}>
+            <button type="button" disabled={!canWrite || busy} onClick={() => void control(r, "resume")}>
               Explicitly resume within original limits
             </button>
           )}

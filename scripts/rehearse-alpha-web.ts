@@ -39,7 +39,7 @@ await world.bootstrap();
 await pool.query("UPDATE world_clocks SET next_tick_due_at=clock_timestamp()+interval '1 hour'");
 const ledger = new ResourceLedger("pact");
 const kingdoms = new KingdomService(pool, { productScope: "pact", onboarding, world, ledger });
-for (const handle of ["rehearsal_amber", "rehearsal_birch"]) {
+for (const handle of ["rehearsal_amber", "rehearsal_birch", "rehearsal_draft"]) {
   await identity.signup({
     email: `${handle}@example.test`,
     password: "Synthetic rehearsal password 123!",
@@ -60,6 +60,7 @@ for (const handle of ["rehearsal_amber", "rehearsal_birch"]) {
     expectedVersion: draft.version,
   });
   await onboarding.recordConnectionCheck(payload.accountId);
+  if (handle === "rehearsal_draft") continue; // Keyboard/phone founding through the actual web flow.
   const founded = await kingdoms.activate(payload.accountId);
   // Explicit synthetic ordinary stock, not an advertised founding entitlement.
   await withTransaction(pool, async (c) => {
