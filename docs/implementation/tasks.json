@@ -3740,7 +3740,7 @@
       "id": "PACT-069",
       "title": "Implement the complete six-week season lifecycle",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -3766,7 +3766,7 @@
       "components": [
         "season lifecycle and newcomer cohorts"
       ],
-      "evidence": ["Claimed MNI-140 on 2026-10-01 after PACT-053 read Done in Linear. Season lifecycle first, followed by PACT-070 only after this acceptance passes."],
+      "evidence": ["1 October 2026: f0763b7 completes both Alpha checks; MNI-140 read back Done. Paused six-week production, pre-boundary closure/new baseline, exact-age newcomer snapshots, shared API/MCP/agent/web views, no asset/term reset. Node 24 build/typecheck/lint; 202 unit and 281 PostgreSQL integration pass, one existing skip; final targeted regressions 10 pass. See docs/implementation/reports/season-lifecycle.md. Local only; hosted remains 2143d92."],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
@@ -3793,7 +3793,7 @@
       "id": "PACT-070",
       "title": "Implement seasonal honors and award review",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -3821,8 +3821,8 @@
       "components": [
         "award calculation and review"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": ["Claimed MNI-141 on 1 October 2026 after MNI-118 and MNI-140 freshly read Done. Alpha provisional honors only; no formal final-award operation."],
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

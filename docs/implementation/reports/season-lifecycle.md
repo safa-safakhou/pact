@@ -1,7 +1,7 @@
 # Season lifecycle
 
 Ticket: PACT-069 / [MNI-140](https://linear.app/mnim/issue/MNI-140).
-Implementation revision: this report's implementation commit.
+Implementation revision: `f0763b7`.
 Environment: 1 October 2026, local Node 24 and isolated PostgreSQL 17 schemas.
 
 ## Result and acceptance

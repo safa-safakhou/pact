@@ -330,6 +330,13 @@ export class SupplySettlementService {
     for (const item of batch.obligations)
       byContract.set(item.contract.id, [...(byContract.get(item.contract.id) ?? []), item]);
     for (const [contractId, items] of byContract) {
+      if (items.some((item) => item.allocated > 0n))
+        await appendOutbox(client, {
+          productScope: this.productScope,
+          eventId: randomUUID(),
+          type: "supply.delivery.executed.v1",
+          payload: { contractId, gameTimeMs },
+        });
       if (items.length !== 2 || items.some((item) => item.due <= 0n || item.allocated !== item.due)) continue;
       const contract = items[0]?.contract;
       if (!contract) continue;

@@ -10,7 +10,7 @@ export function registerSeasonRoutes(
   server: FastifyInstance,
   pool: Pool,
   identity: IdentityService,
-  seasons: SeasonService,
+  seasons: Pick<SeasonService, "readCurrent">,
   oauth?: OAuthService,
 ) {
   server.get<{ Querystring: { cohortStartGameTimeMs?: string } }>("/v1/seasons", async (request, reply) => {

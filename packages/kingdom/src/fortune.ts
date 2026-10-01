@@ -205,9 +205,11 @@ export class FortuneService {
     return (
       await client.query<KingdomRow>(
         `SELECT k.id, k.handle, k.activated_game_time_ms,
-         COALESCE(h.level, 1) AS hall_level, b.marked_value_numerator, b.marked_value_denominator
+         GREATEST(COALESCE(h.level, 1),COALESCE(e.highest_hall,1)) AS hall_level, b.marked_value_numerator, b.marked_value_denominator
        FROM kingdoms k JOIN kingdom_score_baselines b ON b.product_scope = k.product_scope AND b.kingdom_id = k.id
        LEFT JOIN kingdom_buildings h ON h.product_scope = k.product_scope AND h.kingdom_id = k.id AND h.kind = 'hall'
+       LEFT JOIN season_clock s ON s.product_scope=k.product_scope
+       LEFT JOIN season_entries e ON e.product_scope=k.product_scope AND e.kingdom_id=k.id AND e.season_number=s.current_number
        WHERE k.product_scope = $1 AND k.status = 'ranked' ORDER BY k.id`,
         [this.productScope],
       )

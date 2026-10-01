@@ -18,6 +18,7 @@ export * from "./report-reader.js";
 export * from "./retirement.js";
 export * from "./scouting.js";
 export * from "./seals.js";
+export * from "./season-honors.js";
 export * from "./seasons.js";
 export * from "./service.js";
 export * from "./social.js";

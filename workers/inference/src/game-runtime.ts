@@ -51,9 +51,9 @@ import {
   PoliticsService,
   RaidRandomnessService,
   RaidService,
+  readSeasonOverview,
   ScoutService,
   SealService,
-  SeasonService,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -276,7 +276,7 @@ export async function createInferenceGameRuntime(
           const query = SeasonReadQuerySchema.parse(call.arguments);
           const result = await withTransaction(
             pool,
-            (c) => new SeasonService(productScope).readCurrent(c, query.cohortStartGameTimeMs, input.run.accountId),
+            (c) => readSeasonOverview(c, productScope, query.cohortStartGameTimeMs, input.run.accountId),
             { isolation: "REPEATABLE READ" },
           );
           results.push({ callId: call.id, content: JSON.stringify(result) });

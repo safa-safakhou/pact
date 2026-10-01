@@ -115,6 +115,9 @@ services:
 
   rules:
     <<: *runtime
+    environment:
+      <<: *runtime-environment
+      PACT_SEASON_OPENING_GAME_TIME_MS: ${PACT_SEASON_OPENING_GAME_TIME_MS:-}
     command: ["npm", "run", "start", "--workspace", "@pact/rules-worker"]
     secrets:
       - postgres_password

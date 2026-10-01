@@ -12,6 +12,7 @@ import {
   RaidRandomnessService,
   RaidService,
   ScoutService,
+  SeasonHonorsService,
   SeasonService,
   SocialService,
   SupplyExposureAdapter,
@@ -45,6 +46,7 @@ export function createRulesRuntime(
   const garrison = new GarrisonService(productScope, ledger, troops, exposure);
   const fortune = new FortuneService(productScope);
   const seasons = new SeasonService(productScope, seasonOpeningGameTimeMs);
+  const honors = new SeasonHonorsService(productScope);
   const upkeep = new UpkeepService(productScope, ledger, new GarrisonUpkeepExposureAdapter(productScope, exposure));
   const limits = new ActionLimitService(productScope);
   const achievements = new AchievementService(productScope);
@@ -68,7 +70,11 @@ export function createRulesRuntime(
   );
   let retirement: KingdomRetirementService;
   const handlers: TickHandlers = {
-    season_rollover: (client, context) => seasons.beforeTick(client, context),
+    season_rollover: async (client, context) => {
+      await honors.processActivity(client, context.gameTimeMs - 1);
+      await seasons.beforeTick(client, context);
+      await honors.closeSeasons(client);
+    },
     boundaries_and_completions: async (client, context) => {
       await ledger.expireFoundingAllowances(client, context);
       await buildings.settleMinute(client, context);
@@ -101,6 +107,8 @@ export function createRulesRuntime(
     },
     views_and_achievements: async (client, context) => {
       await seasons.afterTick(client, context);
+      await honors.processActivity(client, context.gameTimeMs);
+      await honors.arrivals(client);
       await achievements.processPending(client);
     },
   };
@@ -115,5 +123,5 @@ export function createRulesRuntime(
     buildings,
     troops,
   );
-  return { world, handlers, ledger, buildings, troops, scouting, raids, fortune, achievements, seasons };
+  return { world, handlers, ledger, buildings, troops, scouting, raids, fortune, achievements, seasons, honors };
 }

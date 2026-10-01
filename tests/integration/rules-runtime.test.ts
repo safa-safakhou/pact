@@ -336,6 +336,8 @@ describe("production rules composition", () => {
             expect((await fresh.achievements.read(client, observer.accountId)).achievements).toEqual(
               expect.arrayContaining(["first_stone", "first_pact"]),
             );
+            for (const owner of [attacker, defender, observer])
+              expect((await fresh.honors.read(client, owner.accountId)).ownMeaningfulDays).toBe(1);
           }
           await client.query("INSERT INTO phase_trace VALUES ($1,$2)", [ordinal, phase]);
           if (phase === fault) throw new Error(`FAULT_AFTER_${phase}`);

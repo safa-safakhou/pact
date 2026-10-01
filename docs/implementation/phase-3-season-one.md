@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**21 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**21 tickets · 1 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -64,7 +64,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-069"></a>
 ## PACT-069 — Implement the complete six-week season lifecycle
 
-**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -83,19 +83,19 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] An accelerated isolated six-week fixture applies 100/100/90/80/80/100 percent Farm multipliers and assigns the boundary tick to the correct season.
-- [ ] Contracts/raids crossing season or pause keep their terms; assets persist and age-seven-day cohorts compare the correct snapshots with no scoring reset exploit.
+- [x] An accelerated isolated six-week fixture applies 100/100/90/80/80/100 percent Farm multipliers and assigns the boundary tick to the correct season.
+- [x] Contracts/raids crossing season or pause keep their terms; assets persist and age-seven-day cohorts compare the correct snapshots with no scoring reset exploit.
 
 **Assignee:** Codex / Mohammad Safakhou
 
 **Evidence**
 
-- Claimed MNI-140 on 2026-10-01 after PACT-053 read Done in Linear. Season lifecycle first, followed by PACT-070 only after this acceptance passes.
+- 1 October 2026: f0763b7 completes both Alpha checks; MNI-140 read back Done. Paused six-week production, pre-boundary closure/new baseline, exact-age newcomer snapshots, shared API/MCP/agent/web views, no asset/term reset. Node 24 build/typecheck/lint; 202 unit and 281 PostgreSQL integration pass, one existing skip; final targeted regressions 10 pass. See docs/implementation/reports/season-lifecycle.md. Local only; hosted remains 2143d92.
 
 <a id="pact-070"></a>
 ## PACT-070 — Implement seasonal honors and award review
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -116,6 +116,12 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] Small friend groups see truthful ranks but no unsupported percentile honors; ties, highest band and three meaningful-day eligibility match the rulebook.
 - [ ] Season/arrival/participation processing is retry-safe and never changes resources, troops or Fortune; formal competitive rewards remain explicitly provisional, not falsely finalized.
+
+**Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- Claimed MNI-141 on 1 October 2026 after MNI-118 and MNI-140 freshly read Done. Alpha provisional honors only; no formal final-award operation.
 
 <a id="pact-071"></a>
 ## PACT-071 — Produce and integrate the illustrated kingdom and cosmetics

@@ -31,8 +31,10 @@ import {
   PoliticsService,
   RaidRandomnessService,
   RaidService,
+  readSeasonOverview,
   ScoutService,
   SealService,
+  SeasonHonorsService,
   SeasonService,
   SocialOverviewReader,
   SocialService,
@@ -96,6 +98,11 @@ const kingdom = new KingdomService(pool, {
 const politics = new PoliticsService(pool, "pact", clock);
 const worldViews = new WorldViewService(pool, "pact", undefined, politics);
 const seasons = new SeasonService("pact");
+const honors = new SeasonHonorsService("pact");
+const seasonViews = {
+  readCurrent: (c: import("pg").PoolClient, cohortStart?: number, accountId?: string) =>
+    readSeasonOverview(c, "pact", cohortStart, accountId),
+};
 const socialOverview = new SocialOverviewReader(pool, "pact");
 const inbox = new InboxService(pool, { productScope: "pact", clock });
 const runs = new RunService(pool, {
@@ -231,7 +238,7 @@ const mcp = new McpTransport({
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   seasons: {
     read: (query, accountId) =>
-      withTransaction(pool, (c) => seasons.readCurrent(c, query.cohortStartGameTimeMs, accountId), {
+      withTransaction(pool, (c) => seasonViews.readCurrent(c, query.cohortStartGameTimeMs, accountId), {
         isolation: "REPEATABLE READ",
       }),
   },
@@ -283,6 +290,12 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    {
+      name: "seasonHonors",
+      forgetAccount: (c, id) => honors.forgetAccount(c, id),
+      exportAccount: (c, id) => honors.exportAccount(c, id),
+      prune: (c, now) => honors.prune(c, now),
+    },
     {
       name: "seasons",
       forgetAccount: (c, id) => seasons.forgetAccount(c, id),
@@ -344,7 +357,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   worldViews,
   socialOverview,
   invitations,
-  seasons,
+  seasons: seasonViews,
   courts,
   politics,
   seals,

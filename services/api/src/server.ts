@@ -70,7 +70,7 @@ export interface ApiModules {
   politics?: import("@pact/kingdom").PoliticsService;
   seals?: import("@pact/kingdom").SealService;
   chronicle?: import("@pact/kingdom").ChronicleService;
-  seasons?: import("@pact/kingdom").SeasonService;
+  seasons?: Pick<import("@pact/kingdom").SeasonService, "readCurrent">;
   reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;

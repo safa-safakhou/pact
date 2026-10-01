@@ -1,7 +1,23 @@
 import { randomUUID } from "node:crypto";
-import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
+import {
+  appendOutbox,
+  createPool,
+  createSchemaPool,
+  createTestSchema,
+  dropTestSchema,
+  withTransaction,
+} from "@pact/db";
 import { wholeResources } from "@pact/domain";
-import { GAME_WEEK_MS, SEASON_MS, SeasonService, WorldViewService } from "@pact/kingdom";
+import {
+  ActionLimitService,
+  GAME_DAY_MS,
+  GAME_WEEK_MS,
+  readSeasonOverview,
+  SEASON_MS,
+  SeasonService,
+  SocialService,
+  WorldViewService,
+} from "@pact/kingdom";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createRulesRuntime } from "../../workers/rules/src/runtime.js";
@@ -227,6 +243,8 @@ describe("authoritative season lifecycle", () => {
       (await pool.query("SELECT to_jsonb(c) AS value FROM supply_contracts c WHERE id=$1", [contractId])).rows,
     ).toEqual(contractBefore);
     expect((await pool.query("SELECT * FROM supply_installments WHERE contract_id=$1", [contractId])).rowCount).toBe(1);
+    expect((await withTransaction(pool, (c) => fresh.honors.read(c, owner.accountId))).ownMeaningfulDays).toBe(1);
+    expect((await withTransaction(pool, (c) => fresh.honors.read(c, target.accountId))).ownMeaningfulDays).toBe(1);
     expect(view.standings[0]).not.toHaveProperty("wealthQuarterUnits");
     expect(view.standings[0]).not.toHaveProperty("baselineQuarterUnits");
     await expect(
@@ -252,5 +270,130 @@ describe("authoritative season lifecycle", () => {
     expect((await pool.query("SELECT 1 FROM season_entries WHERE season_number=2")).rowCount).toBeGreaterThan(0);
     await withTransaction(pool, (c) => service.forgetAccount(c, account));
     expect((await withTransaction(pool, (c) => service.exportAccount(c, account))).seasons).toHaveLength(0);
+  });
+  it("counts actual meaningful actions, issues neutral cosmetics once and never finalizes competitive honors", async () => {
+    const a = await player(SEASON_MS),
+      b = await player(SEASON_MS + GAME_DAY_MS),
+      idle = await player(SEASON_MS);
+    await credit(a.kingdomId, 100);
+    const [low, high] = [a.kingdomId, b.kingdomId].sort();
+    await pool.query(
+      "INSERT INTO social_contacts(product_scope,kingdom_a,kingdom_b,accepted_game_time_ms) VALUES('pact',$1,$2,$3)",
+      [low, high, SEASON_MS],
+    );
+    const social = new SocialService("pact", runtime().ledger, new ActionLimitService("pact"), {
+      now: () => new Date(),
+    });
+    for (const day of [1, 1, 2, 3]) {
+      await withTransaction(pool, (c) =>
+        social.transfer(c, {
+          accountId: a.accountId,
+          recipientKingdomId: b.kingdomId,
+          resource: "grain",
+          wholeAmount: 1,
+          actorKind: "human",
+          operationKey: randomUUID(),
+          gameTimeMs: SEASON_MS + day * GAME_DAY_MS,
+        }),
+      );
+    }
+    // Login, prose and training events do not count; forged completion without a durable record does not count.
+    for (const type of ["session.started.v1", "message.sent.v1", "training.unit.completed.v1", "building.completed.v1"])
+      await withTransaction(pool, (c) =>
+        appendOutbox(c, {
+          productScope: "pact",
+          eventId: randomUUID(),
+          type,
+          payload: {
+            kingdomId: idle.kingdomId,
+            instructionId: randomUUID(),
+            batchId: randomUUID(),
+            gameTimeMs: SEASON_MS + GAME_DAY_MS,
+          },
+        }),
+      );
+    await tick(SEASON_MS + GAME_WEEK_MS);
+    const first = (
+      await pool.query("SELECT fortune_quarter_units FROM newcomer_snapshots WHERE kingdom_id=$1", [a.kingdomId])
+    ).rows[0]?.fortune_quarter_units;
+    const beforeNext = await withTransaction(pool, (c) => readSeasonOverview(c, "pact", undefined, b.accountId));
+    expect(beforeNext.cohorts.find((r) => r.kingdomId === b.kingdomId)?.status).toBe("pending");
+    await tick(SEASON_MS + GAME_WEEK_MS + GAME_DAY_MS);
+    expect(
+      (await pool.query("SELECT fortune_quarter_units FROM newcomer_snapshots WHERE kingdom_id=$1", [a.kingdomId]))
+        .rows[0]?.fortune_quarter_units,
+    ).toBe(first);
+    const captured = await withTransaction(pool, (c) => readSeasonOverview(c, "pact", undefined, b.accountId));
+    expect(captured.cohorts.find((r) => r.kingdomId === b.kingdomId)?.status).toBe("captured");
+    expect(captured.honors.ownCosmetics).toContain("medal.arrival");
+    expect(captured.honors.ownMeaningfulDays).toBe(3);
+    expect((await withTransaction(pool, (c) => runtime().honors.read(c, idle.accountId))).ownMeaningfulDays).toBe(0);
+    await pool.query("UPDATE season_entries SET highest_hall=6 WHERE kingdom_id=$1 AND season_number=2", [a.kingdomId]);
+    expect(
+      (
+        await withTransaction(pool, (c) => runtime().fortune.provisional(c, SEASON_MS + GAME_WEEK_MS + GAME_DAY_MS))
+      ).find((r) => r.kingdomId === a.kingdomId)?.band,
+    ).toBe("V-VI");
+    await tick(2 * SEASON_MS);
+    const result = await withTransaction(pool, (c) => readSeasonOverview(c, "pact", undefined, a.accountId));
+    expect(result.honors).toMatchObject({ seasonNumber: 2, competitiveStatus: "provisional", finalized: false });
+    expect(result.honors.results.find((r) => r.kingdomId === a.kingdomId)).toMatchObject({
+      eligible: true,
+      meaningfulDays: 3,
+      band: "V-VI",
+      provisionalBorder: null,
+      provisionalPlaque: true,
+    });
+    expect(result.honors.results.find((r) => r.kingdomId === idle.kingdomId)).toMatchObject({
+      eligible: false,
+      provisionalPlaque: false,
+    });
+    expect(result.honors.ownCosmetics).toEqual(["banner.season.2", "medal.arrival"]);
+    const assets = (
+      await pool.query("SELECT to_jsonb(b) AS value FROM resource_balances b ORDER BY kingdom_id,resource")
+    ).rows;
+    const troops = (await pool.query("SELECT to_jsonb(t) AS value FROM kingdom_troops t ORDER BY id")).rows;
+    const score = (await pool.query("SELECT * FROM kingdom_score_baselines ORDER BY kingdom_id")).rows;
+    const cosmetics = (await pool.query("SELECT * FROM cosmetic_entitlements ORDER BY account_id,item_id")).rows;
+    await withTransaction(pool, async (c) => {
+      await runtime().honors.processActivity(c, 2 * SEASON_MS);
+      await runtime().honors.closeSeasons(c);
+      await runtime().honors.arrivals(c);
+    });
+    expect((await pool.query("SELECT * FROM cosmetic_entitlements ORDER BY account_id,item_id")).rows).toEqual(
+      cosmetics,
+    );
+    expect(
+      (await pool.query("SELECT to_jsonb(b) AS value FROM resource_balances b ORDER BY kingdom_id,resource")).rows,
+    ).toEqual(assets);
+    expect((await pool.query("SELECT to_jsonb(t) AS value FROM kingdom_troops t ORDER BY id")).rows).toEqual(troops);
+    expect((await pool.query("SELECT * FROM kingdom_score_baselines ORDER BY kingdom_id")).rows).toEqual(score);
+    expect(
+      (
+        await pool.query(
+          "SELECT item_id FROM cosmetic_entitlements WHERE item_id LIKE 'border.%' OR item_id LIKE 'plaque.%'",
+        )
+      ).rowCount,
+    ).toBe(0);
+    expect((await withTransaction(pool, (c) => runtime().honors.exportAccount(c, a.accountId))).results).toHaveLength(
+      1,
+    );
+    await withTransaction(pool, (c) => runtime().honors.forgetAccount(c, a.accountId));
+    expect((await withTransaction(pool, (c) => runtime().honors.exportAccount(c, a.accountId))).results).toHaveLength(
+      0,
+    );
+    await pool.query("UPDATE season_honor_results SET recorded_at=clock_timestamp()-interval '181 days'");
+    await pool.query("UPDATE season_meaningful_days SET recorded_at=clock_timestamp()-interval '181 days'");
+    await withTransaction(pool, (c) => runtime().honors.prune(c, new Date()));
+    expect((await pool.query("SELECT 1 FROM season_honor_results")).rowCount).toBe(0);
+    expect((await pool.query("SELECT 1 FROM season_meaningful_days WHERE season_number=2")).rowCount).toBe(0);
+    expect(
+      (
+        await pool.query(
+          "SELECT 1 FROM cosmetic_entitlements WHERE account_id=$1 AND item_id IN ('banner.season.2','medal.arrival')",
+          [b.accountId],
+        )
+      ).rowCount,
+    ).toBe(2);
   });
 });

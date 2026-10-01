@@ -50,4 +50,41 @@ describe("season summary", () => {
     ])
       expect(html).toContain(text);
   });
+  it("shows closing results and cosmetics without claiming finalized or small-band honors", () => {
+    const view: SeasonView = {
+      current: { configured: true, number: 2 },
+      standings: [],
+      cohorts: [],
+      honors: {
+        seasonNumber: 1,
+        ownMeaningfulDays: 2,
+        requiredMeaningfulDays: 3,
+        ownCosmetics: ["medal.arrival", "banner.season.1"],
+        results: [
+          {
+            kingdomId: "own",
+            handle: "fixture",
+            overallRank: 1,
+            band: "I-II",
+            bandRank: 1,
+            eligible: true,
+            meaningfulDays: 3,
+            provisionalBorder: null,
+            provisionalPlaque: true,
+            eligibleBandPopulation: 2,
+          },
+        ],
+      },
+    };
+    const html = renderToStaticMarkup(<SeasonSummary view={view} kingdomId="own" />);
+    for (const text of [
+      "provisional closing results",
+      "provisional top-three plaque",
+      "fewer than 100 eligible players",
+      "not issued as final entitlements",
+      "medal.arrival",
+      "2/3",
+    ])
+      expect(html).toContain(text);
+  });
 });

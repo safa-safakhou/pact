@@ -73,6 +73,7 @@ describe("API/database smoke", () => {
       { name: "0040_evidence_seals.sql" },
       { name: "0041_chronicle.sql" },
       { name: "0042_seasons.sql" },
+      { name: "0043_season_honors.sql" },
     ]);
     await server.close();
   });

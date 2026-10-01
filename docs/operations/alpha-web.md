@@ -1,5 +1,9 @@
 # Private Alpha web controls
 
+## Local season update — 1 October 2026 (not deployed)
+
+PACT-069/070 add the Kingdom tab's **Season & Fortune** card: actual game week, Grain harvest, next game-time transition, signed provisional Fortune, equal-age arrival status and meaningful-day count. Closure shows public competition ranks and provisional honors. Arrival medals/dated participation banners are display-only; bands below 100 eligible players receive no percentile claim. Competitive borders/plaques are not finalized in Alpha. See [season/agent/API instructions](../architecture/seasons.md). This requires migrations through `0043_season_honors.sql` and matching rules/API/web releases; it has not been deployed to the hosted Alpha.
+
 ## Local social/run update — 1 October 2026 (not deployed)
 
 PACT-059/061/062 add public Chronicle stories/notices, exact player-handle lookup in People, a first-session checklist derived from actual owner/social projections, and visible bounded Envoy start/stop/wait/resume/report controls. Reports distinguish committed instructions, proposals, failures and human approvals; assessments are explicitly non-factual. Receipt links read the exact owned receipt. Approval links open Envoy with the exact ID; preview is still required and changing the lookup clears it. Latest-selected report/profile reads cannot be replaced by older responses. Social-read failure is unknown, not zero contacts or successful trade. These changes are local only; the hosted revision below remains unchanged.

@@ -28,6 +28,24 @@ export type SeasonView = {
     dueGameTimeMs: number;
     finalized: boolean;
   }[];
+  honors?: {
+    seasonNumber: number | null;
+    ownMeaningfulDays: number;
+    requiredMeaningfulDays: number;
+    ownCosmetics: string[];
+    results: {
+      kingdomId: string;
+      handle: string;
+      overallRank: number;
+      band: string;
+      bandRank: number;
+      eligible: boolean;
+      meaningfulDays: number;
+      provisionalBorder: string | null;
+      provisionalPlaque: boolean;
+      eligibleBandPopulation: number;
+    }[];
+  };
 };
 export function SeasonSummary({ view, kingdomId }: { view: SeasonView; kingdomId: string }) {
   if (!view.current.configured) return <p>Season opens with the next committed game tick.</p>;
@@ -71,6 +89,34 @@ export function SeasonSummary({ view, kingdomId }: { view: SeasonView; kingdomId
         </p>
       )}
       <p>Ranks are provisional, not finalized competitive honors.</p>
+      {view.honors && (
+        <>
+          <h3>Participation & results</h3>
+          <p>
+            Your meaningful days this season: {view.honors.ownMeaningfulDays}/3. Completed builds, player exchanges,
+            scouts and resolved raids count; logins, messages and training alone do not.
+          </p>
+          <p>
+            Earned display cosmetics: {view.honors.ownCosmetics.join(", ") || "None yet"}. They give no game advantage.
+          </p>
+          {view.honors.seasonNumber !== null && (
+            <h4>Season {view.honors.seasonNumber} · provisional closing results</h4>
+          )}
+          {view.honors.results.map((r) => (
+            <p key={r.kingdomId}>
+              @{r.handle} · rank {r.overallRank} · band {r.band} rank {r.bandRank} · {r.meaningfulDays} meaningful days
+              · {r.eligible ? "eligible" : "needs three meaningful days"}
+              {r.provisionalPlaque ? " · provisional top-three plaque" : ""}
+              {r.provisionalBorder
+                ? ` · provisional ${r.provisionalBorder} border`
+                : r.eligibleBandPopulation < 100
+                  ? " · no percentile honor (fewer than 100 eligible players)"
+                  : ""}
+            </p>
+          ))}
+          <p>Competitive borders and plaques are not issued as final entitlements during Alpha.</p>
+        </>
+      )}
     </>
   );
 }
