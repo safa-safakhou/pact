@@ -21,6 +21,7 @@ export function createApplication(
   });
 }
 
+export { AgentGuideReader, type AgentGuideTopic } from "./agent-guide.js";
 export { describeApprovalEffects } from "./approval-effects.js";
 export { canonicalPayloadHash } from "./canonical.js";
 export * from "./chronicle-facts.js";

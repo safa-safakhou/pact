@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import {
+  AgentGuideReader,
   CommandDispatcher,
   dispatchRunCommandTools,
   GameCommandHandler,
@@ -7,7 +8,7 @@ import {
   runToolCommandId,
 } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
-import { ExactHumanPermitService, ExposureService } from "@pact/authority";
+import { ExactHumanPermitService, ExposureService, readMandateContext } from "@pact/authority";
 import { type CommandEnvelope, ProductScopeSchema, pactApprovalProposalTool } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import {
@@ -30,6 +31,7 @@ import {
   RaidRandomnessService,
   RaidService,
   ScoutService,
+  SocialOverviewReader,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -207,6 +209,84 @@ function command(
 }
 
 describe("shared gameplay command admission", () => {
+  it("shares owner lessons and real exact-handle discovery with the in-app worker without a write", async () => {
+    const owner = await kingdom();
+    const other = await kingdom();
+    const handle = (await pool.query<{ handle: string }>("SELECT handle FROM kingdoms WHERE id=$1", [other.kingdomId]))
+      .rows[0]?.handle;
+    if (!handle) throw new Error("Missing fixture handle");
+    const views = new WorldViewService(pool, "pact");
+    const guide = new AgentGuideReader(views, new SocialOverviewReader(pool, "pact"), {
+      getMandate: async (accountId) => {
+        const value = await withTransaction(pool, (client) => readMandateContext(client, "pact", accountId));
+        return value.version === null
+          ? null
+          : { ...value, version: value.version, sessionLimit: value.sessionLimit ?? 0 };
+      },
+    });
+    const before = (await pool.query("SELECT count(*)::text AS count FROM command_receipts")).rows;
+    for (const [toolName, args] of [
+      ["pact_agent_guide_v1", { topic: "start" }],
+      ["pact_agent_guide_v1", { topic: "military" }],
+      ["pact_agent_guide_v1", { topic: "authority" }],
+      ["pact_player_find_v1", { handle: handle.toUpperCase() }],
+      ["pact_player_find_v1", { handle: "MissingSyntheticPlayer" }],
+    ] as const) {
+      const runtime = await createInferenceGameRuntime({
+        pool,
+        productScope: "pact",
+        clock: { now: () => new Date() },
+        termsVersion: "terms-v1",
+        providerRouter: new ProviderRouter([
+          new DeterministicFakeProvider({ scenario: "success", toolName, toolArguments: args }),
+        ]),
+      });
+      const started = await runtime.runs.start({
+        accountId: owner.accountId,
+        objective: "Learn the game and find real opportunities",
+        provider: "fixture",
+        model: fakeProviderModel.id,
+        limits: { maxCalls: 1 },
+      });
+      expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({ status: "finished" });
+      const row = (
+        await pool.query<{ summary: string }>("SELECT summary FROM envoy_run_tool_results WHERE run_id=$1", [
+          started.runId,
+        ])
+      ).rows[0];
+      const result = JSON.parse(row?.summary ?? "null");
+      if (toolName === "pact_agent_guide_v1" && "topic" in args && args.topic === "start") {
+        expect(result).toMatchObject({ state: "active", surface: "in_app" });
+        expect(JSON.stringify(result.next)).toContain("pact_chronicle_read_v1");
+        expect(JSON.stringify(result.next)).toContain("pact_command_v1");
+        expect(JSON.stringify(result.next)).not.toContain("Open run.open");
+        expect(Buffer.byteLength(row?.summary ?? "", "utf8")).toBeLessThanOrEqual(3_600);
+      } else if (toolName === "pact_agent_guide_v1" && "topic" in args && args.topic === "military") {
+        const { surface: _surface, ...external } = await guide.read(owner.accountId, "military");
+        expect(result).toEqual({ ...external, surface: "in_app" });
+        expect(result.garrison.minimumLenderHallLevel).toBe(3);
+      } else if (toolName === "pact_agent_guide_v1") {
+        expect(result.rule).toContain("already holds the bounded write lease");
+        expect(result.recovery.uncertainResult).toContain("original commandId");
+      } else if ("handle" in args && args.handle === handle.toUpperCase()) {
+        expect(result.report).toMatchObject({
+          found: true,
+          kingdom: { profile: { kingdomId: other.kingdomId } },
+          untrustedContent: true,
+        });
+        expect(JSON.stringify(result)).not.toContain("balances");
+        expect(JSON.stringify(result)).not.toContain("troops");
+      } else expect(result.report).toMatchObject({ found: false, kingdom: null });
+      expect((await runtime.runs.report(started.runId, owner.accountId)).entries).toEqual([]);
+    }
+    expect((await pool.query("SELECT count(*)::text AS count FROM command_receipts")).rows).toEqual(before);
+    const start = await guide.read(owner.accountId, "start");
+    expect(start.self).toMatchObject({ kingdomId: owner.kingdomId });
+    expect(start.contacts).toEqual([]);
+    expect(JSON.stringify(start.next)).toContain("pact_chronicle_read_v1");
+    expect(JSON.stringify(start.next)).not.toContain("not yet implemented");
+  });
+
   it("creates a review-only cold-contact proposal through model and MCP without agent approval privilege", async () => {
     const modelOwner = await kingdom();
     const modelTarget = await kingdom();

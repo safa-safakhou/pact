@@ -79,6 +79,8 @@ describe("agent guide", () => {
     const result = await guide.read(accountId, "start");
     expect(calls).toEqual([accountId, accountId, [accountId, "kingdom-one", 15]]);
     expect(result).toMatchObject({
+      lessonVersion: "pact.agent-lessons.2026-10-01.1",
+      surface: "external",
       state: "active",
       self: { kingdomId: "kingdom-one" },
       resources: { iron: { ordinaryMarked: "12600", ordinaryWholeFloor: "21" } },
@@ -107,5 +109,23 @@ describe("agent guide", () => {
     expect(JSON.stringify(diplomacy)).toContain("Reading a page does not join");
     const military = await guide.read("account-one", "military");
     expect(military).toMatchObject({ scouting: { spearmenRequired: 2, unitIdsOptional: true } });
+  });
+
+  it("gives an in-app run its existing lease instructions and identical pure lessons", async () => {
+    const ports = [
+      { read: async () => null } as unknown as WorldViewService,
+      { read: async () => null } as unknown as SocialOverviewReader,
+      { getMandate: async () => null } as unknown as AuthorityService,
+    ] as const;
+    const external = new AgentGuideReader(...ports);
+    const inApp = new AgentGuideReader(...ports, "in_app");
+    for (const topic of ["development", "diplomacy", "military"] as const) {
+      const { surface: _surface, ...actual } = await inApp.read("owner", topic);
+      const { surface: _externalSurface, ...expected } = await external.read("owner", topic);
+      expect(actual).toEqual(expected);
+    }
+    const authority = await inApp.read("owner", "authority");
+    expect(authority.rule).toContain("already holds the bounded write lease");
+    expect(authority.rule).not.toContain("Open run.open");
   });
 });

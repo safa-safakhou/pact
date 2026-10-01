@@ -3,12 +3,38 @@ import { describe, expect, it } from "vitest";
 import {
   boundedCommandReceiptResult,
   boundedConversationResult,
+  boundedGuideResult,
   boundedRecordResult,
   boundedReportResult,
   boundedWorldResult,
 } from "./run-read-results.js";
 
 describe("bounded model read results", () => {
+  it("preserves guide instructions and complete facts while declaring oversized groups unknown", () => {
+    const guide = {
+      topic: "start",
+      lessonVersion: "test.v1",
+      rulesId: "rules.v1",
+      surface: "in_app",
+      markedUnitsPerWhole: 600,
+      state: "active",
+      next: ["Read real notices. Never invent a player."],
+      resources: { iron: { ordinaryMarked: "12600", ordinaryWholeFloor: "21" } },
+      troops: Array.from({ length: 500 }, (_, n) => ({ id: `troop-${n}` })),
+    };
+    const result = boundedGuideResult(guide);
+    expect(Buffer.byteLength(result, "utf8")).toBeLessThanOrEqual(3_600);
+    expect(JSON.parse(result)).toMatchObject({
+      next: guide.next,
+      resources: guide.resources,
+      truncated: true,
+      omittedFields: ["troops"],
+    });
+    expect(JSON.parse(result)).not.toHaveProperty("troops");
+    expect(boundedGuideResult({ topic: "military", scouting: { cost: 2 } })).toBe(
+      JSON.stringify({ topic: "military", scouting: { cost: 2 } }),
+    );
+  });
   it("omits oversized private report content with an explicit truncation marker", () => {
     const result = boundedReportResult("scout", "record-id", { privateText: "x".repeat(10_000) });
     expect(JSON.parse(result)).toEqual({ kind: "scout", recordId: "record-id", truncated: true });

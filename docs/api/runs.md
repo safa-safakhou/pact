@@ -2,6 +2,8 @@
 
 Tickets: PACT-021, PACT-049, PACT-062 (Alpha).
 
+PACT-099 learning increment (local, not deployed): the inference worker now exposes the same `pact_agent_guide_v1` and `pact_player_find_v1` schemas/readers as MCP. Guides derive identity from the current run, carry `lessonVersion`/`rulesId`, and explain the existing run lease rather than opening a second one. Exact-handle lookup returns only the public projection, including for the owner; missing handles remain `found:false`. Guide results keep complete fact groups within 3,600 UTF-8 bytes; oversized groups are listed in `omittedFields` with `truncated:true` and authorized read-tool directions. Omitted facts are unknown, not zero or authority. Existing private 30-day run-result retention/export applies; no new storage or migration is introduced. Read-only guide/discovery results do not become fictitious committed/failed command entries in factual reports. External MCP activity journaling and fresh uncoached agent observations remain incomplete under PACT-099.
+
 `@pact/runs` owns exclusive kingdom/subject write leases and the Envoy run lifecycle: start, wait, resume, stop, takeover, and MCP lease acquisition without inference.
 
 ## HTTP

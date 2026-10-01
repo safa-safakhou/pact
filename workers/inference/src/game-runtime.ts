@@ -1,4 +1,5 @@
 import {
+  AgentGuideReader,
   ChronicleFactReader,
   CommandDispatcher,
   dispatchRunCommandTools,
@@ -8,20 +9,24 @@ import {
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readMandateContext, readReserveFloor } from "@pact/authority";
 import {
+  AgentGuideQuerySchema,
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ChronicleReadQuerySchema,
   ConversationReadQuerySchema,
   CourtReadQuerySchema,
   InboxReadQuerySchema,
+  PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
+  pactAgentGuideTool,
   pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactChronicleReadTool,
   pactConversationReadTool,
   pactCourtReadTool,
   pactInboxReadTool,
+  pactPlayerFindTool,
   pactPoliticsReadTool,
   pactReceiptReadTool,
   pactReportReadTool,
@@ -54,6 +59,7 @@ import {
   readSeasonOverview,
   ScoutService,
   SealService,
+  SocialOverviewReader,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -71,6 +77,7 @@ import { ownerRunContext } from "./run-context.js";
 import {
   boundedCommandReceiptResult,
   boundedConversationResult,
+  boundedGuideResult,
   boundedRecordResult,
   boundedReportResult,
   boundedWorldResult,
@@ -108,6 +115,19 @@ export async function createInferenceGameRuntime(
   const courts = new CourtService(pool, productScope, clock);
   const politics = new PoliticsService(pool, productScope, clock);
   const views = new WorldViewService(pool, productScope);
+  const guide = new AgentGuideReader(
+    views,
+    new SocialOverviewReader(pool, productScope),
+    {
+      getMandate: async (accountId) => {
+        const mandate = await withTransaction(pool, (client) => readMandateContext(client, productScope, accountId));
+        return mandate.version === null
+          ? null
+          : { ...mandate, version: mandate.version, sessionLimit: mandate.sessionLimit ?? 0 };
+      },
+    },
+    "in_app",
+  );
   const inbox = new InboxService(pool, { productScope, clock });
   const conversations = new ConversationReader(pool, productScope);
   const approvalStatuses = new ApprovalStatusReader(pool, productScope, clock);
@@ -155,6 +175,8 @@ export async function createInferenceGameRuntime(
     },
     tools: [
       pactRunCommandTool,
+      { ...pactAgentGuideTool, parseArguments: (input: unknown) => AgentGuideQuerySchema.parse(input) },
+      { ...pactPlayerFindTool, parseArguments: (input: unknown) => PlayerFindQuerySchema.parse(input) },
       inboxReadTool,
       conversationReadTool,
       worldReadTool,
@@ -171,6 +193,27 @@ export async function createInferenceGameRuntime(
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        if (call.name === pactAgentGuideTool.name) {
+          const query = AgentGuideQuerySchema.parse(call.arguments);
+          results.push({
+            callId: call.id,
+            content: boundedGuideResult(await guide.read(input.run.accountId, query.topic)),
+          });
+          continue;
+        }
+        if (call.name === pactPlayerFindTool.name) {
+          const query = PlayerFindQuerySchema.parse(call.arguments);
+          const profile = await views.publicProfile(query.handle);
+          results.push({
+            callId: call.id,
+            content: boundedReportResult(call.name, "public-discovery", {
+              found: profile !== null,
+              kingdom: profile,
+              untrustedContent: true,
+            }),
+          });
+          continue;
+        }
         if (
           call.name === pactChronicleReadTool.name ||
           call.name === pactCourtReadTool.name ||
