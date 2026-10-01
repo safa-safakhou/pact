@@ -1,6 +1,7 @@
 import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { CourtPanel } from "./court-panel.js";
 import { InvitationPanel } from "./invitation-panel.js";
 import { createWebPactClient } from "./pact-client.js";
 import { RefreshGate } from "./refresh-gate.js";
@@ -150,7 +151,9 @@ export function GameApp(): React.JSX.Element {
     [apiOrigin, csrf],
   );
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
-  const [tab, setTab] = useState<Tab>("Kingdom");
+  const [tab, setTab] = useState<Tab>(() =>
+    new URLSearchParams(window.location.search).has("court") ? "People" : "Kingdom",
+  );
   const [draft, setDraft] = useState<Draft | null>(null);
   const [kingdomId, setKingdomId] = useState("");
   const [view, setView] = useState<OwnerView | null>(null);
@@ -585,6 +588,7 @@ export function GameApp(): React.JSX.Element {
           }}
         />
       )}
+      {tab === "People" && <CourtPanel request={request} kingdomId={kingdomId} canWrite={Boolean(csrf) && !busy} />}
       {tab === "People" && (
         <People
           client={client}

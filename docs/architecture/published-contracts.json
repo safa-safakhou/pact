@@ -1,4 +1,6 @@
 {
+  "courtCommandJsonSchema": "11b0721410d6e8e2aa0be3667750ebe184456673214311ab281ec1713f56cbf4",
+  "courtReadQueryJsonSchema": "06d1ba2195a35c432af368ea6e1641e70019b941db625928faef21f34dba7582",
   "socialCommandJsonSchema": "80ebb58481bba6eb7fbd54383ddf38ecee33974a7b7254b6e2c24b674ba35b77",
   "playerFindQueryJsonSchema": "890e43f14b4350717f364fb42bcde2b29428c8748987e6d4f640b3b5f29db3c3",
   "agentGameActionJsonSchema": "cbac41ac17daef7c2f50d43cc4809beb1ba82f6d189e38f2f70df4632f6cd217",

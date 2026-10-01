@@ -51,7 +51,7 @@ export class AgentGuideReader {
         firstContact:
           "Use a known kingdom ID from a contact, invitation, or public notice. The recipient's human owner must accept a cold request before direct messages. Do not invent another player.",
         discovery:
-          "Find a known handle with pact_player_find_v1, or read existing contacts and pending requests. Public notice discovery is not implemented yet. Contact and Court invitation acceptance requires the human to open the invitation in PACT and explicitly accept; an Envoy cannot consent for them. If no real introduction is available, explain that to the human.",
+          "Find a known handle with pact_player_find_v1, or read existing contacts and pending requests. Discover Courts with pact_court_read_v1 (omit handle to list; offset paginates 50), then read an exact Court handle and roster. Courts own no armies or resources. Court creation, joining/requests, roles, pinned prose and consenting ownership transfer require the human in PACT People; open the returned humanDecision path. Contact and Court invitations likewise require explicit human acceptance. Reading a page does not join. Public Chronicle notice discovery is not implemented yet. If no real introduction is available, explain that to the human.",
         examplesUsePlaceholders:
           "Replace angle-bracket placeholders with real UUIDs from an authorized read. Never submit a placeholder or invent an identity.",
         exampleActions: [

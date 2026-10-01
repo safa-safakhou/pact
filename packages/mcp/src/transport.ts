@@ -6,6 +6,7 @@ import {
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ConversationReadQuerySchema,
+  CourtReadQuerySchema,
   commandJsonSchema,
   InboxReadQuerySchema,
   PlayerFindQuerySchema,
@@ -14,6 +15,7 @@ import {
   pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactConversationReadTool,
+  pactCourtReadTool,
   pactGameActionTool,
   pactInboxReadTool,
   pactPlayerFindTool,
@@ -62,6 +64,7 @@ export interface McpTransportOptions {
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
   readonly publicProfiles?: { read(handle: string): Promise<unknown | null> };
+  readonly courts?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
   readonly agentGuide?: AgentGuideReader;
   readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
@@ -213,6 +216,7 @@ export class McpTransport {
               ...(this.options.publicProfiles && principal.agentScopes?.includes("world:read")
                 ? [pactPlayerFindTool]
                 : []),
+              ...(this.options.courts && principal.agentScopes?.includes("world:read") ? [pactCourtReadTool] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.conversations && principal.agentScopes?.includes("world:read")
@@ -354,6 +358,13 @@ export class McpTransport {
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const kingdom = await this.options.publicProfiles.read(query.data.handle);
       const result = { found: kingdom !== null, kingdom, untrustedContent: true };
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactCourtReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.courts) throw new McpError("FORBIDDEN", 403);
+      const query = CourtReadQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const result = await this.options.courts.read(query.data.handle, query.data.offset, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactWorldReadTool.name) {

@@ -1,5 +1,7 @@
 # Destination invitations
 
+PACT-056 now supplies full Court management and its shared membership service: see [Court communities](courts.md). The invitation adapter delegates to it rather than maintaining separate membership rules. Migration 0038 adds Court-owned requests, transfer, pins and audit.
+
 PACT-055 adds contact/Court links using `InvitationService`, `CourtInvitationDestination` and the shared `CommandDispatcher.dispatchSocial`. The original gameplay v1 schema is unchanged; the additive `pact.social-command.v1` input is pinned separately. Later action families require a new versioned export rather than changing this published schema.
 
 ## Human flow

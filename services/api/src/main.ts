@@ -20,6 +20,7 @@ import {
   ConstructionExposureAdapter,
   ConversationReader,
   CourtInvitationDestination,
+  CourtService,
   GarrisonService,
   ImmediateExposureAdapter,
   InvitationService,
@@ -107,7 +108,8 @@ const social = new SocialService(
   clock,
   new ImmediateExposureAdapter(new ExposureService("pact")),
 );
-const courtInvitations = new CourtInvitationDestination("pact", clock);
+const courts = new CourtService(pool, "pact", clock);
+const courtInvitations = new CourtInvitationDestination("pact", clock, courts);
 const invitations = new InvitationService(pool, "pact", social, clock, { court: courtInvitations });
 const troops = new TroopService(
   "pact",
@@ -170,7 +172,7 @@ const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
-  social: new SocialCommandHandler(invitations),
+  social: new SocialCommandHandler(invitations, courts),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
     execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
@@ -208,6 +210,7 @@ const mcp = new McpTransport({
   worldViews,
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
+  courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
   profile: {
     read: async (accountId) => {
       const owner = await kingdom.getByAccount(accountId);
@@ -284,6 +287,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   worldViews,
   socialOverview,
   invitations,
+  courts,
   gameTime: async () => (await world.read()).gameTimeMs,
   reports,
   dispatcher,

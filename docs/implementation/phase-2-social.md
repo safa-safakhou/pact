@@ -71,7 +71,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-056"></a>
 ## PACT-056 — Implement Court membership, roles, and lifecycle
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -92,6 +92,8 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] Create/join/leave, requests and invitations obey membership/ownership limits and role rules, including concurrent joins and consented transfer.
 - [ ] Leaving or closing a Court preserves independent contacts, contracts, troops and allegiance; an invitation grants membership only.
+
+**Assignee:** Codex / Mohammad Safakhou
 
 <a id="pact-057"></a>
 ## PACT-057 — Implement Articles and mutual allegiance

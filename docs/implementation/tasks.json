@@ -2776,7 +2776,7 @@
       "id": "PACT-056",
       "title": "Implement Court membership, roles, and lifecycle",
       "phase": 2,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2805,7 +2805,7 @@
         "Court service"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

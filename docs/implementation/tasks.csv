@@ -60,7 +60,7 @@ PACT-096,Demonstrate platform-module reuse outside PACT,1,done,verification,Arch
 PACT-053,Accept the transactional rules prototype,1,done,gate,Release,S,PACT-027;PACT-028;PACT-029;PACT-030;PACT-031;PACT-032;PACT-033;PACT-034;PACT-035;PACT-036;PACT-037;PACT-038;PACT-039;PACT-040;PACT-041;PACT-042;PACT-043;PACT-044;PACT-045;PACT-046;PACT-047;PACT-048;PACT-049;PACT-050;PACT-051;PACT-052;PACT-096,R01;R02;R03;R04;R05;R06;R07;R08,phase-1-rules.md#pact-053
 PACT-054,Implement public profiles and handle lifecycle,2,done,implementation,Backend,M,PACT-053,G01,phase-2-social.md#pact-054
 PACT-055,Implement every invitation destination and redemption rule,2,done,implementation,Backend,M,PACT-053;PACT-054,G01,phase-2-social.md#pact-055
-PACT-056,"Implement Court membership, roles, and lifecycle",2,todo,implementation,Backend,M,PACT-053;PACT-054;PACT-055,G01,phase-2-social.md#pact-056
+PACT-056,"Implement Court membership, roles, and lifecycle",2,in_progress,implementation,Backend,M,PACT-053;PACT-054;PACT-055,G01,phase-2-social.md#pact-056
 PACT-057,Implement Articles and mutual allegiance,2,todo,implementation,Backend,M,PACT-053;PACT-054,G01,phase-2-social.md#pact-057
 PACT-058,Implement signed excerpts and the evidence viewer,2,todo,implementation,Security,L,PACT-042;PACT-053;PACT-054,G01,phase-2-social.md#pact-058
 PACT-059,"Implement Chronicle stories, notices, and public share pages",2,todo,implementation,Frontend,L,PACT-053;PACT-055;PACT-056;PACT-057;PACT-058,G01;G03,phase-2-social.md#pact-059

@@ -1,19 +1,26 @@
-import type { SocialCommand } from "@pact/contracts";
-import type { InvitationService } from "@pact/kingdom";
+import type { CourtCommand, SocialCommand } from "@pact/contracts";
+import type { CourtService, InvitationService } from "@pact/kingdom";
 import type { PoolClient } from "pg";
 import type { SocialCommandPort } from "./dispatcher.js";
 import { type AuthenticatedPrincipal, DispatcherError } from "./types.js";
 
 /** All invitation writes are explicit authenticated human decisions, never an agent's implied consent. */
 export class SocialCommandHandler implements SocialCommandPort {
-  constructor(private readonly invitations: InvitationService) {}
+  constructor(
+    private readonly invitations: InvitationService,
+    private readonly courts?: CourtService,
+  ) {}
   async execute(
     client: PoolClient,
     principal: AuthenticatedPrincipal,
-    command: SocialCommand,
+    command: SocialCommand | CourtCommand,
     gameTimeMs: number,
   ): Promise<{ recordVersions: Record<string, number>; result: unknown }> {
     if (principal.audience !== "human") throw new DispatcherError("FORBIDDEN");
+    if (command.schemaVersion === "pact.court-command.v1") {
+      if (!this.courts) throw new DispatcherError("INVALID_COMMAND");
+      return this.courts.execute(client, principal.accountId, command, gameTimeMs);
+    }
     const action = command.action;
     switch (action.kind) {
       case "invitation.issue": {

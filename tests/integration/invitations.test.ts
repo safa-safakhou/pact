@@ -6,6 +6,7 @@ import { IdentityError, type IdentityService } from "@pact/identity";
 import {
   ActionLimitService,
   CourtInvitationDestination,
+  CourtService,
   type InvitationDestinationPort,
   InvitationService,
   SocialService,
@@ -38,7 +39,7 @@ beforeAll(async () => {
   await pool.query("UPDATE world_clocks SET next_tick_due_at = clock_timestamp() + interval '1 hour'");
   social = new SocialService("pact", new ResourceLedger("pact"), new ActionLimitService("pact"), clock);
   invitations = new InvitationService(pool, "pact", social, clock, {
-    court: new CourtInvitationDestination("pact", clock),
+    court: new CourtInvitationDestination("pact", clock, new CourtService(pool, "pact", clock)),
   });
   dispatcher = new CommandDispatcher({
     pool,
@@ -208,7 +209,10 @@ describe("destination invitations", () => {
         ).statusCode,
       ).toBe(403);
       await withTransaction(pool, (client) =>
-        new CourtInvitationDestination("pact", clock).forgetAccount(client, issuer.accountId),
+        new CourtInvitationDestination("pact", clock, new CourtService(pool, "pact", clock)).forgetAccount(
+          client,
+          issuer.accountId,
+        ),
       );
       expect(await preview(link.token)).toMatchObject({ status: "full", destination: { available: false } });
     } finally {

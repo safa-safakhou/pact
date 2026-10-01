@@ -3,6 +3,8 @@ import {
   type CommandEnvelope,
   CommandEnvelopeSchema,
   type CommandReceipt,
+  type CourtCommand,
+  CourtCommandSchema,
   type GameAction,
   type SandboxAction,
   SCHEMA_VERSION,
@@ -30,7 +32,7 @@ export interface SocialCommandPort {
   execute(
     client: PoolClient,
     principal: AuthenticatedPrincipal,
-    command: SocialCommand,
+    command: SocialCommand | CourtCommand,
     gameTimeMs: number,
   ): Promise<{ recordVersions: Record<string, number>; result: unknown }>;
 }
@@ -100,7 +102,7 @@ export class CommandDispatcher {
     this.assertPrincipal(principal);
     if (principal.audience !== "human" || !this.options.social || !this.options.game)
       throw new DispatcherError("FORBIDDEN");
-    const parsed = SocialCommandSchema.safeParse(raw);
+    const parsed = SocialCommandSchema.or(CourtCommandSchema).safeParse(raw);
     if (!parsed.success) throw new DispatcherError("INVALID_COMMAND");
     const command = parsed.data;
     const payloadHash = createHash("sha256").update(JSON.stringify(command)).digest("hex");
