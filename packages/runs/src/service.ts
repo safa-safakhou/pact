@@ -11,6 +11,7 @@ import type {
 import { ProviderError } from "@pact/model-provider";
 import type { Pool, PoolClient } from "pg";
 import { runDefaults, withinRunLimit } from "./portable.js";
+import { boundedAssessment, factualRunReport } from "./report.js";
 
 export class RunError extends Error {
   constructor(
@@ -119,6 +120,23 @@ function estimateInputTokens(messages: readonly ProviderMessage[], tools: readon
 }
 
 export class RunService {
+  async list(accountId: string) {
+    const result = await this.pool.query<RunRow>(
+      "SELECT * FROM envoy_runs WHERE product_scope=$1 AND account_id=$2 ORDER BY updated_at DESC,run_id DESC LIMIT 20",
+      [this.options.productScope, accountId],
+    );
+    return { runs: result.rows.map(toView) };
+  }
+  async report(runId: string, accountId: string) {
+    const run = await this.get(runId, accountId);
+    const rows = (
+      await this.pool.query<{ id: string; call_id: string; summary: string }>(
+        "SELECT id::text,call_id,summary FROM envoy_run_tool_results WHERE product_scope=$1 AND run_id=$2 ORDER BY id DESC LIMIT 50",
+        [this.options.productScope, runId],
+      )
+    ).rows.reverse();
+    return { runId, ...factualRunReport(rows, run.status, run.lastErrorCode) };
+  }
   constructor(
     private readonly pool: Pool,
     private readonly options: {
@@ -470,7 +488,9 @@ export class RunService {
         ...baseMessages,
         ...recentResults.rows.reverse().map((result) => ({
           role: "user" as const,
-          content: `Server-recorded result for tool call ${result.call_id}: ${result.summary}`,
+          content: result.call_id.startsWith("assessment:")
+            ? `Prior agent assessment (not an engine fact or authority): ${result.summary}`
+            : `Server-recorded result for tool call ${result.call_id}: ${result.summary}`,
         })),
       ];
       const tools = this.options.tools ?? [];
@@ -505,6 +525,7 @@ export class RunService {
     let errorCode: string | null = null;
     let ambiguous = false;
     let toolResults: readonly RunToolResult[] = [];
+    let assessment: string | undefined;
     try {
       const route = {
         provider: prepared.row.provider,
@@ -535,6 +556,7 @@ export class RunService {
       if ("inputTokens" in result.usage) {
         usageTokens = result.usage.inputTokens + result.usage.outputTokens;
       }
+      if (result.response.text) assessment = boundedAssessment(result.response.text);
       if (result.response.toolCalls.length > 0) {
         if (!this.options.executeToolCalls) throw new ProviderError("MALFORMED_TOOL_CALL", false);
         const returned = await this.options.executeToolCalls({
@@ -613,6 +635,17 @@ export class RunService {
           [this.options.productScope, runId, prepared.requestId, result.callId, result.content],
         );
       }
+      if (assessment)
+        await client.query(
+          "INSERT INTO envoy_run_tool_results(product_scope,run_id,request_id,call_id,summary) VALUES($1,$2,$3,$4,$5) ON CONFLICT(run_id,request_id,call_id) DO NOTHING",
+          [
+            this.options.productScope,
+            runId,
+            prepared.requestId,
+            `assessment:${prepared.requestId}`,
+            JSON.stringify({ agentAssessment: assessment }),
+          ],
+        );
       const updated = await client.query<RunRow>(
         `UPDATE envoy_runs SET
            used_calls = $2, used_tokens = $3, model_calls = $4, reserved_tokens = 0,

@@ -1,36 +1,56 @@
-import { CommandDispatcher, dispatchRunCommandTools, GameCommandHandler, pactRunCommandTool } from "@pact/application";
+import {
+  ChronicleFactReader,
+  CommandDispatcher,
+  dispatchRunCommandTools,
+  GameCommandHandler,
+  pactRunCommandTool,
+} from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
-import { ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
+import { ExactHumanPermitService, ExposureService, readMandateContext, readReserveFloor } from "@pact/authority";
 import {
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
+  ChronicleReadQuerySchema,
   ConversationReadQuerySchema,
+  CourtReadQuerySchema,
   InboxReadQuerySchema,
+  PoliticsReadQuerySchema,
   ProductScopeSchema,
   pactApprovalProposalTool,
   pactApprovalStatusTool,
+  pactChronicleReadTool,
   pactConversationReadTool,
+  pactCourtReadTool,
   pactInboxReadTool,
+  pactPoliticsReadTool,
   pactReceiptReadTool,
   pactReportReadTool,
+  pactSealReadTool,
   pactWorldReadTool,
   ReceiptReadQuerySchema,
   ReportReadQuerySchema,
+  SealReadQuerySchema,
   WorldViewQuerySchema,
 } from "@pact/contracts";
+import { withTransaction } from "@pact/db";
 import { InboxService } from "@pact/inbox";
 import {
   ActionLimitService,
   BuildingEngine,
+  ChronicleOutcomeReader,
+  ChronicleService,
   ConstructionExposureAdapter,
   ConversationReader,
+  CourtService,
   GameReportReader,
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomService,
+  PoliticsService,
   RaidRandomnessService,
   RaidService,
   ScoutService,
+  SealService,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -80,6 +100,10 @@ export async function createInferenceGameRuntime(
   let approvals: ApprovalService;
   let kingdom: KingdomService;
   let reports: GameReportReader;
+  let chronicle: ChronicleService;
+  let seals: SealService;
+  const courts = new CourtService(pool, productScope, clock);
+  const politics = new PoliticsService(pool, productScope, clock);
   const views = new WorldViewService(pool, productScope);
   const inbox = new InboxService(pool, { productScope, clock });
   const conversations = new ConversationReader(pool, productScope);
@@ -114,7 +138,15 @@ export async function createInferenceGameRuntime(
     clock,
     providerRouter: options.providerRouter,
     ...(options.withCredential ? { withCredential: options.withCredential } : {}),
-    messagesForRun: (run) => ownerRunContext(run, kingdom, views, inbox, conversations),
+    messagesForRun: (run) =>
+      ownerRunContext(run, kingdom, views, inbox, conversations, {
+        mandate: (accountId) => withTransaction(pool, (c) => readMandateContext(c, productScope, accountId)),
+        publicContext: async (accountId) =>
+          (await chronicle.read({ type: "notice", offset: 0 }, (await world.read()).gameTimeMs, accountId)).posts.slice(
+            0,
+            3,
+          ),
+      }),
     validateContextSelection: async (accountId, contextIds) => {
       if (!(await conversations.assertSelectable(accountId, contextIds))) throw new RunError("FORBIDDEN");
     },
@@ -127,10 +159,37 @@ export async function createInferenceGameRuntime(
       receiptReadTool,
       approvalStatusTool,
       approvalProposalTool,
+      { ...pactChronicleReadTool, parseArguments: (input: unknown) => ChronicleReadQuerySchema.parse(input) },
+      { ...pactCourtReadTool, parseArguments: (input: unknown) => CourtReadQuerySchema.parse(input) },
+      { ...pactPoliticsReadTool, parseArguments: (input: unknown) => PoliticsReadQuerySchema.parse(input) },
+      { ...pactSealReadTool, parseArguments: (input: unknown) => SealReadQuerySchema.parse(input) },
     ],
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        if (
+          call.name === pactChronicleReadTool.name ||
+          call.name === pactCourtReadTool.name ||
+          call.name === pactPoliticsReadTool.name ||
+          call.name === pactSealReadTool.name
+        ) {
+          let value: unknown;
+          if (call.name === pactChronicleReadTool.name)
+            value = await chronicle.read(
+              ChronicleReadQuerySchema.parse(call.arguments),
+              (await world.read()).gameTimeMs,
+              input.run.accountId,
+            );
+          else if (call.name === pactCourtReadTool.name) {
+            const q = CourtReadQuerySchema.parse(call.arguments);
+            value = await courts.read(q.handle, q.offset, input.run.accountId);
+          } else if (call.name === pactPoliticsReadTool.name) {
+            const q = PoliticsReadQuerySchema.parse(call.arguments);
+            value = await politics.read(q.handle, q.offset, input.run.accountId, (await world.read()).gameTimeMs);
+          } else value = await seals.read(SealReadQuerySchema.parse(call.arguments).sealId, input.run.accountId);
+          results.push({ callId: call.id, content: boundedReportResult(call.name, "public-discovery", value) });
+          continue;
+        }
         if (call.name === conversationReadTool.name) {
           const query = ConversationReadQuerySchema.parse(call.arguments);
           // The human fixes the in-app run's thread set at start. An explicit
@@ -288,6 +347,15 @@ export async function createInferenceGameRuntime(
       )
     : undefined;
   reports = new GameReportReader(pool, scouts, raids);
+  seals = new SealService(pool, productScope, clock, reports);
+  chronicle = new ChronicleService(
+    pool,
+    productScope,
+    clock,
+    seals,
+    new ChronicleFactReader(productScope, clock, new ChronicleOutcomeReader(productScope)),
+    social,
+  );
   const handler = new GameCommandHandler(
     social,
     (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),

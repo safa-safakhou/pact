@@ -244,3 +244,24 @@ export async function readReserveFloor(
   if (!/^(0|[1-9][0-9]*)$/.test(raw)) throw new Error("INVALID_RESERVE_FLOOR");
   return BigInt(raw);
 }
+
+/** Read-only owner-bound inference context port, with no human-authentication capability. */
+export async function readMandateContext(client: PoolClient, productScope: string, accountId: string) {
+  const row = (
+    await client.query<MandateRow>(
+      "SELECT account_id,version,allowed_actions,target_restrictions,resource_limits,reserve_floors,troop_limit,session_limit FROM kingdom_mandates WHERE product_scope=$1 AND account_id=$2",
+      [productScope, accountId],
+    )
+  ).rows[0];
+  return row
+    ? {
+        version: row.version,
+        allowedActions: row.allowed_actions,
+        targetRestrictions: row.target_restrictions,
+        resourceLimits: row.resource_limits,
+        reserveFloors: row.reserve_floors,
+        troopLimit: row.troop_limit,
+        sessionLimit: row.session_limit,
+      }
+    : { allowedActions: ["world.read"], resourceLimits: {}, reserveFloors: {}, troopLimit: 0, version: null };
+}

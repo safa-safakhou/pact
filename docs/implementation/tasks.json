@@ -2955,7 +2955,7 @@
       "id": "PACT-059",
       "title": "Implement Chronicle stories, notices, and public share pages",
       "phase": 2,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -2987,7 +2987,7 @@
       "components": [
         "Chronicle and public pages"
       ],
-      "evidence": ["Claimed MNI-124 in Linear on 2026-10-01 after verifying all five dependencies Done; Chronicle first, then dependency-ready PACT-061/062 in the requested batch."],
+      "evidence": ["26bcb62; docs/implementation/reports/chronicle.md and docs/architecture/chronicle.md. Build/typecheck/lint, 191 unit and 278 integration passed; one optional local-model skipped; 24 schema pins preserve the prior22. Linear MNI-124 Done, both Alpha checks checked, comment f7a5f6dd-8b97-4b11-b434-87e6c48bd7fb. Local only; original Later criteria unchecked."],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
@@ -3059,7 +3059,7 @@
       "id": "PACT-061",
       "title": "Complete the first-session and social interface",
       "phase": 2,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -3091,8 +3091,11 @@
       "components": [
         "first-session and social UI"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/first-session-envoy.md: actual isolated Chrome Farm II pending/contact request/explicit recipient acceptance/exact version 1 supply offer/one signature still pending/no model call; existing invitation destination and founding/consequence integration paths pass. No hosted rollout or phone/pilot certification.",
+        "Node 24 build/typecheck/lint passed; 199 unit, 279 integration passed, one optional live-model skipped, 25 schema pins unchanged. Planning render/check and diff check accompany implementation commit containing this report."
+      ],
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {
@@ -3125,7 +3128,7 @@
       "id": "PACT-062",
       "title": "Improve Envoy context selection and result explanations",
       "phase": 2,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -3159,8 +3162,11 @@
       "components": [
         "Envoy context and summaries"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/first-session-envoy.md: owner-only offline negotiation report categorizes commitments/proposals/failures/approvals with exact receipt IDs and record versions; authenticated no-store HTTP and scoped MCP verified without provider calls. Persisted fake-provider visible assessments are labeled non-factual in reports and subsequent context.",
+        "Objective/mandate-first byte-bounded permitted context, adversarial/Unicode/hidden-prose and stale-feedback tests pass. Node 24 build/typecheck/lint, 199 unit and 279 integration passed, one optional live-model skipped; new additive report schema, previous pins unchanged. No live model or independent-agent enjoyment claimed."
+      ],
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

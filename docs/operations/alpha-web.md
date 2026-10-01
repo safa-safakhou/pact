@@ -1,5 +1,27 @@
 # Private Alpha web controls
 
+## Local social/run update — 1 October 2026 (not deployed)
+
+PACT-059/061/062 add public Chronicle stories/notices, exact player-handle lookup in People, a first-session checklist derived from actual owner/social projections, and visible bounded Envoy start/stop/wait/resume/report controls. Reports distinguish committed instructions, proposals, failures and human approvals; assessments are explicitly non-factual. Receipt links read the exact owned receipt. Approval links open Envoy with the exact ID; preview is still required and changing the lookup clears it. Latest-selected report/profile reads cannot be replaced by older responses. Social-read failure is unknown, not zero contacts or successful trade. These changes are local only; the hosted revision below remains unchanged.
+
+### Repeatable isolated Chrome rehearsal
+
+With Node 24 and the documented local PostgreSQL 17 test service running:
+
+```sh
+node --import tsx scripts/rehearse-alpha-web.ts
+# In a second terminal:
+PACT_API_PROXY=http://127.0.0.1:3017 npm exec --workspace @pact/web -- vite --host 127.0.0.1 --port 5174 --strictPort
+```
+
+Open `http://127.0.0.1:5174/` in Chrome. The script creates a new disposable `test_web_rehearsal_*` schema only in the hardcoded localhost `pact_test` database. Its synthetic accounts are `rehearsal_amber@example.test` and `rehearsal_birch@example.test`; their deliberately public fixture password is `Synthetic rehearsal password 123!`, valid only for this disposable workflow. These are not hosted credentials. They are founded through the real onboarding/kingdom services and receive an explicitly synthetic 100 ordinary units of each resource. This extra stock is **not** a real founding entitlement. No inference worker/provider call runs. A real rules worker heartbeats, but the first tick is delayed one hour so pending outcomes remain inspectable. This is not an accelerated completed-build or season check.
+
+Amber can queue Farm II, find Birch's exact handle and request contact. Switch the same browser tab to Birch to explicitly accept, choose Amber and propose/sign an exact modest supply offer. One signature stays pending, with no active contract. Test the Envoy tab without saving a model key: Start is disabled and says no model call has started. Ordinary new hosted accounts must still accrue production before paid contact. Sequential account switches are not three independent agents.
+
+Stop both terminal processes after observation. The script prints its exact schema name for inspection/cleanup; it does not delete fixture data automatically. Remove only that confirmed schema via the guarded `dropTestSchema` helper after stopping its API/rules processes. Never point this workflow at the hosted database. See [batch evidence](../implementation/reports/first-session-envoy.md).
+
+## Hosted release boundary
+
 The web root at `https://safa.dedyn.io/pact/` is the first human gameplay client. It uses the existing first-party session and CSRF-protected API; it does not run a separate game engine. Use synthetic test accounts only. The registration notice is temporary MVP test data, not a production legal identity. Verification mail is captured inside the VPS, so the operator must deliver each synthetic account's one-time token through a private channel. Do not put passwords or tokens in Git, Linear, screenshots, or logs. See [VPS deployment](vps-deployment.md) and [identity operations](identity.md).
 
 The current text-first web release is `alpha-20260929-4`, pinned to `2143d92` (29 September 2026 UTC). It removes the fixed "eight Home Guard" hint after live casualties showed only six surviving. Node 24.19 build/typecheck/lint and 175 unit tests passed locally; immutable runtime/gateway builds, current migrations/privacy replay and public `verify.sh` passed on the single VPS. Chrome reloaded the corrected hint and verified Amber's two completed ordinary replacements (10 ordinary, six surviving Home Guard). The preceding `alpha-20260929-3` separates raid-force type/count from Garrison Lending, initially selecting eight Spearmen, and gates the raid button on the owner-view ordinary home force and available shared charge. It passed Node 24.19 build/typecheck/lint, 174 unit and 226 PostgreSQL 17 integration tests plus immutable deployment/public verification. Chrome showed separate Garrison count 1 and Raid count 8, with Declare raid disabled while Birch's eight ordinary units were away attacking. Earlier releases added Scout readiness (`alpha-20260929-2`), accepted-contact guidance (`alpha-20260929-1`) and coherent report navigation (`alpha-20260928-8`). The functional PACT-048 acceptance matrix is complete across paired test sessions; see [the completion report](../implementation/reports/rules-ui-completion.md) for the explicit different-pair lending caveat. This is not the PACT-053 rules gate or a player-pilot claim.

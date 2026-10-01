@@ -83,6 +83,14 @@ export function registerRunRoutes(server: FastifyInstance, identity: IdentitySer
       });
     }),
   );
+  server.get("/v1/runs", async (request, reply) =>
+    safe(reply, async () => runs.list((await identity.authenticate(sessionToken(request))).accountId)),
+  );
+  server.get<{ Params: { runId: string } }>("/v1/runs/:runId/report", async (request, reply) =>
+    safe(reply, async () =>
+      runs.report(request.params.runId, (await identity.authenticate(sessionToken(request))).accountId),
+    ),
+  );
 
   server.get<{ Params: { runId: string } }>("/v1/runs/:runId", async (request, reply) =>
     safe(reply, async () => {

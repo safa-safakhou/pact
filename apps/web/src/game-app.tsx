@@ -4,12 +4,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChroniclePanel } from "./chronicle-panel.js";
 import { CourtPanel } from "./court-panel.js";
 import { EvidencePanel } from "./evidence-panel.js";
+import { FirstSession } from "./first-session.js";
 import { InvitationPanel } from "./invitation-panel.js";
 import { createWebPactClient } from "./pact-client.js";
 import { PoliticsPanel } from "./politics-panel.js";
 import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
 import { wholeResourceAmount } from "./resource-units.js";
+import { RunPanel } from "./run-panel.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 import { readWebResponse } from "./web-response.js";
 
@@ -163,7 +165,9 @@ export function GameApp(): React.JSX.Element {
       : new URLSearchParams(window.location.search).has("court") ||
           new URLSearchParams(window.location.search).has("politics")
         ? "People"
-        : "Kingdom",
+        : new URLSearchParams(window.location.search).has("approval")
+          ? "Envoy"
+          : "Kingdom",
   );
   const [draft, setDraft] = useState<Draft | null>(null);
   const [kingdomId, setKingdomId] = useState("");
@@ -550,6 +554,21 @@ export function GameApp(): React.JSX.Element {
           </button>
         ))}
       </nav>
+      {view && (
+        <FirstSession
+          stage={{
+            socialAvailable: social !== null,
+            farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
+            farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
+            contacts: social?.contacts.length ?? 0,
+            pendingRequests: social?.requests.length ?? 0,
+            pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
+            contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
+          }}
+          onArea={setTab}
+        />
+      )}
+      {tab === "Envoy" && <RunPanel request={request} contacts={social?.contacts ?? []} />}
       {notice && (
         <p className="game-notice" role="status">
           {notice}
@@ -609,6 +628,7 @@ export function GameApp(): React.JSX.Element {
       {tab === "People" && <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={Boolean(csrf) && !busy} />}
       {tab === "People" && (
         <People
+          request={request}
           client={client}
           act={act}
           busy={busy}
@@ -1037,7 +1057,9 @@ function Envoy({
   apiOrigin: URL;
   onCsrfChange: (token: string) => void;
 }): React.JSX.Element {
-  const [approvalId, setApprovalId] = useState("");
+  const [approvalId, setApprovalId] = useState(() => new URLSearchParams(window.location.search).get("approval") ?? "");
+  const approvalGeneration = useRef(0);
+  const [loadedApprovalId, setLoadedApprovalId] = useState("");
   const [review, setReview] = useState<Json | null>(null);
   const [mandate, setMandate] = useState<{
     version: number;
@@ -1100,7 +1122,7 @@ function Envoy({
     if (!review || !window.confirm(`${approve ? "Approve" : "Reject"} this exact server-rendered request?`)) return;
     try {
       const result = await request(
-        `/v1/approvals/${encodeURIComponent(approvalId)}/${approve ? "approve" : "reject"}`,
+        `/v1/approvals/${encodeURIComponent(loadedApprovalId)}/${approve ? "approve" : "reject"}`,
         "POST",
       );
       onNotice(`${approve ? "Approved" : "Rejected"}: ${JSON.stringify(result)}`);
@@ -1140,19 +1162,37 @@ function Envoy({
         <form
           onSubmit={(event) => {
             event.preventDefault();
+            const generation = ++approvalGeneration.current;
+            const requestedId = approvalId;
+            setReview(null);
+            setLoadedApprovalId("");
             void request(`/v1/approvals/${encodeURIComponent(approvalId)}`)
-              .then(setReview)
+              .then((value) => {
+                if (generation !== approvalGeneration.current) return;
+                setReview(value);
+                setLoadedApprovalId(requestedId);
+              })
               .catch((error: unknown) => onNotice(failure(error)));
           }}
         >
           <label>
             Approval ID
-            <input required value={approvalId} onChange={(event) => setApprovalId(event.target.value)} />
+            <input
+              required
+              value={approvalId}
+              onChange={(event) => {
+                approvalGeneration.current++;
+                setApprovalId(event.target.value);
+                setReview(null);
+                setLoadedApprovalId("");
+              }}
+            />
           </label>
           <button type="submit">Preview</button>
         </form>
         {review && (
           <div>
+            <p>Reviewing exact approval {loadedApprovalId}</p>
             <pre>{JSON.stringify(review, null, 2)}</pre>
             <button
               type="button"
@@ -1308,6 +1348,7 @@ export function raidUiReady(
 }
 
 export function People({
+  request,
   client,
   act,
   busy,
@@ -1320,6 +1361,7 @@ export function People({
   hallLevel,
   charges,
 }: {
+  request?: (path: string, method?: string, body?: unknown) => Promise<Json>;
   client: ReturnType<typeof createWebPactClient>;
   act: (action: SandboxAction) => Promise<void>;
   busy: boolean;
@@ -1333,6 +1375,8 @@ export function People({
   charges: NonNullable<OwnerView["charges"]>;
 }): React.JSX.Element {
   const [profile, setProfile] = useState<unknown>(null);
+  const [handle, setHandle] = useState("");
+  const profileGeneration = useRef(0);
   const [message, setMessage] = useState("");
   const [resource, setResource] = useState<"iron" | "silver" | "grain">("grain");
   const [amount, setAmount] = useState(1);
@@ -1406,18 +1450,72 @@ export function People({
       <ContractBoard social={social} kingdomId={kingdomId} busy={busy} confirmAction={confirmAction} />
       <article className="game-card">
         <h3>{selected ? `Conversation with ${selected.displayName}` : "Find a kingdom"}</h3>
+        {request && (
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              const g = ++profileGeneration.current;
+              setProfile(null);
+              setTarget("");
+              void request(`/v1/people/${encodeURIComponent(handle.trim().replace(/^@/, ""))}`)
+                .then(async (result) => {
+                  if (g !== profileGeneration.current) return;
+                  const found = result.kingdom as { profile?: { kingdomId?: string } } | null;
+                  const id = found?.profile?.kingdomId;
+                  if (!id) {
+                    setProfile({ error: "No real kingdom matches that exact handle." });
+                    return;
+                  }
+                  setTarget(id);
+                  const value = await client.readKingdomView(id);
+                  if (g === profileGeneration.current) setProfile(value);
+                })
+                .catch((error: unknown) => {
+                  if (g === profileGeneration.current) setProfile({ error: failure(error) });
+                });
+            }}
+          >
+            <label>
+              Exact player handle
+              <input
+                required
+                value={handle}
+                onChange={(event) => {
+                  profileGeneration.current++;
+                  setHandle(event.target.value);
+                  setTarget("");
+                  setProfile(null);
+                }}
+              />
+            </label>
+            <button type="submit">Find real player</button>
+          </form>
+        )}
         <form
           onSubmit={(event) => {
             event.preventDefault();
+            const g = ++profileGeneration.current;
             void client
               .readKingdomView(target)
-              .then(setProfile)
-              .catch((error: unknown) => setProfile({ error: failure(error) }));
+              .then((value) => {
+                if (g === profileGeneration.current) setProfile(value);
+              })
+              .catch((error: unknown) => {
+                if (g === profileGeneration.current) setProfile({ error: failure(error) });
+              });
           }}
         >
           <label>
             Kingdom ID (or choose a contact above)
-            <input required value={target} onChange={(event) => setTarget(event.target.value.trim())} />
+            <input
+              required
+              value={target}
+              onChange={(event) => {
+                profileGeneration.current++;
+                setProfile(null);
+                setTarget(event.target.value.trim());
+              }}
+            />
           </label>
           <button type="submit">Inspect profile</button>
         </form>

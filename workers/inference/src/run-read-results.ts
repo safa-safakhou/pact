@@ -30,6 +30,8 @@ export function boundedReportResult(kind: string, recordId: string, report: unkn
 }
 
 export function boundedRecordResult(kind: "receipt" | "approval", recordId: string, record: unknown): string {
+  if (kind === "receipt" && record && typeof record === "object" && "recordVersions" in record && "commandId" in record)
+    return boundedCommandReceiptResult(record as CommandReceipt);
   const complete = JSON.stringify(record);
   if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
   return JSON.stringify({ kind, recordId, truncated: true });
@@ -42,12 +44,27 @@ export function boundedCommandReceiptResult(receipt: CommandReceipt): string {
     code: receipt.code,
     charged: receipt.charged,
     recordVersions: receipt.recordVersions,
+    disposition:
+      Object.keys(receipt.recordVersions).some(
+        (key) =>
+          key.startsWith("supply-offer:") || key.startsWith("garrison-offer:") || key.startsWith("contact-request:"),
+      ) &&
+      !Object.keys(receipt.recordVersions).some(
+        (key) => key.startsWith("supply-contract:") || key.startsWith("garrison-contract:"),
+      )
+        ? "proposed"
+        : "committed",
     committedEventIds: receipt.committedEventIds,
     ...(receipt.approvalId ? { approvalId: receipt.approvalId } : {}),
   };
   const complete = JSON.stringify(summary);
   if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
-  return JSON.stringify({ commandId: receipt.commandId, code: receipt.code, truncated: true });
+  return JSON.stringify({
+    commandId: receipt.commandId,
+    code: receipt.code,
+    disposition: summary.disposition,
+    truncated: true,
+  });
 }
 
 export function boundedConversationResult(page: ConversationPage): string {

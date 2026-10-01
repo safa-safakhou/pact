@@ -231,6 +231,7 @@ const mcp = new McpTransport({
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
   seals: { read: (id, accountId) => seals.read(id, accountId) },
   chronicle: { read: async (query, accountId) => chronicle.read(query, (await world.read()).gameTimeMs, accountId) },
+  runReports: { read: (id, accountId) => (id ? runs.report(id, accountId) : runs.list(accountId)) },
   politics: {
     read: async (handle, offset, accountId) =>
       politics.read(handle, offset, accountId, (await world.read()).gameTimeMs),

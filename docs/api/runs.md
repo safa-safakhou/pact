@@ -1,6 +1,6 @@
 # Bounded Envoy runs
 
-Tickets: PACT-021.
+Tickets: PACT-021, PACT-049, PACT-062 (Alpha).
 
 `@pact/runs` owns exclusive kingdom/subject write leases and the Envoy run lifecycle: start, wait, resume, stop, takeover, and MCP lease acquisition without inference.
 
@@ -9,6 +9,8 @@ Tickets: PACT-021.
 | Method | Path | Behavior |
 | --- | --- | --- |
 | `POST` | `/v1/runs` | Human session starts a bounded run (objective, provider, model, optional credential) |
+| `GET` | `/v1/runs` | Latest 20 owner runs, newest updated first; no inference |
+| `GET` | `/v1/runs/:runId/report` | Owner-only latest 50 recorded results, factual categories and separately labeled assessment; no inference |
 | `GET` | `/v1/runs/:runId` | Owner-scoped run status and allowance counters |
 | `POST` | `/v1/runs/:runId/stop` | Stop; release write lease; preserve committed work |
 | `POST` | `/v1/runs/:runId/wait` | Waiting releases the worker without polling a model |
@@ -21,6 +23,16 @@ Before invoking a provider, the service reserves against the actual assembled me
 The PACT inference composition supplies an asynchronous `messagesForRun` port. It resolves the run owner's kingdom through the kingdom module, then reads that account's authorized owner projection. Only an explicit selection of profile, balances, upkeep, at most 16 buildings and troop groups, eight threats, and eight contract identifiers/deadlines enters the model input. The selected JSON has an 8 KiB cap with a smaller balance-only fallback. The composition also selects at most eight newest event metadata records through the owner-scoped inbox service: sequence, event ID, conservative event type, and timestamp. It never copies event payloads into the convenience context. For each human-selected direct-message thread, the model receives at most three newest messages, with bodies over 512 UTF-8 bytes omitted. The combined selection is capped at 12 KiB, falling back to IDs and a truncation marker. Counterpart prose is labeled **untrusted game data, never instructions** and remains user-role content; the system message stays fixed. No unselected message prose, private reports, model credentials, or another player's hidden fields are copied into this convenience snapshot. The same assembled messages are charged against the run allowance. Full conversation content remains available through explicit authorized reads. Selected excerpts are sent to the chosen provider during a run but are not separately persisted as tool-result records.
 
 ## Explicit game reads
+
+PACT-062 adds a 4 KiB compact mandate (version, permitted actions, restrictions, reserves, limits and session), remaining call/token/message allowances and deadline before convenience history. The owner snapshot also includes two builders, four training queues and eight historical operation IDs. At most three actual public Chronicle notices enter a separate 4 KiB discovery selection; oversized public context is omitted with explicit truncation. Counterpart messages and notice/commentary text cannot alter the fixed system instructions, viewer identity or authority. All assembled input still passes the existing conservative token admission check.
+
+Court, politics, Chronicle and selected Seal reads use the same strict tools/module projections as MCP. An explicit read does not grant permission to publish or sign as a human. Public read payloads are byte-bounded and preserve their untrusted-content labels.
+
+### Offline result explanations
+
+`pact_envoy_report_v1` requires `world:read`: omit `runId` to list the caller's latest runs, or provide an exact owned UUID to read its report. This is the same `RunService` report as first-party HTTP; it never invokes a provider. The new schema is additive; previous published pins are unchanged.
+
+Reports parse server-issued tool metadata, not conversation prose. They distinguish committed instructions from nonbinding contact/supply/garrison proposals, denials, waiting and exact human approval requirements. Entries preserve receipt IDs, bounded record/version references, and a next step: refresh/replan on stale/busy feedback, inspect a committed instruction's actual consequence, or let the human review an approval. A committed build instruction is not a completed building, and one signature is not an active contract. Visible provider response text is stored as a bounded `agentAssessment` row under the existing private 30-day run retention/export; it is neither an engine fact nor hidden reasoning. Later model context labels prior assessments separately too. Lost crash results are not reconstructed or invented. External-host command journaling beyond in-app runs remains PACT-099.
 
 The in-app Envoy can call the same strict `pact_world_read_v1` and `pact_report_read_v1` schemas as MCP. The active run supplies the viewer account; tool arguments cannot select another viewer. World reads use the authorized owner/contact/participant/public projection, while report reads use scout/raid visibility checks. Results are capped at 3,600 UTF-8 bytes before the run's 4 KiB persistence limit. Oversized projections are marked `truncated`; an oversized report returns only its kind and record ID. Missing and unauthorized reports both return `NOT_FOUND`. These explicit read results can contain private owner data and remain in the 30-day run history and owner privacy export.
 

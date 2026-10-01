@@ -1,4 +1,14 @@
 import { z } from "zod";
+import { RunReportQuerySchema } from "./run-report-schemas.js";
+export const runReportQueryJsonSchema = z.toJSONSchema(RunReportQuerySchema, { target: "draft-7" });
+export const pactEnvoyReportTool = {
+  name: "pact_envoy_report_v1",
+  description:
+    "Read your own server-recorded in-app Envoy reports, without invoking a model. Omit runId to list your recent runs; pass a returned runId for recorded committed/proposed/failed/approval-needed steps, receipt/record IDs and a next step. Agent assessments are not engine facts. A committed offer or instruction is not a completed agreement. External chatbot inference usage and narrative are managed by that host, not measured here.",
+  inputSchema: runReportQueryJsonSchema,
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+} as const;
+
 import { ChronicleCommandSchema, ChronicleReadQuerySchema } from "./chronicle-schemas.js";
 export const chronicleCommandJsonSchema = z.toJSONSchema(ChronicleCommandSchema, { target: "draft-7" });
 export const chronicleReadQueryJsonSchema = z.toJSONSchema(ChronicleReadQuerySchema, { target: "draft-7" });

@@ -61,7 +61,7 @@ describe("bounded model read results", () => {
       ...receipt,
       recordVersions: Object.fromEntries(Array.from({ length: 400 }, (_, index) => [`record-${index}`, index])),
     });
-    expect(JSON.parse(oversized)).toEqual({ commandId, code: "COMMITTED", truncated: true });
+    expect(JSON.parse(oversized)).toEqual({ commandId, code: "COMMITTED", disposition: "committed", truncated: true });
     expect(Buffer.byteLength(oversized, "utf8")).toBeLessThanOrEqual(3_600);
   });
 

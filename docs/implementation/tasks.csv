@@ -63,10 +63,10 @@ PACT-055,Implement every invitation destination and redemption rule,2,done,imple
 PACT-056,"Implement Court membership, roles, and lifecycle",2,done,implementation,Backend,M,PACT-053;PACT-054;PACT-055,G01,phase-2-social.md#pact-056
 PACT-057,Implement Articles and mutual allegiance,2,done,implementation,Backend,M,PACT-053;PACT-054,G01,phase-2-social.md#pact-057
 PACT-058,Implement signed excerpts and the evidence viewer,2,done,implementation,Security,L,PACT-042;PACT-053;PACT-054,G01,phase-2-social.md#pact-058
-PACT-059,"Implement Chronicle stories, notices, and public share pages",2,in_progress,implementation,Frontend,L,PACT-053;PACT-055;PACT-056;PACT-057;PACT-058,G01;G03,phase-2-social.md#pact-059
+PACT-059,"Implement Chronicle stories, notices, and public share pages",2,done,implementation,Frontend,L,PACT-053;PACT-055;PACT-056;PACT-057;PACT-058,G01;G03,phase-2-social.md#pact-059
 PACT-060,Deliver opt-in critical email and Web Push,2,todo,implementation,Backend,M,PACT-022;PACT-053;PACT-055,S03,phase-2-social.md#pact-060
-PACT-061,Complete the first-session and social interface,2,todo,implementation,Frontend,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-059,G04,phase-2-social.md#pact-061
-PACT-062,Improve Envoy context selection and result explanations,2,todo,implementation,Integrations,M,PACT-049;PACT-053;PACT-054;PACT-056;PACT-057;PACT-058;PACT-059,G02;G03,phase-2-social.md#pact-062
+PACT-061,Complete the first-session and social interface,2,done,implementation,Frontend,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-059,G04,phase-2-social.md#pact-061
+PACT-062,Improve Envoy context selection and result explanations,2,done,implementation,Integrations,M,PACT-049;PACT-053;PACT-054;PACT-056;PACT-057;PACT-058;PACT-059,G02;G03,phase-2-social.md#pact-062
 PACT-063,"Build reporting, moderation, and appeals tools",2,todo,implementation,Backend,L,PACT-053;PACT-054;PACT-056;PACT-058;PACT-059,S05,phase-2-social.md#pact-063
 PACT-064,Extend privacy workflows to the complete social world,2,todo,implementation,Security,M,PACT-050;PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-063,S05,phase-2-social.md#pact-064
 PACT-065,Implement privacy-bounded product measurement,2,todo,implementation,Backend,M,PACT-053;PACT-061;PACT-062;PACT-064,S06;S07,phase-2-social.md#pact-065

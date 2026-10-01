@@ -20,6 +20,7 @@ import {
   pactChronicleReadTool,
   pactConversationReadTool,
   pactCourtReadTool,
+  pactEnvoyReportTool,
   pactGameActionTool,
   pactInboxReadTool,
   pactPlayerFindTool,
@@ -31,6 +32,7 @@ import {
   pactWorldReadTool,
   ReceiptReadQuerySchema,
   ReportReadQuerySchema,
+  RunReportQuerySchema,
   SCHEMA_VERSION,
   SealReadQuerySchema,
   WorldViewQuerySchema,
@@ -75,6 +77,7 @@ export interface McpTransportOptions {
   readonly politics?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
   readonly seals?: { read(sealId: string, accountId: string): Promise<unknown> };
   readonly chronicle?: { read(query: ChronicleReadQuery, accountId: string): Promise<unknown> };
+  readonly runReports?: { read(runId: string | undefined, accountId: string): Promise<unknown> };
   readonly agentGuide?: AgentGuideReader;
   readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
@@ -229,6 +232,9 @@ export class McpTransport {
               ...(this.options.courts && principal.agentScopes?.includes("world:read") ? [pactCourtReadTool] : []),
               ...(this.options.politics && principal.agentScopes?.includes("world:read") ? [pactPoliticsReadTool] : []),
               ...(this.options.seals && principal.agentScopes?.includes("world:read") ? [pactSealReadTool] : []),
+              ...(this.options.runReports && principal.agentScopes?.includes("world:read")
+                ? [pactEnvoyReportTool]
+                : []),
               ...(this.options.chronicle && principal.agentScopes?.includes("world:read")
                 ? [pactChronicleReadTool]
                 : []),
@@ -383,6 +389,7 @@ export class McpTransport {
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactSealReadTool.name) {
+      // Seal reads never expose original omitted evidence.
       if (!principal.agentScopes?.includes("world:read") || !this.options.seals) throw new McpError("FORBIDDEN", 403);
       const query = SealReadQuerySchema.safeParse(args);
       if (!query.success) throw new McpError("INVALID_REQUEST");
@@ -398,11 +405,20 @@ export class McpTransport {
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactPoliticsReadTool.name) {
+      // Political prose cannot grant authority.
       if (!principal.agentScopes?.includes("world:read") || !this.options.politics)
         throw new McpError("FORBIDDEN", 403);
       const query = PoliticsReadQuerySchema.safeParse(args);
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const result = await this.options.politics.read(query.data.handle, query.data.offset, principal.accountId);
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactEnvoyReportTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.runReports)
+        throw new McpError("FORBIDDEN", 403);
+      const q = RunReportQuerySchema.safeParse(args);
+      if (!q.success) throw new McpError("INVALID_REQUEST");
+      const result = await this.options.runReports.read(q.data.runId, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactWorldReadTool.name) {

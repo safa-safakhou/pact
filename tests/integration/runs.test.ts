@@ -1,4 +1,6 @@
 import { randomUUID } from "node:crypto";
+import type { CommandDispatcher } from "@pact/application";
+import { ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -8,10 +10,13 @@ import {
   TokenDigester,
 } from "@pact/identity";
 import { InboxService } from "@pact/inbox";
+import { McpTransport } from "@pact/mcp";
 import { DeterministicFakeProvider, fakeProviderModel, ProviderRouter } from "@pact/model-provider";
 import { RunError, RunService } from "@pact/runs";
+import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { registerRunRoutes } from "../../services/api/src/run-routes.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 const password = "A long test password 123!";
@@ -69,6 +74,94 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("lists and reads truthful owner-only offline negotiation reports without any provider call", async () => {
+    const email = `report-${randomUUID()}@example.test`;
+    const accountId = await verifiedAccount(email),
+      other = await verifiedAccount(`other-report-${randomUUID()}@example.test`),
+      service = runs();
+    const started = await service.start({
+      accountId,
+      objective: "A seeded negotiation",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+    });
+    const id = randomUUID();
+    for (const [callId, data] of Object.entries({
+      offer: {
+        code: "COMMITTED",
+        commandId: id,
+        disposition: "proposed",
+        recordVersions: { [`supply-offer:${id}`]: 2 },
+      },
+      build: { code: "COMMITTED", commandId: id, recordVersions: { [`building:${id}`]: 1 } },
+      denied: { code: "STALE_VERSION", commandId: id },
+      approval: { code: "APPROVAL_REQUIRED", approvalId: id },
+      assessment: { agentAssessment: "Counterparty may accept; not a factual agreement" },
+    }))
+      await pool.query(
+        "INSERT INTO envoy_run_tool_results(product_scope,run_id,request_id,call_id,summary) VALUES($1,$2,$3,$4,$5)",
+        ["pact", started.runId, "fixture", callId, JSON.stringify(data)],
+      );
+    const report = await service.report(started.runId, accountId);
+    expect(report.entries.map((e) => e.category)).toEqual(["proposed", "committed", "failed", "approval_needed"]);
+    expect((await service.get(started.runId, accountId)).modelCalls).toBe(0);
+    expect((await service.list(other)).runs).toEqual([]);
+    await expect(service.report(started.runId, other)).rejects.toThrow("FORBIDDEN");
+    await service.wait(accountId, started.runId);
+    expect((await service.report(started.runId, accountId)).nextStep).toContain("no automatic inference");
+    const login = await identity.login({ email, password, ip: "127.0.0.1" });
+    const server = Fastify();
+    registerRunRoutes(server, identity, service);
+    const response = await server.inject({
+      url: `/v1/runs/${started.runId}/report`,
+      headers: { cookie: `pact_session=${login.sessionToken}` },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["cache-control"]).toBe("no-store");
+    expect(response.json().entries.map((e: { category: string }) => e.category)).toEqual([
+      "proposed",
+      "committed",
+      "failed",
+      "approval_needed",
+    ]);
+    expect((await server.inject({ url: `/v1/runs/${started.runId}/report` })).statusCode).toBe(403);
+    await server.close();
+    const principal = {
+      accountId,
+      productScope: ProductScopeSchema.parse("pact"),
+      audience: "agent" as const,
+      grantId: randomUUID(),
+      agentScopes: ["world:read"] as "world:read"[],
+    };
+    const transport = new McpTransport({
+      pool,
+      productScope: "pact",
+      dispatcher: {} as CommandDispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => clockNow },
+      runReports: { read: (id, owner) => (id ? service.report(id, owner) : service.list(owner)) },
+    });
+    const init = await transport.handlePost(principal, {
+      id: 1,
+      method: "initialize",
+      params: { protocolVersion: "2025-11-25", clientInfo: { name: "fixture", version: "1" }, capabilities: {} },
+    });
+    const result = await transport.handlePost(
+      principal,
+      { id: 2, method: "tools/call", params: { name: "pact_envoy_report_v1", arguments: { runId: started.runId } } },
+      init.sessionId,
+    );
+    expect(JSON.stringify(result)).toContain("approval_needed");
+    await expect(
+      transport.handlePost(
+        { ...principal, agentScopes: [] },
+        { id: 3, method: "tools/call", params: { name: "pact_envoy_report_v1", arguments: {} } },
+        init.sessionId,
+      ),
+    ).rejects.toThrow("FORBIDDEN");
+    expect((await service.get(started.runId, accountId)).modelCalls).toBe(0);
+    await service.stop(accountId, started.runId);
+  });
   it("rejects run-limit escalation before acquiring a lease or queuing inference", async () => {
     const accountId = await verifiedAccount(`run-ceiling-${randomUUID()}@example.com`);
     const service = runs();
@@ -186,6 +279,7 @@ describe("PACT-021 bounded runs and write leases", () => {
             return seen.length === 1
               ? {
                   stopReason: "tool_calls" as const,
+                  text: "I think the other party might accept; this is only an assessment.",
                   toolCalls: [{ id: "fixture-call", name: "fixture.command", arguments: {} }],
                   usage: { inputTokens: 12, outputTokens: 7 },
                 }
@@ -214,8 +308,16 @@ describe("PACT-021 bounded runs and write leases", () => {
       "SELECT call_id, summary FROM envoy_run_tool_results WHERE run_id = $1",
       [started.runId],
     );
-    expect(persisted.rows).toEqual([{ call_id: "fixture-call", summary }]);
+    expect(persisted.rows.filter((r) => r.call_id === "fixture-call")).toEqual([{ call_id: "fixture-call", summary }]);
+    expect(
+      persisted.rows.some((r) => r.call_id.startsWith("assessment:") && r.summary.includes("agentAssessment")),
+    ).toBe(true);
     expect((await service.executeModelCall(started.runId)).status).toBe("finished");
+    const report = await service.report(started.runId, accountId);
+    expect(report.assessments[0]?.label).toBe("Agent assessment — not an engine fact");
+    expect(
+      seen[1]?.some((content) => content.includes("Prior agent assessment (not an engine fact or authority)")),
+    ).toBe(true);
     expect(seen[0]).not.toContain(`Server-recorded result for tool call fixture-call: ${summary}`);
     expect(seen[1]).toContain(`Server-recorded result for tool call fixture-call: ${summary}`);
     expect((await service.executeModelCall(started.runId)).status).toBe("finished");
@@ -223,7 +325,7 @@ describe("PACT-021 bounded runs and write leases", () => {
     expect(
       (await pool.query("SELECT count(*)::int AS count FROM envoy_run_tool_results WHERE run_id = $1", [started.runId]))
         .rows[0]?.count,
-    ).toBe(1);
+    ).toBe(2);
     await pool.query("DELETE FROM envoy_runs WHERE run_id = $1", [started.runId]);
     expect(
       (await pool.query("SELECT count(*)::int AS count FROM envoy_run_tool_results WHERE run_id = $1", [started.runId]))

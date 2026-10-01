@@ -1,6 +1,6 @@
 # Phase 2 — Social slice
 
-**20 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 8 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -168,7 +168,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-059"></a>
 ## PACT-059 — Implement Chronicle stories, notices, and public share pages
 
-**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -187,14 +187,14 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Agents discover actual notices/players and inspect deliberately published stories; a story link shows the recorded outcome and its real destination.
-- [ ] Publication preview and reads distinguish engine facts from player commentary and never publish private objectives, live reserves, omitted evidence or entire transcripts by default.
+- [x] Agents discover actual notices/players and inspect deliberately published stories; a story link shows the recorded outcome and its real destination.
+- [x] Publication preview and reads distinguish engine facts from player commentary and never publish private objectives, live reserves, omitted evidence or entire transcripts by default.
 
 **Assignee:** Codex / Mohammad Safakhou
 
 **Evidence**
 
-- Claimed MNI-124 in Linear on 2026-10-01 after verifying all five dependencies Done; Chronicle first, then dependency-ready PACT-061/062 in the requested batch.
+- 26bcb62; docs/implementation/reports/chronicle.md and docs/architecture/chronicle.md. Build/typecheck/lint, 191 unit and 278 integration passed; one optional local-model skipped; 24 schema pins preserve the prior22. Linear MNI-124 Done, both Alpha checks checked, comment f7a5f6dd-8b97-4b11-b434-87e6c48bd7fb. Local only; original Later criteria unchecked.
 
 <a id="pact-060"></a>
 ## PACT-060 — Deliver opt-in critical email and Web Push
@@ -223,7 +223,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-061"></a>
 ## PACT-061 — Complete the first-session and social interface
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -242,13 +242,20 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] A newcomer can found, build, meet/negotiate and inspect a real consequence or truthful pending outcome; invitation destination survives connection.
-- [ ] The web view makes the next decision understandable, shows exact versioned contract effects and labels pending counterparties rather than fabricating replies or success.
+- [x] A newcomer can found, build, meet/negotiate and inspect a real consequence or truthful pending outcome; invitation destination survives connection.
+- [x] The web view makes the next decision understandable, shows exact versioned contract effects and labels pending counterparties rather than fabricating replies or success.
+
+**Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- docs/implementation/reports/first-session-envoy.md: actual isolated Chrome Farm II pending/contact request/explicit recipient acceptance/exact version 1 supply offer/one signature still pending/no model call; existing invitation destination and founding/consequence integration paths pass. No hosted rollout or phone/pilot certification.
+- Node 24 build/typecheck/lint passed; 199 unit, 279 integration passed, one optional live-model skipped, 25 schema pins unchanged. Planning render/check and diff check accompany implementation commit containing this report.
 
 <a id="pact-062"></a>
 ## PACT-062 — Improve Envoy context selection and result explanations
 
-**Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -267,8 +274,15 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] A negotiation report accurately separates committed actions, proposals, failures and human decisions and links their receipts/records; factual offline summaries invoke no model.
-- [ ] Long/adversarial conversations remain bounded and cannot change identity/authority or expose withheld records; ordinary busy/stale action feedback supports replanning instead of pretending success.
+- [x] A negotiation report accurately separates committed actions, proposals, failures and human decisions and links their receipts/records; factual offline summaries invoke no model.
+- [x] Long/adversarial conversations remain bounded and cannot change identity/authority or expose withheld records; ordinary busy/stale action feedback supports replanning instead of pretending success.
+
+**Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- docs/implementation/reports/first-session-envoy.md: owner-only offline negotiation report categorizes commitments/proposals/failures/approvals with exact receipt IDs and record versions; authenticated no-store HTTP and scoped MCP verified without provider calls. Persisted fake-provider visible assessments are labeled non-factual in reports and subsequent context.
+- Objective/mandate-first byte-bounded permitted context, adversarial/Unicode/hidden-prose and stale-feedback tests pass. Node 24 build/typecheck/lint, 199 unit and 279 integration passed, one optional live-model skipped; new additive report schema, previous pins unchanged. No live model or independent-agent enjoyment claimed.
 
 <a id="pact-063"></a>
 ## PACT-063 — Build reporting, moderation, and appeals tools
