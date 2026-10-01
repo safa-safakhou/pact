@@ -1,3 +1,4 @@
+export { ExternalAgentActivity } from "./external-activity.js";
 export * from "./report.js";
 export {
   AmbiguousProviderCrash,

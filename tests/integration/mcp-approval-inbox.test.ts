@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { CommandDispatcher } from "@pact/application";
 import { ApprovalError, ApprovalService } from "@pact/approvals";
 import { ProductScopeSchema, SCHEMA_VERSION } from "@pact/contracts";
-import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
+import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import {
   AesGcmSecretBox,
   baselineCompromisedPasswordDigests,
@@ -13,11 +13,12 @@ import {
 import { InboxService } from "@pact/inbox";
 import { MCP_PROTOCOL_PRIMARY, McpError, McpTransport } from "@pact/mcp";
 import { OAuthService } from "@pact/oauth";
-import { RunError, RunService } from "@pact/runs";
+import { ExternalAgentActivity, RunError, RunService } from "@pact/runs";
 import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { registerMcpRoutes } from "../../services/api/src/mcp-approval-inbox-routes.js";
+import { registerRunRoutes } from "../../services/api/src/run-routes.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 const password = "A long test password 123!";
@@ -31,6 +32,7 @@ let mcp: McpTransport;
 let approvals: ApprovalService;
 let inbox: InboxService;
 let secretBox: AesGcmSecretBox;
+let activity: ExternalAgentActivity;
 const productScope = ProductScopeSchema.parse("pact");
 
 beforeAll(async () => {
@@ -48,7 +50,20 @@ beforeAll(async () => {
     secretBox,
     compromisedPasswords: new LocalCompromisedPasswordChecker(baselineCompromisedPasswordDigests),
   });
-  dispatcher = new CommandDispatcher({ pool, clock, productScope });
+  activity = new ExternalAgentActivity(pool, "pact", clock);
+  dispatcher = new CommandDispatcher({
+    pool,
+    clock,
+    productScope,
+    onCommittedReceipt: async (client, principal, _command, receipt) => {
+      if (principal.agentOrigin === "external" && principal.sessionId)
+        await activity.record(client, {
+          accountId: principal.accountId,
+          sessionId: principal.sessionId,
+          summary: { ...receipt },
+        });
+    },
+  });
   const runs = new RunService(pool, { productScope: "pact", clock });
   mcp = new McpTransport({
     pool,
@@ -57,6 +72,7 @@ beforeAll(async () => {
     origin,
     clock,
     runLeases: runs,
+    activity: { record: (accountId, sessionId, summary) => activity.record(pool, { accountId, sessionId, summary }) },
     approvalProposals: {
       proposeAgent: async () => {
         throw new RunError("FORBIDDEN");
@@ -105,6 +121,87 @@ async function verifiedAccount(email: string): Promise<{ accountId: string; sess
 }
 
 describe("PACT-017 MCP transport", () => {
+  it("persists owner-only external activity atomically, deduplicates receipts and survives session closure", async () => {
+    const { accountId, sessionToken } = await verifiedAccount(`activity-${randomUUID()}@example.test`);
+    const other = await verifiedAccount(`activity-other-${randomUUID()}@example.test`);
+    const principal = { accountId, productScope, audience: "agent" as const, agentScopes: ["game:act" as const] };
+    const init = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const commandId = randomUUID();
+    const command = {
+      schemaVersion: SCHEMA_VERSION,
+      commandId,
+      actor: { principalId: accountId, productScope, audience: "human", subject: { type: "account", id: accountId } },
+      action: { kind: "sandbox.echo", message: "private payload must not be journaled" },
+      submittedAt: new Date().toISOString(),
+    };
+    const call = { method: "tools/call", id: 2, params: { name: "pact_command_v1", arguments: command } };
+    await mcp.handlePost(principal, call, init.sessionId);
+    await mcp.handlePost(principal, call, init.sessionId);
+    await expect(
+      mcp.handlePost(
+        principal,
+        { method: "tools/call", id: 3, params: { name: "unknown", arguments: { secret: "do not store" } } },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await mcp.closeSession(principal, init.sessionId as string);
+    const report = await activity.read(accountId);
+    expect(report.entries.map((entry) => entry.category)).toEqual(["committed", "failed"]);
+    expect(report.entries[0]?.commandId).toBe(commandId);
+    const server = Fastify();
+    registerRunRoutes(
+      server,
+      identity,
+      new RunService(pool, { productScope: "pact", clock: { now: () => new Date() } }),
+      activity,
+    );
+    const response = await server.inject({
+      method: "GET",
+      url: "/v1/runs/external-activity",
+      headers: { cookie: `pact_session=${sessionToken}` },
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["cache-control"]).toBe("no-store");
+    expect(response.json().entries).toEqual(report.entries);
+    const foreign = await server.inject({
+      method: "GET",
+      url: "/v1/runs/external-activity",
+      headers: { cookie: `pact_session=${other.sessionToken}` },
+    });
+    expect(foreign.json().entries).toEqual([]);
+    expect((await server.inject({ method: "GET", url: "/v1/runs/external-activity" })).statusCode).toBe(403);
+    await server.close();
+    expect((await activity.read(other.accountId)).entries).toEqual([]);
+    expect(JSON.stringify(report)).not.toMatch(/private payload|do not store|secret/);
+    const rows = await withTransaction(pool, (client) => activity.retention.exportAccount(client, accountId));
+    expect(JSON.stringify(rows)).not.toContain("private payload");
+    const failing = new CommandDispatcher({
+      pool,
+      productScope,
+      clock: { now: () => new Date() },
+      onCommittedReceipt: async () => {
+        throw new Error("Synthetic observer rollback");
+      },
+    });
+    const rollbackId = randomUUID();
+    await expect(
+      failing.dispatch(
+        { ...principal, agentOrigin: "external", sessionId: randomUUID() },
+        { ...command, commandId: rollbackId },
+      ),
+    ).rejects.toThrow("Synthetic observer rollback");
+    expect(await dispatcher.lookupReceipt(principal, rollbackId)).toBeNull();
+    await pool.query("UPDATE external_agent_activity SET created_at='2020-01-01' WHERE account_id=$1", [accountId]);
+    expect(
+      await withTransaction(pool, (client) => activity.retention.prune(client, new Date())),
+    ).toBeGreaterThanOrEqual(2);
+    expect((await activity.read(accountId)).entries).toEqual([]);
+  });
+
   it("advertises the PACT subpath OAuth discovery URL to unauthenticated Codex clients", async () => {
     const server = Fastify();
     const oauth = new OAuthService(pool, {
@@ -171,6 +268,20 @@ describe("PACT-017 MCP transport", () => {
     });
     expect(denied.statusCode).toBe(200);
     expect(denied.json()).toMatchObject({ result: { isError: true } });
+    expect(JSON.stringify(denied.json())).toContain("input schema");
+    const malformed = await server.inject({
+      method: "POST",
+      url: "/mcp",
+      headers: {
+        origin,
+        authorization: "Bearer synthetic-test-token",
+        "mcp-session-id": String(response.headers["mcp-session-id"]),
+      },
+      payload: { jsonrpc: "2.0", id: 22, method: "tools/call", params: { name: "run.open", arguments: null } },
+    });
+    expect(malformed.statusCode).toBe(200);
+    expect(malformed.json()).toMatchObject({ result: { isError: true } });
+    expect(JSON.stringify(malformed.json())).toContain("INVALID_REQUEST");
     const noLeaseProposal = await server.inject({
       method: "POST",
       url: "/mcp",

@@ -10,7 +10,7 @@ import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
 import type { OpenRouterAuthService } from "@pact/openrouter";
 import type { PrivacyService } from "@pact/privacy";
-import type { RunService } from "@pact/runs";
+import type { ExternalAgentActivity, RunService } from "@pact/runs";
 import type { TelegramService } from "@pact/telegram";
 import {
   createCorrelationIds,
@@ -80,6 +80,7 @@ export interface ApiModules {
   inbox?: InboxService;
   credentialVault?: CredentialVaultService;
   runs?: RunService;
+  externalActivity?: ExternalAgentActivity;
   openRouter?: OpenRouterAuthService;
   telegram?: TelegramService;
   privacy?: PrivacyService;
@@ -192,7 +193,7 @@ export function buildServer(
     }
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
-    if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs);
+    if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs, modules.externalActivity);
     if (modules.openRouter) {
       registerOpenRouterRoutes(server, modules.identity, modules.openRouter, modules.credentialVault);
     }

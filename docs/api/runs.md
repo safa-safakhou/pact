@@ -6,6 +6,14 @@ PACT-099 learning increment (local, not deployed): the inference worker now expo
 
 `@pact/runs` owns exclusive kingdom/subject write leases and the Envoy run lifecycle: start, wait, resume, stop, takeover, and MCP lease acquisition without inference.
 
+## External activity (PACT-099)
+
+`GET /v1/runs/external-activity` is a human-session owner-only, `no-store` read of the latest 50 external results. `pact_envoy_report_v1` without a run ID returns owner in-app runs plus `external` activity. Envoy displays the same factual categories, command/record/approval IDs and actual UTC timestamps. A committed instruction is not its completed consequence; proposed offers/signatures are not active contracts.
+
+Migration `0044_external_agent_activity.sql` belongs to runs. The dispatcher invokes the injected transaction-bound `onCommittedReceipt` port after its receipt write, before commit. The API supplies only transport-derived external identity and server-issued receipt metadata; game effects, authority, receipt and committed activity roll back together on failure. Receipt retries do not duplicate history, and MCP session deletion does not remove it. Failed/proposed tool observations are ancillary and cannot replace a returned result when their observer fails. No raw arguments, player text, credentials, model assessments or hidden reasoning are stored. Noncommitting failures do not occupy a command's committed deduplication key.
+
+The module's `retention` hook is registered with API privacy: 30-day pruning, owner export and deletion. Account erasure also cascades. New tables are additive for application rollback. MCP denials return explicit recovery advice; malformed null/array arguments are normal tool errors, not HTTP 500. All static guide topics now fit 3,600 bytes; large owner snapshots explicitly omit complete groups. Deployment and uncoached-agent observations must still be recorded separately.
+
 ## HTTP
 
 | Method | Path | Behavior |

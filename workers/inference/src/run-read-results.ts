@@ -1,3 +1,4 @@
+import { agentRecovery } from "@pact/application";
 import type { CommandReceipt } from "@pact/contracts";
 import type { ConversationPage, KingdomWorldView } from "@pact/kingdom";
 
@@ -70,6 +71,9 @@ export function boundedCommandReceiptResult(receipt: CommandReceipt): string {
   const summary = {
     commandId: receipt.commandId,
     code: receipt.code,
+    ...(receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED"
+      ? { recovery: agentRecovery(receipt.code) }
+      : {}),
     charged: receipt.charged,
     recordVersions: receipt.recordVersions,
     disposition:

@@ -1,6 +1,6 @@
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
-import { RunError, type RunService } from "@pact/runs";
+import { type ExternalAgentActivity, RunError, type RunService } from "@pact/runs";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -45,7 +45,12 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
   }
 }
 
-export function registerRunRoutes(server: FastifyInstance, identity: IdentityService, runs: RunService): void {
+export function registerRunRoutes(
+  server: FastifyInstance,
+  identity: IdentityService,
+  runs: RunService,
+  externalActivity?: ExternalAgentActivity,
+): void {
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url.startsWith("/v1/runs")) reply.header("cache-control", "no-store");
     return payload;
@@ -86,6 +91,10 @@ export function registerRunRoutes(server: FastifyInstance, identity: IdentitySer
   server.get("/v1/runs", async (request, reply) =>
     safe(reply, async () => runs.list((await identity.authenticate(sessionToken(request))).accountId)),
   );
+  if (externalActivity)
+    server.get("/v1/runs/external-activity", async (request, reply) =>
+      safe(reply, async () => externalActivity.read((await identity.authenticate(sessionToken(request))).accountId)),
+    );
   server.get<{ Params: { runId: string } }>("/v1/runs/:runId/report", async (request, reply) =>
     safe(reply, async () =>
       runs.report(request.params.runId, (await identity.authenticate(sessionToken(request))).accountId),

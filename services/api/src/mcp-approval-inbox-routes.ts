@@ -1,4 +1,4 @@
-import { type CommandDispatcher, DispatcherError } from "@pact/application";
+import { agentRecovery, type CommandDispatcher, DispatcherError } from "@pact/application";
 import { ApprovalError, type ApprovalService } from "@pact/approvals";
 import { AgentScopeSchema, ProductScopeSchema } from "@pact/contracts";
 import type { IdentityService } from "@pact/identity";
@@ -134,7 +134,7 @@ export function registerMcpRoutes(
             jsonrpc: "2.0",
             id: body.id ?? null,
             result: {
-              content: [{ type: "text", text: JSON.stringify({ error: { code } }) }],
+              content: [{ type: "text", text: JSON.stringify({ error: { code }, recovery: agentRecovery(code) }) }],
               isError: true,
             },
           };

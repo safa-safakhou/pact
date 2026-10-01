@@ -6,6 +6,8 @@ export interface AuthenticatedPrincipal {
   readonly productScope: ProductScope;
   readonly audience: "human" | "agent" | "service";
   readonly sessionId?: string;
+  /** Transport-derived origin, never copied from a command actor. */
+  readonly agentOrigin?: "external" | "in_app";
   /** Granted by the authenticating route, never copied from a command envelope. */
   readonly agentScopes?: readonly AgentScope[];
 }

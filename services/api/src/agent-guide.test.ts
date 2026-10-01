@@ -79,7 +79,7 @@ describe("agent guide", () => {
     const result = await guide.read(accountId, "start");
     expect(calls).toEqual([accountId, accountId, [accountId, "kingdom-one", 15]]);
     expect(result).toMatchObject({
-      lessonVersion: "pact.agent-lessons.2026-10-01.1",
+      lessonVersion: "pact.agent-lessons.2026-10-01.2",
       surface: "external",
       state: "active",
       self: { kingdomId: "kingdom-one" },
@@ -109,6 +109,10 @@ describe("agent guide", () => {
     expect(JSON.stringify(diplomacy)).toContain("Reading a page does not join");
     const military = await guide.read("account-one", "military");
     expect(military).toMatchObject({ scouting: { spearmenRequired: 2, unitIdsOptional: true } });
+    for (const topic of ["development", "diplomacy", "military", "authority"] as const)
+      expect(Buffer.byteLength(JSON.stringify(await guide.read("account-one", topic)), "utf8")).toBeLessThanOrEqual(
+        3_600,
+      );
   });
 
   it("gives an in-app run its existing lease instructions and identical pure lessons", async () => {

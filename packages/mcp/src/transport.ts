@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { AuthenticatedPrincipal, CommandDispatcher } from "@pact/application";
+import { type AuthenticatedPrincipal, agentRecovery, type CommandDispatcher } from "@pact/application";
 import {
   AgentGameActionSchema,
   AgentGuideQuerySchema,
@@ -7,6 +7,7 @@ import {
   ApprovalStatusQuerySchema,
   type ChronicleReadQuery,
   ChronicleReadQuerySchema,
+  type CommandReceipt,
   ConversationReadQuerySchema,
   CourtReadQuerySchema,
   commandJsonSchema,
@@ -45,6 +46,18 @@ export const MCP_PROTOCOL_PRIMARY = "2025-11-25";
 export const MCP_PROTOCOL_COMPAT = "2025-06-18";
 export const SUPPORTED_MCP_PROTOCOLS = new Set([MCP_PROTOCOL_PRIMARY, MCP_PROTOCOL_COMPAT]);
 
+function receiptToolResult(receipt: CommandReceipt) {
+  const denied = receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED";
+  return {
+    content: [
+      { type: "text", text: JSON.stringify(receipt) },
+      ...(denied ? [{ type: "text", text: agentRecovery(receipt.code) }] : []),
+    ],
+    structuredContent: receipt,
+    ...(denied ? { isError: true } : {}),
+  };
+}
+
 export class McpError extends Error {
   constructor(
     readonly code:
@@ -80,6 +93,7 @@ export interface McpTransportOptions {
   readonly seals?: { read(sealId: string, accountId: string): Promise<unknown> };
   readonly chronicle?: { read(query: ChronicleReadQuery, accountId: string): Promise<unknown> };
   readonly runReports?: { read(runId: string | undefined, accountId: string): Promise<unknown> };
+  readonly activity?: { record(accountId: string, sessionId: string, summary: Record<string, unknown>): Promise<void> };
   readonly seasons?: {
     read(query: { cohortStartGameTimeMs?: number | undefined }, accountId: string): Promise<unknown>;
   };
@@ -265,10 +279,23 @@ export class McpTransport {
         };
       case "tools/call":
         await this.requireSession(principal.accountId, sessionId);
-        return {
-          response: this.result(body.id, await this.callTool(principal, body.params ?? {}, sessionId)),
-          ...(sessionId ? { sessionId } : {}),
-        };
+        try {
+          const result = await this.callTool({ ...principal, agentOrigin: "external" }, body.params ?? {}, sessionId);
+          const summary = result.structuredContent;
+          if (sessionId && summary && typeof summary === "object" && "code" in summary && summary.code !== "COMMITTED")
+            await this.observe(principal.accountId, sessionId, summary as Record<string, unknown>);
+          return { response: this.result(body.id, result), ...(sessionId ? { sessionId } : {}) };
+        } catch (error) {
+          if (
+            sessionId &&
+            error instanceof Error &&
+            "code" in error &&
+            typeof error.code === "string" &&
+            /^[A-Z][A-Z0-9_]{0,63}$/.test(error.code)
+          )
+            await this.observe(principal.accountId, sessionId, { code: error.code });
+          throw error;
+        }
       default:
         return {
           response: {
@@ -284,6 +311,15 @@ export class McpTransport {
   async openStream(principal: AuthenticatedPrincipal, sessionId: string): Promise<{ protocolVersion: string }> {
     const row = await this.requireSession(principal.accountId, sessionId);
     return { protocolVersion: row.protocol_version };
+  }
+
+  private async observe(accountId: string, sessionId: string, summary: Record<string, unknown>): Promise<void> {
+    // A denial/proposal observation is ancillary. Never replace the original result with an observer failure.
+    try {
+      await this.options.activity?.record(accountId, sessionId, summary);
+    } catch {
+      /* Receipt truth is unaffected. */
+    }
   }
 
   /** MCP HTTP DELETE: terminate only the authenticated session and its matching write lease. */
@@ -331,6 +367,11 @@ export class McpTransport {
       throw new McpError("FORBIDDEN", 403);
     }
     const name = String(params.name ?? "");
+    if (
+      params.arguments !== undefined &&
+      (params.arguments === null || typeof params.arguments !== "object" || Array.isArray(params.arguments))
+    )
+      throw new McpError("INVALID_REQUEST");
     const args = (params.arguments ?? {}) as Record<string, unknown>;
     if (name === pactProfileTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.profile) throw new McpError("FORBIDDEN", 403);
@@ -493,7 +534,7 @@ export class McpTransport {
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const receipt = await this.options.dispatcher.lookupReceipt(principal, query.data.commandId);
       if (!receipt) throw new McpError("INVALID_REQUEST", 404);
-      return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
+      return receiptToolResult(receipt);
     }
     if (name === pactApprovalStatusTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.approvals)
@@ -543,7 +584,7 @@ export class McpTransport {
         { ...principal, ...(sessionId ? { sessionId } : {}) },
         command,
       );
-      return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
+      return receiptToolResult(receipt);
     }
     if (name === "pact_command_v1") {
       const receipt = await this.options.dispatcher.dispatch(
@@ -583,7 +624,7 @@ export class McpTransport {
       { ...principal, ...(sessionId ? { sessionId } : {}) },
       command,
     );
-    return { content: [{ type: "text", text: JSON.stringify(receipt) }], structuredContent: receipt };
+    return receiptToolResult(receipt);
   }
 
   private async requireSession(

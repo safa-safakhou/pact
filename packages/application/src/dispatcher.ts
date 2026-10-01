@@ -32,6 +32,13 @@ export interface CommandDispatcherOptions {
   readonly trace?: TraceReporter;
   readonly game?: GameCommandPort;
   readonly social?: SocialCommandPort;
+  /** Transaction-bound metadata observer; failure rolls back the command and its receipt together. */
+  readonly onCommittedReceipt?: (
+    client: PoolClient,
+    principal: AuthenticatedPrincipal,
+    command: CommandEnvelope,
+    receipt: CommandReceipt,
+  ) => Promise<void>;
 }
 
 export interface SocialCommandPort {
@@ -255,6 +262,7 @@ export class CommandDispatcher {
           correlation: correlationIds,
           ...(this.options.trace ? { trace: this.options.trace } : {}),
         });
+        await this.options.onCommittedReceipt?.(client, principal, command, receipt);
         return receipt;
       },
       {
@@ -304,6 +312,7 @@ export class CommandDispatcher {
             JSON.stringify(receipt),
           ],
         );
+        await this.options.onCommittedReceipt?.(client, principal, command, receipt);
         return receipt;
       });
     } catch (error) {

@@ -64,6 +64,8 @@ describe("first-session and run decision interface", () => {
     expect(html).toContain("40,000");
     expect(html).toContain("Provider price unavailable");
     expect(html).toContain("no model call has started");
+    expect(html).toContain("External-agent recorded activity");
+    expect(html).toContain("No hidden reasoning");
     expect(html).toContain('disabled=""');
   });
   it("result card separates factual denial from untrusted assessment and links exact human approval", () => {

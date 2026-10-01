@@ -50,7 +50,7 @@ import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { OpenRouterAuthService } from "@pact/openrouter";
 import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
-import { RunError, RunService } from "@pact/runs";
+import { ExternalAgentActivity, RunError, RunService } from "@pact/runs";
 import { TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { AgentGuideReader } from "./agent-guide.js";
@@ -115,6 +115,7 @@ const runs = new RunService(pool, {
     }
   },
 });
+const externalActivity = new ExternalAgentActivity(pool, "pact", clock);
 const social = new SocialService(
   "pact",
   new ResourceLedger("pact"),
@@ -199,6 +200,18 @@ const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
+  onCommittedReceipt: async (client, principal, command, receipt) => {
+    if (principal.agentOrigin !== "external" || !principal.sessionId) return;
+    const proposed =
+      !command.action.kind.endsWith("withdraw") &&
+      Object.keys(receipt.recordVersions).some((key) => /^(supply-offer|garrison-offer|contact-request):/.test(key)) &&
+      !Object.keys(receipt.recordVersions).some((key) => /^(supply-contract|garrison-contract):/.test(key));
+    await externalActivity.record(client, {
+      accountId: principal.accountId,
+      sessionId: principal.sessionId,
+      summary: { ...receipt, disposition: proposed ? "proposed" : "committed" },
+    });
+  },
   social: new SocialCommandHandler(invitations, courts, politics, seals, chronicle),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
@@ -246,7 +259,15 @@ const mcp = new McpTransport({
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
   seals: { read: (id, accountId) => seals.read(id, accountId) },
   chronicle: { read: async (query, accountId) => chronicle.read(query, (await world.read()).gameTimeMs, accountId) },
-  runReports: { read: (id, accountId) => (id ? runs.report(id, accountId) : runs.list(accountId)) },
+  runReports: {
+    read: async (id, accountId) =>
+      id
+        ? runs.report(id, accountId)
+        : { ...(await runs.list(accountId)), external: await externalActivity.read(accountId) },
+  },
+  activity: {
+    record: (accountId, sessionId, summary) => externalActivity.record(pool, { accountId, sessionId, summary }),
+  },
   politics: {
     read: async (handle, offset, accountId) =>
       politics.read(handle, offset, accountId, (await world.read()).gameTimeMs),
@@ -290,6 +311,7 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    externalActivity.retention,
     {
       name: "seasonHonors",
       forgetAccount: (c, id) => honors.forgetAccount(c, id),
@@ -371,6 +393,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   approvals,
   inbox,
   runs,
+  externalActivity,
   openRouter,
   privacy,
   ...(credentialVault ? { credentialVault } : {}),

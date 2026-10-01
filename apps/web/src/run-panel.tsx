@@ -25,6 +25,7 @@ type Entry = {
   nextStep: string;
 };
 type Report = {
+  timestamps?: Record<string, string>;
   label: string;
   status: string;
   entries: Entry[];
@@ -46,6 +47,11 @@ export function RunResult({ report }: { report: Report }) {
             {e.category.replaceAll("_", " ")} · {e.code}
           </h4>
           <p>{e.nextStep}</p>
+          {report.timestamps?.[e.id] && (
+            <p>
+              <time dateTime={report.timestamps[e.id]}>{report.timestamps[e.id]}</time>
+            </p>
+          )}
           {e.commandId && (
             <p>
               <a href={`${import.meta.env.BASE_URL}v1/receipts/${e.commandId}`} target="_blank" rel="noreferrer">
@@ -92,6 +98,8 @@ export function RunPanel({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [report, setReport] = useState<Report | null>(null);
+  const [external, setExternal] = useState<Report | null>(null);
+  const [externalError, setExternalError] = useState("");
   const generation = useRef(0);
   const reportGeneration = useRef(0);
   useEffect(() => {
@@ -114,6 +122,18 @@ export function RunPanel({
       if (g === generation.current) setRuns(r.runs as Run[]);
     } catch (e) {
       if (g === generation.current) setError(String(e));
+    }
+    try {
+      const activity = await request("/v1/runs/external-activity");
+      if (g === generation.current) {
+        setExternal(activity as unknown as Report);
+        setExternalError("");
+      }
+    } catch {
+      if (g === generation.current) {
+        setExternal(null);
+        setExternalError("External-agent activity is unavailable; no success or absence is inferred.");
+      }
     }
   }, [request]);
   useEffect(() => {
@@ -302,6 +322,13 @@ export function RunPanel({
         </article>
       ))}
       {report && <RunResult report={report} />}
+      <h3>External-agent recorded activity</h3>
+      <p>
+        Receipt-backed actions from your external chats. No hidden reasoning or chatbot token usage is collected.
+        Refresh to inspect new moves; reading never starts inference.
+      </p>
+      {externalError && <p role="status">{externalError}</p>}
+      {external && <RunResult report={external} />}
     </section>
   );
 }

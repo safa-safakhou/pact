@@ -1,5 +1,13 @@
 # PACT-099 — shared learning and discovery progress
 
+## 1 October continuation — activity implementation
+
+Implemented the external activity module/migration, atomic dispatcher receipt observer, owner HTTP/MCP reporting and Envoy display. Separate denial/proposal observations never change receipt truth. Activity contains only bounded server metadata, not raw arguments or private prose; replay/session closure, transaction rollback, owner isolation, no-store HTTP, export and retention are tested. Malformed arguments now get normal recoverable tool errors. Static diplomacy lessons were shortened without removing the human handoffs, and all four rule-topic responses are verified within 3,600 bytes. Lesson revision is `pact.agent-lessons.2026-10-01.2`. See [runs API](../../api/runs.md).
+
+Actual final local checks: full build/typecheck/lint and 212 unit tests pass; 284 PostgreSQL integration tests pass with one optional live-model test skipped. A first full run caught the new migration missing from the readiness fixture; that fixture was corrected and the full suite rerun successfully. Existing lint informational/warnings are unchanged.
+
+Fresh GPT-6 Luna read-only connection check (outside the repo; no gameplay coaching) did not reach PACT: saved `pact_aster` OAuth refresh returned `INVALID_GRANT`. The player truthfully reported no connection and made no move. Usage: 52,689 input, 27,136 cached and 231 output tokens on the existing Codex login, not a PACT API call. This is a recorded connection failure, not unaided gameplay acceptance. Reauthorization and matching deployment/fresh play remain before closing 099 or starting 080. Earlier sections below describe the first increment and are superseded only where this continuation provides actual new evidence.
+
 Ticket: [MNI-158 / PACT-099](https://linear.app/mnim/issue/MNI-158/pact-099-complete-agent-first-access-learning-and-observable-play), **In Progress**, Mohammad Safakhou / Codex.
 Implementation: `8789315`. Verification: 1 October 2026, local Node 24 / PostgreSQL 17; synthetic fixtures and deterministic fake providers only.
 
