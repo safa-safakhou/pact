@@ -1,5 +1,7 @@
 # PACT-099 — shared learning and discovery progress
 
+**Historical progress record. Superseded by [agent-first completion](agent-first-completion.md), including the matching deployment, fresh three-account play and acceptance decision.** Statements below about unfinished work/old hosted revision describe their earlier checkpoint, not current status.
+
 ## 1 October continuation — activity implementation
 
 Implemented the external activity module/migration, atomic dispatcher receipt observer, owner HTTP/MCP reporting and Envoy display. Separate denial/proposal observations never change receipt truth. Activity contains only bounded server metadata, not raw arguments or private prose; replay/session closure, transaction rollback, owner isolation, no-store HTTP, export and retention are tested. Malformed arguments now get normal recoverable tool errors. Static diplomacy lessons were shortened without removing the human handoffs, and all four rule-topic responses are verified within 3,600 bytes. Lesson revision is `pact.agent-lessons.2026-10-01.2`. See [runs API](../../api/runs.md).

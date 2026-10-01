@@ -1,5 +1,17 @@
 # PACT handoff — 1 October 2026
 
+## Current final state — supersedes the historical checkpoints below
+
+**Game-only Alpha complete: 13/13, 71 total Done, 28 Later postponed.** PACT-099/MNI-158 and PACT-080/MNI-155 are Done in Linear with linked evidence. No further dependency-ready Alpha work remains; wait for founder/friend feedback rather than selecting Later tickets. Production PACT-081 stays postponed and its original criteria are not implied by Alpha closure.
+
+Hosted: **`alpha-20261001-1` / `88c273f`**, existing VPS only, migrations 0036–0044 applied. Pre-rollout encrypted backup `537793fe`; public deploy verification passed. Same-VPS Seal signer and exact shared-edge public signing-key route work. Preserve all host-only secrets and unrelated shared-edge routes. See [VPS operations](../operations/vps-deployment.md).
+
+Implemented atomic external receipt/activity journaling with owner Envoy/API/MCP reports, compact shared lessons/discovery and recoverable invalid/busy results. Build/typecheck/lint and 212 unit tests pass; final independent full integration rerun 284 pass/one optional live-model skip. Three independent fresh GPT-6 Luna Codex players used ordinary objectives, genuine contacts and no repository/UUID/action coaching; five moves committed, negotiations stayed pending, Cinder's storage upgrade stayed active rather than falsely completed. Normal temporary grants were revoked afterward. Saved desktop profiles can still require browser reauthorization; no PACT paid inference enabled.
+
+Read [agent completion](reports/agent-first-completion.md), [final rehearsal](reports/alpha-final-rehearsal.md), and [friend instructions](../operations/alpha-start.md) for exact commands, records, usage, feedback and known limits. Deterministic full gameplay/season checks use disposable independent worlds; the live three agents did not execute every game action. Fun is not established: recorded agent feedback was mixed/mildly engaging/confusing. Captured email needs operator verification delivery, test authority may need human-created supply offers, and competitive honors remain provisional. Other operational/deployment knowledge is in the repository; secret values intentionally are not.
+
+## Historical checkpoints — not current work-selection instructions
+
 ## Current assignment
 
 The founder approved Version 1.4 [game-only Alpha](../pact/alpha.md). Only PACT-054–059, 061, 062, 069, 070, 073, 099 and 080 are authorized. Select `delivery_track: alpha` / Linear **PACT Alpha**, in dependency-ready backlog order. The other 28 unfinished tickets are **PACT Later**, postponed—not done/canceled/blocked. This overrides historical work-selection and full release requirements below. Keep the single existing VPS and simple web; focus on agents learning/discovering/playing and visible factual reports. Native/Telegram, payments, production certification, large pilot and art/audio are not Alpha prerequisites.

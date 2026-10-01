@@ -1,18 +1,20 @@
 # Private Alpha web controls
 
-## Local live-only usability update — 1 October 2026 (not deployed)
+Current release: **`alpha-20261001-1` / `88c273f`**, deployed 1 October 2026. The updates below are now hosted, including migrations 0036–0044 and external receipt-backed Envoy activity. Start with [friend instructions](alpha-start.md); actual checks/limits are in [final rehearsal](../implementation/reports/alpha-final-rehearsal.md). Earlier release narratives below are historical evidence, not current-state claims.
+
+## Live-only usability update — 1 October 2026
 
 PACT-073 adds a keyboard skip link, focused exact-action confirmation with Escape/Cancel focus return, phone reflow for long identifiers/forms, and at least 44 CSS-pixel button/link/disclosure targets. The connection notice distinguishes offline, refresh-required and the time of the last owner refresh; this wall-clock timestamp is not committed game time. Browser online/offline events, fetch failures and HTTP 5xx invalidate write readiness. Reads have a 10-second transport deadline so an unavailable server does not leave the page waiting indefinitely.
 
 Both the web SDK and ordinary request handlers (including run controls and exact human approvals) share the live-write guard. Reconnect alone does not enable commitments: a current-generation successful owner/draft/session read is required. An outage discards an open game confirmation and exact approval preview; a run's cost/token confirmation must be made again. No background write queue or reconnect replay exists. A submitted command whose response was lost may already have committed: retain its command ID and reconcile the receipt, never assume the timeout rolled it back. Server authorization, versions, charges and receipts remain authoritative. No service worker, private-response caching or installable-PWA certification is introduced. See [the usability evidence](../implementation/reports/alpha-web-usability.md).
 
-## Local season update — 1 October 2026 (not deployed)
+## Season update — 1 October 2026
 
-PACT-069/070 add the Kingdom tab's **Season & Fortune** card: actual game week, Grain harvest, next game-time transition, signed provisional Fortune, equal-age arrival status and meaningful-day count. Closure shows public competition ranks and provisional honors. Arrival medals/dated participation banners are display-only; bands below 100 eligible players receive no percentile claim. Competitive borders/plaques are not finalized in Alpha. See [season/agent/API instructions](../architecture/seasons.md). This requires migrations through `0043_season_honors.sql` and matching rules/API/web releases; it has not been deployed to the hosted Alpha.
+PACT-069/070 add the Kingdom tab's **Season & Fortune** card: actual game week, Grain harvest, next game-time transition, signed provisional Fortune, equal-age arrival status and meaningful-day count. Closure shows public competition ranks and provisional honors. Arrival medals/dated participation banners are display-only; bands below 100 eligible players receive no percentile claim. Competitive borders/plaques are not finalized in Alpha. See [season/agent/API instructions](../architecture/seasons.md). Migrations through `0043_season_honors.sql` are applied in the current hosted release.
 
-## Local social/run update — 1 October 2026 (not deployed)
+## Social/run update — 1 October 2026
 
-PACT-059/061/062 add public Chronicle stories/notices, exact player-handle lookup in People, a first-session checklist derived from actual owner/social projections, and visible bounded Envoy start/stop/wait/resume/report controls. Reports distinguish committed instructions, proposals, failures and human approvals; assessments are explicitly non-factual. Receipt links read the exact owned receipt. Approval links open Envoy with the exact ID; preview is still required and changing the lookup clears it. Latest-selected report/profile reads cannot be replaced by older responses. Social-read failure is unknown, not zero contacts or successful trade. These changes are local only; the hosted revision below remains unchanged.
+PACT-059/061/062/099 add public Chronicle stories/notices, exact player-handle lookup in People, a first-session checklist derived from actual owner/social projections, bounded Envoy controls and external-agent recorded activity. Reports distinguish committed instructions, proposals, failures and human approvals; assessments are explicitly non-factual. Receipt links read the exact owned receipt. Approval links open Envoy with the exact ID; preview is still required and changing the lookup clears it. Latest-selected report/profile reads cannot be replaced by older responses. Social-read failure is unknown, not zero contacts or successful trade. These changes are deployed in the current release; older release observations below remain dated history.
 
 ### Repeatable isolated Chrome rehearsal
 

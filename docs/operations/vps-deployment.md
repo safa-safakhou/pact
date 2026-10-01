@@ -1,5 +1,9 @@
 # Single-VPS deployment
 
+## Current private Alpha — 1 October 2026
+
+Release `alpha-20261001-1` was built from pinned source `88c273f` and deployed after encrypted backup `537793fe`. Migrations 0036–0044, deletion-registry replay and public `verify.sh` passed. All PACT application processes, including the same-VPS Seal signer, use the release image; paid in-app inference remains default-off. The shared edge now routes the exact `/.well-known/pact-signing-keys.json` path to PACT. Configuration validated before installation; prior edge file is `/srv/agentic-world/infra/production/Caddyfile.pact-alpha-20261001-backup`. Do not replace unrelated edge handlers or overwrite host-only signing/other secrets. Application rollback uses previous images and forward-compatible additive tables; do not restore the database to undo a web change. See [final rehearsal](../implementation/reports/alpha-final-rehearsal.md) and [friend instructions](alpha-start.md). Earlier dated rollout narratives below remain historical.
+
 PACT connection testing runs as an isolated Docker Compose project on the existing EU-hosted VPS. It does not require AWS, Kubernetes, Redis, or a second database host. The checked-in connection-test environment uses `https://safa.dedyn.io/pact`; only synthetic accounts are allowed until PACT-025 passes.
 
 ## Layout and isolation

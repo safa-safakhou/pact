@@ -4428,7 +4428,7 @@
       "id": "PACT-099",
       "title": "Complete agent-first access, learning, and observable play",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "L",
@@ -4472,6 +4472,7 @@
         "external and in-app result summaries"
       ],
       "evidence": [
+        "Complete: 8789315 / 88c273f; docs/implementation/reports/agent-first-completion.md. Atomic external journal, owner Envoy/API/MCP reporting, short lessons and recovery. Build/typecheck/lint, 212 unit and 284 integration pass, optional live-model skip. Deployed alpha-20261001-1 with migrations 0036–0044 and public verification. Three fresh independent Luna accounts learned/discovered/acted from ordinary objectives without UUID/action/repository coaching; five committed moves match owner reports, negotiations/human offer authority remain honestly pending. Normal temporary OAuth grants revoked. Linear MNI-158 Done; comment db6bb46a-bdbd-4be9-9b2c-0400ded0498a.",
         "Partial PACT-099 learning/discovery increment: 8789315; docs/implementation/reports/agent-first-progress.md. Shared owner guide and public handle lookup across MCP/in-app worker; versioned lessons and bounded complete-field output. Node 24 build/typecheck/lint pass, 212 unit and 283 PostgreSQL integration tests pass, one optional live-model skip; final targeted owner/start/lookup fake-provider test passes. No external activity journal or fresh uncoached model play yet; acceptance remains incomplete, In Progress. Local only, hosted 2143d92 unchanged."
       ],
       "assignee": "Mohammad Safakhou / Codex",
@@ -4483,7 +4484,7 @@
       "id": "PACT-080",
       "title": "Rehearse Season One end to end",
       "phase": 3,
-      "status": "todo",
+      "status": "done",
       "kind": "verification",
       "owner_role": "QA",
       "size": "L",
@@ -4526,8 +4527,10 @@
       "components": [
         "full-season release validation"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Complete narrowed Alpha: docs/implementation/reports/alpha-final-rehearsal.md; friends docs/operations/alpha-start.md. All 13 dependencies freshly Done before claim. Full integration rerun 284 pass/one optional live-model skip, covering real command/contract/battle/political publication and isolated six-week closure/carryover/provisional results. Three independent live Luna accounts, coherent owner activity and matching Chrome deployment observed; mixed feedback recorded, no unobserved fun/production claims. Live alpha-20261001-1 / 88c273f, backup 537793fe, migrations 0036–0044, deploy verification pass. Linear MNI-155 Done; comment 5cb5a440-3216-4a6c-b70a-74716d5845e5. Original Later acceptance remains postponed."
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

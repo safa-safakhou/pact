@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**21 tickets · 3 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**21 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -456,7 +456,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-099"></a>
 ## PACT-099 — Complete agent-first access, learning, and observable play
 
-**Status:** in_progress · **Role:** Integrations · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -474,20 +474,21 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] A fresh connected agent learns state/rules, discovers real counterparties and acts from a normal objective without repository access, supplied UUIDs or action JSON; no fabricated players.
-- [ ] New gameplay tools use the existing dispatcher/views and hand back human-only decisions rather than bypassing them; web and agent reads show the same committed records.
-- [ ] Each account's web activity/report view truthfully separates committed/proposed/failed/waiting steps and can resume from receipts after disconnect; malformed/busy actions provide useful feedback without duplicate effects.
+- [x] A fresh connected agent learns state/rules, discovers real counterparties and acts from a normal objective without repository access, supplied UUIDs or action JSON; no fabricated players.
+- [x] New gameplay tools use the existing dispatcher/views and hand back human-only decisions rather than bypassing them; web and agent reads show the same committed records.
+- [x] Each account's web activity/report view truthfully separates committed/proposed/failed/waiting steps and can resume from receipts after disconnect; malformed/busy actions provide useful feedback without duplicate effects.
 
 **Assignee:** Mohammad Safakhou / Codex
 
 **Evidence**
 
+- Complete: 8789315 / 88c273f; docs/implementation/reports/agent-first-completion.md. Atomic external journal, owner Envoy/API/MCP reporting, short lessons and recovery. Build/typecheck/lint, 212 unit and 284 integration pass, optional live-model skip. Deployed alpha-20261001-1 with migrations 0036–0044 and public verification. Three fresh independent Luna accounts learned/discovered/acted from ordinary objectives without UUID/action/repository coaching; five committed moves match owner reports, negotiations/human offer authority remain honestly pending. Normal temporary OAuth grants revoked. Linear MNI-158 Done; comment db6bb46a-bdbd-4be9-9b2c-0400ded0498a.
 - Partial PACT-099 learning/discovery increment: 8789315; docs/implementation/reports/agent-first-progress.md. Shared owner guide and public handle lookup across MCP/in-app worker; versioned lessons and bounded complete-field output. Node 24 build/typecheck/lint pass, 212 unit and 283 PostgreSQL integration tests pass, one optional live-model skip; final targeted owner/start/lookup fake-provider test passes. No external activity journal or fresh uncoached model play yet; acceptance remains incomplete, In Progress. Local only, hosted 2143d92 unchanged.
 
 <a id="pact-080"></a>
 ## PACT-080 — Rehearse Season One end to end
 
-**Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
+**Status:** done · **Role:** QA · **Size:** L · **Type:** verification
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -506,9 +507,15 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] All preceding Alpha tickets are done and the complete gameplay sequence has reproducible evidence, coherent receipts/state and no unresolved gameplay-blocking defect.
-- [ ] Three agent accounts discover/learn/play without repository material or privileged edits; pending agents remain pending, reports agree with receipts, and failed behavior is recorded and rerun after fixes.
-- [ ] The isolated season rehearsal preserves assets/ongoing terms and concludes with correct results; Alpha handoff names the deployed revision, known limits and how friends connect/play, without claiming production or an unobserved fun result.
+- [x] All preceding Alpha tickets are done and the complete gameplay sequence has reproducible evidence, coherent receipts/state and no unresolved gameplay-blocking defect.
+- [x] Three agent accounts discover/learn/play without repository material or privileged edits; pending agents remain pending, reports agree with receipts, and failed behavior is recorded and rerun after fixes.
+- [x] The isolated season rehearsal preserves assets/ongoing terms and concludes with correct results; Alpha handoff names the deployed revision, known limits and how friends connect/play, without claiming production or an unobserved fun result.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- Complete narrowed Alpha: docs/implementation/reports/alpha-final-rehearsal.md; friends docs/operations/alpha-start.md. All 13 dependencies freshly Done before claim. Full integration rerun 284 pass/one optional live-model skip, covering real command/contract/battle/political publication and isolated six-week closure/carryover/provisional results. Three independent live Luna accounts, coherent owner activity and matching Chrome deployment observed; mixed feedback recorded, no unobserved fun/production claims. Live alpha-20261001-1 / 88c273f, backup 537793fe, migrations 0036–0044, deploy verification pass. Linear MNI-155 Done; comment 5cb5a440-3216-4a6c-b70a-74716d5845e5. Original Later acceptance remains postponed.
 
 <a id="pact-098"></a>
 ## PACT-098 — Replace MVP operator placeholders with reviewed production facts

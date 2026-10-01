@@ -39,7 +39,7 @@ For this explicitly authorized private game session, set `default_tools_approval
 
 Open one new Codex chat per kingdom, choose **GPT-6 Luna**, and give it only its assigned MCP name and kingdom ID. The Codex configuration may expose all three names to every chat; the prompt is an operational boundary, **not** technical isolation between the chats. Server OAuth grants isolate each connection to its account, and PACT enforces the kingdom mandate, but a chat with access to another MCP name could deliberately call it. For adversarial isolation, run the chats under separate OS users or separate Codex configuration homes.
 
-Keep each 15-minute play session inside one Codex **turn**. Codex may reconnect its MCP transport between turns; PACT binds the write lease to the original MCP session, so a later follow-up turn may be unable to use that lease even before wall-clock expiry. Until an explicit MCP lease-close/resume operation exists, wait for expiry before starting a fresh turn on the same kingdom. Do not open multiple simultaneous chats or CLI sessions for one profile.
+Keep each 15-minute play session inside one Codex **turn**. Codex may reconnect its MCP transport between turns; PACT binds the write lease to the original MCP session. Normal MCP session deletion releases that session's lease. If a process crashes without closing, wait for expiry before starting another turn; never take over somebody else's live lease. Do not open concurrent chats or CLI sessions for one profile.
 
 ## Player prompt template
 
@@ -49,7 +49,7 @@ For an ordinary player, the goal is a short request. On this operator's Codex in
 
 > Use only `pact_aster` for PACT. Enter my kingdom, tell me what is happening, and try to secure a modest Grain supply without raiding anyone. Make permitted moves within my existing authority; bring human-only decisions back to me. Show me what actually committed.
 
-`pact_agent_guide_v1` is the discoverable, read-only starting point. It resolves the owner's kingdom from OAuth, returns factual state, contacts, requests, offers and mandate, and offers versioned `development`, `diplomacy`, `military` and `authority` lessons. The agent should learn mechanics from game tools. The local Alpha now includes real public notices (`pact_chronicle_read_v1`), Courts/rosters (`pact_court_read_v1`) and exact-handle lookup (`pact_player_find_v1`). After a matching deployment it can discover genuine introductions without operator-supplied UUIDs. Empty results must be reported truthfully; no all-player directory or invented candidates. Hosted revision `2143d92` does not yet include these local additions; do not mistake this documentation update for a rollout or new unaided playtest.
+`pact_agent_guide_v1` is the discoverable, read-only starting point. It resolves the owner's kingdom from OAuth, returns factual state, contacts, requests, offers and mandate, and offers versioned `development`, `diplomacy`, `military` and `authority` lessons. The agent should learn mechanics from game tools. Hosted release `alpha-20261001-1` / `88c273f` includes real public notices (`pact_chronicle_read_v1`), Courts/rosters (`pact_court_read_v1`) and exact-handle lookup (`pact_player_find_v1`). It can discover genuine introductions without operator-supplied UUIDs. Empty results must be reported truthfully; no all-player directory or invented candidates. [Three fresh Luna players](../implementation/reports/agent-first-completion.md) learned/acted from ordinary objectives on this release. Reports preserve failures and pending negotiation rather than inventing contracts.
 
 The start view also calls out building kinds already waiting or active and resources near storage capacity. An agent should heed those before queueing production: a second builder slot cannot upgrade the same kind concurrently, and extra production can be wasted at capacity. Rejected construction commands now explain `BUILDING_BUSY`, `SLOT_BUSY`, or `INVALID_LEVEL` where applicable. OAuth sessions can expire; if Codex reports `INVALID_GRANT`, reauthorize the named test connection using `codex mcp login <profile> --oauth-client-registration dcr --scopes world:read,messages:write,game:act` and confirm the account in the browser before retrying. Do not share OAuth callback URLs or tokens in a prompt.
 
@@ -64,6 +64,21 @@ The UUID-based prompt above is only a diagnostic route test, not an unaided-play
 For resource commands, **600 marked units in a world-view balance or cost equal one whole resource unit in command fields** such as `wholeAmount` and `wholePerHour`. A view balance of `12,600` Iron is 21 whole Iron, not 12,600 transferable Iron. A one-time `game.transfer` is unilateral; it is not a bilateral trade contract. For a reciprocal one-hour supply contract, send `game.supply.offer` with `counterpartyKingdomId` and exact `terms`: `aToB`, `bToA`, `aBond`, `bBond`, `durationHours: 1`, `noticeHours: 0`. Each flow is `{resource, wholePerHour}` or `null`; A is the offering kingdom. Both kingdoms must commit `game.supply.sign` for the same offer ID and version before the contract is active. A committed message merely records negotiation text. When a command fails validation or rules before commit, there is no receipt to read for that UUID. Scouting uses two available Spearmen; `unitIds` is optional and the engine selects eligible units when omitted.
 
 ## Watching and reporting
+
+### Operator-only repeatable three-account run
+
+From this checkout, with SSH access to the existing synthetic VPS account files and a Codex ChatGPT login:
+
+```sh
+node scripts/codex-alpha-player.mjs aster 'Enter my kingdom and seek a modest peaceful Grain supply.'
+node scripts/codex-alpha-player.mjs briar 'Find genuine diplomatic opportunities and seek a fair trade.'
+node scripts/codex-alpha-player.mjs cinder 'Improve my economy safely and look for cooperation.'
+node scripts/codex-alpha-player.mjs cinder --report
+```
+
+The three play commands may run concurrently because accounts are independent; never run two for the same account. The launcher privately reads the fixed host-only password file, uses normal login/DCR/PKCE, and passes the 15-minute access token only through a child-process environment variable. It revokes the refresh family afterward; no token enters the prompt, configuration file or transcript. `--report` reads the synthetic owner's factual activity without starting a model. It does not change a mandate, accept contacts, seed stock or advance the live clock. Codex gets an empty temporary directory, only that account's MCP, disabled shell/multi-agent tools, GPT-6 Luna and the ordinary goal. The launcher prints tool names, visible player reports and usage, never hidden reasoning/raw tool arguments. The OpenAI Docs skill verified this configuration against the official [Codex config reference](https://learn.chatgpt.com/docs/config-file/config-reference), including environment-sourced bearer tokens. This is an operator convenience, not a replacement for each friend's own OAuth consent.
+
+The existing bounded test preset permits supply signing but not supply-offer creation. The human may create an exact offer in People for the agent to consider, or decide a mandate change separately. An agent asking for terms does not create a contract, and it must not self-authorize missing actions. A fresh world read may omit `forecastMinutes` (default 60) or supply an integer 1–60; zero is invalid and causes no game mutation.
 
 The three Codex chats show live tool calls and their explanations. In PACT, each account's **Chronicle** shows committed events and receipts; **People** shows messages, offers, and contracts; **Envoy** shows approval requests. An operator can inspect the three chats' final reports and the owner views, then write a consolidated playtest note with exact receipt IDs and game observations. Do not treat a model's narrative as proof of a game action: match it to a PACT receipt or event.
 
