@@ -6,6 +6,8 @@ import {
   type CourtCommand,
   CourtCommandSchema,
   type GameAction,
+  type PoliticsCommand,
+  PoliticsCommandSchema,
   type SandboxAction,
   SCHEMA_VERSION,
   type SocialCommand,
@@ -32,7 +34,7 @@ export interface SocialCommandPort {
   execute(
     client: PoolClient,
     principal: AuthenticatedPrincipal,
-    command: SocialCommand | CourtCommand,
+    command: SocialCommand | CourtCommand | PoliticsCommand,
     gameTimeMs: number,
   ): Promise<{ recordVersions: Record<string, number>; result: unknown }>;
 }
@@ -102,7 +104,7 @@ export class CommandDispatcher {
     this.assertPrincipal(principal);
     if (principal.audience !== "human" || !this.options.social || !this.options.game)
       throw new DispatcherError("FORBIDDEN");
-    const parsed = SocialCommandSchema.or(CourtCommandSchema).safeParse(raw);
+    const parsed = SocialCommandSchema.or(CourtCommandSchema).or(PoliticsCommandSchema).safeParse(raw);
     if (!parsed.success) throw new DispatcherError("INVALID_COMMAND");
     const command = parsed.data;
     const payloadHash = createHash("sha256").update(JSON.stringify(command)).digest("hex");

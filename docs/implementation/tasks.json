@@ -2836,7 +2836,7 @@
       "id": "PACT-057",
       "title": "Implement Articles and mutual allegiance",
       "phase": 2,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2864,7 +2864,7 @@
         "Articles and allegiance"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {
@@ -2891,7 +2891,7 @@
       "id": "PACT-058",
       "title": "Implement signed excerpts and the evidence viewer",
       "phase": 2,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Security",
       "size": "L",
@@ -2920,7 +2920,7 @@
         "evidence signing and viewer"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

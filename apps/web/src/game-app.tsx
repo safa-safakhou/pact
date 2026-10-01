@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CourtPanel } from "./court-panel.js";
 import { InvitationPanel } from "./invitation-panel.js";
 import { createWebPactClient } from "./pact-client.js";
+import { PoliticsPanel } from "./politics-panel.js";
 import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
 import { wholeResourceAmount } from "./resource-units.js";
@@ -152,7 +153,10 @@ export function GameApp(): React.JSX.Element {
   );
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
   const [tab, setTab] = useState<Tab>(() =>
-    new URLSearchParams(window.location.search).has("court") ? "People" : "Kingdom",
+    new URLSearchParams(window.location.search).has("court") ||
+    new URLSearchParams(window.location.search).has("politics")
+      ? "People"
+      : "Kingdom",
   );
   const [draft, setDraft] = useState<Draft | null>(null);
   const [kingdomId, setKingdomId] = useState("");
@@ -589,6 +593,7 @@ export function GameApp(): React.JSX.Element {
         />
       )}
       {tab === "People" && <CourtPanel request={request} kingdomId={kingdomId} canWrite={Boolean(csrf) && !busy} />}
+      {tab === "People" && <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={Boolean(csrf) && !busy} />}
       {tab === "People" && (
         <People
           client={client}

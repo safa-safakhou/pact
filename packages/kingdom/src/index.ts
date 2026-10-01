@@ -9,6 +9,7 @@ export * from "./exposure-adapters.js";
 export * from "./fortune.js";
 export * from "./garrison.js";
 export * from "./invitations.js";
+export * from "./politics.js";
 export * from "./raid-randomness.js";
 export * from "./raids.js";
 export * from "./report-reader.js";

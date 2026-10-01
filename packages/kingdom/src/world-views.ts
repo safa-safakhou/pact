@@ -41,6 +41,7 @@ interface ClockRow {
 }
 
 export interface PublicKingdomView {
+  politics?: unknown;
   audience: "public" | "contact" | "participant";
   profile: { kingdomId: string; handle: string; displayName: string; portrait: string };
   asOfGameTimeMs: number;
@@ -145,6 +146,7 @@ export class WorldViewService {
     private readonly pool: Pool,
     private readonly productScope: string,
     private readonly harvestPercentAt: (gameTimeMs: number) => number = () => 100,
+    private readonly politics?: { publicFor(client: PoolClient, kingdomId: string): Promise<unknown> },
   ) {}
 
   /** Always public, even when an authenticated caller searches their own handle. */
@@ -255,6 +257,7 @@ export class WorldViewService {
         ...common,
         ...(related?.rows.length ? { sharedRecords: related.rows } : {}),
         publicEvents: await this.publicEvents(client, targetId),
+        ...(this.politics ? { politics: await this.politics.publicFor(client, targetId) } : {}),
       };
     }
     const balances = (

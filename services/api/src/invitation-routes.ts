@@ -1,12 +1,15 @@
 import { type CommandDispatcher, DispatcherError } from "@pact/application";
-import { ProductScopeSchema } from "@pact/contracts";
+import { PoliticsReadQuerySchema, ProductScopeSchema } from "@pact/contracts";
 import { IdentityError, type IdentityService } from "@pact/identity";
 import {
+  ActionLimitError,
   CourtError,
   CourtInvitationError,
   type CourtService,
   InvitationError,
   type InvitationService,
+  PoliticsError,
+  type PoliticsService,
   SocialError,
 } from "@pact/kingdom";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
@@ -27,6 +30,8 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
     if (
       error instanceof CourtInvitationError ||
       error instanceof CourtError ||
+      error instanceof PoliticsError ||
+      error instanceof ActionLimitError ||
       error instanceof InvitationError ||
       error instanceof SocialError ||
       error instanceof DispatcherError ||
@@ -51,16 +56,36 @@ export function registerInvitationRoutes(
   invitations: InvitationService,
   gameTime: () => Promise<number>,
   courts?: CourtService,
+  politics?: PoliticsService,
 ): void {
   server.addHook("onSend", async (request, reply, payload) => {
     if (
       request.url.startsWith("/v1/invitations") ||
       request.url.startsWith("/v1/social/commands") ||
-      request.url.startsWith("/v1/courts")
+      request.url.startsWith("/v1/courts") ||
+      request.url.startsWith("/v1/politics")
     )
       reply.header("cache-control", "no-store");
     return payload;
   });
+  if (politics)
+    server.get<{ Querystring: { handle?: string; offset?: string } }>("/v1/politics", async (request, reply) =>
+      safe(reply, async () => {
+        const query = PoliticsReadQuerySchema.safeParse({
+          ...request.query,
+          ...(request.query.offset === undefined ? {} : { offset: Number(request.query.offset) }),
+        });
+        if (!query.success) throw new DispatcherError("INVALID_COMMAND");
+        let accountId: string | undefined;
+        if (request.headers.cookie)
+          try {
+            accountId = (await identity.authenticate(session(request))).accountId;
+          } catch (error) {
+            if (!(error instanceof IdentityError)) throw error;
+          }
+        return politics.read(query.data.handle, query.data.offset, accountId, await gameTime());
+      }),
+    );
   if (courts)
     server.get<{ Querystring: { handle?: string; offset?: string } }>("/v1/courts", async (request, reply) =>
       safe(reply, async () => {

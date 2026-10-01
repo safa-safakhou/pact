@@ -26,6 +26,7 @@ import {
   InvitationService,
   KingdomRetirementService,
   KingdomService,
+  PoliticsService,
   RaidRandomnessService,
   RaidService,
   ScoutService,
@@ -88,7 +89,8 @@ const kingdom = new KingdomService(pool, {
   world,
   ledger: new ResourceLedger("pact"),
 });
-const worldViews = new WorldViewService(pool, "pact");
+const politics = new PoliticsService(pool, "pact", clock);
+const worldViews = new WorldViewService(pool, "pact", undefined, politics);
 const socialOverview = new SocialOverviewReader(pool, "pact");
 const inbox = new InboxService(pool, { productScope: "pact", clock });
 const runs = new RunService(pool, {
@@ -172,7 +174,7 @@ const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
-  social: new SocialCommandHandler(invitations, courts),
+  social: new SocialCommandHandler(invitations, courts, politics),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
     execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
@@ -211,6 +213,10 @@ const mcp = new McpTransport({
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
+  politics: {
+    read: async (handle, offset, accountId) =>
+      politics.read(handle, offset, accountId, (await world.read()).gameTimeMs),
+  },
   profile: {
     read: async (accountId) => {
       const owner = await kingdom.getByAccount(accountId);
@@ -251,6 +257,12 @@ const privacy = new PrivacyService(pool, {
   retirement,
   ownedData: [
     {
+      name: "politics",
+      forgetAccount: (client, accountId) => politics.forgetAccount(client, accountId),
+      prune: (client, now) => politics.prune(client, now),
+      exportAccount: (client, accountId) => politics.exportAccount(client, accountId),
+    },
+    {
       name: "courtDestinations",
       forgetAccount: (client, accountId) => courtInvitations.forgetAccount(client, accountId),
       prune: (client, now) => courtInvitations.prune(client, now),
@@ -288,6 +300,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   socialOverview,
   invitations,
   courts,
+  politics,
   gameTime: async () => (await world.read()).gameTimeMs,
   reports,
   dispatcher,

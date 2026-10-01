@@ -64,6 +64,7 @@ export interface ApiModules {
   invitations?: InvitationService;
   gameTime?: () => Promise<number>;
   courts?: import("@pact/kingdom").CourtService;
+  politics?: import("@pact/kingdom").PoliticsService;
   reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
@@ -165,6 +166,7 @@ export function buildServer(
         modules.invitations,
         modules.gameTime,
         modules.courts,
+        modules.politics,
       );
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
     if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);

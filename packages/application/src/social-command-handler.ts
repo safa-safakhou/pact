@@ -1,5 +1,5 @@
-import type { CourtCommand, SocialCommand } from "@pact/contracts";
-import type { CourtService, InvitationService } from "@pact/kingdom";
+import type { CourtCommand, PoliticsCommand, SocialCommand } from "@pact/contracts";
+import type { CourtService, InvitationService, PoliticsService } from "@pact/kingdom";
 import type { PoolClient } from "pg";
 import type { SocialCommandPort } from "./dispatcher.js";
 import { type AuthenticatedPrincipal, DispatcherError } from "./types.js";
@@ -9,14 +9,19 @@ export class SocialCommandHandler implements SocialCommandPort {
   constructor(
     private readonly invitations: InvitationService,
     private readonly courts?: CourtService,
+    private readonly politics?: PoliticsService,
   ) {}
   async execute(
     client: PoolClient,
     principal: AuthenticatedPrincipal,
-    command: SocialCommand | CourtCommand,
+    command: SocialCommand | CourtCommand | PoliticsCommand,
     gameTimeMs: number,
   ): Promise<{ recordVersions: Record<string, number>; result: unknown }> {
     if (principal.audience !== "human") throw new DispatcherError("FORBIDDEN");
+    if (command.schemaVersion === "pact.politics-command.v1") {
+      if (!this.politics) throw new DispatcherError("INVALID_COMMAND");
+      return this.politics.execute(client, principal.accountId, command, gameTimeMs);
+    }
     if (command.schemaVersion === "pact.court-command.v1") {
       if (!this.courts) throw new DispatcherError("INVALID_COMMAND");
       return this.courts.execute(client, principal.accountId, command, gameTimeMs);

@@ -10,6 +10,7 @@ import {
   commandJsonSchema,
   InboxReadQuerySchema,
   PlayerFindQuerySchema,
+  PoliticsReadQuerySchema,
   ProductScopeSchema,
   pactAgentGuideTool,
   pactApprovalProposalTool,
@@ -19,6 +20,7 @@ import {
   pactGameActionTool,
   pactInboxReadTool,
   pactPlayerFindTool,
+  pactPoliticsReadTool,
   pactProfileTool,
   pactReceiptReadTool,
   pactReportReadTool,
@@ -65,6 +67,7 @@ export interface McpTransportOptions {
   readonly worldViews?: WorldViewReader;
   readonly publicProfiles?: { read(handle: string): Promise<unknown | null> };
   readonly courts?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
+  readonly politics?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
   readonly agentGuide?: AgentGuideReader;
   readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
@@ -217,6 +220,7 @@ export class McpTransport {
                 ? [pactPlayerFindTool]
                 : []),
               ...(this.options.courts && principal.agentScopes?.includes("world:read") ? [pactCourtReadTool] : []),
+              ...(this.options.politics && principal.agentScopes?.includes("world:read") ? [pactPoliticsReadTool] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.conversations && principal.agentScopes?.includes("world:read")
@@ -365,6 +369,14 @@ export class McpTransport {
       const query = CourtReadQuerySchema.safeParse(args);
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const result = await this.options.courts.read(query.data.handle, query.data.offset, principal.accountId);
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactPoliticsReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.politics)
+        throw new McpError("FORBIDDEN", 403);
+      const query = PoliticsReadQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const result = await this.options.politics.read(query.data.handle, query.data.offset, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactWorldReadTool.name) {

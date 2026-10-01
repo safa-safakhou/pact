@@ -103,7 +103,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-057"></a>
 ## PACT-057 — Implement Articles and mutual allegiance
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -125,10 +125,12 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 - [ ] Concurrent signatures or patron changes never create cycles or multiple direct patrons; edited/expired terms cannot use stale signatures.
 - [ ] Articles and allegiance create no automatic tribute, asset transfer, military authority, free intelligence, immunity or cancellation of other contracts.
 
+**Assignee:** Codex / Mohammad Safakhou
+
 <a id="pact-058"></a>
 ## PACT-058 — Implement signed excerpts and the evidence viewer
 
-**Status:** todo · **Role:** Security · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Security · **Size:** L · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -149,6 +151,8 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] Participants can publish and agents can read/verify exact selected evidence; altered bytes, invalid ranges and nonparticipant originals fail.
 - [ ] Complete and omitted excerpts have distinct context labels; private omitted content remains unavailable and a hidden/removed hosted source is not resurrected by the viewer.
+
+**Assignee:** Codex / Mohammad Safakhou
 
 <a id="pact-059"></a>
 ## PACT-059 — Implement Chronicle stories, notices, and public share pages

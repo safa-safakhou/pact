@@ -1,5 +1,6 @@
 import type { CourtCommand } from "@pact/contracts";
 import type { Pool, PoolClient } from "pg";
+import { ActionLimitService } from "./action-limits.js";
 import { uuidV7 } from "./uuid-v7.js";
 
 export class CourtError extends Error {
@@ -284,6 +285,12 @@ export class CourtService {
         }
         case "court.pin":
           owner();
+          await new ActionLimitService(this.scope).recordSuccessfulAction(client, {
+            kingdomId: actor,
+            kind: "public_post",
+            operationKey: command.commandId,
+            gameTimeMs: gameTime,
+          });
           await client.query(
             "INSERT INTO court_pins(court_id,slot,author_kingdom_id,body,created_at) VALUES($1,$2,$3,$4,$5) ON CONFLICT(court_id,slot) DO UPDATE SET author_kingdom_id=EXCLUDED.author_kingdom_id,body=EXCLUDED.body,created_at=EXCLUDED.created_at",
             [id, action.slot, actor, action.body, this.clock.now()],
