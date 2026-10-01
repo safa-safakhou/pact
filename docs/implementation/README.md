@@ -1,10 +1,10 @@
 # PACT implementation backlog
 
-**99 tickets · 66 Done, 0 In Progress, 5 remaining Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+**99 tickets · 68 Done, 0 In Progress, 3 remaining Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
 
 ## Current assignment — game-only Alpha
 
-The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are in the current track. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054–059, 061 and 062 are Done (8/13 Alpha). Latest: [Chronicle](reports/chronicle.md), `26bcb62`; [first-session UI and Envoy reports/context](reports/first-session-envoy.md), `79b1184`. Five remain: 069, 070, 073, 099 and 080. PACT-069 is next dependency-ready in backlog order. Changes are local only; hosted remains alpha-20260929-4 / 2143d92. PACT-080 closes this private gameplay track, not production Season One.
+The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are in the current track. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054–059, 061, 062, 069 and 070 are Done (10/13 Alpha). Latest: [season lifecycle](reports/season-lifecycle.md), `f0763b7`; [Alpha honors](reports/season-honors.md), `94f9573`. Three remain: 073, 099 and 080. PACT-073 is next dependency-ready in backlog order. Changes are local only; hosted remains alpha-20260929-4 / 2143d92. PACT-080 closes this private gameplay track, not production Season One.
 
 Narrowed acceptance and dependencies are explicit in tasks.json and Linear. Each changed ticket's `original_plan` preserves postponed requirements; Alpha completion does not certify original S/L gates. New PACT-099 owns complete agent-first learning/access and observable activity/reports. No payment, native/Telegram, large pilot, production or art/audio prerequisite blocks the Alpha path. The original four-phase plan below is retained for later reference, not current work selection. Historical completed evidence is unchanged.
 

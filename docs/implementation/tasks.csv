@@ -80,7 +80,7 @@ PACT-066,Run the social integration and load suite,2,todo,verification,QA,L,PACT
 PACT-067,Run the three-week social pilot,2,todo,operations,Operations,L,PACT-053;PACT-066,S06;S07,phase-2-social.md#pact-067
 PACT-068,Accept the social slice,2,todo,gate,Release,S,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-060;PACT-061;PACT-062;PACT-063;PACT-064;PACT-065;PACT-066;PACT-067;PACT-088;PACT-089;PACT-090;PACT-091;PACT-092,S01;S02;S03;S04;S05;S06;S07;S08,phase-2-social.md#pact-068
 PACT-069,Implement the complete six-week season lifecycle,3,done,implementation,Rules,M,PACT-053,G05,phase-3-season-one.md#pact-069
-PACT-070,Implement seasonal honors and award review,3,in_progress,implementation,Rules,M,PACT-053;PACT-069,G05,phase-3-season-one.md#pact-070
+PACT-070,Implement seasonal honors and award review,3,done,implementation,Rules,M,PACT-053;PACT-069,G05,phase-3-season-one.md#pact-070
 PACT-071,Produce and integrate the illustrated kingdom and cosmetics,3,todo,implementation,Frontend / Art,L,PACT-068,L02,phase-3-season-one.md#pact-071
 PACT-072,"Integrate optional audio, motion, and notification feedback",3,todo,implementation,Frontend / Audio,M,PACT-068;PACT-071,L02,phase-3-season-one.md#pact-072
 PACT-073,Finish responsive accessibility and PWA behavior,3,todo,implementation,Frontend,L,PACT-053;PACT-061,G04,phase-3-season-one.md#pact-073

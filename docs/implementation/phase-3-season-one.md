@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**21 tickets · 1 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**21 tickets · 2 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -95,7 +95,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-070"></a>
 ## PACT-070 — Implement seasonal honors and award review
 
-**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -114,14 +114,14 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Small friend groups see truthful ranks but no unsupported percentile honors; ties, highest band and three meaningful-day eligibility match the rulebook.
-- [ ] Season/arrival/participation processing is retry-safe and never changes resources, troops or Fortune; formal competitive rewards remain explicitly provisional, not falsely finalized.
+- [x] Small friend groups see truthful ranks but no unsupported percentile honors; ties, highest band and three meaningful-day eligibility match the rulebook.
+- [x] Season/arrival/participation processing is retry-safe and never changes resources, troops or Fortune; formal competitive rewards remain explicitly provisional, not falsely finalized.
 
 **Assignee:** Codex / Mohammad Safakhou
 
 **Evidence**
 
-- Claimed MNI-141 on 1 October 2026 after MNI-118 and MNI-140 freshly read Done. Alpha provisional honors only; no formal final-award operation.
+- 1 October 2026: 94f9573 completes both Alpha checks; MNI-141 read back Done. Exact BigInt thresholds/ties, highest Hall bands, three meaningful UTC days proved from actual completed actions, real arrival/season cosmetics with no economic effect, and shared provisional-only closing results. Node 24 build/typecheck/lint; 205 unit and 282 PostgreSQL integration pass, one existing skip; final targeted 6 unit/web and 4 integration pass. Planning/diff pass. See docs/implementation/reports/season-honors.md and docs/architecture/seasons.md. No final competitive rewards, hosted deployment, paid provider or player-enjoyment claim; 28 Later unchanged.
 
 <a id="pact-071"></a>
 ## PACT-071 — Produce and integrate the illustrated kingdom and cosmetics

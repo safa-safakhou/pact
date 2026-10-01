@@ -2,7 +2,7 @@
 
 Ticket: PACT-070 / [MNI-141](https://linear.app/mnim/issue/MNI-141).
 Dependency: PACT-069 / `f0763b7`, freshly read Done before claiming this ticket; PACT-053 also freshly Done.
-Implementation revision: this report's implementation commit.
+Implementation revision: `94f9573`.
 Environment: local Node 24, PostgreSQL 17 disposable schemas, 1 October 2026.
 
 ## Result and acceptance

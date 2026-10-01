@@ -3793,7 +3793,7 @@
       "id": "PACT-070",
       "title": "Implement seasonal honors and award review",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -3821,7 +3821,7 @@
       "components": [
         "award calculation and review"
       ],
-      "evidence": ["Claimed MNI-141 on 1 October 2026 after MNI-118 and MNI-140 freshly read Done. Alpha provisional honors only; no formal final-award operation."],
+      "evidence": ["1 October 2026: 94f9573 completes both Alpha checks; MNI-141 read back Done. Exact BigInt thresholds/ties, highest Hall bands, three meaningful UTC days proved from actual completed actions, real arrival/season cosmetics with no economic effect, and shared provisional-only closing results. Node 24 build/typecheck/lint; 205 unit and 282 PostgreSQL integration pass, one existing skip; final targeted 6 unit/web and 4 integration pass. Planning/diff pass. See docs/implementation/reports/season-honors.md and docs/architecture/seasons.md. No final competitive rewards, hosted deployment, paid provider or player-enjoyment claim; 28 Later unchanged."],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
