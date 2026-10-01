@@ -1,6 +1,6 @@
 # Phase 2 — Social slice
 
-**20 tickets · 2 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 3 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -71,7 +71,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-056"></a>
 ## PACT-056 — Implement Court membership, roles, and lifecycle
 
-**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -90,10 +90,15 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Create/join/leave, requests and invitations obey membership/ownership limits and role rules, including concurrent joins and consented transfer.
-- [ ] Leaving or closing a Court preserves independent contacts, contracts, troops and allegiance; an invitation grants membership only.
+- [x] Create/join/leave, requests and invitations obey membership/ownership limits and role rules, including concurrent joins and consented transfer.
+- [x] Leaving or closing a Court preserves independent contacts, contracts, troops and allegiance; an invitation grants membership only.
 
 **Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- docs/implementation/reports/courts.md — implementation 490f304; Node 24.19/npm 11.19 build/typecheck/lint, 181 unit and 253 PostgreSQL integration pass / one optional local-model skipped; 13 Court checks plus 13 invitation checks; atomic limits/roles/consented transfer, HTTP/MCP parity, real contract delivery after closure and owned-data lifecycle.
+- Linear MNI-121 Done and both Alpha checks read back 2026-10-01; comment b70c7e50-9b0b-4305-9a22-cc193d6832be. Original acceptance remains unchecked for later. No new deployment, Chrome, real-model or player observation; PACT-057 owns actual allegiance records and their Court noninterference fixture.
 
 <a id="pact-057"></a>
 ## PACT-057 — Implement Articles and mutual allegiance

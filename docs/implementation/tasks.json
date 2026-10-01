@@ -2776,7 +2776,7 @@
       "id": "PACT-056",
       "title": "Implement Court membership, roles, and lifecycle",
       "phase": 2,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2804,7 +2804,10 @@
       "components": [
         "Court service"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/courts.md — implementation 490f304; Node 24.19/npm 11.19 build/typecheck/lint, 181 unit and 253 PostgreSQL integration pass / one optional local-model skipped; 13 Court checks plus 13 invitation checks; atomic limits/roles/consented transfer, HTTP/MCP parity, real contract delivery after closure and owned-data lifecycle.",
+        "Linear MNI-121 Done and both Alpha checks read back 2026-10-01; comment b70c7e50-9b0b-4305-9a22-cc193d6832be. Original acceptance remains unchecked for later. No new deployment, Chrome, real-model or player observation; PACT-057 owns actual allegiance records and their Court noninterference fixture."
+      ],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,

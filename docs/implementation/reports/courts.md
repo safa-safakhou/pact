@@ -1,7 +1,7 @@
 # Court community management
 
 Ticket: [PACT-056 / MNI-121](https://linear.app/mnim/issue/MNI-121/pact-056-implement-court-membership-roles-and-lifecycle).
-Revision: this report's implementation commit, recorded in Linear after commit.
+Revision: `490f304`. Linear Done and both Alpha checks read back; completion comment `b70c7e50-9b0b-4305-9a22-cc193d6832be`. Original acceptance remains unchecked for later review.
 Verified 1 October 2026: Node 24.19.0 / npm 11.19.0 / local PostgreSQL 17, disposable schemas and synthetic accounts.
 
 ## Acceptance evidence
