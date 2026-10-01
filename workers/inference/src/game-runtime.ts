@@ -26,10 +26,12 @@ import {
   pactReceiptReadTool,
   pactReportReadTool,
   pactSealReadTool,
+  pactSeasonReadTool,
   pactWorldReadTool,
   ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   SealReadQuerySchema,
+  SeasonReadQuerySchema,
   WorldViewQuerySchema,
 } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
@@ -51,6 +53,7 @@ import {
   RaidService,
   ScoutService,
   SealService,
+  SeasonService,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -155,6 +158,7 @@ export async function createInferenceGameRuntime(
       inboxReadTool,
       conversationReadTool,
       worldReadTool,
+      { ...pactSeasonReadTool, parseArguments: (input: unknown) => SeasonReadQuerySchema.parse(input) },
       reportReadTool,
       receiptReadTool,
       approvalStatusTool,
@@ -266,6 +270,16 @@ export async function createInferenceGameRuntime(
             callId: call.id,
             content: view ? boundedWorldResult(view) : JSON.stringify({ code: "NOT_FOUND" }),
           });
+          continue;
+        }
+        if (call.name === pactSeasonReadTool.name) {
+          const query = SeasonReadQuerySchema.parse(call.arguments);
+          const result = await withTransaction(
+            pool,
+            (c) => new SeasonService(productScope).readCurrent(c, query.cohortStartGameTimeMs, input.run.accountId),
+            { isolation: "REPEATABLE READ" },
+          );
+          results.push({ callId: call.id, content: JSON.stringify(result) });
           continue;
         }
         if (call.name === reportReadTool.name) {

@@ -10,7 +10,11 @@ if (!databaseUrl || !raidKey || raidKey.length !== 32 || raidKey.toString("base6
   process.exitCode = 1;
 } else {
   const pool = createPool(databaseUrl);
-  const { world } = createRulesRuntime(pool, "pact", raidKey);
+  const openingText = process.env.PACT_SEASON_OPENING_GAME_TIME_MS;
+  const opening = openingText === undefined ? undefined : Number(openingText);
+  if (opening !== undefined && (!Number.isSafeInteger(opening) || opening < 0 || opening % 60000 !== 0))
+    throw new Error("INVALID_SEASON_OPENING");
+  const { world } = createRulesRuntime(pool, "pact", raidKey, undefined, opening);
   const workerId = `rules-${randomUUID()}`;
   let leaseToken: string | null = null;
   let busy = false;

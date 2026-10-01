@@ -3740,7 +3740,7 @@
       "id": "PACT-069",
       "title": "Implement the complete six-week season lifecycle",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -3766,8 +3766,8 @@
       "components": [
         "season lifecycle and newcomer cohorts"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": ["Claimed MNI-140 on 2026-10-01 after PACT-053 read Done in Linear. Season lifecycle first, followed by PACT-070 only after this acceptance passes."],
+      "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
       "original_plan": {

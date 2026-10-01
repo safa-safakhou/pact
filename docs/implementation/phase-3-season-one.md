@@ -64,7 +64,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-069"></a>
 ## PACT-069 — Implement the complete six-week season lifecycle
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -85,6 +85,12 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] An accelerated isolated six-week fixture applies 100/100/90/80/80/100 percent Farm multipliers and assigns the boundary tick to the correct season.
 - [ ] Contracts/raids crossing season or pause keep their terms; assets persist and age-seven-day cohorts compare the correct snapshots with no scoring reset exploit.
+
+**Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- Claimed MNI-140 on 2026-10-01 after PACT-053 read Done in Linear. Season lifecycle first, followed by PACT-070 only after this acceptance passes.
 
 <a id="pact-070"></a>
 ## PACT-070 — Implement seasonal honors and award review

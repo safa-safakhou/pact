@@ -2,6 +2,7 @@ import { withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
 import type { Pool, PoolClient } from "pg";
 import { ActionLimitService, type ChargeView } from "./action-limits.js";
+import { SeasonService, seasonPosition } from "./seasons.js";
 import type { SupplyTerms } from "./supply-terms.js";
 
 type Resource = "iron" | "silver" | "grain";
@@ -443,6 +444,10 @@ export class WorldViewService {
         [this.productScope, accountId],
       )
     ).rows.map((row) => ({ kind: row.type, id: row.event_id, occurredAt: row.occurred_at.toISOString() }));
+    const season = await new SeasonService(this.productScope).clock(client);
+    const harvestPercentAt = season
+      ? (at: number) => seasonPosition(Number(season.opening_game_time_ms), at).harvestPercent
+      : this.harvestPercentAt;
     const forecast = forecastBalances({
       now: gameTimeMs,
       minutes,
@@ -451,7 +456,7 @@ export class WorldViewService {
       kingdomId: targetId,
       upkeep,
       visitingUpkeep,
-      harvestPercentAt: this.harvestPercentAt,
+      harvestPercentAt,
     });
     const lastCommittedEventId =
       (
@@ -473,7 +478,10 @@ export class WorldViewService {
             foundingAllowanceUnits: row.allowance_units,
             lockedUnits: row.locked_units,
             capacityUnits: row.storage_cap_units,
-            productionPerMinuteUnits: row.production_per_minute_units,
+            productionPerMinuteUnits:
+              row.resource === "grain"
+                ? ((BigInt(row.production_per_minute_units) * BigInt(harvestPercentAt(gameTimeMs))) / 100n).toString()
+                : row.production_per_minute_units,
             version: row.version,
           },
         ]),

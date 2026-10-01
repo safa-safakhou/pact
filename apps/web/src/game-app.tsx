@@ -12,6 +12,7 @@ import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
 import { wholeResourceAmount } from "./resource-units.js";
 import { RunPanel } from "./run-panel.js";
+import { SeasonPanel } from "./season-panel.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 import { readWebResponse } from "./web-response.js";
 
@@ -643,6 +644,7 @@ export function GameApp(): React.JSX.Element {
         />
       )}
       {tab === "Chronicle" && <EvidencePanel request={request} canWrite={Boolean(csrf) && !busy} />}
+      {tab === "Kingdom" && <SeasonPanel request={request} kingdomId={kingdomId} />}
       {tab === "Chronicle" && <ChroniclePanel request={request} canWrite={Boolean(csrf) && !busy} />}
       {tab === "People" && <ChroniclePanel request={request} canWrite={Boolean(csrf) && !busy} noticesOnly />}
       {tab === "Chronicle" && view && (

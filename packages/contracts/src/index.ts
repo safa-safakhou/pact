@@ -5,4 +5,5 @@ export * from "./politics-schemas.js";
 export * from "./run-report-schemas.js";
 export * from "./schemas.js";
 export * from "./seal-schemas.js";
+export * from "./season-schemas.js";
 export * from "./social-schemas.js";

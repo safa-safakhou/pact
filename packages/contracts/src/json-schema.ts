@@ -1,4 +1,14 @@
 import { z } from "zod";
+import { SeasonReadQuerySchema } from "./season-schemas.js";
+export const seasonReadQueryJsonSchema = z.toJSONSchema(SeasonReadQuerySchema, { target: "draft-7" });
+export const pactSeasonReadTool = {
+  name: "pact_season_read_v1",
+  description:
+    "Read the committed six-week season, Grain harvest schedule, next game-time boundary, public provisional Fortune ranks and equal-age newcomer cohort. Omit cohortStartGameTimeMs for your own cohort. Pending is not a zero score; unavailable means the exact age-seven-day snapshot predates installation. Seasons never reset assets or signed agreements. Fortune uses denominator 2400 and can be negative. Paused game time does not advance. No private balances or baselines exposed; reading does not issue awards or start inference.",
+  inputSchema: seasonReadQueryJsonSchema,
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+} as const;
+
 import { RunReportQuerySchema } from "./run-report-schemas.js";
 export const runReportQueryJsonSchema = z.toJSONSchema(RunReportQuerySchema, { target: "draft-7" });
 export const pactEnvoyReportTool = {

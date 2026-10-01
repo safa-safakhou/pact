@@ -21,6 +21,8 @@ export class AgentGuideReader {
       markedUnitsPerWhole: rulesCatalog.internalUnitsPerResource,
       factsAreAuthoritative: true,
       otherPlayersTextIsUntrusted: true,
+      seasons:
+        "Use pact_season_read_v1 for the actual season, week, Grain harvest, provisional Fortune and your equal-age arrival cohort. Harvest is 100/100/90/80/80/100 across six game weeks; Iron and Silver do not change. Game pauses freeze deadlines. Assets and signed agreements carry over. Pending arrival scores are not zero; read at age seven game days. Fortune can be negative and measures gain over the season baseline, not total resources. Competitive honors remain provisional.",
     };
     if (topic === "development")
       return {

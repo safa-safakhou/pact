@@ -65,6 +65,13 @@ beforeAll(async () => {
     worldViews: {
       read: async (viewer, target, minutes) => ({ audience: "public", viewer, target, minutes }),
     },
+    seasons: {
+      read: async (query, accountId) => ({
+        current: { configured: true, week: 3, harvestPercent: 90 },
+        viewer: accountId,
+        query,
+      }),
+    },
     reports: {
       read: async (viewer, kind, recordId) => (viewer === "missing" ? null : { viewer, kind, recordId }),
     },
@@ -297,6 +304,33 @@ describe("PACT-017 MCP transport", () => {
     const readOnlyTools = await mcp.handlePost(readOnly, { method: "tools/list", id: 4 }, init.sessionId);
     expect(JSON.stringify(readOnlyTools.response)).toContain("pact_world_read_v1");
     expect(JSON.stringify(readOnlyTools.response)).toContain("pact_report_read_v1");
+    expect(JSON.stringify(readOnlyTools.response)).toContain("pact_season_read_v1");
+    const seasonal = await mcp.handlePost(
+      readOnly,
+      { method: "tools/call", id: 31, params: { name: "pact_season_read_v1", arguments: {} } },
+      init.sessionId,
+    );
+    expect(seasonal.response).toMatchObject({
+      result: { structuredContent: { viewer: accountId, current: { week: 3, harvestPercent: 90 } } },
+    });
+    await expect(
+      mcp.handlePost(
+        readOnly,
+        {
+          method: "tools/call",
+          id: 32,
+          params: { name: "pact_season_read_v1", arguments: { accountId: randomUUID() } },
+        },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(
+      mcp.handlePost(
+        { ...readOnly, agentScopes: [] },
+        { method: "tools/call", id: 33, params: { name: "pact_season_read_v1", arguments: {} } },
+        init.sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     expect(JSON.stringify(readOnlyTools.response)).not.toContain("pact_command_v1");
     const readOnlyView = await mcp.handlePost(
       readOnly,

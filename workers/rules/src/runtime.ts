@@ -12,6 +12,7 @@ import {
   RaidRandomnessService,
   RaidService,
   ScoutService,
+  SeasonService,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -29,6 +30,7 @@ export function createRulesRuntime(
   productScope: string,
   raidKey: Uint8Array,
   entropy?: (size: number) => Uint8Array,
+  seasonOpeningGameTimeMs?: number,
 ) {
   const ledger = new ResourceLedger(productScope);
   const exposure = new ExposureService(productScope, new ExactHumanPermitService(productScope));
@@ -42,6 +44,7 @@ export function createRulesRuntime(
   const troops = new TroopService(productScope, ledger, immediateAuthority);
   const garrison = new GarrisonService(productScope, ledger, troops, exposure);
   const fortune = new FortuneService(productScope);
+  const seasons = new SeasonService(productScope, seasonOpeningGameTimeMs);
   const upkeep = new UpkeepService(productScope, ledger, new GarrisonUpkeepExposureAdapter(productScope, exposure));
   const limits = new ActionLimitService(productScope);
   const achievements = new AchievementService(productScope);
@@ -65,7 +68,7 @@ export function createRulesRuntime(
   );
   let retirement: KingdomRetirementService;
   const handlers: TickHandlers = {
-    // Season rollover is deliberately absent until PACT-069; this is the private week-one test world.
+    season_rollover: (client, context) => seasons.beforeTick(client, context),
     boundaries_and_completions: async (client, context) => {
       await ledger.expireFoundingAllowances(client, context);
       await buildings.settleMinute(client, context);
@@ -78,8 +81,11 @@ export function createRulesRuntime(
       await garrison.settleMinute(client, context.gameTimeMs);
       await raids.lockDue(client, context.gameTimeMs);
     },
-    // PACT-069 replaces the test-world week-one default with the configured season clock.
-    production: (client, context) => ledger.settleProductionMinute(client, context, 1),
+    production: async (client, context) => {
+      const position = await seasons.position(client, context.gameTimeMs);
+      if (!position.configured) throw new Error("SEASON_NOT_CONFIGURED");
+      await ledger.settleProductionMinute(client, context, position.week);
+    },
     upkeep: (client, context) => upkeep.settleMinute(client, context),
     capture_obligations: (client, context) => settlement.capture(client, context.gameTimeMs),
     settle_deliveries: (client, context) => settlement.settleDeliveries(client, context.gameTimeMs),
@@ -94,8 +100,7 @@ export function createRulesRuntime(
       await retirement.retireDue(client, context.gameTimeMs);
     },
     views_and_achievements: async (client, context) => {
-      if (context.gameTimeMs % 3_600_000 === 0)
-        await fortune.snapshotHour(client, context.gameTimeMs, context.sequence);
+      await seasons.afterTick(client, context);
       await achievements.processPending(client);
     },
   };
@@ -110,5 +115,5 @@ export function createRulesRuntime(
     buildings,
     troops,
   );
-  return { world, handlers, ledger, buildings, troops, scouting, raids, fortune, achievements };
+  return { world, handlers, ledger, buildings, troops, scouting, raids, fortune, achievements, seasons };
 }

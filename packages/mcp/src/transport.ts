@@ -29,12 +29,14 @@ import {
   pactReceiptReadTool,
   pactReportReadTool,
   pactSealReadTool,
+  pactSeasonReadTool,
   pactWorldReadTool,
   ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   RunReportQuerySchema,
   SCHEMA_VERSION,
   SealReadQuerySchema,
+  SeasonReadQuerySchema,
   WorldViewQuerySchema,
 } from "@pact/contracts";
 import type { Pool } from "pg";
@@ -78,6 +80,9 @@ export interface McpTransportOptions {
   readonly seals?: { read(sealId: string, accountId: string): Promise<unknown> };
   readonly chronicle?: { read(query: ChronicleReadQuery, accountId: string): Promise<unknown> };
   readonly runReports?: { read(runId: string | undefined, accountId: string): Promise<unknown> };
+  readonly seasons?: {
+    read(query: { cohortStartGameTimeMs?: number | undefined }, accountId: string): Promise<unknown>;
+  };
   readonly agentGuide?: AgentGuideReader;
   readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
@@ -224,6 +229,7 @@ export class McpTransport {
           response: this.result(body.id, {
             tools: [
               ...(this.options.profile && principal.agentScopes?.includes("world:read") ? [pactProfileTool] : []),
+              ...(this.options.seasons && principal.agentScopes?.includes("world:read") ? [pactSeasonReadTool] : []),
               ...(this.options.agentGuide && principal.agentScopes?.includes("world:read") ? [pactAgentGuideTool] : []),
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
               ...(this.options.publicProfiles && principal.agentScopes?.includes("world:read")
@@ -419,6 +425,13 @@ export class McpTransport {
       const q = RunReportQuerySchema.safeParse(args);
       if (!q.success) throw new McpError("INVALID_REQUEST");
       const result = await this.options.runReports.read(q.data.runId, principal.accountId);
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactSeasonReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.seasons) throw new McpError("FORBIDDEN", 403);
+      const q = SeasonReadQuerySchema.safeParse(args);
+      if (!q.success) throw new McpError("INVALID_REQUEST");
+      const result = await this.options.seasons.read(q.data, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactWorldReadTool.name) {

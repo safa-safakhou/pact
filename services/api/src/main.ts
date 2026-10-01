@@ -5,7 +5,7 @@ import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
 import { CredentialVaultService, RsaOaepPublicKeyWrapper } from "@pact/credential-vault";
-import { createPool } from "@pact/db";
+import { createPool, withTransaction } from "@pact/db";
 import {
   AesGcmSecretBox,
   baselineCompromisedPasswordDigests,
@@ -33,6 +33,7 @@ import {
   RaidService,
   ScoutService,
   SealService,
+  SeasonService,
   SocialOverviewReader,
   SocialService,
   SupplyExposureAdapter,
@@ -94,6 +95,7 @@ const kingdom = new KingdomService(pool, {
 });
 const politics = new PoliticsService(pool, "pact", clock);
 const worldViews = new WorldViewService(pool, "pact", undefined, politics);
+const seasons = new SeasonService("pact");
 const socialOverview = new SocialOverviewReader(pool, "pact");
 const inbox = new InboxService(pool, { productScope: "pact", clock });
 const runs = new RunService(pool, {
@@ -227,6 +229,12 @@ const mcp = new McpTransport({
   clock,
   worldViews,
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
+  seasons: {
+    read: (query, accountId) =>
+      withTransaction(pool, (c) => seasons.readCurrent(c, query.cohortStartGameTimeMs, accountId), {
+        isolation: "REPEATABLE READ",
+      }),
+  },
   publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
   seals: { read: (id, accountId) => seals.read(id, accountId) },
@@ -275,6 +283,12 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    {
+      name: "seasons",
+      forgetAccount: (c, id) => seasons.forgetAccount(c, id),
+      exportAccount: (c, id) => seasons.exportAccount(c, id),
+      prune: (c, now) => seasons.prune(c, now),
+    },
     {
       name: "chronicle",
       forgetAccount: (c, id) => chronicle.forgetAccount(c, id),
@@ -330,6 +344,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   worldViews,
   socialOverview,
   invitations,
+  seasons,
   courts,
   politics,
   seals,
