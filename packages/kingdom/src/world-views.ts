@@ -147,6 +147,26 @@ export class WorldViewService {
     private readonly harvestPercentAt: (gameTimeMs: number) => number = () => 100,
   ) {}
 
+  /** Always public, even when an authenticated caller searches their own handle. */
+  async publicProfile(handle: string): Promise<PublicKingdomView | null> {
+    if (!/^[A-Za-z][A-Za-z0-9_]{2,23}$/.test(handle)) return null;
+    return withTransaction(
+      this.pool,
+      async (client) => {
+        const row = (
+          await client.query<{ id: string }>(
+            "SELECT id FROM kingdoms WHERE product_scope = $1 AND handle = $2 AND status = 'ranked'",
+            [this.productScope, handle.toLowerCase()],
+          )
+        ).rows[0];
+        if (!row) return null;
+        const view = await this.readSnapshot(client, null, row.id, 1);
+        return view?.audience === "owner" ? null : view;
+      },
+      { isolation: "REPEATABLE READ" },
+    );
+  }
+
   async read(
     accountId: string | null,
     targetKingdomId: string,

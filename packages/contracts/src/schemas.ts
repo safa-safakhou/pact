@@ -399,6 +399,9 @@ export const WorldViewQuerySchema = z
   .strict();
 export type WorldViewQuery = z.infer<typeof WorldViewQuerySchema>;
 
+/** Exact public identity lookup; no viewer or owner selector is accepted. */
+export const PlayerFindQuerySchema = z.object({ handle: z.string().regex(/^[A-Za-z][A-Za-z0-9_]{2,23}$/) }).strict();
+
 /** Record identity is supplied by the caller; visibility is resolved from authentication. */
 export const ReportReadQuerySchema = z
   .object({

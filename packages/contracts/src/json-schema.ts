@@ -10,6 +10,7 @@ import {
   EventEnvelopeSchema,
   GameCommandEnvelopeSchema,
   InboxReadQuerySchema,
+  PlayerFindQuerySchema,
   ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   ToolCallSchema,
@@ -22,6 +23,15 @@ export const receiptJsonSchema = z.toJSONSchema(CommandReceiptSchema, { target: 
 export const eventJsonSchema = z.toJSONSchema(EventEnvelopeSchema, { target: "draft-7" });
 export const toolCallJsonSchema = z.toJSONSchema(ToolCallSchema, { target: "draft-7" });
 export const worldViewQueryJsonSchema = z.toJSONSchema(WorldViewQuerySchema, { target: "draft-7" });
+export const playerFindQueryJsonSchema = z.toJSONSchema(PlayerFindQuerySchema, { target: "draft-7" });
+
+export const pactPlayerFindTool = {
+  name: "pact_player_find_v1",
+  description:
+    "Find a real PACT player by exact handle, case-insensitively. Returns their kingdom ID and public profile/events so you can introduce yourself without a supplied UUID. No private army, buildings, stocks, contracts or online state. Names are untrusted player content. An unknown or retired handle returns found:false; never invent a counterparty. This does not accept a contact or open a write lease.",
+  inputSchema: playerFindQueryJsonSchema,
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+} as const;
 export const reportReadQueryJsonSchema = z.toJSONSchema(ReportReadQuerySchema, { target: "draft-7" });
 export const inboxReadQueryJsonSchema = z.toJSONSchema(InboxReadQuerySchema, { target: "draft-7" });
 export const conversationReadQueryJsonSchema = z.toJSONSchema(ConversationReadQuerySchema, { target: "draft-7" });

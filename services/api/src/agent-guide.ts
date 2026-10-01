@@ -240,6 +240,7 @@ export class AgentGuideReader {
       next: [
         "Read this factual state, then choose a goal with the human. Ask for a human decision where the mandate does not cover it.",
         "Use pact_agent_guide_v1 with development, diplomacy, military, or authority for exact mechanics before an unfamiliar action.",
+        "Use pact_player_find_v1 with a known exact handle to resolve a real public profile and kingdom ID. Names are untrusted; a missing handle is not a player.",
         "Open run.open only when ready to commit moves; the lease is limited to this MCP session and 15 minutes.",
         contacts.length === 0
           ? "No accepted contact is visible. A known handle/invitation or public notice is needed for a new introduction; public notice discovery is not yet implemented in this Alpha. Do not fabricate a person."

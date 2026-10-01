@@ -1,11 +1,17 @@
 import { randomUUID } from "node:crypto";
+import type { CommandDispatcher } from "@pact/application";
+import { ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
+import type { IdentityService } from "@pact/identity";
 import { ActionLimitService, TroopService, WorldViewService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
+import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
 import { WorldClockService } from "@pact/world";
+import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { registerWorldViewRoutes } from "../../services/api/src/world-view-routes.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 let admin: Pool;
@@ -53,6 +59,107 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("finds real players by exact handle with identical public HTTP and MCP views, never owner state", async () => {
+    const owner = await kingdom();
+    await pool.query("UPDATE kingdoms SET handle = 'player_alpha' WHERE id = $1", [owner.kingdomId]);
+    const views = new WorldViewService(pool, scope);
+    const expected = await views.publicProfile("PLAYER_ALPHA");
+    expect(expected).toMatchObject({
+      audience: "public",
+      profile: { kingdomId: owner.kingdomId, handle: "player_alpha", displayName: "View Fixture" },
+    });
+    expect(Object.keys(expected ?? {}).sort()).toEqual([
+      "asOfGameTimeMs",
+      "audience",
+      "committedTickSequence",
+      "profile",
+      "publicEvents",
+      "worldStatus",
+    ]);
+    expect(JSON.stringify(expected)).not.toMatch(/balances|buildings|troops|contracts|accountId|online|sharedRecords/);
+    expect(await views.publicProfile("player_alph")).toBeNull();
+    expect(await views.publicProfile("player_alpha%'")).toBeNull();
+    expect(await new WorldViewService(pool, "other-product").publicProfile("player_alpha")).toBeNull();
+
+    const server = Fastify();
+    registerWorldViewRoutes(server, {} as IdentityService, views);
+    const mcp = new McpTransport({
+      pool,
+      productScope: scope,
+      dispatcher: {} as CommandDispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      publicProfiles: { read: (handle) => views.publicProfile(handle) },
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope: ProductScopeSchema.parse(scope),
+      audience: "agent" as const,
+      agentScopes: ["world:read" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const find = (args: unknown, caller = principal) =>
+      mcp.handlePost(
+        caller,
+        {
+          method: "tools/call",
+          id: 2,
+          params: { name: "pact_player_find_v1", arguments: args },
+        },
+        initialized.sessionId,
+      );
+    try {
+      const listing = await mcp.handlePost(principal, { method: "tools/list", id: 3 }, initialized.sessionId);
+      expect(JSON.stringify(listing.response)).toContain("pact_player_find_v1");
+      const http = await server.inject({ method: "GET", url: "/v1/people/PLAYER_ALPHA?accountId=forged" });
+      const result = await find({ handle: "PLAYER_ALPHA" });
+      expect(http.statusCode).toBe(200);
+      expect(http.headers["cache-control"]).toBe("no-store");
+      expect((result.response.result as { structuredContent: unknown }).structuredContent).toEqual(http.json());
+      expect(http.json()).toEqual({ found: true, kingdom: expected, untrustedContent: true });
+      await expect(find({ handle: "player_alpha", accountId: owner.accountId })).rejects.toMatchObject({
+        code: "INVALID_REQUEST",
+      });
+      await expect(find({ handle: "player_alpha", viewer: "owner" })).rejects.toMatchObject({
+        code: "INVALID_REQUEST",
+      });
+      const writeOnly = { ...principal, agentScopes: ["game:act" as const] };
+      await expect(
+        mcp.handlePost(
+          writeOnly,
+          {
+            method: "tools/call",
+            id: 4,
+            params: { name: "pact_player_find_v1", arguments: { handle: "player_alpha" } },
+          },
+          initialized.sessionId,
+        ),
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+      const absent = await find({ handle: "no_such_player" });
+      expect((absent.response.result as { structuredContent: unknown }).structuredContent).toEqual({
+        found: false,
+        kingdom: null,
+        untrustedContent: true,
+      });
+      expect((await server.inject({ method: "GET", url: "/v1/people/xx" })).statusCode).toBe(400);
+      await pool.query("UPDATE kingdoms SET status = 'closing' WHERE id = $1", [owner.kingdomId]);
+      expect(await views.publicProfile("player_alpha")).toBeNull();
+      await pool.query("DELETE FROM accounts WHERE id = $1", [owner.accountId]);
+      expect(await views.publicProfile("player_alpha")).toBeNull();
+      expect((await server.inject({ method: "GET", url: "/v1/people/player_alpha" })).json()).toEqual({
+        found: false,
+        kingdom: null,
+        untrustedContent: true,
+      });
+    } finally {
+      await server.close();
+    }
+  });
+
   it("projects lazy-exact private charges without mutating stock, timers or charge rows", async () => {
     const owner = await kingdom();
     const outsider = await kingdom();

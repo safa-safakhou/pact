@@ -8,6 +8,7 @@ import {
   ConversationReadQuerySchema,
   commandJsonSchema,
   InboxReadQuerySchema,
+  PlayerFindQuerySchema,
   ProductScopeSchema,
   pactAgentGuideTool,
   pactApprovalProposalTool,
@@ -15,6 +16,7 @@ import {
   pactConversationReadTool,
   pactGameActionTool,
   pactInboxReadTool,
+  pactPlayerFindTool,
   pactProfileTool,
   pactReceiptReadTool,
   pactReportReadTool,
@@ -59,6 +61,7 @@ export interface McpTransportOptions {
   readonly origin: string;
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
+  readonly publicProfiles?: { read(handle: string): Promise<unknown | null> };
   readonly agentGuide?: AgentGuideReader;
   readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
@@ -207,6 +210,9 @@ export class McpTransport {
               ...(this.options.profile && principal.agentScopes?.includes("world:read") ? [pactProfileTool] : []),
               ...(this.options.agentGuide && principal.agentScopes?.includes("world:read") ? [pactAgentGuideTool] : []),
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
+              ...(this.options.publicProfiles && principal.agentScopes?.includes("world:read")
+                ? [pactPlayerFindTool]
+                : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.conversations && principal.agentScopes?.includes("world:read")
@@ -339,6 +345,15 @@ export class McpTransport {
         throw error;
       }
       const result = { leaseId: lease.leaseId, expiresAt: lease.expiresAt.toISOString() };
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactPlayerFindTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.publicProfiles)
+        throw new McpError("FORBIDDEN", 403);
+      const query = PlayerFindQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const kingdom = await this.options.publicProfiles.read(query.data.handle);
+      const result = { found: kingdom !== null, kingdom, untrustedContent: true };
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactWorldReadTool.name) {

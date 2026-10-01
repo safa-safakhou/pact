@@ -1,4 +1,5 @@
 {
+  "playerFindQueryJsonSchema": "890e43f14b4350717f364fb42bcde2b29428c8748987e6d4f640b3b5f29db3c3",
   "agentGameActionJsonSchema": "cbac41ac17daef7c2f50d43cc4809beb1ba82f6d189e38f2f70df4632f6cd217",
   "agentGuideQueryJsonSchema": "83bc8ef226b55068400be9c828c35da826dcfdf72ffb7f36592a85b534683d4e",
   "approvalProposalJsonSchema": "5906a1336c585c15b63bbd0782f687380c9920265f4df4f1ae96c9b82f04296a",

@@ -1,4 +1,4 @@
-import { WorldViewQuerySchema } from "@pact/contracts";
+import { PlayerFindQuerySchema, WorldViewQuerySchema } from "@pact/contracts";
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
 import type { WorldViewService } from "@pact/kingdom";
@@ -13,6 +13,13 @@ export function registerWorldViewRoutes(
   worldViews: WorldViewService,
   oauth?: OAuthService,
 ): void {
+  server.get<{ Params: { handle: string } }>("/v1/people/:handle", async (request, reply) => {
+    reply.header("cache-control", "no-store");
+    const parsed = PlayerFindQuerySchema.safeParse(request.params);
+    if (!parsed.success) return reply.code(400).send({ error: { code: "INVALID_INPUT" } });
+    const kingdom = await worldViews.publicProfile(parsed.data.handle);
+    return { found: kingdom !== null, kingdom, untrustedContent: true };
+  });
   server.get<{ Params: { kingdomId: string }; Querystring: { forecastMinutes?: string } }>(
     "/v1/world/kingdoms/:kingdomId",
     async (request, reply) => {

@@ -202,6 +202,7 @@ const mcp = new McpTransport({
   clock,
   worldViews,
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
+  publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
   profile: {
     read: async (accountId) => {
       const owner = await kingdom.getByAccount(accountId);
