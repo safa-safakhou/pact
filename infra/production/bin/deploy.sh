@@ -16,6 +16,10 @@ set +a
 
 : "${PACT_SECRETS_DIR:?}"
 : "${PACT_ORIGIN:?}"
+if [ ! -f "$PACT_SECRETS_DIR/seal_encryption_key" ]; then
+  umask 077
+  openssl rand -base64 32 > "$PACT_SECRETS_DIR/seal_encryption_key"
+fi
 if [ ! -f "$PACT_SECRETS_DIR/raid_seed_encryption_key" ]; then
   umask 077
   openssl rand -base64 32 > "$PACT_SECRETS_DIR/raid_seed_encryption_key"
@@ -40,7 +44,7 @@ compose="docker compose --env-file $env_file -f infra/production/compose.yaml"
 $compose up -d postgres
 $compose run --rm migrate
 $compose run --rm privacy-replay
-$compose up -d --remove-orphans api rules inference notification channel gateway
+$compose up -d --remove-orphans api rules seals inference notification channel gateway
 
 cat >"$state_dir/releases/$release_id.env" <<EOF
 PACT_IMAGE=$PACT_IMAGE

@@ -13,6 +13,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@pact/evidence": "0.1.0",
     "@pact/authority": "0.1.0",
     "@pact/db": "0.1.0",
     "@pact/domain": "0.1.0",

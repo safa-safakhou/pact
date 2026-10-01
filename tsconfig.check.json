@@ -6,6 +6,7 @@
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "paths": {
       "@pact/contracts": ["./packages/contracts/src/index.ts"],
+      "@pact/evidence": ["./packages/evidence/src/index.ts"],
       "@pact/platform": ["./packages/platform/src/index.ts"],
       "@pact/domain": ["./packages/domain/src/index.ts"],
       "@pact/world": ["./packages/world/src/index.ts"],

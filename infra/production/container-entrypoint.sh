@@ -13,6 +13,7 @@ read_secret() {
 read_secret IDENTITY_TOKEN_PEPPER /run/secrets/identity_token_pepper
 read_secret IDENTITY_ENCRYPTION_KEY /run/secrets/identity_encryption_key
 read_secret RAID_SEED_ENCRYPTION_KEY_BASE64 /run/secrets/raid_seed_encryption_key
+read_secret SEAL_ENCRYPTION_KEY_BASE64 /run/secrets/seal_encryption_key
 read_secret SMTP_URL /run/secrets/smtp_url
 read_secret TELEGRAM_BOT_ID /run/secrets/telegram_bot_id
 read_secret TELEGRAM_BOT_TOKEN /run/secrets/telegram_bot_token

@@ -10,6 +10,7 @@ import {
   type InvitationService,
   PoliticsError,
   type PoliticsService,
+  SealError,
   SocialError,
 } from "@pact/kingdom";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
@@ -31,6 +32,7 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
       error instanceof CourtInvitationError ||
       error instanceof CourtError ||
       error instanceof PoliticsError ||
+      error instanceof SealError ||
       error instanceof ActionLimitError ||
       error instanceof InvitationError ||
       error instanceof SocialError ||

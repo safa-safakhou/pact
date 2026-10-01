@@ -15,6 +15,7 @@ export * from "./raids.js";
 export * from "./report-reader.js";
 export * from "./retirement.js";
 export * from "./scouting.js";
+export * from "./seals.js";
 export * from "./service.js";
 export * from "./social.js";
 export * from "./social-overview.js";

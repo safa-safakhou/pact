@@ -1,7 +1,7 @@
 # Articles and mutual allegiance
 
 Ticket: [PACT-057 / MNI-122](https://linear.app/mnim/issue/MNI-122/pact-057-implement-articles-and-mutual-allegiance).
-Revision: implementation commit pending; tests verified 1 October 2026 with Node 24.19 / npm 11.19 / disposable PostgreSQL 17 schemas and synthetic accounts.
+Revision: `03b5a62`; Linear Done with both Alpha checks checked, comment `5e94ee31-7eb8-433e-b24c-d06a536b8735`. Tests verified 1 October 2026 with Node 24.19 / npm 11.19 / disposable PostgreSQL 17 schemas and synthetic accounts.
 
 ## Acceptance evidence
 

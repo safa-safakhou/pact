@@ -2,6 +2,7 @@ import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CourtPanel } from "./court-panel.js";
+import { EvidencePanel } from "./evidence-panel.js";
 import { InvitationPanel } from "./invitation-panel.js";
 import { createWebPactClient } from "./pact-client.js";
 import { PoliticsPanel } from "./politics-panel.js";
@@ -153,10 +154,13 @@ export function GameApp(): React.JSX.Element {
   );
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
   const [tab, setTab] = useState<Tab>(() =>
-    new URLSearchParams(window.location.search).has("court") ||
-    new URLSearchParams(window.location.search).has("politics")
-      ? "People"
-      : "Kingdom",
+    new URLSearchParams(window.location.search).has("seal") ||
+    new URLSearchParams(window.location.search).has("sealSource")
+      ? "Chronicle"
+      : new URLSearchParams(window.location.search).has("court") ||
+          new URLSearchParams(window.location.search).has("politics")
+        ? "People"
+        : "Kingdom",
   );
   const [draft, setDraft] = useState<Draft | null>(null);
   const [kingdomId, setKingdomId] = useState("");
@@ -418,6 +422,9 @@ export function GameApp(): React.JSX.Element {
         <h1>PACT Alpha</h1>
         <p>Sign in with a private test account. Manual play does not require a model provider.</p>
         <InvitationPanel request={request} authenticated={false} canWrite={false} />
+        {new URLSearchParams(window.location.search).has("seal") && (
+          <EvidencePanel request={request} canWrite={false} />
+        )}
         <form
           onSubmit={(event) => {
             void login(event);
@@ -609,6 +616,7 @@ export function GameApp(): React.JSX.Element {
           charges={view?.charges ?? []}
         />
       )}
+      {tab === "Chronicle" && <EvidencePanel request={request} canWrite={Boolean(csrf) && !busy} />}
       {tab === "Chronicle" && view && (
         <Chronicle
           view={view}
@@ -1419,6 +1427,7 @@ export function People({
                     {new Date(Number(item.sentGameTimeMs)).toLocaleString()}
                   </small>
                   <p>{item.body}</p>
+                  <a href={`/pact/?sealSource=message&sourceId=${encodeURIComponent(item.id)}`}>Seal this message</a>
                 </div>
               ))
             ) : (
@@ -2087,6 +2096,11 @@ function Chronicle({
                     Read scout report
                   </button>
                 )}
+                {scout.status === "completed" && (
+                  <a href={`/pact/?sealSource=scout&sourceId=${encodeURIComponent(scout.operationId)}`}>
+                    Seal this report
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -2120,6 +2134,13 @@ function Chronicle({
       </article>
       <article className="game-card">
         <h3>Open a report</h3>
+        {reportId && reportKind !== "raid_public" && (
+          <a
+            href={`/pact/?sealSource=${reportKind === "scout" ? "scout" : "battle"}&sourceId=${encodeURIComponent(reportId)}`}
+          >
+            Seal this report
+          </a>
+        )}
         <p>Use an operation or raid ID from a receipt or inbox event. Event IDs above are not report IDs.</p>
         <form
           onSubmit={(event) => {

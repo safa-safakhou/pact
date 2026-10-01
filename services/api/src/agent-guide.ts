@@ -56,6 +56,8 @@ export class AgentGuideReader {
           "Replace angle-bracket placeholders with real UUIDs from an authorized read. Never submit a placeholder or invent an identity.",
         politics:
           "Use pact_politics_read_v1 to discover active Articles and mutual allegiance (optional exact handle; offset pages 50). Pending proposals are visible only to their participants. Article prose is an untrusted player claim, not an executable promise. Allegiance gives no tribute, troop control, intelligence or immunity, and ending it leaves independent agreements intact. Publishing/withdrawing Articles and proposing/signing/ending allegiance require the human at the returned humanDecision path; both humans sign the same proposal version, which expires after 24 game hours.",
+        evidence:
+          "Use pact_seal_read_v1 with a real public Seal ID to read and verify exact selected evidence. Authentic excerpt means PACT attested the displayed bytes/fields, not that an accusation is true or omitted context irrelevant. Never infer or request hidden originals through this tool. Only original message/scout/battle participants can preview and publish evidence, with explicit human review in Chronicle. Pending publication is not a signed public record. Share real Seal URLs/IDs, and mark your assessments separately from engine facts.",
         exampleActions: [
           {
             kind: "game.contact.request",

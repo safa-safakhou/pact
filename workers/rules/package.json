@@ -7,9 +7,11 @@
     "build": "tsc -p tsconfig.json",
     "clock": "node --env-file-if-exists=../../.env --import tsx src/control.ts",
     "dev": "tsx watch src/main.ts",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "start:seals": "node dist/seal-main.js"
   },
   "dependencies": {
+    "@pact/evidence": "0.1.0",
     "@pact/authority": "0.1.0",
     "@pact/db": "0.1.0",
     "@pact/kingdom": "0.1.0",

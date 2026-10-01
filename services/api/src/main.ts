@@ -30,6 +30,7 @@ import {
   RaidRandomnessService,
   RaidService,
   ScoutService,
+  SealService,
   SocialOverviewReader,
   SocialService,
   SupplyExposureAdapter,
@@ -155,6 +156,7 @@ const raids = environment.RAID_SEED_ENCRYPTION_KEY_BASE64
     )
   : undefined;
 const reports = new GameReportReader(pool, scouts, raids);
+const seals = new SealService(pool, "pact", clock, reports);
 const gameCommands = new GameCommandHandler(
   social,
   (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
@@ -174,7 +176,7 @@ const dispatcher = new CommandDispatcher({
   pool,
   clock,
   productScope: ProductScopeSchema.parse("pact"),
-  social: new SocialCommandHandler(invitations, courts, politics),
+  social: new SocialCommandHandler(invitations, courts, politics, seals),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
     execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
@@ -213,6 +215,7 @@ const mcp = new McpTransport({
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
+  seals: { read: (id, accountId) => seals.read(id, accountId) },
   politics: {
     read: async (handle, offset, accountId) =>
       politics.read(handle, offset, accountId, (await world.read()).gameTimeMs),
@@ -256,6 +259,12 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    {
+      name: "seals",
+      forgetAccount: (client, accountId) => seals.forgetAccount(client, accountId),
+      prune: (client, now) => seals.prune(client, now),
+      exportAccount: (client, accountId) => seals.exportAccount(client, accountId),
+    },
     {
       name: "politics",
       forgetAccount: (client, accountId) => politics.forgetAccount(client, accountId),
@@ -301,6 +310,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   invitations,
   courts,
   politics,
+  seals,
   gameTime: async () => (await world.read()).gameTimeMs,
   reports,
   dispatcher,

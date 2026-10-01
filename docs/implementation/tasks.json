@@ -2836,7 +2836,7 @@
       "id": "PACT-057",
       "title": "Implement Articles and mutual allegiance",
       "phase": 2,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2863,7 +2863,10 @@
       "components": [
         "Articles and allegiance"
       ],
-      "evidence": [],
+      "evidence": [
+        "03b5a62 implements Articles and mutual allegiance; docs/implementation/reports/politics.md and docs/architecture/politics.md record acceptance, commands, lifecycle and boundaries. Build/typecheck/lint passed; 183 unit tests, 262 integration passed plus one optional local-model skip; 20 pinned schemas unchanged; planning render/check and diff check passed.",
+        "Linear MNI-122 Done with both Alpha checks checked on 2026-10-01; comment 5e94ee31-7eb8-433e-b24c-d06a536b8735. No deployment/Chrome/player/model/production claim. Original later scope remains unchecked. PACT-058 is the second In Progress ticket in the batch."
+      ],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,

@@ -1,6 +1,6 @@
 # Phase 2 — Social slice
 
-**20 tickets · 3 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 4 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -103,7 +103,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-057"></a>
 ## PACT-057 — Implement Articles and mutual allegiance
 
-**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -122,10 +122,15 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Concurrent signatures or patron changes never create cycles or multiple direct patrons; edited/expired terms cannot use stale signatures.
-- [ ] Articles and allegiance create no automatic tribute, asset transfer, military authority, free intelligence, immunity or cancellation of other contracts.
+- [x] Concurrent signatures or patron changes never create cycles or multiple direct patrons; edited/expired terms cannot use stale signatures.
+- [x] Articles and allegiance create no automatic tribute, asset transfer, military authority, free intelligence, immunity or cancellation of other contracts.
 
 **Assignee:** Codex / Mohammad Safakhou
+
+**Evidence**
+
+- 03b5a62 implements Articles and mutual allegiance; docs/implementation/reports/politics.md and docs/architecture/politics.md record acceptance, commands, lifecycle and boundaries. Build/typecheck/lint passed; 183 unit tests, 262 integration passed plus one optional local-model skip; 20 pinned schemas unchanged; planning render/check and diff check passed.
+- Linear MNI-122 Done with both Alpha checks checked on 2026-10-01; comment 5e94ee31-7eb8-433e-b24c-d06a536b8735. No deployment/Chrome/player/model/production claim. Original later scope remains unchecked. PACT-058 is the second In Progress ticket in the batch.
 
 <a id="pact-058"></a>
 ## PACT-058 — Implement signed excerpts and the evidence viewer

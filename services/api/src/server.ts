@@ -37,6 +37,7 @@ import { registerOperatorRoutes } from "./operator-routes.js";
 import { registerPrivacyRoutes } from "./privacy-routes.js";
 import { registerReportRoutes } from "./report-routes.js";
 import { registerRunRoutes } from "./run-routes.js";
+import { registerSealRoutes } from "./seal-routes.js";
 import { registerSocialOverviewRoutes } from "./social-overview-routes.js";
 import { registerTelegramRoutes } from "./telegram-routes.js";
 import { registerWorldViewRoutes } from "./world-view-routes.js";
@@ -65,6 +66,7 @@ export interface ApiModules {
   gameTime?: () => Promise<number>;
   courts?: import("@pact/kingdom").CourtService;
   politics?: import("@pact/kingdom").PoliticsService;
+  seals?: import("@pact/kingdom").SealService;
   reports?: GameReportReader;
   dispatcher: CommandDispatcher;
   oauth?: OAuthService;
@@ -168,6 +170,7 @@ export function buildServer(
         modules.courts,
         modules.politics,
       );
+    if (modules.seals) registerSealRoutes(server, modules.identity, modules.seals);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
     if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);
     if (modules.reports) registerReportRoutes(server, modules.identity, modules.reports, modules.oauth);

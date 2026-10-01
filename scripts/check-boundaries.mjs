@@ -5,7 +5,7 @@ const importPattern = /(?:from\s+|import\s*\(\s*|import\s+|require\s*\(\s*)["'](
 
 const roots = process.env.BOUNDARY_ROOT
   ? [process.env.BOUNDARY_ROOT]
-  : ["packages/platform/src", "packages/credential-vault/src", "packages/model-provider/src"];
+  : ["packages/platform/src", "packages/credential-vault/src", "packages/model-provider/src", "packages/evidence/src"];
 
 for (const root of roots) {
   for await (const file of glob(`${root}/**/*.ts`)) {
@@ -34,12 +34,18 @@ for await (const file of glob("packages/client-sdk/src/**/*.ts")) {
 }
 
 const privateCredentialCapability = /\b(?:CredentialKeyUnwrapper|CredentialResolver|RsaOaepPrivateKeyUnwrapper)\b/;
+const privateSealCapability = /\b(?:SealSigner|SEAL_ENCRYPTION_KEY_BASE64)\b/;
 for await (const file of glob("{services,workers}/**/*.ts")) {
   if (file.startsWith("workers/inference/") || file.endsWith(".test.ts")) continue;
   const source = await readFile(file, "utf8");
   if (privateCredentialCapability.test(source)) {
     violations.push(`${file}: credential unwrapping is restricted to the inference worker`);
   }
+}
+for await (const file of glob("{services,workers}/*/src/**/*.ts")) {
+  if (file.startsWith("workers/rules/src/seal-") || file.endsWith(".test.ts")) continue;
+  if (privateSealCapability.test(await readFile(file, "utf8")))
+    violations.push(`${file}: Seal private-key capability is restricted to the signing worker`);
 }
 
 if (violations.length > 0) {

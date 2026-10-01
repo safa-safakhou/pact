@@ -1,6 +1,9 @@
 # Place these exact-path handlers before the catch-all `/mcp*` and root handlers
 # in the existing shared-edge Caddyfile. Codex discovers well-known metadata at
 # the origin root for an OAuth issuer with the `/pact` path component.
+handle /.well-known/pact-signing-keys.json {
+  reverse_proxy pact-connection-test-gateway-1:8080
+}
 handle /.well-known/oauth-authorization-server/pact {
   rewrite * /.well-known/oauth-authorization-server
   reverse_proxy pact-connection-test-gateway-1:8080

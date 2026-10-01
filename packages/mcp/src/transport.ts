@@ -24,10 +24,12 @@ import {
   pactProfileTool,
   pactReceiptReadTool,
   pactReportReadTool,
+  pactSealReadTool,
   pactWorldReadTool,
   ReceiptReadQuerySchema,
   ReportReadQuerySchema,
   SCHEMA_VERSION,
+  SealReadQuerySchema,
   WorldViewQuerySchema,
 } from "@pact/contracts";
 import type { Pool } from "pg";
@@ -68,6 +70,7 @@ export interface McpTransportOptions {
   readonly publicProfiles?: { read(handle: string): Promise<unknown | null> };
   readonly courts?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
   readonly politics?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
+  readonly seals?: { read(sealId: string, accountId: string): Promise<unknown> };
   readonly agentGuide?: AgentGuideReader;
   readonly profile?: ProfileReader;
   readonly reports?: ReportReader;
@@ -221,6 +224,7 @@ export class McpTransport {
                 : []),
               ...(this.options.courts && principal.agentScopes?.includes("world:read") ? [pactCourtReadTool] : []),
               ...(this.options.politics && principal.agentScopes?.includes("world:read") ? [pactPoliticsReadTool] : []),
+              ...(this.options.seals && principal.agentScopes?.includes("world:read") ? [pactSealReadTool] : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.conversations && principal.agentScopes?.includes("world:read")
@@ -369,6 +373,13 @@ export class McpTransport {
       const query = CourtReadQuerySchema.safeParse(args);
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const result = await this.options.courts.read(query.data.handle, query.data.offset, principal.accountId);
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactSealReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.seals) throw new McpError("FORBIDDEN", 403);
+      const query = SealReadQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const result = await this.options.seals.read(query.data.sealId, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactPoliticsReadTool.name) {
