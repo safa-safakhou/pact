@@ -124,11 +124,43 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
       reply
         .header(
           "content-security-policy",
-          "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+          "default-src 'none'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
         )
         .header("referrer-policy", "no-referrer")
         .type("text/html; charset=utf-8");
-      return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize PACT connection</title><style>body{font:16px system-ui;max-width:28rem;margin:3rem auto;padding:1rem}label{display:block;margin:.8rem 0}input,button{box-sizing:border-box;width:100%;padding:.7rem}#error{color:#a00}</style><h1>Connect ${clientName} to PACT</h1><p>This client requests: ${scopes}. It can act only within your kingdom mandate. It cannot approve its own exceptions or change that mandate.</p><form id="login"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in and authorize</button></form><p id="error" role="alert"></p><script>const q=${encoded};document.getElementById('login').addEventListener('submit',async(e)=>{e.preventDefault();const f=new FormData(e.currentTarget);const login=await fetch('../v1/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:f.get('email'),password:f.get('password'),label:'PACT connection'})});const l=await login.json();if(!login.ok){document.getElementById('error').textContent='Sign-in failed.';return}const auth=await fetch('authorize',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':l.csrfToken},body:JSON.stringify(q)});const a=await auth.json();if(!auth.ok){document.getElementById('error').textContent='Authorization failed.';return}const u=new URL(q.redirect_uri);u.searchParams.set('code',a.code);u.searchParams.set('state',q.state);location.replace(u.toString())});</script></html>`;
+      return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize PACT connection</title><style>body{font:16px system-ui;max-width:28rem;margin:3rem auto;padding:1rem}label{display:block;margin:.8rem 0}input,button{box-sizing:border-box;width:100%;padding:.7rem}#error{color:#a00}</style><h1>Connect ${clientName} to PACT</h1><p>This client requests: ${scopes}. It can act only within your kingdom mandate. It cannot approve its own exceptions or change that mandate.</p><form id="login"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in and authorize</button></form><p id="status" role="status"></p><p id="error" role="alert"></p><script>
+const q=${encoded};
+document.getElementById('login').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const form=e.currentTarget;
+  const button=form.querySelector('button');
+  if(button.disabled)return;
+  const error=document.getElementById('error');
+  const status=document.getElementById('status');
+  error.textContent='';
+  status.textContent='Signing in…';
+  button.disabled=true;
+  try{
+    const f=new FormData(form);
+    const login=await fetch('../v1/auth/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:f.get('email'),password:f.get('password'),label:'PACT connection'}),signal:AbortSignal.timeout(20000)});
+    if(!login.ok){error.textContent='Sign-in failed. Check your email and password and make sure your account is verified.';return}
+    const l=await login.json();
+    status.textContent='Authorizing connection…';
+    const auth=await fetch('authorize',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':l.csrfToken},body:JSON.stringify(q),signal:AbortSignal.timeout(20000)});
+    if(!auth.ok){error.textContent='Authorization failed. Start a new connection attempt in your agent and try again.';return}
+    const a=await auth.json();
+    const u=new URL(q.redirect_uri);
+    u.searchParams.set('code',a.code);
+    u.searchParams.set('state',q.state);
+    location.replace(u.toString());
+  }catch{
+    error.textContent='Could not connect to PACT. Check your connection and try again.';
+  }finally{
+    status.textContent='';
+    button.disabled=false;
+  }
+});
+</script></html>`;
     }),
   );
 

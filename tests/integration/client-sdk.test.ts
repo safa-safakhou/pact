@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
+import { runInNewContext } from "node:vm";
 import { CommandDispatcher } from "@pact/application";
 import { ApprovalService } from "@pact/approvals";
 import { AuthorityService } from "@pact/authority";
@@ -162,6 +163,77 @@ describe("shared client SDK", () => {
     expect(page.body).toContain("Codex Playtest &lt;script&gt;");
     expect(page.body).not.toContain("Codex Playtest <script>");
     expect(page.body).toContain("game:act");
+    expect(page.headers["content-security-policy"]).toContain("connect-src 'self'");
+    expect(page.headers["content-security-policy"]).toContain("default-src 'none'");
+    expect(page.headers["referrer-policy"]).toBe("no-referrer");
+    const script = page.body.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+    if (!script) throw new Error("authorization script missing");
+    for (const scenario of ["network", "login", "authorization", "success"] as const) {
+      let submit: ((event: unknown) => Promise<void>) | undefined;
+      let redirect: string | undefined;
+      let calls = 0;
+      const button = { disabled: false };
+      const error = { textContent: "" };
+      const status = { textContent: "" };
+      const form = {
+        querySelector: () => button,
+        addEventListener: (_event: string, handler: typeof submit) => {
+          submit = handler;
+        },
+      };
+      runInNewContext(script, {
+        document: {
+          getElementById: (id: string) => ({ login: form, error, status })[id as "login" | "error" | "status"],
+        },
+        FormData: class {
+          get(name: string) {
+            return name === "email" ? "sdk@example.com" : password;
+          }
+        },
+        AbortSignal,
+        URL,
+        location: {
+          replace: (url: string) => {
+            redirect = url;
+          },
+        },
+        fetch: async (url: string, options: RequestInit) => {
+          calls++;
+          expect(button.disabled).toBe(true);
+          expect(status.textContent).not.toBe("");
+          expect(options.signal).toBeInstanceOf(AbortSignal);
+          if (scenario === "network") throw new TypeError("Failed to fetch");
+          return {
+            ok:
+              !(scenario === "login" && url.includes("login")) &&
+              !(scenario === "authorization" && url === "authorize"),
+            json: async () => (url.includes("login") ? { csrfToken: "synthetic-csrf" } : { code: "synthetic-code" }),
+          };
+        },
+      });
+      if (!submit) throw new Error("submit handler missing");
+      const event = { preventDefault() {}, currentTarget: form };
+      const pending = submit(event);
+      await submit(event);
+      await pending;
+      expect(calls).toBe(scenario === "network" || scenario === "login" ? 1 : 2);
+      expect(button.disabled).toBe(false);
+      expect(status.textContent).toBe("");
+      if (scenario === "success") {
+        expect(error.textContent).toBe("");
+        expect(new URL(redirect ?? "").searchParams.get("code")).toBe("synthetic-code");
+        expect(new URL(redirect ?? "").searchParams.get("state")).toBe("test-state-12345678");
+      } else {
+        expect(redirect).toBeUndefined();
+        expect(error.textContent).toContain(
+          scenario === "network"
+            ? "Could not connect"
+            : scenario === "login"
+              ? "Sign-in failed"
+              : "Authorization failed",
+        );
+      }
+    }
     const repeatedResource = new URLSearchParams(params);
     repeatedResource.append("resource", `${origin}/pact/mcp`);
     const repeatedPage = await server.inject({ method: "GET", url: `/oauth/authorize?${repeatedResource}` });
