@@ -52,3 +52,16 @@ Every criterion in the [design delivery checklist](../pact/delivery.md) is mappe
 | L04 | [PACT-075](phase-3-season-one.md#pact-075), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097), [PACT-080](phase-3-season-one.md#pact-080), [PACT-098](phase-3-season-one.md#pact-098) | [PACT-081](phase-3-season-one.md#pact-081) |
 | L05 | [PACT-070](phase-3-season-one.md#pact-070), [PACT-077](phase-3-season-one.md#pact-077), [PACT-080](phase-3-season-one.md#pact-080) | [PACT-081](phase-3-season-one.md#pact-081) |
 | L06 | [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097) | [PACT-081](phase-3-season-one.md#pact-081) |
+
+## Current game-only Alpha
+
+Original A/R/S/L coverage above includes deferred original scope and is not evidence that narrowed Alpha tickets satisfy full production criteria.
+
+| Criterion | Active tickets | Alpha checkpoint |
+| --- | --- | --- |
+| G01 | [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059) | [PACT-080](phase-3-season-one.md#pact-080) |
+| G02 | [PACT-062](phase-2-social.md#pact-062), [PACT-099](phase-3-season-one.md#pact-099) | [PACT-080](phase-3-season-one.md#pact-080) |
+| G03 | [PACT-059](phase-2-social.md#pact-059), [PACT-062](phase-2-social.md#pact-062), [PACT-099](phase-3-season-one.md#pact-099) | [PACT-080](phase-3-season-one.md#pact-080) |
+| G04 | [PACT-061](phase-2-social.md#pact-061), [PACT-073](phase-3-season-one.md#pact-073) | [PACT-080](phase-3-season-one.md#pact-080) |
+| G05 | [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070) | [PACT-080](phase-3-season-one.md#pact-080) |
+| G06 | Observed final rehearsal | [PACT-080](phase-3-season-one.md#pact-080) |

@@ -1,4 +1,10 @@
-# PACT handoff — 29 September 2026
+# PACT handoff — 1 October 2026
+
+## Current assignment
+
+The founder approved Version 1.4 [game-only Alpha](../pact/alpha.md). Only PACT-054–059, 061, 062, 069, 070, 073, 099 and 080 are authorized. Select `delivery_track: alpha` / Linear **PACT Alpha**, in dependency-ready backlog order. The other 28 unfinished tickets are **PACT Later**, postponed—not done/canceled/blocked. This overrides historical work-selection and full release requirements below. Keep the single existing VPS and simple web; focus on agents learning/discovering/playing and visible factual reports. Native/Telegram, payments, production certification, large pilot and art/audio are not Alpha prerequisites.
+
+PACT-054 is claimed In Progress; 58 historical foundations remain Done. New PACT-099 owns agent-first complete feature access, learning and observable play. Each narrowed ticket's `original_plan` preserves former scope/dependencies/acceptance for later review; Alpha Done is not original social/production gate evidence. PACT-080 closes the Alpha through three independent agents and an isolated accelerated season. Record actual failures/feedback; do not manufacture success or enjoyment. The Linear overview, assignment guide and active milestone carry this same scope.
 
 This is a navigation and state snapshot for agents continuing without prior chat. The authoritative behavior is in [`docs/pact/`](../pact/README.md); ticket scope and acceptance live in [`tasks.json`](tasks.json); **Linear owns live execution status** under [PACT — Season One](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d). Re-read the issue before claiming or closing it, then follow [the tracking workflow](linear-workflow.md) and repository `AGENTS.md`. This snapshot is not a substitute for fresh verification.
 

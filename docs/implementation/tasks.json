@@ -754,7 +754,7 @@
       ],
       "acceptance": [
         "Same ID and payload produce one mutation and the original receipt; changed payload with reused ID returns conflict.",
-        "A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account\u2019s result."
+        "A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account’s result."
       ],
       "components": [
         "command gateway",
@@ -1047,7 +1047,8 @@
       "sources": [
         "architecture",
         "access",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "L06"
@@ -1077,7 +1078,8 @@
         "Android SDK, signing-certificate fingerprint, signed development build, and Android test device",
         "Hostname-root Apple and Android association files generated from the real signing identities"
       ],
-      "block_reason": "Deferred by the Version 1.3 MVP decision until web and Telegram gameplay have been played and validated. The existing native shell and simulator evidence are retained; paid signing and physical-device certification resume during Season One release work."
+      "block_reason": "Deferred by the Version 1.3 MVP decision until web and Telegram gameplay have been played and validated. The existing native shell and simulator evidence are retained; paid signing and physical-device certification resume during Season One release work.",
+      "delivery_track": "later"
     },
     {
       "id": "PACT-085",
@@ -1157,7 +1159,7 @@
         "Include Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers; native-session cleanup is added when signed native testing begins."
       ],
       "acceptance": [
-        "Export excludes credentials and other players\u2019 data; delete disables access immediately and meets specified live-store deadlines.",
+        "Export excludes credentials and other players’ data; delete disables access immediately and meets specified live-store deadlines.",
         "Restore a pre-deletion backup and replay the deletion/revocation registry before traffic; removed credentials and content cannot reappear."
       ],
       "components": [
@@ -1382,11 +1384,11 @@
         "A09"
       ],
       "scope": [
-        "Collect Version 1.4 A01\u2013A09 synthetic-MVP evidence, the truthful supported-route matrix, repeated setup fixtures, privacy preflight, and test-environment release revision.",
+        "Collect Version 1.4 A01–A09 synthetic-MVP evidence, the truthful supported-route matrix, repeated setup fixtures, privacy preflight, and test-environment release revision.",
         "Record pass/fail for every MVP criterion and the real-client/key/human-study work deferred to PACT-079 before production support is advertised."
       ],
       "acceptance": [
-        "All Version 1.4 A01\u2013A09 synthetic-MVP checks pass, including Telegram test-bot identity, local native-PKCE fixtures, truthful unavailable-host labels, and reusable-module contracts, with no live economic world exposed.",
+        "All Version 1.4 A01–A09 synthetic-MVP checks pass, including Telegram test-bot identity, local native-PKCE fixtures, truthful unavailable-host labels, and reusable-module contracts, with no live economic world exposed.",
         "The gate identifies recorded fixtures as fixtures and carries live clients/keys, distribution, and unfamiliar-human measurement into PACT-079 rather than claiming them."
       ],
       "components": [
@@ -1641,10 +1643,10 @@
       "block_reason": null
     },
     {
-  "id": "PACT-034",
+      "id": "PACT-034",
       "title": "Implement upkeep, hunger recovery, and desertion",
       "phase": 1,
-  "status": "done",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -1672,18 +1674,18 @@
       "components": [
         "upkeep and attrition"
       ],
-  "evidence": [
-    "23 Sep 2026: docs/implementation/reports/upkeep.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (63 passed), npm run lint all passed locally with PostgreSQL 17. Host default settlement remains PACT-040."
-  ],
-  "assignee": "Mohammad Safakhou",
+      "evidence": [
+        "23 Sep 2026: docs/implementation/reports/upkeep.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (63 passed), npm run lint all passed locally with PostgreSQL 17. Host default settlement remains PACT-040."
+      ],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },
     {
-  "id": "PACT-035",
+      "id": "PACT-035",
       "title": "Implement kingdom-wide charges and action limits",
       "phase": 1,
-  "status": "done",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -1711,18 +1713,18 @@
       "components": [
         "limits and charges"
       ],
-  "evidence": [
-    "23 Sep 2026: docs/implementation/reports/action-limits.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (65 passed), npm run lint passed locally with PostgreSQL 17. Gameplay handler integration remains with later tickets."
-  ],
-  "assignee": "Mohammad Safakhou",
+      "evidence": [
+        "23 Sep 2026: docs/implementation/reports/action-limits.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (65 passed), npm run lint passed locally with PostgreSQL 17. Gameplay handler integration remains with later tickets."
+      ],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },
     {
-  "id": "PACT-036",
+      "id": "PACT-036",
       "title": "Implement contacts, bounded messages, and direct transfers",
       "phase": 1,
-  "status": "done",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -1755,18 +1757,18 @@
         "messages",
         "transfers"
       ],
-  "evidence": [
-    "23 Sep 2026: docs/implementation/reports/social.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (70 passed), npm run lint passed locally with PostgreSQL 17. Later gameplay handlers expose these transaction-bound ports."
-  ],
-  "assignee": "Mohammad Safakhou",
+      "evidence": [
+        "23 Sep 2026: docs/implementation/reports/social.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (70 passed), npm run lint passed locally with PostgreSQL 17. Later gameplay handlers expose these transaction-bound ports."
+      ],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },
     {
-  "id": "PACT-037",
+      "id": "PACT-037",
       "title": "Implement supply offers, signatures, bonds, and contract activation",
       "phase": 1,
-  "status": "done",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "L",
@@ -1796,10 +1798,10 @@
       "components": [
         "supply offers and signatures"
       ],
-  "evidence": [
-    "23 Sep 2026: docs/implementation/reports/supply-offers.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (76 passed), npm run lint passed locally with PostgreSQL 17. Delivery/default settlement remains PACT-038; production agent exposure adapter remains PACT-039."
-  ],
-  "assignee": "Mohammad Safakhou",
+      "evidence": [
+        "23 Sep 2026: docs/implementation/reports/supply-offers.md; npm run build, npm run typecheck, npm test (92 passed), npm run test:integration (76 passed), npm run lint passed locally with PostgreSQL 17. Delivery/default settlement remains PACT-038; production agent exposure adapter remains PACT-039."
+      ],
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -1989,11 +1991,11 @@
       ],
       "scope": [
         "Implement CSPRNG seeds, encrypted storage, RFC-8785 commitment payloads, HMAC rejection-sampling dice, reveal-on-resolution/cancellation, and seed-access audit.",
-        "Publish a small verification routine and the specification\u2019s fixed fixture; keep cryptographic and game-power calculations separate."
+        "Publish a small verification routine and the specification’s fixed fixture; keep cryptographic and game-power calculations separate."
       ],
       "acceptance": [
         "The reference seed yields the published commitment and attacker 6 / defender 1.",
-        "Rejection of byte values 252\u2013255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed."
+        "Rejection of byte values 252–255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed."
       ],
       "components": [
         "randomness and verification"
@@ -2076,7 +2078,7 @@
         "Resolve raids in chronological/declaration order against surviving IDs, apply loot only to the leader, release pending returns, and retain participant/public report variants."
       ],
       "acceptance": [
-        "An earlier battle\u2019s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.",
+        "An earlier battle’s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.",
         "Same-boundary completion/lock/withdrawal, hunger changes, leader cancellation, pinned visitors, last-second requests, and missing units resolve exactly once."
       ],
       "components": [
@@ -2161,7 +2163,7 @@
       ],
       "acceptance": [
         "Build/train conversions preserve marked wealth; grants, Home Guard, expected income, borrowed units, and cosmetics never count.",
-        "Transfer, default, cancellation, loot, and seizure fixtures change the correct owner\u2019s wealth once and allow negative Fortune."
+        "Transfer, default, cancellation, loot, and seizure fixtures change the correct owner’s wealth once and allow negative Fortune."
       ],
       "components": [
         "wealth accounting and rankings"
@@ -2216,10 +2218,10 @@
       "block_reason": null
     },
     {
-  "id": "PACT-048",
+      "id": "PACT-048",
       "title": "Build the plain rules-prototype interface",
       "phase": 1,
-  "status": "done",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -2272,7 +2274,7 @@
         "29 Sep 2026: Birch naturally reached 10 ordinary Iron at tick 4282, queued one ordinary Spearman through Chrome for 10 Iron/4 Silver (receipt f2bd27cf-2f70-43b3-804a-f635b7d3f65e), and showed 0/1 due at 1:46 AM game time with queue occupied. At tick 4287 Chrome showed one ordinary Spearman home beside eight Home Guard, batch absent and training queue free. Screenshots/report: docs/implementation/reports/rules-ui-progress.md. Linear comment 9e09c9e2-caf8-4674-8209-a2502ce2b1e8 and In Progress/assignee/checklist readback reconciled. No clock/stock edit, existing-account funding or full Scout/battle-loop claim.",
         "29 Sep 2026: Completed paired-session capability matrix and both acceptance items; report docs/implementation/reports/rules-ui-completion.md. Amber/Birch founded/developed, negotiated and traded, Birch completed a scout and resolved raid, both read losses and completed ordinary replacement training. Earlier Cinder/PACT MVP Owner paired Chrome sessions completed Hall III garrison offer/sign/host/mutual release; the report explicitly distinguishes that pair from the new founders. 77fc403 separated raid and garrison force controls; 2143d92 removed fixed Home Guard count after actual casualties. Node 24.19 build/typecheck/lint and 175 unit tests passed for final code; 226 PostgreSQL 17 integration tests passed for the preceding UI change, not rerun for the final two-string display edit. Immutable alpha-20260929-4 passed builds/migrations/privacy replay/public verify; Chrome confirmed corrected hint and completed Amber training. Linear MNI-112 Done, both criteria checked, assignee readback Mohammad Safakhou; completion comment 1a3a8042-25e5-46d0-bea4-8455d8d43991. Backlog render/check and git diff --check passed (98 tickets, acyclic dependencies, source snapshots and generated views consistent). No simultaneous same-pair pilot, full accessibility, fun, PACT-053 gate, paid provider call or clock/stock bypass claimed."
       ],
-  "assignee": "Mohammad Safakhou",
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null
     },
@@ -2320,37 +2322,37 @@
         "24 Sep 2026: revision e1401b3 adds a fake-provider game-command bridge using a generated game-only subset of pact.command.v1, deterministic run/request/call command IDs, server-derived agent identity, the shared dispatcher, and exact MCP-or-PACT-run lease checks. Forged human actor/human-only action, replay/conflict, and post-run denial pass in PostgreSQL. Node 24 build/typecheck, 108 unit, 139 integration, and lint pass. See docs/implementation/reports/game-tools-progress.md. Production worker composition/context/receipt handoff remain incomplete.",
         "24 Sep 2026: input admission now estimates the actual assembled messages and tool definitions instead of a fixed 50 tokens; a low-budget PostgreSQL fixture verifies zero provider calls and no in-flight reservation. Node 24 build/typecheck, 108 unit, 141 PostgreSQL integration, and lint pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Context selection and production composition are still incomplete; keep In Progress.",
         "24 Sep 2026: revision e116fb8 moved the PACT game handler into @pact/application and composed it into the inference worker with the generated game tool, shared world admission, exact run lease, and single-VPS raid seed. A PostgreSQL fake-provider fixture verifies a forged actor cannot replace the run owner and one durable command receipt is committed. Node 24 build/typecheck/lint, 108 unit, and 143 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/modules.md, docs/operations/vps-deployment.md, and docs/implementation/reports/game-tools-progress.md. Real provider credentials, durable tool-result handoff, bounded context, and cross-route certification remain; keep In Progress.",
-    "24 Sep 2026: revision 1ef8025 adds a run-owned migration that persists bounded server-generated tool receipt summaries atomically with successful step reconciliation, feeds the 16 latest into the next input reservation, exports them to the owner, and cascades deletion with the run. Two-step PostgreSQL fixture proves receipt handoff, retry nonduplication, and cascade; worker fixture proves no message body in summary. Node 24 build/typecheck/lint, 108 unit, and 144 PostgreSQL integration tests pass. See docs/api/runs.md, docs/api/privacy.md, docs/operations/database.md, and docs/implementation/reports/game-tools-progress.md. Real-provider wiring, broad authorized context, cross-route scenario, and actual worker-death recovery remain; keep In Progress.",
-    "24 Sep 2026: revision 014f4a9 gates network provider registration behind an explicit default-off operator flag and binds inference-only vault credential use to the owner and selected provider. Synthetic injected HTTP, cross-account/provider denial, and default-router tests pass. Node 24 build/typecheck/lint, 110 unit, 146 PostgreSQL integration tests pass; backlog/diff checks pass. See docs/api/runs.md, docs/operations/vps-deployment.md, and docs/implementation/reports/game-tools-progress.md. No live/paid call or deployment; context, cross-route certification, and recovery remain; keep In Progress.",
-    "24 Sep 2026: revision 70c8597 fails an unresolved model call conservatively on durable-job redelivery, releases its reservation/write lease, and prevents a second provider request. A paused synthetic-call fixture verifies late completion cannot restart the run. Node 24 build/typecheck/lint, 110 unit, 147 PostgreSQL integration tests pass; backlog/diff checks pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Actual worker kill and full PACT-049 acceptance remain; keep In Progress.",
-    "24 Sep 2026: revision 9dc4c46 records a message scenario through authenticated web client/HTTP, fake model adapter, and MCP using the same dispatcher. Three COMMITTED receipts have equal resource charges and server-derived sender; MCP lease conflicts with the active in-app run. The inference worker selects an 8 KiB owner-authorized world snapshot without hostile counterpart prose or another kingdom ID. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. First Linear acceptance check is met; inbox context, broader route coverage, and other criteria remain; keep In Progress.",
-    "24 Sep 2026: owner-scoped inbox selector adds at most eight newest metadata records to Envoy user-role context, excluding every event payload. PostgreSQL fixture confirms hostile payloads and another account's event ID are absent. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration, backlog render/check, and diff check pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Conversation reads, broader adversarial checks, and full acceptance remain; keep In Progress.",
-    "25 Sep 2026: shared pact_inbox_read_v1 schema now drives explicit owner-bound MCP and in-app model inbox reads through InboxService.readBounded. Payloads over 512 UTF-8 bytes are omitted; model result labels third-party prose untrusted. PostgreSQL fixture checks equivalent owner events, paging, cross-account exclusion, strict caller arguments, and read-only grant behavior. Node 24 build/typecheck/lint, 110 unit, 152 PostgreSQL integration tests pass. See docs/api/mcp.md, docs/api/runs.md, docs/api/privacy.md, and docs/implementation/reports/game-tools-progress.md. Other command/read groups and full adversarial acceptance remain; keep In Progress.",
-    "25 Sep 2026: shared world/report tool schemas now drive explicit in-app Envoy reads through the same domain-authorized projections as MCP/HTTP, with run-derived identity and bounded results. PostgreSQL fixture verifies owner/private versus outsider/public world view and private scout-report exclusion; unit fixtures verify truncation. Node 24 build/typecheck/lint, 112 unit, and 153 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/world-views.md, and docs/implementation/reports/game-tools-progress.md. Full command-route and adversarial acceptance remain; keep In Progress.",
-    "25 Sep 2026: shared pact_receipt_read_v1 and pact_approval_status_v1 schemas now provide owner-scoped model and MCP readback without human approval authority. Read-only MCP grants can inspect results but cannot list write tools. Cross-account and strict-argument PostgreSQL fixture passes. Local Node 24 build/typecheck/lint, 113 unit, and 154 integration tests pass. See docs/api/runs.md, docs/api/mcp.md, and docs/implementation/reports/game-tools-progress.md. PACT-049 remains In Progress pending full route/adversarial acceptance.",
-    "25 Sep 2026: inference command-result summaries now retain bounded recordVersions and committedEventIds, with explicit truncation and command-ID fallback. A fake-provider PostgreSQL supply-offer fixture verifies the forged actor cannot replace the run owner and the saved summary carries supply-offer version 1. Local Node 24 build/typecheck, 114 unit, and 155 PostgreSQL integration tests pass; see docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Full cross-route/adversarial acceptance remains; keep In Progress.",
-    "25 Sep 2026: shared pact_conversation_read_v1 uses a domain-owned owner-bound projection for read-only MCP and in-app fake-provider routes. At most five messages and 512 UTF-8 bytes per body are returned; model result is bounded with explicit truncation. PostgreSQL fixture checks equivalent owner data, outsider emptiness, strict argument/scope denial, and hostile prose only as user-role result data. Local Node 24 build/typecheck/lint, 115 unit, and 156 PostgreSQL integration tests pass. See docs/api/mcp.md, docs/api/runs.md, docs/api/privacy.md, and docs/implementation/reports/game-tools-progress.md. Run-start conversation selection and full acceptance remain; keep In Progress.",
-    "25 Sep 2026: in-app Envoy game.message.send now charges the run's default 12/max 24 message cap inside the command transaction; POST /v1/runs accepts maxMessages and owner run status exposes usedMessages. Failed send rolls back count, same-command replay does not recount, and a new over-cap send returns RATE_LIMITED. Local Node 24 build/typecheck/lint, 115 unit, and 157 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Conversation selection and full acceptance remain; keep In Progress.",
-    "25 Sep 2026: human-selected run-start conversation IDs are validated as owner-involved, unique, and within the default 6/max 12 cap before lease acquisition, persisted by migration 0035, and exposed in owner run status. Inference includes only bounded selected excerpts as untrusted user-role data; PostgreSQL fake-provider fixture verifies denial of unrelated, duplicate, and over-cap choices and exclusion of unselected prose. Local Node 24 build/typecheck/lint, 115 unit, and 158 integration tests pass. See docs/api/runs.md, docs/operations/database.md, and docs/implementation/reports/game-tools-progress.md. Broader PACT-049 acceptance remains; keep In Progress.",
-    "25 Sep 2026: in-app explicit conversation reads now reject owner-visible but unselected threads as NOT_FOUND, preventing a bypass of the human's selected-thread cap; a separate MCP world:read grant retains independent owner-bound access. A second cross-route scenario produces version-1 supply offers and equal COMMITTED/empty-charge receipts through web, fake-provider, and MCP, with server-owned proposer despite forged account fields. Local Node 24 build/typecheck/lint, 115 unit, and 159 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Full adversarial/route acceptance remains; keep In Progress.",
-    "25 Sep 2026: PACT-021 regression correction now rejects HTTP or internal run starts above 15 minutes, 20 calls, or 40,000 tokens, as well as invalid conversation/message limits, before lease/job creation. Local Node 24 build/typecheck/lint, 115 unit, and 160 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Full PACT-049 game-tool acceptance remains; keep In Progress.",
-    "25 Sep 2026: a selected-thread adversarial fake-provider fixture receives hostile counterpart prose as user-role data, then attempts a forged-account Silver transfer and human-only contact request. Neither commits; the run's owner/provider/model stay bound and no transfer, mandate, or contact request is created. Node 24 build/typecheck/lint, 115 unit, and 161 PostgreSQL integration tests pass. See docs/implementation/reports/game-tools-progress.md. This is one server-boundary fixture, not live-model certification or complete acceptance; keep In Progress.",
-    "25 Sep 2026: a separate inference process is killed after the production-composed game dispatcher commits a fake-provider message but before model-step reconciliation. Replacement claim observes one owner-authored message and receipt, one outgoing-message charge, ambiguous run failure, and no second provider call or invented result. Node 24 build/typecheck/lint, 115 unit, and 162 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Other command-group/adversarial acceptance remains; keep In Progress.",
-    "25 Sep 2026: fixed the blanket agent cold-contact denial to match the execution contract. A contact.request mandate action, sufficient Silver allowance, optional current mandateVersion, and a live run lease now admit the two-Silver request atomically with stock/action/receipt/outbox effects. Fake-provider and MCP fixtures commit one owner-derived request each; MCP replay is idempotent, stale/over-budget attempts leave no third effect, and contact answer remains human-only. Node 24 build/typecheck/lint, 115 unit, and 163 PostgreSQL integration tests pass. See docs/architecture/social.md, docs/api/mcp.md, and docs/implementation/reports/game-tools-progress.md. Remaining PACT-049 acceptance stays In Progress.",
-    "25 Sep 2026: one recipient human-only contact-answer scenario now denies forged-human fake-model and MCP agent actions, then commits via authenticated web SDK and returns the same receipt on retry. The request remains pending until the human action and creates one accepted contact pair. Local Node 24 build/typecheck/lint, 115 unit, and 164 PostgreSQL integration tests pass. An audit found ApprovalService.createRequest has no production caller, so blocked proposals still lack an approval request/deep link; see docs/implementation/reports/game-tools-progress.md. Keep PACT-049 In Progress.",
-    "25 Sep 2026: ApprovalService.createRequest now rejects mismatched product/account ownership and changed terms or cross-account reuse of an existing command ID. A PostgreSQL fixture verifies exact replay and both denial cases. Local Node 24 build/typecheck/lint, 115 unit, and 164 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. This hardens the primitive but does not wire an agent proposal route; PACT-049 remains In Progress.",
-    "25 Sep 2026: pact_approval_propose_v1 now creates exact cold-contact review requests from a lease-bound fake-model run and MCP game:act session, with server-derived owner/effects, atomic pending approval plus owner inbox/outbox event, HTTPS MCP deep link, and no game debit before human approval. Same-ID replay, changed terms, missing lease, read-only grant, human-only action denial, human-authenticated HTTP commit/duplicate POST, and JSONB-stable action hashing pass. Local Node 24 build/typecheck/lint, 115 unit, and 166 PostgreSQL integration tests pass. See docs/api/approvals.md, docs/api/mcp.md, docs/api/runs.md, and docs/implementation/reports/game-tools-progress.md. Other command-group proposals and full adversarial acceptance remain; keep PACT-049 In Progress.",
-    "25 Sep 2026: pact_approval_propose_v1 additionally accepts an exact direct transfer. A PostgreSQL fixture verifies no Iron movement before owner approval, changed-amount and outsider denial, one 1,200-unit sender debit/recipient credit and transfer record, and receipt-stable duplicate approval. Local Node 24 build/typecheck/lint, 115 unit, and 167 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Other actions and full acceptance remain; keep PACT-049 In Progress.",
-    "25 Sep 2026: exact two-Iron approval proposal now also passes through the actual MCP game:act tool after run.open and replays through the same approval service. Local Node 24 build/typecheck/lint, 115 unit and 167 PostgreSQL 17 integration tests pass; see docs/implementation/reports/game-tools-progress.md. Full PACT-049 route/adversarial acceptance remains; keep In Progress.",
-    "25 Sep 2026: approval resolution now holds the request lock through exact command dispatch and resolution, preventing concurrent rejection from overriding a committed command. Expired approve/reject updates commit before EXPIRED returns. PostgreSQL race fixture verifies duplicate approval receipt, denied concurrent rejection, one command receipt, and one approved inbox/outbox event. Local Node 24 build/typecheck/lint, 115 unit and 168 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Full PACT-049 acceptance remains; keep In Progress.",
-    "25 Sep 2026: pact_approval_propose_v1 tool description now accurately names both cold-contact and direct-transfer proposals, matching its shared JSON schema in model and MCP listings. Local Node 24 build/typecheck/lint, 115 unit and 169 PostgreSQL 17 integration tests pass. See docs/implementation/reports/game-tools-progress.md. Remaining action groups and full PACT-049 acceptance stay In Progress.",
-    "25 Sep 2026: exact game.training.queue proposals now share the model/MCP schema and lease-bound approval service. PACT application derives Iron/Silver review effects from the unit catalog. PostgreSQL fixture proves no early training, missing-lease/changed-term/outsider denial, one human commit and stable replay. Node 24 build/typecheck/lint, 115 unit and 170 PostgreSQL 17 integration tests pass; backlog/diff checks pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Other action groups and full acceptance remain; keep In Progress.",
-    "26 Sep 2026: exact game.building.queue proposals now share the model/MCP schema and lease-bound approval service. PACT application quotes catalog price and explains founding allowance and waiting state; human commit uses the existing exact one-use session permit. PostgreSQL fixture proves no early instruction/permit, changed-slot rejection, failed admission without live human session, one active instruction/consumed permit, and stable replay. Node 24 build/typecheck/lint, 115 unit and 171 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Broader route and approval acceptance remain; keep In Progress.",
-    "26 Sep 2026: exact game.scout.start proposals now use the shared model/MCP schema and lease-bound approval service, rendering catalog fees, duration, charge, and selected troops. PostgreSQL fixture proves no early scout or troop movement, changed-ID/outsider denial, exact human commit with 10 Silver/5 Grain charge, and stable replay. Node 24 build/typecheck/lint, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Full route/adversarial acceptance remains; keep In Progress.",
-    "26 Sep 2026: release mvp-20260926-1 deployed the current gameplay backend after revision 99cf2fa fixed clean Docker workspace build ordering and added a dependency guard. Public deployment verification passed; the host-only synthetic account activated one kingdom and submitted a committed Farm II construction command via the gateway. Local lint/typecheck, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/operations/vps-deployment.md and docs/implementation/reports/game-tools-progress.md. Web gameplay and full PACT-049 route/adversarial acceptance remain; keep In Progress.",
-    "26 Sep 2026: workers/inference/src/run-context.test.ts adds owner-context boundary checks: hostile counterpart prose stays user-role data, arbitrary inbox payload does not enter metadata summary, non-owner projection stops all later private reads, and oversized conversation text is omitted with a truncation marker. Node 24 typecheck/lint and focused three-test unit suite pass. See docs/implementation/reports/game-tools-progress.md. This is one context-construction fixture, not full cross-route/adversarial acceptance; keep In Progress.",
-    "26 Sep 2026: PostgreSQL fake-provider/MCP matrix denied all seven human-only game actions with forged human/other-account envelopes and no committed receipts or exact human permits. Unit contract fixture locks all 28 game action kinds to generated web, MCP, and model schemas; model schema excludes sandbox actions. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. At this checkpoint broader acceptance review remained open.",
-    "26 Sep 2026: final acceptance review in docs/implementation/reports/game-tools-completion.md (revision 0b0ca8a) matches all three PACT-049 criteria to recorded web/model/MCP message and versioned supply-offer scenarios, hostile-context/private-read isolation, shared 28-action schemas, and seven-action human-only denial. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. Linear MNI-113 is Done. No live paid-model/consumer-host certification or playable PACT-048 UI is claimed."
+        "24 Sep 2026: revision 1ef8025 adds a run-owned migration that persists bounded server-generated tool receipt summaries atomically with successful step reconciliation, feeds the 16 latest into the next input reservation, exports them to the owner, and cascades deletion with the run. Two-step PostgreSQL fixture proves receipt handoff, retry nonduplication, and cascade; worker fixture proves no message body in summary. Node 24 build/typecheck/lint, 108 unit, and 144 PostgreSQL integration tests pass. See docs/api/runs.md, docs/api/privacy.md, docs/operations/database.md, and docs/implementation/reports/game-tools-progress.md. Real-provider wiring, broad authorized context, cross-route scenario, and actual worker-death recovery remain; keep In Progress.",
+        "24 Sep 2026: revision 014f4a9 gates network provider registration behind an explicit default-off operator flag and binds inference-only vault credential use to the owner and selected provider. Synthetic injected HTTP, cross-account/provider denial, and default-router tests pass. Node 24 build/typecheck/lint, 110 unit, 146 PostgreSQL integration tests pass; backlog/diff checks pass. See docs/api/runs.md, docs/operations/vps-deployment.md, and docs/implementation/reports/game-tools-progress.md. No live/paid call or deployment; context, cross-route certification, and recovery remain; keep In Progress.",
+        "24 Sep 2026: revision 70c8597 fails an unresolved model call conservatively on durable-job redelivery, releases its reservation/write lease, and prevents a second provider request. A paused synthetic-call fixture verifies late completion cannot restart the run. Node 24 build/typecheck/lint, 110 unit, 147 PostgreSQL integration tests pass; backlog/diff checks pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Actual worker kill and full PACT-049 acceptance remain; keep In Progress.",
+        "24 Sep 2026: revision 9dc4c46 records a message scenario through authenticated web client/HTTP, fake model adapter, and MCP using the same dispatcher. Three COMMITTED receipts have equal resource charges and server-derived sender; MCP lease conflicts with the active in-app run. The inference worker selects an 8 KiB owner-authorized world snapshot without hostile counterpart prose or another kingdom ID. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. First Linear acceptance check is met; inbox context, broader route coverage, and other criteria remain; keep In Progress.",
+        "24 Sep 2026: owner-scoped inbox selector adds at most eight newest metadata records to Envoy user-role context, excluding every event payload. PostgreSQL fixture confirms hostile payloads and another account's event ID are absent. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration, backlog render/check, and diff check pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Conversation reads, broader adversarial checks, and full acceptance remain; keep In Progress.",
+        "25 Sep 2026: shared pact_inbox_read_v1 schema now drives explicit owner-bound MCP and in-app model inbox reads through InboxService.readBounded. Payloads over 512 UTF-8 bytes are omitted; model result labels third-party prose untrusted. PostgreSQL fixture checks equivalent owner events, paging, cross-account exclusion, strict caller arguments, and read-only grant behavior. Node 24 build/typecheck/lint, 110 unit, 152 PostgreSQL integration tests pass. See docs/api/mcp.md, docs/api/runs.md, docs/api/privacy.md, and docs/implementation/reports/game-tools-progress.md. Other command/read groups and full adversarial acceptance remain; keep In Progress.",
+        "25 Sep 2026: shared world/report tool schemas now drive explicit in-app Envoy reads through the same domain-authorized projections as MCP/HTTP, with run-derived identity and bounded results. PostgreSQL fixture verifies owner/private versus outsider/public world view and private scout-report exclusion; unit fixtures verify truncation. Node 24 build/typecheck/lint, 112 unit, and 153 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/world-views.md, and docs/implementation/reports/game-tools-progress.md. Full command-route and adversarial acceptance remain; keep In Progress.",
+        "25 Sep 2026: shared pact_receipt_read_v1 and pact_approval_status_v1 schemas now provide owner-scoped model and MCP readback without human approval authority. Read-only MCP grants can inspect results but cannot list write tools. Cross-account and strict-argument PostgreSQL fixture passes. Local Node 24 build/typecheck/lint, 113 unit, and 154 integration tests pass. See docs/api/runs.md, docs/api/mcp.md, and docs/implementation/reports/game-tools-progress.md. PACT-049 remains In Progress pending full route/adversarial acceptance.",
+        "25 Sep 2026: inference command-result summaries now retain bounded recordVersions and committedEventIds, with explicit truncation and command-ID fallback. A fake-provider PostgreSQL supply-offer fixture verifies the forged actor cannot replace the run owner and the saved summary carries supply-offer version 1. Local Node 24 build/typecheck, 114 unit, and 155 PostgreSQL integration tests pass; see docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Full cross-route/adversarial acceptance remains; keep In Progress.",
+        "25 Sep 2026: shared pact_conversation_read_v1 uses a domain-owned owner-bound projection for read-only MCP and in-app fake-provider routes. At most five messages and 512 UTF-8 bytes per body are returned; model result is bounded with explicit truncation. PostgreSQL fixture checks equivalent owner data, outsider emptiness, strict argument/scope denial, and hostile prose only as user-role result data. Local Node 24 build/typecheck/lint, 115 unit, and 156 PostgreSQL integration tests pass. See docs/api/mcp.md, docs/api/runs.md, docs/api/privacy.md, and docs/implementation/reports/game-tools-progress.md. Run-start conversation selection and full acceptance remain; keep In Progress.",
+        "25 Sep 2026: in-app Envoy game.message.send now charges the run's default 12/max 24 message cap inside the command transaction; POST /v1/runs accepts maxMessages and owner run status exposes usedMessages. Failed send rolls back count, same-command replay does not recount, and a new over-cap send returns RATE_LIMITED. Local Node 24 build/typecheck/lint, 115 unit, and 157 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Conversation selection and full acceptance remain; keep In Progress.",
+        "25 Sep 2026: human-selected run-start conversation IDs are validated as owner-involved, unique, and within the default 6/max 12 cap before lease acquisition, persisted by migration 0035, and exposed in owner run status. Inference includes only bounded selected excerpts as untrusted user-role data; PostgreSQL fake-provider fixture verifies denial of unrelated, duplicate, and over-cap choices and exclusion of unselected prose. Local Node 24 build/typecheck/lint, 115 unit, and 158 integration tests pass. See docs/api/runs.md, docs/operations/database.md, and docs/implementation/reports/game-tools-progress.md. Broader PACT-049 acceptance remains; keep In Progress.",
+        "25 Sep 2026: in-app explicit conversation reads now reject owner-visible but unselected threads as NOT_FOUND, preventing a bypass of the human's selected-thread cap; a separate MCP world:read grant retains independent owner-bound access. A second cross-route scenario produces version-1 supply offers and equal COMMITTED/empty-charge receipts through web, fake-provider, and MCP, with server-owned proposer despite forged account fields. Local Node 24 build/typecheck/lint, 115 unit, and 159 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Full adversarial/route acceptance remains; keep In Progress.",
+        "25 Sep 2026: PACT-021 regression correction now rejects HTTP or internal run starts above 15 minutes, 20 calls, or 40,000 tokens, as well as invalid conversation/message limits, before lease/job creation. Local Node 24 build/typecheck/lint, 115 unit, and 160 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Full PACT-049 game-tool acceptance remains; keep In Progress.",
+        "25 Sep 2026: a selected-thread adversarial fake-provider fixture receives hostile counterpart prose as user-role data, then attempts a forged-account Silver transfer and human-only contact request. Neither commits; the run's owner/provider/model stay bound and no transfer, mandate, or contact request is created. Node 24 build/typecheck/lint, 115 unit, and 161 PostgreSQL integration tests pass. See docs/implementation/reports/game-tools-progress.md. This is one server-boundary fixture, not live-model certification or complete acceptance; keep In Progress.",
+        "25 Sep 2026: a separate inference process is killed after the production-composed game dispatcher commits a fake-provider message but before model-step reconciliation. Replacement claim observes one owner-authored message and receipt, one outgoing-message charge, ambiguous run failure, and no second provider call or invented result. Node 24 build/typecheck/lint, 115 unit, and 162 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. Other command-group/adversarial acceptance remains; keep In Progress.",
+        "25 Sep 2026: fixed the blanket agent cold-contact denial to match the execution contract. A contact.request mandate action, sufficient Silver allowance, optional current mandateVersion, and a live run lease now admit the two-Silver request atomically with stock/action/receipt/outbox effects. Fake-provider and MCP fixtures commit one owner-derived request each; MCP replay is idempotent, stale/over-budget attempts leave no third effect, and contact answer remains human-only. Node 24 build/typecheck/lint, 115 unit, and 163 PostgreSQL integration tests pass. See docs/architecture/social.md, docs/api/mcp.md, and docs/implementation/reports/game-tools-progress.md. Remaining PACT-049 acceptance stays In Progress.",
+        "25 Sep 2026: one recipient human-only contact-answer scenario now denies forged-human fake-model and MCP agent actions, then commits via authenticated web SDK and returns the same receipt on retry. The request remains pending until the human action and creates one accepted contact pair. Local Node 24 build/typecheck/lint, 115 unit, and 164 PostgreSQL integration tests pass. An audit found ApprovalService.createRequest has no production caller, so blocked proposals still lack an approval request/deep link; see docs/implementation/reports/game-tools-progress.md. Keep PACT-049 In Progress.",
+        "25 Sep 2026: ApprovalService.createRequest now rejects mismatched product/account ownership and changed terms or cross-account reuse of an existing command ID. A PostgreSQL fixture verifies exact replay and both denial cases. Local Node 24 build/typecheck/lint, 115 unit, and 164 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. This hardens the primitive but does not wire an agent proposal route; PACT-049 remains In Progress.",
+        "25 Sep 2026: pact_approval_propose_v1 now creates exact cold-contact review requests from a lease-bound fake-model run and MCP game:act session, with server-derived owner/effects, atomic pending approval plus owner inbox/outbox event, HTTPS MCP deep link, and no game debit before human approval. Same-ID replay, changed terms, missing lease, read-only grant, human-only action denial, human-authenticated HTTP commit/duplicate POST, and JSONB-stable action hashing pass. Local Node 24 build/typecheck/lint, 115 unit, and 166 PostgreSQL integration tests pass. See docs/api/approvals.md, docs/api/mcp.md, docs/api/runs.md, and docs/implementation/reports/game-tools-progress.md. Other command-group proposals and full adversarial acceptance remain; keep PACT-049 In Progress.",
+        "25 Sep 2026: pact_approval_propose_v1 additionally accepts an exact direct transfer. A PostgreSQL fixture verifies no Iron movement before owner approval, changed-amount and outsider denial, one 1,200-unit sender debit/recipient credit and transfer record, and receipt-stable duplicate approval. Local Node 24 build/typecheck/lint, 115 unit, and 167 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Other actions and full acceptance remain; keep PACT-049 In Progress.",
+        "25 Sep 2026: exact two-Iron approval proposal now also passes through the actual MCP game:act tool after run.open and replays through the same approval service. Local Node 24 build/typecheck/lint, 115 unit and 167 PostgreSQL 17 integration tests pass; see docs/implementation/reports/game-tools-progress.md. Full PACT-049 route/adversarial acceptance remains; keep In Progress.",
+        "25 Sep 2026: approval resolution now holds the request lock through exact command dispatch and resolution, preventing concurrent rejection from overriding a committed command. Expired approve/reject updates commit before EXPIRED returns. PostgreSQL race fixture verifies duplicate approval receipt, denied concurrent rejection, one command receipt, and one approved inbox/outbox event. Local Node 24 build/typecheck/lint, 115 unit and 168 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Full PACT-049 acceptance remains; keep In Progress.",
+        "25 Sep 2026: pact_approval_propose_v1 tool description now accurately names both cold-contact and direct-transfer proposals, matching its shared JSON schema in model and MCP listings. Local Node 24 build/typecheck/lint, 115 unit and 169 PostgreSQL 17 integration tests pass. See docs/implementation/reports/game-tools-progress.md. Remaining action groups and full PACT-049 acceptance stay In Progress.",
+        "25 Sep 2026: exact game.training.queue proposals now share the model/MCP schema and lease-bound approval service. PACT application derives Iron/Silver review effects from the unit catalog. PostgreSQL fixture proves no early training, missing-lease/changed-term/outsider denial, one human commit and stable replay. Node 24 build/typecheck/lint, 115 unit and 170 PostgreSQL 17 integration tests pass; backlog/diff checks pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Other action groups and full acceptance remain; keep In Progress.",
+        "26 Sep 2026: exact game.building.queue proposals now share the model/MCP schema and lease-bound approval service. PACT application quotes catalog price and explains founding allowance and waiting state; human commit uses the existing exact one-use session permit. PostgreSQL fixture proves no early instruction/permit, changed-slot rejection, failed admission without live human session, one active instruction/consumed permit, and stable replay. Node 24 build/typecheck/lint, 115 unit and 171 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Broader route and approval acceptance remain; keep In Progress.",
+        "26 Sep 2026: exact game.scout.start proposals now use the shared model/MCP schema and lease-bound approval service, rendering catalog fees, duration, charge, and selected troops. PostgreSQL fixture proves no early scout or troop movement, changed-ID/outsider denial, exact human commit with 10 Silver/5 Grain charge, and stable replay. Node 24 build/typecheck/lint, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/api/approvals.md and docs/implementation/reports/game-tools-progress.md. Full route/adversarial acceptance remains; keep In Progress.",
+        "26 Sep 2026: release mvp-20260926-1 deployed the current gameplay backend after revision 99cf2fa fixed clean Docker workspace build ordering and added a dependency guard. Public deployment verification passed; the host-only synthetic account activated one kingdom and submitted a committed Farm II construction command via the gateway. Local lint/typecheck, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/operations/vps-deployment.md and docs/implementation/reports/game-tools-progress.md. Web gameplay and full PACT-049 route/adversarial acceptance remain; keep In Progress.",
+        "26 Sep 2026: workers/inference/src/run-context.test.ts adds owner-context boundary checks: hostile counterpart prose stays user-role data, arbitrary inbox payload does not enter metadata summary, non-owner projection stops all later private reads, and oversized conversation text is omitted with a truncation marker. Node 24 typecheck/lint and focused three-test unit suite pass. See docs/implementation/reports/game-tools-progress.md. This is one context-construction fixture, not full cross-route/adversarial acceptance; keep In Progress.",
+        "26 Sep 2026: PostgreSQL fake-provider/MCP matrix denied all seven human-only game actions with forged human/other-account envelopes and no committed receipts or exact human permits. Unit contract fixture locks all 28 game action kinds to generated web, MCP, and model schemas; model schema excludes sandbox actions. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. See docs/api/runs.md and docs/implementation/reports/game-tools-progress.md. At this checkpoint broader acceptance review remained open.",
+        "26 Sep 2026: final acceptance review in docs/implementation/reports/game-tools-completion.md (revision 0b0ca8a) matches all three PACT-049 criteria to recorded web/model/MCP message and versioned supply-offer scenarios, hostile-context/private-read isolation, shared 28-action schemas, and seven-action human-only denial. Node 24 build/typecheck/lint, 119 unit and 174 PostgreSQL 17 integration tests pass. Linear MNI-113 is Done. No live paid-model/consumer-host certification or playable PACT-048 UI is claimed."
       ],
       "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
@@ -2446,7 +2448,7 @@
         "Rehearse backup restore and outbox replay; compare recomputed wealth and unit placement to the authoritative state after recovery."
       ],
       "acceptance": [
-        "All R01\u2013R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.",
+        "All R01–R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.",
         "No negative stock, duplicate troop, repeated reward, partially published tick, or lost committed receipt survives a generated scenario."
       ],
       "components": [
@@ -2456,44 +2458,44 @@
         "24 Sep 2026: MNI-115 remains In Progress. Revisions 7eccf06, 804198c, b38c5f5. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, simultaneous cross-account supply signatures with same-ID receipt recovery, and a revocation-first agent transfer race with no stock or receipt effect. Node 24 typecheck/lint and 138 PostgreSQL integration tests passed. The R01–R06 matrix remains partial; broad cross-module fault injection is not Done.",
         "24 Sep 2026: revision f7febfc injects a deterministic failure after a fake-provider game command commits but before run reconciliation; one recoverable receipt/message remains, the run fails conservatively, and a repeated model step is not invoked. Node 24 lint and 140 PostgreSQL integration tests passed. See docs/implementation/reports/rules-verification-progress.md. This is one R06 interleaving, not complete process-death, transition, or VPS recovery evidence.",
         "24 Sep 2026: overlapping-raid resolution fixture injects a pre-commit failure after two battles and verifies unchanged troop placement, stock, locked raids, and zero resolution events; retry commits two reports/events exactly once. Node 24 build/typecheck/lint, 108 unit, and 142 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. R01–R06 matrix and full VPS recovery remain incomplete; keep In Progress.",
-    "24 Sep 2026: revision 1ef8025 adds R06 run-tool handoff fixtures proving one persisted receipt summary reaches the next provider step, finished-run replay does not duplicate it, and run deletion cascades it; a shared worker fixture proves the summary omits message prose. Node 24 build/typecheck/lint, 108 unit, and 144 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker-death recovery and full R01–R06 matrix remain incomplete; keep In Progress.",
-    "24 Sep 2026: revision 014f4a9 adds R06 credential-boundary fixtures: owner/provider-bound vault use, one bounded synthetic adapter response without network, and wrong-provider denial before transport. Node 24 build/typecheck/lint, 110 unit, 146 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full R01–R06 matrix, process death, and VPS base/WAL restore remain; keep In Progress.",
-    "24 Sep 2026: revision 70c8597 adds a deterministic R06 redelivery fixture: an unresolved model call becomes failed/ambiguous, reservation and lease clear, late completion does not restart, and no second provider request occurs. Node 24 build/typecheck/lint, 110 unit, 147 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker kill, full R01–R06 matrix, and VPS restore remain; keep In Progress.",
-    "24 Sep 2026: revision 9dc4c46 adds an R04/R06 cross-route scenario with authenticated web, fake model, and MCP. MCP write-lease acquisition fails during the in-app run and succeeds after completion; all three message receipts are sender-owned. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. This is one interleaving, not full R01–R06, actual process kill, or VPS restore; keep In Progress.",
-    "24 Sep 2026: a separate Node ledger writer killed with SIGKILL before COMMIT leaves no stock movement; killed after COMMIT leaves exactly one durable movement and an idempotent replay. The isolated game-command fixture also avoids a real-minute rollover during the full suite. Node 24 build/typecheck/lint, 110 unit, 150 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Inference-worker death, full base/WAL restore, and full R01–R06 remain; keep In Progress.",
-    "25 Sep 2026: tests/integration/run-process-death.test.ts kills a separate inference executor after durable job claim and in-flight model reservation, then reclaims the expired job and runs conservative recovery. It observes ambiguous failure, zero reservation, released write lease, completed job, no second provider request or tool result. Node 24 build/typecheck/lint, 110 unit, 151 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/rules-verification.md, and docs/implementation/reports/rules-verification-progress.md. Production binary restart, death after game-command commit, full base/WAL restore, and full R01–R06 remain; keep In Progress.",
-    "25 Sep 2026: PACT-049 inbox-read fixture adds partial R06 cross-account evidence: fake-model and read-only MCP return only owner event IDs, reject caller accountId, and omit oversized payload. Node 24 build/typecheck/lint, 110 unit, 152 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated cross-account and full restore matrix remain; keep In Progress.",
-    "25 Sep 2026: PACT-049 world/report read fixture adds R04/R06 cross-account evidence: owner model result contains balances and a completed scout report, outsider model result has public-only view and NOT_FOUND for private report; MCP rejects supplied accountId. Unit fixtures check bounded truncation. Node 24 build/typecheck/lint, 112 unit, 153 PostgreSQL integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated cross-module and full restore matrix remain; keep In Progress.",
-    "25 Sep 2026: additional R04/R06 owner-scoped receipt and approval-status model/MCP reads reject outsider and caller-supplied owner IDs. A fixed-clock retirement fixture now aligns synthetic ledger/closure timestamps so 180-day retention checks remain reproducible. Local Node 24 build/typecheck/lint, 113 unit, and 154 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transition and VPS recovery matrix remain; keep In Progress.",
-    "25 Sep 2026: fake-provider versioned supply-offer fixture retries a finished run and observes exactly one offer, command receipt, and run-tool result with version 1; forged model actor cannot change proposer. Local Node 24 build/typecheck/lint, 114 unit, and 155 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transition and VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: PACT-049 conversation-read fixture adds bounded R04/R06 cross-account evidence: model and read-only MCP see only owner-involved direct messages, reject caller account ID/excess limit/no scope, and keep hostile prose in user-role data. Local Node 24 build/typecheck/lint, 115 unit, and 156 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated matrix and VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: R06 in-app message-allowance fixture verifies failed noncontact send rolls back its run counter, successful send commits one count, same-command replay does not recount, and a second new send hits RATE_LIMITED. Local Node 24 build/typecheck/lint, 115 unit, and 157 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transitions and VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: R04 run-context admission fixture rejects unrelated, duplicate, and over-cap conversation selections before a run lease; a valid persisted selection sends only owner-involved excerpts to the fake provider, with hostile prose outside the system role. Local Node 24 build/typecheck/lint, 115 unit, and 158 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated matrix and VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: R04/R06 fixture denies an in-app conversation read outside the human's selected set without exposing its prose to the next model step, while a separate owner MCP grant reads it; another fixture compares version-1 supply offers and receipts across web, model, and MCP with server-derived owner. Local Node 24 build/typecheck/lint, 115 unit, and 159 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-transition matrix and VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: R06 run-ceiling fixture rejects over-budget and invalid numeric starts without a run, write lease, or inference job; exact Version 1 maxima still start. An R02/R06 world-clock ordering fixture now waits on PostgreSQL's due timestamp instead of a host timer after a first full-suite run observed not_due; focused clock and rerun of all 160 integration tests pass. Local Node 24 build/typecheck/lint and 115 unit tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated transitions and VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: one R04 selected-thread adversarial fixture injects hostile counterpart prose and confirms forged-account transfer and human-only contact attempts leave no committed effect or authority change. Node 24 build/typecheck/lint, 115 unit, and 161 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-command authority and VPS restore evidence remain; keep In Progress.",
-    "25 Sep 2026: R06 local SIGKILL fixture now covers inference death after a committed game message but before tool-result reconciliation. The replacement claimant retains one command receipt/message and charged allowance, fails the run ambiguously, and does not invoke the provider again. Node 24 build/typecheck/lint, 115 unit, and 162 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Other transition fault injection and full VPS base/WAL restore remain; keep In Progress.",
-    "25 Sep 2026: R04/R06 mandated cold-contact fixture sends requests through fake-provider and MCP routes. Exactly two Silver authority and stock debits accompany each committed request; exact MCP replay does not duplicate them, and stale-version/allowance-exhausted attempts leave no third request, authority spend, stock debit, or action count. Agent contact answer is FORBIDDEN. Node 24 build/typecheck/lint, 115 unit, and 163 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-command transitions and full VPS recovery remain; keep In Progress.",
-    "25 Sep 2026: R04/R06 contact-answer fixture denies forged-human fake-model and MCP agent calls without mutating the request, then an authenticated human web SDK call accepts it and exact retry returns one receipt/contact pair. Local Node 24 build/typecheck/lint, 115 unit, and 164 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. All-command generated fault matrix and full VPS base/WAL restore remain; keep PACT-051 In Progress.",
-    "25 Sep 2026: R04/R06 lease-bound cold-contact proposal fixture keeps game stock/contact state untouched until human approval; MCP replay creates one request/inbox event, changed terms, missing lease, read-only scope, and human-only action fail. Authenticated human HTTP approval commits once and duplicate POST returns the original receipt; a paused-world noncommitting receipt leaves approval pending. Local Node 24 build/typecheck/lint, 115 unit, and 166 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-command fault matrix and full VPS base/WAL restore remain; keep PACT-051 In Progress.",
-    "25 Sep 2026: R04/R06 exact transfer proposal fixture leaves sender stock unchanged until owner approval, denies changed amount and outsider approval, and commits one 1,200-unit transfer with duplicate approval returning the original receipt. Local Node 24 build/typecheck/lint, 115 unit, and 167 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and VPS base/WAL restore remain; keep PACT-051 In Progress.",
-    "25 Sep 2026: enhanced single-VPS restore-drill.sh verified pg_basebackup manifest/WAL, booted Restic snapshot 9a320c36 in an isolated PostgreSQL 17 container, and committed/replayed one synthetic outbox delivery without duplicate. Live PostgreSQL remained healthy and temporary volumes/container were removed. Snapshot predates gameplay tables, so full recovered stock/unit/receipt comparison is not established. MCP direct-transfer proposal route passes; local Node 24 build/typecheck/lint, 115 unit, 167 PostgreSQL 17 integration tests, and sh -n on the restore script pass. See docs/operations/vps-deployment.md and docs/implementation/reports/rules-verification-progress.md. Keep PACT-051 In Progress.",
-    "25 Sep 2026: R04/R06 approval race fixture holds dispatch open while duplicate approval and rejection compete. One command receipt and approved inbox/outbox resolution survive; rejection receives ALREADY_RESOLVED. Expired approve/reject now persist expired state. Local Node 24 build/typecheck/lint, 115 unit and 168 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated transition matrix and VPS gameplay-state restore remain; keep PACT-051 In Progress.",
-    "25 Sep 2026: R01/R06 seed 0x51c0ffee now runs 30 direct-transfer attempts across three mutually contacted kingdoms through the shared world-admitted dispatcher, checking every balance and total against an independent BigInt model after each step. Unaffordable spends leave no transfer/receipt, successful retries retain one receipt, and final balances equal journal sums. Local Node 24 build/typecheck/lint, 115 unit and 169 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Broader cross-module faults and VPS gameplay-state restore remain; keep PACT-051 In Progress.",
-    "25 Sep 2026: R04/R06 training-approval fixture proves lease-bound proposal has no batch or stock debit, exact human approval creates one charged batch and stable replay, and an unaffordable later proposal leaves approval pending with no second batch. Node 24 build/typecheck/lint, 115 unit and 170 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and full VPS gameplay-state restore remain; keep In Progress.",
-    "26 Sep 2026: R04/R06 construction approval fixture verifies no instruction or permit at proposal time, changed-slot rejection, missing human-session denial without resolving approval, exact permit creation and consumption on human commit, and receipt-stable replay. Node 24 build/typecheck/lint, 115 unit and 171 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and VPS gameplay-state restore remain; keep In Progress.",
-    "26 Sep 2026: R04/R06 exact scout approval fixture verifies no operation or troop placement change at proposal, changed selected IDs and outsider denial, one owner-approved scout moving two specified Spearmen and charging 10 Silver/5 Grain, and duplicate approval returning the original receipt. Node 24 build/typecheck/lint, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and VPS gameplay-state restore remain; keep In Progress.",
-    "26 Sep 2026: encrypted Restic snapshot 2ba99a33 of the new single-VPS gameplay deployment booted in isolated PostgreSQL 17; recovered kingdom, eight home guards, Farm II instruction, committed receipt, ledger balances, and deduplicated outbox replay all passed. The live data volume was untouched. Local lint/typecheck, 115 unit, 172 PostgreSQL 17 integration tests and sh -n passed. See docs/operations/vps-deployment.md and docs/implementation/reports/rules-verification-progress.md. This is one representative physical restore, not the generated all-command fault matrix; keep In Progress.",
-    "26 Sep 2026: tests/integration/troops.test.ts adds a seeded 12-step R03/R06 training lifecycle with replayed queue IDs, cancellation, one/two-unit settlement, disbanding, independent ordinary-unit counts, eight Home Guards, unique troop IDs and placement after each step. An injected settlement exception rolls back troop rows, all resource balances, and movement count before retry. Local Node 24 build/typecheck/lint, 115 unit and 173 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Wider all-command matrix remains; keep In Progress.",
-    "27 Sep 2026: world-clock.test.ts records all nine tick phases in durable transaction order after pause/resume, then verifies one game-minute advance, one tick/outbox event, and no duplicate publication on immediate retry. Focused clock suite 8 passing; Node 24 typecheck/lint, 124 unit, and 179 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Synthetic handlers do not close the real-domain phase trace or generated all-command matrix; keep PACT-051 In Progress.",
-    "28 Sep 2026: world-clock.test.ts injects a pre-commit fault at each of nine synthetic tick phase boundaries. All attempts roll back phase effects, tick, and event; clean retry publishes once. Focused clock suite 9 passing; Node 24 typecheck and 183 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Real-domain phase ordering and the all-command generated fault matrix remain; keep In Progress.",
-    "28 Sep 2026: world-domain-order.test.ts proves Market-I production can fund a same-minute supply installment through the real clock, then injects a post-production fault and observes zero harvest, installment, or tick until clean retry. Focused fixture, Node 24 typecheck/lint, and 184 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Battle/scout ordering and the generated all-command fault matrix remain; keep In Progress.",
-    "28 Sep 2026: raids.test.ts verifies real same-minute battle then scout sampling; an injected post-battle tick fault rolls back casualties, reports, and tick, while retry samples the surviving troop band and commits once. Focused fixture, Node 24 typecheck/lint, 126 unit and 185 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Combined all-domain phase trace and generated all-command fault matrix remain; keep In Progress.",
-      "28 Sep 2026: Single-VPS full-disk incident recovery produced encrypted base/WAL snapshot 86734927 after archive-cutoff cleanup. The snapshot booted in an isolated PostgreSQL 17 container; recovered balances matched the ledger journal, Cinder's eight home guards, Hall III build instruction and committed receipt were present, and synthetic outbox replay deduplicated. Last live tick/outbox matched before no-catch-up resume. Local Node 24 build/typecheck/lint, 129 unit and 185 integration tests pass; sh -n and an older/newer archive cutoff fixture pass. This strengthens physical recovery evidence but does not complete the generated all-command fault matrix; keep In Progress.",
-      "28 Sep 2026: revision ae5c534 shares the actual rules-worker composition with a combined real-domain hourly-boundary fixture. Faults after all nine phase positions restore every durable table; fresh-runtime retry commits construction/training, production/upkeep, supply delivery/default/bonds, battle/scout, Fortune and rewards once, with pre-publication read isolation and journal reconciliation. Season rollover is intentionally a no-op until PACT-069. Generated combat compares 32 seeded rosters across 36 dice pairs under detachment splitting/reordering. Authenticated HTTP cookie/CSRF and hash-introspected OAuth MCP signature races retain one contract/bond debit/future commitment and two receipts; exhausted mandate and invalid/revoked credentials fail. Node 24.19.0 build/typecheck/lint, 130 unit and 188 PostgreSQL 17.11 integration tests pass. See docs/implementation/reports/rules-runtime-batch.md and docs/architecture/rules-verification.md; Linear progress comment a90206f4-08cd-4481-b29a-f3efaf22d95a. Broader generated command-fault/value/placement/revocation matrix remains; keep In Progress. No new deployment or hosted CI.",
-      "28 Sep 2026: revision c96b293, tests/integration/game-command-faults.test.ts covers all 28 published gameplay action kinds via real world admission, handler and dispatcher. Post-handler and deferred post-receipt COMMIT failures (56 checks) restore every durable base table, then one clean commit and stable receipt replay survive. Independent exact resource/category arithmetic covers costs, fractional refunds, bonds, provisions and compensation; exact troop IDs/owners and current placement references pass. Forged-owner attempts fail without mutation for 19 private object/party-bound kinds; outsider receipt reads/retries and changed-payload replay are checked for all 28. The process-death fixtures now wait for the specific job's database-clock lease deadline rather than a flaky fixed 150 ms host delay, and verify reclaimed run identity and fenced completion. Local Node 24.19.0 build/typecheck/lint, 130 unit and 216 PostgreSQL 17.11 integration tests pass. See docs/implementation/reports/game-command-fault-matrix.md and docs/architecture/rules-verification.md; Linear progress comment 388b9922-55f0-47e8-b652-6189feef728f. Mixed command sequences, agent-specific mandate/revocation interleavings and consolidated acceptance remain; keep PACT-051 In Progress. No deployment, provider call, new physical restore or hosted CI.",
-      "28 Sep 2026: revision 5a748a2, tests/integration/game-command-faults.test.ts adds seeds 0x51a17e, 0xc0ffee and 0xdecaf (85 mixed commits/replays, 29 injected rollback checks) with independent per-category stock and exact identity/placement models, including seized units explicitly joining a raid before withdrawal. Three real-MCP-lease agent garrison cases prove PostgreSQL-confirmed revocation-first denial, prior-signature survival with new-command denial, competing-offer troop caps and exact host upkeep-plus-five-minute-extension reservation (1300 succeeds, 1299 fails). Final Node 24.19.0 build/typecheck/lint, 130 unit and 222 PostgreSQL 17.11 integration tests pass. An initial concurrent-build run failed one existing process-kill case; isolated and final full reruns passed, cause unconfirmed. See docs/implementation/reports/mixed-gameplay-authority.md and docs/architecture/rules-verification.md. Linear progress comment 6b92ed91-9b75-464d-ac96-3f594f65fd4f records this revision and evidence. Consolidated R01-R06 acceptance review remains; keep PACT-051 In Progress. No production code, deployment, live provider, new physical restore or hosted CI changed.",
-      "28 Sep 2026: completed in revision e6e55cd after consolidated R01-R06 review. Added uncertain caller timeout/recovery (one receipt/contact/two-Silver debit), exact harvest input transitions and fresh schema restore with independent marked wealth 64 plus all stock categories and exact troop placements/receipt/outbox replay. Prior physical VPS snapshot 86734927 recovery remains dated evidence. All 18 dependencies freshly Done; final Node 24.19.0 build/typecheck/lint, 130 unit and 224 PostgreSQL 17.11 integration tests, restore and planning/diff checks pass. Report docs/implementation/reports/rules-verification-completion.md; Linear completion comment 36a1d2d5-2171-46a8-a50a-9ed12e98677f; readback Done. This closes Phase 1 verification, not PACT-053 or automatic season rollover (PACT-069). No new deployment, paid provider, hosted CI or whole-VPS drill."
+        "24 Sep 2026: revision 1ef8025 adds R06 run-tool handoff fixtures proving one persisted receipt summary reaches the next provider step, finished-run replay does not duplicate it, and run deletion cascades it; a shared worker fixture proves the summary omits message prose. Node 24 build/typecheck/lint, 108 unit, and 144 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker-death recovery and full R01–R06 matrix remain incomplete; keep In Progress.",
+        "24 Sep 2026: revision 014f4a9 adds R06 credential-boundary fixtures: owner/provider-bound vault use, one bounded synthetic adapter response without network, and wrong-provider denial before transport. Node 24 build/typecheck/lint, 110 unit, 146 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full R01–R06 matrix, process death, and VPS base/WAL restore remain; keep In Progress.",
+        "24 Sep 2026: revision 70c8597 adds a deterministic R06 redelivery fixture: an unresolved model call becomes failed/ambiguous, reservation and lease clear, late completion does not restart, and no second provider request occurs. Node 24 build/typecheck/lint, 110 unit, 147 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker kill, full R01–R06 matrix, and VPS restore remain; keep In Progress.",
+        "24 Sep 2026: revision 9dc4c46 adds an R04/R06 cross-route scenario with authenticated web, fake model, and MCP. MCP write-lease acquisition fails during the in-app run and succeeds after completion; all three message receipts are sender-owned. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. This is one interleaving, not full R01–R06, actual process kill, or VPS restore; keep In Progress.",
+        "24 Sep 2026: a separate Node ledger writer killed with SIGKILL before COMMIT leaves no stock movement; killed after COMMIT leaves exactly one durable movement and an idempotent replay. The isolated game-command fixture also avoids a real-minute rollover during the full suite. Node 24 build/typecheck/lint, 110 unit, 150 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Inference-worker death, full base/WAL restore, and full R01–R06 remain; keep In Progress.",
+        "25 Sep 2026: tests/integration/run-process-death.test.ts kills a separate inference executor after durable job claim and in-flight model reservation, then reclaims the expired job and runs conservative recovery. It observes ambiguous failure, zero reservation, released write lease, completed job, no second provider request or tool result. Node 24 build/typecheck/lint, 110 unit, 151 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/rules-verification.md, and docs/implementation/reports/rules-verification-progress.md. Production binary restart, death after game-command commit, full base/WAL restore, and full R01–R06 remain; keep In Progress.",
+        "25 Sep 2026: PACT-049 inbox-read fixture adds partial R06 cross-account evidence: fake-model and read-only MCP return only owner event IDs, reject caller accountId, and omit oversized payload. Node 24 build/typecheck/lint, 110 unit, 152 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated cross-account and full restore matrix remain; keep In Progress.",
+        "25 Sep 2026: PACT-049 world/report read fixture adds R04/R06 cross-account evidence: owner model result contains balances and a completed scout report, outsider model result has public-only view and NOT_FOUND for private report; MCP rejects supplied accountId. Unit fixtures check bounded truncation. Node 24 build/typecheck/lint, 112 unit, 153 PostgreSQL integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated cross-module and full restore matrix remain; keep In Progress.",
+        "25 Sep 2026: additional R04/R06 owner-scoped receipt and approval-status model/MCP reads reject outsider and caller-supplied owner IDs. A fixed-clock retirement fixture now aligns synthetic ledger/closure timestamps so 180-day retention checks remain reproducible. Local Node 24 build/typecheck/lint, 113 unit, and 154 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transition and VPS recovery matrix remain; keep In Progress.",
+        "25 Sep 2026: fake-provider versioned supply-offer fixture retries a finished run and observes exactly one offer, command receipt, and run-tool result with version 1; forged model actor cannot change proposer. Local Node 24 build/typecheck/lint, 114 unit, and 155 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transition and VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: PACT-049 conversation-read fixture adds bounded R04/R06 cross-account evidence: model and read-only MCP see only owner-involved direct messages, reject caller account ID/excess limit/no scope, and keep hostile prose in user-role data. Local Node 24 build/typecheck/lint, 115 unit, and 156 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated matrix and VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: R06 in-app message-allowance fixture verifies failed noncontact send rolls back its run counter, successful send commits one count, same-command replay does not recount, and a second new send hits RATE_LIMITED. Local Node 24 build/typecheck/lint, 115 unit, and 157 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transitions and VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: R04 run-context admission fixture rejects unrelated, duplicate, and over-cap conversation selections before a run lease; a valid persisted selection sends only owner-involved excerpts to the fake provider, with hostile prose outside the system role. Local Node 24 build/typecheck/lint, 115 unit, and 158 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated matrix and VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: R04/R06 fixture denies an in-app conversation read outside the human's selected set without exposing its prose to the next model step, while a separate owner MCP grant reads it; another fixture compares version-1 supply offers and receipts across web, model, and MCP with server-derived owner. Local Node 24 build/typecheck/lint, 115 unit, and 159 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-transition matrix and VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: R06 run-ceiling fixture rejects over-budget and invalid numeric starts without a run, write lease, or inference job; exact Version 1 maxima still start. An R02/R06 world-clock ordering fixture now waits on PostgreSQL's due timestamp instead of a host timer after a first full-suite run observed not_due; focused clock and rerun of all 160 integration tests pass. Local Node 24 build/typecheck/lint and 115 unit tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated transitions and VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: one R04 selected-thread adversarial fixture injects hostile counterpart prose and confirms forged-account transfer and human-only contact attempts leave no committed effect or authority change. Node 24 build/typecheck/lint, 115 unit, and 161 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-command authority and VPS restore evidence remain; keep In Progress.",
+        "25 Sep 2026: R06 local SIGKILL fixture now covers inference death after a committed game message but before tool-result reconciliation. The replacement claimant retains one command receipt/message and charged allowance, fails the run ambiguously, and does not invoke the provider again. Node 24 build/typecheck/lint, 115 unit, and 162 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Other transition fault injection and full VPS base/WAL restore remain; keep In Progress.",
+        "25 Sep 2026: R04/R06 mandated cold-contact fixture sends requests through fake-provider and MCP routes. Exactly two Silver authority and stock debits accompany each committed request; exact MCP replay does not duplicate them, and stale-version/allowance-exhausted attempts leave no third request, authority spend, stock debit, or action count. Agent contact answer is FORBIDDEN. Node 24 build/typecheck/lint, 115 unit, and 163 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-command transitions and full VPS recovery remain; keep In Progress.",
+        "25 Sep 2026: R04/R06 contact-answer fixture denies forged-human fake-model and MCP agent calls without mutating the request, then an authenticated human web SDK call accepts it and exact retry returns one receipt/contact pair. Local Node 24 build/typecheck/lint, 115 unit, and 164 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. All-command generated fault matrix and full VPS base/WAL restore remain; keep PACT-051 In Progress.",
+        "25 Sep 2026: R04/R06 lease-bound cold-contact proposal fixture keeps game stock/contact state untouched until human approval; MCP replay creates one request/inbox event, changed terms, missing lease, read-only scope, and human-only action fail. Authenticated human HTTP approval commits once and duplicate POST returns the original receipt; a paused-world noncommitting receipt leaves approval pending. Local Node 24 build/typecheck/lint, 115 unit, and 166 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated all-command fault matrix and full VPS base/WAL restore remain; keep PACT-051 In Progress.",
+        "25 Sep 2026: R04/R06 exact transfer proposal fixture leaves sender stock unchanged until owner approval, denies changed amount and outsider approval, and commits one 1,200-unit transfer with duplicate approval returning the original receipt. Local Node 24 build/typecheck/lint, 115 unit, and 167 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and VPS base/WAL restore remain; keep PACT-051 In Progress.",
+        "25 Sep 2026: enhanced single-VPS restore-drill.sh verified pg_basebackup manifest/WAL, booted Restic snapshot 9a320c36 in an isolated PostgreSQL 17 container, and committed/replayed one synthetic outbox delivery without duplicate. Live PostgreSQL remained healthy and temporary volumes/container were removed. Snapshot predates gameplay tables, so full recovered stock/unit/receipt comparison is not established. MCP direct-transfer proposal route passes; local Node 24 build/typecheck/lint, 115 unit, 167 PostgreSQL 17 integration tests, and sh -n on the restore script pass. See docs/operations/vps-deployment.md and docs/implementation/reports/rules-verification-progress.md. Keep PACT-051 In Progress.",
+        "25 Sep 2026: R04/R06 approval race fixture holds dispatch open while duplicate approval and rejection compete. One command receipt and approved inbox/outbox resolution survive; rejection receives ALREADY_RESOLVED. Expired approve/reject now persist expired state. Local Node 24 build/typecheck/lint, 115 unit and 168 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated transition matrix and VPS gameplay-state restore remain; keep PACT-051 In Progress.",
+        "25 Sep 2026: R01/R06 seed 0x51c0ffee now runs 30 direct-transfer attempts across three mutually contacted kingdoms through the shared world-admitted dispatcher, checking every balance and total against an independent BigInt model after each step. Unaffordable spends leave no transfer/receipt, successful retries retain one receipt, and final balances equal journal sums. Local Node 24 build/typecheck/lint, 115 unit and 169 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Broader cross-module faults and VPS gameplay-state restore remain; keep PACT-051 In Progress.",
+        "25 Sep 2026: R04/R06 training-approval fixture proves lease-bound proposal has no batch or stock debit, exact human approval creates one charged batch and stable replay, and an unaffordable later proposal leaves approval pending with no second batch. Node 24 build/typecheck/lint, 115 unit and 170 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and full VPS gameplay-state restore remain; keep In Progress.",
+        "26 Sep 2026: R04/R06 construction approval fixture verifies no instruction or permit at proposal time, changed-slot rejection, missing human-session denial without resolving approval, exact permit creation and consumption on human commit, and receipt-stable replay. Node 24 build/typecheck/lint, 115 unit and 171 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and VPS gameplay-state restore remain; keep In Progress.",
+        "26 Sep 2026: R04/R06 exact scout approval fixture verifies no operation or troop placement change at proposal, changed selected IDs and outsider denial, one owner-approved scout moving two specified Spearmen and charging 10 Silver/5 Grain, and duplicate approval returning the original receipt. Node 24 build/typecheck/lint, 115 unit and 172 PostgreSQL 17 integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated all-command matrix and VPS gameplay-state restore remain; keep In Progress.",
+        "26 Sep 2026: encrypted Restic snapshot 2ba99a33 of the new single-VPS gameplay deployment booted in isolated PostgreSQL 17; recovered kingdom, eight home guards, Farm II instruction, committed receipt, ledger balances, and deduplicated outbox replay all passed. The live data volume was untouched. Local lint/typecheck, 115 unit, 172 PostgreSQL 17 integration tests and sh -n passed. See docs/operations/vps-deployment.md and docs/implementation/reports/rules-verification-progress.md. This is one representative physical restore, not the generated all-command fault matrix; keep In Progress.",
+        "26 Sep 2026: tests/integration/troops.test.ts adds a seeded 12-step R03/R06 training lifecycle with replayed queue IDs, cancellation, one/two-unit settlement, disbanding, independent ordinary-unit counts, eight Home Guards, unique troop IDs and placement after each step. An injected settlement exception rolls back troop rows, all resource balances, and movement count before retry. Local Node 24 build/typecheck/lint, 115 unit and 173 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Wider all-command matrix remains; keep In Progress.",
+        "27 Sep 2026: world-clock.test.ts records all nine tick phases in durable transaction order after pause/resume, then verifies one game-minute advance, one tick/outbox event, and no duplicate publication on immediate retry. Focused clock suite 8 passing; Node 24 typecheck/lint, 124 unit, and 179 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Synthetic handlers do not close the real-domain phase trace or generated all-command matrix; keep PACT-051 In Progress.",
+        "28 Sep 2026: world-clock.test.ts injects a pre-commit fault at each of nine synthetic tick phase boundaries. All attempts roll back phase effects, tick, and event; clean retry publishes once. Focused clock suite 9 passing; Node 24 typecheck and 183 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Real-domain phase ordering and the all-command generated fault matrix remain; keep In Progress.",
+        "28 Sep 2026: world-domain-order.test.ts proves Market-I production can fund a same-minute supply installment through the real clock, then injects a post-production fault and observes zero harvest, installment, or tick until clean retry. Focused fixture, Node 24 typecheck/lint, and 184 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Battle/scout ordering and the generated all-command fault matrix remain; keep In Progress.",
+        "28 Sep 2026: raids.test.ts verifies real same-minute battle then scout sampling; an injected post-battle tick fault rolls back casualties, reports, and tick, while retry samples the surviving troop band and commits once. Focused fixture, Node 24 typecheck/lint, 126 unit and 185 PostgreSQL 17 integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Combined all-domain phase trace and generated all-command fault matrix remain; keep In Progress.",
+        "28 Sep 2026: Single-VPS full-disk incident recovery produced encrypted base/WAL snapshot 86734927 after archive-cutoff cleanup. The snapshot booted in an isolated PostgreSQL 17 container; recovered balances matched the ledger journal, Cinder's eight home guards, Hall III build instruction and committed receipt were present, and synthetic outbox replay deduplicated. Last live tick/outbox matched before no-catch-up resume. Local Node 24 build/typecheck/lint, 129 unit and 185 integration tests pass; sh -n and an older/newer archive cutoff fixture pass. This strengthens physical recovery evidence but does not complete the generated all-command fault matrix; keep In Progress.",
+        "28 Sep 2026: revision ae5c534 shares the actual rules-worker composition with a combined real-domain hourly-boundary fixture. Faults after all nine phase positions restore every durable table; fresh-runtime retry commits construction/training, production/upkeep, supply delivery/default/bonds, battle/scout, Fortune and rewards once, with pre-publication read isolation and journal reconciliation. Season rollover is intentionally a no-op until PACT-069. Generated combat compares 32 seeded rosters across 36 dice pairs under detachment splitting/reordering. Authenticated HTTP cookie/CSRF and hash-introspected OAuth MCP signature races retain one contract/bond debit/future commitment and two receipts; exhausted mandate and invalid/revoked credentials fail. Node 24.19.0 build/typecheck/lint, 130 unit and 188 PostgreSQL 17.11 integration tests pass. See docs/implementation/reports/rules-runtime-batch.md and docs/architecture/rules-verification.md; Linear progress comment a90206f4-08cd-4481-b29a-f3efaf22d95a. Broader generated command-fault/value/placement/revocation matrix remains; keep In Progress. No new deployment or hosted CI.",
+        "28 Sep 2026: revision c96b293, tests/integration/game-command-faults.test.ts covers all 28 published gameplay action kinds via real world admission, handler and dispatcher. Post-handler and deferred post-receipt COMMIT failures (56 checks) restore every durable base table, then one clean commit and stable receipt replay survive. Independent exact resource/category arithmetic covers costs, fractional refunds, bonds, provisions and compensation; exact troop IDs/owners and current placement references pass. Forged-owner attempts fail without mutation for 19 private object/party-bound kinds; outsider receipt reads/retries and changed-payload replay are checked for all 28. The process-death fixtures now wait for the specific job's database-clock lease deadline rather than a flaky fixed 150 ms host delay, and verify reclaimed run identity and fenced completion. Local Node 24.19.0 build/typecheck/lint, 130 unit and 216 PostgreSQL 17.11 integration tests pass. See docs/implementation/reports/game-command-fault-matrix.md and docs/architecture/rules-verification.md; Linear progress comment 388b9922-55f0-47e8-b652-6189feef728f. Mixed command sequences, agent-specific mandate/revocation interleavings and consolidated acceptance remain; keep PACT-051 In Progress. No deployment, provider call, new physical restore or hosted CI.",
+        "28 Sep 2026: revision 5a748a2, tests/integration/game-command-faults.test.ts adds seeds 0x51a17e, 0xc0ffee and 0xdecaf (85 mixed commits/replays, 29 injected rollback checks) with independent per-category stock and exact identity/placement models, including seized units explicitly joining a raid before withdrawal. Three real-MCP-lease agent garrison cases prove PostgreSQL-confirmed revocation-first denial, prior-signature survival with new-command denial, competing-offer troop caps and exact host upkeep-plus-five-minute-extension reservation (1300 succeeds, 1299 fails). Final Node 24.19.0 build/typecheck/lint, 130 unit and 222 PostgreSQL 17.11 integration tests pass. An initial concurrent-build run failed one existing process-kill case; isolated and final full reruns passed, cause unconfirmed. See docs/implementation/reports/mixed-gameplay-authority.md and docs/architecture/rules-verification.md. Linear progress comment 6b92ed91-9b75-464d-ac96-3f594f65fd4f records this revision and evidence. Consolidated R01-R06 acceptance review remains; keep PACT-051 In Progress. No production code, deployment, live provider, new physical restore or hosted CI changed.",
+        "28 Sep 2026: completed in revision e6e55cd after consolidated R01-R06 review. Added uncertain caller timeout/recovery (one receipt/contact/two-Silver debit), exact harvest input transitions and fresh schema restore with independent marked wealth 64 plus all stock categories and exact troop placements/receipt/outbox replay. Prior physical VPS snapshot 86734927 recovery remains dated evidence. All 18 dependencies freshly Done; final Node 24.19.0 build/typecheck/lint, 130 unit and 224 PostgreSQL 17.11 integration tests, restore and planning/diff checks pass. Report docs/implementation/reports/rules-verification-completion.md; Linear completion comment 36a1d2d5-2171-46a8-a50a-9ed12e98677f; readback Done. This closes Phase 1 verification, not PACT-053 or automatic season rollover (PACT-069). No new deployment, paid provider, hosted CI or whole-VPS drill."
       ],
       "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
@@ -2572,7 +2574,7 @@
       ],
       "acceptance": [
         "The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.",
-        "PACT\u2019s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes."
+        "PACT’s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes."
       ],
       "components": [
         "non-game fixture",
@@ -2641,7 +2643,7 @@
         "Review the eight rules acceptance checks without treating design arithmetic as implemented tests."
       ],
       "acceptance": [
-        "R01\u2013R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.",
+        "R01–R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.",
         "The release record lists precise reproduction commands and evidence; no unresolved ledger or identity corruption is carried into the social slice."
       ],
       "components": [
@@ -2659,7 +2661,7 @@
       "id": "PACT-054",
       "title": "Implement public profiles and handle lifecycle",
       "phase": 2,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2668,26 +2670,45 @@
       ],
       "sources": [
         "social",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
-        "S01"
+        "G01"
       ],
       "scope": [
-        "Implement exact-handle search, public cosmetic profiles, allowed display-name validation, rename throttles, former-name display, and reserved-handle redirects.",
-        "Project public events by immutable identity while respecting deletion and hidden kingdom state."
+        "Expose exact, case-insensitive handle search and public kingdom profiles through shared HTTP/MCP reads so agents can find real players without UUIDs.",
+        "Keep immutable kingdom identity, display-name validation and deletion tombstones. Alpha handles remain fixed; rename/history/redirect lifecycle is postponed."
       ],
       "acceptance": [
-        "Concurrent handle claims/renames cannot collide or bypass reservations; case-insensitive search resolves correctly.",
-        "Public profiles and redirects expose no current army/building/stock or online state; deleted profiles use the specified tombstone behavior."
+        "Exact-handle search resolves an active founded kingdom case-insensitively; unfounded, closing, deleted and unknown identities do not expose private records.",
+        "Public profiles return identity and committed public records only, never stocks, building levels, troops, private contracts or online state; HTTP and MCP return equivalent projections."
       ],
       "components": [
         "identity profiles and handles"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement public profiles and handle lifecycle",
+        "scope": [
+          "Implement exact-handle search, public cosmetic profiles, allowed display-name validation, rename throttles, former-name display, and reserved-handle redirects.",
+          "Project public events by immutable identity while respecting deletion and hidden kingdom state."
+        ],
+        "acceptance": [
+          "Concurrent handle claims/renames cannot collide or bypass reservations; case-insensitive search resolves correctly.",
+          "Public profiles and redirects expose no current army/building/stock or online state; deleted profiles use the specified tombstone behavior."
+        ],
+        "depends_on": [
+          "PACT-053"
+        ],
+        "covers": [
+          "S01"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-055",
@@ -2704,18 +2725,19 @@
       "sources": [
         "social",
         "access",
-        "product"
+        "product",
+        "alpha"
       ],
       "covers": [
-        "S01"
+        "G01"
       ],
       "scope": [
-        "Extend preserved draft destinations and direct-contact invitations to Court, notice, and story destinations with hashed tokens, expiry, revoke, reuse caps, and issuer quotas.",
-        "Add public landing/status routes and atomic human redemption; reserve no membership or promise on link open."
+        "Deliver simple contact and Court invitation links with explicit human acceptance, destination preservation, expiry, revoke and retry-safe redemption.",
+        "Support truthful notice/story destinations as their records arrive; no referral programme, provider-specific onboarding extension or elaborate sharing campaign."
       ],
       "acceptance": [
-        "Two users racing for the last redemption produce one accepted result; repeated acceptance by the same account does not consume another use.",
-        "Signup, provider authorization, recovery, and an expired/full/revoked link preserve or explain the actual destination without open redirects or implicit agreements."
+        "Opening a link changes no contact/membership; explicit acceptance grants only its stated destination, and duplicate acceptance consumes no extra use.",
+        "Expired, revoked or full invitations show their real status; signup/login retains the intended destination and concurrent last-use redemption accepts only one new account."
       ],
       "components": [
         "invitation service and landing pages"
@@ -2723,7 +2745,26 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement every invitation destination and redemption rule",
+        "scope": [
+          "Extend preserved draft destinations and direct-contact invitations to Court, notice, and story destinations with hashed tokens, expiry, revoke, reuse caps, and issuer quotas.",
+          "Add public landing/status routes and atomic human redemption; reserve no membership or promise on link open."
+        ],
+        "acceptance": [
+          "Two users racing for the last redemption produce one accepted result; repeated acceptance by the same account does not consume another use.",
+          "Signup, provider authorization, recovery, and an expired/full/revoked link preserve or explain the actual destination without open redirects or implicit agreements."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-054"
+        ],
+        "covers": [
+          "S01"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-056",
@@ -2740,18 +2781,19 @@
       ],
       "sources": [
         "social",
-        "runtime"
+        "runtime",
+        "alpha"
       ],
       "covers": [
-        "S01"
+        "G01"
       ],
       "scope": [
-        "Add Court schema, separate handle namespace, open/request/invite modes, role and roster pagination, membership/ownership limits, pins, moderation actions, and audit events.",
-        "Implement consenting ownership transfer, immediate leave/removal, closure, and deleted-owner archive behavior."
+        "Implement Court community pages, separate handles, open/request/invite membership, paginated rosters, owner/moderator roles and pinned notices using shared commands.",
+        "Implement consented ownership transfer, leave/removal and closure without creating shared resources, army control, enforced allegiance or automatic contract cancellation."
       ],
       "acceptance": [
-        "Concurrent joins cannot exceed a kingdom\u2019s membership limit; moderators cannot remove owners or other moderators or seize game assets.",
-        "Leaving/closing a Court does not cancel contracts or allegiance; an accepted invitation grants only the stated membership."
+        "Create/join/leave, requests and invitations obey membership/ownership limits and role rules, including concurrent joins and consented transfer.",
+        "Leaving or closing a Court preserves independent contacts, contracts, troops and allegiance; an invitation grants membership only."
       ],
       "components": [
         "Court service"
@@ -2759,7 +2801,27 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement Court membership, roles, and lifecycle",
+        "scope": [
+          "Add Court schema, separate handle namespace, open/request/invite modes, role and roster pagination, membership/ownership limits, pins, moderation actions, and audit events.",
+          "Implement consenting ownership transfer, immediate leave/removal, closure, and deleted-owner archive behavior."
+        ],
+        "acceptance": [
+          "Concurrent joins cannot exceed a kingdom’s membership limit; moderators cannot remove owners or other moderators or seize game assets.",
+          "Leaving/closing a Court does not cancel contracts or allegiance; an accepted invitation grants only the stated membership."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-054",
+          "PACT-055"
+        ],
+        "covers": [
+          "S01"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-057",
@@ -2775,18 +2837,19 @@
       ],
       "sources": [
         "social",
-        "runtime"
+        "runtime",
+        "alpha"
       ],
       "covers": [
-        "S01"
+        "G01"
       ],
       "scope": [
-        "Add signed Article versions, publish/replace/withdraw states, human approval, active-count limits, and shared publication quota.",
-        "Add allegiance proposals, two-human signatures, expiry, one-patron uniqueness, cycle detection, public graph reads, and immediate termination."
+        "Implement versioned human-published Articles with publish/replace/withdraw, three-active limit and publication quota.",
+        "Implement mutual allegiance proposals, exact human signatures, expiry, one direct patron, cycle prevention, public graph reads and immediate termination."
       ],
       "acceptance": [
-        "Concurrent patron changes cannot create a cycle or multiple direct patrons.",
-        "Editing invalidates an old declaration version; neither Article prose nor allegiance creates tribute, military authority, free intel, immunity, or automatic contract cancellation."
+        "Concurrent signatures or patron changes never create cycles or multiple direct patrons; edited/expired terms cannot use stale signatures.",
+        "Articles and allegiance create no automatic tribute, asset transfer, military authority, free intelligence, immunity or cancellation of other contracts."
       ],
       "components": [
         "Articles and allegiance"
@@ -2794,7 +2857,26 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement Articles and mutual allegiance",
+        "scope": [
+          "Add signed Article versions, publish/replace/withdraw states, human approval, active-count limits, and shared publication quota.",
+          "Add allegiance proposals, two-human signatures, expiry, one-patron uniqueness, cycle detection, public graph reads, and immediate termination."
+        ],
+        "acceptance": [
+          "Concurrent patron changes cannot create a cycle or multiple direct patrons.",
+          "Editing invalidates an old declaration version; neither Article prose nor allegiance creates tribute, military authority, free intel, immunity, or automatic contract cancellation."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-054"
+        ],
+        "covers": [
+          "S01"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-058",
@@ -2811,18 +2893,19 @@
       ],
       "sources": [
         "social",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
-        "S02"
+        "G01"
       ],
       "scope": [
-        "Implement participant-authorized message/report Seal creation, immutable source digests, UTF-8 ranges, omission labels, canonical JSON, Ed25519 signing, public verification keys, and key rotation.",
-        "Build the preview/verification viewer with human publication approval, authenticity-only labels, source expiry, removal, and compromised-key status."
+        "Implement participant-selected signed message/scout/battle excerpts, source digests, valid UTF-8 ranges and omission labels; expose verification and a plain evidence viewer.",
+        "Require human publication review and label authenticity separately from truth. Automated rotation, compromised-key operational certification and platform case tooling are postponed."
       ],
       "acceptance": [
-        "Altered/reordered/out-of-boundary excerpts and unauthorized originals fail; a complete excerpt and a selectively omitted one show different context labels.",
-        "Old-key verification survives rotation; a removed source cannot be fetched through a Seal API; authentic content is never labeled a proven allegation."
+        "Participants can publish and agents can read/verify exact selected evidence; altered bytes, invalid ranges and nonparticipant originals fail.",
+        "Complete and omitted excerpts have distinct context labels; private omitted content remains unavailable and a hidden/removed hosted source is not resurrected by the viewer."
       ],
       "components": [
         "evidence signing and viewer"
@@ -2830,7 +2913,27 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement signed excerpts and the evidence viewer",
+        "scope": [
+          "Implement participant-authorized message/report Seal creation, immutable source digests, UTF-8 ranges, omission labels, canonical JSON, Ed25519 signing, public verification keys, and key rotation.",
+          "Build the preview/verification viewer with human publication approval, authenticity-only labels, source expiry, removal, and compromised-key status."
+        ],
+        "acceptance": [
+          "Altered/reordered/out-of-boundary excerpts and unauthorized originals fail; a complete excerpt and a selectively omitted one show different context labels.",
+          "Old-key verification survives rotation; a removed source cannot be fetched through a Seal API; authentic content is never labeled a proven allegation."
+        ],
+        "depends_on": [
+          "PACT-042",
+          "PACT-053",
+          "PACT-054"
+        ],
+        "covers": [
+          "S02"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-059",
@@ -2850,19 +2953,20 @@
       "sources": [
         "social",
         "product",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
-        "S01",
-        "S02"
+        "G01",
+        "G03"
       ],
       "scope": [
-        "Build private history and chronological published feeds with author/Court filters, versioned notice expiry, selected evidence, factual outcome, human commentary, and invitation links.",
-        "Add preview-before-publish, safe public metadata/card images, copy-link, report/remove, and audience-aware cache invalidation."
+        "Deliver private chronological history, public notices/opportunities and deliberately published Chronicle stories with factual outcomes, selected evidence and author/Court filters.",
+        "Provide simple preview/publish/remove and copyable public links. Elaborate share-card artwork, growth analytics and platform moderation workflows are postponed."
       ],
       "acceptance": [
-        "An unauthenticated recipient can view deliberately published content and reach its specific invitation.",
-        "Private prompts, live reserves, withheld excerpts, and full transcripts cannot leak through HTML metadata, link previews, caching, or API expansion."
+        "Agents discover actual notices/players and inspect deliberately published stories; a story link shows the recorded outcome and its real destination.",
+        "Publication preview and reads distinguish engine facts from player commentary and never publish private objectives, live reserves, omitted evidence or entire transcripts by default."
       ],
       "components": [
         "Chronicle and public pages"
@@ -2870,7 +2974,30 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement Chronicle stories, notices, and public share pages",
+        "scope": [
+          "Build private history and chronological published feeds with author/Court filters, versioned notice expiry, selected evidence, factual outcome, human commentary, and invitation links.",
+          "Add preview-before-publish, safe public metadata/card images, copy-link, report/remove, and audience-aware cache invalidation."
+        ],
+        "acceptance": [
+          "An unauthenticated recipient can view deliberately published content and reach its specific invitation.",
+          "Private prompts, live reserves, withheld excerpts, and full transcripts cannot leak through HTML metadata, link previews, caching, or API expansion."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-055",
+          "PACT-056",
+          "PACT-057",
+          "PACT-058"
+        ],
+        "covers": [
+          "S01",
+          "S02"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-060",
@@ -2888,7 +3015,8 @@
       "sources": [
         "runtime",
         "privacy",
-        "architecture"
+        "architecture",
+        "alpha"
       ],
       "covers": [
         "S03"
@@ -2908,7 +3036,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-061",
@@ -2924,25 +3053,24 @@
         "PACT-055",
         "PACT-056",
         "PACT-057",
-        "PACT-059",
-        "PACT-060"
+        "PACT-059"
       ],
       "sources": [
         "product",
         "access",
-        "social"
+        "social",
+        "alpha"
       ],
       "covers": [
-        "S01",
-        "S06"
+        "G04"
       ],
       "scope": [
-        "Extend the four-screen prototype with real People/Court/profile views, a clear Envoy command desk, opportunity entry, result cards, and privacy/conduct explanations.",
-        "Guide founding, first build, conversation, exact offer approval, and first consequence without fake players or fabricated successful trade."
+        "Complete one simple web interface: Kingdom, Envoy, People and Chronicle, including profiles/Courts, notices, readable offers/contracts, inbox decisions and result cards.",
+        "Show real founding-to-first-consequence onboarding, explicit objective/run start/stop and pending/approval/waiting states; use the existing in-game inbox without email/Web Push requirements."
       ],
       "acceptance": [
-        "A newcomer entering from a shared story retains that destination through connection and sees the real outcome of their first action.",
-        "Pending/offline counterparties remain visibly pending; on phone the next decision is understandable without opening every transcript."
+        "A newcomer can found, build, meet/negotiate and inspect a real consequence or truthful pending outcome; invitation destination survives connection.",
+        "The web view makes the next decision understandable, shows exact versioned contract effects and labels pending counterparties rather than fabricating replies or success."
       ],
       "components": [
         "first-session and social UI"
@@ -2950,7 +3078,32 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Complete the first-session and social interface",
+        "scope": [
+          "Extend the four-screen prototype with real People/Court/profile views, a clear Envoy command desk, opportunity entry, result cards, and privacy/conduct explanations.",
+          "Guide founding, first build, conversation, exact offer approval, and first consequence without fake players or fabricated successful trade."
+        ],
+        "acceptance": [
+          "A newcomer entering from a shared story retains that destination through connection and sees the real outcome of their first action.",
+          "Pending/offline counterparties remain visibly pending; on phone the next decision is understandable without opening every transcript."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-054",
+          "PACT-055",
+          "PACT-056",
+          "PACT-057",
+          "PACT-059",
+          "PACT-060"
+        ],
+        "covers": [
+          "S01",
+          "S06"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-062",
@@ -2972,18 +3125,20 @@
       "sources": [
         "runtime",
         "product",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
-        "S06"
+        "G02",
+        "G03"
       ],
       "scope": [
-        "Build an objective/mandate-first context assembler with selected threads, authorized evidence, compact factual history, and provider-aware token bounds.",
-        "Label agent assessments separately from engine receipts, attach supporting record IDs, and summarize unanswered offers and decisions without automatic background inference."
+        "Build objective/mandate-first compact context from selected conversations, permitted social/evidence records and factual history within existing run allowances.",
+        "Produce concise result explanations with supporting record IDs: committed, proposed, failed, waiting and approval-needed; separate agent assessments from engine facts and suggest a next step."
       ],
       "acceptance": [
-        "Long or adversarial transcripts cannot overflow the run allowance, reveal hidden records, execute arbitrary URLs, or elevate counterpart instructions.",
-        "For a seeded negotiation, the player sees what was committed, what only was proposed, what failed, and what still needs approval."
+        "A negotiation report accurately separates committed actions, proposals, failures and human decisions and links their receipts/records; factual offline summaries invoke no model.",
+        "Long/adversarial conversations remain bounded and cannot change identity/authority or expose withheld records; ordinary busy/stale action feedback supports replanning instead of pretending success."
       ],
       "components": [
         "Envoy context and summaries"
@@ -2991,7 +3146,31 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Improve Envoy context selection and result explanations",
+        "scope": [
+          "Build an objective/mandate-first context assembler with selected threads, authorized evidence, compact factual history, and provider-aware token bounds.",
+          "Label agent assessments separately from engine receipts, attach supporting record IDs, and summarize unanswered offers and decisions without automatic background inference."
+        ],
+        "acceptance": [
+          "Long or adversarial transcripts cannot overflow the run allowance, reveal hidden records, execute arbitrary URLs, or elevate counterpart instructions.",
+          "For a seeded negotiation, the player sees what was committed, what only was proposed, what failed, and what still needs approval."
+        ],
+        "depends_on": [
+          "PACT-049",
+          "PACT-053",
+          "PACT-054",
+          "PACT-056",
+          "PACT-057",
+          "PACT-058",
+          "PACT-059"
+        ],
+        "covers": [
+          "S06"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-063",
@@ -3010,7 +3189,8 @@
       ],
       "sources": [
         "privacy",
-        "social"
+        "social",
+        "alpha"
       ],
       "covers": [
         "S05"
@@ -3030,7 +3210,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-064",
@@ -3053,7 +3234,8 @@
       ],
       "sources": [
         "privacy",
-        "social"
+        "social",
+        "alpha"
       ],
       "covers": [
         "S05"
@@ -3064,7 +3246,7 @@
       ],
       "acceptance": [
         "Deletion during combat plus Court ownership preserves only necessary economic state while removing identifying/private data within real-time deadlines.",
-        "Restoring a backup or regenerating a share preview cannot resurrect removed content; exports never include a counterparty\u2019s withheld private data."
+        "Restoring a backup or regenerating a share preview cannot resurrect removed content; exports never include a counterparty’s withheld private data."
       ],
       "components": [
         "social retention and deletion"
@@ -3072,7 +3254,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-065",
@@ -3090,7 +3273,8 @@
       ],
       "sources": [
         "delivery",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "S06",
@@ -3102,7 +3286,7 @@
       ],
       "acceptance": [
         "Raw prompts/messages and provider secrets never enter analytics; events expire at 90 days before de-identified aggregation.",
-        "Day-8\u201314 returns, referred-player windows, incomplete observation, and intelligence-sale labels can be reproduced from fixtures without counting opens as meaningful play."
+        "Day-8–14 returns, referred-player windows, incomplete observation, and intelligence-sale labels can be reproduced from fixtures without counting opens as meaningful play."
       ],
       "components": [
         "product event pipeline and dashboards"
@@ -3110,7 +3294,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-087",
@@ -3131,7 +3316,8 @@
       "sources": [
         "architecture",
         "product",
-        "runtime"
+        "runtime",
+        "alpha"
       ],
       "covers": [
         "L02",
@@ -3152,7 +3338,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-088",
@@ -3170,7 +3357,8 @@
       ],
       "sources": [
         "architecture",
-        "product"
+        "product",
+        "alpha"
       ],
       "covers": [
         "S08"
@@ -3190,7 +3378,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-089",
@@ -3210,7 +3399,8 @@
       "sources": [
         "architecture",
         "runtime",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "S08"
@@ -3230,7 +3420,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-090",
@@ -3249,7 +3440,8 @@
       "sources": [
         "architecture",
         "runtime",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "S03",
@@ -3271,7 +3463,8 @@
       "blocked_by_external": [
         "APNs and Firebase credentials; test-device push entitlement"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-091",
@@ -3291,7 +3484,8 @@
       "sources": [
         "architecture",
         "access",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "S05",
@@ -3313,7 +3507,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-092",
@@ -3334,7 +3529,8 @@
       ],
       "sources": [
         "architecture",
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
         "S08"
@@ -3354,7 +3550,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-066",
@@ -3386,7 +3583,8 @@
       ],
       "sources": [
         "delivery",
-        "runtime"
+        "runtime",
+        "alpha"
       ],
       "covers": [
         "S01",
@@ -3401,7 +3599,7 @@
       ],
       "acceptance": [
         "p95 authorized state reads are under 500 ms and command receipts under one second at the specified load, with no skipped or duplicate tick.",
-        "S01\u2013S05 have recorded passing evidence, including compromised key, removed evidence, blocked messaging, and a privacy restore drill."
+        "S01–S05 have recorded passing evidence, including compromised key, removed evidence, blocked messaging, and a privacy restore drill."
       ],
       "components": [
         "social/load validation"
@@ -3409,7 +3607,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-067",
@@ -3427,7 +3626,8 @@
         "delivery",
         "privacy",
         "product",
-        "architecture"
+        "architecture",
+        "alpha"
       ],
       "covers": [
         "S06",
@@ -3439,7 +3639,7 @@
         "Include web, native mobile, and Telegram users in the same pilot world; record channel-specific setup failures and handoffs without increasing gameplay quotas."
       ],
       "acceptance": [
-        "Record at least 7/10 correct explanations of a consequential human decision; evaluate 20/50 meaningful returns in days 8\u201314, five voluntary sharers, and three referred returning players.",
+        "Record at least 7/10 correct explanations of a consequential human decision; evaluate 20/50 meaningful returns in days 8–14, five voluntary sharers, and three referred returning players.",
         "Report full denominators, incomplete referral windows, staff coverage, incidents, and actual failures; do not mark criteria passed before each observation window closes."
       ],
       "components": [
@@ -3450,7 +3650,8 @@
       "blocked_by_external": [
         "50 consenting adult players and staffed support"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-068",
@@ -3483,7 +3684,8 @@
         "PACT-092"
       ],
       "sources": [
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
         "S01",
@@ -3496,7 +3698,7 @@
         "S08"
       ],
       "scope": [
-        "Compile S01\u2013S08 evidence and the pilot release revision; distinguish technical checks from observed player behavior.",
+        "Compile S01–S08 evidence and the pilot release revision; distinguish technical checks from observed player behavior.",
         "Record whether the baseline advances or requires a versioned interaction revision and another pilot."
       ],
       "acceptance": [
@@ -3509,7 +3711,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-069",
@@ -3520,22 +3723,23 @@
       "owner_role": "Rules",
       "size": "M",
       "depends_on": [
-        "PACT-068"
+        "PACT-053"
       ],
       "sources": [
         "rules",
-        "product"
+        "product",
+        "alpha"
       ],
       "covers": [
-        "L01"
+        "G05"
       ],
       "scope": [
-        "Extend the clock/score foundation with configured opening time, the published harvest schedule, pre-boundary closing snapshot, next-season baseline, and pinned in-flight rules.",
-        "Add equal-age newcomer cohorts and persistent assets/contracts across seasons; expose current week and next transition in the UI/API."
+        "Implement configured six-week opening/harvest progression, pre-boundary closing Fortune snapshot and next-season baseline on the authoritative paused game clock.",
+        "Preserve buildings, troops, stocks, contacts and contracts; pin in-flight terms/rules, expose season/week/transition and implement equal-age newcomer snapshots."
       ],
       "acceptance": [
-        "An accelerated six-week run applies exactly the specified multipliers and awards boundary-tick value to the correct season.",
-        "A contract/raid crossing a season or world pause retains its correct terms/version; newcomer comparisons use age-seven-day snapshots without reset exploits."
+        "An accelerated isolated six-week fixture applies 100/100/90/80/80/100 percent Farm multipliers and assigns the boundary tick to the correct season.",
+        "Contracts/raids crossing season or pause keep their terms; assets persist and age-seven-day cohorts compare the correct snapshots with no scoring reset exploit."
       ],
       "components": [
         "season lifecycle and newcomer cohorts"
@@ -3543,7 +3747,25 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement the complete six-week season lifecycle",
+        "scope": [
+          "Extend the clock/score foundation with configured opening time, the published harvest schedule, pre-boundary closing snapshot, next-season baseline, and pinned in-flight rules.",
+          "Add equal-age newcomer cohorts and persistent assets/contracts across seasons; expose current week and next transition in the UI/API."
+        ],
+        "acceptance": [
+          "An accelerated six-week run applies exactly the specified multipliers and awards boundary-tick value to the correct season.",
+          "A contract/raid crossing a season or world pause retains its correct terms/version; newcomer comparisons use age-seven-day snapshots without reset exploits."
+        ],
+        "depends_on": [
+          "PACT-068"
+        ],
+        "covers": [
+          "L01"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-070",
@@ -3554,26 +3776,25 @@
       "owner_role": "Rules",
       "size": "M",
       "depends_on": [
-        "PACT-063",
-        "PACT-068",
+        "PACT-053",
         "PACT-069"
       ],
       "sources": [
         "rules",
         "product",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
-        "L01",
-        "L05"
+        "G05"
       ],
       "scope": [
-        "Implement meaningful-day eligibility, minimum band population, exact percentile thresholds/ties, overall plaques, arrival/participation rewards, and seven-real-day provisional review.",
-        "Build the audited disqualification/appeal and idempotent entitlement workflow, including updates to awards after a successful appeal."
+        "Implement season results, meaningful-day eligibility, ties, overall/Hall-band standings, arrival medals and participation rewards with retry-safe entitlements.",
+        "Label competitive honors provisional during Alpha; preserve minimum population rules. Formal competitive disqualification, appeals and seven-real-day final-award operations remain later work."
       ],
       "acceptance": [
-        "Small bands issue no false percentile award; ties expand honors as specified and only the highest border is granted.",
-        "Closing/disqualified accounts are excluded; review retries or overturned decisions cannot duplicate rewards, delete legitimate gameplay stock, or silently change Fortune."
+        "Small friend groups see truthful ranks but no unsupported percentile honors; ties, highest band and three meaningful-day eligibility match the rulebook.",
+        "Season/arrival/participation processing is retry-safe and never changes resources, troops or Fortune; formal competitive rewards remain explicitly provisional, not falsely finalized."
       ],
       "components": [
         "award calculation and review"
@@ -3581,7 +3802,28 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Implement seasonal honors and award review",
+        "scope": [
+          "Implement meaningful-day eligibility, minimum band population, exact percentile thresholds/ties, overall plaques, arrival/participation rewards, and seven-real-day provisional review.",
+          "Build the audited disqualification/appeal and idempotent entitlement workflow, including updates to awards after a successful appeal."
+        ],
+        "acceptance": [
+          "Small bands issue no false percentile award; ties expand honors as specified and only the highest border is granted.",
+          "Closing/disqualified accounts are excluded; review retries or overturned decisions cannot duplicate rewards, delete legitimate gameplay stock, or silently change Fortune."
+        ],
+        "depends_on": [
+          "PACT-063",
+          "PACT-068",
+          "PACT-069"
+        ],
+        "covers": [
+          "L01",
+          "L05"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-071",
@@ -3595,7 +3837,8 @@
         "PACT-068"
       ],
       "sources": [
-        "product"
+        "product",
+        "alpha"
       ],
       "covers": [
         "L02"
@@ -3616,7 +3859,8 @@
       "blocked_by_external": [
         "Approved/licensed visual assets or art production capacity"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-072",
@@ -3632,7 +3876,8 @@
       ],
       "sources": [
         "product",
-        "runtime"
+        "runtime",
+        "alpha"
       ],
       "covers": [
         "L02"
@@ -3653,7 +3898,8 @@
       "blocked_by_external": [
         "Approved/licensed audio assets or audio production capacity"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-073",
@@ -3664,25 +3910,24 @@
       "owner_role": "Frontend",
       "size": "L",
       "depends_on": [
-        "PACT-061",
-        "PACT-068",
-        "PACT-071",
-        "PACT-072"
+        "PACT-053",
+        "PACT-061"
       ],
       "sources": [
         "product",
-        "access"
+        "access",
+        "alpha"
       ],
       "covers": [
-        "L02"
+        "G04"
       ],
       "scope": [
-        "Complete installable PWA manifest/icons, responsive layouts, keyboard/focus paths, screen-reader labels, contrast, reflow, touch targets, and batched live announcements.",
-        "Cache only safe static assets; show stale/offline state and require a live server commit for gameplay actions instead of queueing expired commands silently."
+        "Finish readable responsive desktop/phone web layouts, keyboard/focus paths, labels, clear touch controls and accessible text for gameplay decisions.",
+        "Show stale/disconnected state and require a live server for commitments; installation/PWA/offline caching certification, audio, animation and commissioned assets are postponed."
       ],
       "acceptance": [
-        "Manual keyboard/screen-reader and phone/desktop audits cover signup, approvals, contracts, raids, reports, and privacy controls against the specified accessibility target.",
-        "App install/update/offline recovery preserves server authority and never caches keys, private responses, or a reusable approval action."
+        "Desktop/phone and keyboard checks cover founding, objective/run controls, contracts, troops, raids, social views and reports without clipped or unreachable essential controls.",
+        "Disconnect/reconnect displays truthful state and does not blindly replay signatures, raids or approvals; no gameplay consequence depends on color, sound or animation alone."
       ],
       "components": [
         "responsive UI",
@@ -3692,7 +3937,28 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Finish responsive accessibility and PWA behavior",
+        "scope": [
+          "Complete installable PWA manifest/icons, responsive layouts, keyboard/focus paths, screen-reader labels, contrast, reflow, touch targets, and batched live announcements.",
+          "Cache only safe static assets; show stale/offline state and require a live server commit for gameplay actions instead of queueing expired commands silently."
+        ],
+        "acceptance": [
+          "Manual keyboard/screen-reader and phone/desktop audits cover signup, approvals, contracts, raids, reports, and privacy controls against the specified accessibility target.",
+          "App install/update/offline recovery preserves server authority and never caches keys, private responses, or a reusable approval action."
+        ],
+        "depends_on": [
+          "PACT-061",
+          "PACT-068",
+          "PACT-071",
+          "PACT-072"
+        ],
+        "covers": [
+          "L02"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-074",
@@ -3710,7 +3976,8 @@
       "sources": [
         "product",
         "rules",
-        "architecture"
+        "architecture",
+        "alpha"
       ],
       "covers": [
         "L03"
@@ -3730,7 +3997,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-075",
@@ -3749,7 +4017,8 @@
       "sources": [
         "product",
         "privacy",
-        "architecture"
+        "architecture",
+        "alpha"
       ],
       "covers": [
         "L03",
@@ -3772,7 +4041,8 @@
       "blocked_by_external": [
         "Merchant/processor account, product prices, legal payment-record schedule"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-076",
@@ -3789,7 +4059,8 @@
       "sources": [
         "product",
         "privacy",
-        "architecture"
+        "architecture",
+        "alpha"
       ],
       "covers": [
         "L03"
@@ -3801,7 +4072,7 @@
       "acceptance": [
         "Duplicate and out-of-order refund events cannot over-reverse, credit Gems, or affect ordinary game balances, Fortune, troops, buildings, or achievements.",
         "Full/partial refunds and mixed-funding fixtures reconcile to payment receipts with a human-readable explanation and support audit trail.",
-        "Refund reconciliation retains original purchase-channel provenance and cannot debit another channel\u2019s paid lot to hide an attribution error."
+        "Refund reconciliation retains original purchase-channel provenance and cannot debit another channel’s paid lot to hide an attribution error."
       ],
       "components": [
         "refund reconciliation"
@@ -3809,7 +4080,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-077",
@@ -3829,7 +4101,8 @@
       "sources": [
         "delivery",
         "rules",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "L05"
@@ -3848,7 +4121,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-093",
@@ -3868,7 +4142,8 @@
       "sources": [
         "architecture",
         "product",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "L03",
@@ -3891,7 +4166,8 @@
       "blocked_by_external": [
         "Apple/Google developer and merchant accounts; sandbox products and test users"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-094",
@@ -3912,7 +4188,8 @@
       "sources": [
         "architecture",
         "product",
-        "privacy"
+        "privacy",
+        "alpha"
       ],
       "covers": [
         "L03",
@@ -3935,7 +4212,8 @@
       "blocked_by_external": [
         "Telegram bot with Stars test and production payment capability"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-078",
@@ -3957,7 +4235,8 @@
       "sources": [
         "runtime",
         "privacy",
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
         "L04"
@@ -3978,7 +4257,8 @@
       "blocked_by_external": [
         "Production access to the project VPS, domain/DNS, encrypted off-host backup target, SMTP credentials, and operator coverage"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-079",
@@ -3998,7 +4278,8 @@
       "sources": [
         "access",
         "delivery",
-        "architecture"
+        "architecture",
+        "alpha"
       ],
       "covers": [
         "L04"
@@ -4020,7 +4301,8 @@
       "blocked_by_external": [
         "Eligible release host accounts and any required distribution approvals"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-095",
@@ -4044,7 +4326,8 @@
       "sources": [
         "architecture",
         "privacy",
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
         "L04",
@@ -4052,7 +4335,7 @@
       ],
       "scope": [
         "Prepare iOS/Android signed releases, privacy/data disclosures, account deletion access, report/block controls, review accounts, production app links/push, and supported-device testing.",
-        "Complete required store reviews, Telegram Mini App/bot metadata/deep links, and each channel\u2019s digital-purchase checks; record policy versions and acceptance evidence."
+        "Complete required store reviews, Telegram Mini App/bot metadata/deep links, and each channel’s digital-purchase checks; record policy versions and acceptance evidence."
       ],
       "acceptance": [
         "Release artifacts are reproducible and the tested binaries match submitted builds; production links resolve to the correct account/destination.",
@@ -4068,7 +4351,8 @@
       "blocked_by_external": [
         "Apple/Google distribution approvals; production Telegram bot/domain configuration"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-097",
@@ -4089,7 +4373,8 @@
       ],
       "sources": [
         "architecture",
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
         "L04",
@@ -4109,7 +4394,61 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
+    },
+    {
+      "id": "PACT-099",
+      "title": "Complete agent-first access, learning, and observable play",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059",
+        "PACT-061",
+        "PACT-062",
+        "PACT-069",
+        "PACT-070",
+        "PACT-073"
+      ],
+      "sources": [
+        "alpha",
+        "runtime",
+        "social",
+        "product"
+      ],
+      "covers": [
+        "G02",
+        "G03"
+      ],
+      "scope": [
+        "Extend shared MCP/in-app tools and short versioned lessons to every Alpha social/season feature, including real player/opportunity discovery and explicit human-decision handoff.",
+        "Persist bounded, owner-visible activity and concise run summaries for external and in-app agents: actions/record IDs, results, pending decisions and next steps, never hidden reasoning.",
+        "Support useful recovery from busy/stale/invalid actions and small-model-friendly context; keep separate account identity and existing bounded runs, with no scheduled unsolicited inference."
+      ],
+      "acceptance": [
+        "A fresh connected agent learns state/rules, discovers real counterparties and acts from a normal objective without repository access, supplied UUIDs or action JSON; no fabricated players.",
+        "New gameplay tools use the existing dispatcher/views and hand back human-only decisions rather than bypassing them; web and agent reads show the same committed records.",
+        "Each account's web activity/report view truthfully separates committed/proposed/failed/waiting steps and can resume from receipts after disconnect; malformed/busy actions provide useful feedback without duplicate effects."
+      ],
+      "components": [
+        "agent guide and game tool registry",
+        "observable agent activity",
+        "external and in-app result summaries"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-080",
@@ -4120,38 +4459,40 @@
       "owner_role": "QA",
       "size": "L",
       "depends_on": [
-        "PACT-068",
+        "PACT-053",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059",
+        "PACT-061",
+        "PACT-062",
         "PACT-069",
         "PACT-070",
-        "PACT-071",
-        "PACT-072",
         "PACT-073",
-        "PACT-074",
-        "PACT-075",
-        "PACT-076",
-        "PACT-077",
-        "PACT-078",
-        "PACT-079",
-        "PACT-095",
-        "PACT-097"
+        "PACT-099"
       ],
       "sources": [
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
-        "L01",
-        "L02",
-        "L03",
-        "L04",
-        "L05"
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G05",
+        "G06"
       ],
       "scope": [
-        "Run an accelerated complete season against the release candidate, then validate signup/invitations, mixed-provider negotiations, scarcity, raids, privacy deletion, public evidence, purchases/refunds, and final honors.",
-        "Execute final accessibility, load, security, provider-error, and recovery regressions at the planned release capacity and record the tested limit."
+        "Rehearse the game-only Alpha from founding through development, discovery, negotiation, supply/garrison, intelligence, conflict, political publication and season conclusion; use an isolated accelerated world for season boundaries.",
+        "Observe three independent connected agents from ordinary objectives without operator UUIDs/action coaching; retain visible activity/reports and document actual successes, failures, model use and enjoyment feedback. No production/payments/native/load certification."
       ],
       "acceptance": [
-        "L01\u2013L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.",
-        "Critical defects are fixed and their affected scenarios rerun; a 50-player slice test is not mislabeled proof of unlimited global-world capacity."
+        "All preceding Alpha tickets are done and the complete gameplay sequence has reproducible evidence, coherent receipts/state and no unresolved gameplay-blocking defect.",
+        "Three agent accounts discover/learn/play without repository material or privileged edits; pending agents remain pending, reports agree with receipts, and failed behavior is recorded and rerun after fixes.",
+        "The isolated season rehearsal preserves assets/ongoing terms and concludes with correct results; Alpha handoff names the deployed revision, known limits and how friends connect/play, without claiming production or an unobserved fun result."
       ],
       "components": [
         "full-season release validation"
@@ -4159,7 +4500,42 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "original_plan": {
+        "title": "Rehearse Season One end to end",
+        "scope": [
+          "Run an accelerated complete season against the release candidate, then validate signup/invitations, mixed-provider negotiations, scarcity, raids, privacy deletion, public evidence, purchases/refunds, and final honors.",
+          "Execute final accessibility, load, security, provider-error, and recovery regressions at the planned release capacity and record the tested limit."
+        ],
+        "acceptance": [
+          "L01–L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.",
+          "Critical defects are fixed and their affected scenarios rerun; a 50-player slice test is not mislabeled proof of unlimited global-world capacity."
+        ],
+        "depends_on": [
+          "PACT-068",
+          "PACT-069",
+          "PACT-070",
+          "PACT-071",
+          "PACT-072",
+          "PACT-073",
+          "PACT-074",
+          "PACT-075",
+          "PACT-076",
+          "PACT-077",
+          "PACT-078",
+          "PACT-079",
+          "PACT-095",
+          "PACT-097"
+        ],
+        "covers": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05"
+        ]
+      },
+      "delivery_track": "alpha"
     },
     {
       "id": "PACT-098",
@@ -4178,7 +4554,8 @@
         "privacy",
         "access",
         "architecture",
-        "delivery"
+        "delivery",
+        "alpha"
       ],
       "covers": [
         "L04"
@@ -4200,7 +4577,8 @@
       "blocked_by_external": [
         "Actual operator identity, public legal contacts, reviewed notices, and processor agreements"
       ],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     },
     {
       "id": "PACT-081",
@@ -4230,11 +4608,13 @@
         "PACT-093",
         "PACT-094",
         "PACT-095",
-        "PACT-097"
+        "PACT-097",
+        "PACT-099"
       ],
       "sources": [
         "delivery",
-        "product"
+        "product",
+        "alpha"
       ],
       "covers": [
         "L01",
@@ -4249,7 +4629,7 @@
         "Prepare the deploy command and controlled signup enablement; actual release execution is a separate explicit operational action, not an effect of generating this backlog."
       ],
       "acceptance": [
-        "Every L01\u2013L06 criterion passes, including native/Telegram distribution, verified payments, and the complete channel matrix; all blocking defects/external reviews are closed.",
+        "Every L01–L06 criterion passes, including native/Telegram distribution, verified payments, and the complete channel matrix; all blocking defects/external reviews are closed.",
         "The release record names who can pause/recover the world and provides a reproducible go/no-go checklist; no task is marked completed merely because it is scheduled."
       ],
       "components": [
@@ -4258,7 +4638,8 @@
       "evidence": [],
       "assignee": null,
       "blocked_by_external": [],
-      "block_reason": null
+      "block_reason": null,
+      "delivery_track": "later"
     }
   ],
   "source_sha256": {
@@ -4269,7 +4650,8 @@
     "../pact/privacy.md": "f196d63676d0d2f335f480395987d5cf69edc8ccc555228d901b47ad9f0a7086",
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
-    "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0"
+    "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0",
+    "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9"
   },
   "task_status_values": [
     "todo",
@@ -4283,5 +4665,26 @@
     "L": "Cross-cutting lifecycle or integration, usually delivered as multiple reviewable pull requests"
   },
   "source_of_truth": "tasks.json owns planned scope, dependencies, and acceptance criteria. Linear owns execution status, assignment, blockers, and evidence; local execution fields are manually reconciled snapshots. See linear-workflow.md and linear-map.json. Markdown phase pages are generated views. Game behavior remains owned by ../pact/.",
-  "specification_revision": "1.3 \u2014 2026-09-22"
+  "specification_revision": "1.4 — 2026-10-01 game-only Alpha",
+  "alpha": {
+    "approved_at": "2026-10-01",
+    "scope": "../pact/alpha.md",
+    "active_ids": [
+      "PACT-054",
+      "PACT-055",
+      "PACT-056",
+      "PACT-057",
+      "PACT-058",
+      "PACT-059",
+      "PACT-061",
+      "PACT-062",
+      "PACT-069",
+      "PACT-070",
+      "PACT-073",
+      "PACT-099",
+      "PACT-080"
+    ],
+    "gate": "PACT-080",
+    "note": "Only these 13 unfinished tickets are authorized. Later tracks are postponed, not done; original_plan preserves deferred portions of narrowed tickets."
+  }
 }

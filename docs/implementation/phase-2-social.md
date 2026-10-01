@@ -2,144 +2,172 @@
 
 **20 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
-Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
+Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-054"></a>
 ## PACT-054 — Implement public profiles and handle lifecycle
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053)
 
 **Components:** identity profiles and handles.
 
-**Specification:** [social](../pact/social.md), [privacy](../pact/privacy.md) · **Release checks:** S01
+**Specification:** [social](../pact/social.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** G01
 
 **Implement / deliver**
 
-- Implement exact-handle search, public cosmetic profiles, allowed display-name validation, rename throttles, former-name display, and reserved-handle redirects.
-- Project public events by immutable identity while respecting deletion and hidden kingdom state.
+- Expose exact, case-insensitive handle search and public kingdom profiles through shared HTTP/MCP reads so agents can find real players without UUIDs.
+- Keep immutable kingdom identity, display-name validation and deletion tombstones. Alpha handles remain fixed; rename/history/redirect lifecycle is postponed.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Concurrent handle claims/renames cannot collide or bypass reservations; case-insensitive search resolves correctly.
-- [ ] Public profiles and redirects expose no current army/building/stock or online state; deleted profiles use the specified tombstone behavior.
+- [ ] Exact-handle search resolves an active founded kingdom case-insensitively; unfounded, closing, deleted and unknown identities do not expose private records.
+- [ ] Public profiles return identity and committed public records only, never stocks, building levels, troops, private contracts or online state; HTTP and MCP return equivalent projections.
+
+**Assignee:** Mohammad Safakhou
 
 <a id="pact-055"></a>
 ## PACT-055 — Implement every invitation destination and redemption rule
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054)
 
 **Components:** invitation service and landing pages.
 
-**Specification:** [social](../pact/social.md), [access](../pact/access.md), [product](../pact/product.md) · **Release checks:** S01
+**Specification:** [social](../pact/social.md), [access](../pact/access.md), [product](../pact/product.md), [alpha](../pact/alpha.md) · **Release checks:** G01
 
 **Implement / deliver**
 
-- Extend preserved draft destinations and direct-contact invitations to Court, notice, and story destinations with hashed tokens, expiry, revoke, reuse caps, and issuer quotas.
-- Add public landing/status routes and atomic human redemption; reserve no membership or promise on link open.
+- Deliver simple contact and Court invitation links with explicit human acceptance, destination preservation, expiry, revoke and retry-safe redemption.
+- Support truthful notice/story destinations as their records arrive; no referral programme, provider-specific onboarding extension or elaborate sharing campaign.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Two users racing for the last redemption produce one accepted result; repeated acceptance by the same account does not consume another use.
-- [ ] Signup, provider authorization, recovery, and an expired/full/revoked link preserve or explain the actual destination without open redirects or implicit agreements.
+- [ ] Opening a link changes no contact/membership; explicit acceptance grants only its stated destination, and duplicate acceptance consumes no extra use.
+- [ ] Expired, revoked or full invitations show their real status; signup/login retains the intended destination and concurrent last-use redemption accepts only one new account.
 
 <a id="pact-056"></a>
 ## PACT-056 — Implement Court membership, roles, and lifecycle
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055)
 
 **Components:** Court service.
 
-**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md) · **Release checks:** S01
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [alpha](../pact/alpha.md) · **Release checks:** G01
 
 **Implement / deliver**
 
-- Add Court schema, separate handle namespace, open/request/invite modes, role and roster pagination, membership/ownership limits, pins, moderation actions, and audit events.
-- Implement consenting ownership transfer, immediate leave/removal, closure, and deleted-owner archive behavior.
+- Implement Court community pages, separate handles, open/request/invite membership, paginated rosters, owner/moderator roles and pinned notices using shared commands.
+- Implement consented ownership transfer, leave/removal and closure without creating shared resources, army control, enforced allegiance or automatic contract cancellation.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Concurrent joins cannot exceed a kingdom’s membership limit; moderators cannot remove owners or other moderators or seize game assets.
-- [ ] Leaving/closing a Court does not cancel contracts or allegiance; an accepted invitation grants only the stated membership.
+- [ ] Create/join/leave, requests and invitations obey membership/ownership limits and role rules, including concurrent joins and consented transfer.
+- [ ] Leaving or closing a Court preserves independent contacts, contracts, troops and allegiance; an invitation grants membership only.
 
 <a id="pact-057"></a>
 ## PACT-057 — Implement Articles and mutual allegiance
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054)
 
 **Components:** Articles and allegiance.
 
-**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md) · **Release checks:** S01
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [alpha](../pact/alpha.md) · **Release checks:** G01
 
 **Implement / deliver**
 
-- Add signed Article versions, publish/replace/withdraw states, human approval, active-count limits, and shared publication quota.
-- Add allegiance proposals, two-human signatures, expiry, one-patron uniqueness, cycle detection, public graph reads, and immediate termination.
+- Implement versioned human-published Articles with publish/replace/withdraw, three-active limit and publication quota.
+- Implement mutual allegiance proposals, exact human signatures, expiry, one direct patron, cycle prevention, public graph reads and immediate termination.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Concurrent patron changes cannot create a cycle or multiple direct patrons.
-- [ ] Editing invalidates an old declaration version; neither Article prose nor allegiance creates tribute, military authority, free intel, immunity, or automatic contract cancellation.
+- [ ] Concurrent signatures or patron changes never create cycles or multiple direct patrons; edited/expired terms cannot use stale signatures.
+- [ ] Articles and allegiance create no automatic tribute, asset transfer, military authority, free intelligence, immunity or cancellation of other contracts.
 
 <a id="pact-058"></a>
 ## PACT-058 — Implement signed excerpts and the evidence viewer
 
 **Status:** todo · **Role:** Security · **Size:** L · **Type:** implementation
 
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-042](phase-1-rules.md#pact-042), [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054)
 
 **Components:** evidence signing and viewer.
 
-**Specification:** [social](../pact/social.md), [privacy](../pact/privacy.md) · **Release checks:** S02
+**Specification:** [social](../pact/social.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** G01
 
 **Implement / deliver**
 
-- Implement participant-authorized message/report Seal creation, immutable source digests, UTF-8 ranges, omission labels, canonical JSON, Ed25519 signing, public verification keys, and key rotation.
-- Build the preview/verification viewer with human publication approval, authenticity-only labels, source expiry, removal, and compromised-key status.
+- Implement participant-selected signed message/scout/battle excerpts, source digests, valid UTF-8 ranges and omission labels; expose verification and a plain evidence viewer.
+- Require human publication review and label authenticity separately from truth. Automated rotation, compromised-key operational certification and platform case tooling are postponed.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Altered/reordered/out-of-boundary excerpts and unauthorized originals fail; a complete excerpt and a selectively omitted one show different context labels.
-- [ ] Old-key verification survives rotation; a removed source cannot be fetched through a Seal API; authentic content is never labeled a proven allegation.
+- [ ] Participants can publish and agents can read/verify exact selected evidence; altered bytes, invalid ranges and nonparticipant originals fail.
+- [ ] Complete and omitted excerpts have distinct context labels; private omitted content remains unavailable and a hidden/removed hosted source is not resurrected by the viewer.
 
 <a id="pact-059"></a>
 ## PACT-059 — Implement Chronicle stories, notices, and public share pages
 
 **Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
 
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058)
 
 **Components:** Chronicle and public pages.
 
-**Specification:** [social](../pact/social.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** S01, S02
+**Specification:** [social](../pact/social.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** G01, G03
 
 **Implement / deliver**
 
-- Build private history and chronological published feeds with author/Court filters, versioned notice expiry, selected evidence, factual outcome, human commentary, and invitation links.
-- Add preview-before-publish, safe public metadata/card images, copy-link, report/remove, and audience-aware cache invalidation.
+- Deliver private chronological history, public notices/opportunities and deliberately published Chronicle stories with factual outcomes, selected evidence and author/Court filters.
+- Provide simple preview/publish/remove and copyable public links. Elaborate share-card artwork, growth analytics and platform moderation workflows are postponed.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] An unauthenticated recipient can view deliberately published content and reach its specific invitation.
-- [ ] Private prompts, live reserves, withheld excerpts, and full transcripts cannot leak through HTML metadata, link previews, caching, or API expansion.
+- [ ] Agents discover actual notices/players and inspect deliberately published stories; a story link shows the recorded outcome and its real destination.
+- [ ] Publication preview and reads distinguish engine facts from player commentary and never publish private objectives, live reserves, omitted evidence or entire transcripts by default.
 
 <a id="pact-060"></a>
 ## PACT-060 — Deliver opt-in critical email and Web Push
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-022](phase-0-connections.md#pact-022), [PACT-053](phase-1-rules.md#pact-053), [PACT-055](phase-2-social.md#pact-055)
 
 **Components:** notification worker and preferences.
 
-**Specification:** [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md) · **Release checks:** S03
+**Specification:** [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [alpha](../pact/alpha.md) · **Release checks:** S03
 
 **Implement / deliver**
 
@@ -157,53 +185,63 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
 
-**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060)
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-059](phase-2-social.md#pact-059)
 
 **Components:** first-session and social UI.
 
-**Specification:** [product](../pact/product.md), [access](../pact/access.md), [social](../pact/social.md) · **Release checks:** S01, S06
+**Specification:** [product](../pact/product.md), [access](../pact/access.md), [social](../pact/social.md), [alpha](../pact/alpha.md) · **Release checks:** G04
 
 **Implement / deliver**
 
-- Extend the four-screen prototype with real People/Court/profile views, a clear Envoy command desk, opportunity entry, result cards, and privacy/conduct explanations.
-- Guide founding, first build, conversation, exact offer approval, and first consequence without fake players or fabricated successful trade.
+- Complete one simple web interface: Kingdom, Envoy, People and Chronicle, including profiles/Courts, notices, readable offers/contracts, inbox decisions and result cards.
+- Show real founding-to-first-consequence onboarding, explicit objective/run start/stop and pending/approval/waiting states; use the existing in-game inbox without email/Web Push requirements.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] A newcomer entering from a shared story retains that destination through connection and sees the real outcome of their first action.
-- [ ] Pending/offline counterparties remain visibly pending; on phone the next decision is understandable without opening every transcript.
+- [ ] A newcomer can found, build, meet/negotiate and inspect a real consequence or truthful pending outcome; invitation destination survives connection.
+- [ ] The web view makes the next decision understandable, shows exact versioned contract effects and labels pending counterparties rather than fabricating replies or success.
 
 <a id="pact-062"></a>
 ## PACT-062 — Improve Envoy context selection and result explanations
 
 **Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
 
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-049](phase-1-rules.md#pact-049), [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059)
 
 **Components:** Envoy context and summaries.
 
-**Specification:** [runtime](../pact/runtime.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** S06
+**Specification:** [runtime](../pact/runtime.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** G02, G03
 
 **Implement / deliver**
 
-- Build an objective/mandate-first context assembler with selected threads, authorized evidence, compact factual history, and provider-aware token bounds.
-- Label agent assessments separately from engine receipts, attach supporting record IDs, and summarize unanswered offers and decisions without automatic background inference.
+- Build objective/mandate-first compact context from selected conversations, permitted social/evidence records and factual history within existing run allowances.
+- Produce concise result explanations with supporting record IDs: committed, proposed, failed, waiting and approval-needed; separate agent assessments from engine facts and suggest a next step.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Long or adversarial transcripts cannot overflow the run allowance, reveal hidden records, execute arbitrary URLs, or elevate counterpart instructions.
-- [ ] For a seeded negotiation, the player sees what was committed, what only was proposed, what failed, and what still needs approval.
+- [ ] A negotiation report accurately separates committed actions, proposals, failures and human decisions and links their receipts/records; factual offline summaries invoke no model.
+- [ ] Long/adversarial conversations remain bounded and cannot change identity/authority or expose withheld records; ordinary busy/stale action feedback supports replanning instead of pretending success.
 
 <a id="pact-063"></a>
 ## PACT-063 — Build reporting, moderation, and appeals tools
 
 **Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-056](phase-2-social.md#pact-056), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059)
 
 **Components:** reporting, moderation console.
 
-**Specification:** [privacy](../pact/privacy.md), [social](../pact/social.md) · **Release checks:** S05
+**Specification:** [privacy](../pact/privacy.md), [social](../pact/social.md), [alpha](../pact/alpha.md) · **Release checks:** S05
 
 **Implement / deliver**
 
@@ -220,11 +258,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Security · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-050](phase-1-rules.md#pact-050), [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-063](phase-2-social.md#pact-063)
 
 **Components:** social retention and deletion.
 
-**Specification:** [privacy](../pact/privacy.md), [social](../pact/social.md) · **Release checks:** S05
+**Specification:** [privacy](../pact/privacy.md), [social](../pact/social.md), [alpha](../pact/alpha.md) · **Release checks:** S05
 
 **Implement / deliver**
 
@@ -241,11 +281,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-064](phase-2-social.md#pact-064)
 
 **Components:** product event pipeline and dashboards.
 
-**Specification:** [delivery](../pact/delivery.md), [privacy](../pact/privacy.md) · **Release checks:** S06, S07
+**Specification:** [delivery](../pact/delivery.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** S06, S07
 
 **Implement / deliver**
 
@@ -262,11 +304,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Frontend · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-061](phase-2-social.md#pact-061), [PACT-083](phase-0-connections.md#pact-083), [PACT-085](phase-0-connections.md#pact-085)
 
 **Components:** Telegram web shell, shared DOM features.
 
-**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md) · **Release checks:** S08
+**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [alpha](../pact/alpha.md) · **Release checks:** S08
 
 **Implement / deliver**
 
@@ -283,11 +327,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-049](phase-1-rules.md#pact-049), [PACT-053](phase-1-rules.md#pact-053), [PACT-055](phase-2-social.md#pact-055), [PACT-062](phase-2-social.md#pact-062), [PACT-085](phase-0-connections.md#pact-085)
 
 **Components:** Telegram bot commands, explicit start confirmation.
 
-**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md) · **Release checks:** S08
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** S08
 
 **Implement / deliver**
 
@@ -304,11 +350,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend / Mobile · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-060](phase-2-social.md#pact-060), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089)
 
 **Components:** Telegram delivery.
 
-**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md) · **Release checks:** S03, S08
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** S03, S08
 
 **Implement / deliver**
 
@@ -327,11 +375,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Security · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-064](phase-2-social.md#pact-064), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090)
 
 **Components:** channel lifecycle, bot subscription cleanup, scoped revocation.
 
-**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md) · **Release checks:** S05, S08
+**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** S05, S08
 
 **Implement / deliver**
 
@@ -348,11 +398,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-065](phase-2-social.md#pact-065), [PACT-086](phase-0-connections.md#pact-086), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091)
 
 **Components:** channel contract tests, race fixtures.
 
-**Specification:** [architecture](../pact/architecture.md), [delivery](../pact/delivery.md) · **Release checks:** S08
+**Specification:** [architecture](../pact/architecture.md), [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** S08
 
 **Implement / deliver**
 
@@ -369,11 +421,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-065](phase-2-social.md#pact-065), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092)
 
 **Components:** social/load validation.
 
-**Specification:** [delivery](../pact/delivery.md), [runtime](../pact/runtime.md) · **Release checks:** S01, S02, S03, S04, S05
+**Specification:** [delivery](../pact/delivery.md), [runtime](../pact/runtime.md), [alpha](../pact/alpha.md) · **Release checks:** S01, S02, S03, S04, S05
 
 **Implement / deliver**
 
@@ -390,11 +444,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Operations · **Size:** L · **Type:** operations
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-066](phase-2-social.md#pact-066)
 
 **Components:** pilot operation and observation.
 
-**Specification:** [delivery](../pact/delivery.md), [privacy](../pact/privacy.md), [product](../pact/product.md), [architecture](../pact/architecture.md) · **Release checks:** S06, S07
+**Specification:** [delivery](../pact/delivery.md), [privacy](../pact/privacy.md), [product](../pact/product.md), [architecture](../pact/architecture.md), [alpha](../pact/alpha.md) · **Release checks:** S06, S07
 
 **Implement / deliver**
 
@@ -414,11 +470,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-060](phase-2-social.md#pact-060), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-063](phase-2-social.md#pact-063), [PACT-064](phase-2-social.md#pact-064), [PACT-065](phase-2-social.md#pact-065), [PACT-066](phase-2-social.md#pact-066), [PACT-067](phase-2-social.md#pact-067), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-092](phase-2-social.md#pact-092)
 
 **Components:** social release gate.
 
-**Specification:** [delivery](../pact/delivery.md) · **Release checks:** S01, S02, S03, S04, S05, S06, S07, S08
+**Specification:** [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** S01, S02, S03, S04, S05, S06, S07, S08
 
 **Implement / deliver**
 

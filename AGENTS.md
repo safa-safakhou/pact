@@ -7,7 +7,7 @@ PACT is a competitive kingdom game operated by humans and their LLM Envoys. This
 Before editing:
 1. Read [the specification index](docs/pact/README.md), [architecture](docs/pact/architecture.md), and [implementation workflow](docs/implementation/README.md).
 2. Read your ticket in `docs/implementation/tasks.json` and its linked specification documents. Inspect the working tree and any applicable directory instructions.
-3. Confirm dependencies are `done` in the active tracker. Linear is active; use `docs/implementation/linear-map.json` to find issues and reconcile the local snapshot before selecting work. For an unspecified implementation assignment, choose the first dependency-ready, unassigned ticket in backlog order. Do not choose by numeric ID: the initial sequence is **PACT-001 → PACT-082 → PACT-002 → PACT-003**.
+3. Confirm dependencies are `done` in the active tracker. Linear is active; use `docs/implementation/linear-map.json` to find issues and reconcile the local snapshot before selecting work. The current assignment is the 13-ticket **game-only Alpha** in `docs/pact/alpha.md`: select only `delivery_track: alpha` / Linear **PACT Alpha**; `later` tickets are postponed, not authorized or done. Choose the first dependency-ready, unassigned active ticket in backlog order. The initial historical sequence was **PACT-001 → PACT-082 → PACT-002 → PACT-003**.
 
 ## Sources of truth
 

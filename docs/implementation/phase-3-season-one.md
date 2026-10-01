@@ -1,19 +1,21 @@
 # Phase 3 — Season One release
 
-**20 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**21 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
-Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
+Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-084"></a>
 ## PACT-084 — Prove native iOS and Android login, linking, and approval
 
 **Status:** todo · **Role:** Mobile · **Size:** L · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-068](phase-2-social.md#pact-068), [PACT-083](phase-0-connections.md#pact-083)
 
 **Components:** React Native Expo shell, native identity, secure storage.
 
-**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md) · **Release checks:** L06
+**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** L06
 
 **Implement / deliver**
 
@@ -41,11 +43,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Mobile · **Size:** L · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-048](phase-1-rules.md#pact-048), [PACT-053](phase-1-rules.md#pact-053), [PACT-061](phase-2-social.md#pact-061), [PACT-068](phase-2-social.md#pact-068), [PACT-083](phase-0-connections.md#pact-083), [PACT-084](phase-3-season-one.md#pact-084)
 
 **Components:** native gameplay screens, shared view models.
 
-**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [runtime](../pact/runtime.md) · **Release checks:** L02, L06
+**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [runtime](../pact/runtime.md), [alpha](../pact/alpha.md) · **Release checks:** L02, L06
 
 **Implement / deliver**
 
@@ -62,53 +66,63 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068)
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053)
 
 **Components:** season lifecycle and newcomer cohorts.
 
-**Specification:** [rules](../pact/rules.md), [product](../pact/product.md) · **Release checks:** L01
+**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [alpha](../pact/alpha.md) · **Release checks:** G05
 
 **Implement / deliver**
 
-- Extend the clock/score foundation with configured opening time, the published harvest schedule, pre-boundary closing snapshot, next-season baseline, and pinned in-flight rules.
-- Add equal-age newcomer cohorts and persistent assets/contracts across seasons; expose current week and next transition in the UI/API.
+- Implement configured six-week opening/harvest progression, pre-boundary closing Fortune snapshot and next-season baseline on the authoritative paused game clock.
+- Preserve buildings, troops, stocks, contacts and contracts; pin in-flight terms/rules, expose season/week/transition and implement equal-age newcomer snapshots.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] An accelerated six-week run applies exactly the specified multipliers and awards boundary-tick value to the correct season.
-- [ ] A contract/raid crossing a season or world pause retains its correct terms/version; newcomer comparisons use age-seven-day snapshots without reset exploits.
+- [ ] An accelerated isolated six-week fixture applies 100/100/90/80/80/100 percent Farm multipliers and assigns the boundary tick to the correct season.
+- [ ] Contracts/raids crossing season or pause keep their terms; assets persist and age-seven-day cohorts compare the correct snapshots with no scoring reset exploit.
 
 <a id="pact-070"></a>
 ## PACT-070 — Implement seasonal honors and award review
 
 **Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
 
-**Depends on:** [PACT-063](phase-2-social.md#pact-063), [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069)
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-069](phase-3-season-one.md#pact-069)
 
 **Components:** award calculation and review.
 
-**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** L01, L05
+**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** G05
 
 **Implement / deliver**
 
-- Implement meaningful-day eligibility, minimum band population, exact percentile thresholds/ties, overall plaques, arrival/participation rewards, and seven-real-day provisional review.
-- Build the audited disqualification/appeal and idempotent entitlement workflow, including updates to awards after a successful appeal.
+- Implement season results, meaningful-day eligibility, ties, overall/Hall-band standings, arrival medals and participation rewards with retry-safe entitlements.
+- Label competitive honors provisional during Alpha; preserve minimum population rules. Formal competitive disqualification, appeals and seven-real-day final-award operations remain later work.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Small bands issue no false percentile award; ties expand honors as specified and only the highest border is granted.
-- [ ] Closing/disqualified accounts are excluded; review retries or overturned decisions cannot duplicate rewards, delete legitimate gameplay stock, or silently change Fortune.
+- [ ] Small friend groups see truthful ranks but no unsupported percentile honors; ties, highest band and three meaningful-day eligibility match the rulebook.
+- [ ] Season/arrival/participation processing is retry-safe and never changes resources, troops or Fortune; formal competitive rewards remain explicitly provisional, not falsely finalized.
 
 <a id="pact-071"></a>
 ## PACT-071 — Produce and integrate the illustrated kingdom and cosmetics
 
 **Status:** todo · **Role:** Frontend / Art · **Size:** L · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068)
 
 **Components:** art assets and kingdom scene.
 
-**Specification:** [product](../pact/product.md) · **Release checks:** L02
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md) · **Release checks:** L02
 
 **Implement / deliver**
 
@@ -127,11 +141,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Frontend / Audio · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-071](phase-3-season-one.md#pact-071)
 
 **Components:** audio and motion.
 
-**Specification:** [product](../pact/product.md), [runtime](../pact/runtime.md) · **Release checks:** L02
+**Specification:** [product](../pact/product.md), [runtime](../pact/runtime.md), [alpha](../pact/alpha.md) · **Release checks:** L02
 
 **Implement / deliver**
 
@@ -150,32 +166,38 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
 
-**Depends on:** [PACT-061](phase-2-social.md#pact-061), [PACT-068](phase-2-social.md#pact-068), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072)
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-061](phase-2-social.md#pact-061)
 
 **Components:** responsive UI, accessibility, PWA.
 
-**Specification:** [product](../pact/product.md), [access](../pact/access.md) · **Release checks:** L02
+**Specification:** [product](../pact/product.md), [access](../pact/access.md), [alpha](../pact/alpha.md) · **Release checks:** G04
 
 **Implement / deliver**
 
-- Complete installable PWA manifest/icons, responsive layouts, keyboard/focus paths, screen-reader labels, contrast, reflow, touch targets, and batched live announcements.
-- Cache only safe static assets; show stale/offline state and require a live server commit for gameplay actions instead of queueing expired commands silently.
+- Finish readable responsive desktop/phone web layouts, keyboard/focus paths, labels, clear touch controls and accessible text for gameplay decisions.
+- Show stale/disconnected state and require a live server for commitments; installation/PWA/offline caching certification, audio, animation and commissioned assets are postponed.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] Manual keyboard/screen-reader and phone/desktop audits cover signup, approvals, contracts, raids, reports, and privacy controls against the specified accessibility target.
-- [ ] App install/update/offline recovery preserves server authority and never caches keys, private responses, or a reusable approval action.
+- [ ] Desktop/phone and keyboard checks cover founding, objective/run controls, contracts, troops, raids, social views and reports without clipped or unreachable essential controls.
+- [ ] Disconnect/reconnect displays truthful state and does not blindly replay signatures, raids or approvals; no gameplay consequence depends on color, sound or animation alone.
 
 <a id="pact-074"></a>
 ## PACT-074 — Implement the cosmetic catalog, wallet, and unlock flow
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-047](phase-1-rules.md#pact-047), [PACT-068](phase-2-social.md#pact-068), [PACT-071](phase-3-season-one.md#pact-071)
 
 **Components:** cosmetic catalog and wallet.
 
-**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [architecture](../pact/architecture.md) · **Release checks:** L03
+**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [architecture](../pact/architecture.md), [alpha](../pact/alpha.md) · **Release checks:** L03
 
 **Implement / deliver**
 
@@ -193,11 +215,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-064](phase-2-social.md#pact-064), [PACT-068](phase-2-social.md#pact-068), [PACT-074](phase-3-season-one.md#pact-074)
 
 **Components:** checkout and payment receipts.
 
-**Specification:** [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md) · **Release checks:** L03, L04
+**Specification:** [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [alpha](../pact/alpha.md) · **Release checks:** L03, L04
 
 **Implement / deliver**
 
@@ -217,11 +241,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-075](phase-3-season-one.md#pact-075)
 
 **Components:** refund reconciliation.
 
-**Specification:** [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md) · **Release checks:** L03
+**Specification:** [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [alpha](../pact/alpha.md) · **Release checks:** L03
 
 **Implement / deliver**
 
@@ -239,11 +265,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** QA / Operations · **Size:** L · **Type:** verification
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-063](phase-2-social.md#pact-063), [PACT-065](phase-2-social.md#pact-065), [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070)
 
 **Components:** competitive abuse validation.
 
-**Specification:** [delivery](../pact/delivery.md), [rules](../pact/rules.md), [privacy](../pact/privacy.md) · **Release checks:** L05
+**Specification:** [delivery](../pact/delivery.md), [rules](../pact/rules.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** L05
 
 **Implement / deliver**
 
@@ -260,11 +288,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend / Mobile · **Size:** L · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-087](phase-3-season-one.md#pact-087)
 
 **Components:** native billing adapters, receipt verification.
 
-**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** L03, L06
+**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** L03, L06
 
 **Implement / deliver**
 
@@ -283,11 +313,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-088](phase-2-social.md#pact-088), [PACT-089](phase-2-social.md#pact-089)
 
 **Components:** Stars billing adapter, cosmetic provenance.
 
-**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** L03, L06
+**Specification:** [architecture](../pact/architecture.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [alpha](../pact/alpha.md) · **Release checks:** L03, L06
 
 **Implement / deliver**
 
@@ -306,11 +338,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Platform · **Size:** L · **Type:** operations
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-073](phase-3-season-one.md#pact-073), [PACT-076](phase-3-season-one.md#pact-076), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094)
 
 **Components:** production infrastructure and operations.
 
-**Specification:** [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [delivery](../pact/delivery.md) · **Release checks:** L04
+**Specification:** [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** L04
 
 **Implement / deliver**
 
@@ -329,11 +363,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Integrations · **Size:** L · **Type:** verification
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-049](phase-1-rules.md#pact-049), [PACT-062](phase-2-social.md#pact-062), [PACT-068](phase-2-social.md#pact-068), [PACT-073](phase-3-season-one.md#pact-073), [PACT-078](phase-3-season-one.md#pact-078)
 
 **Components:** provider/client release certification.
 
-**Specification:** [access](../pact/access.md), [delivery](../pact/delivery.md), [architecture](../pact/architecture.md) · **Release checks:** L04
+**Specification:** [access](../pact/access.md), [delivery](../pact/delivery.md), [architecture](../pact/architecture.md), [alpha](../pact/alpha.md) · **Release checks:** L04
 
 **Implement / deliver**
 
@@ -353,11 +389,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Mobile / Operations · **Size:** L · **Type:** operations
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-073](phase-3-season-one.md#pact-073), [PACT-078](phase-3-season-one.md#pact-078), [PACT-087](phase-3-season-one.md#pact-087), [PACT-088](phase-2-social.md#pact-088), [PACT-090](phase-2-social.md#pact-090), [PACT-091](phase-2-social.md#pact-091), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094)
 
 **Components:** signed builds, store submissions, Telegram production configuration.
 
-**Specification:** [architecture](../pact/architecture.md), [privacy](../pact/privacy.md), [delivery](../pact/delivery.md) · **Release checks:** L04, L06
+**Specification:** [architecture](../pact/architecture.md), [privacy](../pact/privacy.md), [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** L04, L06
 
 **Implement / deliver**
 
@@ -376,11 +414,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-079](phase-3-season-one.md#pact-079), [PACT-092](phase-2-social.md#pact-092), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-096](phase-1-rules.md#pact-096)
 
 **Components:** production-like cross-surface certification.
 
-**Specification:** [architecture](../pact/architecture.md), [delivery](../pact/delivery.md) · **Release checks:** L04, L06
+**Specification:** [architecture](../pact/architecture.md), [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** L04, L06
 
 **Implement / deliver**
 
@@ -392,37 +432,69 @@ Dependencies are completion requirements. Later phases also depend on the preced
 - [ ] Each required surface has evidence tied to its build/client version and backend revision; advertised capability labels match actual supported routes.
 - [ ] Cross-surface entitlements, run leases, event state, and privacy controls remain consistent; a blocked store review or failed required channel blocks release.
 
+<a id="pact-099"></a>
+## PACT-099 — Complete agent-first access, learning, and observable play
+
+**Status:** todo · **Role:** Integrations · **Size:** L · **Type:** implementation
+
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-073](phase-3-season-one.md#pact-073)
+
+**Components:** agent guide and game tool registry, observable agent activity, external and in-app result summaries.
+
+**Specification:** [alpha](../pact/alpha.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [product](../pact/product.md) · **Release checks:** G02, G03
+
+**Implement / deliver**
+
+- Extend shared MCP/in-app tools and short versioned lessons to every Alpha social/season feature, including real player/opportunity discovery and explicit human-decision handoff.
+- Persist bounded, owner-visible activity and concise run summaries for external and in-app agents: actions/record IDs, results, pending decisions and next steps, never hidden reasoning.
+- Support useful recovery from busy/stale/invalid actions and small-model-friendly context; keep separate account identity and existing bounded runs, with no scheduled unsolicited inference.
+
+**Acceptance**
+
+- [ ] A fresh connected agent learns state/rules, discovers real counterparties and acts from a normal objective without repository access, supplied UUIDs or action JSON; no fabricated players.
+- [ ] New gameplay tools use the existing dispatcher/views and hand back human-only decisions rather than bypassing them; web and agent reads show the same committed records.
+- [ ] Each account's web activity/report view truthfully separates committed/proposed/failed/waiting steps and can resume from receipts after disconnect; malformed/busy actions provide useful feedback without duplicate effects.
+
 <a id="pact-080"></a>
 ## PACT-080 — Rehearse Season One end to end
 
 **Status:** todo · **Role:** QA · **Size:** L · **Type:** verification
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097)
+**Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-061](phase-2-social.md#pact-061), [PACT-062](phase-2-social.md#pact-062), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-073](phase-3-season-one.md#pact-073), [PACT-099](phase-3-season-one.md#pact-099)
 
 **Components:** full-season release validation.
 
-**Specification:** [delivery](../pact/delivery.md) · **Release checks:** L01, L02, L03, L04, L05
+**Specification:** [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** G01, G02, G03, G04, G05, G06
 
 **Implement / deliver**
 
-- Run an accelerated complete season against the release candidate, then validate signup/invitations, mixed-provider negotiations, scarcity, raids, privacy deletion, public evidence, purchases/refunds, and final honors.
-- Execute final accessibility, load, security, provider-error, and recovery regressions at the planned release capacity and record the tested limit.
+- Rehearse the game-only Alpha from founding through development, discovery, negotiation, supply/garrison, intelligence, conflict, political publication and season conclusion; use an isolated accelerated world for season boundaries.
+- Observe three independent connected agents from ordinary objectives without operator UUIDs/action coaching; retain visible activity/reports and document actual successes, failures, model use and enjoyment feedback. No production/payments/native/load certification.
+
+**Deferred original scope:** Preserved in this ticket's `original_plan` in tasks.json; Alpha completion does not certify its former production/pilot acceptance.
 
 **Acceptance**
 
-- [ ] L01–L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.
-- [ ] Critical defects are fixed and their affected scenarios rerun; a 50-player slice test is not mislabeled proof of unlimited global-world capacity.
+- [ ] All preceding Alpha tickets are done and the complete gameplay sequence has reproducible evidence, coherent receipts/state and no unresolved gameplay-blocking defect.
+- [ ] Three agent accounts discover/learn/play without repository material or privileged edits; pending agents remain pending, reports agree with receipts, and failed behavior is recorded and rerun after fixes.
+- [ ] The isolated season rehearsal preserves assets/ongoing terms and concludes with correct results; Alpha handoff names the deployed revision, known limits and how friends connect/play, without claiming production or an unobserved fun result.
 
 <a id="pact-098"></a>
 ## PACT-098 — Replace MVP operator placeholders with reviewed production facts
 
 **Status:** todo · **Role:** Operations / Privacy · **Size:** M · **Type:** operations
 
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-025](phase-0-connections.md#pact-025), [PACT-068](phase-2-social.md#pact-068), [PACT-078](phase-3-season-one.md#pact-078)
 
 **Components:** production operator configuration, legal and processor records.
 
-**Specification:** [privacy](../pact/privacy.md), [access](../pact/access.md), [architecture](../pact/architecture.md), [delivery](../pact/delivery.md) · **Release checks:** L04
+**Specification:** [privacy](../pact/privacy.md), [access](../pact/access.md), [architecture](../pact/architecture.md), [delivery](../pact/delivery.md), [alpha](../pact/alpha.md) · **Release checks:** L04
 
 **Implement / deliver**
 
@@ -441,11 +513,13 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** todo · **Role:** Release · **Size:** S · **Type:** gate
 
-**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-080](phase-3-season-one.md#pact-080), [PACT-098](phase-3-season-one.md#pact-098), [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097)
+**Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-068](phase-2-social.md#pact-068), [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070), [PACT-071](phase-3-season-one.md#pact-071), [PACT-072](phase-3-season-one.md#pact-072), [PACT-073](phase-3-season-one.md#pact-073), [PACT-074](phase-3-season-one.md#pact-074), [PACT-075](phase-3-season-one.md#pact-075), [PACT-076](phase-3-season-one.md#pact-076), [PACT-077](phase-3-season-one.md#pact-077), [PACT-078](phase-3-season-one.md#pact-078), [PACT-079](phase-3-season-one.md#pact-079), [PACT-080](phase-3-season-one.md#pact-080), [PACT-098](phase-3-season-one.md#pact-098), [PACT-084](phase-3-season-one.md#pact-084), [PACT-087](phase-3-season-one.md#pact-087), [PACT-093](phase-3-season-one.md#pact-093), [PACT-094](phase-3-season-one.md#pact-094), [PACT-095](phase-3-season-one.md#pact-095), [PACT-097](phase-3-season-one.md#pact-097), [PACT-099](phase-3-season-one.md#pact-099)
 
 **Components:** Season One release gate.
 
-**Specification:** [delivery](../pact/delivery.md), [product](../pact/product.md) · **Release checks:** L01, L02, L03, L04, L05, L06
+**Specification:** [delivery](../pact/delivery.md), [product](../pact/product.md), [alpha](../pact/alpha.md) · **Release checks:** L01, L02, L03, L04, L05, L06
 
 **Implement / deliver**
 

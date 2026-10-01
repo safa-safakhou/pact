@@ -2,12 +2,14 @@
 
 **27 tickets · 27 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
-Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
+Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-028"></a>
 ## PACT-028 — Encode the versioned rules catalog and exact arithmetic
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027)
 
@@ -36,6 +38,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028)
 
 **Components:** game clock, rules worker.
@@ -62,6 +66,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-030 — Implement the resource ledger, provenance, and storage
 
 **Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-029](phase-1-rules.md#pact-029)
 
@@ -90,6 +96,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030)
 
 **Components:** kingdom founding.
@@ -116,6 +124,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-032 — Implement building upgrades and the two builder queues
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031)
 
@@ -144,6 +154,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031)
 
 **Components:** unit inventory and training.
@@ -170,6 +182,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-034 — Implement upkeep, hunger recovery, and desertion
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-033](phase-1-rules.md#pact-033)
 
@@ -198,6 +212,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-031](phase-1-rules.md#pact-031)
 
 **Components:** limits and charges.
@@ -224,6 +240,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-036 — Implement contacts, bounded messages, and direct transfers
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-022](phase-0-connections.md#pact-022), [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031), [PACT-035](phase-1-rules.md#pact-035)
 
@@ -252,6 +270,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-019](phase-0-connections.md#pact-019), [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036)
 
 **Components:** supply offers and signatures.
@@ -278,6 +298,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-038 — Implement independent contract delivery and default settlement
 
 **Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-034](phase-1-rules.md#pact-034), [PACT-037](phase-1-rules.md#pact-037)
 
@@ -306,6 +328,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-027](phase-0-connections.md#pact-027), [PACT-032](phase-1-rules.md#pact-032), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038)
 
 **Components:** authority exposure ledger.
@@ -332,6 +356,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-040 — Implement garrison contracts, recall, return, and seizure
 
 **Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-037](phase-1-rules.md#pact-037), [PACT-039](phase-1-rules.md#pact-039)
 
@@ -360,6 +386,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-033](phase-1-rules.md#pact-033), [PACT-035](phase-1-rules.md#pact-035), [PACT-039](phase-1-rules.md#pact-039)
 
 **Components:** scout rules and reports.
@@ -386,6 +414,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-042 — Implement raid seed commitments and deterministic dice
 
 **Status:** done · **Role:** Security · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028)
 
@@ -414,6 +444,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-033](phase-1-rules.md#pact-033)
 
 **Components:** pure combat calculator.
@@ -440,6 +472,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-044 — Implement raids, contributors, locks, and overlapping resolution
 
 **Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043)
 
@@ -468,6 +502,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-022](phase-0-connections.md#pact-022), [PACT-027](phase-0-connections.md#pact-027), [PACT-032](phase-1-rules.md#pact-032), [PACT-038](phase-1-rules.md#pact-038), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-044](phase-1-rules.md#pact-044)
 
 **Components:** authorized state projections.
@@ -494,6 +530,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-046 — Implement Fortune accounting and provisional standings
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-030](phase-1-rules.md#pact-030), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-038](phase-1-rules.md#pact-038), [PACT-040](phase-1-rules.md#pact-040), [PACT-044](phase-1-rules.md#pact-044)
 
@@ -522,6 +560,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-032](phase-1-rules.md#pact-032), [PACT-038](phase-1-rules.md#pact-038), [PACT-041](phase-1-rules.md#pact-041), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046)
 
 **Components:** achievements and earned entitlements.
@@ -548,6 +588,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-048 — Build the plain rules-prototype interface
 
 **Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-023](phase-0-connections.md#pact-023), [PACT-027](phase-0-connections.md#pact-027), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047), [PACT-049](phase-1-rules.md#pact-049)
 
@@ -593,6 +635,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-049 — Expose complete game tools to every Envoy route
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-021](phase-0-connections.md#pact-021), [PACT-027](phase-0-connections.md#pact-027), [PACT-039](phase-1-rules.md#pact-039), [PACT-045](phase-1-rules.md#pact-045)
 
@@ -657,6 +701,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-024](phase-0-connections.md#pact-024), [PACT-027](phase-0-connections.md#pact-027), [PACT-038](phase-1-rules.md#pact-038), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046)
 
 **Components:** kingdom retirement.
@@ -683,6 +729,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-051 — Run transaction, replay, and adversarial rules tests
 
 **Status:** done · **Role:** QA · **Size:** L · **Type:** verification
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043), [PACT-044](phase-1-rules.md#pact-044), [PACT-046](phase-1-rules.md#pact-046), [PACT-050](phase-1-rules.md#pact-050)
 
@@ -751,6 +799,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** QA · **Size:** M · **Type:** verification
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051)
 
 **Components:** script client and comparison harness.
@@ -782,6 +832,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Architecture / QA · **Size:** M · **Type:** verification
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-039](phase-1-rules.md#pact-039), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083)
 
 **Components:** non-game fixture, module isolation tests.
@@ -809,6 +861,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-053 — Accept the transactional rules prototype
 
 **Status:** done · **Role:** Release · **Size:** S · **Type:** gate
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-027](phase-0-connections.md#pact-027), [PACT-028](phase-1-rules.md#pact-028), [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-031](phase-1-rules.md#pact-031), [PACT-032](phase-1-rules.md#pact-032), [PACT-033](phase-1-rules.md#pact-033), [PACT-034](phase-1-rules.md#pact-034), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036), [PACT-037](phase-1-rules.md#pact-037), [PACT-038](phase-1-rules.md#pact-038), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043), [PACT-044](phase-1-rules.md#pact-044), [PACT-045](phase-1-rules.md#pact-045), [PACT-046](phase-1-rules.md#pact-046), [PACT-047](phase-1-rules.md#pact-047), [PACT-048](phase-1-rules.md#pact-048), [PACT-049](phase-1-rules.md#pact-049), [PACT-050](phase-1-rules.md#pact-050), [PACT-051](phase-1-rules.md#pact-051), [PACT-052](phase-1-rules.md#pact-052), [PACT-096](phase-1-rules.md#pact-096)
 

@@ -2,12 +2,14 @@
 
 **31 tickets · 31 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
-Dependencies are completion requirements. Later phases also depend on the preceding gate. Owner roles are disciplines, not assigned people. Size is complexity, not a time commitment.
+Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-001"></a>
 ## PACT-001 — Bootstrap the application workspace and continuous integration
 
 **Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** None — start here.
 
@@ -38,6 +40,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Architecture · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001)
 
 **Components:** workspace packages, domain ports, CI boundaries.
@@ -65,6 +69,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-002 — Define shared command, event, and tool schemas
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-082](phase-0-connections.md#pact-082)
 
@@ -94,6 +100,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-002](phase-0-connections.md#pact-002)
 
 **Components:** persistence, job/outbox infrastructure.
@@ -121,6 +129,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-004 — Provision the single-VPS connection-test environment
 
 **Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-003](phase-0-connections.md#pact-003)
 
@@ -153,6 +163,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-002](phase-0-connections.md#pact-002), [PACT-003](phase-0-connections.md#pact-003)
 
 **Components:** observability.
@@ -181,6 +193,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-006 — Implement signup, verification, and human sessions
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-003](phase-0-connections.md#pact-003), [PACT-005](phase-0-connections.md#pact-005)
 
@@ -211,6 +225,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-006](phase-0-connections.md#pact-006)
 
 **Components:** identity, access revocation.
@@ -239,6 +255,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-008 — Implement private kingdom drafts and resumable setup
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-006](phase-0-connections.md#pact-006), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -269,6 +287,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007)
 
 **Components:** credential vault.
@@ -298,6 +318,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-002](phase-0-connections.md#pact-002), [PACT-009](phase-0-connections.md#pact-009)
 
 **Components:** provider interface, provider test harness.
@@ -326,6 +348,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-011 — Implement the OpenAI model adapter
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010)
 
@@ -359,6 +383,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010)
 
 **Components:** Anthropic adapter.
@@ -390,6 +416,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-013 — Implement the Gemini model adapter
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010)
 
@@ -423,6 +451,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010)
 
 **Components:** xAI adapter.
@@ -454,6 +484,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-015 — Implement OpenRouter authorization and model adapter
 
 **Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010), [PACT-007](phase-0-connections.md#pact-007)
 
@@ -488,6 +520,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Security · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-002](phase-0-connections.md#pact-002)
 
 **Components:** OAuth authorization/resource service.
@@ -518,6 +552,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-016](phase-0-connections.md#pact-016), [PACT-002](phase-0-connections.md#pact-002)
 
 **Components:** MCP transport.
@@ -546,6 +582,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-018 — Implement the shared dispatcher and sandbox receipts
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-003](phase-0-connections.md#pact-003), [PACT-007](phase-0-connections.md#pact-007), [PACT-002](phase-0-connections.md#pact-002)
 
@@ -576,6 +614,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-018](phase-0-connections.md#pact-018)
 
 **Components:** authority service.
@@ -605,6 +645,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-019](phase-0-connections.md#pact-019)
 
 **Components:** approval service.
@@ -633,6 +675,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-021 — Implement bounded Envoy runs and exclusive write leases
 
 **Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-010](phase-0-connections.md#pact-010), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020)
 
@@ -664,6 +708,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-003](phase-0-connections.md#pact-003), [PACT-018](phase-0-connections.md#pact-018)
 
 **Components:** inbox service, SSE.
@@ -692,6 +738,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-023 — Build account, connection, and Envoy setup screens
 
 **Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-015](phase-0-connections.md#pact-015), [PACT-016](phase-0-connections.md#pact-016), [PACT-017](phase-0-connections.md#pact-017), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022)
 
@@ -726,6 +774,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Backend / Frontend · **Size:** M · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-002](phase-0-connections.md#pact-002), [PACT-016](phase-0-connections.md#pact-016), [PACT-018](phase-0-connections.md#pact-018), [PACT-020](phase-0-connections.md#pact-020), [PACT-022](phase-0-connections.md#pact-022), [PACT-082](phase-0-connections.md#pact-082)
 
 **Components:** TypeScript SDK, generated types, capability metadata.
@@ -754,6 +804,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-085 — Prove Telegram identity linking and Mini App authentication
 
 **Status:** done · **Role:** Integrations · **Size:** L · **Type:** implementation
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-007](phase-0-connections.md#pact-007), [PACT-023](phase-0-connections.md#pact-023), [PACT-083](phase-0-connections.md#pact-083)
 
@@ -790,6 +842,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Security · **Size:** L · **Type:** implementation
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-016](phase-0-connections.md#pact-016), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-085](phase-0-connections.md#pact-085)
 
 **Components:** privacy jobs, export, deletion registry.
@@ -820,6 +874,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-025 — Complete the real-account environment preflight
 
 **Status:** done · **Role:** Operations · **Size:** M · **Type:** operations
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-024](phase-0-connections.md#pact-024)
 
@@ -852,6 +908,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 
 **Status:** done · **Role:** Integrations · **Size:** M · **Type:** verification
 
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
+
 **Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-025](phase-0-connections.md#pact-025), [PACT-083](phase-0-connections.md#pact-083)
 
 **Components:** Gemini CLI certification, Grok tool-client fixture, compatibility registry.
@@ -881,6 +939,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-026 — Certify every connection route and measure unaided setup
 
 **Status:** done · **Role:** QA · **Size:** L · **Type:** verification
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-017](phase-0-connections.md#pact-017), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
 
@@ -912,6 +972,8 @@ Dependencies are completion requirements. Later phases also depend on the preced
 ## PACT-027 — Accept the connection experiment
 
 **Status:** done · **Role:** Release · **Size:** S · **Type:** gate
+
+**Delivery track:** completed foundation · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-001](phase-0-connections.md#pact-001), [PACT-002](phase-0-connections.md#pact-002), [PACT-003](phase-0-connections.md#pact-003), [PACT-004](phase-0-connections.md#pact-004), [PACT-005](phase-0-connections.md#pact-005), [PACT-006](phase-0-connections.md#pact-006), [PACT-007](phase-0-connections.md#pact-007), [PACT-008](phase-0-connections.md#pact-008), [PACT-009](phase-0-connections.md#pact-009), [PACT-010](phase-0-connections.md#pact-010), [PACT-011](phase-0-connections.md#pact-011), [PACT-012](phase-0-connections.md#pact-012), [PACT-013](phase-0-connections.md#pact-013), [PACT-014](phase-0-connections.md#pact-014), [PACT-015](phase-0-connections.md#pact-015), [PACT-016](phase-0-connections.md#pact-016), [PACT-017](phase-0-connections.md#pact-017), [PACT-018](phase-0-connections.md#pact-018), [PACT-019](phase-0-connections.md#pact-019), [PACT-020](phase-0-connections.md#pact-020), [PACT-021](phase-0-connections.md#pact-021), [PACT-022](phase-0-connections.md#pact-022), [PACT-023](phase-0-connections.md#pact-023), [PACT-024](phase-0-connections.md#pact-024), [PACT-025](phase-0-connections.md#pact-025), [PACT-026](phase-0-connections.md#pact-026), [PACT-082](phase-0-connections.md#pact-082), [PACT-083](phase-0-connections.md#pact-083), [PACT-085](phase-0-connections.md#pact-085), [PACT-086](phase-0-connections.md#pact-086)
 

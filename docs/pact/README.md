@@ -1,14 +1,16 @@
-# PACT — Version 1.3 specification
+# PACT — Version 1.4 specification
 
-**Decision baseline: Version 1.3, 22 September 2026. Status: specified; implementation evidence is tracked separately.**
+**Decision baseline: Version 1.4, 1 October 2026. Status: specified; implementation evidence is tracked separately.**
 
-**Implementation work:** [98 dependency-ordered technical tickets](../implementation/README.md), with acceptance criteria and release-criterion coverage.
+**Current assignment: [game-only private Alpha](alpha.md). Only 13 unfinished tickets are active; 28 are postponed.** The Alpha document owns this approved scope correction and takes precedence over broader release requirements below. Game mechanics and existing authority boundaries are unchanged; original production requirements remain later work.
+
+**Implementation work:** [99 dependency-ordered technical tickets](../implementation/README.md), including the 13-ticket Alpha track, with acceptance criteria and deferred release scope preserved.
 
 PACT is a competitive, persistent kingdom game. You build your kingdom and set your priorities. Your Envoy negotiates with other players' Envoys, makes agreements within your authority, and brings consequential choices back to you. Everyone shares one world. Relationships are chosen by players; the engine enforces resources, ownership, deadlines, and signed actions.
 
 ## The decisions
 
-| Subject | Version 1.3 decision |
+| Subject | Full later-release decision (Alpha exceptions above) |
 | --- | --- |
 | Where people play | Web/PWA, native iOS/Android apps, Telegram Mini App and bot, and certified external assistant clients |
 | Models in PACT | OpenAI, Anthropic, Google Gemini, xAI, and OpenRouter; one replaceable connection per active run |
@@ -25,6 +27,7 @@ PACT is a competitive, persistent kingdom game. You build your kingdom and set y
 
 | Document | Purpose and authority |
 | --- | --- |
+| [Game-only Alpha scope](alpha.md) | Current private finish line, active 13 tickets, explicit deferrals and G01–G06 acceptance; overrides broader release/channel/pilot gates only |
 | [Product brief](product.md) | Player promise, screens, first session, season, progression, and monetization |
 | [Channels and reusable architecture](architecture.md) | Client coverage, shared modules, native/Telegram identity, cross-channel state, payments, and portability |
 | [Account and connection specification](access.md) | Signup, model routes, MCP authentication, protocol compatibility, and onboarding |

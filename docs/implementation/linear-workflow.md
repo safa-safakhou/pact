@@ -1,5 +1,9 @@
 # Linear delivery workflow
 
+## Current scope override — 1 October 2026
+
+Only the founder-approved [Version 1.4 Alpha](../pact/alpha.md) is active: 13 tickets in **Active — Game-only Alpha**, labeled **PACT Alpha**. Twenty-eight remaining unfinished tickets are postponed **PACT Later** / Backlog. Historical four-phase milestones/counts below are import records, not the current assignment. New PACT-099 is substantive missing agent implementation, not an umbrella. Preserve `original_plan` when narrowing scope and never infer full original S/L gate acceptance from Alpha completion.
+
 **Activation: active.** Verified 16 September 2026, 14:52 UTC in the **mnim** workspace / **Mnim** team. [PACT — Season One](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) now contains 98 tickets across four milestones. Linear owns execution tracking; the local backlog is its reconciled snapshot. The original import count and relationship audit are recorded in [the import report](reports/linear-import.md); consult live Linear for current execution status.
 
 Open [Start here — agent assignments](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) or [Delivery and documentation policy](https://linear.app/mnim/document/delivery-and-documentation-policy-32fa9e76322e). The project also contains eight specification reference documents. Stable IDs/URLs and verification metadata are in [linear-map.json](linear-map.json); read the [import report](reports/linear-import.md) for checks and handoff limits.

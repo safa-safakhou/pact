@@ -587,12 +587,17 @@
       "id": "c492fa0f-2109-4ef5-ba83-e3ea6296e03a",
       "identifier": "MNI-156",
       "url": "https://linear.app/mnim/issue/MNI-156/pact-081-accept-and-prepare-the-season-one-release"
+    },
+    "PACT-099": {
+      "id": "e6373264-a91d-4d12-920a-3e1f43f8ad2e",
+      "identifier": "MNI-158",
+      "url": "https://linear.app/mnim/issue/MNI-158/pact-099-complete-agent-first-access-learning-and-observable-play"
     }
   },
   "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-09-29T17:25:08Z",
-  "last_sync_scope": "PACT-048 MNI-112 Done, both acceptance boxes checked and assignee Mohammad Safakhou read back after completion comment 1a3a8042-25e5-46d0-bea4-8455d8d43991. Completion report docs/implementation/reports/rules-ui-completion.md distinguishes fresh Amber/Birch founding/scout/raid/loss/rebuild from prior Cinder/Owner paired Hall III lending. Immutable alpha-20260929-4/public verify and Chrome completed rebuild evidence. PACT-052 remains In Progress with matched real-model comparison outstanding; PACT-053 remains gated. No full 98-issue audit or same-pair pilot claim.",
+  "last_synced_at": "2026-10-01 11:20:12 UTC",
+  "last_sync_scope": "99 issues: 58 Done, 13 Alpha (PACT-054 In Progress), 28 Later; explicit scopes and Alpha dependency graph revised 1 October 2026.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -630,5 +635,29 @@
     "done": 51,
     "blocked_local": 0,
     "note": "Version 1.3 keeps the zero-cost private MVP on one VPS, accepts the documented single-host backup risk, uses internal Mailpit capture, and moves off-host recovery/real outbound email to PACT-078. PACT-004 and the real Telegram test-bot certification in PACT-085 are complete. Paid native signing and physical-device work move from the MVP gates to the Season One release milestone in PACT-084/087."
+  },
+  "alpha": {
+    "milestone": {
+      "id": "02088096-285f-4ee3-99a5-0574cd408b1b",
+      "name": "Active — Game-only Alpha",
+      "description": "Only 13 active tickets: PACT-054–059, 061, 062, 069, 070, 073, 080, 099. Simple web + agent-primary play on the existing VPS; no payments/native/Telegram/production/pilot gates. Exit: narrowed PACT-080 gameplay rehearsal. Founder-approved 1 October 2026.",
+      "progress": 0,
+      "sortOrder": 4027
+    },
+    "active_ids": [
+      "PACT-054",
+      "PACT-055",
+      "PACT-056",
+      "PACT-057",
+      "PACT-058",
+      "PACT-059",
+      "PACT-061",
+      "PACT-062",
+      "PACT-069",
+      "PACT-070",
+      "PACT-073",
+      "PACT-099",
+      "PACT-080"
+    ]
   }
 }

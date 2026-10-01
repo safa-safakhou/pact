@@ -1,6 +1,12 @@
 # PACT implementation backlog
 
-**98 tickets · 58 Done, 0 In Progress, 40 Backlog as of 29 September 2026 · Based on the [current specification](../pact/README.md).** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+**99 tickets · 58 Done, 1 In Progress, 12 other Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+
+## Current assignment — game-only Alpha
+
+The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are active. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054 is In Progress. PACT-080 closes this private gameplay track, not production Season One.
+
+Narrowed acceptance and dependencies are explicit in tasks.json and Linear. Each changed ticket's `original_plan` preserves postponed requirements; Alpha completion does not certify original S/L gates. New PACT-099 owns complete agent-first learning/access and observable activity/reports. No payment, native/Telegram, large pilot, production or art/audio prerequisite blocks the Alpha path. The original four-phase plan below is retained for later reference, not current work selection. Historical completed evidence is unchanged.
 
 The backlog turns the design into dependency-ordered engineering work. Every ticket contains a concrete deliverable, acceptance checks, component ownership, specification links, and prerequisites. Creating a planning record alone is never completion evidence; consult Linear and the linked reports for implemented work.
 
