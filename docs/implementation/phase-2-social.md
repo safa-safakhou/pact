@@ -1,13 +1,13 @@
 # Phase 2 — Social slice
 
-**20 tickets · 0 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 1 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-054"></a>
 ## PACT-054 — Implement public profiles and handle lifecycle
 
-**Status:** in_progress · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** alpha · [Approved Alpha scope](../pact/alpha.md)
 
@@ -26,10 +26,15 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Exact-handle search resolves an active founded kingdom case-insensitively; unfounded, closing, deleted and unknown identities do not expose private records.
-- [ ] Public profiles return identity and committed public records only, never stocks, building levels, troops, private contracts or online state; HTTP and MCP return equivalent projections.
+- [x] Exact-handle search resolves an active founded kingdom case-insensitively; unfounded, closing, deleted and unknown identities do not expose private records.
+- [x] Public profiles return identity and committed public records only, never stocks, building levels, troops, private contracts or online state; HTTP and MCP return equivalent projections.
 
 **Assignee:** Mohammad Safakhou
+
+**Evidence**
+
+- docs/implementation/reports/public-player-discovery.md
+- 8d1a2f0: Node 24.19 build/typecheck/lint; 175 unit; 227 integration passed (one optional local-model skipped); exact public HTTP/MCP lookup parity and negative paths.
 
 <a id="pact-055"></a>
 ## PACT-055 — Implement every invitation destination and redemption rule

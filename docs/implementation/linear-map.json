@@ -32,14 +32,14 @@
     },
     "2": {
       "id": "53ce719b-79d8-4b97-9efa-97c9f220422c",
-      "name": "2 — Social slice",
+      "name": "Later — Social pilot and channels",
       "description": "20 tickets. Profiles, Courts, Articles, evidence, sharing, web/Telegram/assistant surfaces, notifications, privacy/moderation, load tests, and a real three-week 50-player pilot. Exit: PACT-068, criteria S01–S08.",
       "progress": 0,
       "sortOrder": 2016
     },
     "3": {
       "id": "80a160f5-7996-41db-b281-470ae9541ba6",
-      "name": "3 — Season One release",
+      "name": "Later — Production release",
       "description": "20 tickets. Native clients and signing, seasons/honors, art/audio/accessibility, cosmetics and platform purchases, production operator facts, operations/distribution certification, and release rehearsal. Exit: PACT-081, criteria L01–L06.",
       "progress": 0,
       "sortOrder": 2933
@@ -95,6 +95,11 @@
       "id": "795b32d4-8703-4b77-b701-ddbf97dd4a67",
       "title": "Delivery and documentation policy",
       "url": "https://linear.app/mnim/document/delivery-and-documentation-policy-32fa9e76322e"
+    },
+    "alpha": {
+      "id": "3e18a9b5-1414-47f4-9ff8-8abdd1cab1a4",
+      "title": "Approved game-only Alpha — Version 1.4",
+      "url": "https://linear.app/mnim/document/approved-game-only-alpha-version-14-b91b27bec011"
     }
   },
   "issues": {
@@ -594,10 +599,10 @@
       "url": "https://linear.app/mnim/issue/MNI-158/pact-099-complete-agent-first-access-learning-and-observable-play"
     }
   },
-  "source_revision": "626802c53a4dd246fce4c799f12a1614e1889689",
+  "source_revision": "1.4 — 2026-10-01 game-only Alpha",
   "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-10-01 11:20:12 UTC",
-  "last_sync_scope": "99 issues: 58 Done, 13 Alpha (PACT-054 In Progress), 28 Later; explicit scopes and Alpha dependency graph revised 1 October 2026.",
+  "last_synced_at": "2026-10-01T11:32:28.000Z",
+  "last_sync_scope": "99-issue scope readback; 13-ticket Alpha (PACT-054 Done, 12 Todo), 28 Later Backlog; current Alpha relation sets and milestone parity checked; PACT-054 checklist/status completion read back.",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -614,27 +619,21 @@
     "../pact/privacy.md": "f196d63676d0d2f335f480395987d5cf69edc8ccc555228d901b47ad9f0a7086",
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
-    "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0"
+    "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0",
+    "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9"
   },
   "verification": {
-    "issues": 98,
-    "blocking_relations": 504,
-    "milestones": 4,
-    "documents": 10,
-    "scope_and_acceptance": "read_back_passed",
-    "specification_documents": "read_back_passed_after_markdown_normalization",
-    "phase_counts": [
-      31,
-      27,
-      20,
-      20
-    ],
-    "todo": 0,
-    "backlog": 46,
-    "in_progress": 1,
-    "done": 51,
-    "blocked_local": 0,
-    "note": "Version 1.3 keeps the zero-cost private MVP on one VPS, accepts the documented single-host backup risk, uses internal Mailpit capture, and moves off-host recovery/real outbound email to PACT-078. PACT-004 and the real Telegram test-bot certification in PACT-085 are complete. Paid native signing and physical-device work move from the MVP gates to the Season One release milestone in PACT-084/087."
+    "issues": 99,
+    "done": 59,
+    "in_progress": 0,
+    "todo": 12,
+    "backlog": 28,
+    "alpha_scope": 13,
+    "alpha_done": 1,
+    "later": 28,
+    "alpha_blocking_relations": "all 13 read back; no later dependency",
+    "alpha_document": "full scope published and read back",
+    "note": "Historical completed foundations: 58. Newly completed PACT-054 is approved narrowed Alpha only; no production, deployment, broad client certification or new live-model claim."
   },
   "alpha": {
     "milestone": {
@@ -659,5 +658,25 @@
       "PACT-099",
       "PACT-080"
     ]
+  },
+  "prior_verification_snapshot": {
+    "issues": 98,
+    "blocking_relations": 504,
+    "milestones": 4,
+    "documents": 10,
+    "scope_and_acceptance": "read_back_passed",
+    "specification_documents": "read_back_passed_after_markdown_normalization",
+    "phase_counts": [
+      31,
+      27,
+      20,
+      20
+    ],
+    "todo": 0,
+    "backlog": 46,
+    "in_progress": 1,
+    "done": 51,
+    "blocked_local": 0,
+    "note": "Version 1.3 keeps the zero-cost private MVP on one VPS, accepts the documented single-host backup risk, uses internal Mailpit capture, and moves off-host recovery/real outbound email to PACT-078. PACT-004 and the real Telegram test-bot certification in PACT-085 are complete. Paid native signing and physical-device work move from the MVP gates to the Season One release milestone in PACT-084/087."
   }
 }

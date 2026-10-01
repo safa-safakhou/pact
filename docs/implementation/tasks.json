@@ -2661,7 +2661,7 @@
       "id": "PACT-054",
       "title": "Implement public profiles and handle lifecycle",
       "phase": 2,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -2687,7 +2687,10 @@
       "components": [
         "identity profiles and handles"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/public-player-discovery.md",
+        "8d1a2f0: Node 24.19 build/typecheck/lint; 175 unit; 227 integration passed (one optional local-model skipped); exact public HTTP/MCP lookup parity and negative paths."
+      ],
       "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,

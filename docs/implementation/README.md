@@ -1,10 +1,10 @@
 # PACT implementation backlog
 
-**99 tickets · 58 Done, 1 In Progress, 12 other Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+**99 tickets · 59 Done, 0 In Progress, 12 remaining Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
 
 ## Current assignment — game-only Alpha
 
-The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are active. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054 is In Progress. PACT-080 closes this private gameplay track, not production Season One.
+The founder approved [Version 1.4 Alpha scope](../pact/alpha.md): only **PACT-054–059, 061, 062, 069, 070, 073, 099 and 080** are in the current track. Use Linear's **Active — Game-only Alpha** milestone / **PACT Alpha** label; the other 28 unfinished tickets carry **PACT Later** and remain Backlog. PACT-054 is Done ([public discovery](reports/public-player-discovery.md), `8d1a2f0`); PACT-055 is next dependency-ready in backlog order. PACT-080 closes this private gameplay track, not production Season One.
 
 Narrowed acceptance and dependencies are explicit in tasks.json and Linear. Each changed ticket's `original_plan` preserves postponed requirements; Alpha completion does not certify original S/L gates. New PACT-099 owns complete agent-first learning/access and observable activity/reports. No payment, native/Telegram, large pilot, production or art/audio prerequisite blocks the Alpha path. The original four-phase plan below is retained for later reference, not current work selection. Historical completed evidence is unchanged.
 
@@ -38,7 +38,7 @@ Tasks inside a milestone can proceed independently once their listed dependencie
 
 Agents follow the repository [engineering instructions](../../AGENTS.md). Use the [first implementation prompt](kickoff.md) to assign the foundation batch: PACT-001 → PACT-082 → PACT-002 → PACT-003. These are four checkpoints within one assignment, not four required agents.
 
-The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 98 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the first assignment.
+The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 99 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the current assignment.
 
 1. **[PACT-001 — Workspace and CI](phase-0-connections.md#pact-001):** establish a reproducible local application and database environment.
 2. **[PACT-082 — Reusable module boundaries](phase-0-connections.md#pact-082):** define package ownership, product scoping, and forbidden dependencies before contracts spread through clients.
