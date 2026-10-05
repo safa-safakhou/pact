@@ -1,0 +1,1561 @@
+{
+  "release": "experience-20261003-4",
+  "sourceArchiveSha256": "9d43c3be12fca65da46b39dcb042923fe5fca4d6321dab00d152a9023eecf64b",
+  "browser": "154.0.8037.93",
+  "model": "gpt-6-luna",
+  "startedAt": "2026-10-03T21:35:47.644Z",
+  "handle": "turnip_b20a66",
+  "kingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+  "assistance": [
+    "Actual web registration/verification/signin/founding. Captured Mailpit verification required operator assistance.",
+    "Human chose farmer ambition and bounded playtest mandate in UI.",
+    "Normal login/DCR/PKCE consent routes; bearer stays process environment, not agent prompt/config/log."
+  ],
+  "before": {
+    "audience": "owner",
+    "ambition": "neutral",
+    "consequences": {
+      "asOfGameTimeMs": 1791059880000,
+      "limit": 20,
+      "firstRetained": {
+        "build": null,
+        "contact": null,
+        "delivery": null
+      },
+      "builds": [],
+      "contacts": [],
+      "supplyContracts": []
+    },
+    "profile": {
+      "kingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+      "handle": "turnip_b20a66",
+      "displayName": "Turnip Research Annex",
+      "portrait": "alpha-default"
+    },
+    "asOfGameTimeMs": 1791059880000,
+    "committedTickSequence": "11299",
+    "worldStatus": "active",
+    "lastCommittedEventId": "12626",
+    "charges": [
+      {
+        "available": 3,
+        "capacity": 3,
+        "nextRegenerationGameTimeMs": null,
+        "retryAtGameTimeMs": null,
+        "kind": "raid",
+        "regenerationHours": 8
+      },
+      {
+        "available": 4,
+        "capacity": 4,
+        "nextRegenerationGameTimeMs": null,
+        "retryAtGameTimeMs": null,
+        "kind": "scout",
+        "regenerationHours": 6
+      }
+    ],
+    "balances": {
+      "grain": {
+        "ordinaryUnits": "2860",
+        "foundingAllowanceUnits": "48000",
+        "lockedUnits": "0",
+        "capacityUnits": "360000",
+        "productionPerMinuteUnits": "300",
+        "facts": {
+          "ordinaryWhole": "\u22484.766666",
+          "allowanceWhole": "80",
+          "lockedWhole": "0",
+          "capacityWhole": "600",
+          "rates": {
+            "gross": {
+              "perMinuteWhole": "0.5",
+              "perHourWhole": "30",
+              "label": "0.5/min = 30/hour"
+            },
+            "upkeep": {
+              "perMinuteWhole": "\u22480.133333",
+              "perHourWhole": "8",
+              "label": "\u22480.133333/min = 8/hour"
+            },
+            "net": {
+              "perMinuteWhole": "\u22480.366666",
+              "perHourWhole": "22",
+              "label": "\u22480.366666/min = 22/hour"
+            },
+            "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+          }
+        },
+        "version": "26"
+      },
+      "iron": {
+        "ordinaryUnits": "2600",
+        "foundingAllowanceUnits": "120000",
+        "lockedUnits": "0",
+        "capacityUnits": "360000",
+        "productionPerMinuteUnits": "200",
+        "facts": {
+          "ordinaryWhole": "\u22484.333333",
+          "allowanceWhole": "200",
+          "lockedWhole": "0",
+          "capacityWhole": "600",
+          "rates": {
+            "gross": {
+              "perMinuteWhole": "\u22480.333333",
+              "perHourWhole": "20",
+              "label": "\u22480.333333/min = 20/hour"
+            },
+            "upkeep": {
+              "perMinuteWhole": "0",
+              "perHourWhole": "0",
+              "label": "0/min = 0/hour"
+            },
+            "net": {
+              "perMinuteWhole": "\u22480.333333",
+              "perHourWhole": "20",
+              "label": "\u22480.333333/min = 20/hour"
+            },
+            "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+          }
+        },
+        "version": "13"
+      },
+      "silver": {
+        "ordinaryUnits": "1300",
+        "foundingAllowanceUnits": "60000",
+        "lockedUnits": "0",
+        "capacityUnits": "360000",
+        "productionPerMinuteUnits": "100",
+        "facts": {
+          "ordinaryWhole": "\u22482.166666",
+          "allowanceWhole": "100",
+          "lockedWhole": "0",
+          "capacityWhole": "600",
+          "rates": {
+            "gross": {
+              "perMinuteWhole": "\u22480.166666",
+              "perHourWhole": "10",
+              "label": "\u22480.166666/min = 10/hour"
+            },
+            "upkeep": {
+              "perMinuteWhole": "0",
+              "perHourWhole": "0",
+              "label": "0/min = 0/hour"
+            },
+            "net": {
+              "perMinuteWhole": "\u22480.166666",
+              "perHourWhole": "10",
+              "label": "\u22480.166666/min = 10/hour"
+            },
+            "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+          }
+        },
+        "version": "13"
+      }
+    },
+    "buildings": [
+      {
+        "kind": "barracks",
+        "level": 1
+      },
+      {
+        "kind": "farm",
+        "level": 1
+      },
+      {
+        "kind": "hall",
+        "level": 1
+      },
+      {
+        "kind": "market",
+        "level": 1
+      },
+      {
+        "kind": "mine",
+        "level": 1
+      },
+      {
+        "kind": "storehouse",
+        "level": 1
+      },
+      {
+        "kind": "wall",
+        "level": 1
+      }
+    ],
+    "builders": [
+      {
+        "slot": 1,
+        "instructionId": null,
+        "kind": null,
+        "state": null,
+        "dueGameTimeMs": null,
+        "remainingGameMinutes": null
+      },
+      {
+        "slot": 2,
+        "instructionId": null,
+        "kind": null,
+        "state": null,
+        "dueGameTimeMs": null,
+        "remainingGameMinutes": null
+      }
+    ],
+    "troops": [
+      {
+        "type": "spearman",
+        "placement": "home",
+        "ownerKingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+        "hostKingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+        "homeGuard": true,
+        "count": 8
+      }
+    ],
+    "training": [],
+    "upkeep": {
+      "perMinuteUnits": "80",
+      "hungry": false
+    },
+    "contracts": [],
+    "raids": [],
+    "scouts": [],
+    "threats": [],
+    "records": [],
+    "forecast": {
+      "throughGameTimeMs": 1791063480000,
+      "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+      "harvestPercentByMinute": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "expected": {
+        "iron": {
+          "ordinaryUnits": "14600",
+          "foundingAllowanceUnits": "120000"
+        },
+        "silver": {
+          "ordinaryUnits": "7300",
+          "foundingAllowanceUnits": "60000"
+        },
+        "grain": {
+          "ordinaryUnits": "16060",
+          "foundingAllowanceUnits": "48000"
+        }
+      },
+      "assumedDeliveries": []
+    }
+  },
+  "mandate": {
+    "version": 2,
+    "allowedActions": [
+      "world.read",
+      "inbox.read",
+      "message.send.contact",
+      "contact.request",
+      "transfer",
+      "training.queue",
+      "building.queue",
+      "scout.start",
+      "supply.sign",
+      "supply.break",
+      "garrison.sign",
+      "garrison.break",
+      "raid.commit"
+    ]
+  },
+  "observations": [
+    {
+      "kind": "ambition",
+      "observed": "Human selected farmer; owner projection reports farmer on both visits. No class or economic bonus."
+    },
+    {
+      "kind": "before_after",
+      "observed": "Farm I stayed level1 while building. Farm II completed at1791060600000; gross grain30 to45/hour, upkeep8/hour unchanged, net22 to37/hour. Hall retained the actual build ID."
+    },
+    {
+      "kind": "next_decision",
+      "observed": "Second builder remained idle. Luna suggested storage then stopped without committing it. UI presents level/cost/prerequisite choices; MineII remains an available direction, requiring an explicit next decision."
+    },
+    {
+      "kind": "social",
+      "observed": "Public notices and Chronicle empty. No known independent recipient discovered; exact lookup returned self. No request, reply or trade occurred. Whole-community emptiness is not inferred."
+    },
+    {
+      "kind": "return",
+      "observed": "Return to see FarmII, its grain-rate improvement and first build keepsake; choose the free builders' next uses. Historical completion loaded quietly, not replayed as a fresh audio event."
+    }
+  ],
+  "errors": [],
+  "playerStartedAt": "2026-10-03T21:36:54.759Z",
+  "playerEndedAt": "2026-10-03T21:37:33.876Z",
+  "agent": {
+    "model": "gpt-6-luna",
+    "exitCode": 0,
+    "providerRequests": 8,
+    "overBudgetRequestsBlocked": 0,
+    "providerHttpStatuses": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "events": [
+      {
+        "type": "player_report",
+        "text": "I\u2019ll check your realm, available actions, builder queue, and authorized limits first, then make only decisions that fit a peaceful farming plan. I\u2019ll use no more than six game calls and won\u2019t poll afterward."
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_agent_guide_v1",
+        "status": "completed"
+      },
+      {
+        "type": "player_report",
+        "text": "Your mandate permits building queues and direct contact. The farm upgrade is affordable, and both builders are idle. I\u2019m checking current world details and public notices so I can use the second slot sensibly and identify one real, affordable social opening."
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_world_read_v1",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_chronicle_read_v1",
+        "status": "completed"
+      },
+      {
+        "type": "player_report",
+        "text": "There are no current public notices to answer. Since a cold contact costs two ordinary Silver and you have enough, I\u2019ll make one genuine introduction to a real public player if the notices don\u2019t provide one; no goods will be offered. First, I\u2019m opening the bounded write lease."
+      },
+      {
+        "type": "tool_completed",
+        "tool": "run.open",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_agent_guide_v1",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_game_action_v1",
+        "status": "completed"
+      },
+      {
+        "type": "player_report",
+        "text": "The farm upgrade is committed, with 10 game minutes of construction. I\u2019ll use the other builder for storage capacity, which supports the farm expansion and future harvests. The notice feed had no social opening, so I\u2019m checking one real player\u2019s public profile before deciding whether to introduce the kingdom."
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_player_find_v1",
+        "status": "completed"
+      },
+      {
+        "type": "player_report",
+        "text": "The farm upgrade to level 2 **committed** in builder slot 1; it is still under construction for 10 game minutes. Builder slot 2 remains idle.\n\nI couldn\u2019t identify a real public social opportunity: the notice feed was empty, and checking your own handle only returned your profile. I made no contact and promised no goods.\n\nCome back after construction to check the farm\u2019s new production and choose the next use for the free builder."
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 165448,
+          "cached_input_tokens": 136448,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 668,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "cost": "Unknown: existing Codex subscription; no billed dollar amount returned."
+  },
+  "visits": [
+    {
+      "visit": "first",
+      "visitedAt": "2026-10-03T21:38:55.427Z",
+      "release": "experience-20261003-3",
+      "owner": {
+        "audience": "owner",
+        "ambition": "farmer",
+        "consequences": {
+          "asOfGameTimeMs": 1791060060000,
+          "limit": 20,
+          "firstRetained": {
+            "build": null,
+            "contact": null,
+            "delivery": null
+          },
+          "builds": [
+            {
+              "id": "5fe502ae-a616-4d04-8582-86601d97d6ca",
+              "building": "farm",
+              "targetLevel": 2,
+              "state": "active",
+              "dueGameTimeMs": 1791060600000,
+              "settledGameTimeMs": null,
+              "remainingGameMinutes": 9
+            }
+          ],
+          "contacts": [],
+          "supplyContracts": []
+        },
+        "profile": {
+          "kingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "handle": "turnip_b20a66",
+          "displayName": "Turnip Research Annex",
+          "portrait": "alpha-default"
+        },
+        "asOfGameTimeMs": 1791060060000,
+        "committedTickSequence": "11302",
+        "worldStatus": "active",
+        "lastCommittedEventId": "12631",
+        "charges": [
+          {
+            "available": 3,
+            "capacity": 3,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "raid",
+            "regenerationHours": 8
+          },
+          {
+            "available": 4,
+            "capacity": 4,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "scout",
+            "regenerationHours": 6
+          }
+        ],
+        "balances": {
+          "grain": {
+            "ordinaryUnits": "3520",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "300",
+            "facts": {
+              "ordinaryWhole": "\u22485.866666",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "0.5",
+                  "perHourWhole": "30",
+                  "label": "0.5/min = 30/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "\u22480.133333",
+                  "perHourWhole": "8",
+                  "label": "\u22480.133333/min = 8/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "\u22480.366666",
+                  "perHourWhole": "22",
+                  "label": "\u22480.366666/min = 22/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "32"
+          },
+          "iron": {
+            "ordinaryUnits": "3200",
+            "foundingAllowanceUnits": "96000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "200",
+            "facts": {
+              "ordinaryWhole": "\u22485.333333",
+              "allowanceWhole": "160",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "\u22480.333333",
+                  "perHourWhole": "20",
+                  "label": "\u22480.333333/min = 20/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "\u22480.333333",
+                  "perHourWhole": "20",
+                  "label": "\u22480.333333/min = 20/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "17"
+          },
+          "silver": {
+            "ordinaryUnits": "1600",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "100",
+            "facts": {
+              "ordinaryWhole": "\u22482.666666",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "\u22480.166666",
+                  "perHourWhole": "10",
+                  "label": "\u22480.166666/min = 10/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "\u22480.166666",
+                  "perHourWhole": "10",
+                  "label": "\u22480.166666/min = 10/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "17"
+          }
+        },
+        "buildings": [
+          {
+            "kind": "barracks",
+            "level": 1
+          },
+          {
+            "kind": "farm",
+            "level": 1
+          },
+          {
+            "kind": "hall",
+            "level": 1
+          },
+          {
+            "kind": "market",
+            "level": 1
+          },
+          {
+            "kind": "mine",
+            "level": 1
+          },
+          {
+            "kind": "storehouse",
+            "level": 1
+          },
+          {
+            "kind": "wall",
+            "level": 1
+          }
+        ],
+        "builders": [
+          {
+            "slot": 1,
+            "instructionId": "5fe502ae-a616-4d04-8582-86601d97d6ca",
+            "kind": "farm",
+            "state": "active",
+            "dueGameTimeMs": 1791060600000,
+            "remainingGameMinutes": 9
+          },
+          {
+            "slot": 2,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          }
+        ],
+        "troops": [
+          {
+            "type": "spearman",
+            "placement": "home",
+            "ownerKingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+            "hostKingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+            "homeGuard": true,
+            "count": 8
+          }
+        ],
+        "training": [],
+        "upkeep": {
+          "perMinuteUnits": "80",
+          "hungry": false
+        },
+        "contracts": [],
+        "raids": [],
+        "scouts": [],
+        "threats": [],
+        "records": [],
+        "forecast": {
+          "throughGameTimeMs": 1791063660000,
+          "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+          "harvestPercentByMinute": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "expected": {
+            "iron": {
+              "ordinaryUnits": "15200",
+              "foundingAllowanceUnits": "96000"
+            },
+            "silver": {
+              "ordinaryUnits": "7600",
+              "foundingAllowanceUnits": "48000"
+            },
+            "grain": {
+              "ordinaryUnits": "16720",
+              "foundingAllowanceUnits": "48000"
+            }
+          },
+          "assumedDeliveries": []
+        }
+      },
+      "checks": [
+        {
+          "screen": "Kingdom",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Envoy",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "People",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Chronicle",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Kingdom",
+          "width": 390,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Envoy",
+          "width": 390,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "People",
+          "width": 390,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Chronicle",
+          "width": 390,
+          "noHorizontalOverflow": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        }
+      ],
+      "defaultMedia": [
+        {
+          "src": "/pact/experience/audio/settlement.wav",
+          "paused": false,
+          "error": false
+        },
+        {
+          "src": "/pact/experience/audio/ambience.wav",
+          "paused": false,
+          "error": false
+        }
+      ],
+      "quiet": {
+        "motion": "off",
+        "humour": "off",
+        "allPaused": true,
+        "visibleFlavour": 0,
+        "defaultFacts": 1
+      },
+      "errors": [],
+      "api": {
+        "/v1/game/social": {
+          "status": 200,
+          "data": {
+            "kingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+            "requestHistory": [],
+            "contacts": [],
+            "requests": [],
+            "messages": [],
+            "supplyOffers": [],
+            "supplyContracts": [],
+            "garrisonOffers": [],
+            "garrisonContracts": []
+          }
+        },
+        "/v1/runs/external-activity": {
+          "status": 200,
+          "data": {
+            "source": "external",
+            "label": "Engine facts \u2014 server-recorded tool results",
+            "entries": [
+              {
+                "id": "80",
+                "category": "committed",
+                "callId": "80",
+                "code": "COMMITTED",
+                "records": [
+                  {
+                    "record": "building:5fe502ae-a616-4d04-8582-86601d97d6ca",
+                    "version": 1
+                  }
+                ],
+                "commandId": "5fe502ae-a616-4d04-8582-86601d97d6ca",
+                "nextStep": "Construction is pending on the game clock. Inspect the current builder deadline.",
+                "currentFacts": [
+                  {
+                    "record": "building:5fe502ae-a616-4d04-8582-86601d97d6ca",
+                    "label": "farm level 2",
+                    "status": "active",
+                    "asOfGameTimeMs": 1791060060000,
+                    "nextStep": "Construction is pending on the game clock. Inspect the current builder deadline."
+                  }
+                ]
+              }
+            ],
+            "assessments": [],
+            "status": "recorded",
+            "lastErrorCode": null,
+            "truncated": false,
+            "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+            "stale": false,
+            "checkedAt": "2026-10-03T21:38:51.637Z",
+            "timestamps": {
+              "80": "2026-10-03T21:37:23.614Z"
+            }
+          }
+        },
+        "/v1/chronicle": {
+          "status": 200,
+          "data": {
+            "posts": [],
+            "nextOffset": null,
+            "humanDecision": {
+              "path": "/pact/?chronicle=1",
+              "publicationRequiresHuman": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "visit": "second",
+      "visitedAt": "2026-10-03T21:48:26.729Z",
+      "release": "experience-20261003-4",
+      "owner": {
+        "audience": "owner",
+        "ambition": "farmer",
+        "consequences": {
+          "asOfGameTimeMs": 1791060600000,
+          "limit": 20,
+          "firstRetained": {
+            "build": {
+              "recordId": "5fe502ae-a616-4d04-8582-86601d97d6ca",
+              "occurredGameTimeMs": 1791060600000,
+              "summary": "farm level 2 completed"
+            },
+            "contact": null,
+            "delivery": null
+          },
+          "builds": [
+            {
+              "id": "5fe502ae-a616-4d04-8582-86601d97d6ca",
+              "building": "farm",
+              "targetLevel": 2,
+              "state": "completed",
+              "dueGameTimeMs": 1791060600000,
+              "settledGameTimeMs": 1791060600000,
+              "remainingGameMinutes": 0
+            }
+          ],
+          "contacts": [],
+          "supplyContracts": []
+        },
+        "profile": {
+          "kingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "handle": "turnip_b20a66",
+          "displayName": "Turnip Research Annex",
+          "portrait": "alpha-default"
+        },
+        "asOfGameTimeMs": 1791060600000,
+        "committedTickSequence": "11311",
+        "worldStatus": "active",
+        "lastCommittedEventId": "12642",
+        "charges": [
+          {
+            "available": 3,
+            "capacity": 3,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "raid",
+            "regenerationHours": 8
+          },
+          {
+            "available": 4,
+            "capacity": 4,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "scout",
+            "regenerationHours": 6
+          }
+        ],
+        "balances": {
+          "grain": {
+            "ordinaryUnits": "5650",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "450",
+            "facts": {
+              "ordinaryWhole": "\u22489.416666",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "0.75",
+                  "perHourWhole": "45",
+                  "label": "0.75/min = 45/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "\u22480.133333",
+                  "perHourWhole": "8",
+                  "label": "\u22480.133333/min = 8/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "\u22480.616666",
+                  "perHourWhole": "37",
+                  "label": "\u22480.616666/min = 37/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "51"
+          },
+          "iron": {
+            "ordinaryUnits": "5000",
+            "foundingAllowanceUnits": "96000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "200",
+            "facts": {
+              "ordinaryWhole": "\u22488.333333",
+              "allowanceWhole": "160",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "\u22480.333333",
+                  "perHourWhole": "20",
+                  "label": "\u22480.333333/min = 20/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "\u22480.333333",
+                  "perHourWhole": "20",
+                  "label": "\u22480.333333/min = 20/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "27"
+          },
+          "silver": {
+            "ordinaryUnits": "2500",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "100",
+            "facts": {
+              "ordinaryWhole": "\u22484.166666",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "\u22480.166666",
+                  "perHourWhole": "10",
+                  "label": "\u22480.166666/min = 10/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "\u22480.166666",
+                  "perHourWhole": "10",
+                  "label": "\u22480.166666/min = 10/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "27"
+          }
+        },
+        "buildings": [
+          {
+            "kind": "barracks",
+            "level": 1
+          },
+          {
+            "kind": "farm",
+            "level": 2
+          },
+          {
+            "kind": "hall",
+            "level": 1
+          },
+          {
+            "kind": "market",
+            "level": 1
+          },
+          {
+            "kind": "mine",
+            "level": 1
+          },
+          {
+            "kind": "storehouse",
+            "level": 1
+          },
+          {
+            "kind": "wall",
+            "level": 1
+          }
+        ],
+        "builders": [
+          {
+            "slot": 1,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          },
+          {
+            "slot": 2,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          }
+        ],
+        "troops": [
+          {
+            "type": "spearman",
+            "placement": "home",
+            "ownerKingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+            "hostKingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+            "homeGuard": true,
+            "count": 8
+          }
+        ],
+        "training": [],
+        "upkeep": {
+          "perMinuteUnits": "80",
+          "hungry": false
+        },
+        "contracts": [],
+        "raids": [],
+        "scouts": [],
+        "threats": [],
+        "records": [],
+        "forecast": {
+          "throughGameTimeMs": 1791064200000,
+          "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+          "harvestPercentByMinute": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "expected": {
+            "iron": {
+              "ordinaryUnits": "17000",
+              "foundingAllowanceUnits": "96000"
+            },
+            "silver": {
+              "ordinaryUnits": "8500",
+              "foundingAllowanceUnits": "48000"
+            },
+            "grain": {
+              "ordinaryUnits": "27850",
+              "foundingAllowanceUnits": "48000"
+            }
+          },
+          "assumedDeliveries": []
+        }
+      },
+      "checks": [
+        {
+          "screen": "Kingdom",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Envoy",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "People",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Chronicle",
+          "width": 1440,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Kingdom",
+          "width": 390,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Envoy",
+          "width": 390,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "People",
+          "width": 390,
+          "noHorizontalOverflow": true
+        },
+        {
+          "screen": "Chronicle",
+          "width": 390,
+          "noHorizontalOverflow": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/receipts/5fe502ae-a616-4d04-8582-86601d97d6ca",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        },
+        {
+          "path": "/pact/v1/world/kingdoms/60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+          "status": 200
+        }
+      ],
+      "defaultMedia": [
+        {
+          "src": "/pact/experience/audio/settlement.wav",
+          "paused": false,
+          "error": false
+        },
+        {
+          "src": "/pact/experience/audio/ambience.wav",
+          "paused": false,
+          "error": false
+        }
+      ],
+      "quiet": {
+        "motion": "off",
+        "humour": "off",
+        "allPaused": true,
+        "visibleFlavour": 0,
+        "defaultFacts": 1
+      },
+      "errors": [],
+      "api": {
+        "/v1/game/social": {
+          "status": 200,
+          "data": {
+            "kingdomId": "60acfdd6-6f9d-4975-bfce-2c0b261197b4",
+            "requestHistory": [],
+            "contacts": [],
+            "requests": [],
+            "messages": [],
+            "supplyOffers": [],
+            "supplyContracts": [],
+            "garrisonOffers": [],
+            "garrisonContracts": []
+          }
+        },
+        "/v1/runs/external-activity": {
+          "status": 200,
+          "data": {
+            "source": "external",
+            "label": "Engine facts \u2014 server-recorded tool results",
+            "entries": [
+              {
+                "id": "80",
+                "category": "committed",
+                "callId": "80",
+                "code": "COMMITTED",
+                "records": [
+                  {
+                    "record": "building:5fe502ae-a616-4d04-8582-86601d97d6ca",
+                    "version": 1
+                  }
+                ],
+                "commandId": "5fe502ae-a616-4d04-8582-86601d97d6ca",
+                "nextStep": "Construction finished. Choose your next objective from current resources.",
+                "currentFacts": [
+                  {
+                    "record": "building:5fe502ae-a616-4d04-8582-86601d97d6ca",
+                    "label": "farm level 2",
+                    "status": "completed",
+                    "asOfGameTimeMs": 1791060600000,
+                    "nextStep": "Construction finished. Choose your next objective from current resources."
+                  }
+                ]
+              }
+            ],
+            "assessments": [],
+            "status": "recorded",
+            "lastErrorCode": null,
+            "truncated": false,
+            "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+            "stale": false,
+            "checkedAt": "2026-10-03T21:48:23.815Z",
+            "timestamps": {
+              "80": "2026-10-03T21:37:23.614Z"
+            }
+          }
+        },
+        "/v1/chronicle": {
+          "status": 200,
+          "data": {
+            "posts": [],
+            "nextOffset": null,
+            "humanDecision": {
+              "path": "/pact/?chronicle=1",
+              "publicationRequiresHuman": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "cleanup": {
+    "at": "2026-10-03T21:49:54.118Z",
+    "mandateRestricted": true,
+    "remainingGrants": 0,
+    "oldSessionRejected": 403,
+    "agentBearerRejected": 401,
+    "refreshRejected": 400,
+    "oldPasswordRejected": 400,
+    "operatorPasswordInvalidation": {
+      "passwordInvalidated": true,
+      "accountsChanged": 1
+    },
+    "operatorScope": "Only this synthetic account's password hash/timestamps. Replacement random password created and discarded on server. No clocks/resources/gameplay records modified.",
+    "localCredentialFileDeleted": true
+  },
+  "deployment": {
+    "sourceArchiveSha256": "9d43c3be12fca65da46b39dcb042923fe5fca4d6321dab00d152a9023eecf64b",
+    "baseRelease": "experience-20261003-1",
+    "finalRelease": "experience-20261003-4",
+    "backup": "Encrypted backup passed; /srv/pact/state/operator/experience-backup-20261003.log",
+    "publicVerify": true,
+    "releaseVerifiedAt": {
+      "experience-20261003-2": "2026-10-03T21:35:16.894Z",
+      "experience-20261003-3": "2026-10-03T21:38:25.704Z",
+      "experience-20261003-4": "2026-10-03T21:45:29.856Z"
+    },
+    "migrationsThrough": "0045",
+    "inAppPaidInferenceEnabled": false,
+    "correctiveSourceHashes": {
+      "apps/web/src/outcome-cards.tsx": "8a0c54264f9f5cc9e4a64dfbace47cb0463c73ff681ee89d07ecb5e94bd0d362",
+      "apps/web/src/hall-keepsakes.tsx": "188872a593fda146a460ca0f7a1b6e1e6f30174f8900ae62b064d0ee687ad438",
+      "apps/web/src/milestone-reveals.tsx": "f7d3939e08f6a2e66db5d75b4002d72e299e2ce960a793a777e3d94fc4555261",
+      "workers/notification/src/email.ts": "81ba83a86bca35629c532807cb374a46f80f13dcc05afc0f04cb294690f6b162"
+    },
+    "vpsCorrectiveSourcesMatch": true
+  },
+  "budget": {
+    "maxProviderRequests": 8,
+    "actualProviderRequests": 8,
+    "maxActiveMinutes": 30,
+    "conservativeActiveMinutesUpperBound": 23,
+    "firstVisitConservativeInterval": [
+      "2026-10-03T21:22:00Z",
+      "2026-10-03T21:38:55.427Z"
+    ],
+    "secondVisitInterval": [
+      "2026-10-03T21:48:19Z",
+      "2026-10-03T21:49:54.118Z"
+    ],
+    "administrativeRecoveryAndCleanupAllowanceMinutes": 4,
+    "waitingHadNoProviderRequests": true,
+    "normalClockAndResources": true
+  },
+  "designAssessment": {
+    "progress": "More legible: actual waiting/complete cards, source links, matching scene and one earned Hall record.",
+    "personality": "Generated court portraits and optional goose/background loops add recognizable flavour; actual event cue audibility was not independently heard by the model.",
+    "remaining": [
+      "Phone Kingdom is long; three empty Hall slots and detailed choice/catalog text crowd the opening.",
+      "Eight Luna provider requests produced one committed upgrade; the second-builder intention remained unfulfilled.",
+      "Empty discovery surfaces limit tension, relationship and spontaneous social play.",
+      "Captured email and version-specific Codex setup still need operator assistance."
+    ],
+    "enjoyment": "Mixed synthetic design assessment. No measured human attachment, successful independent social negotiation, all-events live listening or production certification."
+  },
+  "listening": {
+    "proof": "Founder: Sounds clean",
+    "sevenEffects": "Founder: Seems like clean, but needs meaning in the game.",
+    "contextAndMusic": "Founder: I think it should be okay. Tentative acceptance recorded."
+  }
+}

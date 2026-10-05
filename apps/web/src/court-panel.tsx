@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ReportControl } from "./moderation-panel.js";
 
 type Request = (path: string, method?: string, body?: unknown) => Promise<Record<string, unknown>>;
 type Summary = { id: string; handle: string; title: string; status: string };
@@ -9,7 +10,7 @@ type Page = {
   court?: Summary & { description: string; join_mode: string; version: number };
   roster?: Member[];
   nextOffset?: number | null;
-  pins?: { slot: number; body: string }[];
+  pins?: { id: string; slot: number; body: string }[];
   requests?: { kingdomId: string; handle: string }[];
   requestsNextOffset?: number | null;
   transfers?: { id: string; toKingdomId: string }[];
@@ -191,6 +192,7 @@ export function CourtPanel({
             {court.title} · @{court.handle}
           </h3>
           <p>{court.description}</p>
+          <ReportControl kind="court" targetId={court.id} />
           <p>
             {court.status} · {court.join_mode} · your role: {page.viewerRole ?? "not a member"}
           </p>
@@ -241,6 +243,7 @@ export function CourtPanel({
           {page.pins?.map((p) => (
             <div key={p.slot}>
               <p>{p.body}</p>
+              <ReportControl kind="pin" targetId={p.id} />
               {owner && active && (
                 <button
                   type="button"

@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-03",
+  "experience_issues": {
+    "PACT-123": {
+      "id": "10b42790-5856-4412-b7a4-1ffd8314b2b7",
+      "identifier": "MNI-217",
+      "url": "https://linear.app/mnim/issue/MNI-217/pact-123-make-the-existing-harvest-season-visible-through-scenery-and",
+      "status": "Todo"
+    },
+    "PACT-126": {
+      "id": "9aee1c4d-7a9b-4563-9904-96773c717a64",
+      "identifier": "MNI-220",
+      "url": "https://linear.app/mnim/issue/MNI-220/pact-126-replay-the-fresh-single-player-experience-and-assess",
+      "status": "Todo"
+    },
+    "PACT-125": {
+      "id": "58632701-2cc8-4068-aac3-f1d237a7212f",
+      "identifier": "MNI-219",
+      "url": "https://linear.app/mnim/issue/MNI-219/pact-125-package-all-generated-assets-and-document-reproducible",
+      "status": "Todo"
+    },
+    "PACT-124": {
+      "id": "871bfbfa-9e10-484a-8799-7ef26ea41741",
+      "identifier": "MNI-218",
+      "url": "https://linear.app/mnim/issue/MNI-218/pact-124-integrate-the-generated-experience-across-the-four-web",
+      "status": "Todo"
+    },
+    "PACT-119": {
+      "id": "079b1551-8dea-4d82-8e34-addc34bab166",
+      "identifier": "MNI-213",
+      "url": "https://linear.app/mnim/issue/MNI-213/pact-119-add-generated-in-app-notification-cards-and-truthful-comic",
+      "status": "Todo"
+    },
+    "PACT-114": {
+      "id": "2237952c-7e27-46c4-8460-1814ca08f8a8",
+      "identifier": "MNI-208",
+      "url": "https://linear.app/mnim/issue/MNI-208/pact-114-generate-and-integrate-an-evolving-illustrated-kingdom-and",
+      "status": "Todo"
+    },
+    "PACT-117": {
+      "id": "6e32aaf1-1648-466c-958a-8340a963e670",
+      "identifier": "MNI-211",
+      "url": "https://linear.app/mnim/issue/MNI-211/pact-117-generate-original-music-and-ambient-sound-loops",
+      "status": "Todo"
+    },
+    "PACT-116": {
+      "id": "38a055af-7661-4d21-8e02-76b481c7b191",
+      "identifier": "MNI-210",
+      "url": "https://linear.app/mnim/issue/MNI-210/pact-116-animate-real-milestones-and-optional-harmless-court",
+      "status": "Todo"
+    },
+    "PACT-122": {
+      "id": "b2a890c9-c8b3-420b-9665-bfd6b86d417f",
+      "identifier": "MNI-216",
+      "url": "https://linear.app/mnim/issue/MNI-216/pact-122-create-a-private-hall-scrapbook-of-real-accomplishments",
+      "status": "Todo"
+    },
+    "PACT-121": {
+      "id": "be35897f-08c6-40c9-8333-f51b5bc5b74b",
+      "identifier": "MNI-215",
+      "url": "https://linear.app/mnim/issue/MNI-215/pact-121-make-social-opportunities-and-response-expectations-honest",
+      "status": "Todo"
+    },
+    "PACT-120": {
+      "id": "bd23232b-c79c-4ca4-8af3-4bcf8202f47d",
+      "identifier": "MNI-214",
+      "url": "https://linear.app/mnim/issue/MNI-214/pact-120-add-opt-in-audio-controls-and-accessible-calm-and-reduced",
+      "status": "Todo"
+    },
+    "PACT-110": {
+      "id": "2aebbf66-86fd-4558-81e1-62b8f8b26a40",
+      "identifier": "MNI-204",
+      "url": "https://linear.app/mnim/issue/MNI-204/pact-110-prove-a-reproducible-generation-pipeline-for-all-original",
+      "status": "Todo"
+    },
+    "PACT-118": {
+      "id": "2939fe90-221d-4a46-8fc0-0e7fd0341ac1",
+      "identifier": "MNI-212",
+      "url": "https://linear.app/mnim/issue/MNI-212/pact-118-generate-original-event-effects-and-silly-synthesized-vocal",
+      "status": "Todo"
+    },
+    "PACT-115": {
+      "id": "33fa6c41-df8f-4e78-b4c1-c5dc85f1d5b9",
+      "identifier": "MNI-209",
+      "url": "https://linear.app/mnim/issue/MNI-209/pact-115-generate-the-original-silly-court-character-cast-and-reusable",
+      "status": "Todo"
+    },
+    "PACT-112": {
+      "id": "5b89df1a-91d8-49df-9781-38ed8d9c1b08",
+      "identifier": "MNI-207",
+      "url": "https://linear.app/mnim/issue/MNI-207/pact-112-make-the-first-session-and-waiting-periods-lead-to-meaningful",
+      "status": "Todo"
+    },
+    "PACT-113": {
+      "id": "14fff0c1-2494-4c8a-9846-55a2d4bda38a",
+      "identifier": "MNI-206",
+      "url": "https://linear.app/mnim/issue/MNI-206/pact-113-make-envoy-briefings-trustworthy-and-tied-to-the-players",
+      "status": "Todo"
+    },
+    "PACT-111": {
+      "id": "0b94349a-d6fb-4709-a687-9faa28722a0a",
+      "identifier": "MNI-205",
+      "url": "https://linear.app/mnim/issue/MNI-205/pact-111-give-players-a-personal-ambition-and-a-recognizable-kingdom",
+      "status": "Todo"
+    },
+    "PACT-109": {
+      "id": "336bac8b-6fd7-495a-ac90-c95f0d638422",
+      "identifier": "MNI-203",
+      "url": "https://linear.app/mnim/issue/MNI-203/pact-109-define-the-game-experience-brief-and-asset-production",
+      "status": "Todo"
+    }
+  },
+  "counts": {
+    "date": "2026-10-03",
+    "issues": 126,
+    "done": 80,
+    "todo": 18,
+    "in_progress": 0,
+    "backlog": 28,
+    "later": 28,
+    "note": "18 experience issues freshly read back as Todo in their own active milestone. Original 108 issues unchanged in prior full audit."
+  }
+}

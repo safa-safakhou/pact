@@ -1,0 +1,68 @@
+{
+  "ticket": "PACT-114",
+  "producer": "Original Codex-authored SVG; approved imagegen parchment export",
+  "regenerate": "python3 assets/experience/generate_scene.py",
+  "building_states": 9,
+  "texture": 1,
+  "banner": 1,
+  "texture_source": "assets/experience/proof/parchment.png",
+  "texture_source_sha256": "72635eec50e308aa835675fd701c9e9b72dc2152e5af32a7e47ebda57aadab76",
+  "texture_export": "Pillow12.3 PNG RGB resized256x256 LANCZOS; geometry/encoding export only, no creative edits",
+  "assets": [
+    {
+      "file": "scene/banner.svg",
+      "bytes": 334,
+      "sha256": "4657e4cc54ba40925d6e0c3fcb8abfc655acea6208ae4536817ef75a764102ef"
+    },
+    {
+      "file": "scene/barracks-1.svg",
+      "bytes": 668,
+      "sha256": "bedba59399caddff5d78cccb9250ed0ebbc1bb8ef882ad1586fb48ae28ad49e7"
+    },
+    {
+      "file": "scene/farm-1.svg",
+      "bytes": 499,
+      "sha256": "8e454dede0ce57d67721d20693e9b7bc680b2203ccaaa69de60babd5317ac831"
+    },
+    {
+      "file": "scene/farm-2.svg",
+      "bytes": 626,
+      "sha256": "a0872304b192a398e674bb34439c8013d22e869a013b3caa723947b460cce580"
+    },
+    {
+      "file": "scene/hall-1.svg",
+      "bytes": 623,
+      "sha256": "1ed6519f39b199ee7efeccde6d4b2633ce93b96e00686cee7c88111b66890683"
+    },
+    {
+      "file": "scene/market-1.svg",
+      "bytes": 551,
+      "sha256": "b3d25d50db00808a1fa8950697f84e389f8a10dd88e6fc271dbc72ca5ca2c9cc"
+    },
+    {
+      "file": "scene/mine-1.svg",
+      "bytes": 451,
+      "sha256": "e90f3a56e58e652c8d7c5dd2c2e21e9feb4f579122473bc95e71c89c107eec7d"
+    },
+    {
+      "file": "scene/mine-2.svg",
+      "bytes": 673,
+      "sha256": "f8ae2be7cd7b100377db07e2c4946921650d330a32c43baf1c92d30aace6cf17"
+    },
+    {
+      "file": "scene/parchment.png",
+      "bytes": 97230,
+      "sha256": "14bc40815c05213dac8e24b76122810d07745d2946e9baebc8cefd3e372b009b"
+    },
+    {
+      "file": "scene/storehouse-1.svg",
+      "bytes": 628,
+      "sha256": "658908af8b0b4bca3d622642e8b1ce10320230d45c4767bcf7230f72877bba58"
+    },
+    {
+      "file": "scene/wall-1.svg",
+      "bytes": 676,
+      "sha256": "9b997b718edaa7c643a843bd01b5ddde968f2aeaa2fb7621306458837a2a008e"
+    }
+  ]
+}

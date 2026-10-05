@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "specification": "../pact/README.md",
-  "status": "planned_not_implemented",
+  "status": "test_scope_complete_production_deferred",
   "tasks": [
     {
       "id": "PACT-001",
@@ -1079,7 +1079,9 @@
         "Hostname-root Apple and Android association files generated from the real signing identities"
       ],
       "block_reason": "Deferred by the Version 1.3 MVP decision until web and Telegram gameplay have been played and validated. The existing native shell and simulator evidence are retained; paid signing and physical-device certification resume during Season One release work.",
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-085",
@@ -2987,7 +2989,9 @@
       "components": [
         "Chronicle and public pages"
       ],
-      "evidence": ["26bcb62; docs/implementation/reports/chronicle.md and docs/architecture/chronicle.md. Build/typecheck/lint, 191 unit and 278 integration passed; one optional local-model skipped; 24 schema pins preserve the prior22. Linear MNI-124 Done, both Alpha checks checked, comment f7a5f6dd-8b97-4b11-b434-87e6c48bd7fb. Local only; original Later criteria unchecked."],
+      "evidence": [
+        "26bcb62; docs/implementation/reports/chronicle.md and docs/architecture/chronicle.md. Build/typecheck/lint, 191 unit and 278 integration passed; one optional local-model skipped; 24 schema pins preserve the prior22. Linear MNI-124 Done, both Alpha checks checked, comment f7a5f6dd-8b97-4b11-b434-87e6c48bd7fb. Local only; original Later criteria unchecked."
+      ],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
@@ -3019,7 +3023,7 @@
       "id": "PACT-060",
       "title": "Deliver opt-in critical email and Web Push",
       "phase": 2,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "M",
@@ -3049,11 +3053,18 @@
       "components": [
         "notification worker and preferences"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/social-channel-resume-20261004.md",
+        "docs/api/social-channels.md",
+        "docs/operations/social-channels.md",
+        "Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2",
+        "docs/implementation/reports/evidence/social-channel-linear-final-20261004.json"
+      ],
+      "assignee": "codex-social-channel",
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "assignment_date": "2026-10-04"
     },
     {
       "id": "PACT-061",
@@ -3198,7 +3209,7 @@
       "id": "PACT-063",
       "title": "Build reporting, moderation, and appeals tools",
       "phase": 2,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Backend",
       "size": "L",
@@ -3229,11 +3240,18 @@
         "reporting",
         "moderation console"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/social-channel-resume-20261004.md",
+        "docs/api/social-channels.md",
+        "docs/operations/social-channels.md",
+        "Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2",
+        "docs/implementation/reports/evidence/social-channel-linear-final-20261004.json"
+      ],
+      "assignee": "codex-social-channel",
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "assignment_date": "2026-10-04"
     },
     {
       "id": "PACT-064",
@@ -3277,7 +3295,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-065",
@@ -3317,7 +3337,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-087",
@@ -3361,13 +3383,15 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-088",
       "title": "Deliver the complete Telegram Mini App",
       "phase": 2,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "M",
@@ -3397,17 +3421,24 @@
         "Telegram web shell",
         "shared DOM features"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/social-channel-resume-20261004.md",
+        "docs/api/social-channels.md",
+        "docs/operations/social-channels.md",
+        "Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2",
+        "docs/implementation/reports/evidence/social-channel-linear-final-20261004.json"
+      ],
+      "assignee": "codex-social-channel",
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "assignment_date": "2026-10-04"
     },
     {
       "id": "PACT-089",
       "title": "Implement private-chat bot briefings and explicit run controls",
       "phase": 2,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Integrations",
       "size": "M",
@@ -3439,11 +3470,18 @@
         "Telegram bot commands",
         "explicit start confirmation"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/social-channel-resume-20261004.md",
+        "docs/api/social-channels.md",
+        "docs/operations/social-channels.md",
+        "Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2",
+        "docs/implementation/reports/evidence/social-channel-linear-final-20261004.json"
+      ],
+      "assignee": "codex-social-channel",
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "assignment_date": "2026-10-04"
     },
     {
       "id": "PACT-090",
@@ -3486,7 +3524,9 @@
         "APNs and Firebase credentials; test-device push entitlement"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-091",
@@ -3530,7 +3570,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-092",
@@ -3573,7 +3615,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-066",
@@ -3630,7 +3674,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-067",
@@ -3673,7 +3719,9 @@
         "50 consenting adult players and staffed support"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-068",
@@ -3734,7 +3782,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-069",
@@ -3766,7 +3816,9 @@
       "components": [
         "season lifecycle and newcomer cohorts"
       ],
-      "evidence": ["1 October 2026: f0763b7 completes both Alpha checks; MNI-140 read back Done. Paused six-week production, pre-boundary closure/new baseline, exact-age newcomer snapshots, shared API/MCP/agent/web views, no asset/term reset. Node 24 build/typecheck/lint; 202 unit and 281 PostgreSQL integration pass, one existing skip; final targeted regressions 10 pass. See docs/implementation/reports/season-lifecycle.md. Local only; hosted remains 2143d92."],
+      "evidence": [
+        "1 October 2026: f0763b7 completes both Alpha checks; MNI-140 read back Done. Paused six-week production, pre-boundary closure/new baseline, exact-age newcomer snapshots, shared API/MCP/agent/web views, no asset/term reset. Node 24 build/typecheck/lint; 202 unit and 281 PostgreSQL integration pass, one existing skip; final targeted regressions 10 pass. See docs/implementation/reports/season-lifecycle.md. Local only; hosted remains 2143d92."
+      ],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
@@ -3821,7 +3873,9 @@
       "components": [
         "award calculation and review"
       ],
-      "evidence": ["1 October 2026: 94f9573 completes both Alpha checks; MNI-141 read back Done. Exact BigInt thresholds/ties, highest Hall bands, three meaningful UTC days proved from actual completed actions, real arrival/season cosmetics with no economic effect, and shared provisional-only closing results. Node 24 build/typecheck/lint; 205 unit and 282 PostgreSQL integration pass, one existing skip; final targeted 6 unit/web and 4 integration pass. Planning/diff pass. See docs/implementation/reports/season-honors.md and docs/architecture/seasons.md. No final competitive rewards, hosted deployment, paid provider or player-enjoyment claim; 28 Later unchanged."],
+      "evidence": [
+        "1 October 2026: 94f9573 completes both Alpha checks; MNI-141 read back Done. Exact BigInt thresholds/ties, highest Hall bands, three meaningful UTC days proved from actual completed actions, real arrival/season cosmetics with no economic effect, and shared provisional-only closing results. Node 24 build/typecheck/lint; 205 unit and 282 PostgreSQL integration pass, one existing skip; final targeted 6 unit/web and 4 integration pass. Planning/diff pass. See docs/implementation/reports/season-honors.md and docs/architecture/seasons.md. No final competitive rewards, hosted deployment, paid provider or player-enjoyment claim; 28 Later unchanged."
+      ],
       "assignee": "Codex / Mohammad Safakhou",
       "blocked_by_external": [],
       "block_reason": null,
@@ -3882,7 +3936,9 @@
         "Approved/licensed visual assets or art production capacity"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-072",
@@ -3921,7 +3977,9 @@
         "Approved/licensed audio assets or audio production capacity"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-073",
@@ -4025,7 +4083,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-075",
@@ -4069,7 +4129,9 @@
         "Merchant/processor account, product prices, legal payment-record schedule"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-076",
@@ -4108,7 +4170,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-077",
@@ -4149,7 +4213,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-093",
@@ -4194,7 +4260,9 @@
         "Apple/Google developer and merchant accounts; sandbox products and test users"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-094",
@@ -4240,7 +4308,9 @@
         "Telegram bot with Stars test and production payment capability"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-078",
@@ -4285,7 +4355,9 @@
         "Production access to the project VPS, domain/DNS, encrypted off-host backup target, SMTP credentials, and operator coverage"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-079",
@@ -4329,7 +4401,9 @@
         "Eligible release host accounts and any required distribution approvals"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-095",
@@ -4379,7 +4453,9 @@
         "Apple/Google distribution approvals; production Telegram bot/domain configuration"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-097",
@@ -4422,7 +4498,9 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-099",
@@ -4611,7 +4689,9 @@
         "Actual operator identity, public legal contacts, reviewed notices, and processor agreements"
       ],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
     },
     {
       "id": "PACT-081",
@@ -4672,7 +4752,2080 @@
       "assignee": null,
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "later"
+      "delivery_track": "later",
+      "deferral_date": "2026-10-04",
+      "deferral_reason": "Founder postponed to a later phase; not mandatory for friends-only playable/fun testing."
+    },
+    {
+      "id": "PACT-100",
+      "title": "Fix exact approval links under the hosted PACT path",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099"
+      ],
+      "sources": [
+        "alpha",
+        "access",
+        "runtime"
+      ],
+      "covers": [
+        "G02",
+        "G03"
+      ],
+      "components": [
+        "approvals",
+        "MCP transport",
+        "web exact approval routing"
+      ],
+      "scope": [
+        "Generate one canonical configured approval URL for MCP proposal/status and web handoff; support /pact deployment and root deployment through shared link construction.",
+        "Preserve authenticated human preview and exact one-use approval/rejection; update the MCP/API guide and add a focused completion report."
+      ],
+      "acceptance": [
+        "Proposal and status tools return a link that opens PACT exact review and preselects the correct approval ID under /pact; it never opens the other hosted application.",
+        "Root-path deployment also works; logged-out owners can authenticate and return to the intended review without approving automatically.",
+        "Approve/reject uses existing exact-command handlers; an agent, wrong owner, expired request or repeated decision cannot gain authority or duplicate effects.",
+        "Meaningful route/authorization checks and a synthetic hosted click-through are recorded separately from local tests."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-initial-20261002.json"
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "Both live approval links opened Join Agentic World; /pact/?approval=<id> worked."
+    },
+    {
+      "id": "PACT-101",
+      "title": "Make private Alpha signup and Codex connection setup actionable",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099"
+      ],
+      "sources": [
+        "alpha",
+        "access",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "G02",
+        "G04"
+      ],
+      "components": [
+        "web signup and Envoy connection entry",
+        "OAuth connection status",
+        "Alpha setup runbooks"
+      ],
+      "scope": [
+        "Present a clear external-Codex setup route with exact canonical resource, copyable commands, tested client version and useful unsupported-client/OAuth recovery feedback.",
+        "Show the authenticated external PACT connection independently of an optional saved in-app provider credential; never display or request tokens/passwords in chats.",
+        "State the current private captured-email limitation at signup and provide an explicit secure operator-to-owner verification handoff/runbook. Real outbound email remains PACT-078/060 Later; do not bypass email verification or introduce paid infrastructure.",
+        "Update alpha-start/codex-playtest guides and document recent-authentication recovery for authority changes."
+      ],
+      "acceptance": [
+        "A fresh synthetic owner can follow the published private signup/verification steps without guessing where the token comes from; captured email is labeled operator-assisted rather than delivered internet email.",
+        "The tested Codex route completes sign-in, DCR/PKCE consent, own-account read and permitted write without conflicting OAuth resources; unsupported client versions receive actionable instructions.",
+        "External connection account/status and revoke/reconnect instructions are visible without falsely requiring an in-app model API credential.",
+        "Credentials remain separate and secret; no verification bypass, public Mailpit exposure, unauthenticated token retrieval or automatic inference occurs.",
+        "Actual tested versions and interventions are recorded; unavailable client/SMTP routes are not certified or marked successful."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-initial-20261002.json"
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "Mailpit required operator intervention; CLI 0.144.4 failed DCR/resource handling while 0.159.0-alpha.12.1 worked; external setup was buried."
+    },
+    {
+      "id": "PACT-102",
+      "title": "Make current kingdom reads and validation errors reliable for small agents",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Integrations",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099"
+      ],
+      "sources": [
+        "alpha",
+        "access",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "G02",
+        "G03"
+      ],
+      "components": [
+        "shared read contracts",
+        "MCP tools",
+        "in-app tool registry",
+        "authorized world projections"
+      ],
+      "scope": [
+        "Provide an identity-derived own-kingdom read or equally discoverable unambiguous self-read shape while preserving targetKingdomId for authorized other-player projections.",
+        "Return bounded field-level validation/help for malformed world reads and invalid forecasts; teach the valid argument shape in tool descriptions and recovery lessons.",
+        "Distinguish deterministic precommit rejection/no receipt from uncertain committed-command recovery; share semantics across MCP and in-app adapters."
+      ],
+      "acceptance": [
+        "A fresh Luna agent reads its own current buildings/builders/resources from an ordinary status objective without supplied UUIDs or mechanical coaching.",
+        "Malformed field names, absent required target and invalid forecast horizons identify the correction without returning private data or unsafe input text.",
+        "Owner/contact/public projections retain authorization boundaries; caller-supplied ownership cannot change authenticated identity.",
+        "Deterministic failed commands explain when no receipt exists; uncertain committed responses recover by the same command ID without duplicates.",
+        "Focused contract/behavior checks cover valid reads, bad inputs, absent kingdoms and unauthorized views; live model results are documented independently."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-initial-20261002.json"
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "14 of 16 world-read calls failed with generic INVALID_REQUEST; owner HTTP projections remained readable."
+    },
+    {
+      "id": "PACT-103",
+      "title": "Clarify founding resources, affordability and trade authority for agents",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Gameplay",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099"
+      ],
+      "sources": [
+        "alpha",
+        "rules",
+        "runtime",
+        "access"
+      ],
+      "covers": [
+        "G02",
+        "G03"
+      ],
+      "components": [
+        "agent start guide and versioned lessons",
+        "authority resource projections",
+        "game error explanations",
+        "Codex playtest docs"
+      ],
+      "scope": [
+        "Explain ordinary versus restricted founding resources in whole units, eligible construction/training/food uses, reserve-floor inputs and actual current action affordability.",
+        "Give actionable stock shortfall or game-time waiting information without changing economy values, costs, reserve floors or authority limits.",
+        "Teach contact-request races/incoming human-only acceptance, proposal versus signature versus active contract, and when exact human review is genuinely required.",
+        "Resolve the documentation contradiction about unsigned supply proposals versus supply.sign authority by checking the owning specs and implementation. A substantive conflict requires an explicit documented correction and affected fixtures, not silent authority expansion."
+      ],
+      "acceptance": [
+        "Fresh-state fixtures show construction can use eligible founding allowances while cold contacts/transfers cannot spend restricted stock.",
+        "The guide explains food-reserve calculations and ordinary/marked units accurately; small-model checks do not mistake construction allowance for transferable stock.",
+        "Failure feedback identifies actual shortage/prerequisite and next legal step; it does not advise changing mandates or requesting approval for every permitted move.",
+        "Incoming contact requests remain human-only and duplicate/opposing requests produce useful recovery rather than redundant approval.",
+        "Supply-offer creation, signing authority and activation semantics agree across specs, guides and operator instructions; signing still reserves authorized exposure transactionally.",
+        "Context/usage changes are measured against the recorded playtest, with no unsupported dollar-savings or enjoyment claim."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-initial-20261002.json"
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "Two players skipped affordable founding construction; unnecessary approvals and reserve misunderstandings occurred; docs incorrectly said unsigned offer creation was forbidden."
+    },
+    {
+      "id": "PACT-104",
+      "title": "Expose completed builds and actual trade deliveries to owners and agents",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Backend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-102"
+      ],
+      "sources": [
+        "alpha",
+        "rules",
+        "runtime",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "G03",
+        "G04"
+      ],
+      "components": [
+        "authorized consequence projections",
+        "Kingdom People Chronicle views",
+        "agent guide and reports"
+      ],
+      "scope": [
+        "Expose current build completion, counterparty signatures, contract status and delivered/failed/overflow installment totals through shared authorized module interfaces.",
+        "Show readable named events and links in People/Chronicle and relevant agent views; distinguish original commit receipts from current consequences.",
+        "Implement explicit privacy, retention and export treatment for any newly persisted view data; prefer existing authoritative records over redundant state."
+      ],
+      "acceptance": [
+        "A normal owner and their agent can verify a completed Farm II and a signed active contract without database access.",
+        "Actual minute deliveries show amount/resource/counterparty/as-of game time and pending/default/overflow status; an unsigned offer or committed message never appears as delivered trade.",
+        "People/Chronicle first-session hints lead to visible relevant evidence; a completed build/contact/trade does not leave an empty misleading history.",
+        "Other players cannot read private stocks, signatures/messages/installments beyond the specified view; reusable platform packages do not import PACT domain types.",
+        "Replay and settlement checks preserve exact arithmetic, no duplicate totals, and consistent web/MCP facts; no model/network calls run inside transactions."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-consequences-20261002.json"
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "Trade deliveries could only be verified in DB; People showed rates/status but no installments, and Flint Chronicle said No records yet despite completed buildings."
+    },
+    {
+      "id": "PACT-105",
+      "title": "Keep external-agent activity ordered, refreshed and reconciled with current state",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-100",
+        "PACT-104"
+      ],
+      "sources": [
+        "alpha",
+        "runtime",
+        "product",
+        "privacy"
+      ],
+      "covers": [
+        "G03",
+        "G04"
+      ],
+      "components": [
+        "external activity query/report formatting",
+        "Envoy activity refresh",
+        "live consequence links"
+      ],
+      "scope": [
+        "Sort by numeric sequence/time, preserve factual historical tool outcomes, and attach current approval/contact/build/contract status with a clear next human decision.",
+        "Refresh recorded activity while the owner views it through bounded polling or an existing event mechanism; reading/refreshing must never initiate inference.",
+        "Use named actions, ordinary-unit costs, current result/as-of time and supporting receipts instead of bare UUID/status dumps; handle disconnected/stale/error states honestly."
+      ],
+      "acceptance": [
+        "IDs spanning 9/10/99/100 remain in chronological order, with stable pagination/deduplication.",
+        "New external moves appear without a manual refresh while the screen is active; background/network behavior is bounded and cleaned up on unmount.",
+        "Accepted contacts, approved/rejected requests and completed builds no longer display unresolved next steps; historical outcomes are retained and labeled.",
+        "Unknown/offline current status is labeled stale rather than inferred; receipt/proposal/commit/completion meanings remain separate.",
+        "No hidden reasoning, credentials or other-player private content is stored or displayed, and no refresh starts a model."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-activity-20261002.json",
+        "Build/type/lint passed; 221 unit, 287 integration (1 skipped); hosted polling/offline/reconnect/current approval/contact/build/trade passed."
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "All three views required manual refresh; old approval/contact prompts remained unresolved; textual sorting placed ID 9 after ID 36."
+    },
+    {
+      "id": "PACT-106",
+      "title": "Show remaining game time for builds and contracts",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099"
+      ],
+      "sources": [
+        "alpha",
+        "rules",
+        "product"
+      ],
+      "covers": [
+        "G03",
+        "G04"
+      ],
+      "components": [
+        "shared web game-clock display",
+        "builder contract scout and raid deadlines"
+      ],
+      "scope": [
+        "Render remaining committed game time and active/paused/stale clock status for deadlines; label any absolute timestamp as game time.",
+        "Use explicit projection clock inputs, not assumptions that wall clock and game clock coincide; update player documentation."
+      ],
+      "acceptance": [
+        "A new one-hour contract still shows about one game hour remaining when the world is an hour behind wall time; it does not imply expiry in two wall minutes.",
+        "Build, contract, scout and raid timing uses consistent labeling/remaining-game-time behavior across time zones and pause/resume.",
+        "Offline/stale projections do not promise real-time completion; display refresh never mutates or advances the world.",
+        "Meaningful offset/paused/boundary display checks and desktop/phone observations are recorded."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-timing-20261002.json",
+        "npm test: 221 passed; npm run test:integration: 287 passed, 1 skipped; hosted desktop/390px phone 59m game time remaining despite wall offset; local paused/boundary checks passed."
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "At 14:22 UTC a new one-hour contract showed Ends 4:24 PM Berlin by formatting its game timestamp as wall-clock date."
+    },
+    {
+      "id": "PACT-107",
+      "title": "Put connection, progress and next decisions first on desktop and phone",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-101",
+        "PACT-105",
+        "PACT-106"
+      ],
+      "sources": [
+        "alpha",
+        "product",
+        "architecture"
+      ],
+      "covers": [
+        "G02",
+        "G04"
+      ],
+      "components": [
+        "web Envoy information order",
+        "People discovery/contact entry",
+        "first-session navigation"
+      ],
+      "scope": [
+        "Surface current Codex connection, objective/last meaningful result, pending human decisions and next action before optional provider or advanced social controls.",
+        "Put basic contacts/real opportunities/negotiation ahead of Courts/articles/allegiance for a fresh player without deleting those Alpha features.",
+        "Preserve keyboard/focus/accessibility and clear separation of game facts from player/model claims; replace technical receipt JSON notices with readable outcomes and evidence access."
+      ],
+      "acceptance": [
+        "At 390px viewport a fresh owner can locate connection and current progress/decision without scrolling through unrelated provider and raw activity forms.",
+        "Desktop/phone keep all authorized functionality, no horizontal overflow, usable focus order and keyboard activation of the primary journey.",
+        "A pending human review links to its exact request and a completed decision produces readable status, not a persistent full receipt JSON dump.",
+        "A disconnected/external-only account is clearly distinguished from an optional missing in-app model credential.",
+        "Screen observations verify actual sequence and distances; physical-device usability is not claimed from viewport emulation."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-playtest-fixes.md",
+        "docs/implementation/reports/evidence/alpha-followup-layout-final-20261002.json",
+        "docs/implementation/reports/evidence/alpha-followup-layout-20261002.json",
+        "alpha-20261002-5 public deployment verification passed; keyboard/390px/1280px/no overflow/current connection/real exact rejection verified. Build/types/lint; 221 unit and 288 integration passed (1 skipped)."
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "Phone Envoy was 6437px high; activity began around 2601px and Codex instructions 5082px down; People led with advanced society forms."
+    },
+    {
+      "id": "PACT-108",
+      "title": "Repeat the fresh three-player journey and document remaining friction",
+      "phase": 3,
+      "status": "done",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-100",
+        "PACT-101",
+        "PACT-102",
+        "PACT-103",
+        "PACT-104",
+        "PACT-105",
+        "PACT-106",
+        "PACT-107"
+      ],
+      "sources": [
+        "alpha",
+        "delivery",
+        "access",
+        "runtime",
+        "product"
+      ],
+      "covers": [
+        "G02",
+        "G03",
+        "G04",
+        "G06"
+      ],
+      "components": [
+        "fresh-player test harness",
+        "hosted synthetic journey evidence",
+        "Alpha handoff and completion reports"
+      ],
+      "scope": [
+        "Re-run three fresh independently authenticated Luna players from ordinary objectives with normal resources/game clock, no supplied IDs/rules/action JSON or hidden mechanical coaching.",
+        "Exercise documented private verification, supported OAuth route, first improvement, discovery/human contact acceptance, exact approval, negotiation, signature and observable delivery/completion.",
+        "Record all setup assistance, model usage, failures and outcome disagreements; fix/retest acceptance failures before claiming this follow-up checkpoint complete.",
+        "Use the existing VPS only when a later implementation assignment covers deployment; never contact real testers or expand provider spending automatically."
+      ],
+      "acceptance": [
+        "Every PACT-100–107 dependency is Done with per-ticket evidence before this retest is claimed.",
+        "Three account identities remain separate; real player discovery, authorized actions, human-only decisions and at least one contract with actual delivery are verified through normal owner/agent views.",
+        "Models and owner screens agree on finished work and pending obligations; wrong reports/failed routes remain explicitly recorded and resolved or reported as blockers.",
+        "Phone viewport/keyboard/approval links and disconnect/reconnect/revocation checks use dated real observations; no full production/provider/physical-device certification is inferred.",
+        "Temporary grants/sessions and own local credentials are cleaned up while preserving reviewable synthetic gameplay records.",
+        "A durable report names hosted revision, tested client/model, commands/results, token usage, assistance and limits. Real human enjoyment and Later pilot/SMTP work remain unproven unless separately observed."
+      ],
+      "evidence": [
+        "docs/implementation/reports/alpha-three-player-retest-20261002.md",
+        "docs/implementation/reports/evidence/alpha-three-player-retest-20261002.json",
+        "docs/implementation/reports/alpha-playtest-fixes.md"
+      ],
+      "assignee": "Mohammad Safakhou / Codex",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "alpha_followup",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/fresh-three-player-playtest-20261002.md"
+      ],
+      "finding": "Original playtest succeeded with assistance and DB interpretation; after fixes the same consequences must be understandable through the supported player surfaces."
+    },
+    {
+      "id": "PACT-109",
+      "title": "Freeze the small web-experience scope and asset list",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Design",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G01",
+        "G06"
+      ],
+      "components": [
+        "Design",
+        "generated game experience"
+      ],
+      "scope": [
+        "Write one brief with the existing five palette colours, four character silhouettes, the exact asset counts in PACT-114–119, and one table linking each cue to an existing authorized event.",
+        "Record presentation scope correction and affected-specification review before implementation. Preserve the economy, human decisions, receipts and the 28 Later tasks."
+      ],
+      "acceptance": [
+        "Brief contains an inventory with filename/format/producer/event/owner/privacy/fallback for every bounded asset; no 'and more' deliverable or extra channel is included.",
+        "Every asset is Codex-generated through image generation, authored SVG/CSS or procedural WAV; no founder files, recording, new account or paid service is a prerequisite.",
+        "Affected specification/ticket review is recorded, with any necessary source changes explicitly versioned; historical acceptance evidence remains tied to its original revision."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/pact/experience.md",
+        "docs/implementation/experience-inventory.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Define the game-experience brief and asset production contract",
+        "size": "M",
+        "scope": [
+          "Document the founder-prioritized experience batch and its presentation-only scope correction before implementation; reconcile product/Alpha ownership and review affected source snapshots explicitly.",
+          "Turn the warm, shabby medieval court proposal into a style sheet, event matrix, asset inventory and quality targets; cover Sir Honk, Pebble, Moth and Professor Bean.",
+          "Record overlap with postponed PACT-071/072/074 without claiming or activating them; this batch is web experience, not the full production cosmetics/channel release."
+        ],
+        "acceptance": [
+          "A versioned brief names art palette, character silhouettes, event truth rules, generated deliverables, reduced-motion/silent equivalents and completion evidence.",
+          "Every design, texture, character, animation, music cue, effect, vocal gag, notification icon and text has a Codex-owned production route; no founder uploads, recordings, accounts or purchases are assumed.",
+          "Economy, authority, private/public views, original Alpha history and all 28 Later records remain intact; any specification correction includes affected-ticket review rather than hash-only refresh."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-110",
+      "title": "Prove image, motion and audio generation with four samples",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Assets",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-109"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G06"
+      ],
+      "components": [
+        "Assets",
+        "generated game experience"
+      ],
+      "scope": [
+        "Produce exactly four disposable proof samples: one transparent character image, one parchment texture, one 200 ms SVG/CSS transition and one two-second procedural WAV.",
+        "Save a small manifest and generation instructions; production tickets own their final asset exports. Use one shared manifest format, not a generator platform."
+      ],
+      "acceptance": [
+        "All four samples are actually generated and previewed; the WAV is auditioned, finite and unclipped, and dimensions/duration are recorded.",
+        "Scripted outputs reproduce from saved code/seed; image prompt/reference/output are preserved without promising identical new model generations.",
+        "Missing image tooling is reported explicitly rather than counted as proven. Optional TTS/video/music services and encoding tools are not prerequisites."
+      ],
+      "evidence": [
+        "assets/experience/proof/manifest.json",
+        "docs/implementation/reports/evidence/experience-proof.png",
+        "docs/implementation/reports/game-experience-implementation.md"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Prove a reproducible generation pipeline for all original assets",
+        "size": "M",
+        "scope": [
+          "Use the callable image generation tool for raster designs/pose references and assistant-authored SVG/CSS/sprite animation for motion; inspect references and iterate for a consistent character.",
+          "Use Python standard-library DSP/wave generation for original effects, synthesized vocal gags and composed music. Node/audio encoding tools are optional optimizations only after availability is verified.",
+          "Create a versioned asset manifest with source prompts or scripts, approved references, seeds where available, hashes, formats, dimensions/duration, gain and game-event mapping; keep secrets out of it."
+        ],
+        "acceptance": [
+          "Generate and preview a real small character image, a texture, a looping animation and original WAV sound/music samples through documented accessible routes without asking the founder for production assets.",
+          "Rerunning scripted SVG/motion/audio generation reproduces outputs; raster sources/results are preserved and new model generation is not falsely called bit-reproducible.",
+          "Missing optional TTS/video/music services do not block delivery: use captions, procedural honks and code-built motion; do not install paid services or claim an unavailable generator works.",
+          "Visual alignment/loop continuity and audio clipping/duration checks plus actual preview evidence are recorded; iteration is required for defects, no promise of automatic perfection."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-109"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-111",
+      "title": "Persist one private ambition choice for the human and Envoy",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-109"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G01",
+        "G04"
+      ],
+      "components": [
+        "Web",
+        "generated game experience"
+      ],
+      "scope": [
+        "Add one owner-only optional ambition: farmer, trader or defender, with neutral default and one-sentence descriptions. Persist through the existing identity/domain boundary and expose the same enum to owner HTTP/MCP context.",
+        "Show the choice and an explicit human edit control on Kingdom; each ambition changes guidance only. Reuse the existing kingdom name and banner rather than adding motto, publication or banner-customizer features."
+      ],
+      "acceptance": [
+        "All three choices and neutral default round-trip through owner reads, survive reload/reconnect and can only be changed by the authenticated human; another owner or agent cannot edit.",
+        "The selected ambition appears in Envoy context; human editing does not start a run or change game permissions, resource costs or production.",
+        "Missing/deleted ambition uses neutral guidance; no public projection reveals it and existing account export/deletion covers the new field."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/api/kingdom-experience.md",
+        "tests/integration/kingdom-ambition.test.ts"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Give players a personal ambition and a recognizable kingdom identity",
+        "size": "M",
+        "scope": [
+          "Let the human choose or write a peaceful farmer/trader/defender ambition, motto and decorative banner direction with no classes, stat bonuses or purchased advantage.",
+          "Keep the chosen ambition visible in Kingdom and factual Envoy context; preserve explicit player-started runs and normal mandate boundaries.",
+          "Explain the existing second-builder Mine/Market/Wall tradeoffs against the ambition after common Farm II."
+        ],
+        "acceptance": [
+          "The selected ambition persists across normal return/reconnect and can be changed deliberately by the owner; clients/MCP reflect it through shared authorized contracts.",
+          "Choices show actual cost, duration and effect and never create resources, extra actions or implicit inference.",
+          "Public identity decoration reveals no private buildings, stocks or troops; any new published motto needs explicit owner disclosure."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-109"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-112",
+      "title": "Show one truthful next-decision card throughout the first session",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-111",
+        "PACT-113"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G01",
+        "G04"
+      ],
+      "components": [
+        "Web",
+        "generated game experience"
+      ],
+      "scope": [
+        "Use one deterministic card with priority: required human approval, failed action needing attention, pending recipient response, active build, available next choice. Keep source-record links.",
+        "Explain Farm II before/after and Mine/Market/Wall second-builder tradeoffs using existing catalog and snapshot facts. During waits link existing notices or allow leaving with a return expectation."
+      ],
+      "acceptance": [
+        "Fixtures cover unfounded, affordable/unaffordable Farm II, queued/active/completed/paused/stale build, outgoing pending/accepted/declined contact and expired approval; the card selects the documented priority.",
+        "Construction allowance is labeled separately from ordinary Silver; costs and durations come from canonical facts and no balance/rule is changed.",
+        "Sending a request changes guidance to waiting for its recipient. Countdown expiry or a historical success cannot imply a completed build or received response."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Make the first session and waiting periods lead to meaningful choices",
+        "size": "M",
+        "scope": [
+          "Present one achievable first-session goal, Farm II before/after benefit and a useful second-builder choice.",
+          "During waits offer real notice reading, public introduction, existing invitation routes or a clear stopping/return expectation.",
+          "Reconcile next-decision cards with actual pending builds, pending recipient contact acceptance, human approvals, failures and completions."
+        ],
+        "acceptance": [
+          "The Mosslight first-session replay clearly distinguishes construction allowance from ordinary Silver before a failed contact attempt; no free stock or pricing change is introduced.",
+          "After sending a contact request the main guidance recognizes the pending recipient decision instead of repeating meet-a-player instructions.",
+          "Completion cards use exact snapshot-derived effects with gross production versus upkeep/net/forecast labels; paused/stale/unknown timing stays honest."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-111",
+          "PACT-113"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-113",
+      "title": "Correct rate units and show a factual Envoy result summary",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Agent",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-109",
+        "PACT-111"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "rules",
+        "experience"
+      ],
+      "covers": [
+        "G02",
+        "G03"
+      ],
+      "components": [
+        "Agent",
+        "generated game experience"
+      ],
+      "scope": [
+        "Create a deterministic summary of latest recorded result, current pending decision, selected ambition and next permitted step using existing authorized records. Keep free-form agent interpretation separately labeled.",
+        "Use one shared formatting path for whole-unit costs, gross production, upkeep, net rate and forecasts in web/HTTP/MCP. Preserve the existing bounded run and approval contracts."
+      ],
+      "acceptance": [
+        "A fixed fixture renders Grain 0.75/min = 45/hour, distinguishes ending stock from net increase and labels forecast assumptions; all three routes agree.",
+        "Fixtures for committed/proposed/failed/waiting/approval-needed/unknown results link actual receipts and distinguish agent supply.sign authority from human-only decisions.",
+        "One bounded cheap-model run of at most eight provider requests records the model and any disagreement. Deterministic facts remain correct even when model prose is wrong; no event-triggered inference is added."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-luna-comprehension.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 2,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Make Envoy briefings trustworthy and tied to the player's ongoing goal",
+        "size": "M",
+        "scope": [
+          "Foreground what changed, why it matters to the chosen ambition, what remains pending and the next permitted choices; retain source references separately.",
+          "Supply canonical whole-unit rate/cost formatting and current mandate/signature ownership in shared HTTP/MCP/in-app views, preventing 45-per-minute versus 45-per-hour confusion.",
+          "Keep deterministic fact text separate from optional model or character interpretation; do not use extra inference to narrate every browser read or event."
+        ],
+        "acceptance": [
+          "Mosslight fixtures report Grain 0.75/min =45/hour, distinguish ending stock from net increase and show authorized agent supply.sign separately from human-only decisions.",
+          "Recorded committed/failed historical entries cannot invent current completion, counterpart replies or failure classifications; a small Luna route is checked with actual observed disagreements retained.",
+          "Existing authorization, privacy, schema/version policy and bounded-run behavior remain enforced; quantity facts are usable without trusting free-form model prose."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-109"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-114",
+      "title": "Generate a small kingdom scene with two visible upgrade changes",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Art/Web",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-110"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G01",
+        "G04"
+      ],
+      "components": [
+        "Art/Web",
+        "generated game experience"
+      ],
+      "scope": [
+        "Generate seven static building silhouettes in one owner-only scene, plus alternate Farm II and Mine II artwork: nine building states total. Include one parchment texture and one cloth banner; no Hall II/IV/VI evolution pack or new scene editor.",
+        "Integrate these into Kingdom using authoritative levels and one reusable static scaffold overlay for an active build. Preserve readable native resource values and controls."
+      ],
+      "acceptance": [
+        "Manifest contains exactly nine building states, one texture and one banner, with approved originals/export hashes and generation sources.",
+        "Farm II and Mine II visibly change only after committed completion; scaffolding appears for active work and disappears on completion/cancel. Unknown higher levels retain text labels without fabricated variant art.",
+        "At 390 and 1440 CSS px the scene fits without hiding controls; art failure retains text, reduced motion is static, and public projections/URLs do not expose private state."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Generate and integrate an evolving illustrated kingdom and textures",
+        "size": "L",
+        "scope": [
+          "Generate original parchment, wood, cloth and copper textures plus a small settlement with all seven recognizable buildings and Hall II/IV/VI silhouettes.",
+          "Show owned Farm/Mine upgrades, scaffolding, builder activity and persistent completed changes through the authoritative owner snapshot.",
+          "Provide responsive scene composition and decorative banners while keeping controls/values/contracts in readable native text."
+        ],
+        "acceptance": [
+          "Final generated originals, chosen variants, export files and manifest entries are saved; no external stock pack or founder asset is required.",
+          "Farm II and Mine II create visible distinct scene changes; future/current levels and paused/stale states cannot fabricate completed production.",
+          "Phone/desktop layouts, contrast, keyboard access, reduced motion and image load fallback are checked; public portraits do not expose private owner progression."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-110"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-115",
+      "title": "Generate four court characters with three poses each",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Art",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-110"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Art",
+        "generated game experience"
+      ],
+      "scope": [
+        "Generate Sir Honk, Pebble, Moth and Professor Bean, each with idle, pleased and concerned poses: exactly twelve exports, maximum 256×256 pixels each. Use the approved palette and character references.",
+        "Write sixteen original flavour lines, four per character, each at most 80 characters. Keep factual status outside the joke; no dialogue generation, conversation engine or comedy-mode library."
+      ],
+      "acceptance": [
+        "All twelve exports and sixteen lines are present, inspected for consistent silhouettes, transparency, scale and readable fallback, and listed in the manifest.",
+        "Characters only present existing facts; they cannot negotiate, sign, create contacts or act as counterparties.",
+        "Flavour may be disabled without losing status text. No further poses, cast members or joke variants are required for this ticket."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Generate the original silly court character cast and reusable poses",
+        "size": "M",
+        "scope": [
+          "Generate Sir Honk the Grain auditor, Pebble the stone foreman, Moth the courier and Professor Bean the abacus wizard with consistent original silhouettes/palette.",
+          "Deliver idle, pleased, suspicious/waiting and panic/victory key poses as appropriate, transparent exports and expression/motion references.",
+          "Write a reusable original dry/chaotic joke library, keeping clear factual status alongside flavour."
+        ],
+        "acceptance": [
+          "All four characters and required poses are generated, visually reviewed for consistency/edges/scale and saved with source prompts/scripts and manifest hashes.",
+          "Characters are cosmetic presenters, not autonomous game actors, extra Envoys, agents that sign or an NPC counterparty population.",
+          "Calm/dry/chaotic presentation choices preserve the same facts and accessible text; missing art has a readable fallback."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-110"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-116",
+      "title": "Add three short milestone animations and one optional goose gag",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web/Motion",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-112",
+        "PACT-114",
+        "PACT-115",
+        "PACT-120"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Web/Motion",
+        "generated game experience"
+      ],
+      "scope": [
+        "Author three 150–250 ms reveals for confirmed build completion, accepted contact and first actual trade delivery. Add one optional clickable goose honk pose lasting at most one second; no separate raid/signature/banner/helmet/quill motion pack.",
+        "Use existing event IDs to deduplicate reveals across reload/reconnect, and obey the preferences from PACT-120. Animation changes presentation only."
+      ],
+      "acceptance": [
+        "Fixtures for queue success, local timer expiry, rejected action and pending contact produce no celebration; each confirmed mapped event produces one reveal.",
+        "Refreshing/reconnecting or replaying the same event does not repeat the reveal, and routine settlement ticks stay quiet.",
+        "All four motions are previewed at 390/1440 px with keyboard focus intact; reduced motion uses an immediate static state and no input is blocked."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json",
+        "docs/implementation/reports/evidence/experience-media-regeneration.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Animate real milestones and optional harmless court interactions",
+        "size": "M",
+        "scope": [
+          "Create original CSS/SVG/sprite motions for Farm II pennant, mine cart, accepted-contact courier, first-delivery tiny parcel, two-party seal and goose raid panic.",
+          "Add harmless banner/helmet/quill gags with no rewards, collection chores or model calls.",
+          "Animate confirmed events once with replay/deduplication rules; provide equivalent static reduced-motion states."
+        ],
+        "acceptance": [
+          "Celebrations trigger from actual authorized completion/acceptance/delivery/signature events, not queue success, local countdown expiry or a model claim.",
+          "Refresh/reconnect does not repeatedly celebrate the same event; routine delivery ticks remain quiet and animations do not alter spendable state.",
+          "Loop joins, pose anchoring, dismissal, reduced-motion behavior and input readability are previewed at phone/desktop sizes."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-112",
+          "PACT-114",
+          "PACT-115"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-117",
+      "title": "Generate one music loop, one ambience loop and one flourish",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Audio",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-110"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Audio",
+        "generated game experience"
+      ],
+      "scope": [
+        "Compose and synthesize one 30-second settlement music loop, one 15-second quiet wind/cloth ambience loop and one two-second achievement flourish. Save score/code/seed and original WAVs; no diplomacy/threat/season soundtrack variants.",
+        "Produce browser-playable mono assets at 22050 Hz or a documented smaller compatible export. These are outputs for the shared audio controls, not a new audio engine."
+      ],
+      "acceptance": [
+        "Exactly three generated assets play and are auditioned; durations, hashes, measured peaks and regeneration command are recorded.",
+        "Music and ambience have no audible join click; all samples are finite with peak at or below -3 dBFS and a documented fade if seamless synthesis fails.",
+        "Two refinement passes are the production allowance; an unacceptable result is recorded as incomplete and scoped explicitly, rather than opening unlimited generation work. No founder production account is required."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "assets/experience/music-manifest.json",
+        "docs/implementation/reports/evidence/experience-media-regeneration.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Generate original music and ambient sound loops",
+        "size": "M",
+        "scope": [
+          "Compose and synthesize original settlement, diplomacy and threat/season variations: The Kingdom Is Probably Fine, Diplomacy in Very Small Shoes and The Goose Has Concerns.",
+          "Generate wind/cloth/forge/courtyard ambience and the short A Historically Significant Turnip achievement flourish.",
+          "Use procedural composition and synthesis as the dependable baseline; retain score/script, source WAV masters, rendered browser assets and metadata."
+        ],
+        "acceptance": [
+          "Music and ambience are actual generated playable assets with seamless loop checks, clipping/level checks and documented previews; placeholders or licensed reference tracks cannot count as delivery.",
+          "All production is executable by Codex using available tools; no founder DAW, microphone, upload, API key or separate music-generation subscription is required.",
+          "Music variation is driven only by public season/authorized owner conditions and never schedules inference or leaks unseen threats."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-110"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-118",
+      "title": "Generate six short event sounds and one synthesized goose honk",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Audio",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-110",
+        "PACT-115"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Audio",
+        "generated game experience"
+      ],
+      "scope": [
+        "Generate six effects: build clack/trumpet, paper flutter, signature seal, first-delivery bell, raid drums and default snapped cord. Add one optional nonverbal goose honk. Each is at most two seconds; no speech/TTS or extra variants.",
+        "Save procedural source/seed, WAV/export, duration and gain in the shared manifest. PACT-119 owns event mapping; PACT-120 owns playback controls."
+      ],
+      "acceptance": [
+        "Exactly seven original finite assets are generated and auditioned with peaks at or below -3 dBFS; no clipping or copied recording is used.",
+        "Honk is at most one second and no louder than the build cue; an original caption accompanies the manual gag.",
+        "Critical warnings remain readable without audio; no resource tick or repeated denied command receives an audio cue."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json",
+        "docs/implementation/reports/evidence/experience-media-regeneration.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Generate original event effects and silly synthesized vocal gags",
+        "size": "M",
+        "scope": [
+          "Synthesize build clack/bad trumpet, mine rattle/ping, paper flutter, seal press, first-delivery bell, deflated purse squeak, warning drums and muted snapped cord.",
+          "Generate a short optional opera-goose honk/panic and other nonverbal vocal flourishes procedurally, with captioned original character lines.",
+          "Create event/effect mappings, bounded gain, cooldowns and variants; no human voice recording or unavailable TTS account dependency."
+        ],
+        "acceptance": [
+          "Every planned cue is a generated asset with reproducible script/source, duration/gain metadata, preview and clipping checks.",
+          "The scream is brief, opt-in, rare and controllable; repeated resource denials or settlement ticks cannot spam audio.",
+          "Loss/default/threat information remains readable in silence; humour does not hide an exact factual consequence."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-110",
+          "PACT-115"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-119",
+      "title": "Add seven factual in-app event cards with generated icons",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web/Notifications",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-112",
+        "PACT-115",
+        "PACT-118"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Web/Notifications",
+        "generated game experience"
+      ],
+      "scope": [
+        "Define exactly seven card templates: build complete, contact accepted, first delivery, signature, raid warning, default and waiting. Generate seven simple SVG icons and one optional flavour line per template.",
+        "Reuse existing authorized history/inbox/receipt IDs. Map the six PACT-118 effects to the six corresponding non-waiting events; honk is manual only. Reuse the PACT-116 animations when present."
+      ],
+      "acceptance": [
+        "Each template has a fixture for authorized data and missing/stale data, factual outcome text and a record link; waiting never celebrates or plays a sound.",
+        "Duplicate/reconnected delivery of an event yields one card/cue; first delivery is once per contract, other settlement installments are silent.",
+        "This extends existing in-app rendering only: no new inbox store, outbound email/push, or provider call. Errors/defaults retain exact consequence text when humour is disabled."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-context-browser.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Add generated in-app notification cards and truthful comic reactions",
+        "size": "M",
+        "scope": [
+          "Generate original icons, factual templates and flavour lines for build completion, accepted contact, first delivery, signature, warning, default and waiting.",
+          "Integrate with existing authorized in-app history/outbox and event grouping/deduplication; avoid generic failure becoming the only foreground story.",
+          "Keep critical result text separate from optional court reaction and preserve privacy/current record links."
+        ],
+        "acceptance": [
+          "All notification visuals/text/audio are Codex-generated and have manifest/template evidence; exact quantities and identities come from owner-authorized facts.",
+          "Replay/grouping/failure/reconnect checks prove notifications cannot fabricate progress or start inference.",
+          "This ticket adds no outbound SMTP, push provisioning, Telegram/native channel certification or dependency on postponed PACT-060/090."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-116",
+          "PACT-118"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-120",
+      "title": "Add silent-by-default audio controls and a reduced-motion option",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-110"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Web",
+        "generated game experience"
+      ],
+      "scope": [
+        "Provide Enable sound, master mute and separate music/effects/ambience/notifications sliders using one small shared playback helper. Honour OS reduced motion and expose an explicit motion override; add one Humour on/off choice instead of calm/dry/chaotic modes.",
+        "Persist preferences in owner-scoped browser storage, clear them on sign-out, pause audio in hidden tabs and release active audio on unmount. Implement controls using temporary proof assets; final assets are checked in PACT-124."
+      ],
+      "acceptance": [
+        "First load is silent until user gesture; mute/sliders, disabled notifications, humour-off and reduced-motion combinations are tested with keyboard labels and saved preferences.",
+        "Global event cue cooldown is at least three seconds, manual honk cooldown ten seconds, and only one instance of each loop plays. Reconnect/hidden-tab return cannot replay an audio backlog.",
+        "Humour-off removes flavour/manual gag while retaining every fact; motion-off replaces reveals with static output. No setting changes game allowance or triggers inference."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Add opt-in audio controls and accessible calm and reduced-motion modes",
+        "size": "M",
+        "scope": [
+          "Provide explicit Enable sound and independent music/effects/ambience/voice settings, persistent user choices and calm/dry/chaotic presentation controls.",
+          "Provide mute, volume caps, sparse event playback and static equivalents for motion; stop/dispose playback cleanly on navigation or hidden views.",
+          "Keep every important value, action and warning readable without audio, animation or colour."
+        ],
+        "acceptance": [
+          "Silent first load, user activation, independent controls, stored preferences and no surprise loud scream are checked in real supported browsers.",
+          "Keyboard/screen-reader labels and phone controls work; reduced motion does not remove gameplay information.",
+          "Repeated events/hidden tabs/reconnect cannot multiply sound instances; music/voice settings never affect quotas, execution priority or resource production."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-117",
+          "PACT-118",
+          "PACT-119"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-121",
+      "title": "Show notice freshness and actual contact waiting states",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Social/Web",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-112"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G03",
+        "G04"
+      ],
+      "components": [
+        "Social/Web",
+        "generated game experience"
+      ],
+      "scope": [
+        "Display created/expiry times on existing public notices; label missing dates as unknown and expired notices as expired.",
+        "For the current owner's outgoing contact request show pending/accepted/declined/expired and existing no-cost introduction/invitation routes; use explicit 'response time unknown' instead of presence or response-window prediction."
+      ],
+      "acceptance": [
+        "Fixtures cover fresh/expired/undated notices, all four request states and no notices/contacts; all use existing authoritative fields.",
+        "Pending/expired requests cannot appear accepted; another owner's inbox, online state, stock and troops remain absent from public views.",
+        "No new fee, free Silver, automatic retry, tester recruitment, scheduling field or NPC is introduced. Empty-state text permits leaving and returning."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json",
+        "docs/implementation/reports/evidence/experience-media-regeneration.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Make social opportunities and response expectations honest and useful",
+        "size": "M",
+        "scope": [
+          "Show public notice age/expiry and distinguish kingdom-active status from actual response expectations.",
+          "Surface genuine accepted-invitation onboarding where available and existing no-cost public introduction choices during the ordinary-Silver wait.",
+          "Recognize outgoing requests, actual declines/acceptance and opportunities instead of repeatedly spending contact fees; any response-window text is voluntary owner disclosure."
+        ],
+        "acceptance": [
+          "Single-player replay shows actual notice freshness and counterparty-human waiting; no fake online presence, generated acceptance or automatic NPC trade.",
+          "Privacy tests prevent exposing hidden online state, private stocks/armies or another owner's inbox; public copy is deliberate.",
+          "Contact pricing, grants and human acceptance rules remain unchanged; empty communities are explicit and no pilot/tester recruitment is assumed."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-112"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-122",
+      "title": "Show three private milestone keepsakes in the Hall",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-111",
+        "PACT-119"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Web",
+        "generated game experience"
+      ],
+      "scope": [
+        "Add three read-only Hall cards for first completed build, first accepted contact and first delivered trade. Generate three small SVG keepsake designs, including the agriculture plaque.",
+        "Derive first occurrences from existing retained authorized records and link their dated results; use the existing history view when none exists. No new collection database, pinning, export format or public sharing flow."
+      ],
+      "acceptance": [
+        "Exactly three templates use real first-occurrence IDs; reload/replay changes neither counts nor occurrence dates and queued/proposed events produce no keepsake.",
+        "Missing/purged history is explicitly unavailable, not reconstructed as a false accomplishment. Cross-owner access remains denied.",
+        "All three SVGs/texts are generated and saved; no Gems, purchases or catalog entitlement is awarded or consumed."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-keepsakes-browser.json",
+        "tests/integration/world-views.test.ts"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Create a private Hall scrapbook of real accomplishments",
+        "size": "M",
+        "scope": [
+          "Generate decorative keepsakes for first completed build, accepted contact and actual first trade delivery, including the WE HAVE AGRICULTURE plaque.",
+          "Present selected real milestones with date/result and private owner records so the kingdom accumulates a personal history.",
+          "Keep the scrapbook separate from public publication and existing paid/earned cosmetic entitlements."
+        ],
+        "acceptance": [
+          "Kept milestones are derived idempotently from actual authorized records; proposals/queued work are not achievements.",
+          "All keepsake designs/text are generated and saved in the manifest; scrapbook privacy/export/retention follows owning modules.",
+          "No new Gems, purchased advantage, wallet/catalog fulfillment or completed PACT-074 claim is introduced; public sharing still requires human preview."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-111",
+          "PACT-116"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-123",
+      "title": "Show harvest conditions with three generated field overlays",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web/Art",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-114"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "rules",
+        "experience"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "components": [
+        "Web/Art",
+        "generated game experience"
+      ],
+      "scope": [
+        "Generate three static SVG field overlays for 100%, 90% and 80% public harvest multipliers, using the same scene style. Map six existing weeks to these three images; show exact multiplier and published schedule in text.",
+        "Reuse the single music/ambience loop unchanged. No weather simulation, private hunger mood, seasonal soundtrack or additional planning system."
+      ],
+      "acceptance": [
+        "Fixtures for all six weeks map 100/100/90/80/80/100 correctly, with paused and unavailable clock states visibly labeled.",
+        "Exactly three overlays are saved; asset failure or silent/reduced-motion mode retains the complete textual schedule.",
+        "Scenery uses public season data only; no production multiplier, clock, scoring or private public-portrait data changes."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json",
+        "docs/implementation/reports/evidence/experience-media-regeneration.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Make the existing harvest season visible through scenery and music",
+        "size": "M",
+        "scope": [
+          "Generate owner-scene seasonal variants, subtly drier fields and court reactions for the known six-week harvest schedule.",
+          "Connect public harvest and owner food condition to readable explanations, short-horizon planning and optional music variations.",
+          "Preserve exact public schedule, pause behavior, private owner state and provisional honors."
+        ],
+        "acceptance": [
+          "Scenery/music match the actual shared multiplier and authorized condition; no hidden disaster, timer acceleration or production-rule change occurs.",
+          "Generated variants and asset mappings are saved; silent/reduced-motion/fallback views explain the same season facts.",
+          "Newcomer goals do not imply finalized awards or display another kingdom's private hunger/economy."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-114",
+          "PACT-117"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-124",
+      "title": "Check the four-screen experience and enforce media budgets",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Web/QA",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-112",
+        "PACT-113",
+        "PACT-114",
+        "PACT-115",
+        "PACT-116",
+        "PACT-117",
+        "PACT-118",
+        "PACT-119",
+        "PACT-120",
+        "PACT-121",
+        "PACT-122",
+        "PACT-123"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G04",
+        "G06"
+      ],
+      "components": [
+        "Web/QA",
+        "generated game experience"
+      ],
+      "scope": [
+        "Review the integrated Kingdom/Envoy/People/Chronicle flow; feature tickets own integration and acceptance. Fix only seams between completed features, not a second redesign.",
+        "Check Chromium at 390×844 and 1440×900, keyboard-only use, silent/reduced-motion mode, asset failures and reconnect. Measure generated-media transfer bytes and audio instances."
+      ],
+      "acceptance": [
+        "All four screens retain readable contracts/exact approvals, no horizontal overflow at the two sizes, visible keyboard focus and minimum 44 CSS px primary touch targets.",
+        "Generated media is at most 3 MiB initially transferred and 8 MiB total shipped, excluding existing app assets. Lazy loading or procedural compression meets the budget; record measured bytes rather than a performance claim.",
+        "Asset failure leaves text, reconnect preserves stale labels and does not repeat commands/cues, hidden tabs stop audio, and relevant build/type/lint/behavior checks pass with recorded results."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-integrated-browser.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Integrate the generated experience across the four web screens",
+        "size": "L",
+        "scope": [
+          "Integrate scene, companion, milestone cards, social waits, scrapbook and notification controls into Kingdom/Envoy/People/Chronicle without burying decisions.",
+          "Use native readable contracts/approvals, responsive layouts and accessible fallbacks; tune lazy loading, asset sizes and animation cleanup.",
+          "Run relevant builds/type/migration/authorization/behavior checks and observed browser reviews for offline, pause, failed commands and replay."
+        ],
+        "acceptance": [
+          "Desktop/phone and keyboard journey remains understandable and operable in silent/static modes; no horizontal overflow or blocked exact review.",
+          "Asset loading failures and reconnect preserve honest stale state and never replay commitments or award effects.",
+          "Performance measurements and source-backed facts are recorded; generation quality is reviewed instead of claiming perfect automatically generated assets."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-112",
+          "PACT-113",
+          "PACT-114",
+          "PACT-115",
+          "PACT-116",
+          "PACT-119",
+          "PACT-120",
+          "PACT-121",
+          "PACT-122",
+          "PACT-123"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-125",
+      "title": "Verify the bounded asset bundle and regeneration instructions",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Assets/Operations",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-110",
+        "PACT-124"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G06"
+      ],
+      "components": [
+        "Assets/Operations",
+        "generated game experience"
+      ],
+      "scope": [
+        "Check only the PACT-114–119/122/123 inventory against the shared manifest: source/prompt, approved export, hash, event/placement, dimensions/duration and generation method.",
+        "Write one regeneration/readme command index and existing-build packaging notes. Feature reports already own their implementation evidence; no additional publishing, server or deployment project."
+      ],
+      "acceptance": [
+        "Every bounded final asset and template has a source and export entry, no placeholders; procedural generation works from saved inputs and approved raster exports remain preserved.",
+        "Inventory counts agree with revised tickets, generated bundle budget from PACT-124 passes, and no founder files or production account is needed.",
+        "Document generated-tool use/cost where available and unknown where unavailable; no secret or copied stock media is packaged. No deployment is performed by this planning task."
+      ],
+      "evidence": [
+        "assets/experience/README.md",
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/evidence/experience-final-regeneration.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Package all generated assets and document reproducible production",
+        "size": "M",
+        "scope": [
+          "Audit every shipped design, texture, icon, character pose, animation, sound, notification template and music/ambience cue against the generation manifest.",
+          "Preserve prompts/references, editable vector/animation sources, procedural audio scores/scripts, approved masters and delivery exports.",
+          "Write operations/regeneration instructions, usage/cost/tool records and completion reports; stage the existing-VPS package only within a covering implementation assignment."
+        ],
+        "acceptance": [
+          "No final asset requires founder-supplied files, recordings or external production accounts; missing/placeholder assets remain explicit incomplete work.",
+          "Documented scripts reproduce procedural outputs and provenance correctly distinguishes preserved raster exports from stochastic new image generation.",
+          "Bundle checks and playback/visual previews pass; no secret, copied stock media or new paid infrastructure is silently introduced."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-110",
+          "PACT-114",
+          "PACT-115",
+          "PACT-117",
+          "PACT-118",
+          "PACT-124"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-126",
+      "title": "Run one fresh-player session and record clarity and enjoyment limits",
+      "phase": 3,
+      "status": "done",
+      "kind": "verification",
+      "owner_role": "QA",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108",
+        "PACT-109",
+        "PACT-110",
+        "PACT-111",
+        "PACT-112",
+        "PACT-113",
+        "PACT-114",
+        "PACT-115",
+        "PACT-116",
+        "PACT-117",
+        "PACT-118",
+        "PACT-119",
+        "PACT-120",
+        "PACT-121",
+        "PACT-122",
+        "PACT-123",
+        "PACT-124",
+        "PACT-125"
+      ],
+      "sources": [
+        "product",
+        "alpha",
+        "architecture",
+        "runtime",
+        "experience"
+      ],
+      "covers": [
+        "G01",
+        "G02",
+        "G03",
+        "G04",
+        "G06"
+      ],
+      "components": [
+        "QA",
+        "generated game experience"
+      ],
+      "scope": [
+        "Use one fresh account in the testing world with normal clocks/resources and one connected cheap agent; allow at most 30 active minutes across two visits, with the second after the normal Farm II deadline. Observe founding, Farm II, a second-builder choice and a real available social opportunity; no model calls while waiting.",
+        "Compare default versus silent/reduced-motion/humour-off, record actual build effects, waiting states, rate units, connection assistance and media. Social acceptance is conditional on an independent reply; no operated counterparty is required."
+      ],
+      "acceptance": [
+        "All seventeen preceding tickets are Done with their revised evidence. Record five observations: stated ambition, actual before/after, next decision, actual recipient wait/empty community and a reason to return; negative findings are valid recorded results.",
+        "Any observed violation of factual/accessibility criteria is fixed and the affected step rerun before completion; unresolved subjective enjoyment concerns are reported without unlimited redesign.",
+        "Screenshots/receipts identify release/browser/model, calls and cost if available. At most eight provider requests and 30 active minutes across two visits; a still-pending progression is reported as not observed, with no clock acceleration.",
+        "Temporary sessions/grants/credentials are revoked. This is a synthetic design review, not measured human attachment, a mandatory successful trade, a production certification or a forced positive fun score."
+      ],
+      "evidence": [
+        "docs/implementation/reports/game-experience-implementation.md",
+        "docs/implementation/reports/experience-fresh-player-20261003.md",
+        "docs/implementation/reports/evidence/experience-fresh-player-20261003.json"
+      ],
+      "assignee": "codex-game-experience",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "experience",
+      "priority": 3,
+      "planning_evidence": [
+        "docs/implementation/reports/game-experience-ideas-20261002.md",
+        "docs/implementation/reports/gamer-perspective-playtest-20261002.md"
+      ],
+      "scope_review_previous": {
+        "title": "Replay the fresh single-player experience and assess attachment and fun",
+        "size": "M",
+        "scope": [
+          "Play a fresh single account through the real opening, choices, waits, generated characters/audio, actual improvements and a genuine social opportunity without operating its counterparty.",
+          "Record whether ambition, before/after payoff, remembered place/characters, return reason and Envoy quantities are understandable; compare calm/silent/reduced-motion and comic modes.",
+          "Document actual release, browser, model usage, asset coverage, assistance, remaining friction and grant/credential cleanup; optional real-player feedback is separate, not fabricated."
+        ],
+        "acceptance": [
+          "All PACT-109–125 dependencies are Done with per-ticket code/asset/docs evidence before this checkpoint is claimed.",
+          "Dated real observations show completed improvements and pending social decisions accurately; wrong agent rates or false celebrations are recorded and acceptance failures fixed/retested.",
+          "Original generated assets are visible/playable and their accessibility settings work; no unauditioned/unseen media or fake human reply is certified.",
+          "Temporary access is cleaned while reviewable gameplay records remain. Synthetic/design assessment is distinguished from measured human enjoyment; no full Later pilot or production gate claim."
+        ],
+        "depends_on": [
+          "PACT-053",
+          "PACT-099",
+          "PACT-108",
+          "PACT-109",
+          "PACT-110",
+          "PACT-111",
+          "PACT-112",
+          "PACT-113",
+          "PACT-114",
+          "PACT-115",
+          "PACT-116",
+          "PACT-117",
+          "PACT-118",
+          "PACT-119",
+          "PACT-120",
+          "PACT-121",
+          "PACT-122",
+          "PACT-123",
+          "PACT-124",
+          "PACT-125"
+        ]
+      },
+      "scope_review_date": "2026-10-03"
+    },
+    {
+      "id": "PACT-127",
+      "title": "Join from one shared link and connect your own agent",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Full stack",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-108"
+      ],
+      "sources": [
+        "alpha",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "G02",
+        "G04"
+      ],
+      "scope": [
+        "Provide a testing-mode shared URL: enter a nickname, automatically create a guest kingdom with the normal starting rules, and enter the game. No PACT account form, email, password, verification, operator code retrieval or per-person admission link.",
+        "Persist the browser's guest identity so refresh/return resumes the same kingdom. Reuse internal ownership/session machinery; joining does not give control over another guest. A new browser or cleared browser data starts fresh; cross-device recovery is outside this task.",
+        "Present Connect your agent in the entry flow with copyable instructions, the existing own-agent authorization route, a connection check and a ready-to-copy first mission. The agent runs in the player's own client, not an automatically purchased in-game model. Adapt existing guest-incompatible verified-email/reauth checks to the explicit testing identity, not invented email verification."
+      ],
+      "acceptance": [
+        "Two separate browser profiles use the same URL and only choose nicknames; each reaches its own kingdom without signup/email/password/verification. Reload and return preserve the same kingdom without duplicate founding.",
+        "A guest connects their own supported Codex route without PACT login prompts or manually retrieving server tokens, and its first read identifies that exact kingdom. Existing explicit agent authorization and human decisions remain available in the guest session.",
+        "Copy/check/reconnect states show actionable success or failure. No model starts merely from joining or connecting. Record the tested client version and an end-to-end first-mission result; use the cheapest available supported model with a small explicit call cap if live inference is exercised."
+      ],
+      "components": [
+        "guest play"
+      ],
+      "evidence": [
+        "docs/implementation/reports/friends-playtest-20261004.md",
+        "docs/implementation/reports/evidence/friends-play-checks-20261004.json",
+        "Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified."
+      ],
+      "assignee": "codex-friends-playtest",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "friends_playtest"
+    },
+    {
+      "id": "PACT-128",
+      "title": "Make the opening kingdom screen short and actionable",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-126"
+      ],
+      "sources": [
+        "alpha",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "G04"
+      ],
+      "scope": [
+        "Reorder the existing Kingdom screen: scene, compact resource summary, active/free builders and one current next action first.",
+        "Collapse detailed forecasts, advanced controls and records. Replace the empty keepsake collection with a compact hint until the first keepsake is earned; keep full collection reachable afterward.",
+        "Reuse existing art, cast and factual next-decision logic. Do not add assets, tutorials, game rules or an additional dashboard."
+      ],
+      "acceptance": [
+        "At 390x844 and 1440x900 the next-action card appears in the initial viewport after kingdom entry, with no horizontal overflow; builders and progress are directly adjacent rather than behind empty collections.",
+        "Keyboard users can reveal details, and existing actions/receipts remain reachable. Fresh, building, completed-build and pending-approval fixtures show the corresponding truthful next action."
+      ],
+      "components": [
+        "shared web features"
+      ],
+      "evidence": [
+        "docs/implementation/reports/friends-playtest-20261004.md",
+        "docs/implementation/reports/evidence/friends-play-checks-20261004.json",
+        "Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified."
+      ],
+      "assignee": "codex-friends-playtest",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "friends_playtest"
+    },
+    {
+      "id": "PACT-129",
+      "title": "Show useful upgrade choices and use the free builder",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "S",
+      "depends_on": [
+        "PACT-053",
+        "PACT-126"
+      ],
+      "sources": [
+        "alpha",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "G02",
+        "G04"
+      ],
+      "scope": [
+        "Show up to three deterministic upgrade cards using existing rules/catalog calculations, current resources and ambition. Each states exact benefit, costs, duration and a specific known blocker; keep all other choices available under All buildings.",
+        "Select an available builder automatically; show both slots clearly and do not overwrite a busy slot. Refresh/revalidate through the existing command path before a commitment.",
+        "Provide a copyable Ask my agent instruction for each choice; clicking it alone does not purchase inference or queue a build. Reuse existing character flavour sparingly around a genuinely idle builder."
+      ],
+      "acceptance": [
+        "Fixtures with zero, one and two available builders select only a free slot or explain that both are busy. Already queued/max-level upgrades are not suggested as immediately actionable.",
+        "Each shown card's numbers match the shared catalog; unaffordable/prerequisite-blocked options explain why. Human submission or an authorized agent uses the existing game command/receipt without duplicate effects.",
+        "After completing one upgrade, the choices and slot display update from fresh state; a free second builder remains visibly actionable while the first is busy."
+      ],
+      "components": [
+        "shared web features"
+      ],
+      "evidence": [
+        "docs/implementation/reports/friends-playtest-20261004.md",
+        "docs/implementation/reports/evidence/friends-play-checks-20261004.json",
+        "Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified."
+      ],
+      "assignee": "codex-friends-playtest",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "friends_playtest"
+    },
+    {
+      "id": "PACT-130",
+      "title": "Find friends in the shared world and start a conversation",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Full stack",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-127",
+        "PACT-128",
+        "PACT-129"
+      ],
+      "sources": [
+        "alpha",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "G01",
+        "G04",
+        "G06"
+      ],
+      "scope": [
+        "Put a compact list of actual public guest kingdoms from this testing world at the top of People: nickname/handle, public kingdom identity and contact action. Show up to 20 per page; exclude self/retired/hidden profiles and expose no private balances/messages.",
+        "Add Copy game link for the same common guest-entry URL. Do not require individual invitations, exact-handle lookup or pasted kingdom IDs; reuse existing explicit contact request/acceptance and messaging.",
+        "After contact acceptance, open the conversation with Say hello and Discuss a trade drafts; drafts are not sent automatically and trade discussion does not sign a contract.",
+        "Finish with a small integrated two-browser guest playthrough of joining, connecting an agent, seeing building progress, finding each other and messaging. Record actual results and deployment evidence without inventing human enjoyment."
+      ],
+      "acceptance": [
+        "Two guests using the same shared URL can discover each other, request/accept contact and exchange a message without UUID entry or email verification. Each sees only permitted public/own information.",
+        "Copy game link returns the common entry URL. Empty and loading/error lists distinguish no players from unavailable data; no fake players, online indicators or invented trade success.",
+        "Discuss a trade opens an editable conversation draft; sending, acceptance and any later financial agreement remain explicit. The integrated phone/desktop walkthrough records the tested release, outcomes and any remaining friction."
+      ],
+      "components": [
+        "shared web features"
+      ],
+      "evidence": [
+        "docs/implementation/reports/friends-playtest-20261004.md",
+        "docs/implementation/reports/evidence/friends-play-checks-20261004.json",
+        "Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified."
+      ],
+      "assignee": "codex-friends-playtest",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "friends_playtest"
     }
   ],
   "source_sha256": {
@@ -4684,7 +6837,8 @@
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
     "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0",
-    "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9"
+    "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9",
+    "../pact/experience.md": "cac7b2eafe414046dba481a00949b66bebae07d2b2df59dbb91d35fef5b2794d"
   },
   "task_status_values": [
     "todo",
@@ -4718,6 +6872,99 @@
       "PACT-080"
     ],
     "gate": "PACT-080",
-    "note": "Only these 13 unfinished tickets are authorized. Later tracks are postponed, not done; original_plan preserves deferred portions of narrowed tickets."
+    "note": "Original 13-ticket Alpha scope and subsequent follow-up batches are complete. Original production scope remains preserved in original_plan for later work."
+  },
+  "alpha_followup": {
+    "approved_at": "2026-10-02",
+    "scope": "alpha-playtest-fixes.md",
+    "active_ids": [
+      "PACT-100",
+      "PACT-101",
+      "PACT-102",
+      "PACT-103",
+      "PACT-104",
+      "PACT-105",
+      "PACT-106",
+      "PACT-107",
+      "PACT-108"
+    ],
+    "gate": "PACT-108",
+    "execution": "completed",
+    "note": "All nine founder-assigned PACT-100–108 tickets completed and verified; see reports/alpha-playtest-fixes.md."
+  },
+  "experience": {
+    "approved_at": "2026-10-03",
+    "scope": "game-experience.md",
+    "active_ids": [
+      "PACT-109",
+      "PACT-110",
+      "PACT-111",
+      "PACT-112",
+      "PACT-113",
+      "PACT-114",
+      "PACT-115",
+      "PACT-116",
+      "PACT-117",
+      "PACT-118",
+      "PACT-119",
+      "PACT-120",
+      "PACT-121",
+      "PACT-122",
+      "PACT-123",
+      "PACT-124",
+      "PACT-125",
+      "PACT-126"
+    ],
+    "gate": "PACT-126",
+    "execution": "completed",
+    "recommended_first": "PACT-109",
+    "note": "All eighteen generated-experience tickets completed. Assets are Codex-produced, with listening checks and playtest limitations recorded in the completion reports. Current remaining production backlog is 24 tickets.",
+    "scope_review_date": "2026-10-03",
+    "scope_review": "reports/game-experience-scope-review-20261003.md",
+    "goal": "Human objectives, bounded agent actions and observable consequences with a small generated comedy layer.",
+    "completed_at": "2026-10-03",
+    "completion_report": "reports/experience-fresh-player-20261003.md"
+  },
+  "roadmap_resume": {
+    "authorized_at": "2026-10-04",
+    "active_ids": [
+      "PACT-060",
+      "PACT-063",
+      "PACT-088",
+      "PACT-089"
+    ],
+    "execution": "completed_then_remaining_roadmap_deferred",
+    "scope": "roadmap-resume.md",
+    "note": "The four explicitly resumed tickets completed with their original acceptance. The founder subsequently deferred the remaining 24 production tickets."
+  },
+  "current_scope": {
+    "date": "2026-10-04",
+    "name": "friends-only playable and fun web game",
+    "production_roadmap_deferred": true,
+    "open_existing_experience_tickets": 0,
+    "new_polish_tickets_created": 4,
+    "scope": "friends-playtest.md"
+  },
+  "friends_playtest": {
+    "approved_at": "2026-10-04",
+    "scope": "friends-playtest.md",
+    "active_ids": [
+      "PACT-127",
+      "PACT-128",
+      "PACT-129",
+      "PACT-130"
+    ],
+    "execution": "completed",
+    "note": "All four shared-link guest entry, opening, builder choice and friend-walkthrough tickets completed. Original 24 Later production tickets remain deferred.",
+    "completed_at": "2026-10-04",
+    "completion_report": "reports/friends-playtest-20261004.md"
+  },
+  "population_playtest": {
+    "execution": "completed",
+    "run_id": "population-2026-10-04T21-13-18-681Z",
+    "ended_at": "2026-10-04T23:13:59.742Z",
+    "model_requests": 200,
+    "completion_report": "reports/population-playtest-20261004.md",
+    "note": "Ten Luna envoys plus ninety scripted players; observed bugs fixed under founder authorization. Monitor paused. No new Linear issue could be created because its free issue limit was reached."
   }
 }

@@ -1,0 +1,28 @@
+const fs=require("fs"),{chromium}=require("C:/Users/ENDORFY/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");const base="https://safa.dedyn.io/pact/",prefix="C:/Users/ENDORFY/pact-friends-";
+(async()=>{const browser=await chromium.launch({channel:"chrome",headless:true}),report={events:[],errors:[]};try{
+const contexts=[],pages=[];
+for(const width of [1440,390]){const ctx=await browser.newContext({storageState:prefix+width+"-private.json",viewport:{width,height:width===390?844:900},permissions:["clipboard-read","clipboard-write"]});const page=await ctx.newPage();page.on("pageerror",e=>report.errors.push(e.message));page.on("response",async r=>{if(r.request().method()==="POST"&&r.url().includes("/commands")){try{report.events.push({url:new URL(r.url()).pathname,status:r.status(),result:await r.json()});}catch{}}});await page.goto(base);await page.getByRole("navigation",{name:"Game areas"}).waitFor();await page.getByRole("button",{name:"People",exact:true}).click();await page.getByRole("heading",{name:"Friends in this world"}).waitFor();await page.waitForTimeout(1500);contexts.push(ctx);pages.push(page);}
+const [a,b]=pages;
+await a.getByRole("button",{name:"Copy game link",exact:true}).click();report.link=await a.evaluate(()=>navigator.clipboard.readText());
+const friend=a.locator('[aria-label="Friends in this world"] article').filter({hasText:"Captain Noodles"});await friend.getByRole("button",{name:"Request contact",exact:true}).click();
+const composer=a.locator("article").filter({has:a.locator("#contact-composer")});
+await a.screenshot({path:prefix+"social-debug.png",fullPage:true});report.draft=await a.locator("#contact-composer").locator("..").locator("textarea").inputValue();
+await composer.getByRole("button",{name:"Request contact",exact:true}).click({timeout:30000});
+await a.waitForTimeout(1200);await b.getByRole("button",{name:"Refresh",exact:true}).click();await b.getByRole("button",{name:"Accept",exact:true}).waitFor({timeout:15000});
+report.incomingNextMove=await b.locator('[aria-label="First-session progress"]').innerText();await b.getByRole("button",{name:"Accept",exact:true}).click();await b.waitForTimeout(1200);await a.getByRole("button",{name:"Refresh",exact:true}).click();await a.waitForTimeout(1500);
+await a.locator("#contact-composer").locator("..").locator("textarea").fill("My potato bureaucracy salutes your noodles. Hello!");
+await a.getByRole("button",{name:"Send message",exact:true}).click();await a.waitForTimeout(1000);
+await b.getByRole("button",{name:"Refresh",exact:true}).click();await b.waitForTimeout(1000);
+await b.locator('[aria-label="Friends in this world"] article').filter({hasText:"Professor Turnip"}).getByRole("button",{name:"Say hello",exact:true}).click();
+await b.getByRole("log",{name:"Conversation"}).getByText("My potato bureaucracy salutes your noodles. Hello!",{exact:true}).waitFor();
+await b.locator("#contact-composer").locator("..").locator("textarea").fill("Noodle kingdom reporting for mildly questionable diplomacy.");
+await b.getByRole("button",{name:"Send message",exact:true}).click();await b.waitForTimeout(1000);await a.getByRole("button",{name:"Refresh",exact:true}).click();await a.waitForTimeout(1000);await a.getByRole("log",{name:"Conversation"}).getByText("Noodle kingdom reporting for mildly questionable diplomacy.",{exact:true}).waitFor();
+const before=await (await a.request.get(base+"v1/game/social")).json();
+await friend.getByRole("button",{name:"Discuss a trade",exact:true}).click();
+report.tradeDraft=await a.locator("#contact-composer").locator("..").locator("textarea").inputValue();
+const after=await(await a.request.get(base+"v1/game/social")).json();
+report.draftOnly=before.messages.length===after.messages.length&&before.supplyOffers.length===after.supplyOffers.length&&before.supplyContracts.length===after.supplyContracts.length;
+report.twoWayConversation=true;
+for(let i=0;i<pages.length;i++){await pages[i].screenshot({path:prefix+[1440,390][i]+"-conversation.png",fullPage:true});}
+fs.writeFileSync(prefix+"social-result.json",JSON.stringify(report,null,2));console.log(JSON.stringify(report));for(const ctx of contexts)await ctx.close();
+}finally{await browser.close();}})().catch(e=>{console.error(e.message);process.exit(1)});

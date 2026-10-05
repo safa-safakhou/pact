@@ -32,6 +32,7 @@ export interface CommandDispatcherOptions {
   readonly trace?: TraceReporter;
   readonly game?: GameCommandPort;
   readonly social?: SocialCommandPort;
+  readonly assertPlayAllowed?: (client: PoolClient, accountId: string) => Promise<void>;
   /** Transaction-bound metadata observer; failure rolls back the command and its receipt together. */
   readonly onCommittedReceipt?: (
     client: PoolClient,
@@ -134,10 +135,11 @@ export class CommandDispatcher {
       if (previous)
         return { receipt: this.replayed(principal, command.commandId, payloadHash, previous), result: null };
       const account = await client.query(
-        "SELECT id FROM accounts WHERE product_scope = $1 AND id = $2 AND status = 'active' AND email_verified_at IS NOT NULL FOR UPDATE",
+        "SELECT id FROM accounts WHERE product_scope = $1 AND id = $2 AND status = 'active' AND (email_verified_at IS NOT NULL OR is_guest) FOR UPDATE",
         [this.options.productScope, principal.accountId],
       );
       if (!account.rowCount) throw new DispatcherError("FORBIDDEN");
+      await this.options.assertPlayAllowed?.(client, principal.accountId);
       const mutation = await this.options.social?.execute(client, principal, command, gameTimeMs);
       if (!mutation) throw new DispatcherError("INVALID_COMMAND");
       const eventId = randomUUID();
@@ -171,6 +173,7 @@ export class CommandDispatcher {
       // The opaque link token is returned once, not stored in receipts, events or logs.
       return { receipt, result: mutation.result };
     });
+    if (admitted.kind === "tick_pending") throw new DispatcherError("TICK_PENDING");
     return admitted.kind === "admitted"
       ? admitted.value
       : { receipt: receiptSkeleton(command.commandId, "WORLD_PAUSED"), result: null };
@@ -290,6 +293,7 @@ export class CommandDispatcher {
       admitted = await game.admit(async (client, gameTimeMs) => {
         const existing = await this.loadReceipt(client, command.commandId);
         if (existing) return this.replayed(principal, command.commandId, payloadHash, existing);
+        await this.options.assertPlayAllowed?.(client, principal.accountId);
         const mutation = await game.execute(client, principal, command, gameTimeMs);
         const receipt: CommandReceipt = {
           schemaVersion: SCHEMA_VERSION,
@@ -328,6 +332,7 @@ export class CommandDispatcher {
       }
       throw error;
     }
+    if (admitted.kind === "tick_pending") throw new DispatcherError("TICK_PENDING");
     return admitted.kind === "admitted" ? admitted.value : receiptSkeleton(command.commandId, "WORLD_PAUSED");
   }
 

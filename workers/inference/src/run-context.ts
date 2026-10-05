@@ -38,7 +38,22 @@ export async function ownerRunContext(
     kind: "pact.owner_snapshot.v1",
     asOfGameTimeMs: view.asOfGameTimeMs,
     profile: view.profile,
-    balances: view.balances,
+    ambition: view.ambition,
+    balances: Object.fromEntries(
+      Object.entries(view.balances).map(([resource, { facts, ...balance }]) => [
+        resource,
+        {
+          ...balance,
+          ratesWhole: facts
+            ? {
+                gross: facts.rates.gross.label,
+                upkeep: facts.rates.upkeep.label,
+                net: facts.rates.net.label,
+              }
+            : undefined,
+        },
+      ]),
+    ),
     upkeep: view.upkeep,
     buildings: view.buildings.slice(0, 16),
     builders: view.builders?.slice(0, 2),
@@ -58,7 +73,22 @@ export async function ownerRunContext(
       kind: "pact.owner_snapshot.v1",
       asOfGameTimeMs: view.asOfGameTimeMs,
       profile: view.profile,
-      balances: view.balances,
+      ambition: view.ambition,
+      balances: Object.fromEntries(
+        Object.entries(view.balances).map(([resource, { facts, ...balance }]) => [
+          resource,
+          {
+            ...balance,
+            ratesWhole: facts
+              ? {
+                  gross: facts.rates.gross.label,
+                  upkeep: facts.rates.upkeep.label,
+                  net: facts.rates.net.label,
+                }
+              : undefined,
+          },
+        ]),
+      ),
       truncated: true,
     });
   }
@@ -89,8 +119,11 @@ export async function ownerRunContext(
   }
   if (run.selectedContextIds.length > 0) {
     const pages = [];
-    for (const counterpartyKingdomId of run.selectedContextIds.slice(0, run.maxConversations)) {
-      const page = await conversations.read(run.accountId, counterpartyKingdomId, 3);
+    const counterparties = run.selectedContextIds.slice(0, Math.min(run.maxConversations, 12));
+    // Bound each excerpt before its read acknowledgment; leave space for the envelope.
+    const perPageBytes = Math.min(3_600, Math.floor((MAX_CONVERSATION_CONTEXT_BYTES - 256) / counterparties.length));
+    for (const counterpartyKingdomId of counterparties) {
+      const page = await conversations.read(run.accountId, counterpartyKingdomId, 3, perPageBytes);
       if (page && page.messages.length > 0) pages.push(page);
     }
     let encoded = JSON.stringify({ kind: "pact.selected_conversations.v1", pages });

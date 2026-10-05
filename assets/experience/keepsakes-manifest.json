@@ -1,0 +1,22 @@
+{
+  "ticket": "PACT-122",
+  "producer": "Codex authored native SVG",
+  "regenerate": "python3 assets/experience/generate_keepsakes.py",
+  "assets": [
+    {
+      "file": "keepsakes/build.svg",
+      "bytes": 465,
+      "sha256": "908ada505a7b2119e587e95a8ec3763037aa0b7120b49a762a862f182602f779"
+    },
+    {
+      "file": "keepsakes/contact.svg",
+      "bytes": 415,
+      "sha256": "cf42ccf52c0cb0e869ec987fb86b50e1f2fbbd2d2c427c28a6dd98ac109f4fba"
+    },
+    {
+      "file": "keepsakes/delivery.svg",
+      "bytes": 439,
+      "sha256": "0c5907b3000ad98270c5b1a674a7d12c4e244d6f9e7dd8d0463c9aafff072696"
+    }
+  ]
+}

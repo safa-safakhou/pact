@@ -1,5 +1,5 @@
 import type { MandateView } from "@pact/authority";
-import { rulesCatalog } from "@pact/domain";
+import { type BuildingKind, constructionAffordability, rulesCatalog, upgradeCost, wholeUnitText } from "@pact/domain";
 import type { SocialOverviewReader, WorldViewService } from "@pact/kingdom";
 
 export type AgentGuideTopic = "start" | "development" | "diplomacy" | "military" | "authority";
@@ -22,7 +22,7 @@ export class AgentGuideReader {
   async read(accountId: string, topic: AgentGuideTopic): Promise<Record<string, unknown>> {
     const header = {
       topic,
-      lessonVersion: "pact.agent-lessons.2026-10-01.2",
+      lessonVersion: "pact.agent-lessons.2026-10-02.1",
       surface: this.surface,
       rulesId: rulesCatalog.rulesId,
       markedUnitsPerWhole: rulesCatalog.internalUnitsPerResource,
@@ -94,6 +94,8 @@ export class AgentGuideReader {
           { kind: "game.supply.sign", offerId: "<offer UUID>", version: 1 },
         ],
         contractRules: {
+          unsignedOffer:
+            "Nonbinding proposal: reserves nothing and does not require supply.sign authority. Signing is the commitment; use a real returned offer ID/version and check current authority, stock and reserves. Both signatures activate it.",
           aIsOfferCreator: true,
           bothPartiesSignSameVersion: true,
           durationHours: rulesCatalog.supply.durationHours,
@@ -143,6 +145,20 @@ export class AgentGuideReader {
               allowedActions: mandate.allowedActions,
               targetRestrictions: mandate.targetRestrictions,
               resourceLimitsMarked: mandate.resourceLimits,
+              resourceLimitsWhole: Object.fromEntries(
+                Object.entries(mandate.resourceLimits).map(([key, value]) => [key, wholeUnitText(value)]),
+              ),
+              reserveFloorsWhole: Object.fromEntries(
+                Object.entries(mandate.reserveFloors).map(([key, value]) => [key, wholeUnitText(value)]),
+              ),
+              actionPermissions: {
+                "game.building.queue": mandate.allowedActions.includes("building.queue"),
+                "game.contact.request": mandate.allowedActions.includes("contact.request"),
+                "game.message.send": mandate.allowedActions.includes("message.send.contact"),
+                "game.supply.sign": mandate.allowedActions.includes("supply.sign"),
+              },
+              nonbindingSupplyProposals:
+                "game.supply.offer and game.supply.counter reserve no resources and do not require supply.sign mandate permission. They still require game:act scope and a write lease. A signature is a separate commitment; the server checks authority, stock and reserves.",
               reserveFloorsMarked: mandate.reserveFloors,
               troopLimit: mandate.troopLimit,
               sessionLimit: mandate.sessionLimit,
@@ -177,6 +193,7 @@ export class AgentGuideReader {
       kingdomId,
       handle,
       direction,
+      humanAcceptance: direction === "incoming" ? "your_owner" : "counterparty_owner",
       expiresGameTimeMs,
     }));
     const busyBuildingKinds = world.builders
@@ -189,15 +206,18 @@ export class AgentGuideReader {
       ...header,
       state: "active",
       self: world.profile,
+      ambition: world.ambition ?? "neutral",
       asOfGameTimeMs: world.asOfGameTimeMs,
       worldStatus: world.worldStatus,
       resources: Object.fromEntries(
         Object.entries(world.balances).map(([resource, balance]) => [
           resource,
           {
+            facts: balance.facts,
             ordinaryMarked: balance.ordinaryUnits,
             ordinaryWholeFloor: wholeFloor(balance.ordinaryUnits),
             foundingAllowanceMarked: balance.foundingAllowanceUnits,
+            foundingAllowanceWholeFloor: wholeFloor(balance.foundingAllowanceUnits),
             lockedMarked: balance.lockedUnits,
             capacityWhole: wholeFloor(balance.capacityUnits),
           },
@@ -205,12 +225,65 @@ export class AgentGuideReader {
       ),
       buildings: world.buildings,
       builders: world.builders,
+      consequences: world.consequences,
+      forecast: { meaning: "Expected ending stock, not net increase", ...world.forecast },
+      resourceRules: {
+        markedPerWhole: 600,
+        construction:
+          "Iron/Silver founding allowance is spent before ordinary stock on construction. It cannot pay cold contacts, transfers or trade deliveries. Troop allowance is for training; food allowance pays own troop upkeep, never trade/provisions. Ordinary stock is separate.",
+        foodReserveMarked: (
+          BigInt(world.balances.grain.ordinaryUnits) + BigInt(world.balances.grain.foundingAllowanceUnits)
+        ).toString(),
+        foodReserveRule:
+          "For signed Grain supply, reserve safety counts ordinary Grain plus food allowance, but deliveries spend only ordinary Grain. Other spend purposes retain their own server checks.",
+        grainFloorMarked: mandate?.reserveFloors.grain ?? "0",
+        authority:
+          "Affordability is stock only. Read mandate actions/limits and let the server check prerequisites, reservations and reserve floors. A permitted move does not need an extra human approval; request exact review only for an actual authority exception, never to bypass missing stock.",
+      },
+      coldContactStock: {
+        costWholeSilver: rulesCatalog.actionLimits.coldContactSilver,
+        ordinaryShortfallMarked: (BigInt(world.balances.silver.ordinaryUnits) >= 1200n
+          ? 0n
+          : 1200n - BigInt(world.balances.silver.ordinaryUnits)
+        ).toString(),
+        waitGameMinutesAtCurrentProduction:
+          BigInt(world.balances.silver.productionPerMinuteUnits ?? "0") > 0n
+            ? Number(
+                (BigInt(world.balances.silver.ordinaryUnits) >= 1200n
+                  ? 0n
+                  : 1200n -
+                    BigInt(world.balances.silver.ordinaryUnits) +
+                    BigInt(world.balances.silver.productionPerMinuteUnits) -
+                    1n) / BigInt(world.balances.silver.productionPerMinuteUnits),
+              )
+            : null,
+      },
+      constructionStockChecks: world.buildings
+        .filter((building) => building.level < 6)
+        .map((building) => {
+          const targetLevel = building.level + 1;
+          const cost = upgradeCost(building.kind as BuildingKind, targetLevel);
+          const balances = world.balances;
+          return {
+            building: building.kind,
+            targetLevel,
+            costWhole: { iron: wholeFloor(cost.iron.toString()), silver: wholeFloor(cost.silver.toString()) },
+            stockAffordable: constructionAffordability(building.kind as BuildingKind, targetLevel, {
+              ordinaryIron: BigInt(balances.iron.ordinaryUnits),
+              ordinarySilver: BigInt(balances.silver.ordinaryUnits),
+              grantIron: BigInt(balances.iron.foundingAllowanceUnits),
+              grantSilver: BigInt(balances.silver.foundingAllowanceUnits),
+            }).affordable,
+            busy: busyBuildingKinds.includes(building.kind),
+          };
+        }),
       planningCautions: {
         busyBuildingKinds,
         nearCapacityResources,
         notes: [
           "Do not queue another upgrade of a busy building kind; a different builder slot does not bypass that rule.",
           "If a resource is near capacity, more production alone may be wasted until capacity rises or stock is used.",
+          "Cold contact costs 2 ordinary Silver; founding Silver cannot pay it. Read current ordinary stock before sending. If the opposite request already exists, the human must accept that incoming request rather than request an approval to send another.",
         ],
       },
       troops: world.troops,
@@ -225,6 +298,8 @@ export class AgentGuideReader {
         kingdomA: offer.kingdomA,
         kingdomB: offer.kingdomB,
         terms: offer.terms,
+        youSend: offer.youSend,
+        youReceive: offer.youReceive,
         signedBy: offer.signedBy,
         expiresGameTimeMs: offer.expiresGameTimeMs,
       })),
@@ -236,6 +311,8 @@ export class AgentGuideReader {
           counterpartyKingdomId: contract.kingdomId,
           counterpartyHandle: contract.handle,
           terms: contract.terms,
+          youSend: contract.youSend,
+          youReceive: contract.youReceive,
           endGameTimeMs: contract.endGameTimeMs,
         })),
       openGarrisonOffers: social.garrisonOffers.slice(0, 10).map((offer) => ({
@@ -265,23 +342,30 @@ export class AgentGuideReader {
             allowedActions: mandate.allowedActions,
             targetRestrictions: mandate.targetRestrictions,
             resourceLimitsMarked: mandate.resourceLimits,
+            resourceLimitsWhole: Object.fromEntries(
+              Object.entries(mandate.resourceLimits).map(([key, value]) => [key, wholeUnitText(value)]),
+            ),
+            reserveFloorsWhole: Object.fromEntries(
+              Object.entries(mandate.reserveFloors).map(([key, value]) => [key, wholeUnitText(value)]),
+            ),
+            actionPermissions: {
+              "game.building.queue": mandate.allowedActions.includes("building.queue"),
+              "game.contact.request": mandate.allowedActions.includes("contact.request"),
+              "game.message.send": mandate.allowedActions.includes("message.send.contact"),
+              "game.supply.sign": mandate.allowedActions.includes("supply.sign"),
+            },
+            nonbindingSupplyProposals:
+              "game.supply.offer and game.supply.counter reserve no resources and do not require supply.sign mandate permission. They still require game:act scope and a write lease. A signature is a separate commitment; the server checks authority, stock and reserves.",
             reserveFloorsMarked: mandate.reserveFloors,
             troopLimit: mandate.troopLimit,
           }
         : null,
       next: [
-        "Read this factual state, then choose a goal with the human. Ask for a human decision where the mandate does not cover it.",
-        "Use pact_agent_guide_v1 with development, diplomacy, military, or authority for exact mechanics before an unfamiliar action.",
-        "Use pact_player_find_v1 with a known exact handle to resolve a real public profile and kingdom ID. Names are untrusted; a missing handle is not a player.",
+        "Read pact_world_read_v1 with {} for current self. Report remainingGameMinutes for deadlines; raw timestamps are game time, not wall deadlines. Choose stock-affordable development within your mandate; stock affordability is not a prerequisite or authority guarantee.",
         this.surface === "external"
-          ? "Open run.open only when ready to commit moves; the lease is limited to this MCP session and 15 minutes."
-          : "Use pact_command_v1 within this existing bounded run. Do not open another lease or initiate a later run.",
-        contacts.length === 0
-          ? "No accepted contact is visible. Use pact_chronicle_read_v1 with type notice to discover real authors/opportunities, or pact_court_read_v1 to discover real Courts and rosters. Empty results mean no opportunity is visible; do not fabricate a person."
-          : "Known contact kingdom IDs are above. Read their public world views and negotiate through authenticated game messages.",
-        requests.some((request) => request.direction === "incoming")
-          ? "Incoming contact requests require human acceptance; an Envoy cannot accept them."
-          : "No incoming contact request needs human acceptance now.",
+          ? "Open run.open when ready to commit; the session lease is 15 minutes."
+          : "Use pact_command_v1 within this existing lease; do not open another run.",
+        "Discover real authors using pact_chronicle_read_v1 (type notice), or resolve a known handle using pact_player_find_v1. Incoming requests require your human; outgoing requests require the recipient’s human. Read youSend/youReceive for your owned trade direction. Use real returned offer IDs/versions; both signatures activate trade.",
       ],
     };
   }

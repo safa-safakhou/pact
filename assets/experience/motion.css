@@ -1,0 +1,64 @@
+@keyframes experience-build {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes experience-contact {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes experience-delivery {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes experience-honk {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(-5deg);
+  }
+  70% {
+    transform: rotate(5deg);
+  }
+}
+.experience-reveal.build {
+  animation: experience-build 200ms ease-out;
+}
+.experience-reveal.contact {
+  animation: experience-contact 200ms ease-out;
+}
+.experience-reveal.delivery {
+  animation: experience-delivery 200ms ease-out;
+}
+.experience-gag {
+  animation: experience-honk 700ms ease-in-out;
+}
+html[data-experience-motion="off"] .experience-reveal,
+html[data-experience-motion="off"] .experience-gag {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-experience-motion="on"]) .experience-reveal,
+  html:not([data-experience-motion="on"]) .experience-gag {
+    animation: none;
+  }
+}

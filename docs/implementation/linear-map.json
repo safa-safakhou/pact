@@ -12,83 +12,102 @@
   },
   "project": {
     "id": "af4c1ccf-36c1-489f-9cad-96a5f4f7af46",
-    "name": "PACT — Season One",
+    "name": "PACT \u2014 Season One",
     "url": "https://linear.app/mnim/project/pact-season-one-7dae7c737a2d"
   },
   "milestones": {
     "0": {
       "id": "f8db801f-0b68-4ad5-a024-a751ae664781",
-      "name": "0 — Connections",
-      "description": "31 tickets. Account/credential foundations, five provider adapters, MCP, approvals, bounded runs, Telegram authentication, privacy, and real MVP connection certification. Signed native certification is deferred to Season One release. Exit: PACT-027, criteria A01–A09.",
-      "progress": 0,
+      "name": "0 \u2014 Connections",
+      "description": "31 tickets. Account/credential foundations, five provider adapters, MCP, approvals, bounded runs, Telegram authentication, privacy, and real MVP connection certification. Signed native certification is deferred to Season One release. Exit: PACT-027, criteria A01\u2013A09.",
+      "progress": 100,
       "sortOrder": -12
     },
     "1": {
       "id": "26677b8a-2713-4bdb-9d31-5ef324d85b21",
-      "name": "1 — Transactional rules",
-      "description": "27 tickets. Deterministic rules, atomic clock/resource ledger, economy, units, contracts, scouting/combat, authorized UI/tools, adversarial checks, and reuse proof. Exit: PACT-053, criteria R01–R08.",
-      "progress": 0,
+      "name": "1 \u2014 Transactional rules",
+      "description": "27 tickets. Deterministic rules, atomic clock/resource ledger, economy, units, contracts, scouting/combat, authorized UI/tools, adversarial checks, and reuse proof. Exit: PACT-053, criteria R01\u2013R08.",
+      "progress": 100,
       "sortOrder": 950
     },
     "2": {
       "id": "53ce719b-79d8-4b97-9efa-97c9f220422c",
-      "name": "Later — Social pilot and channels",
-      "description": "20 tickets. Profiles, Courts, Articles, evidence, sharing, web/Telegram/assistant surfaces, notifications, privacy/moderation, load tests, and a real three-week 50-player pilot. Exit: PACT-068, criteria S01–S08.",
+      "name": "Later \u2014 Social pilot and channels",
+      "description": "Deferred by founder 4 October 2026; remaining original tickets are not prerequisites for friends-only playable/fun web testing. Preserve original future scope and gates.",
       "progress": 0,
       "sortOrder": 2016
     },
     "3": {
       "id": "80a160f5-7996-41db-b281-470ae9541ba6",
-      "name": "Later — Production release",
-      "description": "20 tickets. Native clients and signing, seasons/honors, art/audio/accessibility, cosmetics and platform purchases, production operator facts, operations/distribution certification, and release rehearsal. Exit: PACT-081, criteria L01–L06.",
+      "name": "Later \u2014 Production release",
+      "description": "Deferred by founder 4 October 2026; remaining original tickets are not prerequisites for friends-only playable/fun web testing. Preserve original future scope and gates.",
       "progress": 0,
       "sortOrder": 2933
+    },
+    "experience": {
+      "id": "ce8ba75e-4b93-470c-96d4-6137ba1e4e43",
+      "name": "Completed - Game experience and generated assets (3 October)",
+      "progress": 100
+    },
+    "roadmap_resume": {
+      "id": "0ee84e10-452e-49d6-a63c-fa774e1ff628",
+      "name": "Completed - Resumed social and channel batch (4 October)",
+      "description": "Original PACT-060/063/088/089 completed; verified testing release social-channel-20261004-2. Actual device/push/staffing/pilot certification remains separate. Next dependency-ready: PACT-064.",
+      "progress": 100,
+      "sortOrder": 7068
+    },
+    "friends_playtest": {
+      "id": "b2c10d4e-5414-4606-ade8-cebaccbb787d",
+      "name": "Completed - Friends playtest: join, connect and play",
+      "description": "Four tasks implemented and deployed as friends-play-20261004-3; full evidence in reports/friends-playtest-20261004.md. All 24 Later tasks remain deferred.",
+      "progress": 100,
+      "sortOrder": 8061
     }
   },
   "documents": {
     "product": {
       "id": "9c13d88e-609e-496a-bd5b-6c4e28da2791",
-      "title": "Specification — Product brief",
+      "title": "Specification \u2014 Product brief",
       "url": "https://linear.app/mnim/document/specification-product-brief-59c57d508c3c"
     },
     "architecture": {
       "id": "aee47b4c-e443-4aeb-a5d3-ee63937aa2a2",
-      "title": "Specification — Channels and reusable architecture",
+      "title": "Specification \u2014 Channels and reusable architecture",
       "url": "https://linear.app/mnim/document/specification-channels-and-reusable-architecture-9fa9f2809472"
     },
     "access": {
       "id": "22251b99-9a5c-4159-8d9e-905235383435",
-      "title": "Specification — Account and connection specification",
+      "title": "Specification \u2014 Account and connection specification",
       "url": "https://linear.app/mnim/document/specification-account-and-connection-specification-9cf3414d9430"
     },
     "runtime": {
       "id": "f5e31697-04fe-4fa9-bb7b-9b683beaf347",
-      "title": "Specification — Execution contract",
+      "title": "Specification \u2014 Execution contract",
       "url": "https://linear.app/mnim/document/specification-execution-contract-1ee255410780"
     },
     "rules": {
       "id": "6802a076-a3db-43a1-b7a4-db0baa754bda",
-      "title": "Specification — Game rulebook",
+      "title": "Specification \u2014 Game rulebook",
       "url": "https://linear.app/mnim/document/specification-game-rulebook-6f92f10bb88b"
     },
     "social": {
       "id": "6ec30cb8-04d4-419b-b654-2a080d7ce869",
-      "title": "Specification — Identity, society, and evidence",
+      "title": "Specification \u2014 Identity, society, and evidence",
       "url": "https://linear.app/mnim/document/specification-identity-society-and-evidence-8818c3654dd7"
     },
     "privacy": {
       "id": "e76b8f07-8b08-457b-a72b-1c705c0b1614",
-      "title": "Specification — Privacy and conduct policy",
+      "title": "Specification \u2014 Privacy and conduct policy",
       "url": "https://linear.app/mnim/document/specification-privacy-and-conduct-policy-1c2ce98d4dc1"
     },
     "delivery": {
       "id": "637fef3f-ceed-460d-b621-8cbcb97f6f88",
-      "title": "Specification — Build and acceptance checklist",
+      "title": "Specification \u2014 Build and acceptance checklist",
       "url": "https://linear.app/mnim/document/specification-build-and-acceptance-checklist-ca9dd36b1e6d"
     },
     "start": {
       "id": "0d652551-22da-4651-b116-0ff257959ce3",
-      "title": "Start here — PACT implementation",
+      "title": "Start here \u2014 PACT implementation",
       "url": "https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93"
     },
     "policy": {
@@ -98,512 +117,807 @@
     },
     "alpha": {
       "id": "3e18a9b5-1414-47f4-9ff8-8abdd1cab1a4",
-      "title": "Approved game-only Alpha — Version 1.4",
+      "title": "Approved game-only Alpha \u2014 Version 1.4",
       "url": "https://linear.app/mnim/document/approved-game-only-alpha-version-14-b91b27bec011"
+    },
+    "alpha_followup": {
+      "id": "a7d325aa-aebc-42db-95e1-5edde7cc1fd0",
+      "title": "Alpha playtest findings and fix plan \u2014 2 October 2026",
+      "url": "https://linear.app/mnim/document/alpha-playtest-findings-and-fix-plan-2-october-2026-d378b4173356"
+    },
+    "alpha_fix_completion": {
+      "id": "a4e7b90f-9474-4cb7-b6e6-017aa5d4aa4a",
+      "title": "Alpha playtest fix implementation evidence \u2014 2 October 2026",
+      "url": "https://linear.app/mnim/document/alpha-playtest-fix-implementation-evidence-2-october-2026-ce30a17b3a8e"
     }
   },
   "issues": {
     "PACT-001": {
       "id": "2cd81954-b6b9-4434-a66b-640a9fbce7b1",
       "identifier": "MNI-60",
-      "url": "https://linear.app/mnim/issue/MNI-60/pact-001-bootstrap-the-application-workspace-and-continuous"
+      "url": "https://linear.app/mnim/issue/MNI-60/pact-001-bootstrap-the-application-workspace-and-continuous",
+      "status": "Done"
     },
     "PACT-082": {
       "id": "8a65fdbd-6acf-4d15-b4a0-4767adb5fc22",
       "identifier": "MNI-61",
-      "url": "https://linear.app/mnim/issue/MNI-61/pact-082-establish-reusable-package-boundaries-and-product-isolation"
+      "url": "https://linear.app/mnim/issue/MNI-61/pact-082-establish-reusable-package-boundaries-and-product-isolation",
+      "status": "Done"
     },
     "PACT-002": {
       "id": "592081d9-0095-444b-b520-5e13c4b47ee8",
       "identifier": "MNI-62",
-      "url": "https://linear.app/mnim/issue/MNI-62/pact-002-define-shared-command-event-and-tool-schemas"
+      "url": "https://linear.app/mnim/issue/MNI-62/pact-002-define-shared-command-event-and-tool-schemas",
+      "status": "Done"
     },
     "PACT-003": {
       "id": "564f2918-81df-465f-994b-e252db345edf",
       "identifier": "MNI-63",
-      "url": "https://linear.app/mnim/issue/MNI-63/pact-003-create-account-persistence-and-transactionoutbox"
+      "url": "https://linear.app/mnim/issue/MNI-63/pact-003-create-account-persistence-and-transactionoutbox",
+      "status": "Done"
     },
     "PACT-004": {
       "id": "e2609d0d-dcd3-459e-abe2-2a2b99f3d24f",
       "identifier": "MNI-64",
-      "url": "https://linear.app/mnim/issue/MNI-64/pact-004-provision-the-isolated-connection-test-environment"
+      "url": "https://linear.app/mnim/issue/MNI-64/pact-004-provision-the-isolated-connection-test-environment",
+      "status": "Done"
     },
     "PACT-005": {
       "id": "455c3b7a-70fd-4c54-9379-3cdb038778d8",
       "identifier": "MNI-65",
-      "url": "https://linear.app/mnim/issue/MNI-65/pact-005-add-redacted-operational-telemetry-and-failure-correlation"
+      "url": "https://linear.app/mnim/issue/MNI-65/pact-005-add-redacted-operational-telemetry-and-failure-correlation",
+      "status": "Done"
     },
     "PACT-006": {
       "id": "83d0f0fd-37ae-461b-a8bb-d4bcb00121f5",
       "identifier": "MNI-66",
-      "url": "https://linear.app/mnim/issue/MNI-66/pact-006-implement-signup-verification-and-human-sessions"
+      "url": "https://linear.app/mnim/issue/MNI-66/pact-006-implement-signup-verification-and-human-sessions",
+      "status": "Done"
     },
     "PACT-007": {
       "id": "a67f503a-0639-4175-868a-a9b1e439f8e5",
       "identifier": "MNI-67",
-      "url": "https://linear.app/mnim/issue/MNI-67/pact-007-implement-recovery-reauthentication-and-account-security"
+      "url": "https://linear.app/mnim/issue/MNI-67/pact-007-implement-recovery-reauthentication-and-account-security",
+      "status": "Done"
     },
     "PACT-008": {
       "id": "0612de4f-8397-4edb-b53d-7f73c26b067a",
       "identifier": "MNI-68",
-      "url": "https://linear.app/mnim/issue/MNI-68/pact-008-implement-private-kingdom-drafts-and-resumable-setup"
+      "url": "https://linear.app/mnim/issue/MNI-68/pact-008-implement-private-kingdom-drafts-and-resumable-setup",
+      "status": "Done"
     },
     "PACT-009": {
       "id": "8f964ae3-1b45-465c-935f-5e9829fbcd49",
       "identifier": "MNI-69",
-      "url": "https://linear.app/mnim/issue/MNI-69/pact-009-build-encrypted-model-credential-storage"
+      "url": "https://linear.app/mnim/issue/MNI-69/pact-009-build-encrypted-model-credential-storage",
+      "status": "Done"
     },
     "PACT-010": {
       "id": "a883c365-03f1-4d15-8f76-fb71df753b4d",
       "identifier": "MNI-70",
-      "url": "https://linear.app/mnim/issue/MNI-70/pact-010-build-the-provider-adapter-interface-and-contract-harness"
+      "url": "https://linear.app/mnim/issue/MNI-70/pact-010-build-the-provider-adapter-interface-and-contract-harness",
+      "status": "Done"
     },
     "PACT-011": {
       "id": "734533e6-ae1a-4355-8633-e660debe0a52",
       "identifier": "MNI-71",
-      "url": "https://linear.app/mnim/issue/MNI-71/pact-011-implement-the-openai-model-adapter"
+      "url": "https://linear.app/mnim/issue/MNI-71/pact-011-implement-the-openai-model-adapter",
+      "status": "Done"
     },
     "PACT-012": {
       "id": "9dada6a3-04b5-460a-a129-452f8d8279a1",
       "identifier": "MNI-72",
-      "url": "https://linear.app/mnim/issue/MNI-72/pact-012-implement-the-anthropic-model-adapter"
+      "url": "https://linear.app/mnim/issue/MNI-72/pact-012-implement-the-anthropic-model-adapter",
+      "status": "Done"
     },
     "PACT-013": {
       "id": "14050b8d-d67d-4d76-a268-68ea6157e4b9",
       "identifier": "MNI-73",
-      "url": "https://linear.app/mnim/issue/MNI-73/pact-013-implement-the-gemini-model-adapter"
+      "url": "https://linear.app/mnim/issue/MNI-73/pact-013-implement-the-gemini-model-adapter",
+      "status": "Done"
     },
     "PACT-014": {
       "id": "45ccfa9a-841f-4376-ba92-8e4614d869da",
       "identifier": "MNI-74",
-      "url": "https://linear.app/mnim/issue/MNI-74/pact-014-implement-the-xai-model-adapter"
+      "url": "https://linear.app/mnim/issue/MNI-74/pact-014-implement-the-xai-model-adapter",
+      "status": "Done"
     },
     "PACT-015": {
       "id": "d08ce963-7ff8-4748-ae01-76d71a8ec8a2",
       "identifier": "MNI-75",
-      "url": "https://linear.app/mnim/issue/MNI-75/pact-015-implement-openrouter-authorization-and-model-adapter"
+      "url": "https://linear.app/mnim/issue/MNI-75/pact-015-implement-openrouter-authorization-and-model-adapter",
+      "status": "Done"
     },
     "PACT-016": {
       "id": "290244e8-c2c8-4e01-bffb-c052a6fb38cc",
       "identifier": "MNI-76",
-      "url": "https://linear.app/mnim/issue/MNI-76/pact-016-implement-pact-oauth-for-external-clients"
+      "url": "https://linear.app/mnim/issue/MNI-76/pact-016-implement-pact-oauth-for-external-clients",
+      "status": "Done"
     },
     "PACT-017": {
       "id": "d4c67c16-6d58-474f-b876-ebf3dc2cdacb",
       "identifier": "MNI-77",
-      "url": "https://linear.app/mnim/issue/MNI-77/pact-017-implement-the-remote-mcp-transport-and-tool-registry"
+      "url": "https://linear.app/mnim/issue/MNI-77/pact-017-implement-the-remote-mcp-transport-and-tool-registry",
+      "status": "Done"
     },
     "PACT-018": {
       "id": "30e83364-ae62-4bb1-b27d-27a15bdfc008",
       "identifier": "MNI-78",
-      "url": "https://linear.app/mnim/issue/MNI-78/pact-018-implement-the-shared-dispatcher-and-sandbox-receipts"
+      "url": "https://linear.app/mnim/issue/MNI-78/pact-018-implement-the-shared-dispatcher-and-sandbox-receipts",
+      "status": "Done"
     },
     "PACT-019": {
       "id": "459fd142-dbd5-4325-9646-59ba7b58e6b8",
       "identifier": "MNI-79",
-      "url": "https://linear.app/mnim/issue/MNI-79/pact-019-implement-mandate-permissions-and-immediate-spend-checks"
+      "url": "https://linear.app/mnim/issue/MNI-79/pact-019-implement-mandate-permissions-and-immediate-spend-checks",
+      "status": "Done"
     },
     "PACT-020": {
       "id": "ea4d24dc-aa4e-4c5f-8906-c7daec5620db",
       "identifier": "MNI-80",
-      "url": "https://linear.app/mnim/issue/MNI-80/pact-020-implement-exact-command-human-approvals"
+      "url": "https://linear.app/mnim/issue/MNI-80/pact-020-implement-exact-command-human-approvals",
+      "status": "Done"
     },
     "PACT-021": {
       "id": "10163b6c-74e0-47ef-9785-b7cfd5e2f8a6",
       "identifier": "MNI-81",
-      "url": "https://linear.app/mnim/issue/MNI-81/pact-021-implement-bounded-envoy-runs-and-exclusive-write-leases"
+      "url": "https://linear.app/mnim/issue/MNI-81/pact-021-implement-bounded-envoy-runs-and-exclusive-write-leases",
+      "status": "Done"
     },
     "PACT-022": {
       "id": "b7ef073e-cc50-4cea-b337-51889a43644f",
       "identifier": "MNI-82",
-      "url": "https://linear.app/mnim/issue/MNI-82/pact-022-implement-the-durable-inbox-and-live-event-delivery"
+      "url": "https://linear.app/mnim/issue/MNI-82/pact-022-implement-the-durable-inbox-and-live-event-delivery",
+      "status": "Done"
     },
     "PACT-023": {
       "id": "e30e3c85-f3ad-44b3-9dcb-a4da201357cf",
       "identifier": "MNI-83",
-      "url": "https://linear.app/mnim/issue/MNI-83/pact-023-build-account-connection-and-envoy-setup-screens"
+      "url": "https://linear.app/mnim/issue/MNI-83/pact-023-build-account-connection-and-envoy-setup-screens",
+      "status": "Done"
     },
     "PACT-083": {
       "id": "5ba9f8ac-3b9d-469e-afcf-95b610bef07a",
       "identifier": "MNI-84",
-      "url": "https://linear.app/mnim/issue/MNI-84/pact-083-build-the-shared-client-sdk-and-capability-contract"
+      "url": "https://linear.app/mnim/issue/MNI-84/pact-083-build-the-shared-client-sdk-and-capability-contract",
+      "status": "Done"
     },
     "PACT-084": {
       "id": "e8c7cfc4-6628-4c0a-aecd-ec8781d0d26c",
       "identifier": "MNI-85",
-      "url": "https://linear.app/mnim/issue/MNI-85/pact-084-prove-native-ios-and-android-login-linking-and-approval"
+      "url": "https://linear.app/mnim/issue/MNI-85/pact-084-prove-native-ios-and-android-login-linking-and-approval",
+      "status": "Todo"
     },
     "PACT-085": {
       "id": "a10192e4-93e2-45fd-981f-e717a48e508c",
       "identifier": "MNI-86",
-      "url": "https://linear.app/mnim/issue/MNI-86/pact-085-prove-telegram-identity-linking-and-mini-app-authentication"
+      "url": "https://linear.app/mnim/issue/MNI-86/pact-085-prove-telegram-identity-linking-and-mini-app-authentication",
+      "status": "Done"
     },
     "PACT-024": {
       "id": "ad40fe6c-b70b-4d7c-8843-add94967e6c3",
       "identifier": "MNI-87",
-      "url": "https://linear.app/mnim/issue/MNI-87/pact-024-implement-first-account-retention-export-and-deletion"
+      "url": "https://linear.app/mnim/issue/MNI-87/pact-024-implement-first-account-retention-export-and-deletion",
+      "status": "Done"
     },
     "PACT-025": {
       "id": "e2d32c5a-7f05-44be-8cb1-46f8a4c58edf",
       "identifier": "MNI-88",
-      "url": "https://linear.app/mnim/issue/MNI-88/pact-025-complete-the-real-account-environment-preflight"
+      "url": "https://linear.app/mnim/issue/MNI-88/pact-025-complete-the-real-account-environment-preflight",
+      "status": "Done"
     },
     "PACT-086": {
       "id": "5e029827-5acc-4435-b45b-461fff6d97c0",
       "identifier": "MNI-89",
-      "url": "https://linear.app/mnim/issue/MNI-89/pact-086-certify-additional-assistant-routes-and-publish-a-capability"
+      "url": "https://linear.app/mnim/issue/MNI-89/pact-086-certify-additional-assistant-routes-and-publish-a-capability",
+      "status": "Done"
     },
     "PACT-026": {
       "id": "4ac4513a-f12e-4039-9bf6-361755398e6e",
       "identifier": "MNI-90",
-      "url": "https://linear.app/mnim/issue/MNI-90/pact-026-certify-every-connection-route-and-measure-unaided-setup"
+      "url": "https://linear.app/mnim/issue/MNI-90/pact-026-certify-every-connection-route-and-measure-unaided-setup",
+      "status": "Done"
     },
     "PACT-027": {
       "id": "db6965c3-aef9-4abf-ad17-a52f098ea42b",
       "identifier": "MNI-91",
-      "url": "https://linear.app/mnim/issue/MNI-91/pact-027-accept-the-connection-experiment"
+      "url": "https://linear.app/mnim/issue/MNI-91/pact-027-accept-the-connection-experiment",
+      "status": "Done"
     },
     "PACT-028": {
       "id": "f755d92e-e249-4950-b33e-ba1eaa0ae17f",
       "identifier": "MNI-92",
-      "url": "https://linear.app/mnim/issue/MNI-92/pact-028-encode-the-versioned-rules-catalog-and-exact-arithmetic"
+      "url": "https://linear.app/mnim/issue/MNI-92/pact-028-encode-the-versioned-rules-catalog-and-exact-arithmetic",
+      "status": "Done"
     },
     "PACT-029": {
       "id": "c7b43218-02f2-4291-9103-5c920beb92fe",
       "identifier": "MNI-93",
-      "url": "https://linear.app/mnim/issue/MNI-93/pact-029-implement-the-authoritative-clock-and-atomic-tick-coordinator"
+      "url": "https://linear.app/mnim/issue/MNI-93/pact-029-implement-the-authoritative-clock-and-atomic-tick-coordinator",
+      "status": "Done"
     },
     "PACT-030": {
       "id": "86148b45-813d-4c06-a92f-8ade9289b963",
       "identifier": "MNI-94",
-      "url": "https://linear.app/mnim/issue/MNI-94/pact-030-implement-the-resource-ledger-provenance-and-storage"
+      "url": "https://linear.app/mnim/issue/MNI-94/pact-030-implement-the-resource-ledger-provenance-and-storage",
+      "status": "Done"
     },
     "PACT-031": {
       "id": "758a0369-0c94-4e34-a6fa-6cfd1b9a8861",
       "identifier": "MNI-95",
-      "url": "https://linear.app/mnim/issue/MNI-95/pact-031-activate-real-kingdoms-exactly-once"
+      "url": "https://linear.app/mnim/issue/MNI-95/pact-031-activate-real-kingdoms-exactly-once",
+      "status": "Done"
     },
     "PACT-032": {
       "id": "315075d8-305b-43d3-b13b-35d9a53674db",
       "identifier": "MNI-96",
-      "url": "https://linear.app/mnim/issue/MNI-96/pact-032-implement-building-upgrades-and-the-two-builder-queues"
+      "url": "https://linear.app/mnim/issue/MNI-96/pact-032-implement-building-upgrades-and-the-two-builder-queues",
+      "status": "Done"
     },
     "PACT-033": {
       "id": "3c6ac698-5a9a-4d7e-8866-f7dddea25009",
       "identifier": "MNI-97",
-      "url": "https://linear.app/mnim/issue/MNI-97/pact-033-implement-troop-identity-training-placement-and-capacity"
+      "url": "https://linear.app/mnim/issue/MNI-97/pact-033-implement-troop-identity-training-placement-and-capacity",
+      "status": "Done"
     },
     "PACT-034": {
       "id": "b7aa2f58-3d72-44a9-906f-108e257fa871",
       "identifier": "MNI-98",
-      "url": "https://linear.app/mnim/issue/MNI-98/pact-034-implement-upkeep-hunger-recovery-and-desertion"
+      "url": "https://linear.app/mnim/issue/MNI-98/pact-034-implement-upkeep-hunger-recovery-and-desertion",
+      "status": "Done"
     },
     "PACT-035": {
       "id": "23ba5924-c572-4fe9-801c-5f6bf4f75acf",
       "identifier": "MNI-99",
-      "url": "https://linear.app/mnim/issue/MNI-99/pact-035-implement-kingdom-wide-charges-and-action-limits"
+      "url": "https://linear.app/mnim/issue/MNI-99/pact-035-implement-kingdom-wide-charges-and-action-limits",
+      "status": "Done"
     },
     "PACT-036": {
       "id": "a37ad259-4ca3-47f0-93ca-61f5e98116ef",
       "identifier": "MNI-100",
-      "url": "https://linear.app/mnim/issue/MNI-100/pact-036-implement-contacts-bounded-messages-and-direct-transfers"
+      "url": "https://linear.app/mnim/issue/MNI-100/pact-036-implement-contacts-bounded-messages-and-direct-transfers",
+      "status": "Done"
     },
     "PACT-037": {
       "id": "dbf35e4f-05ec-4116-b351-90af3da58448",
       "identifier": "MNI-101",
-      "url": "https://linear.app/mnim/issue/MNI-101/pact-037-implement-supply-offers-signatures-bonds-and-contract"
+      "url": "https://linear.app/mnim/issue/MNI-101/pact-037-implement-supply-offers-signatures-bonds-and-contract",
+      "status": "Done"
     },
     "PACT-038": {
       "id": "fbbc084b-b501-4b00-b2eb-9e51d36c7d8b",
       "identifier": "MNI-102",
-      "url": "https://linear.app/mnim/issue/MNI-102/pact-038-implement-independent-contract-delivery-and-default"
+      "url": "https://linear.app/mnim/issue/MNI-102/pact-038-implement-independent-contract-delivery-and-default",
+      "status": "Done"
     },
     "PACT-039": {
       "id": "aa979d6c-7fe7-40b9-81f6-9d9cb73de779",
       "identifier": "MNI-103",
-      "url": "https://linear.app/mnim/issue/MNI-103/pact-039-complete-future-exposure-accounting-and-human-exceptions"
+      "url": "https://linear.app/mnim/issue/MNI-103/pact-039-complete-future-exposure-accounting-and-human-exceptions",
+      "status": "Done"
     },
     "PACT-040": {
       "id": "45a700af-96a8-4dda-bc5a-a17a138ca48b",
       "identifier": "MNI-104",
-      "url": "https://linear.app/mnim/issue/MNI-104/pact-040-implement-garrison-contracts-recall-return-and-seizure"
+      "url": "https://linear.app/mnim/issue/MNI-104/pact-040-implement-garrison-contracts-recall-return-and-seizure",
+      "status": "Done"
     },
     "PACT-041": {
       "id": "696ee8e9-5080-49e5-ae6a-071439877361",
       "identifier": "MNI-105",
-      "url": "https://linear.app/mnim/issue/MNI-105/pact-041-implement-scouting-and-private-observation-reports"
+      "url": "https://linear.app/mnim/issue/MNI-105/pact-041-implement-scouting-and-private-observation-reports",
+      "status": "Done"
     },
     "PACT-042": {
       "id": "93118a8a-f8f7-4558-ab8e-0b5363d35573",
       "identifier": "MNI-106",
-      "url": "https://linear.app/mnim/issue/MNI-106/pact-042-implement-raid-seed-commitments-and-deterministic-dice"
+      "url": "https://linear.app/mnim/issue/MNI-106/pact-042-implement-raid-seed-commitments-and-deterministic-dice",
+      "status": "Done"
     },
     "PACT-043": {
       "id": "7db05465-9efe-4bce-97ab-16d48ebef942",
       "identifier": "MNI-107",
-      "url": "https://linear.app/mnim/issue/MNI-107/pact-043-implement-pure-combat-casualties-and-loot-calculations"
+      "url": "https://linear.app/mnim/issue/MNI-107/pact-043-implement-pure-combat-casualties-and-loot-calculations",
+      "status": "Done"
     },
     "PACT-044": {
       "id": "b96bbe42-52f7-43c1-924d-0d0207014131",
       "identifier": "MNI-108",
-      "url": "https://linear.app/mnim/issue/MNI-108/pact-044-implement-raids-contributors-locks-and-overlapping-resolution"
+      "url": "https://linear.app/mnim/issue/MNI-108/pact-044-implement-raids-contributors-locks-and-overlapping-resolution",
+      "status": "Done"
     },
     "PACT-045": {
       "id": "3bc3969f-ea4e-47f0-bc2c-2ca3d9329ae4",
       "identifier": "MNI-109",
-      "url": "https://linear.app/mnim/issue/MNI-109/pact-045-build-authorized-world-views-and-factual-forecasts"
+      "url": "https://linear.app/mnim/issue/MNI-109/pact-045-build-authorized-world-views-and-factual-forecasts",
+      "status": "Done"
     },
     "PACT-046": {
       "id": "a9dd4329-0aed-4aa0-8ddd-75ec9e60ed1e",
       "identifier": "MNI-110",
-      "url": "https://linear.app/mnim/issue/MNI-110/pact-046-implement-fortune-accounting-and-provisional-standings"
+      "url": "https://linear.app/mnim/issue/MNI-110/pact-046-implement-fortune-accounting-and-provisional-standings",
+      "status": "Done"
     },
     "PACT-047": {
       "id": "b27c2e96-9e0f-4e2c-8719-f49a151ff55e",
       "identifier": "MNI-111",
-      "url": "https://linear.app/mnim/issue/MNI-111/pact-047-implement-achievement-triggers-and-earned-cosmetic"
+      "url": "https://linear.app/mnim/issue/MNI-111/pact-047-implement-achievement-triggers-and-earned-cosmetic",
+      "status": "Done"
     },
     "PACT-048": {
       "id": "984774f1-0eda-49de-bb81-2e1b4b53f1b0",
       "identifier": "MNI-112",
-      "url": "https://linear.app/mnim/issue/MNI-112/pact-048-build-the-plain-rules-prototype-interface"
+      "url": "https://linear.app/mnim/issue/MNI-112/pact-048-build-the-plain-rules-prototype-interface",
+      "status": "Done"
     },
     "PACT-049": {
       "id": "a199fe42-095f-4e1c-8403-424bb6cbed36",
       "identifier": "MNI-113",
-      "url": "https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route"
+      "url": "https://linear.app/mnim/issue/MNI-113/pact-049-expose-complete-game-tools-to-every-envoy-route",
+      "status": "Done"
     },
     "PACT-050": {
       "id": "2611e218-442e-453a-b409-656c3de85997",
       "identifier": "MNI-114",
-      "url": "https://linear.app/mnim/issue/MNI-114/pact-050-implement-gameplay-retirement-and-account-deletion-settlement"
+      "url": "https://linear.app/mnim/issue/MNI-114/pact-050-implement-gameplay-retirement-and-account-deletion-settlement",
+      "status": "Done"
     },
     "PACT-051": {
       "id": "7541279a-76ec-4c23-8c87-b4ebc7583dcb",
       "identifier": "MNI-115",
-      "url": "https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests"
+      "url": "https://linear.app/mnim/issue/MNI-115/pact-051-run-transaction-replay-and-adversarial-rules-tests",
+      "status": "Done"
     },
     "PACT-052": {
       "id": "275b2acf-7d09-4cfe-9f1d-00871c296ceb",
       "identifier": "MNI-116",
-      "url": "https://linear.app/mnim/issue/MNI-116/pact-052-build-and-run-the-allowed-script-baseline"
+      "url": "https://linear.app/mnim/issue/MNI-116/pact-052-build-and-run-the-allowed-script-baseline",
+      "status": "Done"
     },
     "PACT-096": {
       "id": "52af29f3-284a-4397-96d3-b212381179b8",
       "identifier": "MNI-117",
-      "url": "https://linear.app/mnim/issue/MNI-117/pact-096-demonstrate-platform-module-reuse-outside-pact"
+      "url": "https://linear.app/mnim/issue/MNI-117/pact-096-demonstrate-platform-module-reuse-outside-pact",
+      "status": "Done"
     },
     "PACT-053": {
       "id": "5c92b41b-cbca-4bda-b7f1-e2f6a1cea19f",
       "identifier": "MNI-118",
-      "url": "https://linear.app/mnim/issue/MNI-118/pact-053-accept-the-transactional-rules-prototype"
+      "url": "https://linear.app/mnim/issue/MNI-118/pact-053-accept-the-transactional-rules-prototype",
+      "status": "Done"
     },
     "PACT-054": {
       "id": "537879c9-c739-47c8-b745-5e1f9998da8b",
       "identifier": "MNI-119",
-      "url": "https://linear.app/mnim/issue/MNI-119/pact-054-implement-public-profiles-and-handle-lifecycle"
+      "url": "https://linear.app/mnim/issue/MNI-119/pact-054-implement-public-profiles-and-handle-lifecycle",
+      "status": "Done"
     },
     "PACT-055": {
       "id": "8f4fa2b2-38b4-4821-9abd-588c289b1a0a",
       "identifier": "MNI-120",
-      "url": "https://linear.app/mnim/issue/MNI-120/pact-055-implement-every-invitation-destination-and-redemption-rule"
+      "url": "https://linear.app/mnim/issue/MNI-120/pact-055-implement-every-invitation-destination-and-redemption-rule",
+      "status": "Done"
     },
     "PACT-056": {
       "id": "da6af256-a728-4067-945b-87e0a1f830a2",
       "identifier": "MNI-121",
-      "url": "https://linear.app/mnim/issue/MNI-121/pact-056-implement-court-membership-roles-and-lifecycle"
+      "url": "https://linear.app/mnim/issue/MNI-121/pact-056-implement-court-membership-roles-and-lifecycle",
+      "status": "Done"
     },
     "PACT-057": {
       "id": "29f7591f-3946-49ea-af45-77db539d850e",
       "identifier": "MNI-122",
-      "url": "https://linear.app/mnim/issue/MNI-122/pact-057-implement-articles-and-mutual-allegiance"
+      "url": "https://linear.app/mnim/issue/MNI-122/pact-057-implement-articles-and-mutual-allegiance",
+      "status": "Done"
     },
     "PACT-058": {
       "id": "737b4846-5964-4fc0-8d1f-21cc96e21baa",
       "identifier": "MNI-123",
-      "url": "https://linear.app/mnim/issue/MNI-123/pact-058-implement-signed-excerpts-and-the-evidence-viewer"
+      "url": "https://linear.app/mnim/issue/MNI-123/pact-058-implement-signed-excerpts-and-the-evidence-viewer",
+      "status": "Done"
     },
     "PACT-059": {
       "id": "82fddf3a-6835-44ae-860a-e7df7cf8a129",
       "identifier": "MNI-124",
-      "url": "https://linear.app/mnim/issue/MNI-124/pact-059-implement-chronicle-stories-notices-and-public-share-pages"
+      "url": "https://linear.app/mnim/issue/MNI-124/pact-059-implement-chronicle-stories-notices-and-public-share-pages",
+      "status": "Done"
     },
     "PACT-060": {
       "id": "c765791a-1c41-4b27-961e-e4307ad4ef8f",
       "identifier": "MNI-125",
-      "url": "https://linear.app/mnim/issue/MNI-125/pact-060-deliver-opt-in-critical-email-and-web-push"
+      "url": "https://linear.app/mnim/issue/MNI-125/pact-060-deliver-opt-in-critical-email-and-web-push",
+      "status": "Done"
     },
     "PACT-061": {
       "id": "bbe22ee9-a215-47cb-8e2b-be46334741e0",
       "identifier": "MNI-126",
-      "url": "https://linear.app/mnim/issue/MNI-126/pact-061-complete-the-first-session-and-social-interface"
+      "url": "https://linear.app/mnim/issue/MNI-126/pact-061-complete-the-first-session-and-social-interface",
+      "status": "Done"
     },
     "PACT-062": {
       "id": "1d7d2883-a98e-42b2-970b-6102575224c2",
       "identifier": "MNI-127",
-      "url": "https://linear.app/mnim/issue/MNI-127/pact-062-improve-envoy-context-selection-and-result-explanations"
+      "url": "https://linear.app/mnim/issue/MNI-127/pact-062-improve-envoy-context-selection-and-result-explanations",
+      "status": "Done"
     },
     "PACT-063": {
       "id": "47145412-f304-49a7-ae98-696dc080ac9d",
       "identifier": "MNI-128",
-      "url": "https://linear.app/mnim/issue/MNI-128/pact-063-build-reporting-moderation-and-appeals-tools"
+      "url": "https://linear.app/mnim/issue/MNI-128/pact-063-build-reporting-moderation-and-appeals-tools",
+      "status": "Done"
     },
     "PACT-064": {
       "id": "3c7010be-5ff1-4613-91f2-0d575a37239c",
       "identifier": "MNI-129",
-      "url": "https://linear.app/mnim/issue/MNI-129/pact-064-extend-privacy-workflows-to-the-complete-social-world"
+      "url": "https://linear.app/mnim/issue/MNI-129/pact-064-extend-privacy-workflows-to-the-complete-social-world",
+      "status": "Todo"
     },
     "PACT-065": {
       "id": "da53782c-a1ee-4964-abdb-268181cb9e80",
       "identifier": "MNI-130",
-      "url": "https://linear.app/mnim/issue/MNI-130/pact-065-implement-privacy-bounded-product-measurement"
+      "url": "https://linear.app/mnim/issue/MNI-130/pact-065-implement-privacy-bounded-product-measurement",
+      "status": "Todo"
     },
     "PACT-087": {
       "id": "ce4d034f-348f-439b-bfeb-d167d1d4ae78",
       "identifier": "MNI-131",
-      "url": "https://linear.app/mnim/issue/MNI-131/pact-087-build-complete-native-kingdom-and-envoy-screens"
+      "url": "https://linear.app/mnim/issue/MNI-131/pact-087-build-complete-native-kingdom-and-envoy-screens",
+      "status": "Todo"
     },
     "PACT-088": {
       "id": "b1b4de9b-70cf-4551-9422-61a6960bba0a",
       "identifier": "MNI-132",
-      "url": "https://linear.app/mnim/issue/MNI-132/pact-088-deliver-the-complete-telegram-mini-app"
+      "url": "https://linear.app/mnim/issue/MNI-132/pact-088-deliver-the-complete-telegram-mini-app",
+      "status": "Done"
     },
     "PACT-089": {
       "id": "451345b9-6d00-4eb4-8e1b-ceaec8a211de",
       "identifier": "MNI-133",
-      "url": "https://linear.app/mnim/issue/MNI-133/pact-089-implement-private-chat-bot-briefings-and-explicit-run"
+      "url": "https://linear.app/mnim/issue/MNI-133/pact-089-implement-private-chat-bot-briefings-and-explicit-run",
+      "status": "Done"
     },
     "PACT-090": {
       "id": "8d0268f7-a5dc-4c40-b749-d4086e3aa035",
       "identifier": "MNI-134",
-      "url": "https://linear.app/mnim/issue/MNI-134/pact-090-add-native-push-and-telegram-notification-delivery"
+      "url": "https://linear.app/mnim/issue/MNI-134/pact-090-add-native-push-and-telegram-notification-delivery",
+      "status": "Todo"
     },
     "PACT-091": {
       "id": "f1792634-7fc2-499f-8879-bba96d437e4c",
       "identifier": "MNI-135",
-      "url": "https://linear.app/mnim/issue/MNI-135/pact-091-complete-cross-channel-session-and-privacy-lifecycle"
+      "url": "https://linear.app/mnim/issue/MNI-135/pact-091-complete-cross-channel-session-and-privacy-lifecycle",
+      "status": "Todo"
     },
     "PACT-092": {
       "id": "2b2d2932-9b29-42f3-8632-6ac785b0f739",
       "identifier": "MNI-136",
-      "url": "https://linear.app/mnim/issue/MNI-136/pact-092-verify-cross-device-and-assistant-handoff-end-to-end"
+      "url": "https://linear.app/mnim/issue/MNI-136/pact-092-verify-cross-device-and-assistant-handoff-end-to-end",
+      "status": "Todo"
     },
     "PACT-066": {
       "id": "4a8009f6-02b4-4eb2-88fd-1103f465c820",
       "identifier": "MNI-137",
-      "url": "https://linear.app/mnim/issue/MNI-137/pact-066-run-the-social-integration-and-load-suite"
+      "url": "https://linear.app/mnim/issue/MNI-137/pact-066-run-the-social-integration-and-load-suite",
+      "status": "Todo"
     },
     "PACT-067": {
       "id": "e2e855a2-6b5d-43f0-8e44-08294de2e565",
       "identifier": "MNI-138",
-      "url": "https://linear.app/mnim/issue/MNI-138/pact-067-run-the-three-week-social-pilot"
+      "url": "https://linear.app/mnim/issue/MNI-138/pact-067-run-the-three-week-social-pilot",
+      "status": "Todo"
     },
     "PACT-068": {
       "id": "f81e6989-54d6-4b8f-b10a-e9c69f532277",
       "identifier": "MNI-139",
-      "url": "https://linear.app/mnim/issue/MNI-139/pact-068-accept-the-social-slice"
+      "url": "https://linear.app/mnim/issue/MNI-139/pact-068-accept-the-social-slice",
+      "status": "Todo"
     },
     "PACT-069": {
       "id": "0db9f257-6bf9-412e-b900-d6e2fdfef3ec",
       "identifier": "MNI-140",
-      "url": "https://linear.app/mnim/issue/MNI-140/pact-069-implement-the-complete-six-week-season-lifecycle"
+      "url": "https://linear.app/mnim/issue/MNI-140/pact-069-implement-the-complete-six-week-season-lifecycle",
+      "status": "Done"
     },
     "PACT-070": {
       "id": "70606adc-5d1d-4793-91a3-631b1e795d33",
       "identifier": "MNI-141",
-      "url": "https://linear.app/mnim/issue/MNI-141/pact-070-implement-seasonal-honors-and-award-review"
+      "url": "https://linear.app/mnim/issue/MNI-141/pact-070-implement-seasonal-honors-and-award-review",
+      "status": "Done"
     },
     "PACT-071": {
       "id": "32e38554-c034-48a3-9dde-4da879892073",
       "identifier": "MNI-142",
-      "url": "https://linear.app/mnim/issue/MNI-142/pact-071-produce-and-integrate-the-illustrated-kingdom-and-cosmetics"
+      "url": "https://linear.app/mnim/issue/MNI-142/pact-071-produce-and-integrate-the-illustrated-kingdom-and-cosmetics",
+      "status": "Todo"
     },
     "PACT-072": {
       "id": "df5b332f-175b-4ffd-8751-f7308c678dac",
       "identifier": "MNI-143",
-      "url": "https://linear.app/mnim/issue/MNI-143/pact-072-integrate-optional-audio-motion-and-notification-feedback"
+      "url": "https://linear.app/mnim/issue/MNI-143/pact-072-integrate-optional-audio-motion-and-notification-feedback",
+      "status": "Todo"
     },
     "PACT-073": {
       "id": "eab07846-70f3-4d9a-a1af-89ced69f496a",
       "identifier": "MNI-144",
-      "url": "https://linear.app/mnim/issue/MNI-144/pact-073-finish-responsive-accessibility-and-pwa-behavior"
+      "url": "https://linear.app/mnim/issue/MNI-144/pact-073-finish-responsive-accessibility-and-pwa-behavior",
+      "status": "Done"
     },
     "PACT-074": {
       "id": "b28fc658-a364-4006-8d1e-242debd25784",
       "identifier": "MNI-145",
-      "url": "https://linear.app/mnim/issue/MNI-145/pact-074-implement-the-cosmetic-catalog-wallet-and-unlock-flow"
+      "url": "https://linear.app/mnim/issue/MNI-145/pact-074-implement-the-cosmetic-catalog-wallet-and-unlock-flow",
+      "status": "Todo"
     },
     "PACT-075": {
       "id": "ad059cc5-0837-4a33-a861-3176db19c3f0",
       "identifier": "MNI-146",
-      "url": "https://linear.app/mnim/issue/MNI-146/pact-075-integrate-hosted-payments-and-verified-purchase-receipts"
+      "url": "https://linear.app/mnim/issue/MNI-146/pact-075-integrate-hosted-payments-and-verified-purchase-receipts",
+      "status": "Todo"
     },
     "PACT-076": {
       "id": "34e69837-64e9-4471-9e03-8ec5dc0443d0",
       "identifier": "MNI-147",
-      "url": "https://linear.app/mnim/issue/MNI-147/pact-076-implement-refunds-reversals-and-cosmetic-reconciliation"
+      "url": "https://linear.app/mnim/issue/MNI-147/pact-076-implement-refunds-reversals-and-cosmetic-reconciliation",
+      "status": "Todo"
     },
     "PACT-077": {
       "id": "2911d9a4-6371-4092-8d88-52c12e430a00",
       "identifier": "MNI-148",
-      "url": "https://linear.app/mnim/issue/MNI-148/pact-077-run-the-competitive-abuse-and-moderation-release-review"
+      "url": "https://linear.app/mnim/issue/MNI-148/pact-077-run-the-competitive-abuse-and-moderation-release-review",
+      "status": "Todo"
     },
     "PACT-093": {
       "id": "b8db9b00-5ff9-4a39-9d18-93c78b938ee1",
       "identifier": "MNI-149",
-      "url": "https://linear.app/mnim/issue/MNI-149/pact-093-implement-storekit-and-google-play-cosmetic-purchases"
+      "url": "https://linear.app/mnim/issue/MNI-149/pact-093-implement-storekit-and-google-play-cosmetic-purchases",
+      "status": "Todo"
     },
     "PACT-094": {
       "id": "88e9ed99-ffd6-43c0-96c8-6691e7816d08",
       "identifier": "MNI-150",
-      "url": "https://linear.app/mnim/issue/MNI-150/pact-094-implement-telegram-stars-cosmetic-purchases"
+      "url": "https://linear.app/mnim/issue/MNI-150/pact-094-implement-telegram-stars-cosmetic-purchases",
+      "status": "Todo"
     },
     "PACT-078": {
       "id": "afd3aaa0-375f-4243-afc2-4f56ae8b8119",
       "identifier": "MNI-151",
-      "url": "https://linear.app/mnim/issue/MNI-151/pact-078-provision-and-rehearse-production-operations"
+      "url": "https://linear.app/mnim/issue/MNI-151/pact-078-provision-and-rehearse-production-operations",
+      "status": "Todo"
     },
     "PACT-079": {
       "id": "c3283977-4c25-4d10-a3b3-174bc123b9dd",
       "identifier": "MNI-152",
-      "url": "https://linear.app/mnim/issue/MNI-152/pact-079-re-certify-external-clients-and-complete-distribution"
+      "url": "https://linear.app/mnim/issue/MNI-152/pact-079-re-certify-external-clients-and-complete-distribution",
+      "status": "Todo"
     },
     "PACT-095": {
       "id": "f5271e8b-2d3e-4944-b47d-8a637f5f89ad",
       "identifier": "MNI-153",
-      "url": "https://linear.app/mnim/issue/MNI-153/pact-095-prepare-and-certify-mobile-store-and-telegram-distribution"
+      "url": "https://linear.app/mnim/issue/MNI-153/pact-095-prepare-and-certify-mobile-store-and-telegram-distribution",
+      "status": "Todo"
     },
     "PACT-097": {
       "id": "b8d625ea-f51b-43d4-85b0-fa24d8f1207d",
       "identifier": "MNI-154",
-      "url": "https://linear.app/mnim/issue/MNI-154/pact-097-certify-the-full-production-channel-matrix"
+      "url": "https://linear.app/mnim/issue/MNI-154/pact-097-certify-the-full-production-channel-matrix",
+      "status": "Todo"
     },
     "PACT-080": {
       "id": "be4ec3dc-d59c-42d5-8e92-2df30fe0edec",
       "identifier": "MNI-155",
-      "url": "https://linear.app/mnim/issue/MNI-155/pact-080-rehearse-season-one-end-to-end"
+      "url": "https://linear.app/mnim/issue/MNI-155/pact-080-rehearse-season-one-end-to-end",
+      "status": "Done"
     },
     "PACT-098": {
       "id": "d5a3ffb1-e386-42e7-b096-0a2e218f5df1",
       "identifier": "MNI-157",
-      "url": "https://linear.app/mnim/issue/MNI-157/pact-098-replace-mvp-operator-placeholders-with-reviewed-production-facts"
+      "url": "https://linear.app/mnim/issue/MNI-157/pact-098-replace-mvp-operator-placeholders-with-reviewed-production-facts",
+      "status": "Todo"
     },
     "PACT-081": {
       "id": "c492fa0f-2109-4ef5-ba83-e3ea6296e03a",
       "identifier": "MNI-156",
-      "url": "https://linear.app/mnim/issue/MNI-156/pact-081-accept-and-prepare-the-season-one-release"
+      "url": "https://linear.app/mnim/issue/MNI-156/pact-081-accept-and-prepare-the-season-one-release",
+      "status": "Todo"
     },
     "PACT-099": {
       "id": "e6373264-a91d-4d12-920a-3e1f43f8ad2e",
       "identifier": "MNI-158",
-      "url": "https://linear.app/mnim/issue/MNI-158/pact-099-complete-agent-first-access-learning-and-observable-play"
+      "url": "https://linear.app/mnim/issue/MNI-158/pact-099-complete-agent-first-access-learning-and-observable-play",
+      "status": "Done"
+    },
+    "PACT-100": {
+      "id": "83aeb198-acd8-42d1-b6be-b591622530f6",
+      "identifier": "MNI-159",
+      "url": "https://linear.app/mnim/issue/MNI-159/pact-100-fix-exact-approval-links-under-the-hosted-pact-path",
+      "status": "Done"
+    },
+    "PACT-101": {
+      "id": "08b1855b-07b7-42b1-a615-5dfbab847ab0",
+      "identifier": "MNI-160",
+      "url": "https://linear.app/mnim/issue/MNI-160/pact-101-make-private-alpha-signup-and-codex-connection-setup",
+      "status": "Done"
+    },
+    "PACT-102": {
+      "id": "98e7f16a-6025-4aee-94d6-39d39acb2e04",
+      "identifier": "MNI-161",
+      "url": "https://linear.app/mnim/issue/MNI-161/pact-102-make-current-kingdom-reads-and-validation-errors-reliable-for",
+      "status": "Done"
+    },
+    "PACT-103": {
+      "id": "2705440e-9687-46ef-a92e-fd6df8c8c50c",
+      "identifier": "MNI-162",
+      "url": "https://linear.app/mnim/issue/MNI-162/pact-103-clarify-founding-resources-affordability-and-trade-authority",
+      "status": "Done"
+    },
+    "PACT-104": {
+      "id": "7767380b-39df-49c5-8126-fc3320f0507f",
+      "identifier": "MNI-163",
+      "url": "https://linear.app/mnim/issue/MNI-163/pact-104-expose-completed-builds-and-actual-trade-deliveries-to-owners",
+      "status": "Done"
+    },
+    "PACT-105": {
+      "id": "5278da5b-aec3-4ade-b24c-e32208d92c45",
+      "identifier": "MNI-164",
+      "url": "https://linear.app/mnim/issue/MNI-164/pact-105-keep-external-agent-activity-ordered-refreshed-and-reconciled",
+      "status": "Done"
+    },
+    "PACT-106": {
+      "id": "c778d26e-ac88-4727-b372-5a3ef63f8956",
+      "identifier": "MNI-165",
+      "url": "https://linear.app/mnim/issue/MNI-165/pact-106-show-remaining-game-time-for-builds-and-contracts",
+      "status": "Done"
+    },
+    "PACT-107": {
+      "id": "f3c293fa-5397-4945-8359-cec7c27597e1",
+      "identifier": "MNI-166",
+      "url": "https://linear.app/mnim/issue/MNI-166/pact-107-put-connection-progress-and-next-decisions-first-on-desktop",
+      "status": "Done"
+    },
+    "PACT-108": {
+      "id": "16633fd7-6ea4-4b6d-b70e-5ce564ecd839",
+      "identifier": "MNI-167",
+      "url": "https://linear.app/mnim/issue/MNI-167/pact-108-repeat-the-fresh-three-player-journey-and-document-remaining",
+      "status": "Done"
+    },
+    "PACT-123": {
+      "id": "10b42790-5856-4412-b7a4-1ffd8314b2b7",
+      "identifier": "MNI-217",
+      "url": "https://linear.app/mnim/issue/MNI-217/pact-123-show-harvest-conditions-with-three-generated-field-overlays",
+      "status": "Done"
+    },
+    "PACT-126": {
+      "id": "9aee1c4d-7a9b-4563-9904-96773c717a64",
+      "identifier": "MNI-220",
+      "url": "https://linear.app/mnim/issue/MNI-220/pact-126-run-one-fresh-player-session-and-record-clarity-and-enjoyment",
+      "status": "Done"
+    },
+    "PACT-125": {
+      "id": "58632701-2cc8-4068-aac3-f1d237a7212f",
+      "identifier": "MNI-219",
+      "url": "https://linear.app/mnim/issue/MNI-219/pact-125-verify-the-bounded-asset-bundle-and-regeneration-instructions",
+      "status": "Done"
+    },
+    "PACT-124": {
+      "id": "871bfbfa-9e10-484a-8799-7ef26ea41741",
+      "identifier": "MNI-218",
+      "url": "https://linear.app/mnim/issue/MNI-218/pact-124-check-the-four-screen-experience-and-enforce-media-budgets",
+      "status": "Done"
+    },
+    "PACT-119": {
+      "id": "079b1551-8dea-4d82-8e34-addc34bab166",
+      "identifier": "MNI-213",
+      "url": "https://linear.app/mnim/issue/MNI-213/pact-119-add-seven-factual-in-app-event-cards-with-generated-icons",
+      "status": "Done"
+    },
+    "PACT-114": {
+      "id": "2237952c-7e27-46c4-8460-1814ca08f8a8",
+      "identifier": "MNI-208",
+      "url": "https://linear.app/mnim/issue/MNI-208/pact-114-generate-a-small-kingdom-scene-with-two-visible-upgrade",
+      "status": "Done"
+    },
+    "PACT-117": {
+      "id": "6e32aaf1-1648-466c-958a-8340a963e670",
+      "identifier": "MNI-211",
+      "url": "https://linear.app/mnim/issue/MNI-211/pact-117-generate-one-music-loop-one-ambience-loop-and-one-flourish",
+      "status": "Done"
+    },
+    "PACT-116": {
+      "id": "38a055af-7661-4d21-8e02-76b481c7b191",
+      "identifier": "MNI-210",
+      "url": "https://linear.app/mnim/issue/MNI-210/pact-116-add-three-short-milestone-animations-and-one-optional-goose",
+      "status": "Done"
+    },
+    "PACT-122": {
+      "id": "b2a890c9-c8b3-420b-9665-bfd6b86d417f",
+      "identifier": "MNI-216",
+      "url": "https://linear.app/mnim/issue/MNI-216/pact-122-show-three-private-milestone-keepsakes-in-the-hall",
+      "status": "Done"
+    },
+    "PACT-121": {
+      "id": "be35897f-08c6-40c9-8333-f51b5bc5b74b",
+      "identifier": "MNI-215",
+      "url": "https://linear.app/mnim/issue/MNI-215/pact-121-show-notice-freshness-and-actual-contact-waiting-states",
+      "status": "Done"
+    },
+    "PACT-120": {
+      "id": "bd23232b-c79c-4ca4-8af3-4bcf8202f47d",
+      "identifier": "MNI-214",
+      "url": "https://linear.app/mnim/issue/MNI-214/pact-120-add-silent-by-default-audio-controls-and-a-reduced-motion",
+      "status": "Done"
+    },
+    "PACT-110": {
+      "id": "2aebbf66-86fd-4558-81e1-62b8f8b26a40",
+      "identifier": "MNI-204",
+      "url": "https://linear.app/mnim/issue/MNI-204/pact-110-prove-image-motion-and-audio-generation-with-four-samples",
+      "status": "Done"
+    },
+    "PACT-118": {
+      "id": "2939fe90-221d-4a46-8fc0-0e7fd0341ac1",
+      "identifier": "MNI-212",
+      "url": "https://linear.app/mnim/issue/MNI-212/pact-118-generate-six-short-event-sounds-and-one-synthesized-goose",
+      "status": "Done"
+    },
+    "PACT-115": {
+      "id": "33fa6c41-df8f-4e78-b4c1-c5dc85f1d5b9",
+      "identifier": "MNI-209",
+      "url": "https://linear.app/mnim/issue/MNI-209/pact-115-generate-four-court-characters-with-three-poses-each",
+      "status": "Done"
+    },
+    "PACT-112": {
+      "id": "5b89df1a-91d8-49df-9781-38ed8d9c1b08",
+      "identifier": "MNI-207",
+      "url": "https://linear.app/mnim/issue/MNI-207/pact-112-show-one-truthful-next-decision-card-throughout-the-first",
+      "status": "Done"
+    },
+    "PACT-113": {
+      "id": "14fff0c1-2494-4c8a-9846-55a2d4bda38a",
+      "identifier": "MNI-206",
+      "url": "https://linear.app/mnim/issue/MNI-206/pact-113-correct-rate-units-and-show-a-factual-envoy-result-summary",
+      "status": "Done"
+    },
+    "PACT-111": {
+      "id": "0b94349a-d6fb-4709-a687-9faa28722a0a",
+      "identifier": "MNI-205",
+      "url": "https://linear.app/mnim/issue/MNI-205/pact-111-persist-one-private-ambition-choice-for-the-human-and-envoy",
+      "status": "Done"
+    },
+    "PACT-109": {
+      "id": "336bac8b-6fd7-495a-ac90-c95f0d638422",
+      "identifier": "MNI-203",
+      "url": "https://linear.app/mnim/issue/MNI-203/pact-109-freeze-the-small-web-experience-scope-and-asset-list",
+      "status": "Done"
+    },
+    "PACT-127": {
+      "id": "ef971131-446c-4560-bf21-4ff4f9a498c5",
+      "identifier": "MNI-221",
+      "url": "https://linear.app/mnim/issue/MNI-221/pact-127-join-from-one-shared-link-and-connect-your-own-agent",
+      "status": "Done"
+    },
+    "PACT-128": {
+      "id": "d61db6ef-c9a8-405b-9ea7-bb0a105e7b14",
+      "identifier": "MNI-222",
+      "url": "https://linear.app/mnim/issue/MNI-222/pact-128-make-the-opening-kingdom-screen-short-and-actionable",
+      "status": "Done"
+    },
+    "PACT-129": {
+      "id": "2f247a49-09c8-49b8-b372-7461a8be5c73",
+      "identifier": "MNI-223",
+      "url": "https://linear.app/mnim/issue/MNI-223/pact-129-show-useful-upgrade-choices-and-use-the-free-builder",
+      "status": "Done"
+    },
+    "PACT-130": {
+      "id": "7d6ea718-1792-4e6a-98d4-4522e53e0fe7",
+      "identifier": "MNI-224",
+      "url": "https://linear.app/mnim/issue/MNI-224/pact-130-find-friends-in-the-shared-world-and-start-a-conversation",
+      "status": "Done"
     }
   },
-  "source_revision": "1.4 — 2026-10-01 game-only Alpha",
-  "verified_at": "2026-09-16T14:52:19Z",
-  "last_synced_at": "2026-10-01T21:59:34.515Z",
-  "latest_followup_sync": "PACT-099 reopened for founder-reported OAuth button blocker and returned to Done after e07dd47 / alpha-20261001-2 deployment/public verification and fresh Chrome synthetic login feedback. Comment 97d3c0f0-7e94-4960-97f5-8949fd10fbf0; report oauth-button-fix.md. No other issue or postponed scope changed. Prior full closure sync scope below retained as history.",
-  "last_sync_scope": "PACT-099/MNI-158 and PACT-080/MNI-155 freshly Done/read back with checked narrowed Alpha acceptance and linked completion reports/comments db6bb46a-bdbd-4be9-9b2c-0400ded0498a and 5cb5a440-3216-4a6c-b70a-74716d5845e5. All 13 prerequisites freshly Done before 080 claim. 13/13 Alpha complete, 71 total Done, 28 Later Backlog carried forward; not a new full 99-issue audit. Project overview/summary and start guide updated/read back; Alpha milestone 100%, original project remains unfinished for postponed production work. Implementation 8789315/88c273f deployed alpha-20261001-1, migrations 0036–0044, backup 537793fe and public verification passed. Build/typecheck/lint, 212 unit and full final 284 integration pass, optional live-model skip. Three independent fresh Luna players made five actual moves from ordinary objectives; owner reports match, pending negotiation and mixed feedback documented, temporary grants revoked. No paid PACT inference/new infrastructure/production claim. Friend connection and final rehearsal docs added; original Later acceptance preserved.",
+  "source_revision": "1.4 \u2014 2026-10-01 game-only Alpha",
+  "verified_at": "2026-10-02T18:43:16.672635+00:00",
+  "last_synced_at": "2026-10-03",
+  "latest_followup_sync": "Full 108-issue live Linear readback (no next page): 80 Done, zero In Progress/Todo, 28 Later Backlog. PACT-100\u2013108 all Done, assigned Mohammad Safakhou, all acceptance checked, correct completed milestone/PACT Alpha label. Original Alpha 13/13 preserved. Milestone 100%, project/start/plan/completion docs read back. Existing VPS alpha-20261002-7 uncommitted source snapshot deployed/public verified; 222 unit/288 integration pass, optional skip, build/types/lint pass. Final fresh three-player journey and six-account cleanup documented; no production/human enjoyment certification.",
+  "last_sync_scope": "PACT-127 through PACT-130 complete; 106 Done / 24 Later Backlog",
   "status_map": {
     "Backlog": "todo",
     "Todo": "todo",
@@ -624,24 +938,20 @@
     "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9"
   },
   "verification": {
-    "issues": 99,
-    "done": 59,
+    "date": "2026-10-04",
+    "issues": 130,
+    "done": 106,
     "in_progress": 0,
-    "todo": 12,
-    "backlog": 28,
-    "alpha_scope": 13,
-    "alpha_done": 1,
-    "later": 28,
-    "alpha_blocking_relations": "all 13 read back; no later dependency",
-    "alpha_document": "full scope published and read back",
-    "note": "Historical completed foundations: 58. Newly completed PACT-054 is approved narrowed Alpha only; no production, deployment, broad client certification or new live-model claim."
+    "todo": 0,
+    "backlog": 24,
+    "note": "Fresh project readback confirms four friends-playtest tickets Done; completed milestone 100%; all 24 Later tasks remain deferred. Evidence: reports/evidence/friends-play-linear-final-20261004.json."
   },
   "alpha": {
     "milestone": {
       "id": "02088096-285f-4ee3-99a5-0574cd408b1b",
-      "name": "Active — Game-only Alpha",
-      "description": "Only 13 active tickets: PACT-054–059, 061, 062, 069, 070, 073, 080, 099. Simple web + agent-primary play on the existing VPS; no payments/native/Telegram/production/pilot gates. Exit: narrowed PACT-080 gameplay rehearsal. Founder-approved 1 October 2026.",
-      "progress": 0,
+      "name": "Completed \u2014 Game-only Alpha (1 October)",
+      "description": "Only 13 active tickets: PACT-054\u2013059, 061, 062, 069, 070, 073, 080, 099. Simple web + agent-primary play on the existing VPS; no payments/native/Telegram/production/pilot gates. Exit: narrowed PACT-080 gameplay rehearsal. Founder-approved 1 October 2026.",
+      "progress": 100,
       "sortOrder": 4027
     },
     "active_ids": [
@@ -679,5 +989,94 @@
     "done": 51,
     "blocked_local": 0,
     "note": "Version 1.3 keeps the zero-cost private MVP on one VPS, accepts the documented single-host backup risk, uses internal Mailpit capture, and moves off-host recovery/real outbound email to PACT-078. PACT-004 and the real Telegram test-bot certification in PACT-085 are complete. Paid native signing and physical-device work move from the MVP gates to the Season One release milestone in PACT-084/087."
+  },
+  "alpha_followup": {
+    "milestone": {
+      "id": "9096173a-155c-40b9-83e3-77eb0fbd80f4",
+      "name": "Completed \u2014 Alpha playtest fixes (2 October)",
+      "progress": 100
+    },
+    "active_ids": [
+      "PACT-100",
+      "PACT-101",
+      "PACT-102",
+      "PACT-103",
+      "PACT-104",
+      "PACT-105",
+      "PACT-106",
+      "PACT-107",
+      "PACT-108"
+    ],
+    "checkpoint": "PACT-108",
+    "recommended_first": null,
+    "execution": "completed_verified_assigned_batch",
+    "verified_at": "2026-10-02T18:43:16.672635+00:00",
+    "completion_report": "docs/implementation/reports/alpha-three-player-retest-20261002.md",
+    "release": "alpha-20261002-7",
+    "source_snapshot_sha256": "a8c3d6b4c8efec8f57277512f7359389692a3a45c0bc3dbfc4ed3a7763d6ba32"
+  },
+  "prior_verification_before_playtest_followups": {
+    "issues": 99,
+    "done": 59,
+    "in_progress": 0,
+    "todo": 12,
+    "backlog": 28,
+    "alpha_scope": 13,
+    "alpha_done": 1,
+    "later": 28,
+    "alpha_blocking_relations": "all 13 read back; no later dependency",
+    "alpha_document": "full scope published and read back",
+    "note": "Historical completed foundations: 58. Newly completed PACT-054 is approved narrowed Alpha only; no production, deployment, broad client certification or new live-model claim."
+  },
+  "prior_verification_before_followup_completion": {
+    "issues": 108,
+    "done": 71,
+    "in_progress": 0,
+    "todo": 9,
+    "backlog": 28,
+    "alpha_scope": 13,
+    "alpha_done": 13,
+    "alpha_followup": 9,
+    "alpha_followup_done": 0,
+    "later": 28,
+    "note": "99 existing issues freshly read; all nine new issues freshly read with milestone/status/labels/assignee/acceptance/dependencies. Original completed evidence unchanged."
+  },
+  "prior_verification_before_experience_planning": {
+    "issues": 108,
+    "done": 80,
+    "in_progress": 0,
+    "todo": 0,
+    "backlog": 28,
+    "alpha_scope": 13,
+    "alpha_done": 13,
+    "alpha_followup": 9,
+    "alpha_followup_done": 9,
+    "later": 28,
+    "note": "Fresh full project readback; all nine follow-up descriptions have checked acceptance and completion evidence. Completed milestone 100%, project/start/plan/completion docs read back. Evidence: docs/implementation/reports/evidence/alpha-followup-linear-final-20261002.json."
+  },
+  "experience_document": {
+    "id": "23ba3136-9933-4e86-9d7a-508d7c37bc95",
+    "url": "https://linear.app/mnim/document/game-experience-and-generated-assets-current-work-plan-cd96f1f00862"
+  },
+  "experience_scope_review": {
+    "date": "2026-10-03",
+    "counts": {
+      "Done": 80,
+      "Todo": 18,
+      "Backlog": 28
+    },
+    "active_issues": 18,
+    "metadata_and_dependencies_and_acceptance_readback": true,
+    "historical_108_metadata_unchanged": true,
+    "plan_readback": true
+  },
+  "current_scope": {
+    "date": "2026-10-04",
+    "name": "friends-only testing",
+    "production_roadmap_deferred": true,
+    "open_existing_experience_tickets": 0,
+    "next_production_ticket": null,
+    "scope": "friends-playtest.md",
+    "testing_release": "friends-play-20261004-3"
   }
 }

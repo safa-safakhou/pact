@@ -1,5 +1,9 @@
 import { createHmac, randomUUID } from "node:crypto";
-import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
+import { CommandDispatcher, GameCommandHandler } from "@pact/application";
+import { ApprovalService } from "@pact/approvals";
+import { ProductScopeSchema, SCHEMA_VERSION } from "@pact/contracts";
+import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
+import { wholeResources } from "@pact/domain";
 import {
   AesGcmSecretBox,
   baselineCompromisedPasswordDigests,
@@ -7,7 +11,10 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
+import { ActionLimitService, SocialService, SupplyService, WorldViewService } from "@pact/kingdom";
+import { ResourceLedger } from "@pact/ledger";
 import { TelegramService } from "@pact/telegram";
+import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -91,7 +98,10 @@ describe("PACT-085 Telegram linking", () => {
 
     const renamed = initData(881122, "renamed_handle");
     const secondBootstrap = await telegram.beginBootstrap(renamed);
+    expect(secondBootstrap.linked).toBe(true);
     await expect(telegram.confirmLink(otherAccount, secondBootstrap.bootstrapToken)).rejects.toThrow("ALREADY_LINKED");
+    const renewed = await telegram.exchangeBootstrap(renamed, secondBootstrap.bootstrapToken);
+    await expect(identity.authenticate(renewed.sessionToken)).resolves.toMatchObject({ accountId: firstAccount });
 
     await telegram.unlink(firstAccount);
     await expect(identity.authenticate(channel.sessionToken)).rejects.toThrow("FORBIDDEN");
@@ -116,5 +126,208 @@ describe("PACT-085 Telegram linking", () => {
       duplicate: true,
       privilegedAction: false,
     });
+  });
+});
+
+describe("PACT-088 shared web/Telegram exact approvals", () => {
+  it("reads the web-created request as the same owner, commits it once, and rejects a revoked channel", async () => {
+    const email = `miniapp-${randomUUID()}@example.test`;
+    const owner = await account(email);
+    const web = await identity.login({ email, password, ip: "127.0.0.1" });
+    const launch = initData(551122);
+    const bootstrap = await telegram.beginBootstrap(launch);
+    await telegram.confirmLink(owner, bootstrap.bootstrapToken);
+    const channel = await telegram.exchangeBootstrap(launch, bootstrap.bootstrapToken);
+    const dispatcher = new CommandDispatcher({
+      pool,
+      productScope: ProductScopeSchema.parse("pact"),
+      clock: { now: () => clockNow },
+    });
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      identity,
+      dispatcher,
+      clock: { now: () => clockNow },
+      origin: "https://pact.example",
+      webBasePath: "/pact/",
+    });
+    const commandId = randomUUID();
+    const command = {
+      schemaVersion: SCHEMA_VERSION,
+      commandId,
+      actor: {
+        principalId: owner,
+        productScope: ProductScopeSchema.parse("pact"),
+        audience: "human" as const,
+        subject: { type: "account" as const, id: owner },
+      },
+      action: { kind: "sandbox.echo" as const, message: "exact current synthetic offer" },
+      submittedAt: clockNow.toISOString(),
+    };
+    const created = await approvals.createRequest({
+      accountId: owner,
+      command,
+      effectsSummary: "Exact synthetic terms",
+    });
+    const before = await approvals.review(
+      created.approvalId,
+      (await identity.authenticate(web.sessionToken)).accountId,
+    );
+    const channelView = await approvals.review(
+      created.approvalId,
+      (await identity.authenticate(channel.sessionToken)).accountId,
+    );
+    expect(channelView).toEqual(before);
+    expect(channelView.deepLinkPath).toBe(`/pact/?approval=${created.approvalId}`);
+    const committed = await approvals.approve(channel.sessionToken, created.approvalId);
+    expect(committed.receipt?.code).toBe("COMMITTED");
+    await approvals.approve(web.sessionToken, created.approvalId).catch(() => undefined);
+    const count = await pool.query("SELECT count(*)::int AS count FROM command_receipts WHERE command_id = $1", [
+      commandId,
+    ]);
+    expect(count.rows[0].count).toBe(1);
+    await telegram.unlink(owner);
+    await expect(approvals.approve(channel.sessionToken, created.approvalId)).rejects.toThrow("FORBIDDEN");
+  });
+});
+
+describe("PACT-088 actual shared Supply Offer", () => {
+  it("starts a real offer in web, reads owner state through the validated channel, and signs current terms exactly once", async () => {
+    const email = "telegram-offer-" + randomUUID() + "@example.test",
+      a = await account(email),
+      b = await account("counterparty-" + randomUUID() + "@example.test");
+    const web = await identity.login({ email, password, ip: "127.0.0.1" }),
+      ledger = new ResourceLedger("pact"),
+      world = new WorldClockService(pool, "pact");
+    await world.bootstrap();
+    const limits = new ActionLimitService("pact"),
+      social = new SocialService("pact", ledger, limits, { now: () => clockNow });
+    const supply = new SupplyService("pact", ledger, limits, social, {
+      reserve: async () => randomUUID(),
+      release: async () => {},
+      activate: async () => {},
+    });
+    const ka = randomUUID(),
+      kb = randomUUID();
+    await withTransaction(pool, async (c) => {
+      for (const [id, owner] of [
+        [ka, a],
+        [kb, b],
+      ] as const) {
+        await c.query(
+          `INSERT INTO kingdoms(id,product_scope,account_id,handle,display_name,portrait,activated_at,activated_game_time_ms,activated_tick_sequence,first_tick_game_time_ms,activation_event_id)
+    VALUES($1,'pact',$2,$3,'Telegram offer fixture','portrait.wolf',$4,0,0,60000,$5)`,
+          [id, owner, "tg_" + randomUUID().slice(0, 8), clockNow, randomUUID()],
+        );
+        await ledger.initializeKingdom(c, id, 0);
+        await ledger.creditOrdinary(c, {
+          kingdomId: id,
+          resource: "silver",
+          amount: wholeResources(100),
+          operationKey: "fixture-" + randomUUID(),
+          reason: "fixture",
+          gameTimeMs: 0,
+        });
+      }
+      const left = ka < kb ? ka : kb,
+        right = ka < kb ? kb : ka;
+      await c.query(
+        "INSERT INTO social_contacts(product_scope,kingdom_a,kingdom_b,accepted_game_time_ms) VALUES('pact',$1,$2,0)",
+        [left, right],
+      );
+    });
+    const handler = new GameCommandHandler(social, undefined, undefined, undefined, undefined, undefined, supply);
+    const dispatcher = new CommandDispatcher({
+      pool,
+      productScope: ProductScopeSchema.parse("pact"),
+      clock: { now: () => clockNow },
+      game: {
+        admit: (op) => world.admitCommand((c, snapshot) => op(c, snapshot.gameTimeMs)),
+        execute: (c, p, command, t) => handler.execute(c, p, command, t),
+      },
+    });
+    const approvals = new ApprovalService(pool, {
+      productScope: "pact",
+      identity,
+      dispatcher,
+      clock: { now: () => clockNow },
+      origin: "https://pact.example",
+      webBasePath: "/pact/",
+    });
+    const actor = {
+      principalId: a,
+      productScope: ProductScopeSchema.parse("pact"),
+      audience: "human" as const,
+      subject: { type: "account" as const, id: a },
+    };
+    const offerId = randomUUID(),
+      terms = {
+        aToB: { resource: "silver" as const, wholePerHour: 8 },
+        bToA: null,
+        aBond: { resource: "silver" as const, wholeAmount: 2 },
+        bBond: null,
+        durationHours: 6,
+        noticeHours: 1,
+      };
+    await dispatcher.dispatch(
+      { accountId: a, productScope: actor.productScope, audience: "human" },
+      {
+        schemaVersion: SCHEMA_VERSION,
+        commandId: offerId,
+        actor,
+        action: { kind: "game.supply.offer", counterpartyKingdomId: kb, terms },
+        submittedAt: clockNow.toISOString(),
+      },
+    );
+    await withTransaction(pool, (c) =>
+      supply.signOffer(c, {
+        accountId: b,
+        offerId,
+        version: 1,
+        actorKind: "human",
+        gameTimeMs: 0,
+        operationKey: "fixture-" + randomUUID(),
+      }),
+    );
+    const launch = initData(776655),
+      boot = await telegram.beginBootstrap(launch);
+    await telegram.confirmLink(a, boot.bootstrapToken);
+    const channel = await telegram.exchangeBootstrap(launch, boot.bootstrapToken);
+    const channelOwner = (await identity.authenticate(channel.sessionToken)).accountId;
+    const views = new WorldViewService(pool, "pact");
+    expect(await views.readSelf(channelOwner)).toEqual(
+      await views.readSelf((await identity.authenticate(web.sessionToken)).accountId),
+    );
+    const commandId = randomUUID(),
+      request = await approvals.createRequest({
+        accountId: a,
+        command: {
+          schemaVersion: SCHEMA_VERSION,
+          commandId,
+          actor,
+          action: { kind: "game.supply.sign", offerId, version: 1 },
+          submittedAt: clockNow.toISOString(),
+        },
+        effectsSummary: "Sign this current version: 8 Silver/hour for six hours, 2 Silver bond",
+      });
+    expect((await approvals.review(request.approvalId, channelOwner)).deepLinkPath).toBe(
+      "/pact/?approval=" + request.approvalId,
+    );
+    const first = await approvals.approve(channel.sessionToken, request.approvalId),
+      retry = await approvals.approve(web.sessionToken, request.approvalId);
+    expect(first.receipt?.code).toBe("COMMITTED");
+    expect(retry.receipt?.commandId).toBe(commandId);
+    expect(
+      (
+        await pool.query("SELECT kingdom_id FROM supply_offer_signatures WHERE offer_id=$1 AND kingdom_id=$2", [
+          offerId,
+          ka,
+        ])
+      ).rows,
+    ).toEqual([{ kingdom_id: ka }]);
+    expect((await pool.query("SELECT id FROM supply_contracts WHERE offer_id=$1", [offerId])).rowCount).toBe(1);
+    expect(
+      (await pool.query("SELECT command_id FROM command_receipts WHERE command_id=$1", [commandId])).rowCount,
+    ).toBe(1);
   });
 });

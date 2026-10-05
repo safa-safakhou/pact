@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "state": "approval",
+      "text": "Human: review this exact pending approval. No command completion is assumed.",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "failure",
+      "text": "The last action needs attention: STOCK_LOW. Inspect its receipt and current permissions before trying again.",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "recipient",
+      "text": "Waiting for @real_player_fixture to answer your contact request. No reply or agreement is assumed.",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "build",
+      "text": "Your build is pending. 10m game time remaining · as of last refresh You can read real notices or leave and refresh after its game deadline; a countdown is not completion.",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "stale",
+      "text": "Current decision facts are stale or unavailable. Refresh before acting; no success or absence is assumed.",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "choice",
+      "text": "Start your first Farm II upgrade in Kingdom.",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "approval",
+      "text": "Human: review this exact pending approval. No command completion is assumed.",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "failure",
+      "text": "The last action needs attention: STOCK_LOW. Inspect its receipt and current permissions before trying again.",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "recipient",
+      "text": "Waiting for @real_player_fixture to answer your contact request. No reply or agreement is assumed.",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "build",
+      "text": "Your build is pending. 10m game time remaining · as of last refresh You can read real notices or leave and refresh after its game deadline; a countdown is not completion.",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "stale",
+      "text": "Current decision facts are stale or unavailable. Refresh before acting; no success or absence is assumed.",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "choice",
+      "text": "Start your first Farm II upgrade in Kingdom.",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "audio": [
+    {
+      "file": "settlement.wav",
+      "duration": 30,
+      "loop": true,
+      "playing": true
+    },
+    {
+      "file": "ambience.wav",
+      "duration": 15,
+      "loop": true,
+      "playing": true
+    },
+    {
+      "file": "flourish.wav",
+      "duration": 2,
+      "loop": false,
+      "playing": true
+    }
+  ],
+  "audition": "Playback only; human listening feedback pending"
+}

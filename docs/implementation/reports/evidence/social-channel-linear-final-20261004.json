@@ -1,0 +1,564 @@
+{
+  "date": "2026-10-04",
+  "counts": {
+    "Done": 102,
+    "Backlog": 24
+  },
+  "hasNextPage": false,
+  "issues": [
+    {
+      "id": "MNI-125",
+      "uuid": "c765791a-1c41-4b27-961e-e4307ad4ef8f",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "projectMilestone": {
+        "id": "0ee84e10-452e-49d6-a63c-fa774e1ff628",
+        "name": "Completed - Resumed social and channel batch (4 October)"
+      },
+      "acceptanceChecked": true,
+      "url": "https://linear.app/mnim/issue/MNI-125/pact-060-deliver-opt-in-critical-email-and-web-push"
+    },
+    {
+      "id": "MNI-128",
+      "uuid": "47145412-f304-49a7-ae98-696dc080ac9d",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "projectMilestone": {
+        "id": "0ee84e10-452e-49d6-a63c-fa774e1ff628",
+        "name": "Completed - Resumed social and channel batch (4 October)"
+      },
+      "acceptanceChecked": true,
+      "url": "https://linear.app/mnim/issue/MNI-128/pact-063-build-reporting-moderation-and-appeals-tools"
+    },
+    {
+      "id": "MNI-132",
+      "uuid": "b1b4de9b-70cf-4551-9422-61a6960bba0a",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "projectMilestone": {
+        "id": "0ee84e10-452e-49d6-a63c-fa774e1ff628",
+        "name": "Completed - Resumed social and channel batch (4 October)"
+      },
+      "acceptanceChecked": true,
+      "url": "https://linear.app/mnim/issue/MNI-132/pact-088-deliver-the-complete-telegram-mini-app"
+    },
+    {
+      "id": "MNI-133",
+      "uuid": "451345b9-6d00-4eb4-8e1b-ceaec8a211de",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "projectMilestone": {
+        "id": "0ee84e10-452e-49d6-a63c-fa774e1ff628",
+        "name": "Completed - Resumed social and channel batch (4 October)"
+      },
+      "acceptanceChecked": true,
+      "url": "https://linear.app/mnim/issue/MNI-133/pact-089-implement-private-chat-bot-briefings-and-explicit-run"
+    }
+  ],
+  "projectIssues": [
+    {
+      "id": "MNI-133",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-132",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-128",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-125",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-220",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-219",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-218",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-216",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-211",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-213",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-217",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-215",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-212",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-210",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-209",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-214",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-208",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-207",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-204",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-206",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-205",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-203",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-158",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-167",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-118",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-166",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-164",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-165",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-163",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-160",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-162",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-161",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-159",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-155",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-144",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-141",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-140",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-127",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-126",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-124",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-123",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-122",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-121",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-120",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-119",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-156",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-157",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-154",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-153",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-152",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-151",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-150",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-149",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-148",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-147",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-146",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-145",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-143",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-142",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-139",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-138",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-131",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-137",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-136",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-135",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-134",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-130",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-129",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-85",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-116",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-112",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-117",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-115",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-77",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-113",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-81",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-114",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-111",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-110",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-109",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-108",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-105",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-104",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-103",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-107",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-106",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-102",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-101",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-100",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-99",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-98",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-97",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-96",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-95",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-94",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-93",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-92",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-91",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-90",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-89",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-88",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-87",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-86",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-64",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-75",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-83",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-74",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-72",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-73",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-71",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-70",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-69",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-82",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-84",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-80",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-79",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-76",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-78",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-67",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-68",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-66",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-63",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-62",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-61",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-60",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-65",
+      "status": "Done"
+    }
+  ]
+}

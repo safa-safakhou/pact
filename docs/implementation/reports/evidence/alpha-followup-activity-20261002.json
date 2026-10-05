@@ -1,0 +1,278 @@
+{
+  "cedar": {
+    "text": "Skip to game areas\nInvitations\nCreate contact invitation\n\nPACT · PRIVATE ALPHA\n\nJuniper Reach\n\n@cedar_7bf6cc · active · tick 9621\n\nYour kingdom ID: 3b218fff-e4d5-414b-86ab-a8254958ebf9\n\nRefresh\nSwitch test player\n\nLast owner refresh: 7:38:11 PM. The server rechecks every action.\n\nKingdom\nEnvoy\nPeople\nChronicle\nYour next decision\n\nAn agreement is recorded. Inspect its actual status, exact terms and recorded installments in People/Chronicle.\n\nKingdom founded — real resources and rules are active.\nFarm II or later exists.\n1 accepted real contacts.\n1 recorded contracts; inspect actual status and consequences.\nInspect buildersMeet and negotiateRead real consequencesSet an agent objective\n\nRead sources, not just claims. A message is not a contract and connection is not continuous thinking.\n\nConnect your Codex\n\nPlaying as @cedar_7bf6cc. 0 active external connections.\n\nUse your own Codex account. No saved PACT model API key is needed. Sign in as this PACT owner when the browser opens.\n\nTested with Codex CLI 0.159.0-alpha.12.1. Run codex mcp login --help; if it lacks --oauth-client-registration, update to a client supporting DCR before connecting.\n\ncodex mcp add pact --url 'https://safa.dedyn.io/pact/mcp' --oauth-resource 'https://safa.dedyn.io/pact/mcp' --oauth-client-registration dcr\n# Reconnect an existing connection:\ncodex mcp login pact --oauth-client-registration dcr --scopes world:read,messages:write,game:act\n\nAfter OAuth, use Switch test player and sign in again in this PACT tab to refresh your browser session. Then review your authority below and ask Codex: “Read my kingdom and improve my economy safely within my authority.” A write lease lasts at most 15 minutes; connection and refresh never start inference.\n\nReconnect or revoke\nRefresh connection status\nObjective and bounded Envoy runs\n\nStart only when you want inference. Waiting, messages and game ticks never start it. External chatbot usage is managed by that chatbot; committed game actions continue after stopping.\n\nYour objective\nSaved model connection\nChoose an existing connection\nTool-capable model identifier\nSelected conversations (up to six; unselected threads are not sent)\n@marsh_82349a\n\nMaximum 15 minutes, 20 model calls, 40,000 reported tokens, 12 outgoing messages. Provider price unavailable; this is not a currency guarantee or free-model claim.\n\nI explicitly confirm this provider/model and token-bounded run.\nStart bounded Envoy\n\nNo saved model connection is available. Manual play and your existing external agent connection still work; no model call has started.\n\nRefresh recorded activity\nExternal-agent recorded activity\n\nReceipt-backed actions from your external chats. No hidden reasoning or chatbot token usage is collected. Updates every ten seconds while this area is visible; reading never starts inference.\n\nEngine Facts — Server-Recorded Tool Results\n\nrecorded · Review committed records and pending counterparties before choosing another objective.\n\nRecorded outcome: failed\n\nHistorical failed attempt. Read current state before choosing a new move; no success is established by this result.\n\n2026-10-02T16:54:42.950Z\n\nReceipt and record references\nRecorded outcome: committed\n\nfarm level 2: completed\n\nConstruction finished. Choose your next objective from current resources.\n\n2026-10-02T16:58:05.398Z\n\nReceipt and record references\nRecorded outcome: committed\n\nHistorical result retained; current record status unknown. Inspect the authorized record before deciding.\n\n2026-10-02T17:17:23.426Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nSupply offer · current version 1: active\n\nContract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending.\n\n2026-10-02T17:17:27.177Z\n\nReceipt and record references\nRecorded outcome: committed\n\nSupply offer · current version 1: active\n\nSigned supply contract: active\n\nContract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending. Contract active. Inspect actual settled deliveries; future installments remain pending.\n\n2026-10-02T17:21:25.206Z\n\nReceipt and record references\nEnvoy\n\nManual actions remain available without a model connection. Reading an approval never commits it.\n\nCodex Agent Playtest\n\nConnect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15 minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.\n\nCurrent authority: bounded playtest.\n\nEnable bounded agent playtest Disable new agent game actions\n\nOnly the human can change this authority or approve an exact exception. The game still enforces stock, charges, and locks.\n\nExact Approval Review\nApproval ID\nPreview\nInbox\n\nNo events yet.\n\nPrivacy And Account Data\n\nExport account data or close the account. Both require your current password.\n\nCurrent password\nPrepare exportClose account",
+    "view": {
+      "status": 200,
+      "body": {
+        "source": "external",
+        "label": "Engine facts — server-recorded tool results",
+        "entries": [
+          {
+            "id": "47",
+            "category": "failed",
+            "callId": "47",
+            "code": "FORBIDDEN",
+            "records": [],
+            "nextStep": "Historical failed attempt. Read current state before choosing a new move; no success is established by this result.",
+            "currentFacts": []
+          },
+          {
+            "id": "48",
+            "category": "committed",
+            "callId": "48",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "building:a897f4d2-d24f-4d4f-a880-f8ebbbd7e211",
+                "version": 1
+              }
+            ],
+            "commandId": "a897f4d2-d24f-4d4f-a880-f8ebbbd7e211",
+            "nextStep": "Construction finished. Choose your next objective from current resources.",
+            "currentFacts": [
+              {
+                "record": "building:a897f4d2-d24f-4d4f-a880-f8ebbbd7e211",
+                "label": "farm level 2",
+                "status": "completed",
+                "asOfGameTimeMs": 1790959200000,
+                "nextStep": "Construction finished. Choose your next objective from current resources."
+              }
+            ]
+          },
+          {
+            "id": "53",
+            "category": "committed",
+            "callId": "53",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "message:51cf11b2-46e6-47d4-b320-e95e39fc8abe",
+                "version": 1
+              }
+            ],
+            "commandId": "786f2f73-60d6-44e5-86f1-1c0bf7946782",
+            "nextStep": "Historical result retained; current record status unknown. Inspect the authorized record before deciding.",
+            "currentFacts": []
+          },
+          {
+            "id": "54",
+            "category": "proposed",
+            "callId": "54",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "version": 1
+              }
+            ],
+            "commandId": "8c79b233-3d49-41a9-9bef-1a8947d99dae",
+            "nextStep": "Contract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending.",
+            "currentFacts": [
+              {
+                "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "label": "Supply offer · current version 1",
+                "status": "active",
+                "asOfGameTimeMs": 1790959200000,
+                "nextStep": "Contract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending."
+              }
+            ]
+          },
+          {
+            "id": "56",
+            "category": "committed",
+            "callId": "56",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "version": 1
+              },
+              {
+                "record": "supply-contract:d6954217-6014-48f5-9498-d97a94625ab4",
+                "version": 1
+              }
+            ],
+            "commandId": "c22ef324-5bb3-4c3b-8c53-6b02029cbe96",
+            "nextStep": "Contract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending. Contract active. Inspect actual settled deliveries; future installments remain pending.",
+            "currentFacts": [
+              {
+                "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "label": "Supply offer · current version 1",
+                "status": "active",
+                "asOfGameTimeMs": 1790959200000,
+                "nextStep": "Contract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending."
+              },
+              {
+                "record": "supply-contract:d6954217-6014-48f5-9498-d97a94625ab4",
+                "label": "Signed supply contract",
+                "status": "active",
+                "asOfGameTimeMs": 1790959200000,
+                "nextStep": "Contract active. Inspect actual settled deliveries; future installments remain pending."
+              }
+            ]
+          }
+        ],
+        "assessments": [],
+        "status": "recorded",
+        "lastErrorCode": null,
+        "truncated": false,
+        "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+        "stale": false,
+        "checkedAt": "2026-10-02T17:38:23.782Z",
+        "timestamps": {
+          "47": "2026-10-02T16:54:42.950Z",
+          "48": "2026-10-02T16:58:05.398Z",
+          "53": "2026-10-02T17:17:23.426Z",
+          "54": "2026-10-02T17:17:27.177Z",
+          "56": "2026-10-02T17:21:25.206Z"
+        }
+      }
+    },
+    "polls": 3
+  },
+  "marsh": {
+    "text": "Skip to game areas\nInvitations\nCreate contact invitation\n\nPACT · PRIVATE ALPHA\n\nWillow Crossing\n\n@marsh_82349a · active · tick 9621\n\nYour kingdom ID: e70c9ca0-20f5-46b3-9a95-e97da3409eca\n\nRefresh\nSwitch test player\n\nLast owner refresh: 7:38:24 PM. The server rechecks every action.\n\nKingdom\nEnvoy\nPeople\nChronicle\nYour next decision\n\nStart your first Farm II upgrade in Kingdom.\n\nKingdom founded — real resources and rules are active.\nFirst build not started.\n1 accepted real contacts.\n1 recorded contracts; inspect actual status and consequences.\nInspect buildersMeet and negotiateRead real consequencesSet an agent objective\n\nRead sources, not just claims. A message is not a contract and connection is not continuous thinking.\n\nConnect your Codex\n\nPlaying as @marsh_82349a. 0 active external connections.\n\nUse your own Codex account. No saved PACT model API key is needed. Sign in as this PACT owner when the browser opens.\n\nTested with Codex CLI 0.159.0-alpha.12.1. Run codex mcp login --help; if it lacks --oauth-client-registration, update to a client supporting DCR before connecting.\n\ncodex mcp add pact --url 'https://safa.dedyn.io/pact/mcp' --oauth-resource 'https://safa.dedyn.io/pact/mcp' --oauth-client-registration dcr\n# Reconnect an existing connection:\ncodex mcp login pact --oauth-client-registration dcr --scopes world:read,messages:write,game:act\n\nAfter OAuth, use Switch test player and sign in again in this PACT tab to refresh your browser session. Then review your authority below and ask Codex: “Read my kingdom and improve my economy safely within my authority.” A write lease lasts at most 15 minutes; connection and refresh never start inference.\n\nReconnect or revoke\nRefresh connection status\nObjective and bounded Envoy runs\n\nStart only when you want inference. Waiting, messages and game ticks never start it. External chatbot usage is managed by that chatbot; committed game actions continue after stopping.\n\nYour objective\nSaved model connection\nChoose an existing connection\nTool-capable model identifier\nSelected conversations (up to six; unselected threads are not sent)\n@cedar_7bf6cc\n\nMaximum 15 minutes, 20 model calls, 40,000 reported tokens, 12 outgoing messages. Provider price unavailable; this is not a currency guarantee or free-model claim.\n\nI explicitly confirm this provider/model and token-bounded run.\nStart bounded Envoy\n\nNo saved model connection is available. Manual play and your existing external agent connection still work; no model call has started.\n\nRefresh recorded activity\nExternal-agent recorded activity\n\nReceipt-backed actions from your external chats. No hidden reasoning or chatbot token usage is collected. Updates every ten seconds while this area is visible; reading never starts inference.\n\nEngine Facts — Server-Recorded Tool Results\n\nrecorded · Review committed records and pending counterparties before choosing another objective.\n\nRecorded outcome: committed\n\nmine level 2: completed\n\nConstruction finished. Choose your next objective from current resources.\n\n2026-10-02T16:59:03.053Z\n\nReceipt and record references\nRecorded outcome: failed\n\nHistorical failed attempt. Read current state before choosing a new move; no success is established by this result.\n\n2026-10-02T16:59:07.527Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nContact with @cedar_7bf6cc: accepted\n\nContact accepted. You can message and negotiate; no further acceptance is pending.\n\n2026-10-02T17:14:53.963Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nSupply offer · current version 1: active\n\nContract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending.\n\n2026-10-02T17:19:17.440Z\n\nReceipt and record references\nEnvoy\n\nManual actions remain available without a model connection. Reading an approval never commits it.\n\nCodex Agent Playtest\n\nConnect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15 minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.\n\nCurrent authority: bounded playtest.\n\nEnable bounded agent playtest Disable new agent game actions\n\nOnly the human can change this authority or approve an exact exception. The game still enforces stock, charges, and locks.\n\nExact Approval Review\nApproval ID\nPreview\nInbox\n\nNo events yet.\n\nPrivacy And Account Data\n\nExport account data or close the account. Both require your current password.\n\nCurrent password\nPrepare exportClose account",
+    "view": {
+      "status": 200,
+      "body": {
+        "source": "external",
+        "label": "Engine facts — server-recorded tool results",
+        "entries": [
+          {
+            "id": "50",
+            "category": "committed",
+            "callId": "50",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "building:d5ded244-2297-46a9-b9cf-d9f3b169d1e1",
+                "version": 1
+              }
+            ],
+            "commandId": "d5ded244-2297-46a9-b9cf-d9f3b169d1e1",
+            "nextStep": "Construction finished. Choose your next objective from current resources.",
+            "currentFacts": [
+              {
+                "record": "building:d5ded244-2297-46a9-b9cf-d9f3b169d1e1",
+                "label": "mine level 2",
+                "status": "completed",
+                "asOfGameTimeMs": 1790959260000,
+                "nextStep": "Construction finished. Choose your next objective from current resources."
+              }
+            ]
+          },
+          {
+            "id": "51",
+            "category": "failed",
+            "callId": "51",
+            "code": "INSUFFICIENT_STOCK",
+            "records": [],
+            "nextStep": "Historical failed attempt. Read current state before choosing a new move; no success is established by this result.",
+            "currentFacts": []
+          },
+          {
+            "id": "52",
+            "category": "proposed",
+            "callId": "52",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "contact-request:fa17aa47-1f1f-4b2d-8203-25fc696c2d74",
+                "version": 1
+              }
+            ],
+            "commandId": "b56a8d6e-e128-4fcb-9530-acf8d564075b",
+            "nextStep": "Contact accepted. You can message and negotiate; no further acceptance is pending.",
+            "currentFacts": [
+              {
+                "record": "contact-request:fa17aa47-1f1f-4b2d-8203-25fc696c2d74",
+                "label": "Contact with @cedar_7bf6cc",
+                "status": "accepted",
+                "asOfGameTimeMs": 1790959260000,
+                "nextStep": "Contact accepted. You can message and negotiate; no further acceptance is pending."
+              }
+            ]
+          },
+          {
+            "id": "55",
+            "category": "proposed",
+            "callId": "55",
+            "code": "COMMITTED",
+            "records": [
+              {
+                "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "version": 1
+              }
+            ],
+            "commandId": "2c2dcbd2-f898-4e24-8c23-1b1585672fd3",
+            "nextStep": "Contract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending.",
+            "currentFacts": [
+              {
+                "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "label": "Supply offer · current version 1",
+                "status": "active",
+                "asOfGameTimeMs": 1790959260000,
+                "nextStep": "Contract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending."
+              }
+            ]
+          }
+        ],
+        "assessments": [],
+        "status": "recorded",
+        "lastErrorCode": null,
+        "truncated": false,
+        "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+        "stale": false,
+        "checkedAt": "2026-10-02T17:38:37.480Z",
+        "timestamps": {
+          "50": "2026-10-02T16:59:03.053Z",
+          "51": "2026-10-02T16:59:07.527Z",
+          "52": "2026-10-02T17:14:53.963Z",
+          "55": "2026-10-02T17:19:17.440Z"
+        }
+      }
+    },
+    "polls": 3,
+    "offlineText": "Skip to game areas\nInvitations\n\nFailed to fetch\n\nPACT · PRIVATE ALPHA\n\nWillow Crossing\n\n@marsh_82349a · active · tick 9621\n\nYour kingdom ID: e70c9ca0-20f5-46b3-9a95-e97da3409eca\n\nRefresh\nSwitch test player\n\nOffline — displayed information is stale. Game actions are disabled; nothing is queued.\n\nRefresh live state\nKingdom\nEnvoy\nPeople\nChronicle\nYour next decision\n\nStart your first Farm II upgrade in Kingdom.\n\nKingdom founded — real resources and rules are active.\nFirst build not started.\n1 accepted real contacts.\n1 recorded contracts; inspect actual status and consequences.\nInspect buildersMeet and negotiateRead real consequencesSet an agent objective\n\nRead sources, not just claims. A message is not a contract and connection is not continuous thinking.\n\nConnect your Codex\n\nPlaying as @marsh_82349a. 0 active external connections.\n\nUse your own Codex account. No saved PACT model API key is needed. Sign in as this PACT owner when the browser opens.\n\nTested with Codex CLI 0.159.0-alpha.12.1. Run codex mcp login --help; if it lacks --oauth-client-registration, update to a client supporting DCR before connecting.\n\ncodex mcp add pact --url 'https://safa.dedyn.io/pact/mcp' --oauth-resource 'https://safa.dedyn.io/pact/mcp' --oauth-client-registration dcr\n# Reconnect an existing connection:\ncodex mcp login pact --oauth-client-registration dcr --scopes world:read,messages:write,game:act\n\nAfter OAuth, use Switch test player and sign in again in this PACT tab to refresh your browser session. Then review your authority below and ask Codex: “Read my kingdom and improve my economy safely within my authority.” A write lease lasts at most 15 minutes; connection and refresh never start inference.\n\nReconnect or revoke\nRefresh connection status\nObjective and bounded Envoy runs\n\nStart only when you want inference. Waiting, messages and game ticks never start it. External chatbot usage is managed by that chatbot; committed game actions continue after stopping.\n\nTypeError: Failed to fetch\n\nYour objective\nSaved model connection\nChoose an existing connection\nTool-capable model identifier\nSelected conversations (up to six; unselected threads are not sent)\n@cedar_7bf6cc\n\nMaximum 15 minutes, 20 model calls, 40,000 reported tokens, 12 outgoing messages. Provider price unavailable; this is not a currency guarantee or free-model claim.\n\nI explicitly confirm this provider/model and token-bounded run.\nStart bounded Envoy\n\nNo saved model connection is available. Manual play and your existing external agent connection still work; no model call has started.\n\nRefresh recorded activity\nExternal-agent recorded activity\n\nReceipt-backed actions from your external chats. No hidden reasoning or chatbot token usage is collected. Updates every ten seconds while this area is visible; reading never starts inference.\n\nExternal-agent activity is unavailable; no success or absence is inferred.\n\nEngine Facts — Server-Recorded Tool Results\n\nrecorded · Review committed records and pending counterparties before choosing another objective.\n\nCurrent state is stale or unavailable. Historical results remain below; reconnect and refresh before deciding.\n\nRecorded outcome: committed\n\nmine level 2: completed\n\nConstruction finished. Choose your next objective from current resources.\n\n2026-10-02T16:59:03.053Z\n\nReceipt and record references\nRecorded outcome: failed\n\nHistorical failed attempt. Read current state before choosing a new move; no success is established by this result.\n\n2026-10-02T16:59:07.527Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nContact with @cedar_7bf6cc: accepted\n\nContact accepted. You can message and negotiate; no further acceptance is pending.\n\n2026-10-02T17:14:53.963Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nSupply offer · current version 1: active\n\nContract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending.\n\n2026-10-02T17:19:17.440Z\n\nReceipt and record references\n\nWorld refresh failed: Failed to fetch\n\nEnvoy\n\nManual actions remain available without a model connection. Reading an approval never commits it.\n\nCodex Agent Playtest\n\nConnect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15 minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.\n\nCurrent authority: bounded playtest.\n\nEnable bounded agent playtest Disable new agent game actions\n\nOnly the human can change this authority or approve an exact exception. The game still enforces stock, charges, and locks.\n\nExact Approval Review\nApproval ID\nPreview\nInbox\n\nNo events yet.\n\nPrivacy And Account Data\n\nExport account data or close the account. Both require your current password.\n\nCurrent password\nPrepare exportClose account",
+    "reconnectedText": "Skip to game areas\nInvitations\nCreate contact invitation\n\nFailed to fetch\n\nPACT · PRIVATE ALPHA\n\nWillow Crossing\n\n@marsh_82349a · active · tick 9622\n\nYour kingdom ID: e70c9ca0-20f5-46b3-9a95-e97da3409eca\n\nRefresh\nSwitch test player\n\nLast owner refresh: 7:38:55 PM. The server rechecks every action.\n\nKingdom\nEnvoy\nPeople\nChronicle\nYour next decision\n\nStart your first Farm II upgrade in Kingdom.\n\nKingdom founded — real resources and rules are active.\nFirst build not started.\n1 accepted real contacts.\n1 recorded contracts; inspect actual status and consequences.\nInspect buildersMeet and negotiateRead real consequencesSet an agent objective\n\nRead sources, not just claims. A message is not a contract and connection is not continuous thinking.\n\nConnect your Codex\n\nPlaying as @marsh_82349a. 0 active external connections.\n\nUse your own Codex account. No saved PACT model API key is needed. Sign in as this PACT owner when the browser opens.\n\nTested with Codex CLI 0.159.0-alpha.12.1. Run codex mcp login --help; if it lacks --oauth-client-registration, update to a client supporting DCR before connecting.\n\ncodex mcp add pact --url 'https://safa.dedyn.io/pact/mcp' --oauth-resource 'https://safa.dedyn.io/pact/mcp' --oauth-client-registration dcr\n# Reconnect an existing connection:\ncodex mcp login pact --oauth-client-registration dcr --scopes world:read,messages:write,game:act\n\nAfter OAuth, use Switch test player and sign in again in this PACT tab to refresh your browser session. Then review your authority below and ask Codex: “Read my kingdom and improve my economy safely within my authority.” A write lease lasts at most 15 minutes; connection and refresh never start inference.\n\nReconnect or revoke\nRefresh connection status\nObjective and bounded Envoy runs\n\nStart only when you want inference. Waiting, messages and game ticks never start it. External chatbot usage is managed by that chatbot; committed game actions continue after stopping.\n\nTypeError: Failed to fetch\n\nYour objective\nSaved model connection\nChoose an existing connection\nTool-capable model identifier\nSelected conversations (up to six; unselected threads are not sent)\n@cedar_7bf6cc\n\nMaximum 15 minutes, 20 model calls, 40,000 reported tokens, 12 outgoing messages. Provider price unavailable; this is not a currency guarantee or free-model claim.\n\nI explicitly confirm this provider/model and token-bounded run.\nStart bounded Envoy\n\nNo saved model connection is available. Manual play and your existing external agent connection still work; no model call has started.\n\nRefresh recorded activity\nExternal-agent recorded activity\n\nReceipt-backed actions from your external chats. No hidden reasoning or chatbot token usage is collected. Updates every ten seconds while this area is visible; reading never starts inference.\n\nEngine Facts — Server-Recorded Tool Results\n\nrecorded · Review committed records and pending counterparties before choosing another objective.\n\nRecorded outcome: committed\n\nmine level 2: completed\n\nConstruction finished. Choose your next objective from current resources.\n\n2026-10-02T16:59:03.053Z\n\nReceipt and record references\nRecorded outcome: failed\n\nHistorical failed attempt. Read current state before choosing a new move; no success is established by this result.\n\n2026-10-02T16:59:07.527Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nContact with @cedar_7bf6cc: accepted\n\nContact accepted. You can message and negotiate; no further acceptance is pending.\n\n2026-10-02T17:14:53.963Z\n\nReceipt and record references\nRecorded outcome: proposed\n\nSupply offer · current version 1: active\n\nContract active; inspect actual deliveries in People or Chronicle. No proposal signature is pending.\n\n2026-10-02T17:19:17.440Z\n\nReceipt and record references\nEnvoy\n\nManual actions remain available without a model connection. Reading an approval never commits it.\n\nCodex Agent Playtest\n\nConnect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15 minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.\n\nCurrent authority: bounded playtest.\n\nEnable bounded agent playtest Disable new agent game actions\n\nOnly the human can change this authority or approve an exact exception. The game still enforces stock, charges, and locks.\n\nExact Approval Review\nApproval ID\nPreview\nInbox\n\nNo events yet.\n\nPrivacy And Account Data\n\nExport account data or close the account. Both require your current password.\n\nCurrent password\nPrepare exportClose account"
+  },
+  "flint": {
+    "text": "Skip to game areas\nInvitations\nCreate contact invitation\n\nPACT · PRIVATE ALPHA\n\nSlate Hill\n\n@flint_9c90a8 · active · tick 9622\n\nYour kingdom ID: 4d86dba2-4054-43a5-85d2-198c146dc532\n\nRefresh\nSwitch test player\n\nLast owner refresh: 7:39:05 PM. The server rechecks every action.\n\nKingdom\nEnvoy\nPeople\nChronicle\nYour next decision\n\nMeet a real player in People. Read actual notices or find an exact handle; no test opponent is invented.\n\nKingdom founded — real resources and rules are active.\nFarm II or later exists.\nNo accepted contacts. 0 requests still pending; no reply is assumed.\nNo contract has been accepted yet.\nInspect buildersMeet and negotiateRead real consequencesSet an agent objective\n\nRead sources, not just claims. A message is not a contract and connection is not continuous thinking.\n\nConnect your Codex\n\nPlaying as @flint_9c90a8. 0 active external connections.\n\nUse your own Codex account. No saved PACT model API key is needed. Sign in as this PACT owner when the browser opens.\n\nTested with Codex CLI 0.159.0-alpha.12.1. Run codex mcp login --help; if it lacks --oauth-client-registration, update to a client supporting DCR before connecting.\n\ncodex mcp add pact --url 'https://safa.dedyn.io/pact/mcp' --oauth-resource 'https://safa.dedyn.io/pact/mcp' --oauth-client-registration dcr\n# Reconnect an existing connection:\ncodex mcp login pact --oauth-client-registration dcr --scopes world:read,messages:write,game:act\n\nAfter OAuth, use Switch test player and sign in again in this PACT tab to refresh your browser session. Then review your authority below and ask Codex: “Read my kingdom and improve my economy safely within my authority.” A write lease lasts at most 15 minutes; connection and refresh never start inference.\n\nReconnect or revoke\nRefresh connection status\nObjective and bounded Envoy runs\n\nStart only when you want inference. Waiting, messages and game ticks never start it. External chatbot usage is managed by that chatbot; committed game actions continue after stopping.\n\nYour objective\nSaved model connection\nChoose an existing connection\nTool-capable model identifier\nSelected conversations (up to six; unselected threads are not sent)\n\nMaximum 15 minutes, 20 model calls, 40,000 reported tokens, 12 outgoing messages. Provider price unavailable; this is not a currency guarantee or free-model claim.\n\nI explicitly confirm this provider/model and token-bounded run.\nStart bounded Envoy\n\nNo saved model connection is available. Manual play and your existing external agent connection still work; no model call has started.\n\nRefresh recorded activity\nExternal-agent recorded activity\n\nReceipt-backed actions from your external chats. No hidden reasoning or chatbot token usage is collected. Updates every ten seconds while this area is visible; reading never starts inference.\n\nEngine Facts — Server-Recorded Tool Results\n\nrecorded · Review committed records and pending counterparties before choosing another objective.\n\nRecorded outcome: approval needed\n\nExact human approval: approved\n\nApproval resolved. Inspect the receipt and current consequences; no further approval is pending.\n\n2026-10-02T16:58:13.464Z\n\nReceipt and record references\nEnvoy\n\nManual actions remain available without a model connection. Reading an approval never commits it.\n\nCodex Agent Playtest\n\nConnect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15 minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.\n\nCurrent authority: bounded playtest.\n\nEnable bounded agent playtest Disable new agent game actions\n\nOnly the human can change this authority or approve an exact exception. The game still enforces stock, charges, and locks.\n\nExact Approval Review\nApproval ID\nPreview\nInbox\napproval.resolved.v1 · 10\nRecorded event\napproval.requested.v1 · 9\nRecorded event\nPrivacy And Account Data\n\nExport account data or close the account. Both require your current password.\n\nCurrent password\nPrepare exportClose account",
+    "view": {
+      "status": 200,
+      "body": {
+        "source": "external",
+        "label": "Engine facts — server-recorded tool results",
+        "entries": [
+          {
+            "id": "49",
+            "category": "approval_needed",
+            "callId": "49",
+            "code": "APPROVAL_REQUIRED",
+            "records": [],
+            "approvalId": "59fa5807-6bd5-4f7a-a689-f54a9955c172",
+            "nextStep": "Approval resolved. Inspect the receipt and current consequences; no further approval is pending.",
+            "currentFacts": [
+              {
+                "label": "Exact human approval",
+                "status": "approved",
+                "nextStep": "Approval resolved. Inspect the receipt and current consequences; no further approval is pending."
+              }
+            ]
+          }
+        ],
+        "assessments": [],
+        "status": "recorded",
+        "lastErrorCode": null,
+        "truncated": false,
+        "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+        "stale": false,
+        "checkedAt": "2026-10-02T17:39:15.891Z",
+        "timestamps": {
+          "49": "2026-10-02T16:58:13.464Z"
+        }
+      }
+    },
+    "polls": 3
+  }
+}

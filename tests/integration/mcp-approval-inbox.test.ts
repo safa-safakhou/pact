@@ -17,7 +17,7 @@ import { ExternalAgentActivity, RunError, RunService } from "@pact/runs";
 import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { registerMcpRoutes } from "../../services/api/src/mcp-approval-inbox-routes.js";
+import { registerApprovalRoutes, registerMcpRoutes } from "../../services/api/src/mcp-approval-inbox-routes.js";
 import { registerRunRoutes } from "../../services/api/src/run-routes.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
@@ -80,6 +80,7 @@ beforeAll(async () => {
     },
     worldViews: {
       read: async (viewer, target, minutes) => ({ audience: "public", viewer, target, minutes }),
+      readSelf: async (viewer, minutes) => ({ audience: "owner", viewer, minutes }),
     },
     seasons: {
       read: async (query, accountId) => ({
@@ -477,17 +478,27 @@ describe("PACT-017 MCP transport", () => {
         init.sessionId,
       ),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
-    await expect(
-      mcp.handlePost(
-        readOnly,
-        {
-          method: "tools/call",
-          id: 7,
-          params: { name: "pact_world_read_v1", arguments: { targetKingdomId: randomUUID(), forecastMinutes: 61 } },
-        },
-        init.sessionId,
-      ),
-    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    const invalid = await mcp.handlePost(
+      readOnly,
+      {
+        method: "tools/call",
+        id: 7,
+        params: { name: "pact_world_read_v1", arguments: { forecastMinutes: 61, kingdomId: "PRIVATE_BAD_TEXT" } },
+      },
+      init.sessionId,
+    );
+    expect(invalid.response).toMatchObject({
+      result: { isError: true, structuredContent: { code: "INVALID_REQUEST", receiptExists: false } },
+    });
+    expect(JSON.stringify(invalid.response)).not.toContain("PRIVATE_BAD_TEXT");
+    const self = await mcp.handlePost(
+      readOnly,
+      { method: "tools/call", id: 71, params: { name: "pact_world_read_v1", arguments: {} } },
+      init.sessionId,
+    );
+    expect(self.response).toMatchObject({
+      result: { structuredContent: { audience: "owner", viewer: accountId, minutes: 60 } },
+    });
     await expect(
       mcp.handlePost(
         readOnly,
@@ -645,6 +656,70 @@ describe("PACT-017 MCP transport", () => {
 });
 
 describe("PACT-020 approvals", () => {
+  it("lists only this human's live approvals with a ten-record bound and no command admission", async () => {
+    const owner = await verifiedAccount(`pending-owner-${randomUUID()}@example.com`);
+    const other = await verifiedAccount(`pending-other-${randomUUID()}@example.com`);
+    const create = (accountId: string) =>
+      approvals.createRequest({
+        accountId,
+        command: {
+          schemaVersion: SCHEMA_VERSION,
+          commandId: randomUUID(),
+          actor: {
+            principalId: accountId,
+            productScope,
+            audience: "human",
+            subject: { type: "account", id: accountId },
+          },
+          action: { kind: "sandbox.echo", message: "synthetic pending fixture" },
+          submittedAt: "2026-09-20T20:00:00.000Z",
+        },
+        effectsSummary: "Read-only fixture",
+      });
+    const expired = await create(owner.accountId),
+      foreign = await create(other.accountId);
+    await pool.query("UPDATE approval_requests SET expires_at='2026-09-20T19:00:00Z' WHERE approval_id=$1", [
+      expired.approvalId,
+    ]);
+    for (let n = 0; n < 12; n++) await create(owner.accountId);
+    const server = Fastify();
+    registerApprovalRoutes(server, identity, approvals);
+    try {
+      const response = await server.inject({
+        method: "GET",
+        url: `/v1/approvals?accountId=${other.accountId}`,
+        headers: { cookie: `pact_session=${owner.sessionToken}` },
+      });
+      expect(response.statusCode).toBe(200);
+      expect(response.headers["cache-control"]).toBe("no-store");
+      const listed = response.json() as {
+        approvals: { approvalId: string; status: string; deepLinkPath: string }[];
+        truncated: boolean;
+      };
+      expect(listed.truncated).toBe(true);
+      expect(listed.approvals).toHaveLength(10);
+      expect(listed.approvals.every((a) => a.status === "pending" && a.deepLinkPath.includes(a.approvalId))).toBe(true);
+      expect(JSON.stringify(listed)).not.toContain(expired.approvalId);
+      expect(JSON.stringify(listed)).not.toContain(foreign.approvalId);
+      expect(
+        (await server.inject({ method: "GET", url: "/v1/approvals", headers: { authorization: "Bearer agent-token" } }))
+          .statusCode,
+      ).toBe(403);
+      const ids = listed.approvals.map((a) => a.approvalId);
+      expect(
+        (
+          await pool.query(
+            "SELECT count(*)::int AS count FROM approval_requests WHERE approval_id=ANY($1::uuid[]) AND status='pending'",
+            [ids],
+          )
+        ).rows,
+      ).toEqual([{ count: 10 }]);
+      expect(JSON.stringify(listed)).not.toMatch(/canonical_command_hash|requesting_client_id|action/);
+    } finally {
+      await server.close();
+    }
+  });
+
   it("keeps an exact request pending when the world cannot commit its approved command", async () => {
     const { accountId, sessionToken } = await verifiedAccount(`approval-paused-${randomUUID()}@example.com`);
     const pausedDispatcher = new CommandDispatcher({

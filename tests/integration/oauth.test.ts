@@ -34,6 +34,7 @@ beforeAll(async () => {
   const clock = { now: () => new Date("2026-09-20T18:00:00.000Z") };
   secretBox = new AesGcmSecretBox(Buffer.alloc(32, 7));
   identity = new IdentityService(pool, {
+    connectionRefreshExpirations: (accountId) => oauth.refreshableGrantExpirations(accountId),
     productScope: "pact",
     currentTermsVersion: "terms-v1",
     allowedOrigins: new Set(["https://pact.example"]),
@@ -72,6 +73,27 @@ async function verifiedAccount(email: string): Promise<string> {
 }
 
 describe("PACT OAuth", () => {
+  it("keeps expired-access connections visible only while an owned unused refresh remains valid", async () => {
+    const email = `inventory-${randomUUID()}@example.test`,
+      accountId = await verifiedAccount(email),
+      other = await verifiedAccount(`other-${randomUUID()}@example.test`);
+    const login = await identity.login({ email, password, ip: "192.0.2.17" });
+    const grantId = randomUUID();
+    await pool.query(
+      `INSERT INTO oauth_grants(id,product_scope,account_id,client_id,token_family_id,scopes,expires_at) VALUES($1,'pact',$2,'fixture',$3,ARRAY['world:read'],'2026-09-20T17:00:00Z')`,
+      [grantId, accountId, randomUUID()],
+    );
+    await pool.query(
+      `INSERT INTO oauth_refresh_tokens(product_scope,grant_id,token_family_id,token_hash,expires_at) VALUES('pact',$1,$2,$3,'2026-09-21T18:00:00Z')`,
+      [grantId, randomUUID(), randomUUID()],
+    );
+    expect(await oauth.refreshableGrantExpirations(other)).toEqual({});
+    const inventory = await identity.connectionInventory(login.sessionToken);
+    expect(inventory.grants).toMatchObject([{ id: grantId, refreshExpiresAt: new Date("2026-09-21T18:00:00Z") }]);
+    expect(JSON.stringify(inventory)).not.toContain("token_hash");
+    await pool.query("UPDATE oauth_refresh_tokens SET used_at=clock_timestamp() WHERE grant_id=$1", [grantId]);
+    expect((await identity.connectionInventory(login.sessionToken)).grants).toEqual([]);
+  });
   it("rejects wrong audience, redirect mismatch, refresh replay, revoked access, and private metadata", async () => {
     const accountId = await verifiedAccount(`oauth-${randomUUID()}@example.com`);
     const mcp = await oauth.registerPreregisteredClient({

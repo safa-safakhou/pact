@@ -24,7 +24,7 @@ export function registerSocialOverviewRoutes(
         return reply.code(403).send({ error: { code: "FORBIDDEN" } });
       throw error;
     }
-    const overview = await reader.read(accountId);
+    const overview = await reader.read(accountId, { acknowledgeDeliveredMessages: true });
     if (!overview) return reply.code(404).send({ error: { code: "KINGDOM_NOT_FOUND" } });
     return overview;
   });

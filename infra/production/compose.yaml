@@ -10,6 +10,8 @@ x-runtime: &runtime
     PACT_PUBLIC_BASE_URL: ${PACT_PUBLIC_BASE_URL:-${PACT_ORIGIN}}
     CURRENT_TERMS_VERSION: ${CURRENT_TERMS_VERSION:-connection-test-v1}
     LOG_LEVEL: ${LOG_LEVEL:-info}
+    PACT_GUEST_PLAY: ${PACT_GUEST_PLAY:-0}
+    WEB_PUSH_PUBLIC_KEY: ${WEB_PUSH_PUBLIC_KEY:-}
     PACT_DELETION_REGISTRY_FILE: /var/lib/pact-state/deletion-registry.ndjson
   secrets:
     - postgres_password
@@ -163,11 +165,14 @@ services:
     environment:
       <<: *runtime-environment
       SMTP_FROM: ${SMTP_FROM:-PACT MVP <noreply@safa.dedyn.io>}
+      WEB_PUSH_SUBJECT: ${WEB_PUSH_SUBJECT:-}
+      WEB_PUSH_PRIVATE_KEY: ${WEB_PUSH_PRIVATE_KEY:-}
     secrets:
       - postgres_password
       - identity_token_pepper
       - identity_encryption_key
       - smtp_url
+      - web_push_private_key
     depends_on:
       privacy-replay:
         condition: service_completed_successfully
@@ -192,6 +197,11 @@ services:
 
   channel:
     <<: *runtime
+    secrets:
+      - postgres_password
+      - identity_token_pepper
+      - identity_encryption_key
+      - telegram_bot_token
     command: ["npm", "run", "start", "--workspace", "@pact/channel-worker"]
     depends_on:
       privacy-replay:
@@ -241,6 +251,8 @@ secrets:
     file: ${PACT_SECRETS_DIR}/smtp_url
   compromised_password_sha256:
     file: ${PACT_SECRETS_DIR}/compromised_password_sha256.txt
+  web_push_private_key:
+    file: ${PACT_SECRETS_DIR}/web_push_private_key
   telegram_bot_id:
     file: ${PACT_SECRETS_DIR}/telegram_bot_id
   telegram_bot_token:

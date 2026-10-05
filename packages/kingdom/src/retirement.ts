@@ -99,7 +99,7 @@ export class KingdomRetirementService {
     const changed = await client.query(
       `UPDATE kingdoms SET status = 'closing', draft_id = NULL,
          handle = 'retired_' || left(replace(id::text, '-', ''), 16),
-         display_name = 'Retired kingdom', portrait = 'portrait.wolf'
+         display_name = 'Retired kingdom', portrait = 'portrait.wolf', ambition = NULL
        WHERE product_scope = $1 AND id = $2 AND status = 'ranked'`,
       [this.productScope, kingdom.id],
     );

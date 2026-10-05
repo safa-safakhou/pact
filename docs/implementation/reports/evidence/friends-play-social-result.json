@@ -1,0 +1,76 @@
+{
+  "events": [
+    {
+      "url": "/pact/v1/commands",
+      "status": 200,
+      "result": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "73742448-7c4e-4572-bfa7-1ef21d2e8f1d",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "contact-request:300284cb-4f56-40d2-ae20-95db3ecf62d6": 1
+        },
+        "charged": [
+          {
+            "asset": "silver",
+            "units": "1200"
+          }
+        ],
+        "committedAt": "2026-10-04T19:17:45.861Z"
+      }
+    },
+    {
+      "url": "/pact/v1/commands",
+      "status": 200,
+      "result": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "e53e7ffe-1546-42f3-8d6c-00c6c62db1e2",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "contact-request:300284cb-4f56-40d2-ae20-95db3ecf62d6": 1
+        },
+        "charged": [],
+        "committedAt": "2026-10-04T19:17:47.264Z"
+      }
+    },
+    {
+      "url": "/pact/v1/commands",
+      "status": 200,
+      "result": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "0b104f81-f0af-480d-935e-31854f5b3810",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "message:bb08c92d-8c67-4b8a-9e27-5d4976735cca": 1
+        },
+        "charged": [],
+        "committedAt": "2026-10-04T19:17:50.041Z"
+      }
+    },
+    {
+      "url": "/pact/v1/commands",
+      "status": 200,
+      "result": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "b671e0d0-f269-40cf-9f93-c48e077c232f",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "message:b2916601-8554-41e0-aae3-072958dcc48d": 1
+        },
+        "charged": [],
+        "committedAt": "2026-10-04T19:17:52.136Z"
+      }
+    }
+  ],
+  "errors": [],
+  "link": "https://safa.dedyn.io/pact/",
+  "draft": "Hello! I just arrived. What are you building?",
+  "incomingNextMove": "Your next move\n\nHuman: review the incoming contact request from @gprofessort_834c9012 in People.\n\nInspect People\n\nRead the current source record\n\nProgress and game areas",
+  "tradeDraft": "Want to trade? I can check my resources — what do you need?",
+  "draftOnly": true,
+  "twoWayConversation": true
+}

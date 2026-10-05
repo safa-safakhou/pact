@@ -24,6 +24,10 @@ if [ ! -f "$PACT_SECRETS_DIR/raid_seed_encryption_key" ]; then
   umask 077
   openssl rand -base64 32 > "$PACT_SECRETS_DIR/raid_seed_encryption_key"
 fi
+if [ ! -f "$PACT_SECRETS_DIR/web_push_private_key" ]; then
+  umask 077
+  : > "$PACT_SECRETS_DIR/web_push_private_key"
+fi
 for secret in postgres_password identity_token_pepper identity_encryption_key model_credential_public.pem model_credential_private.pem smtp_url compromised_password_sha256.txt telegram_bot_id telegram_bot_token telegram_webhook_secret; do
   test -f "$PACT_SECRETS_DIR/$secret" || { echo "missing $PACT_SECRETS_DIR/$secret" >&2; exit 1; }
 done

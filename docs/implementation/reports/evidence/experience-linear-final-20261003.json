@@ -1,0 +1,660 @@
+{
+  "readAt": "2026-10-03",
+  "counts": {
+    "Done": 98,
+    "Backlog": 28
+  },
+  "hasNextPage": false,
+  "issues": [
+    {
+      "pact": "[PACT-126]",
+      "linear": "MNI-220",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-125]",
+      "linear": "MNI-219",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-124]",
+      "linear": "MNI-218",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-122]",
+      "linear": "MNI-216",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-117]",
+      "linear": "MNI-211",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-119]",
+      "linear": "MNI-213",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-123]",
+      "linear": "MNI-217",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-121]",
+      "linear": "MNI-215",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-118]",
+      "linear": "MNI-212",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-116]",
+      "linear": "MNI-210",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-115]",
+      "linear": "MNI-209",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-120]",
+      "linear": "MNI-214",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-114]",
+      "linear": "MNI-208",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-112]",
+      "linear": "MNI-207",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-110]",
+      "linear": "MNI-204",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-113]",
+      "linear": "MNI-206",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-111]",
+      "linear": "MNI-205",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-109]",
+      "linear": "MNI-203",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-099]",
+      "linear": "MNI-158",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-108]",
+      "linear": "MNI-167",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-053]",
+      "linear": "MNI-118",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-107]",
+      "linear": "MNI-166",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-105]",
+      "linear": "MNI-164",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-106]",
+      "linear": "MNI-165",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-104]",
+      "linear": "MNI-163",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-101]",
+      "linear": "MNI-160",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-103]",
+      "linear": "MNI-162",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-102]",
+      "linear": "MNI-161",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-100]",
+      "linear": "MNI-159",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-080]",
+      "linear": "MNI-155",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-073]",
+      "linear": "MNI-144",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-070]",
+      "linear": "MNI-141",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-069]",
+      "linear": "MNI-140",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-062]",
+      "linear": "MNI-127",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-061]",
+      "linear": "MNI-126",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-059]",
+      "linear": "MNI-124",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-058]",
+      "linear": "MNI-123",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-057]",
+      "linear": "MNI-122",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-056]",
+      "linear": "MNI-121",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-055]",
+      "linear": "MNI-120",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-054]",
+      "linear": "MNI-119",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-081]",
+      "linear": "MNI-156",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-098]",
+      "linear": "MNI-157",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-097]",
+      "linear": "MNI-154",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-095]",
+      "linear": "MNI-153",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-079]",
+      "linear": "MNI-152",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-078]",
+      "linear": "MNI-151",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-094]",
+      "linear": "MNI-150",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-093]",
+      "linear": "MNI-149",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-077]",
+      "linear": "MNI-148",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-076]",
+      "linear": "MNI-147",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-075]",
+      "linear": "MNI-146",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-074]",
+      "linear": "MNI-145",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-072]",
+      "linear": "MNI-143",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-071]",
+      "linear": "MNI-142",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-068]",
+      "linear": "MNI-139",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-067]",
+      "linear": "MNI-138",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-087]",
+      "linear": "MNI-131",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-066]",
+      "linear": "MNI-137",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-092]",
+      "linear": "MNI-136",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-091]",
+      "linear": "MNI-135",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-090]",
+      "linear": "MNI-134",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-089]",
+      "linear": "MNI-133",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-088]",
+      "linear": "MNI-132",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-065]",
+      "linear": "MNI-130",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-060]",
+      "linear": "MNI-125",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-063]",
+      "linear": "MNI-128",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-064]",
+      "linear": "MNI-129",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-084]",
+      "linear": "MNI-85",
+      "status": "Backlog"
+    },
+    {
+      "pact": "[PACT-052]",
+      "linear": "MNI-116",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-048]",
+      "linear": "MNI-112",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-096]",
+      "linear": "MNI-117",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-051]",
+      "linear": "MNI-115",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-017]",
+      "linear": "MNI-77",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-049]",
+      "linear": "MNI-113",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-021]",
+      "linear": "MNI-81",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-050]",
+      "linear": "MNI-114",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-047]",
+      "linear": "MNI-111",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-046]",
+      "linear": "MNI-110",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-045]",
+      "linear": "MNI-109",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-044]",
+      "linear": "MNI-108",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-041]",
+      "linear": "MNI-105",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-040]",
+      "linear": "MNI-104",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-039]",
+      "linear": "MNI-103",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-043]",
+      "linear": "MNI-107",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-042]",
+      "linear": "MNI-106",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-038]",
+      "linear": "MNI-102",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-037]",
+      "linear": "MNI-101",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-036]",
+      "linear": "MNI-100",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-035]",
+      "linear": "MNI-99",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-034]",
+      "linear": "MNI-98",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-033]",
+      "linear": "MNI-97",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-032]",
+      "linear": "MNI-96",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-031]",
+      "linear": "MNI-95",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-030]",
+      "linear": "MNI-94",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-029]",
+      "linear": "MNI-93",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-028]",
+      "linear": "MNI-92",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-027]",
+      "linear": "MNI-91",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-026]",
+      "linear": "MNI-90",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-086]",
+      "linear": "MNI-89",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-025]",
+      "linear": "MNI-88",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-024]",
+      "linear": "MNI-87",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-085]",
+      "linear": "MNI-86",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-004]",
+      "linear": "MNI-64",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-015]",
+      "linear": "MNI-75",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-023]",
+      "linear": "MNI-83",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-014]",
+      "linear": "MNI-74",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-012]",
+      "linear": "MNI-72",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-013]",
+      "linear": "MNI-73",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-011]",
+      "linear": "MNI-71",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-010]",
+      "linear": "MNI-70",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-009]",
+      "linear": "MNI-69",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-022]",
+      "linear": "MNI-82",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-083]",
+      "linear": "MNI-84",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-020]",
+      "linear": "MNI-80",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-019]",
+      "linear": "MNI-79",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-016]",
+      "linear": "MNI-76",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-018]",
+      "linear": "MNI-78",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-007]",
+      "linear": "MNI-67",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-008]",
+      "linear": "MNI-68",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-006]",
+      "linear": "MNI-66",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-003]",
+      "linear": "MNI-63",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-002]",
+      "linear": "MNI-62",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-082]",
+      "linear": "MNI-61",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-001]",
+      "linear": "MNI-60",
+      "status": "Done"
+    },
+    {
+      "pact": "[PACT-005]",
+      "linear": "MNI-65",
+      "status": "Done"
+    }
+  ],
+  "gate": {
+    "id": "MNI-220",
+    "uuid": "9aee1c4d-7a9b-4563-9904-96773c717a64",
+    "status": "Done",
+    "acceptanceChecked": true,
+    "report": "docs/implementation/reports/experience-fresh-player-20261003.md"
+  },
+  "milestone": {
+    "id": "ce8ba75e-4b93-470c-96d4-6137ba1e4e43",
+    "name": "Completed - Game experience and generated assets (3 October)",
+    "description": "18/18 PACT-109-126 Done. Generated assets integrated, bounded source/export inventory verified, actual single-account/two-visit Luna review completed on testing release experience-20261003-4. Eight provider requests, ordinary clocks/resources, FarmII actual payoff, temporary access revoked. Mixed enjoyment/setup/discovery limits recorded; no production or human-retention certification. Original28 Later remain separate.",
+    "progress": 100,
+    "sortOrder": 6099
+  },
+  "plan": {
+    "id": "23ba3136-9933-4e86-9d7a-508d7c37bc95",
+    "completionPrefixVerified": true,
+    "allCriteriaChecked": true
+  },
+  "sourceHashReadback": "8a0c54264f9f5cc9e4a64dfbace47cb0463c73ff681ee89d07ecb5e94bd0d362  apps/web/src/outcome-cards.tsx\n188872a593fda146a460ca0f7a1b6e1e6f30174f8900ae62b064d0ee687ad438  apps/web/src/hall-keepsakes.tsx\nf7d3939e08f6a2e66db5d75b4002d72e299e2ce960a793a777e3d94fc4555261  apps/web/src/milestone-reveals.tsx\n81ba83a86bca35629c532807cb374a46f80f13dcc05afc0f04cb294690f6b162  workers/notification/src/email.ts\n8a0c54264f9f5cc9e4a64dfbace47cb0463c73ff681ee89d07ecb5e94bd0d362  /srv/pact/source/apps/web/src/outcome-cards.tsx\n188872a593fda146a460ca0f7a1b6e1e6f30174f8900ae62b064d0ee687ad438  /srv/pact/source/apps/web/src/hall-keepsakes.tsx\nf7d3939e08f6a2e66db5d75b4002d72e299e2ce960a793a777e3d94fc4555261  /srv/pact/source/apps/web/src/milestone-reveals.tsx\n81ba83a86bca35629c532807cb374a46f80f13dcc05afc0f04cb294690f6b162  /srv/pact/source/workers/notification/src/email.ts\n"
+}

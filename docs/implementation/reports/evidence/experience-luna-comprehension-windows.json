@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-03T19:15:21.726717+00:00",
+  "model": "gpt-6-luna",
+  "route": "installed Windows Codex CLI, existing ChatGPT login",
+  "mode": "one synthetic comprehension turn",
+  "request_bound": {
+    "invocations": 1,
+    "http_retry_limit": 0,
+    "stream_retry_limit": 0,
+    "websockets": false,
+    "completed_tool_calls": 0,
+    "provider_http_count": "not independently instrumented"
+  },
+  "exitCode": 1,
+  "events": []
+}

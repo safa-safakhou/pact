@@ -36,7 +36,7 @@ def validate(data):
         for dependency in task["depends_on"]:
             assert dependency in by_id, f"Missing dependency {dependency}"
             assert by_id[dependency]["phase"] <= task["phase"], "Dependency on a later milestone"
-        if task.get("delivery_track") == "alpha":
+        if task.get("delivery_track") in {"alpha", "alpha_followup", "experience", "friends_playtest"}:
             assert "PACT-053" in task["depends_on"], f"Missing rules gate: {task['id']}"
             assert all(by_id[d].get("delivery_track") != "later" for d in task["depends_on"]), f"Alpha blocked by deferred work: {task['id']}"
         elif task["phase"]:
@@ -54,6 +54,22 @@ def validate(data):
     active = {t["id"] for t in tasks if t.get("delivery_track") == "alpha"}
     assert active == set(data["alpha"]["active_ids"]) and len(active) == 13, "Alpha scope drift"
     assert active - {data["alpha"]["gate"]} <= set(by_id[data["alpha"]["gate"]]["depends_on"]), "Incomplete Alpha checkpoint"
+    followups = {t["id"] for t in tasks if t.get("delivery_track") == "alpha_followup"}
+    if followups:
+        plan = data["alpha_followup"]
+        assert followups == set(plan["active_ids"]), "Alpha follow-up scope drift"
+        assert all("PACT-099" in by_id[t]["depends_on"] for t in followups), "Missing agent foundation"
+        assert followups - {plan["gate"]} <= set(by_id[plan["gate"]]["depends_on"]), "Incomplete follow-up checkpoint"
+    experience = {t["id"] for t in tasks if t.get("delivery_track") == "experience"}
+    if experience:
+        plan = data["experience"]
+        assert experience == set(plan["active_ids"]) and len(experience) == 18, "Experience scope drift"
+        assert all({"PACT-099", "PACT-108"} <= set(by_id[t]["depends_on"]) for t in experience), "Missing experience foundations"
+        assert experience - {plan["gate"]} <= set(by_id[plan["gate"]]["depends_on"]), "Incomplete experience checkpoint"
+    friends = {t["id"] for t in tasks if t.get("delivery_track") == "friends_playtest"}
+    if friends:
+        assert friends == set(data["friends_playtest"]["active_ids"]) and len(friends) == 4, "Friends playtest scope drift"
+        assert friends - {"PACT-130"} <= set(by_id["PACT-130"]["depends_on"]), "Incomplete friend walkthrough dependencies"
     visiting, visited = set(), set()
 
     def visit(task_id):
@@ -69,7 +85,9 @@ def validate(data):
     for task_id in by_id:
         visit(task_id)
     for phase, gate_id in GATES.items():
-        phase_tasks = {t["id"] for t in tasks if t["phase"] == phase and t["id"] != gate_id}
+        # New follow-ups have their own checkpoint; do not rewrite historical gate acceptance.
+        phase_tasks = {t["id"] for t in tasks if t["phase"] == phase and t["id"] != gate_id
+                       and t.get("delivery_track") not in {"alpha_followup", "experience", "friends_playtest"}}
         assert phase_tasks <= set(by_id[gate_id]["depends_on"]), f"Incomplete gate {gate_id}"
     for source, expected in data["source_sha256"].items():
         actual = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
@@ -90,11 +108,15 @@ def render(data, by_id, criteria):
         completed = sum(t["status"] == "done" for t in selected)
         lines = [f"# Phase {phase} — {title}", "",
                  f"**{len(selected)} tickets · {completed} completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)", "",
-                 "Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.", ""]
+                 "Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.", ""]
         for task in selected:
             lines += [f'<a id="{task["id"].lower()}"></a>', f"## {task['id']} — {task['title']}", "",
                       f"**Status:** {task['status']} · **Role:** {task['owner_role']} · **Size:** {task['size']} · **Type:** {task['kind']}", "",
-                      f"**Delivery track:** {task.get('delivery_track', 'completed foundation')} · [Approved Alpha scope](../pact/alpha.md)", "",
+                      f"**Delivery track:** {task.get('delivery_track', 'completed foundation')} · "
+                      + ("[Alpha playtest follow-ups](alpha-playtest-fixes.md)" if task.get("delivery_track") == "alpha_followup"
+                         else "[Generated experience](game-experience.md)" if task.get("delivery_track") == "experience"
+                         else "[Friends playtest](friends-playtest.md)" if task.get("delivery_track") == "friends_playtest"
+                         else "[Approved Alpha scope](../pact/alpha.md)"), "",
                       "**Depends on:** " + (", ".join(link(d) for d in task["depends_on"]) or "None — start here."), "",
                       "**Components:** " + ", ".join(task["components"]) + ".", "",
                       "**Specification:** " + ", ".join(f"[{s}](../pact/{s}.md)" for s in task["sources"]) + " · **Release checks:** " + ", ".join(task["covers"]), "",
@@ -136,8 +158,28 @@ def render(data, by_id, criteria):
         lines += [""]
     lines += ["## Current game-only Alpha", "", "Original A/R/S/L coverage above includes deferred original scope and is not evidence that narrowed Alpha tickets satisfy full production criteria.", "", "| Criterion | Active tickets | Alpha checkpoint |", "| --- | --- | --- |"]
     for criterion in sorted(c for c in criteria if c.startswith("G")):
-        members = [t for t in tasks if criterion in t["covers"] and t["id"] != data["alpha"]["gate"]]
+        members = [t for t in tasks if criterion in t["covers"] and t["id"] != data["alpha"]["gate"]
+                   and t.get("delivery_track") not in {"alpha_followup", "experience", "friends_playtest"}]
         lines += [f"| {criterion} | " + (", ".join(link(t["id"]) for t in members) or "Observed final rehearsal") + f" | {link(data['alpha']['gate'])} |"]
+    if data.get("alpha_followup"):
+        plan = data["alpha_followup"]
+        lines += ["", "## Alpha playtest follow-ups — completed", "",
+                  "The original 13-ticket checkpoint remains historical. These additional tickets completed through their own follow-up checkpoint. Experience and friends batches have separate completion reports.", "",
+                  "| Criterion | Follow-up tickets | Follow-up checkpoint |", "| --- | --- | --- |"]
+        for criterion in sorted(c for c in criteria if c.startswith("G")):
+            members = [t for t in tasks if criterion in t["covers"] and t.get("delivery_track") == "alpha_followup"
+                       and t["id"] != plan["gate"]]
+            if members or criterion in by_id[plan["gate"]]["covers"]:
+                lines += [f"| {criterion} | " + (", ".join(link(t["id"]) for t in members) or "Observed repeat playtest")
+                          + f" | {link(plan['gate'])} |"]
+    if data.get("friends_playtest"):
+        friends_complete = all(by_id[t]["status"] == "done" for t in data["friends_playtest"]["active_ids"])
+        lines += ["", "## Friends playtest - " + ("completed" if friends_complete else "in progress"), "", "Four bounded web/agent improvements; original production gates remain deferred.", "",
+                  "| Ticket | Criteria | Evidence |", "| --- | --- | --- |"]
+        for task_id in data["friends_playtest"]["active_ids"]:
+            task = by_id[task_id]
+            evidence = "[Completed checks and integrated walkthrough](reports/friends-playtest-20261004.md)" if task["status"] == "done" else "Pending per-ticket checks and integrated walkthrough"
+            lines += ["| " + link(task_id) + " | " + ", ".join(task["covers"]) + " | " + evidence + " |"]
     outputs["coverage.md"] = "\n".join(lines)
     return outputs
 

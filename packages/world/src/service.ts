@@ -112,8 +112,8 @@ export class WorldClockService {
     });
   }
 
-  async read(): Promise<WorldSnapshot> {
-    const result = await this.pool.query<ClockRow>("SELECT * FROM world_clocks WHERE product_scope = $1", [
+  async read(client: PoolClient | Pool = this.pool): Promise<WorldSnapshot> {
+    const result = await client.query<ClockRow>("SELECT * FROM world_clocks WHERE product_scope = $1", [
       this.productScope,
     ]);
     const row = result.rows[0];

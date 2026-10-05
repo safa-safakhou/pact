@@ -1,19 +1,36 @@
 import { PactClientError, type SandboxAction } from "@pact/client-sdk";
+import { wholeUnitText } from "@pact/domain/resource-facts";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type Ambition, AmbitionChoice } from "./ambition.js";
 import { ChroniclePanel } from "./chronicle-panel.js";
+import { pactBaseUrl } from "./client-location.js";
+import { CodexConnection } from "./codex-connection.js";
+import { Consequences, type ConsequenceView } from "./consequences.js";
 import { CourtPanel } from "./court-panel.js";
+import { developmentChoices } from "./development-choices.js";
 import { EvidencePanel } from "./evidence-panel.js";
+import { clearExperiencePreferences, type ExperienceAudio } from "./experience-audio.js";
+import { ExperienceControls } from "./experience-controls.js";
 import { FirstSession } from "./first-session.js";
+import { FriendsLobby } from "./friends-lobby.js";
+import { remainingGameTime } from "./game-time.js";
+import { GuestEntry } from "./guest-entry.js";
+import { HallKeepsakes } from "./hall-keepsakes.js";
 import { InvitationPanel } from "./invitation-panel.js";
+import { KingdomScene } from "./kingdom-scene.js";
 import { LiveConnection, liveFetch } from "./live-connection.js";
+import { ModerationPanel, ReportControl, ReportingContext } from "./moderation-panel.js";
+import { NotificationSettings } from "./notification-settings.js";
+import { OutcomeCards } from "./outcome-cards.js";
 import { createWebPactClient } from "./pact-client.js";
 import { PoliticsPanel } from "./politics-panel.js";
+import { BuilderStatus, QuickBuilds } from "./quick-builds.js";
 import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
-import { wholeResourceAmount } from "./resource-units.js";
 import { RunPanel } from "./run-panel.js";
 import { SeasonPanel } from "./season-panel.js";
+import { OutgoingContactHistory } from "./social-freshness.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 import { readWebResponse } from "./web-response.js";
 
@@ -24,15 +41,18 @@ type Party = { kingdomId: string; handle: string; displayName: string };
 type Offer = Party & { id: string; version: number; terms: Json; signedBy: string[] };
 type Contract = Party & { id: string; terms: Json; status: string; endGameTimeMs: string };
 type SocialOverview = {
+  requestHistory?: { id: string; status: string; handle: string; expiresGameTimeMs: string }[];
   contacts: Party[];
-  requests: (Party & { id: string; direction: "incoming" | "outgoing"; note: string })[];
+  requests: (Party & { id: string; direction: "incoming" | "outgoing"; note: string; expiresGameTimeMs: string })[];
   messages: (Party & { id: string; senderKingdomId: string; body: string; sentGameTimeMs: string })[];
   supplyOffers: (Offer & { kingdomA: string; kingdomB: string })[];
   supplyContracts: (Contract & { kingdomA: string; kingdomB: string })[];
   garrisonOffers: (Offer & { lenderKingdomId: string; hostKingdomId: string })[];
   garrisonContracts: (Contract & { lenderKingdomId: string; hostKingdomId: string })[];
 };
-type OwnerView = {
+export type OwnerView = {
+  ambition?: Ambition;
+  consequences?: ConsequenceView;
   audience: "owner";
   profile: { kingdomId: string; handle: string; displayName: string };
   asOfGameTimeMs: number;
@@ -54,6 +74,13 @@ type OwnerView = {
       lockedUnits: string;
       capacityUnits: string;
       productionPerMinuteUnits: string;
+      facts?: {
+        ordinaryWhole: string;
+        allowanceWhole: string;
+        lockedWhole: string;
+        capacityWhole: string;
+        rates: { gross: { label: string }; upkeep: { label: string }; net: { label: string }; excludes: string };
+      };
       version: string;
     }
   >;
@@ -119,7 +146,7 @@ export function actionReceiptNotice(action: SandboxAction, receipt: { code: stri
   return `${action.kind}: ${actionCodeMessage(action, receipt.code)} · ${receipt.commandId}`;
 }
 function units(value: string): string {
-  return wholeResourceAmount(value).toLocaleString(undefined, { maximumFractionDigits: 3 });
+  return wholeUnitText(value);
 }
 function supplyTerms(terms: Json, sendA: boolean): string {
   const direction = (value: unknown): string => {
@@ -144,8 +171,16 @@ function owner(value: unknown): OwnerView {
   return value as OwnerView;
 }
 
-export function GameApp(): React.JSX.Element {
-  const apiOrigin = useMemo(() => new URL(import.meta.env.BASE_URL, window.location.origin), []);
+export interface GameHost {
+  readonly csrfToken: string;
+  readonly onAuthenticationRequired: () => void;
+  readonly openAccount: () => void;
+  readonly onTabChange: (tab: Tab) => void;
+  readonly subscribeBack: (callback: () => void) => () => void;
+}
+export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
+  const [experienceAudio, setExperienceAudio] = useState<ExperienceAudio | null>(null);
+  const apiOrigin = useMemo(() => new URL(pactBaseUrl(), window.location.origin), []);
   const telegramBootstrap = useMemo(() => readTelegramBootstrap(window.location.search), []);
   const connection = useMemo(() => new LiveConnection(navigator.onLine), []);
   const [connectionStatus, setConnectionStatus] = useState(connection.status);
@@ -154,13 +189,25 @@ export function GameApp(): React.JSX.Element {
   const returnFocus = useRef<HTMLElement | null>(null);
   const send = useMemo(
     () =>
-      liveFetch(window.fetch.bind(window), connection, () => {
-        setConnectionStatus(connection.status);
-        setPendingAction(null);
-      }),
-    [connection],
+      liveFetch(
+        async (input, init) => {
+          const response = await window.fetch(input, init);
+          if (host && response.status === 403) {
+            // A scoped permission refusal is different from an expired channel session.
+            const session = await window.fetch(new URL("v1/auth/connections", apiOrigin), { credentials: "include" });
+            if (session.status === 403) host.onAuthenticationRequired();
+          }
+          return response;
+        },
+        connection,
+        () => {
+          setConnectionStatus(connection.status);
+          setPendingAction(null);
+        },
+      ),
+    [connection, host, apiOrigin],
   );
-  const [csrf, setCsrf] = useState(() => sessionStorage.getItem("pact_csrf") ?? "");
+  const [csrf, setCsrf] = useState(() => host?.csrfToken ?? sessionStorage.getItem("pact_csrf") ?? "");
   const client = useMemo(
     () =>
       createWebPactClient({
@@ -170,6 +217,22 @@ export function GameApp(): React.JSX.Element {
       }),
     [apiOrigin, csrf, send],
   );
+  const [guestMode, setGuestMode] = useState<boolean | null>(host ? false : null);
+  const [guestPlayer, setGuestPlayer] = useState(false);
+  useEffect(() => {
+    if (host) return;
+    void fetch(new URL("v1/play", apiOrigin), { credentials: "include" })
+      .then((r) => r.json())
+      .then((data) => {
+        setGuestMode(data.enabled === true);
+        setGuestPlayer(data.guest === true);
+        if (data.csrfToken) {
+          sessionStorage.setItem("pact_csrf", data.csrfToken);
+          setCsrf(data.csrfToken);
+        }
+      })
+      .catch(() => setGuestMode(false));
+  }, [host, apiOrigin]);
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
   const [tab, setTab] = useState<Tab>(() =>
     new URLSearchParams(window.location.search).has("seal") ||
@@ -180,13 +243,35 @@ export function GameApp(): React.JSX.Element {
       : new URLSearchParams(window.location.search).has("court") ||
           new URLSearchParams(window.location.search).has("politics")
         ? "People"
-        : new URLSearchParams(window.location.search).has("approval")
+        : new URLSearchParams(window.location.search).has("approval") ||
+            new URLSearchParams(window.location.search).has("inbox") ||
+            new URLSearchParams(window.location.search).has("notifications")
           ? "Envoy"
           : "Kingdom",
   );
+  useEffect(() => {
+    host?.onTabChange(tab);
+  }, [host, tab]);
+  useEffect(
+    () =>
+      host?.subscribeBack(() => {
+        setPendingAction(null);
+        setTab("Kingdom");
+      }),
+    [host],
+  );
+  useEffect(() => {
+    if (auth === "login" && host) host.onAuthenticationRequired();
+  }, [auth, host]);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [kingdomId, setKingdomId] = useState("");
   const [view, setView] = useState<OwnerView | null>(null);
+  const [decisions, setDecisions] = useState<{
+    kingdomId: string;
+    approvals: { approvalId: string; status: string; deepLinkPath: string }[];
+    failure?: { code: string; commandId?: string };
+  } | null>(null);
+  const [localFailure, setLocalFailure] = useState<{ code: string; commandId?: string } | null>(null);
   const [social, setSocial] = useState<SocialOverview | null>(null);
   const [target, setTarget] = useState("");
   const [pendingAction, setPendingAction] = useState<{ summary: string; action: SandboxAction } | null>(null);
@@ -232,8 +317,11 @@ export function GameApp(): React.JSX.Element {
         setSocial(null);
         setInbox([]);
         setView(null);
+        setDecisions(null);
+        setLocalFailure(null);
         setKingdomId("");
         setDraft(null);
+        clearExperiencePreferences(localStorage);
         sessionStorage.removeItem("pact_csrf");
         setCsrf("");
         setLastRefreshed(null);
@@ -263,6 +351,26 @@ export function GameApp(): React.JSX.Element {
         setSocial(null);
       }
       try {
+        const [pending, activity] = await Promise.all([
+          request("/v1/approvals"),
+          request("/v1/runs/external-activity"),
+        ]);
+        if (!gate.isCurrent(ticket)) return;
+        const entries = Array.isArray(activity.entries)
+          ? (activity.entries as { category: string; code: string; commandId?: string }[])
+          : [];
+        const latest = entries.at(-1);
+        setDecisions({
+          kingdomId: id,
+          approvals: pending.approvals as { approvalId: string; status: string; deepLinkPath: string }[],
+          ...(latest?.category === "failed"
+            ? { failure: { code: latest.code, ...(latest.commandId ? { commandId: latest.commandId } : {}) } }
+            : {}),
+        });
+      } catch {
+        if (gate.isCurrent(ticket)) setDecisions(null);
+      }
+      try {
         const nextInbox = await client.readInbox(undefined, 50);
         if (!gate.isCurrent(ticket)) return;
         setInbox(
@@ -289,6 +397,7 @@ export function GameApp(): React.JSX.Element {
           setAuth("login");
         }
       } else if (["FORBIDDEN", "AUTHENTICATION_REQUIRED", "INVALID_CREDENTIALS"].includes(failure(error))) {
+        clearExperiencePreferences(localStorage);
         setAuth("login");
         if (connection.confirmRefresh(connectionRevision)) setConnectionStatus(connection.status);
       } else {
@@ -324,9 +433,9 @@ export function GameApp(): React.JSX.Element {
   }, [pendingAction]);
 
   useEffect(() => {
-    void refresh();
+    if (guestMode !== null) void refresh();
     return () => refreshGate.current.invalidate();
-  }, [refresh]);
+  }, [refresh, guestMode]);
   useEffect(() => {
     if (auth !== "ready") return;
     const timer = window.setInterval(() => {
@@ -342,12 +451,18 @@ export function GameApp(): React.JSX.Element {
     };
   }, [auth, apiOrigin, refresh]);
 
-  async function login(event: React.FormEvent): Promise<void> {
+  async function login(event: React.FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     setBusy(true);
     setNotice("");
     try {
-      const result = await request("/v1/auth/login", "POST", { email, password, label: "PACT Alpha web" });
+      const mfaCode = String(new FormData(event.currentTarget).get("mfaCode") ?? "").trim();
+      const result = await request("/v1/auth/login", "POST", {
+        email,
+        password,
+        label: "PACT Alpha web",
+        ...(mfaCode ? { mfaCode } : {}),
+      });
       refreshGate.current.invalidate();
       refreshGate.current.resume();
       visibleKingdom.current = "";
@@ -355,6 +470,8 @@ export function GameApp(): React.JSX.Element {
       setTarget("");
       setPendingAction(null);
       setView(null);
+      setDecisions(null);
+      setLocalFailure(null);
       setSocial(null);
       setInbox([]);
       setKingdomId("");
@@ -401,6 +518,32 @@ export function GameApp(): React.JSX.Element {
     }
   }
 
+  async function queueSuggested(building: string, level: number) {
+    if (!view || !connection.writable) return;
+    try {
+      const fresh = owner(await client.readKingdomView(view.profile.kingdomId));
+      const free = fresh.builders.find((b) => !b.instructionId);
+      const built = fresh.buildings.find((b) => b.kind === building);
+      if (
+        !free ||
+        !built ||
+        built.level + 1 !== level ||
+        fresh.builders.some((b) => b.kind === building && b.instructionId)
+      ) {
+        setNotice("Your builders changed. Review the refreshed choices.");
+        await refresh();
+        return;
+      }
+      await act({
+        kind: "game.building.queue",
+        building: building as "farm",
+        targetLevel: level,
+        slot: free.slot as 1 | 2,
+      });
+    } catch {
+      setNotice("Could not check your builders. Refresh and try again.");
+    }
+  }
   async function act(action: SandboxAction): Promise<void> {
     if (!connection.writable) {
       setNotice("Refresh live state before deciding again. No action was queued.");
@@ -412,7 +555,13 @@ export function GameApp(): React.JSX.Element {
     try {
       const receipt = await client.submitCommand(command);
       setNotice(actionReceiptNotice(action, receipt));
+      setLocalFailure(
+        ["COMMITTED", "ALREADY_COMMITTED"].includes(receipt.code)
+          ? null
+          : { code: receipt.code, commandId: receipt.commandId },
+      );
     } catch (error) {
+      setLocalFailure({ code: failure(error), commandId: command.commandId });
       if (failure(error) === "NETWORK_UNCERTAIN") {
         const receipt = await client.reconcileReceipt(command.commandId).catch(() => null);
         setNotice(
@@ -436,7 +585,7 @@ export function GameApp(): React.JSX.Element {
     <ConnectionNotice status={connectionStatus} lastRefreshed={lastRefreshed} onRefresh={() => void refresh()} />
   );
 
-  if (telegramBootstrap)
+  if (telegramBootstrap && !host)
     return (
       <main className="game-shell auth-shell">
         <h1>Confirm Telegram link</h1>
@@ -473,11 +622,36 @@ export function GameApp(): React.JSX.Element {
         {notice && <p role="alert">{notice}</p>}
       </main>
     );
-  if (auth === "checking")
+  if ((auth === "login" || auth === "draft") && guestMode && !host)
+    return (
+      <GuestEntry
+        onJoined={(token) => {
+          refreshGate.current.invalidate();
+          refreshGate.current.resume();
+          visibleKingdom.current = "";
+          sessionStorage.setItem("pact_csrf", token);
+          setCsrf(token);
+          setGuestPlayer(true);
+          setAuth("checking");
+          setNotice("");
+        }}
+      />
+    );
+  if (guestMode === null || auth === "checking")
     return (
       <main className="game-shell">
         <h1>PACT Alpha</h1>
         <p>Loading…</p>
+      </main>
+    );
+  if (auth === "login" && host)
+    return (
+      <main className="game-shell">
+        <h1>Reconnect your PACT account</h1>
+        <p>Your session ended. Return to the secure PACT sign-in flow before taking another action.</p>
+        <button type="button" onClick={host.onAuthenticationRequired}>
+          Reconnect
+        </button>
       </main>
     );
   if (auth === "login")
@@ -518,6 +692,10 @@ export function GameApp(): React.JSX.Element {
               onChange={(event) => setPassword(event.target.value)}
             />
           </label>
+          <label>
+            Authenticator or recovery code (if enabled)
+            <input name="mfaCode" autoComplete="one-time-code" maxLength={64} />
+          </label>
           <button type="submit" disabled={busy}>
             Sign in
           </button>
@@ -534,6 +712,12 @@ export function GameApp(): React.JSX.Element {
         {connectionNotice}
         <p>Your name and handle become public on entry. This private Alpha uses a test portrait.</p>
         <InvitationPanel request={request} authenticated canWrite={canWrite} />
+        {!host && (
+          <details>
+            <summary>Optional game notifications</summary>
+            <NotificationSettings request={request} canWrite={canWrite} />
+          </details>
+        )}
         <form
           onSubmit={(event) => {
             void found(event);
@@ -555,192 +739,316 @@ export function GameApp(): React.JSX.Element {
       </main>
     );
   return (
-    <main className="game-shell" id="game-content" tabIndex={-1}>
-      <a className="skip-link" href="#game-areas">
-        Skip to game areas
-      </a>
-      <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
-      <header className="game-header">
-        <div>
-          <p className="eyebrow">PACT · private Alpha</p>
-          <h1>{view?.profile.displayName ?? "Kingdom"}</h1>
-          <p>
-            @{view?.profile.handle} · {view?.worldStatus} · tick {view?.committedTickSequence}
-          </p>
-          <p>
-            Your kingdom ID: <code>{kingdomId}</code>
-          </p>
-        </div>
-        <div className="game-header-actions">
-          <button
-            type="button"
-            onClick={() => {
-              void refresh();
-            }}
-            disabled={busy}
-          >
-            Refresh
-          </button>
-          <button
-            type="button"
-            className="secondary"
-            disabled={busy}
-            onClick={() => {
-              refreshGate.current.pause();
-              setNotice("");
-              setRefreshFailure("");
-              setTarget("");
-              setSocial(null);
-              setView(null);
-              setPendingAction(null);
-              setInbox([]);
-              setKingdomId("");
-              setDraft(null);
-              setAuth("login");
-              setLastRefreshed(null);
-            }}
-          >
-            Switch test player
-          </button>
-        </div>
-      </header>
-      {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
-      {connectionNotice}
-      <nav className="game-nav" id="game-areas" tabIndex={-1} aria-label="Game areas">
-        {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
-          <button
-            type="button"
-            key={item}
-            aria-current={tab === item ? "page" : undefined}
-            onClick={() => setTab(item)}
-          >
-            {item}
-          </button>
-        ))}
-      </nav>
-      {view && (
-        <FirstSession
-          stage={{
-            socialAvailable: social !== null,
-            farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
-            farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
-            contacts: social?.contacts.length ?? 0,
-            pendingRequests: social?.requests.length ?? 0,
-            pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
-            contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
-          }}
-          onArea={setTab}
-        />
-      )}
-      {tab === "Envoy" && <RunPanel request={request} contacts={social?.contacts ?? []} canWrite={canWrite} />}
-      {notice && (
-        <p className="game-notice" role="status">
-          {notice}
-        </p>
-      )}
-      {refreshFailure && (
-        <p className="game-notice" role="status">
-          {refreshFailure}
-        </p>
-      )}
-      {pendingAction && (
-        <section
-          className="game-confirm"
-          aria-label="Confirm game action"
-          ref={confirmation}
-          tabIndex={-1}
-          onKeyDown={(event) => {
-            if (event.key === "Escape") {
-              setPendingAction(null);
-              returnFocus.current?.focus();
-            }
-          }}
-        >
+    <ReportingContext.Provider value={{ request, canWrite }}>
+      <main className={guestMode ? "game-shell friends-play" : "game-shell"} id="game-content" tabIndex={-1}>
+        <a className="skip-link" href="#game-areas">
+          Skip to game areas
+        </a>
+        <header className="game-header">
           <div>
-            <strong>Confirm this action</strong>
-            <p>{pendingAction.summary}</p>
+            <p className="eyebrow">PACT · friends world</p>
+            <h1>{view?.profile.displayName ?? "Kingdom"}</h1>
+            <p>
+              @{view?.profile.handle} {view?.worldStatus === "paused" ? " · World paused" : ""}
+            </p>
+            <details>
+              <summary>Kingdom reference</summary>
+              <code>{kingdomId}</code>
+            </details>
           </div>
-          <button
-            type="button"
-            disabled={!canWrite}
-            onClick={() => {
-              const action = pendingAction.action;
-              setPendingAction(null);
-              void act(action);
+          <div className="game-header-actions">
+            <button
+              type="button"
+              onClick={() => {
+                void refresh();
+              }}
+              disabled={busy}
+            >
+              Refresh
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              disabled={busy}
+              onClick={() => {
+                if (
+                  guestPlayer &&
+                  !window.confirm("Start a new kingdom in this browser? Your current guest will be left behind.")
+                )
+                  return;
+                if (guestPlayer) {
+                  localStorage.removeItem("pact_guest_entry");
+                  localStorage.removeItem("pact_guest_name");
+                }
+                clearExperiencePreferences(localStorage);
+                refreshGate.current.pause();
+                setNotice("");
+                setRefreshFailure("");
+                setTarget("");
+                setSocial(null);
+                setView(null);
+                setDecisions(null);
+                setLocalFailure(null);
+                setPendingAction(null);
+                setInbox([]);
+                setKingdomId("");
+                setDraft(null);
+                setAuth("login");
+                setLastRefreshed(null);
+              }}
+            >
+              {guestPlayer ? "New guest" : "Switch test player"}
+            </button>
+          </div>
+        </header>
+        {view && (
+          <ExperienceControls
+            key={view.profile.kingdomId}
+            owner={view.profile.kingdomId}
+            onAudioReady={setExperienceAudio}
+          />
+        )}
+        {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
+        {connectionNotice}
+        <nav className="game-nav" id="game-areas" tabIndex={-1} aria-label="Game areas">
+          {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
+            <button
+              type="button"
+              key={item}
+              aria-current={tab === item ? "page" : undefined}
+              onClick={() => setTab(item)}
+            >
+              {item}
+            </button>
+          ))}
+        </nav>
+        {tab === "Envoy" && (
+          <details className="game-card">
+            <summary>Reports and appeals</summary>
+            <ModerationPanel request={request} canWrite={canWrite} />
+          </details>
+        )}
+        {tab === "Envoy" && !host && (
+          <CodexConnection request={request} handle={view?.profile.handle} guest={guestPlayer} />
+        )}
+        {view && (
+          <FirstSession
+            compact
+            stage={{
+              stale: !canWrite || Boolean(refreshFailure),
+              approvalsAvailable: decisions?.kingdomId === view.profile.kingdomId,
+              approvals: decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : [],
+              failure:
+                localFailure ?? (decisions?.kingdomId === view.profile.kingdomId ? decisions.failure : undefined),
+              ambition: view.ambition,
+              asOfGameTimeMs: view.asOfGameTimeMs,
+              worldStatus: view.worldStatus,
+              requests: social?.requests,
+              contactOutcome: social?.requestHistory?.find((r) =>
+                ["accepted", "declined", "expired"].includes(r.status),
+              ),
+              build: (() => {
+                const b = view.builders.find(
+                  (b) => b.instructionId && b.kind && ["waiting", "active"].includes(b.state ?? ""),
+                );
+                return b?.instructionId && b.kind
+                  ? { ...b, instructionId: b.instructionId, kind: b.kind, state: b.state ?? "waiting" }
+                  : undefined;
+              })(),
+              freeBuilders: view.builders.filter((b) => !b.instructionId).length,
+              choices: developmentChoices(view),
+              ownerSource: `${pactBaseUrl()}v1/world/kingdoms/${view.profile.kingdomId}`,
+              socialAvailable: social !== null,
+              farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
+              farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
+              contacts: social?.contacts.length ?? 0,
+              pendingRequests: social?.requests.length ?? 0,
+              pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
+              contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
+            }}
+            onArea={setTab}
+          />
+        )}
+        {view && tab === "Kingdom" && <BuilderStatus view={view} />}
+        {view && (
+          <details className="game-card">
+            <summary>Game moments and notifications</summary>
+            <OutcomeCards
+              key={view.profile.kingdomId}
+              owner={view.profile.kingdomId}
+              view={view}
+              stale={!csrf || connectionStatus !== "live" || Boolean(refreshFailure)}
+              offers={social?.supplyOffers}
+              requests={social?.requests}
+              approvals={decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : undefined}
+              audio={experienceAudio}
+              onNotice={setNotice}
+            />
+          </details>
+        )}
+
+        {notice && (
+          <p className="game-notice" role="status">
+            {notice}
+          </p>
+        )}
+        {refreshFailure && (
+          <p className="game-notice" role="status">
+            {refreshFailure}
+          </p>
+        )}
+        {pendingAction && (
+          <section
+            className="game-confirm"
+            aria-label="Confirm game action"
+            ref={confirmation}
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                setPendingAction(null);
+                returnFocus.current?.focus();
+              }
             }}
           >
-            Confirm
-          </button>
-          <button
-            type="button"
-            className="secondary"
-            onClick={() => {
-              setPendingAction(null);
-              returnFocus.current?.focus();
+            <div>
+              <strong>Confirm this action</strong>
+              <p>{pendingAction.summary}</p>
+            </div>
+            <button
+              type="button"
+              disabled={!canWrite}
+              onClick={() => {
+                const action = pendingAction.action;
+                setPendingAction(null);
+                void act(action);
+              }}
+            >
+              Confirm
+            </button>
+            <button
+              type="button"
+              className="secondary"
+              onClick={() => {
+                setPendingAction(null);
+                returnFocus.current?.focus();
+              }}
+            >
+              Cancel
+            </button>
+          </section>
+        )}
+        {tab === "Kingdom" && view && (
+          <details className="game-card">
+            <summary>Choose your kingdom’s ambition</summary>
+            <AmbitionChoice
+              value={view.ambition ?? "neutral"}
+              disabled={!canWrite}
+              save={async (ambition) => {
+                await request("/v1/kingdom/ambition", "PATCH", { ambition });
+                await refresh();
+              }}
+            />
+          </details>
+        )}
+        {tab === "Kingdom" && view && (
+          <Kingdom
+            view={view}
+            busy={!canWrite}
+            act={act}
+            social={social}
+            kingdomId={kingdomId}
+            onPeople={() => setTab("People")}
+            queueSuggested={queueSuggested}
+          />
+        )}
+        {tab === "Envoy" && (
+          <Envoy
+            canWrite={canWrite}
+            inbox={inbox}
+            request={request}
+            onNotice={setNotice}
+            onRefresh={refresh}
+            apiOrigin={apiOrigin}
+            openAccount={host?.openAccount}
+            onCsrfChange={(token) => {
+              sessionStorage.setItem("pact_csrf", token);
+              setCsrf(token);
             }}
+          />
+        )}
+        {tab === "Envoy" && !host && <NotificationSettings request={request} canWrite={canWrite} />}
+        {tab === "Envoy" && (
+          <RunPanel
+            request={request}
+            contacts={social?.contacts ?? []}
+            canWrite={canWrite}
+            ambition={view?.ambition ?? "neutral"}
+          />
+        )}
+        {tab === "People" && (
+          <People
+            friends={Boolean(guestMode)}
+            request={request}
+            client={client}
+            act={act}
+            busy={!canWrite}
+            view={view}
+            kingdomId={kingdomId}
+            social={social}
+            target={target}
+            setTarget={setTarget}
+            confirmAction={confirmAction}
+            hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
+            charges={view?.charges ?? []}
+          />
+        )}
+
+        {tab === "Kingdom" && (
+          <SeasonPanel request={request} kingdomId={kingdomId} worldStatus={view?.worldStatus ?? "unknown"} />
+        )}
+
+        {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
+        {tab === "Chronicle" && view && (
+          <Chronicle
+            view={view}
+            client={client}
+            inbox={inbox}
+            social={social}
+            busy={busy}
+            confirmAction={confirmAction}
+            onKingdom={() => setTab("Kingdom")}
+          />
+        )}
+        {tab === "People" && (
+          <details
+            className="game-card"
+            open={Boolean(
+              new URLSearchParams(window.location.search).get("court") ||
+                new URLSearchParams(window.location.search).get("invite") ||
+                new URLSearchParams(window.location.search).get("politics"),
+            )}
           >
-            Cancel
-          </button>
-        </section>
-      )}
-      {tab === "Kingdom" && view && (
-        <Kingdom
-          view={view}
-          busy={!canWrite}
-          act={act}
-          social={social}
-          kingdomId={kingdomId}
-          onPeople={() => setTab("People")}
-        />
-      )}
-      {tab === "Envoy" && (
-        <Envoy
-          canWrite={canWrite}
-          inbox={inbox}
-          request={request}
-          onNotice={setNotice}
-          onRefresh={refresh}
-          apiOrigin={apiOrigin}
-          onCsrfChange={(token) => {
-            sessionStorage.setItem("pact_csrf", token);
-            setCsrf(token);
-          }}
-        />
-      )}
-      {tab === "People" && <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />}
-      {tab === "People" && <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />}
-      {tab === "People" && (
-        <People
-          request={request}
-          client={client}
-          act={act}
-          busy={!canWrite}
-          view={view}
-          kingdomId={kingdomId}
-          social={social}
-          target={target}
-          setTarget={setTarget}
-          confirmAction={confirmAction}
-          hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
-          charges={view?.charges ?? []}
-        />
-      )}
-      {tab === "Chronicle" && <EvidencePanel request={request} canWrite={canWrite} />}
-      {tab === "Kingdom" && <SeasonPanel request={request} kingdomId={kingdomId} />}
-      {tab === "Chronicle" && <ChroniclePanel request={request} canWrite={canWrite} />}
-      {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
-      {tab === "Chronicle" && view && (
-        <Chronicle
-          view={view}
-          client={client}
-          inbox={inbox}
-          social={social}
-          busy={busy}
-          confirmAction={confirmAction}
-          onKingdom={() => setTab("Kingdom")}
-        />
-      )}
-    </main>
+            <summary>Courts, allegiance and invitations</summary>
+            <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
+            <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
+            <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
+          </details>
+        )}
+        {tab === "Chronicle" && (
+          <details
+            className="game-card"
+            open={
+              new URLSearchParams(window.location.search).has("post") ||
+              new URLSearchParams(window.location.search).has("chronicle")
+            }
+          >
+            <summary>Public Chronicle and evidence publishing</summary>
+            <ChroniclePanel request={request} canWrite={canWrite} />
+            <EvidencePanel request={request} canWrite={canWrite} />
+          </details>
+        )}
+      </main>
+    </ReportingContext.Provider>
   );
 }
 
@@ -914,6 +1222,7 @@ export function Kingdom({
   social,
   kingdomId,
   onPeople,
+  queueSuggested,
 }: {
   view: OwnerView;
   busy: boolean;
@@ -921,6 +1230,7 @@ export function Kingdom({
   social: SocialOverview | null;
   kingdomId: string;
   onPeople: () => void;
+  queueSuggested?: (building: string, level: number) => void;
 }): React.JSX.Element {
   const [building, setBuilding] = useState("farm");
   const currentLevel = view.buildings.find((item) => item.kind === building)?.level ?? 1;
@@ -928,229 +1238,261 @@ export function Kingdom({
   const maxLevel = currentLevel >= 6;
   const alreadyQueued = view.builders.some((item) => item.kind === building && item.instructionId !== null);
   const [slot, setSlot] = useState(1);
+  useEffect(() => {
+    const free = view.builders.find((b) => !b.instructionId);
+    if (free) setSlot(free.slot);
+  }, [view.builders]);
   const [troopType, setTroopType] = useState("spearman");
   const [troopCount, setTroopCount] = useState(1);
   return (
     <section>
-      <h2>Kingdom</h2>
-      <ActionCharges charges={view.charges ?? []} />
-      <p>
-        Committed {new Date(view.asOfGameTimeMs).toLocaleString()}. Resource amounts below use whole game units; the
-        server decides costs and limits.
-      </p>
-      <div className="game-grid">
-        {["iron", "silver", "grain"].map((resource) => {
-          const balance = view.balances[resource];
-          return (
-            balance && (
-              <article className="game-card" key={resource}>
-                <h3>{resource}</h3>
-                <strong>{units(balance.ordinaryUnits)}</strong>
-                <p>
-                  Founding allowance {units(balance.foundingAllowanceUnits)} · locked {units(balance.lockedUnits)}
-                </p>
-                <small>
-                  +{units(balance.productionPerMinuteUnits)} / min · cap {units(balance.capacityUnits)} · version{" "}
-                  {balance.version}
-                </small>
-              </article>
-            )
-          );
-        })}
+      <KingdomScene facts={{ ...view, audience: "owner" }} />
+      <div className="resource-strip">
+        {["grain", "iron", "silver"].map((kind) => (
+          <div key={kind}>
+            <strong>{kind}</strong>
+            <span>
+              {units(view.balances[kind]?.ordinaryUnits ?? "0")}{" "}
+              <small>+ {units(view.balances[kind]?.foundingAllowanceUnits ?? "0")} starter stock</small>
+            </span>
+          </div>
+        ))}
       </div>
-      <article className="game-card">
-        <h3>Next-hour forecast</h3>
-        <ul>
-          {Object.entries(view.forecast.expected).map(([resource, amount]) => (
-            <li key={resource}>
-              {resource}: {units(amount.ordinaryUnits)} ordinary + {units(amount.foundingAllowanceUnits)} founding
-              allowance
-            </li>
-          ))}
-        </ul>
-        <details>
-          <summary>What this forecast assumes</summary>
-          <p>{view.forecast.assumption}</p>
-          <small>Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()}</small>
-        </details>
-      </article>
-      <div className="game-grid">
+      {queueSuggested && <QuickBuilds view={view} disabled={busy} onBuild={queueSuggested} />}
+      <details className="game-card">
+        <summary>All buildings, resources and advanced actions</summary>
+        <ActionCharges charges={view.charges ?? []} />
+        <p>
+          Committed game time {new Date(view.asOfGameTimeMs).toLocaleString()}. Resource amounts below use whole game
+          units; the server decides costs and limits.
+        </p>
+        <div className="game-grid">
+          {["iron", "silver", "grain"].map((resource) => {
+            const balance = view.balances[resource];
+            return (
+              balance && (
+                <article className="game-card" key={resource}>
+                  <h3>{resource}</h3>
+                  <strong>{units(balance.ordinaryUnits)}</strong>
+                  <p>
+                    Founding allowance {units(balance.foundingAllowanceUnits)} · locked {units(balance.lockedUnits)}
+                  </p>
+                  <small>
+                    Gross {balance.facts?.rates.gross.label ?? `${units(balance.productionPerMinuteUnits)} / min`} ·
+                    upkeep {balance.facts?.rates.upkeep.label ?? "inspect troops"} · net{" "}
+                    {balance.facts?.rates.net.label ?? "unavailable"} · cap {units(balance.capacityUnits)} · version{" "}
+                    {balance.version}
+                  </small>
+                </article>
+              )
+            );
+          })}
+        </div>
         <article className="game-card">
-          <h3>Buildings</h3>
+          <h3>Next-hour expected ending stock</h3>
+          <p>This is ending stock, not the net increase. Gross production, upkeep and assumed deliveries differ.</p>
           <ul>
-            {view.buildings.map((item) => (
-              <li key={item.kind}>
-                {item.kind} {item.level}
+            {Object.entries(view.forecast.expected).map(([resource, amount]) => (
+              <li key={resource}>
+                {resource}: {units(amount.ordinaryUnits)} ordinary + {units(amount.foundingAllowanceUnits)} founding
+                allowance
               </li>
             ))}
           </ul>
-          {view.builders.map((item) => (
-            <p key={item.slot}>
-              Slot {item.slot}: {item.kind ?? "free"} {item.state ?? ""}
-              {item.dueGameTimeMs !== null
-                ? ` · due ${new Date(item.dueGameTimeMs).toLocaleString()} game time`
-                : item.state === "waiting"
-                  ? " · waiting for level prerequisites, stock, authority, or a builder slot"
-                  : ""}
-            </p>
-          ))}
-          {(building === "hall" || view.builders.some((item) => item.kind === "hall" && item.state === "waiting")) && (
-            <p>Hall upgrades require Farm and Barracks at the target level and Storehouse one level below it.</p>
-          )}
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              void act({
-                kind: "game.building.queue",
-                building: building as "farm",
-                targetLevel: level,
-                slot: slot as 1 | 2,
-              });
-            }}
-          >
-            <label>
-              Building
-              <select value={building} onChange={(event) => setBuilding(event.target.value)}>
-                {["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"].map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Target level
-              <input type="number" value={level} readOnly />
-            </label>
-            <label>
-              Builder slot
-              <select value={slot} onChange={(event) => setSlot(Number(event.target.value))}>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-              </select>
-            </label>
-            <button type="submit" disabled={busy || maxLevel || alreadyQueued}>
-              {maxLevel ? "Maximum level reached" : alreadyQueued ? "Upgrade already queued" : "Queue upgrade"}
-            </button>
-            <p>
-              {maxLevel
-                ? "Level VI is the development cap."
-                : `Next upgrade: ${building} ${currentLevel} → ${level}. Missing stock or prerequisites can leave an instruction waiting; the server decides admission and costs.`}
-            </p>
-          </form>
-          {view.builders
-            .filter((item) => item.instructionId)
-            .map((item) => (
-              <button
-                type="button"
-                key={item.instructionId}
-                className="secondary"
-                disabled={busy}
-                onClick={() => {
-                  if (item.instructionId) void act({ kind: "game.building.cancel", instructionId: item.instructionId });
-                }}
-              >
-                Cancel slot {item.slot}
-              </button>
-            ))}
+          <details>
+            <summary>What this forecast assumes</summary>
+            <p>{view.forecast.assumption}</p>
+            <small>Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()} game time</small>
+          </details>
         </article>
-        <article className="game-card">
-          <h3>Troops</h3>
-          <ul>
-            {view.troops.map((item) => (
-              <li key={`${item.type}-${item.placement}-${item.homeGuard}`}>
-                {item.count} {item.type} · {item.placement} ·{" "}
-                {item.homeGuard ? "Home Guard (defense only)" : "ordinary"}
-              </li>
-            ))}
-          </ul>
-          <p>
-            Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
-          </p>
-          <p>Founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
-          {view.training.length > 0 && (
-            <div>
-              <h4>Training in progress</h4>
-              {view.training.map((batch) => (
-                <div className="game-list-item" key={batch.batchId}>
-                  <strong>
-                    {batch.completedCount} of {batch.requestedCount} {batch.type} ready
-                  </strong>
-                  <p>Next unit: {new Date(batch.nextUnitDueGameTimeMs).toLocaleString()} game time</p>
-                  <small>One unit every {batch.unitMinutes} game minutes. The clock stops if the world pauses.</small>
-                  <button
-                    type="button"
-                    className="secondary"
-                    disabled={busy}
-                    onClick={() => void act({ kind: "game.training.cancel", batchId: batch.batchId })}
-                  >
-                    Cancel remaining training
-                  </button>
-                </div>
+        <div className="game-grid">
+          <article className="game-card">
+            <h3>Buildings</h3>
+            <ul>
+              {view.buildings.map((item) => (
+                <li key={item.kind}>
+                  {item.kind} {item.level}
+                </li>
               ))}
-            </div>
-          )}
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              void act({ kind: "game.training.queue", type: troopType as "spearman", count: troopCount });
-            }}
-          >
-            <label>
-              Type
-              <select value={troopType} onChange={(event) => setTroopType(event.target.value)}>
-                {["spearman", "archer", "rider", "ram"].map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Count
-              <input
-                type="number"
-                min={1}
-                max={40}
-                value={troopCount}
-                onChange={(event) => setTroopCount(Number(event.target.value))}
-              />
-            </label>
-            <button type="submit" disabled={busy || view.training.length > 0}>
-              {view.training.length > 0 ? "Training queue occupied" : "Queue training"}
-            </button>
-          </form>
-        </article>
-      </div>
-      <div className="game-grid">
-        <article className="game-card">
-          <h3>Supply contracts</h3>
-          {social?.supplyContracts.filter((item) => item.status === "active").length ? (
-            social.supplyContracts
-              .filter((item) => item.status === "active")
-              .map((item) => (
-                <div className="game-list-item" key={item.id}>
-                  <strong>Supply with {item.displayName}</strong>
-                  <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
-                  <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
-                </div>
-              ))
-          ) : (
-            <p>No active supply contracts. Garrison contracts appear in People.</p>
-          )}
-          <button type="button" className="secondary" onClick={onPeople}>
-            See offers and all contracts
-          </button>
-        </article>
-        <article className="game-card">
-          <h3>Threats</h3>
-          {view.threats.length ? (
-            view.threats.map((item) => (
-              <p key={item.id}>
-                {item.kind} · {item.id}
+            </ul>
+            {view.builders.map((item) => (
+              <p key={item.slot}>
+                Slot {item.slot}: {item.kind ?? "free"} {item.state ?? ""}
+                {item.dueGameTimeMs !== null
+                  ? ` · ${remainingGameTime(item.dueGameTimeMs, view)}`
+                  : item.state === "waiting"
+                    ? " · waiting for level prerequisites, stock, authority, or a builder slot"
+                    : ""}
               </p>
-            ))
-          ) : (
-            <p>No known incoming operations.</p>
-          )}
-        </article>
-      </div>
+            ))}
+            {(building === "hall" ||
+              view.builders.some((item) => item.kind === "hall" && item.state === "waiting")) && (
+              <p>Hall upgrades require Farm and Barracks at the target level and Storehouse one level below it.</p>
+            )}
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void act({
+                  kind: "game.building.queue",
+                  building: building as "farm",
+                  targetLevel: level,
+                  slot: slot as 1 | 2,
+                });
+              }}
+            >
+              <label>
+                Building
+                <select value={building} onChange={(event) => setBuilding(event.target.value)}>
+                  {["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"].map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Target level
+                <input type="number" value={level} readOnly />
+              </label>
+              <label>
+                Builder slot
+                <select value={slot} onChange={(event) => setSlot(Number(event.target.value))}>
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                </select>
+              </label>
+              <button type="submit" disabled={busy || maxLevel || alreadyQueued}>
+                {maxLevel ? "Maximum level reached" : alreadyQueued ? "Upgrade already queued" : "Queue upgrade"}
+              </button>
+              <p>
+                {maxLevel
+                  ? "Level VI is the development cap."
+                  : `Next upgrade: ${building} ${currentLevel} → ${level}. Missing stock or prerequisites can leave an instruction waiting; the server decides admission and costs.`}
+              </p>
+            </form>
+            {view.builders
+              .filter((item) => item.instructionId)
+              .map((item) => (
+                <button
+                  type="button"
+                  key={item.instructionId}
+                  className="secondary"
+                  disabled={busy}
+                  onClick={() => {
+                    if (item.instructionId)
+                      void act({ kind: "game.building.cancel", instructionId: item.instructionId });
+                  }}
+                >
+                  Cancel slot {item.slot}
+                </button>
+              ))}
+          </article>
+          <article className="game-card">
+            <h3>Troops</h3>
+            <ul>
+              {view.troops.map((item) => (
+                <li key={`${item.type}-${item.placement}-${item.homeGuard}`}>
+                  {item.count} {item.type} · {item.placement} ·{" "}
+                  {item.homeGuard ? "Home Guard (defense only)" : "ordinary"}
+                </li>
+              ))}
+            </ul>
+            <p>
+              Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
+            </p>
+            <p>Founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
+            {view.training.length > 0 && (
+              <div>
+                <h4>Training in progress</h4>
+                {view.training.map((batch) => (
+                  <div className="game-list-item" key={batch.batchId}>
+                    <strong>
+                      {batch.completedCount} of {batch.requestedCount} {batch.type} ready
+                    </strong>
+                    <p>Next unit: {remainingGameTime(batch.nextUnitDueGameTimeMs, view)}</p>
+                    <small>One unit every {batch.unitMinutes} game minutes. The clock stops if the world pauses.</small>
+                    <button
+                      type="button"
+                      className="secondary"
+                      disabled={busy}
+                      onClick={() => void act({ kind: "game.training.cancel", batchId: batch.batchId })}
+                    >
+                      Cancel remaining training
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void act({ kind: "game.training.queue", type: troopType as "spearman", count: troopCount });
+              }}
+            >
+              <label>
+                Type
+                <select value={troopType} onChange={(event) => setTroopType(event.target.value)}>
+                  {["spearman", "archer", "rider", "ram"].map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Count
+                <input
+                  type="number"
+                  min={1}
+                  max={40}
+                  value={troopCount}
+                  onChange={(event) => setTroopCount(Number(event.target.value))}
+                />
+              </label>
+              <button type="submit" disabled={busy || view.training.length > 0}>
+                {view.training.length > 0 ? "Training queue occupied" : "Queue training"}
+              </button>
+            </form>
+          </article>
+        </div>
+        <div className="game-grid">
+          <article className="game-card">
+            <h3>Supply contracts</h3>
+            {social?.supplyContracts.filter((item) => item.status === "active").length ? (
+              social.supplyContracts
+                .filter((item) => item.status === "active")
+                .map((item) => (
+                  <div className="game-list-item" key={item.id}>
+                    <strong>Supply with {item.displayName}</strong>
+                    <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
+                    <small>{remainingGameTime(Number(item.endGameTimeMs), view ?? null)}</small>
+                  </div>
+                ))
+            ) : (
+              <p>No active supply contracts. Garrison contracts appear in People.</p>
+            )}
+            <button type="button" className="secondary" onClick={onPeople}>
+              See offers and all contracts
+            </button>
+          </article>
+          <article className="game-card">
+            <h3>Threats</h3>
+            {view.threats.length ? (
+              view.threats.map((item) => (
+                <p key={item.id}>
+                  {item.kind} · {item.id}
+                </p>
+              ))
+            ) : (
+              <p>No known incoming operations.</p>
+            )}
+          </article>
+        </div>
+      </details>
+      {Object.values(view.consequences?.firstRetained ?? {}).some(Boolean) ? (
+        <details className="game-card">
+          <summary>Your Hall keepsakes</summary>
+          <HallKeepsakes owner={view.profile.kingdomId} view={view} />
+        </details>
+      ) : (
+        <p className="quiet">Your first completed build earns a little keepsake here.</p>
+      )}
     </section>
   );
 }
@@ -1163,6 +1505,7 @@ function Envoy({
   onRefresh,
   apiOrigin,
   onCsrfChange,
+  openAccount,
 }: {
   canWrite: boolean;
   inbox: { sequence: string; type: string; event: unknown }[];
@@ -1171,6 +1514,7 @@ function Envoy({
   onRefresh: () => Promise<void>;
   apiOrigin: URL;
   onCsrfChange: (token: string) => void;
+  openAccount?: (() => void) | undefined;
 }): React.JSX.Element {
   const [approvalId, setApprovalId] = useState(() => new URLSearchParams(window.location.search).get("approval") ?? "");
   const approvalGeneration = useRef(0);
@@ -1252,7 +1596,12 @@ function Envoy({
         `/v1/approvals/${encodeURIComponent(loadedApprovalId)}/${approve ? "approve" : "reject"}`,
         "POST",
       );
-      onNotice(`${approve ? "Approved" : "Rejected"}: ${JSON.stringify(result)}`);
+      const receipt = result.receipt as { code?: string } | null;
+      onNotice(
+        approve
+          ? `Exact request approved · ${receipt?.code ?? result.status ?? "resolved"}. Read current consequences for completion.`
+          : "Exact request rejected. No command was approved.",
+      );
       setReview(null);
       await onRefresh();
     } catch (error) {
@@ -1260,96 +1609,109 @@ function Envoy({
     }
   }
   return (
-    <section>
+    <details className="game-card" open={Boolean(approvalId)}>
+      <summary>Agent authority, exact approvals and account</summary>
       <h2>Envoy</h2>
       <p>Manual actions remain available without a model connection. Reading an approval never commits it.</p>
       <article className="game-card">
-        <h3>Codex agent playtest</h3>
-        <p>
-          Connect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15
-          minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.
-        </p>
-        <p>
-          Current authority:{" "}
-          {mandate?.allowedActions.includes("raid.commit") ? "bounded playtest" : "read and contact messages only"}.
-        </p>
-        <button type="button" disabled={!canWrite || !mandate} onClick={() => void setPlaytestMandate(true)}>
-          Enable bounded agent playtest
-        </button>{" "}
-        <button
-          type="button"
-          className="secondary"
-          disabled={!canWrite || !mandate}
-          onClick={() => void setPlaytestMandate(false)}
-        >
-          Disable new agent game actions
-        </button>
-        <p>
-          Only the human can change this authority or approve an exact exception. The game still enforces stock,
-          charges, and locks.
-        </p>
+        <h3>Agent authority</h3>
+        <details>
+          <summary>Review or change your agent authority</summary>
+          <p>
+            Connect this account through Codex OAuth, then start a 15-minute agent lease. Access tokens expire after 15
+            minutes and the revocable connection can refresh for 30 days. Never paste a password or token into a chat.
+          </p>
+          <p>
+            Current authority:{" "}
+            {mandate?.allowedActions.includes("raid.commit") ? "bounded playtest" : "read and contact messages only"}.
+          </p>
+          <button type="button" disabled={!canWrite || !mandate} onClick={() => void setPlaytestMandate(true)}>
+            Enable bounded agent playtest
+          </button>{" "}
+          <button
+            type="button"
+            className="secondary"
+            disabled={!canWrite || !mandate}
+            onClick={() => void setPlaytestMandate(false)}
+          >
+            Disable new agent game actions
+          </button>
+          <p>
+            Only the human can change this authority or approve an exact exception. The game still enforces stock,
+            charges, and locks.
+          </p>
+        </details>
       </article>
       <article className="game-card">
-        <h3>Exact approval review</h3>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            const generation = ++approvalGeneration.current;
-            const requestedId = approvalId;
-            setReview(null);
-            setLoadedApprovalId("");
-            void request(`/v1/approvals/${encodeURIComponent(approvalId)}`)
-              .then((value) => {
-                if (generation !== approvalGeneration.current) return;
-                setReview(value);
-                setLoadedApprovalId(requestedId);
-              })
-              .catch((error: unknown) => onNotice(failure(error)));
-          }}
-        >
-          <label>
-            Approval ID
-            <input
-              required
-              value={approvalId}
-              onChange={(event) => {
-                approvalGeneration.current++;
-                setApprovalId(event.target.value);
-                setReview(null);
-                setLoadedApprovalId("");
-              }}
-            />
-          </label>
-          <button type="submit">Preview</button>
-        </form>
-        {review && (
-          <div>
-            <p>Reviewing exact approval {loadedApprovalId}</p>
-            <pre>{JSON.stringify(review, null, 2)}</pre>
-            <button
-              type="button"
-              disabled={!canWrite}
-              onClick={() => {
-                void decide(true);
-              }}
-            >
-              Approve
-            </button>
-            <button
-              type="button"
-              className="secondary"
-              disabled={!canWrite}
-              onClick={() => {
-                void decide(false);
-              }}
-            >
-              Reject
-            </button>
-          </div>
-        )}
+        <details open={Boolean(approvalId)}>
+          <summary>Exact approval review</summary>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              const generation = ++approvalGeneration.current;
+              const requestedId = approvalId;
+              setReview(null);
+              setLoadedApprovalId("");
+              void request(`/v1/approvals/${encodeURIComponent(approvalId)}`)
+                .then((value) => {
+                  if (generation !== approvalGeneration.current) return;
+                  setReview(value);
+                  setLoadedApprovalId(requestedId);
+                })
+                .catch((error: unknown) => onNotice(failure(error)));
+            }}
+          >
+            <label>
+              Approval ID
+              <input
+                required
+                value={approvalId}
+                onChange={(event) => {
+                  approvalGeneration.current++;
+                  setApprovalId(event.target.value);
+                  setReview(null);
+                  setLoadedApprovalId("");
+                }}
+              />
+            </label>
+            <button type="submit">Preview</button>
+          </form>
+          {review && (
+            <div>
+              <p>Reviewing exact approval {loadedApprovalId}</p>
+              <p>
+                Status: {String(review.status)} · expires {new Date(String(review.expiresAt)).toLocaleString()}.
+              </p>
+              <p>{String(review.effectsSummary)}</p>
+              <details>
+                <summary>Exact request and receipt references</summary>
+                <pre>{JSON.stringify(review, null, 2)}</pre>
+              </details>
+              <button
+                type="button"
+                disabled={!canWrite || review.status !== "pending"}
+                onClick={() => {
+                  void decide(true);
+                }}
+              >
+                Approve
+              </button>
+              <button
+                type="button"
+                className="secondary"
+                disabled={!canWrite || review.status !== "pending"}
+                onClick={() => {
+                  void decide(false);
+                }}
+              >
+                Reject
+              </button>
+            </div>
+          )}
+        </details>
       </article>
-      <article className="game-card">
-        <h3>Inbox</h3>
+      <details className="game-card">
+        <summary>Inbox notifications</summary>
         {inbox.length ? (
           <ul>
             {inbox.map((item) => (
@@ -1365,9 +1727,34 @@ function Envoy({
         ) : (
           <p>No events yet.</p>
         )}
-      </article>
-      <PrivacySettings request={request} onNotice={onNotice} apiOrigin={apiOrigin} onCsrfChange={onCsrfChange} />
-    </section>
+      </details>
+      <details className="game-card">
+        <summary>Account and privacy</summary>
+        <button
+          type="button"
+          disabled={!canWrite}
+          onClick={() => {
+            if (window.confirm("Revoke this account’s browser sessions and external connections?"))
+              void request("/v1/auth/sign-out-everywhere", "POST")
+                .then(() => {
+                  clearExperiencePreferences(localStorage);
+                  sessionStorage.removeItem("pact_csrf");
+                  window.location.reload();
+                })
+                .catch((error) => onNotice(failure(error)));
+          }}
+        >
+          Sign out everywhere
+        </button>
+        {openAccount ? (
+          <button type="button" onClick={openAccount}>
+            Open secure account settings in PACT
+          </button>
+        ) : (
+          <PrivacySettings request={request} onNotice={onNotice} apiOrigin={apiOrigin} onCsrfChange={onCsrfChange} />
+        )}
+      </details>
+    </details>
   );
 }
 
@@ -1405,6 +1792,7 @@ function PrivacySettings({
       await request("/v1/privacy/deletion", "POST", { password });
       setPassword("");
       setDownloadUrl("");
+      clearExperiencePreferences(localStorage);
       sessionStorage.removeItem("pact_csrf");
       onNotice("Account closed. Access revoked.");
     } catch (error) {
@@ -1482,6 +1870,7 @@ export function raidUiReady(
 }
 
 export function People({
+  friends = false,
   request,
   client,
   act,
@@ -1495,6 +1884,7 @@ export function People({
   hallLevel,
   charges,
 }: {
+  friends?: boolean;
   request?: (path: string, method?: string, body?: unknown) => Promise<Json>;
   client: ReturnType<typeof createWebPactClient>;
   act: (action: SandboxAction) => Promise<void>;
@@ -1514,13 +1904,27 @@ export function People({
   const [message, setMessage] = useState("");
   const [resource, setResource] = useState<"iron" | "silver" | "grain">("grain");
   const [amount, setAmount] = useState(1);
+  const contactSilverReady = BigInt(view?.balances.silver?.ordinaryUnits ?? "0") >= 1200n;
   const selected = social?.contacts.find((item) => item.kingdomId === target);
   const messages = social?.messages.filter((item) => item.kingdomId === target).reverse() ?? [];
   return (
     <section>
       <h2>People</h2>
       <p>Talk, trade, and make alliances with other kingdoms. Private details are shown only to the parties.</p>
-      <ActionCharges charges={charges} />
+      {friends && request && (
+        <FriendsLobby
+          request={request}
+          contacts={social?.contacts ?? []}
+          requests={social?.requests ?? []}
+          onChoose={(id, text) => {
+            setTarget(id);
+            setMessage(text);
+            setProfile(null);
+            document.getElementById("contact-composer")?.scrollIntoView({ behavior: "smooth", block: "center" });
+          }}
+        />
+      )}
+
       {!social && <p role="status">Social activity is temporarily unavailable. Your kingdom is still playable.</p>}
       <div className="game-grid">
         <article className="game-card">
@@ -1541,7 +1945,9 @@ export function People({
               </button>
             ))
           ) : (
-            <p>No contacts yet. Send a contact request to start talking.</p>
+            <p>
+              No contacts yet. Choose a kingdom above and request contact. Once they accept, you can chat and trade.
+            </p>
           )}
         </article>
         <article className="game-card">
@@ -1572,7 +1978,7 @@ export function People({
                     </button>
                   </div>
                 ) : (
-                  <small>Awaiting response</small>
+                  <small>Waiting for the recipient human. Response time unknown.</small>
                 )}
               </div>
             ))
@@ -1581,27 +1987,64 @@ export function People({
           )}
         </article>
       </div>
-      <ContractBoard social={social} kingdomId={kingdomId} busy={busy} confirmAction={confirmAction} />
       <article className="game-card">
-        <h3>{selected ? `Conversation with ${selected.displayName}` : "Find a kingdom"}</h3>
-        {request && (
+        <h3>
+          {selected
+            ? `Conversation with ${selected.displayName}`
+            : target
+              ? "Your selected kingdom"
+              : "Choose a kingdom above"}
+        </h3>
+        <details open={!friends}>
+          <summary>Find another kingdom or inspect its profile</summary>
+          {request && (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                const g = ++profileGeneration.current;
+                setProfile(null);
+                setTarget("");
+                void request(`/v1/people/${encodeURIComponent(handle.trim().replace(/^@/, ""))}`)
+                  .then(async (result) => {
+                    if (g !== profileGeneration.current) return;
+                    const found = result.kingdom as { profile?: { kingdomId?: string } } | null;
+                    const id = found?.profile?.kingdomId;
+                    if (!id) {
+                      setProfile({ error: "No real kingdom matches that exact handle." });
+                      return;
+                    }
+                    setTarget(id);
+                    const value = await client.readKingdomView(id);
+                    if (g === profileGeneration.current) setProfile(value);
+                  })
+                  .catch((error: unknown) => {
+                    if (g === profileGeneration.current) setProfile({ error: failure(error) });
+                  });
+              }}
+            >
+              <label>
+                Exact player handle
+                <input
+                  required
+                  value={handle}
+                  onChange={(event) => {
+                    profileGeneration.current++;
+                    setHandle(event.target.value);
+                    setTarget("");
+                    setProfile(null);
+                  }}
+                />
+              </label>
+              <button type="submit">Find real player</button>
+            </form>
+          )}
           <form
             onSubmit={(event) => {
               event.preventDefault();
               const g = ++profileGeneration.current;
-              setProfile(null);
-              setTarget("");
-              void request(`/v1/people/${encodeURIComponent(handle.trim().replace(/^@/, ""))}`)
-                .then(async (result) => {
-                  if (g !== profileGeneration.current) return;
-                  const found = result.kingdom as { profile?: { kingdomId?: string } } | null;
-                  const id = found?.profile?.kingdomId;
-                  if (!id) {
-                    setProfile({ error: "No real kingdom matches that exact handle." });
-                    return;
-                  }
-                  setTarget(id);
-                  const value = await client.readKingdomView(id);
+              void client
+                .readKingdomView(target)
+                .then((value) => {
                   if (g === profileGeneration.current) setProfile(value);
                 })
                 .catch((error: unknown) => {
@@ -1610,50 +2053,21 @@ export function People({
             }}
           >
             <label>
-              Exact player handle
+              Kingdom ID (or choose a contact above)
               <input
                 required
-                value={handle}
+                value={target}
                 onChange={(event) => {
                   profileGeneration.current++;
-                  setHandle(event.target.value);
-                  setTarget("");
                   setProfile(null);
+                  setTarget(event.target.value.trim());
                 }}
               />
             </label>
-            <button type="submit">Find real player</button>
+            <button type="submit">Inspect profile</button>
           </form>
-        )}
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            const g = ++profileGeneration.current;
-            void client
-              .readKingdomView(target)
-              .then((value) => {
-                if (g === profileGeneration.current) setProfile(value);
-              })
-              .catch((error: unknown) => {
-                if (g === profileGeneration.current) setProfile({ error: failure(error) });
-              });
-          }}
-        >
-          <label>
-            Kingdom ID (or choose a contact above)
-            <input
-              required
-              value={target}
-              onChange={(event) => {
-                profileGeneration.current++;
-                setProfile(null);
-                setTarget(event.target.value.trim());
-              }}
-            />
-          </label>
-          <button type="submit">Inspect profile</button>
-        </form>
-        {profile !== null && <PublicProfile value={profile} />}
+          {profile !== null && <PublicProfile value={profile} />}
+        </details>
         {target && (
           <div className="game-messages" role="log" aria-label="Conversation">
             {messages.length ? (
@@ -1664,9 +2078,10 @@ export function People({
                 >
                   <small>
                     {item.senderKingdomId === kingdomId ? "You" : item.displayName} ·{" "}
-                    {new Date(Number(item.sentGameTimeMs)).toLocaleString()}
+                    {new Date(Number(item.sentGameTimeMs)).toLocaleString()} game time
                   </small>
                   <p>{item.body}</p>
+                  <ReportControl kind="message" targetId={item.id} />
                   <a href={`/pact/?sealSource=message&sourceId=${encodeURIComponent(item.id)}`}>Seal this message</a>
                 </div>
               ))
@@ -1678,18 +2093,24 @@ export function People({
       </article>
       <div className="game-grid">
         <article className="game-card">
-          <h3>Contact and message</h3>
+          <h3 id="contact-composer">Contact and message</h3>
           <p>
             A cold contact request costs 2 ordinary Silver, not founding allowance. Messages and direct transfers need
             an accepted contact.
           </p>
+          {!selected && !contactSilverReady && (
+            <p role="status">
+              Your market is earning the 2 Silver needed to introduce yourself. A fresh kingdom earns this in 12 game
+              minutes; build while it works.
+            </p>
+          )}
           <label>
             Text
             <textarea maxLength={1000} value={message} onChange={(event) => setMessage(event.target.value)} />
           </label>
           <button
             type="button"
-            disabled={busy || !target || !message || target === kingdomId || Boolean(selected)}
+            disabled={busy || !contactSilverReady || !target || !message || target === kingdomId || Boolean(selected)}
             onClick={() => {
               void act({ kind: "game.contact.request", recipientKingdomId: target, note: message });
             }}
@@ -1738,38 +2159,52 @@ export function People({
           </button>
         </article>
       </div>
-      <DiplomacyForms
-        target={target}
-        busy={busy}
-        act={act}
-        confirmAction={confirmAction}
-        hallLevel={hallLevel}
-        view={view}
-        kingdomId={kingdomId}
-        scoutReady={scoutUiReady(view) && target !== kingdomId}
-      />
+      <details className="game-card">
+        <summary>Trade, diplomacy and records</summary>
+        <ActionCharges charges={charges} />
+        <Consequences data={view?.consequences} worldStatus={view?.worldStatus ?? "unknown"} />
+        <OutgoingContactHistory entries={social?.requestHistory} gameTimeMs={view?.asOfGameTimeMs} />
+        <ContractBoard view={view} social={social} kingdomId={kingdomId} busy={busy} confirmAction={confirmAction} />
+        <DiplomacyForms
+          target={target}
+          busy={busy}
+          act={act}
+          confirmAction={confirmAction}
+          hallLevel={hallLevel}
+          view={view}
+          kingdomId={kingdomId}
+          scoutReady={scoutUiReady(view) && target !== kingdomId}
+        />
+      </details>
     </section>
   );
 }
 
 function PublicProfile({ value }: { value: unknown }): React.JSX.Element {
   if (!value || typeof value !== "object") return <p>Profile unavailable.</p>;
-  const result = value as { profile?: { displayName?: string; handle?: string }; worldStatus?: string; error?: string };
+  const result = value as {
+    profile?: { displayName?: string; handle?: string; kingdomId?: string };
+    worldStatus?: string;
+    error?: string;
+  };
   if (result.error) return <p role="alert">{result.error}</p>;
   return (
-    <p className="game-profile">
+    <div className="game-profile">
       <strong>{result.profile?.displayName ?? "Kingdom"}</strong> · @{result.profile?.handle ?? "unknown"} ·{" "}
       {result.worldStatus ?? "in the world"}
-    </p>
+      {result.profile?.kingdomId && <ReportControl kind="profile" targetId={result.profile.kingdomId} />}
+    </div>
   );
 }
 
 export function ContractBoard({
+  view,
   social,
   kingdomId,
   busy,
   confirmAction,
 }: {
+  view?: OwnerView | null;
   social: SocialOverview | null;
   kingdomId: string;
   busy: boolean;
@@ -1820,7 +2255,7 @@ export function ContractBoard({
                   {item.displayName} · {item.status}
                 </strong>
                 <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
-                <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
+                <small>{remainingGameTime(Number(item.endGameTimeMs), view ?? null)}</small>
               </div>
             ))
           ) : (
@@ -1883,7 +2318,7 @@ export function ContractBoard({
                   {item.displayName} · {item.status}
                 </strong>
                 <p>{garrisonTerms(item.terms)}</p>
-                <small>Ends {new Date(Number(item.endGameTimeMs)).toLocaleString()}</small>
+                <small>{remainingGameTime(Number(item.endGameTimeMs), view ?? null)}</small>
                 {item.status === "active" && (
                   <div className="game-inline-actions">
                     <button
@@ -2226,13 +2661,16 @@ export function RaidOperations({
               <p>
                 Other kingdom: {raid.otherKingdomId} · <code>{raid.raidId}</code>
               </p>
-              <p>Scheduled resolution: {new Date(raid.dueGameTimeMs).toLocaleString()} game time.</p>
+              <p>
+                Scheduled resolution:{" "}
+                {remainingGameTime(raid.dueGameTimeMs, { asOfGameTimeMs: gameTimeMs, worldStatus })}
+              </p>
               {active && (
                 <>
                   <p>
                     {raid.lockGameTimeMs === undefined
                       ? "Lock deadline unavailable; refresh before acting."
-                      : `Battle lock: ${new Date(raid.lockGameTimeMs).toLocaleString()} game time. ${locked ? "Locked through resolution." : "Withdrawal closes at this boundary."}`}
+                      : `Battle lock: ${remainingGameTime(raid.lockGameTimeMs, { asOfGameTimeMs: gameTimeMs, worldStatus })}. ${locked ? "Locked through resolution." : "Withdrawal closes at this boundary."}`}
                   </p>
                   {raid.role === "defender" && <p>Defense is automatic. You cannot withdraw another kingdom's raid.</p>}
                   {attacker && (
@@ -2316,6 +2754,7 @@ function Chronicle({
   return (
     <section>
       <h2>Chronicle</h2>
+      <Consequences data={view.consequences} worldStatus={view.worldStatus} />
       <p>Committed records and authorized private reports.</p>
       <article className="game-card">
         <h3>Your scouts</h3>
@@ -2323,7 +2762,7 @@ function Chronicle({
           <ul>
             {view.scouts.map((scout) => (
               <li key={scout.operationId}>
-                {scout.status} · target {scout.targetKingdomId} · due {new Date(scout.dueGameTimeMs).toLocaleString()}{" "}
+                {scout.status} · target {scout.targetKingdomId} · due {remainingGameTime(scout.dueGameTimeMs, view)}{" "}
                 game time · <code>{scout.operationId}</code>{" "}
                 {scout.status === "completed" && (
                   <button
@@ -2359,7 +2798,7 @@ function Chronicle({
         }}
       />
       <article className="game-card">
-        <h3>Records</h3>
+        <h3>Notification history</h3>
         {view.records.length ? (
           <ul>
             {view.records.map((item) => (
@@ -2369,7 +2808,7 @@ function Chronicle({
             ))}
           </ul>
         ) : (
-          <p>No records yet.</p>
+          <p>No inbox notifications yet. Builds, contacts and delivered trade are shown above.</p>
         )}
       </article>
       <article className="game-card">
@@ -2542,7 +2981,7 @@ function GameReport({
   return (
     <div className="game-report">
       <p>
-        Scouted <strong>{targetName}</strong> at {new Date(Number(item.observedGameTimeMs)).toLocaleString()}.
+        Scouted <strong>{targetName}</strong> at {new Date(Number(item.observedGameTimeMs)).toLocaleString()} game time.
         {item.staleAfterObservation ? " This is a snapshot; the kingdom may have changed since then." : ""}
       </p>
       <div className="game-grid">

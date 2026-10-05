@@ -11,7 +11,8 @@
     "@pact/client-sdk": "0.1.0",
     "@pact/ui-features": "0.1.0",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "@pact/domain": "0.1.0"
   },
   "devDependencies": {
     "@types/react": "19.3.0",

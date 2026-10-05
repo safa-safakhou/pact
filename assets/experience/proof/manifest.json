@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "audio": {
+    "duration_s": 2,
+    "sample_rate": 22050,
+    "peak_dbfs": -11.259665694373314,
+    "seed": "deterministic score",
+    "producer": "Python stdlib composition"
+  },
+  "motion": {
+    "duration_ms": 200,
+    "producer": "authored CSS"
+  },
+  "assets": [
+    {
+      "file": "honk.png",
+      "bytes": 1253764,
+      "sha256": "8bad325eeb3a61b8b8ad5d3d5b6f024290570e9e7519bb165755d7bc96b4a1d4"
+    },
+    {
+      "file": "parchment.png",
+      "bytes": 2740702,
+      "sha256": "72635eec50e308aa835675fd701c9e9b72dc2152e5af32a7e47ebda57aadab76"
+    },
+    {
+      "file": "proof.wav",
+      "bytes": 88244,
+      "sha256": "c1471e426f880b25898774bf3bce1d4d73c1b1ed00ebfa6d9f21786a80b88aaf"
+    },
+    {
+      "file": "proof.css",
+      "bytes": 281,
+      "sha256": "67281e09e766834dc98bc1964b79fa4cd37cbd82aaf1e99f6cc7889a73e6da2c"
+    }
+  ]
+}

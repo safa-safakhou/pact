@@ -1,0 +1,52 @@
+const fs=require("fs");const {chromium}=require("C:/Users/ENDORFY/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");
+(async()=>{const browser=await chromium.launch({channel:"chrome",headless:true});const results=[];
+for(const width of [390,1440]) {
+const page=await browser.newPage({viewport:{width,height:900}});const errors=[];page.on("pageerror",e=>{errors.push(e.message);console.log("pageerror",e.message)});
+await page.addInitScript(()=>{const back={shown:false,handler:null};window.fixtureBack=back;
+window.Telegram={WebApp:{initData:"synthetic-launch",themeParams:{bg_color:"#16201d",text_color:"#ffffff",secondary_bg_color:"#24312d"},
+safeAreaInset:{top:24,bottom:18,left:0,right:0},contentSafeAreaInset:{top:44,bottom:0,left:0,right:0},viewportStableHeight:800,
+ready(){},expand(){},openLink(url){window.openedAccount=url},onEvent(){},offEvent(){},
+BackButton:{show(){back.shown=true},hide(){back.shown=false},onClick(fn){back.handler=fn},offClick(fn){if(back.handler===fn)back.handler=null}}}}});
+let revoked=false;const calls=[];
+await page.route("https://telegram.org/**",r=>r.fulfill({body:""}));
+await page.route("**/pact/v1/**",async r=>{const u=new URL(r.request().url());const path=u.pathname;calls.push({path,method:r.request().method()});
+let value={};
+if(path.endsWith("/telegram/bootstrap")) value={bootstrapToken:"a".repeat(43)};
+else if(path.endsWith("/telegram/session")) value={csrfToken:"synthetic-csrf"};
+else if(revoked) return r.fulfill({status:403,contentType:"application/json",body:JSON.stringify({error:{code:"FORBIDDEN"}})});
+else if(path.endsWith("/moderation/queue")) return r.fulfill({status:403,contentType:"application/json",body:JSON.stringify({error:{code:"FORBIDDEN"}})}); else if(path.endsWith("/moderation/reports")) value={caseId:"00000000-0000-4000-8000-000000000040",triageDueAt:"2030-01-01T00:00:00Z"}; else if(path.endsWith("/moderation/mine")) value={cases:[{id:"00000000-0000-4000-8000-000000000040",status:"resolved",target_kind:"post",triage_due_at:"2030-01-01T00:00:00Z",appeal_due_at:"2030-01-01T00:00:00Z",can_appeal:true,decisions:[{action:"hide",reason:"Synthetic decision",occurredAt:"2026-10-04T08:00:00Z"}]}]}; else if(path.endsWith("/appeal")) value={submitted:true,reviewDueAt:"2030-01-01T00:00:00Z"}; else if(path.endsWith("/kingdom/me")) value={kingdomId:"test-owner"};
+else if(path.includes("/world/kingdoms/")) value={audience:"owner",profile:{kingdomId:"test-owner",handle:"test_owner",displayName:"Synthetic Nerd"},
+asOfGameTimeMs:0,committedTickSequence:"1",worldStatus:"active",ambition:"neutral",balances:Object.fromEntries(["iron","silver","grain"].map(k=>[k,{ordinaryUnits:"30000",foundingAllowanceUnits:"100000",lockedUnits:"0",capacityUnits:"500000",productionPerMinuteUnits:"500",version:"1"}])),
+buildings:[{kind:"hall",level:1},{kind:"farm",level:1}],builders:[],troops:[],training:[],upkeep:{perMinuteUnits:"100",hungry:false},contracts:[],raids:[],scouts:[],threats:[],records:[],forecast:{throughGameTimeMs:0,assumption:"Synthetic fixture",expected:{}},
+consequences:{asOfGameTimeMs:0,builds:[],contacts:[],supplyContracts:[]}};
+else if(path.endsWith("/game/social")) value={contacts:[],requests:[],messages:[],supplyOffers:[],supplyContracts:[],garrisonOffers:[],garrisonContracts:[]};
+else if(path.includes("/inbox")) value={events:[],nextCursor:null};
+else if(path.endsWith("/mandate")) value={version:1,allowedActions:[]};
+else if(path.includes("/model-connections")) value={connections:[]};
+else if(path.endsWith("/runs/external-activity")) value={label:"Synthetic activity",status:"empty",entries:[],assessments:[],nextStep:"No fixture run",truncated:false}; else if(path.endsWith("/seasons")) value={current:{configured:false},standings:[],cohorts:[]}; else if(path.endsWith("/runs")) value={runs:[]};
+else if(path.includes("/approval-inbox")) value={approvals:[]};
+else if(path.endsWith("/chronicle")) value={posts:[{id:"00000000-0000-4000-8000-000000000030",type:"notice",title:"Report fixture",commentary:"Synthetic untrusted fixture",status:"published",version:1,publishedAt:"2026-10-04T08:00:00Z",expiresGameTimeMs:60000,author:{handle:"fixture_author"}}],nextOffset:null}; else if(path.includes("/approvals/")) value={approvalId:"test-approval",status:"pending",effectsSummary:"Exact synthetic terms",expiresAt:"2030-01-01T00:00:00Z",commandId:"test-command",receipt:null};
+return r.fulfill({status:200,contentType:"application/json",body:JSON.stringify(value)});});
+await page.goto("http://localhost:5185/pact/telegram/?approval=test-approval");
+await page.getByRole("button",{name:"Connect PACT account",exact:true}).click();
+await page.getByRole("button",{name:"Confirm in secure PACT",exact:true}).click();
+await page.getByRole("button",{name:"I confirmed",exact:false}).click();
+await page.waitForTimeout(1200); await page.getByRole("navigation",{name:"Game areas"}).waitFor();
+await page.getByRole("button",{name:"Envoy",exact:true}).click();
+await page.waitForTimeout(400);
+await page.locator("summary").filter({hasText:/^Reports and appeals$/}).click(); await page.getByText("Staff moderation console",{exact:true}).click(); await page.getByRole("button",{name:"Load queue",exact:true}).click(); await page.waitForTimeout(200); const scopedRefusalKeepsSession=await page.getByRole("navigation",{name:"Game areas"}).count()===1; const noPasswords=await page.locator('input[type=password]').count()===0;
+const destination=await page.locator('input').evaluateAll(xs=>xs.some(x=>x.value==="test-approval"));
+const backShown=await page.evaluate(()=>window.fixtureBack.shown);
+await page.evaluate(()=>window.fixtureBack.handler());
+await page.waitForTimeout(100);
+const backKingdom=await page.getByRole("button",{name:"Kingdom",exact:true}).getAttribute("aria-current")==="page";
+for(const tab of ["People","Chronicle","Kingdom"]) {await page.getByRole("button",{name:tab,exact:true}).click();await page.waitForTimeout(200);}
+await page.getByRole("button",{name:"Chronicle",exact:true}).click(); await page.getByText("Public Chronicle and evidence publishing",{exact:true}).click(); await page.getByRole("heading",{name:"Report fixture",exact:true}).waitFor(); await page.getByText("Report this content",{exact:true}).first().click(); await page.getByLabel("Context",{exact:true}).fill("Synthetic public content report"); await page.getByRole("button",{name:"Submit report",exact:true}).click(); await page.getByText(/Report received/).waitFor(); const reporting=true; await page.getByRole("button",{name:"Envoy",exact:true}).click(); await page.locator("summary").filter({hasText:/^Reports and appeals$/}).click(); await page.getByRole("button",{name:"Load my cases",exact:true}).click(); await page.getByLabel("Appeal reason",{exact:true}).fill("Synthetic appeal"); await page.getByRole("button",{name:"Submit appeal",exact:true}).click(); await page.getByText("Appeal submitted",{exact:true}).waitFor(); const appeal=true; await page.screenshot({path:"C:/Users/ENDORFY/social-channel-"+width+".png",fullPage:true});
+const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);
+const safeTop=await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue("--tg-safe-top"));
+revoked=true;await page.getByRole("button",{name:"Refresh",exact:true}).first().click();
+await page.getByRole("heading",{name:"Bring your kingdom into Telegram"}).waitFor();
+const cleared=await page.getByRole("navigation",{name:"Game areas"}).count()===0;
+results.push({width,reporting,appeal,scopedRefusalKeepsSession,noPasswords,destination,backShown,backKingdom,overflow,safeTop,cleared,errors,writes:calls.filter(x=>x.method!=="GET"),confirmation:await page.evaluate(()=>window.openedAccount)});
+await page.close();}
+await browser.close();fs.writeFileSync("C:/Users/ENDORFY/social-channel-browser.json",JSON.stringify(results,null,2));console.log(JSON.stringify(results,null,2));})();

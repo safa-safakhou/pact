@@ -87,6 +87,7 @@ export class SocialService {
     private readonly limits: ActionLimitService,
     private readonly clock: { now(): Date },
     private readonly authority?: ImmediateAuthorityPort,
+    private readonly assertMessagingAllowed?: (client: PoolClient, accountId: string) => Promise<void>,
   ) {}
 
   private async ownerKingdom(client: PoolClient, accountId: string): Promise<string> {
@@ -168,6 +169,7 @@ export class SocialService {
         throw new SocialError("OPERATION_CONFLICT");
       return concurrent.rows[0].id;
     }
+    await this.assertMessagingAllowed?.(client, input.accountId);
     await this.assertDirectCommunicationAllowed(client, sender, input.recipientKingdomId);
     if (await this.isContact(client, sender, input.recipientKingdomId)) throw new SocialError("ALREADY_CONTACT");
     const pending = await client.query<{ sender_kingdom_id: string }>(
@@ -383,6 +385,7 @@ export class SocialService {
         throw new SocialError("OPERATION_CONFLICT");
       return concurrent.rows[0].id;
     }
+    await this.assertMessagingAllowed?.(client, input.accountId);
     await this.assertDirectCommunicationAllowed(client, sender, input.recipientKingdomId);
     if (!(await this.isContact(client, sender, input.recipientKingdomId))) throw new SocialError("NOT_CONTACT");
     const unread = await client.query<{ count: number }>(
@@ -505,6 +508,7 @@ export class SocialService {
         throw new SocialError("OPERATION_CONFLICT");
       return { id: old.id, credited: BigInt(old.credited_units), overflow: BigInt(old.overflow_units) };
     }
+    await this.assertMessagingAllowed?.(client, input.accountId);
     await this.assertDirectCommunicationAllowed(client, sender, input.recipientKingdomId);
     if (!(await this.isContact(client, sender, input.recipientKingdomId))) throw new SocialError("NOT_CONTACT");
     await this.limits.recordSuccessfulAction(client, {

@@ -48,7 +48,7 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
         .code(
           error.code === "FORBIDDEN"
             ? 403
-            : error.code === "STALE_VERSION"
+            : error.code === "STALE_VERSION" || error.code === "TICK_PENDING"
               ? 409
               : error.code === "RATE_LIMITED"
                 ? 429
@@ -205,6 +205,12 @@ export function registerApprovalRoutes(
     }
     return payload;
   });
+
+  server.get("/v1/approvals", async (request, reply) =>
+    safe(reply, async () =>
+      approvals.pendingForAccount((await identity.authenticate(sessionToken(request))).accountId),
+    ),
+  );
 
   server.get<{ Params: { approvalId: string } }>("/v1/approvals/:approvalId", async (request, reply) =>
     safe(reply, async () => {

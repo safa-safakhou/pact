@@ -1,0 +1,1543 @@
+{
+  "capturedAt": "2026-10-04T22:48:35.705585+00:00",
+  "closedContracts": [
+    {
+      "id": "b8d25482-cb27-40ce-b103-e99494f10526",
+      "offerId": "36ab899d-3df5-47ab-8f1a-e40f810d85b4",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_3451f33b",
+        "kingdomId": "26d49c62-c3f2-48e9-b2dd-bf74df659857",
+        "displayName": "Sim Merchant 02"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "26d49c62-c3f2-48e9-b2dd-bf74df659857",
+        "859698f0-f11e-4785-b456-a0a1f62ac38f"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "417b7ab1-ec2a-4875-90fe-a24f3795f2fc",
+      "offerId": "ab20b8f1-59f9-4711-a2f4-392d6c3cc825",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_459707e9",
+        "kingdomId": "6402bfc3-187d-49bf-adac-792840f98bde",
+        "displayName": "Sim Merchant 05"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "24c8bc49-b08d-4235-8cf9-595d57e6edc1",
+        "6402bfc3-187d-49bf-adac-792840f98bde"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "694a006b-6e86-4580-bbf3-7d5878fa46da",
+      "offerId": "27027623-1137-4379-9f6d-d55255f22116",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_5ebec467",
+        "kingdomId": "0fce9e59-51dd-4aa3-8bf0-193f01860517",
+        "displayName": "Sim Merchant 08"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "0fce9e59-51dd-4aa3-8bf0-193f01860517",
+        "1b9dc792-cb22-4ede-800c-8ea2b7fe9710"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "21315e3e-719f-4bb3-b6db-446e005c29b5",
+      "offerId": "0497af5f-bcef-4481-bb4e-98dbef8394ca",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_8882e200",
+        "kingdomId": "e2324820-a982-4de7-8bd5-c88521be60e2",
+        "displayName": "Sim Merchant 11"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "5efba51c-260f-4dd8-8399-fcf656759ec9",
+        "e2324820-a982-4de7-8bd5-c88521be60e2"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "7150a26e-56ef-452f-b0f6-2031bfa180e9",
+      "offerId": "1032b150-09a4-4de1-b6f5-a2f72cce9d0e",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_f64541e3",
+        "kingdomId": "e8a2886e-cefd-4733-8ff0-0a463462afb6",
+        "displayName": "Sim Merchant 14"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "2c120004-106d-4b91-8273-27a00d6e3c2f",
+        "e8a2886e-cefd-4733-8ff0-0a463462afb6"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "304a5b19-20a2-4295-9661-03520fbf6182",
+      "offerId": "87ba5931-861c-48c2-9e2d-55d00beff6bb",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_62ae172d",
+        "kingdomId": "08f056d5-8cb7-4ab9-8285-6c9355f8cb4b",
+        "displayName": "Sim Merchant 17"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "08f056d5-8cb7-4ab9-8285-6c9355f8cb4b",
+        "98e9d5c1-2e8c-4258-8bae-44e56e8cb6ba"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "75ed964c-be6f-44f1-bcbd-418c05ca7126",
+      "offerId": "5130bd07-ab0d-4eb5-9683-58d12ef57cb5",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_cb9c167b",
+        "kingdomId": "97677f88-e1fa-4d68-a3d7-879518696ae3",
+        "displayName": "Sim Merchant 20"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "8871ec46-52a2-4258-90b6-a1f0f78f5a6d",
+        "97677f88-e1fa-4d68-a3d7-879518696ae3"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "14bf6213-f92d-473e-9119-774efe7a1b75",
+      "offerId": "d1b9d0bb-7561-46a4-aaeb-81774ce9faca",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_01a6ba1d",
+        "kingdomId": "22385eee-051b-4b24-a02f-716f382b2cac",
+        "displayName": "Sim Merchant 23"
+      },
+      "endGameTimeMs": 1791149940000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "158c806a-5dc9-46c1-8cf0-736a40de427a",
+        "22385eee-051b-4b24-a02f-716f382b2cac"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149880000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "2dc3b738-d990-49cf-8861-9cd630f57672",
+      "offerId": "8600d53a-2979-4458-9f69-a7ea26a02154",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_9ddf19ff",
+        "kingdomId": "c72c7456-a7ce-4f72-84f3-8f9c3d09a152",
+        "displayName": "Sim Merchant 26"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "c72c7456-a7ce-4f72-84f3-8f9c3d09a152",
+        "c866790c-8cd1-4e1a-86ba-81ebadceac64"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "0b9a50af-4196-40d4-a05e-d1fd804593ca",
+      "offerId": "22589e01-5122-4f2e-b414-da51c5034724",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_ab0a17a9",
+        "kingdomId": "179b46ce-273e-44da-998c-9da53438e2dc",
+        "displayName": "Sim Merchant 29"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "179b46ce-273e-44da-998c-9da53438e2dc",
+        "2910a96b-a1a3-4d6f-8ca8-f2ee5cee4e72"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "a52fbe4f-eaed-498a-be06-e9091299a94b",
+      "offerId": "6f3aa731-07ac-4493-ba87-177a44f9f855",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_189ecb13",
+        "kingdomId": "b491e59d-7d04-4575-b2ef-ab674e50df4e",
+        "displayName": "Sim Merchant 32"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "187bc54f-7a9d-452a-a185-f4e0ea3c28b7",
+        "b491e59d-7d04-4575-b2ef-ab674e50df4e"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "71abc43a-6608-43fc-91c5-fe4865195d75",
+      "offerId": "49f7be8b-7009-4fe1-9bce-c5b7d1006afd",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_dc7a5302",
+        "kingdomId": "ed91aad9-b173-40d2-b588-11e9e8d4efeb",
+        "displayName": "Sim Merchant 35"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "ed91aad9-b173-40d2-b588-11e9e8d4efeb",
+        "fcedb706-5275-4982-ba7e-f50b3ec7c2a5"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "2a2e685c-49c0-4b06-845d-73e6c176bc9f",
+      "offerId": "87424242-b0ca-435e-b59a-74c602b97d00",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_d10e242e",
+        "kingdomId": "339a63f9-b1f6-4bf5-a4c0-a822065fc90d",
+        "displayName": "Sim Merchant 47"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "339a63f9-b1f6-4bf5-a4c0-a822065fc90d",
+        "7f14fd10-ab0e-43e9-9edf-21e8487af504"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "e5759a13-10fe-4b06-b35f-2de403015532",
+      "offerId": "6bbcd2df-f35a-43f9-bfff-cc1e3c9a5c76",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_9efcd20c",
+        "kingdomId": "15fa42f3-2e0b-4be8-92b8-3108644959fd",
+        "displayName": "Sim Merchant 50"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "15fa42f3-2e0b-4be8-92b8-3108644959fd",
+        "b507226c-0ef5-471a-99b0-70adfcefe088"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "33c02d61-c4d3-4584-b87f-4c7102c3cde0",
+      "offerId": "06864a93-8fa2-470e-b68f-4eedf3c55ee4",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_b476a9b4",
+        "kingdomId": "879a8dc3-f594-4354-a2b8-50849a8c1a9f",
+        "displayName": "Sim Merchant 53"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "26e783a6-e5f4-4b79-bd89-e269972e906d",
+        "879a8dc3-f594-4354-a2b8-50849a8c1a9f"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "51341ef3-c6af-4639-bd0f-749a3f8926fe",
+      "offerId": "abc19752-c694-42d8-800d-074a340cea75",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_2287dd7f",
+        "kingdomId": "28ba3599-a9b9-4ad7-b468-51b18e0b6198",
+        "displayName": "Sim Merchant 56"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "28ba3599-a9b9-4ad7-b468-51b18e0b6198",
+        "7e986872-e9c7-45c1-8cc3-f667a32895ca"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "ee6850bf-efcc-4ee5-85ee-11c5fb66ebac",
+      "offerId": "df41a191-d292-4646-a702-a9a18d6ef66e",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_48035f65",
+        "kingdomId": "cd3feca3-5895-4003-8ac8-e0e7f40af0a4",
+        "displayName": "Sim Merchant 59"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "8edab232-8158-4647-93b9-f11cde46567a",
+        "cd3feca3-5895-4003-8ac8-e0e7f40af0a4"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "c36f6f99-24ad-49e6-97a2-f69477b7d918",
+      "offerId": "5af43ac1-05fa-4ddb-b2ea-43b0af3c8cc7",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_b5349b59",
+        "kingdomId": "9c34cee5-e4ff-4a21-b736-abc8e09f84b4",
+        "displayName": "Sim Merchant 62"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "942c63db-39cd-485d-916a-cf3108509706",
+        "9c34cee5-e4ff-4a21-b736-abc8e09f84b4"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "fad7137d-0a50-4060-94a5-2e3ebd4423af",
+      "offerId": "cc6da6ae-c571-4060-8fdd-cbafb248da63",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_bcfc6a72",
+        "kingdomId": "57d9cf20-c48b-43ef-858c-c78f715d3419",
+        "displayName": "Sim Merchant 65"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "1b8f36e5-fced-4e1e-acb8-0dea9b6bd800",
+        "57d9cf20-c48b-43ef-858c-c78f715d3419"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "181cca5a-4f33-4910-aee1-b3e66ac70d7d",
+      "offerId": "35c6ace9-8d27-495a-a057-9349853357bc",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_5e291c54",
+        "kingdomId": "6db35c8b-f742-4561-ae1f-20d297515719",
+        "displayName": "Sim Merchant 68"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "6db35c8b-f742-4561-ae1f-20d297515719",
+        "fdb3c39f-d35d-4a8d-82ff-d95198cd915c"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "0341691d-e2cd-4716-8fce-be4f7e5ad3b4",
+      "offerId": "18cff641-b749-485b-b1f1-6fb3be0733df",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_92137d17",
+        "kingdomId": "2260f1e6-a106-4472-bf78-11c16e069681",
+        "displayName": "Sim Merchant 71"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "2260f1e6-a106-4472-bf78-11c16e069681",
+        "8c3c73ac-92b6-4b06-80ae-8bded9ec83b8"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "9ab9c5fb-4565-4f58-81c7-aa1b41bbc8d6",
+      "offerId": "d031c5ed-5343-4519-af1e-6041aee93324",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_c45fe6ec",
+        "kingdomId": "ee3db54e-11a0-4250-b3c8-ba26c4ef7123",
+        "displayName": "Sim Merchant 77"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "1286b846-ae30-4b93-bcfb-5fff8f2f55b7",
+        "ee3db54e-11a0-4250-b3c8-ba26c4ef7123"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "69b35ecd-9d88-4020-a100-54ac8fcde8ef",
+      "offerId": "481acb01-2b08-4fdf-9e24-4ab9cc753ca3",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_b90f3a77",
+        "kingdomId": "267defd2-4d28-40af-9f59-8aae0c2e3f4f",
+        "displayName": "Sim Merchant 80"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "267defd2-4d28-40af-9f59-8aae0c2e3f4f",
+        "c44b52a1-6d5c-4486-8655-7c2e1e2b8a80"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "7441651c-ed67-40a2-ad87-b0a2595a23ec",
+      "offerId": "78918ef1-21f5-41b5-85f5-62ce5ffeeba7",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_7988075a",
+        "kingdomId": "2f8ba868-4f00-4cdc-a8d8-c2f1402e6850",
+        "displayName": "Sim Merchant 86"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "2f8ba868-4f00-4cdc-a8d8-c2f1402e6850",
+        "6f296bfd-3d5c-4910-b0a1-622653a8839b"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "d71f19fe-8087-4f89-8237-0b5d383d163d",
+      "offerId": "7e4ef046-a8da-44d3-9a20-5d237f48f3fd",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_e4cb96c5",
+        "kingdomId": "55b82b3a-3818-44ae-aa0f-603406790ae1",
+        "displayName": "Sim Merchant 89"
+      },
+      "endGameTimeMs": 1791150000000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "55b82b3a-3818-44ae-aa0f-603406790ae1",
+        "5bd29e13-6add-4e98-ac23-217511f3fec6"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791149940000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "b9122ef3-151a-4d94-9929-e70fc1d47536",
+      "offerId": "3ca7adb5-7428-43e4-bb06-ad8b61c4c440",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gcaptainnoo_b2f88d63",
+        "kingdomId": "899b7294-589c-4e24-9721-9477f4c1a968",
+        "displayName": "Captain Noodle"
+      },
+      "endGameTimeMs": 1791150120000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "5efba51c-260f-4dd8-8399-fcf656759ec9",
+        "899b7294-589c-4e24-9721-9477f4c1a968"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150060000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150060000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "7df3d7b2-5169-4f8b-b6a0-c55a5784f39d",
+      "offerId": "4f191d24-3764-4a2a-a0a4-b288a8af5f4e",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_bd504641",
+        "kingdomId": "a7e95f94-cf26-444f-8351-323fc6762c50",
+        "displayName": "Sim Merchant 38"
+      },
+      "endGameTimeMs": 1791150180000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "a7e95f94-cf26-444f-8351-323fc6762c50",
+        "d78add5b-48bc-457f-9461-ccc7bdd032f7"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "55412600-5741-4441-9221-c56e3b0bae82",
+      "offerId": "9f26415d-670b-4ac5-b307-1856578cfb4a",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_8319e662",
+        "kingdomId": "163589c5-4867-4379-9706-1275b665978f",
+        "displayName": "Sim Merchant 41"
+      },
+      "endGameTimeMs": 1791150180000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "163589c5-4867-4379-9706-1275b665978f",
+        "bce95fb2-1a5d-42af-9c40-68868d1770ed"
+      ],
+      "deliveries": [
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "2f237590-a0ad-44a0-96af-5dd8967d05fe",
+      "offerId": "1c95058e-0841-4030-8107-f21b40aba0b2",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_7de18144",
+        "kingdomId": "c90dd065-a75b-4b33-ad1a-c406f2703190",
+        "displayName": "Sim Merchant 44"
+      },
+      "endGameTimeMs": 1791150180000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "9a0ce42f-45fc-47af-a262-de697c3e86f1",
+        "c90dd065-a75b-4b33-ad1a-c406f2703190"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    },
+    {
+      "id": "09c651b7-9687-47aa-9e17-6b9436232f4c",
+      "offerId": "7c3ae3df-16ec-467d-81c9-6da25e4f8983",
+      "offerVersion": 1,
+      "status": "expired",
+      "youSend": {
+        "resource": "grain",
+        "wholePerHour": 3
+      },
+      "youReceive": {
+        "resource": "iron",
+        "wholePerHour": 3
+      },
+      "counterparty": {
+        "handle": "gsimmerchan_b1db0de8",
+        "kingdomId": "fcf5f6bf-b42c-4b6d-baf2-eb02151fd314",
+        "displayName": "Sim Merchant 74"
+      },
+      "endGameTimeMs": 1791150180000,
+      "noticeEndGameTimeMs": null,
+      "closeReason": "natural_expiry",
+      "signedBy": [
+        "8a18b5e9-2e46-40aa-b208-e460d6b25863",
+        "fcf5f6bf-b42c-4b6d-baf2-eb02151fd314"
+      ],
+      "deliveries": [
+        {
+          "resource": "grain",
+          "direction": "sent",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        },
+        {
+          "resource": "iron",
+          "direction": "received",
+          "dueMarked": "1800",
+          "installments": 60,
+          "lastGameTimeMs": 1791150120000,
+          "overflowMarked": "0",
+          "deliveredMarked": "1800",
+          "failedInstallments": 0
+        }
+      ],
+      "remainingGameMinutes": 0
+    }
+  ],
+  "orbitWave8": [
+    {
+      "at": "2026-10-04T22:42:01.760Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "agent_plan",
+      "actor": "Orbit Duck",
+      "role": "luna",
+      "plan": {
+        "understanding": "Three unsigned offers propose 3 silver/hour to you for 3 grain/hour from you, each for one hour with no notice or bonds. You have about 51.13 ordinary grain plus 80 allowance and 15 ordinary silver; signing all three would commit 9 grain/hour and bring in 9 silver/hour. Your grain reserve check includes allowance, but deliveries spend ordinary grain, so current stock appears sufficient for one hour at each rate. No upgrade is affordable now.",
+        "intent": "Accept one specific offer to obtain silver while limiting grain commitment; leave the other offers unanswered for now.",
+        "actions": [
+          {
+            "actionJson": "{\"kind\":\"game.supply.sign\",\"offerId\":\"25528fe8-78cc-41c2-8e72-97ed90942a62\",\"version\":1}",
+            "reason": "This offer is from a known contact, has the stated one-hour, zero-notice, no-bond terms, and its grain flow is within current ordinary stock. Signing adds your signature; the contract becomes active only if the counterparty's signature remains valid and both signatures are present."
+          }
+        ],
+        "nextCheck": "Reassess stock and contract status after signing. The two other offers may expire soon; do not assume they are active or that a construction upgrade is affordable."
+      }
+    },
+    {
+      "at": "2026-10-04T22:42:02.006Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "action_requested",
+      "actor": "Orbit Duck",
+      "role": "luna",
+      "commandId": "6d8e2655-97f4-4149-9648-773f61033ba3",
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "25528fe8-78cc-41c2-8e72-97ed90942a62",
+        "version": 1
+      },
+      "controller": "luna"
+    },
+    {
+      "at": "2026-10-04T22:42:02.076Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "receipt",
+      "actor": "Orbit Duck",
+      "role": "luna",
+      "commandId": "6d8e2655-97f4-4149-9648-773f61033ba3",
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "6d8e2655-97f4-4149-9648-773f61033ba3",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "supply-offer:25528fe8-78cc-41c2-8e72-97ed90942a62": 1,
+          "supply-contract:4f3b04bf-ee8a-4449-9e5d-93dc621aa367": 1
+        },
+        "charged": [],
+        "committedAt": "2026-10-04T22:42:02.069Z"
+      }
+    },
+    {
+      "at": "2026-10-04T22:42:15.682Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Orbit Duck",
+      "role": "luna",
+      "report": {
+        "summary": "Your signature was accepted and the offer became an active one-hour contract with Sim Merchant 80: you send 3 grain per hour and receive 3 silver per hour. The receipt confirms it committed; the contract record shows both parties signed and about 61 game minutes remaining. No deliveries are recorded yet.",
+        "whatChanged": "The plan was to sign one offer, but the signed offer was from Sim Merchant 80, not either of the two offers still open. The receipt is authoritative: it records a committed signature for offer 25528fe8, which now appears as active contract 4f3b04bf. Two other offers remain open and unsigned by you; they are proposed offers, not contracts. No action is shown as rejected, queued, or finished in this turn.",
+        "nextDecision": "Recheck the active contract and your ordinary grain before its deliveries; the stated supply rate is 3 grain per hour, and trade deliveries spend ordinary stock. The two open offers each propose the same exchange, but signing either would be a separate commitment.",
+        "reasonToReturn": "Return when you want to decide whether to leave the two proposals unanswered or sign one, or to review the active contract as it approaches its end.",
+        "confusion": "The plan names an offer from a known contact, but the receipt's offer ID resolves to Sim Merchant 80, while the two offers still open belong to different merchants. Also, there are no delivery records yet, so the contract is active but no completed exchange is evidenced."
+      }
+    }
+  ]
+}

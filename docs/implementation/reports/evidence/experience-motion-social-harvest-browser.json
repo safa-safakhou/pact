@@ -1,0 +1,403 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "three-confirmed-reveals",
+      "pass": true,
+      "motion": [
+        {
+          "duration": "0.2s",
+          "animation": "experience-build"
+        },
+        {
+          "duration": "0.2s",
+          "animation": "experience-contact"
+        },
+        {
+          "duration": "0.2s",
+          "animation": "experience-delivery"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "focus-intact",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "replay-quiet",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "manual-goose",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "goose-under-one-second",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "six-week-harvest",
+      "pass": true,
+      "images": [
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-90.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "social-and-clock-facts",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": false,
+      "state": "fits",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "three-confirmed-reveals",
+      "pass": true,
+      "motion": [
+        {
+          "duration": "0s",
+          "animation": "none"
+        },
+        {
+          "duration": "0s",
+          "animation": "none"
+        },
+        {
+          "duration": "0s",
+          "animation": "none"
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "focus-intact",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "replay-quiet",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "manual-goose",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "goose-under-one-second",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "six-week-harvest",
+      "pass": true,
+      "images": [
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-90.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "social-and-clock-facts",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "reduced": true,
+      "state": "fits",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "three-confirmed-reveals",
+      "pass": true,
+      "motion": [
+        {
+          "duration": "0.2s",
+          "animation": "experience-build"
+        },
+        {
+          "duration": "0.2s",
+          "animation": "experience-contact"
+        },
+        {
+          "duration": "0.2s",
+          "animation": "experience-delivery"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "focus-intact",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "replay-quiet",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "manual-goose",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "goose-under-one-second",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "six-week-harvest",
+      "pass": true,
+      "images": [
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-90.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "social-and-clock-facts",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": false,
+      "state": "fits",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "three-confirmed-reveals",
+      "pass": true,
+      "motion": [
+        {
+          "duration": "0s",
+          "animation": "none"
+        },
+        {
+          "duration": "0s",
+          "animation": "none"
+        },
+        {
+          "duration": "0s",
+          "animation": "none"
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "focus-intact",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "replay-quiet",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "manual-goose",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "goose-under-one-second",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "six-week-harvest",
+      "pass": true,
+      "images": [
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-90.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-80.svg",
+          "loaded": true
+        },
+        {
+          "file": "/experience/scene/harvest-100.svg",
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "social-and-clock-facts",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "reduced": true,
+      "state": "fits",
+      "pass": true
+    },
+    {
+      "state": "field-art-fallback",
+      "pass": true
+    },
+    {
+      "state": "seven-effects-play",
+      "pass": true,
+      "audio": [
+        {
+          "file": "build.wav",
+          "duration": 1.2,
+          "playing": true
+        },
+        {
+          "file": "paper.wav",
+          "duration": 0.7,
+          "playing": true
+        },
+        {
+          "file": "seal.wav",
+          "duration": 0.5,
+          "playing": true
+        },
+        {
+          "file": "delivery.wav",
+          "duration": 1.2,
+          "playing": true
+        },
+        {
+          "file": "raid.wav",
+          "duration": 1.4,
+          "playing": true
+        },
+        {
+          "file": "default.wav",
+          "duration": 0.9,
+          "playing": true
+        },
+        {
+          "file": "honk.wav",
+          "duration": 0.8,
+          "playing": true
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "audition": "Actual listening pending. Browser playback only."
+}

@@ -1,9 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { claimOutboxDelivery, createPool, markOutboxDelivered } from "@pact/db";
 import { AesGcmSecretBox } from "@pact/identity";
+import { InboxService, NotificationService } from "@pact/inbox";
+import { GameNotificationProjector, gameNotificationCategories } from "@pact/kingdom";
+import { WorldClockService } from "@pact/world";
 import nodemailer from "nodemailer";
 import type { PoolClient } from "pg";
 import { parseSecurityEmailPayload, renderSecurityEmail } from "./email.js";
+import { smtpGamePort, webPushPort } from "./game-delivery.js";
 
 const smtpUrl = process.env.SMTP_URL;
 const encryptionKey = process.env.IDENTITY_ENCRYPTION_KEY;
@@ -20,6 +24,34 @@ const transport = nodemailer.createTransport(smtpUrl);
 const secretBox = new AesGcmSecretBox(Buffer.from(encryptionKey, "base64url"));
 const workerId = `notification-${randomUUID()}`;
 const consumer = "security-email-v1";
+const clock = { now: () => new Date() };
+const notifications = new NotificationService(pool, {
+  productScope: "pact",
+  clock,
+  secretBox,
+  categories: gameNotificationCategories,
+  publicBaseUrl: publicBaseUrl + "/",
+});
+const inbox = new InboxService(pool, { productScope: "pact", clock });
+const world = new WorldClockService(pool, "pact");
+const projector = new GameNotificationProjector(pool, {
+  productScope: "pact",
+  clock,
+  readGameTime: async () => (await world.read()).gameTimeMs,
+  ports: {
+    publishForAccount: (client, input) => inbox.publishForAccount(client, input),
+    enqueue: (client, input) => notifications.enqueue(client, input),
+  },
+});
+const ports = [smtpGamePort(transport, from)];
+if (process.env.WEB_PUSH_PUBLIC_KEY && process.env.WEB_PUSH_PRIVATE_KEY && process.env.WEB_PUSH_SUBJECT)
+  ports.push(
+    webPushPort({
+      publicKey: process.env.WEB_PUSH_PUBLIC_KEY,
+      privateKey: process.env.WEB_PUSH_PRIVATE_KEY,
+      subject: process.env.WEB_PUSH_SUBJECT,
+    }),
+  );
 let stopping = false;
 
 interface CandidateRow {
@@ -96,10 +128,18 @@ async function deliverBatch(): Promise<number> {
 }
 
 async function run(): Promise<void> {
-  await transport.verify();
   console.log(JSON.stringify({ event: "notification.ready", adapter: "smtp" }));
   while (!stopping) {
-    const delivered = await deliverBatch();
+    let delivered = 0;
+    try {
+      await projector.project();
+      await notifications.projectInbox({ "approval.requested.v1": "approval" });
+      await projector.expiryNotices();
+      delivered += await notifications.deliverBatch(ports, workerId);
+      delivered += await deliverBatch();
+    } catch {
+      console.error(JSON.stringify({ event: "notification.batch_failed", code: "DELIVERY_FAILED" }));
+    }
     if (delivered === 0) await new Promise((resolve) => setTimeout(resolve, 2_000));
   }
 }

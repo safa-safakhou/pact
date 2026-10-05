@@ -1,0 +1,52 @@
+{
+  "startedAt": "2026-10-04T19:03:59.949Z",
+  "players": [
+    {
+      "name": "Professor Turnip",
+      "width": 1440,
+      "accountId": "834c9012-8757-4e4e-887a-2a8c24f6bc2e",
+      "kingdomId": "e923c330-c5d8-4527-838c-91d9a61a8bb8",
+      "handle": "gprofessort_834c9012",
+      "joinStatus": 200,
+      "layout": {
+        "overflow": false,
+        "next": {
+          "x": 64,
+          "y": 377.6875,
+          "width": 1312,
+          "height": 187.578125,
+          "top": 377.6875,
+          "right": 1376,
+          "bottom": 565.265625,
+          "left": 64
+        },
+        "height": 900
+      },
+      "resumed": true
+    },
+    {
+      "name": "Captain Noodles",
+      "width": 390,
+      "accountId": "0f322524-33ef-4bf4-b109-e4a22a5f5e90",
+      "kingdomId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330",
+      "handle": "gcaptainnoo_0f322524",
+      "joinStatus": 200,
+      "layout": {
+        "overflow": false,
+        "next": {
+          "x": 16,
+          "y": 394.125,
+          "width": 358,
+          "height": 235.578125,
+          "top": 394.125,
+          "right": 374,
+          "bottom": 629.703125,
+          "left": 16
+        },
+        "height": 844
+      },
+      "resumed": true
+    }
+  ],
+  "errors": []
+}

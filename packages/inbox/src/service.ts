@@ -43,7 +43,15 @@ export interface InboxEventMetadata {
 export class InboxService {
   constructor(
     private readonly pool: Pool,
-    private readonly options: { productScope: string; clock: { now(): Date }; retentionFloorSequence?: number },
+    private readonly options: {
+      productScope: string;
+      clock: { now(): Date };
+      retentionFloorSequence?: number;
+      onPublish?: (
+        client: PoolClient,
+        input: { accountId: string; eventId: string; type: string; occurredAt: Date },
+      ) => Promise<void>;
+    },
   ) {}
 
   async publishForAccount(
@@ -65,12 +73,14 @@ export class InboxService {
       payload:
         typeof input.payload === "object" && input.payload !== null ? (input.payload as Record<string, unknown>) : {},
     };
-    await client.query(
+    const inserted = await client.query(
       `INSERT INTO inbox_events(product_scope, event_id, account_id, type, payload, occurred_at)
        VALUES ($1, $2, $3, $4, $5::jsonb, $6)
-       ON CONFLICT(product_scope, event_id, account_id) DO NOTHING`,
+       ON CONFLICT(product_scope, event_id, account_id) DO NOTHING RETURNING event_id`,
       [this.options.productScope, eventId, input.accountId, input.type, JSON.stringify(envelope), occurredAt],
     );
+    if (inserted.rowCount)
+      await this.options.onPublish?.(client, { accountId: input.accountId, eventId, type: input.type, occurredAt });
     return eventId;
   }
 

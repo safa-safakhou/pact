@@ -1,0 +1,23 @@
+{
+  "ticket": "PACT-123",
+  "producer": "Original Codex-authored SVG",
+  "regenerate": "python3 assets/experience/generate_harvest.py",
+  "overlays": 3,
+  "assets": [
+    {
+      "file": "scene/harvest-100.svg",
+      "bytes": 1248,
+      "sha256": "23e1b5556b6f2022435be92bd8ce9bfec85543afc3db617b9353ca837266b89f"
+    },
+    {
+      "file": "scene/harvest-90.svg",
+      "bytes": 1139,
+      "sha256": "51f4f12a40be5bfa6640fe18cbd0df68733b2e24b0498c0b19262f7d4dc95ea4"
+    },
+    {
+      "file": "scene/harvest-80.svg",
+      "bytes": 1031,
+      "sha256": "34ef845d7d02a38549042ec4ea72932f72482020830352ccb05ecbc98ae74a17"
+    }
+  ]
+}

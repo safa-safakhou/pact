@@ -65,3 +65,25 @@ Original A/R/S/L coverage above includes deferred original scope and is not evid
 | G04 | [PACT-061](phase-2-social.md#pact-061), [PACT-073](phase-3-season-one.md#pact-073) | [PACT-080](phase-3-season-one.md#pact-080) |
 | G05 | [PACT-069](phase-3-season-one.md#pact-069), [PACT-070](phase-3-season-one.md#pact-070) | [PACT-080](phase-3-season-one.md#pact-080) |
 | G06 | Observed final rehearsal | [PACT-080](phase-3-season-one.md#pact-080) |
+
+## Alpha playtest follow-ups — completed
+
+The original 13-ticket checkpoint remains historical. These additional tickets completed through their own follow-up checkpoint. Experience and friends batches have separate completion reports.
+
+| Criterion | Follow-up tickets | Follow-up checkpoint |
+| --- | --- | --- |
+| G02 | [PACT-100](phase-3-season-one.md#pact-100), [PACT-101](phase-3-season-one.md#pact-101), [PACT-102](phase-3-season-one.md#pact-102), [PACT-103](phase-3-season-one.md#pact-103), [PACT-107](phase-3-season-one.md#pact-107) | [PACT-108](phase-3-season-one.md#pact-108) |
+| G03 | [PACT-100](phase-3-season-one.md#pact-100), [PACT-102](phase-3-season-one.md#pact-102), [PACT-103](phase-3-season-one.md#pact-103), [PACT-104](phase-3-season-one.md#pact-104), [PACT-105](phase-3-season-one.md#pact-105), [PACT-106](phase-3-season-one.md#pact-106) | [PACT-108](phase-3-season-one.md#pact-108) |
+| G04 | [PACT-101](phase-3-season-one.md#pact-101), [PACT-104](phase-3-season-one.md#pact-104), [PACT-105](phase-3-season-one.md#pact-105), [PACT-106](phase-3-season-one.md#pact-106), [PACT-107](phase-3-season-one.md#pact-107) | [PACT-108](phase-3-season-one.md#pact-108) |
+| G06 | Observed repeat playtest | [PACT-108](phase-3-season-one.md#pact-108) |
+
+## Friends playtest - completed
+
+Four bounded web/agent improvements; original production gates remain deferred.
+
+| Ticket | Criteria | Evidence |
+| --- | --- | --- |
+| [PACT-127](phase-3-season-one.md#pact-127) | G02, G04 | [Completed checks and integrated walkthrough](reports/friends-playtest-20261004.md) |
+| [PACT-128](phase-3-season-one.md#pact-128) | G04 | [Completed checks and integrated walkthrough](reports/friends-playtest-20261004.md) |
+| [PACT-129](phase-3-season-one.md#pact-129) | G02, G04 | [Completed checks and integrated walkthrough](reports/friends-playtest-20261004.md) |
+| [PACT-130](phase-3-season-one.md#pact-130) | G01, G04, G06 | [Completed checks and integrated walkthrough](reports/friends-playtest-20261004.md) |

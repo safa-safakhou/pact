@@ -58,7 +58,7 @@ export class ChronicleService {
   private async actor(c: PoolClient, accountId: string) {
     const r = (
       await c.query<{ id: string; handle: string }>(
-        "SELECT k.id,k.handle FROM kingdoms k JOIN accounts a ON a.id=k.account_id WHERE k.product_scope=$1 AND k.account_id=$2 AND k.status='ranked' AND a.status='active' AND a.email_verified_at IS NOT NULL FOR UPDATE OF k",
+        "SELECT k.id,k.handle FROM kingdoms k JOIN accounts a ON a.id=k.account_id WHERE k.product_scope=$1 AND k.account_id=$2 AND k.status='ranked' AND a.status='active' AND (a.email_verified_at IS NOT NULL OR a.is_guest) FOR UPDATE OF k",
         [this.scope, accountId],
       )
     ).rows[0];

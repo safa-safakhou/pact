@@ -1,0 +1,36 @@
+[
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "checks": {
+      "rates": true,
+      "endingStock": true,
+      "ambition": true,
+      "waiting": true,
+      "interpretation": true,
+      "receipt": true,
+      "assumptions": true,
+      "noOverflow": true
+    },
+    "errors": []
+  },
+  {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "checks": {
+      "rates": true,
+      "endingStock": true,
+      "ambition": true,
+      "waiting": true,
+      "interpretation": true,
+      "receipt": true,
+      "assumptions": true,
+      "noOverflow": true
+    },
+    "errors": []
+  }
+]

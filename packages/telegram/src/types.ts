@@ -25,6 +25,7 @@ export interface VerifiedTelegramLaunch {
 }
 
 export interface TelegramBootstrap {
+  readonly linked?: boolean;
   readonly bootstrapToken: string;
   readonly telegramUserId: string;
   readonly expiresAt: Date;

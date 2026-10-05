@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-04",
+  "environment": "WSL Ubuntu; Node 24.12.0; npm 11; PostgreSQL 17; synthetic accounts and fake transports",
+  "revision": "Uncommitted source snapshot; pre-existing working tree retained; no hosted CI claim",
+  "checks": {
+    "typecheck": "passed",
+    "lint": "passed",
+    "publicV1SchemasUnchanged": 26,
+    "unit": {
+      "files": 88,
+      "passed": 278
+    },
+    "integration": {
+      "files": 50,
+      "passed": 315,
+      "skipped": 1,
+      "skip": "existing optional check"
+    },
+    "build": "all packages/API/workers/web/native/Telegram passed",
+    "nestedTelegramBaseBuild": "/pact/telegram/ passed",
+    "browser": "390px and 1440px synthetic host/API fixtures passed",
+    "deploymentScriptSyntax": "sh -n passed"
+  },
+  "audit": {
+    "command": "npm audit --omit=dev --json",
+    "passed": false,
+    "moderate": 7,
+    "high": 16,
+    "critical": 0,
+    "context": "Existing unchanged Expo/React Native dependency trees and their tooling; no reported advisory for added web-push, jws, jwa or http_ece. Native release/dependency remediation remains future scope."
+  },
+  "paidModelRequests": 0,
+  "realBotMessages": 0,
+  "realExternalPushReceipt": "not exercised",
+  "independentHumanPilot": "not claimed"
+}

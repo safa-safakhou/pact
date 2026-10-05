@@ -161,17 +161,20 @@ export class RunService {
     },
   ) {}
 
-  async start(input: {
-    accountId: string;
-    subjectId?: string;
-    objective: string;
-    provider: string;
-    model: string;
-    credentialId?: string;
-    limits?: RunLimits;
-    clientKind?: "pact" | "mcp";
-    selectedContextIds?: readonly string[];
-  }): Promise<RunView> {
+  async start(
+    input: {
+      accountId: string;
+      subjectId?: string;
+      objective: string;
+      provider: string;
+      model: string;
+      credentialId?: string;
+      limits?: RunLimits;
+      clientKind?: "pact" | "mcp";
+      selectedContextIds?: readonly string[];
+    },
+    transactionClient?: PoolClient,
+  ): Promise<RunView> {
     const subjectId = input.subjectId ?? input.accountId;
     const now = this.options.clock.now();
     const limits = input.limits ?? {};
@@ -202,7 +205,12 @@ export class RunService {
       await this.options.validateContextSelection(input.accountId, selectedContextIds);
     }
     const runId = randomUUID();
-    return withTransaction(this.pool, async (client) => {
+    const operation = async (client: PoolClient) => {
+      const active = await client.query(
+        "SELECT id FROM accounts WHERE product_scope=$1 AND id=$2 AND status='active' AND (email_verified_at IS NOT NULL OR is_guest) FOR UPDATE",
+        [this.options.productScope, input.accountId],
+      );
+      if (!active.rowCount) throw new RunError("FORBIDDEN");
       await this.acquireLease(client, {
         subjectId,
         holderKind: "pact_run",
@@ -253,7 +261,8 @@ export class RunService {
         });
       }
       return toView(row);
-    });
+    };
+    return transactionClient ? operation(transactionClient) : withTransaction(this.pool, operation);
   }
 
   /** MCP `run.open`: write lease only — never starts provider inference. */
@@ -338,8 +347,12 @@ export class RunService {
     return Boolean(updated.rowCount);
   }
 
-  async stop(accountId: string, runId: string): Promise<RunView> {
-    return withTransaction(this.pool, async (client) => {
+  async stop(accountId: string, runId: string, transactionClient?: PoolClient): Promise<RunView> {
+    const operation = async (client: PoolClient) => {
+      await client.query("SELECT id FROM accounts WHERE product_scope=$1 AND id=$2 FOR UPDATE", [
+        this.options.productScope,
+        accountId,
+      ]);
       const row = await this.lockRun(client, runId);
       if (row.account_id !== accountId) throw new RunError("FORBIDDEN");
       if (row.status === "stopped" || row.status === "finished" || row.status === "failed") {
@@ -355,7 +368,8 @@ export class RunService {
       const next = updated.rows[0];
       if (!next) throw new Error("stop failed");
       return toView(next);
-    });
+    };
+    return transactionClient ? operation(transactionClient) : withTransaction(this.pool, operation);
   }
 
   async wait(accountId: string, runId: string): Promise<RunView> {
@@ -406,8 +420,12 @@ export class RunService {
     });
   }
 
-  async takeover(accountId: string, subjectId: string): Promise<void> {
-    await withTransaction(this.pool, async (client) => {
+  async takeover(accountId: string, subjectId: string, transactionClient?: PoolClient): Promise<void> {
+    const operation = async (client: PoolClient) => {
+      await client.query("SELECT id FROM accounts WHERE product_scope=$1 AND id=$2 FOR UPDATE", [
+        this.options.productScope,
+        accountId,
+      ]);
       const active = await client.query<RunRow>(
         `SELECT * FROM envoy_runs
          WHERE product_scope = $1 AND subject_id = $2 AND status IN ('running','waiting')
@@ -423,7 +441,9 @@ export class RunService {
         );
       }
       await this.releaseLease(client, subjectId);
-    });
+    };
+    if (transactionClient) await operation(transactionClient);
+    else await withTransaction(this.pool, operation);
   }
 
   async get(runId: string, accountId?: string): Promise<RunView> {

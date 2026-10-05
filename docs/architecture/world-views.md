@@ -34,3 +34,32 @@ Each owner raid entry also supplies `role` (`leader`, `contributor`, or `defende
 Owner reads include `charges`: scout/raid kind, available/capacity, regeneration interval, next regeneration game time, and retry time when empty. `ActionLimitService.readCharges` projects serial regeneration using the same pure calculation as command admission, at the snapshot's committed game time. It neither locks nor updates charge rows; a read cannot consume/refill a pool. Missing rows produce no fabricated allowance. Public, contact, and participant views exclude charges. Pauses stop game-time regeneration; human and agent surfaces share the same pools.
 
 The owner projection also includes `scouts`, the 20 most recently started operations belonging to that kingdom: `operationId`, `status` (`active` or `completed`), `targetKingdomId`, and `dueGameTimeMs`. This is a navigation index, not an observation report, and is absent from other-account/public projections. Chronicle offers a direct report button for completed operations; the existing report reader still authorizes the read independently. Reloading the page no longer requires retaining a scout receipt ID outside the game.
+
+## Alpha consequence projection (PACT-104)
+
+`WorldViewService.readSelf(accountId)` derives the kingdom from authenticated ownership. Owner projections include `consequences` in the same repeatable-read snapshot: latest 20 build instructions and their terminal state/game times, accepted named contacts, and latest 20 participant supply contracts with exact offer-version signatures, closure/notice state, and per-direction/resource settled installment totals. Sums of due/delivered/overflow are exact marked decimal strings; installment/failure counts and last settlement game time are explicit. Delivered includes overflow: overflow was not credited to the recipient. Pending future flow is never reported as delivery. Unsigned proposals have no contract or installment rows.
+
+Public/contact/other-player projections exclude these private consequences. Web People and Chronicle render the same owner projection; agents read it through self/world and start lessons. Bounded in-app responses mark truncation and retain only the first few records; omitted records are unknown. No additional view data is persisted: existing building/contact/supply records retain their module erasure/export/cascade policies, and reads never mutate totals or create inference.
+
+### External activity reconciliation
+
+`OwnerRecordStates` reads only selected owned builds and party-authorized contact,
+offer and contract statuses in a repeatable-read transaction. The world clock is
+an injected transaction port. API composition combines these with owner-bound
+approval status; the reusable run package only accepts a generic fact resolver.
+Original result codes/versions remain historical. Unsupported record kinds are
+unknown, not presumed completed. Failed reconciliation marks the view stale and
+retains original metadata. No new retained private projection is created.
+
+Owner builders and build/supply consequences include `remainingGameMinutes`,
+derived from the same committed snapshot clock. Waiting work without a deadline
+returns null; completed/past deadlines clamp to zero. Inactive contracts return
+zero. These are display hints, not completion evidence: inspect state and actual
+settlement. Agents should report this game duration instead of inventing calendar
+conversions; original game timestamps remain available for provenance.
+
+Owned supply offers/contracts also expose `youSend` and `youReceive`, preserving
+the signed flow exactly and orienting it to the authenticated kingdom. Raw A/B
+terms remain available. Social contact requests label `humanAcceptance` as
+`your_owner` for incoming or `counterparty_owner` for outgoing. These labels do
+not confer authority; human-only command admission still enforces the decision.

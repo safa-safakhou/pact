@@ -1,0 +1,81 @@
+{
+  "capturedAt": "2026-10-04T22:24:34.863437+00:00",
+  "runId": "population-2026-10-04T21-13-18-681Z",
+  "firstDeployedAt": "2026-10-04T22:21:38Z",
+  "contextBoundDeployedAt": "2026-10-04T22:24:19Z",
+  "runtimeImage": "pact-runtime:population-fixes-20261005-2",
+  "servicesRecreated": [
+    "api",
+    "inference"
+  ],
+  "rulesUnchanged": true,
+  "status": "running",
+  "endsAt": "2026-10-04T23:13:59.742Z",
+  "population": 100,
+  "messages": {
+    "total": 835,
+    "acknowledged": 726
+  },
+  "worldClock": {
+    "status": "active",
+    "gameTimeMs": 1791149220000,
+    "tickSequence": 12788,
+    "suspensionReason": null
+  },
+  "postPatchEvents": {
+    "run_started": 2,
+    "luna_wave_finished": 13,
+    "observation": 126,
+    "script_plan": 126,
+    "action_requested": 3,
+    "receipt": 3,
+    "bot_round_finished": 1,
+    "run_interrupted": 1
+  },
+  "guideEvidence": {
+    "actor": "Sim Farmer 36",
+    "mandate": {
+      "version": 2,
+      "allowedActions": [
+        "world.read",
+        "inbox.read",
+        "message.send.contact",
+        "contact.request",
+        "building.queue",
+        "supply.sign"
+      ],
+      "targetRestrictions": [],
+      "resourceLimitsMarked": {
+        "iron": "300000",
+        "grain": "300000",
+        "silver": "300000"
+      },
+      "resourceLimitsWhole": {
+        "iron": "500",
+        "grain": "500",
+        "silver": "500"
+      },
+      "reserveFloorsWhole": {
+        "grain": "20"
+      },
+      "actionPermissions": {
+        "game.building.queue": true,
+        "game.contact.request": true,
+        "game.message.send": true,
+        "game.supply.sign": true
+      },
+      "nonbindingSupplyProposals": "game.supply.offer and game.supply.counter reserve no resources and do not require supply.sign mandate permission. They still require game:act scope and a write lease. A signature is a separate commitment; the server checks authority, stock and reserves.",
+      "reserveFloorsMarked": {
+        "grain": "12000"
+      },
+      "troopLimit": 0
+    }
+  },
+  "postPatchDenials": [],
+  "postPatchFailures": [],
+  "modelBudgetAtCheck": {
+    "requests": 120,
+    "limit": 200,
+    "source": "local persistent budget.json"
+  }
+}

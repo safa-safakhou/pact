@@ -71,6 +71,20 @@ export class OAuthService {
     },
   ) {}
 
+  /** Owner connection inventory metadata only; never returns token hashes or credentials. */
+  async refreshableGrantExpirations(accountId: string): Promise<Record<string, Date>> {
+    const rows = (
+      await this.pool.query<{ grant_id: string; expires_at: Date }>(
+        `SELECT r.grant_id,max(r.expires_at) AS expires_at FROM oauth_refresh_tokens r
+       JOIN oauth_grants g ON g.id=r.grant_id AND g.product_scope=r.product_scope
+       WHERE r.product_scope=$1 AND g.account_id=$2 AND g.revoked_at IS NULL
+       AND r.revoked_at IS NULL AND r.used_at IS NULL AND r.expires_at>$3 GROUP BY r.grant_id`,
+        [this.options.productScope, accountId, this.options.clock.now()],
+      )
+    ).rows;
+    return Object.fromEntries(rows.map((row) => [row.grant_id, row.expires_at]));
+  }
+
   authorizationServerMetadata(): Record<string, unknown> {
     return {
       issuer: this.options.issuer,

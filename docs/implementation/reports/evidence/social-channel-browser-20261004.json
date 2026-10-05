@@ -1,0 +1,68 @@
+[
+  {
+    "width": 390,
+    "reporting": true,
+    "appeal": true,
+    "scopedRefusalKeepsSession": true,
+    "noPasswords": true,
+    "destination": true,
+    "backShown": true,
+    "backKingdom": true,
+    "overflow": false,
+    "safeTop": "44px",
+    "cleared": true,
+    "errors": [],
+    "writes": [
+      {
+        "path": "/pact/v1/telegram/bootstrap",
+        "method": "POST"
+      },
+      {
+        "path": "/pact/v1/telegram/session",
+        "method": "POST"
+      },
+      {
+        "path": "/pact/v1/moderation/reports",
+        "method": "POST"
+      },
+      {
+        "path": "/pact/v1/moderation/cases/00000000-0000-4000-8000-000000000040/appeal",
+        "method": "POST"
+      }
+    ],
+    "confirmation": "http://localhost:5185/pact/?telegram_bootstrap=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "width": 1440,
+    "reporting": true,
+    "appeal": true,
+    "scopedRefusalKeepsSession": true,
+    "noPasswords": true,
+    "destination": true,
+    "backShown": true,
+    "backKingdom": true,
+    "overflow": false,
+    "safeTop": "44px",
+    "cleared": true,
+    "errors": [],
+    "writes": [
+      {
+        "path": "/pact/v1/telegram/bootstrap",
+        "method": "POST"
+      },
+      {
+        "path": "/pact/v1/telegram/session",
+        "method": "POST"
+      },
+      {
+        "path": "/pact/v1/moderation/reports",
+        "method": "POST"
+      },
+      {
+        "path": "/pact/v1/moderation/cases/00000000-0000-4000-8000-000000000040/appeal",
+        "method": "POST"
+      }
+    ],
+    "confirmation": "http://localhost:5185/pact/?telegram_bootstrap=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+]

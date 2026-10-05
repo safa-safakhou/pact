@@ -1,0 +1,52 @@
+{
+  "release": "friends-play-20261004-3",
+  "layouts": [
+    {
+      "width": 1440,
+      "tab": "Kingdom",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "Envoy",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "People",
+      "overflow": false
+    },
+    {
+      "width": 1440,
+      "tab": "Chronicle",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "Kingdom",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "Envoy",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "People",
+      "overflow": false
+    },
+    {
+      "width": 390,
+      "tab": "Chronicle",
+      "overflow": false
+    }
+  ],
+  "errors": [],
+  "keyboardDetails": true,
+  "defaultName": "Captain Goose",
+  "defaultJoin": true,
+  "defaultResume": true,
+  "listFailureExplained": true,
+  "listRecovered": true
+}

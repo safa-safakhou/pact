@@ -1,6 +1,6 @@
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
-import { KingdomError, type KingdomService } from "@pact/kingdom";
+import { ambitionValues, KingdomError, type KingdomService } from "@pact/kingdom";
 import type { OnboardingService } from "@pact/onboarding";
 import { OnboardingError } from "@pact/onboarding";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
@@ -228,6 +228,19 @@ export function registerIdentityRoutes(
     }),
   );
   if (kingdom) {
+    server.patch("/v1/kingdom/ambition", async (request, reply) =>
+      safe(reply, async () => {
+        const context = writeContext(request);
+        const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+        const input = z
+          .object({ ambition: z.enum(ambitionValues) })
+          .strict()
+          .parse(request.body);
+        if (!(await kingdom.getByAccount(session.accountId)))
+          return reply.code(404).send({ error: { code: "KINGDOM_NOT_FOUND", message: "Found your kingdom first." } });
+        return kingdom.setAmbition(session.accountId, input.ambition);
+      }),
+    );
     server.post("/v1/setup/activate", async (request, reply) =>
       safe(reply, async () => {
         const context = writeContext(request);

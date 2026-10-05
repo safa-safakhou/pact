@@ -1,0 +1,36 @@
+{
+  "model": "gpt-6-luna",
+  "mode": "one synthetic comprehension turn, no tools or game commands",
+  "fixture": {
+    "gross": {
+      "perMinuteWhole": "0.75",
+      "perHourWhole": "45",
+      "label": "0.75/min = 45/hour"
+    },
+    "upkeep": {
+      "perMinuteWhole": "0.25",
+      "perHourWhole": "15",
+      "label": "0.25/min = 15/hour"
+    },
+    "net": {
+      "perMinuteWhole": "0.5",
+      "perHourWhole": "30",
+      "label": "0.5/min = 30/hour"
+    },
+    "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+  },
+  "exitCode": 1,
+  "events": [
+    {
+      "type": "error",
+      "message": "Your access token could not be refreshed. Please log out and sign in again."
+    },
+    {
+      "type": "turn.failed",
+      "error": {
+        "message": "Your access token could not be refreshed. Please log out and sign in again."
+      }
+    }
+  ],
+  "limit": "One CLI invocation; no tools/retries requested. Provider HTTP requests are not independently observable."
+}

@@ -1,0 +1,701 @@
+[
+  {
+    "width": 1440,
+    "layout": {
+      "overflow": false,
+      "next": {
+        "x": 64,
+        "y": 377.6875,
+        "width": 1312,
+        "height": 187.578125,
+        "top": 377.6875,
+        "right": 1376,
+        "bottom": 565.265625,
+        "left": 64
+      },
+      "builder": {
+        "x": 64,
+        "y": 573.265625,
+        "width": 1312,
+        "height": 65.578125,
+        "top": 573.265625,
+        "right": 1376,
+        "bottom": 638.84375,
+        "left": 64
+      }
+    },
+    "state": {
+      "kingdomId": "e923c330-c5d8-4527-838c-91d9a61a8bb8",
+      "view": {
+        "audience": "owner",
+        "ambition": "neutral",
+        "consequences": {
+          "asOfGameTimeMs": 1791138000000,
+          "limit": 20,
+          "firstRetained": {
+            "build": {
+              "recordId": "4d7fe4f3-4478-4aa9-aacc-76e7bd86be2c",
+              "occurredGameTimeMs": 1791138000000,
+              "summary": "farm level 2 completed"
+            },
+            "contact": {
+              "recordId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330:1791138000000",
+              "occurredGameTimeMs": 1791138000000,
+              "summary": "Contact accepted with @gcaptainnoo_0f322524"
+            },
+            "delivery": null
+          },
+          "builds": [
+            {
+              "id": "4d7fe4f3-4478-4aa9-aacc-76e7bd86be2c",
+              "building": "farm",
+              "targetLevel": 2,
+              "state": "completed",
+              "dueGameTimeMs": 1791138000000,
+              "settledGameTimeMs": 1791138000000,
+              "remainingGameMinutes": 0
+            }
+          ],
+          "contacts": [
+            {
+              "kingdomId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330",
+              "handle": "gcaptainnoo_0f322524",
+              "displayName": "Captain Noodles",
+              "acceptedGameTimeMs": "1791138000000"
+            }
+          ],
+          "supplyContracts": []
+        },
+        "profile": {
+          "kingdomId": "e923c330-c5d8-4527-838c-91d9a61a8bb8",
+          "handle": "gprofessort_834c9012",
+          "displayName": "Professor Turnip",
+          "portrait": "alpha-default"
+        },
+        "asOfGameTimeMs": 1791138000000,
+        "committedTickSequence": "12601",
+        "worldStatus": "active",
+        "lastCommittedEventId": "13950",
+        "charges": [
+          {
+            "available": 3,
+            "capacity": 3,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "raid",
+            "regenerationHours": 8
+          },
+          {
+            "available": 4,
+            "capacity": 4,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "scout",
+            "regenerationHours": 6
+          }
+        ],
+        "balances": {
+          "grain": {
+            "ordinaryUnits": "3230",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "450",
+            "facts": {
+              "ordinaryWhole": "≈5.383333",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "0.75",
+                  "perHourWhole": "45",
+                  "label": "0.75/min = 45/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "≈0.133333",
+                  "perHourWhole": "8",
+                  "label": "≈0.133333/min = 8/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "≈0.616666",
+                  "perHourWhole": "37",
+                  "label": "≈0.616666/min = 37/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "29"
+          },
+          "iron": {
+            "ordinaryUnits": "2800",
+            "foundingAllowanceUnits": "96000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "200",
+            "facts": {
+              "ordinaryWhole": "≈4.666666",
+              "allowanceWhole": "160",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "≈0.333333",
+                  "perHourWhole": "20",
+                  "label": "≈0.333333/min = 20/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "≈0.333333",
+                  "perHourWhole": "20",
+                  "label": "≈0.333333/min = 20/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "16"
+          },
+          "silver": {
+            "ordinaryUnits": "200",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "100",
+            "facts": {
+              "ordinaryWhole": "≈0.333333",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "≈0.166666",
+                  "perHourWhole": "10",
+                  "label": "≈0.166666/min = 10/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "≈0.166666",
+                  "perHourWhole": "10",
+                  "label": "≈0.166666/min = 10/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "17"
+          }
+        },
+        "buildings": [
+          {
+            "kind": "barracks",
+            "level": 1
+          },
+          {
+            "kind": "farm",
+            "level": 2
+          },
+          {
+            "kind": "hall",
+            "level": 1
+          },
+          {
+            "kind": "market",
+            "level": 1
+          },
+          {
+            "kind": "mine",
+            "level": 1
+          },
+          {
+            "kind": "storehouse",
+            "level": 1
+          },
+          {
+            "kind": "wall",
+            "level": 1
+          }
+        ],
+        "builders": [
+          {
+            "slot": 1,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          },
+          {
+            "slot": 2,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          }
+        ],
+        "troops": [
+          {
+            "type": "spearman",
+            "placement": "home",
+            "ownerKingdomId": "e923c330-c5d8-4527-838c-91d9a61a8bb8",
+            "hostKingdomId": "e923c330-c5d8-4527-838c-91d9a61a8bb8",
+            "homeGuard": true,
+            "count": 8
+          }
+        ],
+        "training": [],
+        "upkeep": {
+          "perMinuteUnits": "80",
+          "hungry": false
+        },
+        "contracts": [],
+        "raids": [],
+        "scouts": [],
+        "threats": [],
+        "records": [],
+        "forecast": {
+          "throughGameTimeMs": 1791141600000,
+          "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+          "harvestPercentByMinute": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "expected": {
+            "iron": {
+              "ordinaryUnits": "14800",
+              "foundingAllowanceUnits": "96000"
+            },
+            "silver": {
+              "ordinaryUnits": "6200",
+              "foundingAllowanceUnits": "48000"
+            },
+            "grain": {
+              "ordinaryUnits": "25430",
+              "foundingAllowanceUnits": "48000"
+            }
+          },
+          "assumedDeliveries": []
+        }
+      }
+    }
+  },
+  {
+    "width": 390,
+    "layout": {
+      "overflow": false,
+      "next": {
+        "x": 16,
+        "y": 394.125,
+        "width": 358,
+        "height": 235.578125,
+        "top": 394.125,
+        "right": 374,
+        "bottom": 629.703125,
+        "left": 16
+      },
+      "builder": {
+        "x": 16,
+        "y": 637.703125,
+        "width": 358,
+        "height": 60.765625,
+        "top": 637.703125,
+        "right": 374,
+        "bottom": 698.46875,
+        "left": 16
+      }
+    },
+    "state": {
+      "kingdomId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330",
+      "view": {
+        "audience": "owner",
+        "ambition": "neutral",
+        "consequences": {
+          "asOfGameTimeMs": 1791138000000,
+          "limit": 20,
+          "firstRetained": {
+            "build": {
+              "recordId": "351b32ef-e73e-4b82-aec3-d9b11db8c993",
+              "occurredGameTimeMs": 1791137940000,
+              "summary": "mine level 2 completed"
+            },
+            "contact": {
+              "recordId": "e923c330-c5d8-4527-838c-91d9a61a8bb8:1791138000000",
+              "occurredGameTimeMs": 1791138000000,
+              "summary": "Contact accepted with @gprofessort_834c9012"
+            },
+            "delivery": null
+          },
+          "builds": [
+            {
+              "id": "4922d1a2-166f-4941-b9a0-986a533e9fed",
+              "building": "farm",
+              "targetLevel": 2,
+              "state": "completed",
+              "dueGameTimeMs": 1791137940000,
+              "settledGameTimeMs": 1791137940000,
+              "remainingGameMinutes": 0
+            },
+            {
+              "id": "351b32ef-e73e-4b82-aec3-d9b11db8c993",
+              "building": "mine",
+              "targetLevel": 2,
+              "state": "completed",
+              "dueGameTimeMs": 1791137940000,
+              "settledGameTimeMs": 1791137940000,
+              "remainingGameMinutes": 0
+            }
+          ],
+          "contacts": [
+            {
+              "kingdomId": "e923c330-c5d8-4527-838c-91d9a61a8bb8",
+              "handle": "gprofessort_834c9012",
+              "displayName": "Professor Turnip",
+              "acceptedGameTimeMs": "1791138000000"
+            }
+          ],
+          "supplyContracts": []
+        },
+        "profile": {
+          "kingdomId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330",
+          "handle": "gcaptainnoo_0f322524",
+          "displayName": "Captain Noodles",
+          "portrait": "alpha-default"
+        },
+        "asOfGameTimeMs": 1791138000000,
+        "committedTickSequence": "12601",
+        "worldStatus": "active",
+        "lastCommittedEventId": "13950",
+        "charges": [
+          {
+            "available": 3,
+            "capacity": 3,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "raid",
+            "regenerationHours": 8
+          },
+          {
+            "available": 4,
+            "capacity": 4,
+            "nextRegenerationGameTimeMs": null,
+            "retryAtGameTimeMs": null,
+            "kind": "scout",
+            "regenerationHours": 6
+          }
+        ],
+        "balances": {
+          "grain": {
+            "ordinaryUnits": "3380",
+            "foundingAllowanceUnits": "48000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "450",
+            "facts": {
+              "ordinaryWhole": "≈5.633333",
+              "allowanceWhole": "80",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "0.75",
+                  "perHourWhole": "45",
+                  "label": "0.75/min = 45/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "≈0.133333",
+                  "perHourWhole": "8",
+                  "label": "≈0.133333/min = 8/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "≈0.616666",
+                  "perHourWhole": "37",
+                  "label": "≈0.616666/min = 37/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "30"
+          },
+          "iron": {
+            "ordinaryUnits": "3000",
+            "foundingAllowanceUnits": "66000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "300",
+            "facts": {
+              "ordinaryWhole": "5",
+              "allowanceWhole": "110",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "0.5",
+                  "perHourWhole": "30",
+                  "label": "0.5/min = 30/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "0.5",
+                  "perHourWhole": "30",
+                  "label": "0.5/min = 30/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "18"
+          },
+          "silver": {
+            "ordinaryUnits": "1400",
+            "foundingAllowanceUnits": "33000",
+            "lockedUnits": "0",
+            "capacityUnits": "360000",
+            "productionPerMinuteUnits": "100",
+            "facts": {
+              "ordinaryWhole": "≈2.333333",
+              "allowanceWhole": "55",
+              "lockedWhole": "0",
+              "capacityWhole": "600",
+              "rates": {
+                "gross": {
+                  "perMinuteWhole": "≈0.166666",
+                  "perHourWhole": "10",
+                  "label": "≈0.166666/min = 10/hour"
+                },
+                "upkeep": {
+                  "perMinuteWhole": "0",
+                  "perHourWhole": "0",
+                  "label": "0/min = 0/hour"
+                },
+                "net": {
+                  "perMinuteWhole": "≈0.166666",
+                  "perHourWhole": "10",
+                  "label": "≈0.166666/min = 10/hour"
+                },
+                "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+              }
+            },
+            "version": "18"
+          }
+        },
+        "buildings": [
+          {
+            "kind": "barracks",
+            "level": 1
+          },
+          {
+            "kind": "farm",
+            "level": 2
+          },
+          {
+            "kind": "hall",
+            "level": 1
+          },
+          {
+            "kind": "market",
+            "level": 1
+          },
+          {
+            "kind": "mine",
+            "level": 2
+          },
+          {
+            "kind": "storehouse",
+            "level": 1
+          },
+          {
+            "kind": "wall",
+            "level": 1
+          }
+        ],
+        "builders": [
+          {
+            "slot": 1,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          },
+          {
+            "slot": 2,
+            "instructionId": null,
+            "kind": null,
+            "state": null,
+            "dueGameTimeMs": null,
+            "remainingGameMinutes": null
+          }
+        ],
+        "troops": [
+          {
+            "type": "spearman",
+            "placement": "home",
+            "ownerKingdomId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330",
+            "hostKingdomId": "92a8b739-d8f9-4255-9097-ebe4a8cc6330",
+            "homeGuard": true,
+            "count": 8
+          }
+        ],
+        "training": [],
+        "upkeep": {
+          "perMinuteUnits": "80",
+          "hungry": false
+        },
+        "contracts": [],
+        "raids": [],
+        "scouts": [],
+        "threats": [],
+        "records": [],
+        "forecast": {
+          "throughGameTimeMs": 1791141600000,
+          "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+          "harvestPercentByMinute": [
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100,
+            100
+          ],
+          "expected": {
+            "iron": {
+              "ordinaryUnits": "21000",
+              "foundingAllowanceUnits": "66000"
+            },
+            "silver": {
+              "ordinaryUnits": "7400",
+              "foundingAllowanceUnits": "33000"
+            },
+            "grain": {
+              "ordinaryUnits": "25580",
+              "foundingAllowanceUnits": "48000"
+            }
+          },
+          "assumedDeliveries": []
+        }
+      }
+    }
+  }
+]

@@ -64,15 +64,15 @@ PACT-056,"Implement Court membership, roles, and lifecycle",2,done,implementatio
 PACT-057,Implement Articles and mutual allegiance,2,done,implementation,Backend,M,PACT-053;PACT-054,G01,phase-2-social.md#pact-057
 PACT-058,Implement signed excerpts and the evidence viewer,2,done,implementation,Security,L,PACT-042;PACT-053;PACT-054,G01,phase-2-social.md#pact-058
 PACT-059,"Implement Chronicle stories, notices, and public share pages",2,done,implementation,Frontend,L,PACT-053;PACT-055;PACT-056;PACT-057;PACT-058,G01;G03,phase-2-social.md#pact-059
-PACT-060,Deliver opt-in critical email and Web Push,2,todo,implementation,Backend,M,PACT-022;PACT-053;PACT-055,S03,phase-2-social.md#pact-060
+PACT-060,Deliver opt-in critical email and Web Push,2,done,implementation,Backend,M,PACT-022;PACT-053;PACT-055,S03,phase-2-social.md#pact-060
 PACT-061,Complete the first-session and social interface,2,done,implementation,Frontend,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-059,G04,phase-2-social.md#pact-061
 PACT-062,Improve Envoy context selection and result explanations,2,done,implementation,Integrations,M,PACT-049;PACT-053;PACT-054;PACT-056;PACT-057;PACT-058;PACT-059,G02;G03,phase-2-social.md#pact-062
-PACT-063,"Build reporting, moderation, and appeals tools",2,todo,implementation,Backend,L,PACT-053;PACT-054;PACT-056;PACT-058;PACT-059,S05,phase-2-social.md#pact-063
+PACT-063,"Build reporting, moderation, and appeals tools",2,done,implementation,Backend,L,PACT-053;PACT-054;PACT-056;PACT-058;PACT-059,S05,phase-2-social.md#pact-063
 PACT-064,Extend privacy workflows to the complete social world,2,todo,implementation,Security,M,PACT-050;PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-063,S05,phase-2-social.md#pact-064
 PACT-065,Implement privacy-bounded product measurement,2,todo,implementation,Backend,M,PACT-053;PACT-061;PACT-062;PACT-064,S06;S07,phase-2-social.md#pact-065
 PACT-087,Build complete native kingdom and Envoy screens,3,todo,implementation,Mobile,L,PACT-048;PACT-053;PACT-061;PACT-068;PACT-083;PACT-084,L02;L06,phase-3-season-one.md#pact-087
-PACT-088,Deliver the complete Telegram Mini App,2,todo,implementation,Frontend,M,PACT-053;PACT-061;PACT-083;PACT-085,S08,phase-2-social.md#pact-088
-PACT-089,Implement private-chat bot briefings and explicit run controls,2,todo,implementation,Integrations,M,PACT-049;PACT-053;PACT-055;PACT-062;PACT-085,S08,phase-2-social.md#pact-089
+PACT-088,Deliver the complete Telegram Mini App,2,done,implementation,Frontend,M,PACT-053;PACT-061;PACT-083;PACT-085,S08,phase-2-social.md#pact-088
+PACT-089,Implement private-chat bot briefings and explicit run controls,2,done,implementation,Integrations,M,PACT-049;PACT-053;PACT-055;PACT-062;PACT-085,S08,phase-2-social.md#pact-089
 PACT-090,Add Telegram notification delivery,2,todo,implementation,Backend / Mobile,M,PACT-053;PACT-060;PACT-088;PACT-089,S03;S08,phase-2-social.md#pact-090
 PACT-091,Complete cross-channel session and privacy lifecycle,2,todo,implementation,Security,M,PACT-053;PACT-064;PACT-088;PACT-089;PACT-090,S05;S08,phase-2-social.md#pact-091
 PACT-092,Verify MVP cross-channel and assistant handoff end to end,2,todo,verification,QA,L,PACT-053;PACT-065;PACT-086;PACT-088;PACT-089;PACT-090;PACT-091,S08,phase-2-social.md#pact-092
@@ -98,3 +98,34 @@ PACT-099,"Complete agent-first access, learning, and observable play",3,done,imp
 PACT-080,Rehearse Season One end to end,3,done,verification,QA,L,PACT-053;PACT-054;PACT-055;PACT-056;PACT-057;PACT-058;PACT-059;PACT-061;PACT-062;PACT-069;PACT-070;PACT-073;PACT-099,G01;G02;G03;G04;G05;G06,phase-3-season-one.md#pact-080
 PACT-098,Replace MVP operator placeholders with reviewed production facts,3,todo,operations,Operations / Privacy,M,PACT-025;PACT-068;PACT-078,L04,phase-3-season-one.md#pact-098
 PACT-081,Accept and prepare the Season One release,3,todo,gate,Release,S,PACT-068;PACT-069;PACT-070;PACT-071;PACT-072;PACT-073;PACT-074;PACT-075;PACT-076;PACT-077;PACT-078;PACT-079;PACT-080;PACT-098;PACT-084;PACT-087;PACT-093;PACT-094;PACT-095;PACT-097;PACT-099,L01;L02;L03;L04;L05;L06,phase-3-season-one.md#pact-081
+PACT-100,Fix exact approval links under the hosted PACT path,3,done,implementation,Integrations,S,PACT-053;PACT-099,G02;G03,phase-3-season-one.md#pact-100
+PACT-101,Make private Alpha signup and Codex connection setup actionable,3,done,implementation,Integrations,M,PACT-053;PACT-099,G02;G04,phase-3-season-one.md#pact-101
+PACT-102,Make current kingdom reads and validation errors reliable for small agents,3,done,implementation,Integrations,M,PACT-053;PACT-099,G02;G03,phase-3-season-one.md#pact-102
+PACT-103,"Clarify founding resources, affordability and trade authority for agents",3,done,implementation,Gameplay,M,PACT-053;PACT-099,G02;G03,phase-3-season-one.md#pact-103
+PACT-104,Expose completed builds and actual trade deliveries to owners and agents,3,done,implementation,Backend,M,PACT-053;PACT-099;PACT-102,G03;G04,phase-3-season-one.md#pact-104
+PACT-105,"Keep external-agent activity ordered, refreshed and reconciled with current state",3,done,implementation,Frontend,M,PACT-053;PACT-099;PACT-100;PACT-104,G03;G04,phase-3-season-one.md#pact-105
+PACT-106,Show remaining game time for builds and contracts,3,done,implementation,Frontend,S,PACT-053;PACT-099,G03;G04,phase-3-season-one.md#pact-106
+PACT-107,"Put connection, progress and next decisions first on desktop and phone",3,done,implementation,Frontend,M,PACT-053;PACT-099;PACT-101;PACT-105;PACT-106,G02;G04,phase-3-season-one.md#pact-107
+PACT-108,Repeat the fresh three-player journey and document remaining friction,3,done,verification,QA,M,PACT-053;PACT-099;PACT-100;PACT-101;PACT-102;PACT-103;PACT-104;PACT-105;PACT-106;PACT-107,G02;G03;G04;G06,phase-3-season-one.md#pact-108
+PACT-109,Freeze the small web-experience scope and asset list,3,done,implementation,Design,S,PACT-053;PACT-099;PACT-108,G01;G06,phase-3-season-one.md#pact-109
+PACT-110,"Prove image, motion and audio generation with four samples",3,done,implementation,Assets,S,PACT-053;PACT-099;PACT-108;PACT-109,G06,phase-3-season-one.md#pact-110
+PACT-111,Persist one private ambition choice for the human and Envoy,3,done,implementation,Web,M,PACT-053;PACT-099;PACT-108;PACT-109,G01;G04,phase-3-season-one.md#pact-111
+PACT-112,Show one truthful next-decision card throughout the first session,3,done,implementation,Web,M,PACT-053;PACT-099;PACT-108;PACT-111;PACT-113,G01;G04,phase-3-season-one.md#pact-112
+PACT-113,Correct rate units and show a factual Envoy result summary,3,done,implementation,Agent,M,PACT-053;PACT-099;PACT-108;PACT-109;PACT-111,G02;G03,phase-3-season-one.md#pact-113
+PACT-114,Generate a small kingdom scene with two visible upgrade changes,3,done,implementation,Art/Web,M,PACT-053;PACT-099;PACT-108;PACT-110,G01;G04,phase-3-season-one.md#pact-114
+PACT-115,Generate four court characters with three poses each,3,done,implementation,Art,M,PACT-053;PACT-099;PACT-108;PACT-110,G04,phase-3-season-one.md#pact-115
+PACT-116,Add three short milestone animations and one optional goose gag,3,done,implementation,Web/Motion,M,PACT-053;PACT-099;PACT-108;PACT-112;PACT-114;PACT-115;PACT-120,G04,phase-3-season-one.md#pact-116
+PACT-117,"Generate one music loop, one ambience loop and one flourish",3,done,implementation,Audio,M,PACT-053;PACT-099;PACT-108;PACT-110,G04,phase-3-season-one.md#pact-117
+PACT-118,Generate six short event sounds and one synthesized goose honk,3,done,implementation,Audio,M,PACT-053;PACT-099;PACT-108;PACT-110;PACT-115,G04,phase-3-season-one.md#pact-118
+PACT-119,Add seven factual in-app event cards with generated icons,3,done,implementation,Web/Notifications,M,PACT-053;PACT-099;PACT-108;PACT-112;PACT-115;PACT-118,G04,phase-3-season-one.md#pact-119
+PACT-120,Add silent-by-default audio controls and a reduced-motion option,3,done,implementation,Web,M,PACT-053;PACT-099;PACT-108;PACT-110,G04,phase-3-season-one.md#pact-120
+PACT-121,Show notice freshness and actual contact waiting states,3,done,implementation,Social/Web,S,PACT-053;PACT-099;PACT-108;PACT-112,G03;G04,phase-3-season-one.md#pact-121
+PACT-122,Show three private milestone keepsakes in the Hall,3,done,implementation,Web,S,PACT-053;PACT-099;PACT-108;PACT-111;PACT-119,G04,phase-3-season-one.md#pact-122
+PACT-123,Show harvest conditions with three generated field overlays,3,done,implementation,Web/Art,S,PACT-053;PACT-099;PACT-108;PACT-114,G04,phase-3-season-one.md#pact-123
+PACT-124,Check the four-screen experience and enforce media budgets,3,done,implementation,Web/QA,M,PACT-053;PACT-099;PACT-108;PACT-112;PACT-113;PACT-114;PACT-115;PACT-116;PACT-117;PACT-118;PACT-119;PACT-120;PACT-121;PACT-122;PACT-123,G04;G06,phase-3-season-one.md#pact-124
+PACT-125,Verify the bounded asset bundle and regeneration instructions,3,done,implementation,Assets/Operations,S,PACT-053;PACT-099;PACT-108;PACT-110;PACT-124,G06,phase-3-season-one.md#pact-125
+PACT-126,Run one fresh-player session and record clarity and enjoyment limits,3,done,verification,QA,M,PACT-053;PACT-099;PACT-108;PACT-109;PACT-110;PACT-111;PACT-112;PACT-113;PACT-114;PACT-115;PACT-116;PACT-117;PACT-118;PACT-119;PACT-120;PACT-121;PACT-122;PACT-123;PACT-124;PACT-125,G01;G02;G03;G04;G06,phase-3-season-one.md#pact-126
+PACT-127,Join from one shared link and connect your own agent,3,done,implementation,Full stack,M,PACT-053;PACT-099;PACT-108,G02;G04,phase-3-season-one.md#pact-127
+PACT-128,Make the opening kingdom screen short and actionable,3,done,implementation,Frontend,S,PACT-053;PACT-126,G04,phase-3-season-one.md#pact-128
+PACT-129,Show useful upgrade choices and use the free builder,3,done,implementation,Frontend,S,PACT-053;PACT-126,G02;G04,phase-3-season-one.md#pact-129
+PACT-130,Find friends in the shared world and start a conversation,3,done,implementation,Full stack,M,PACT-053;PACT-127;PACT-128;PACT-129,G01;G04;G06,phase-3-season-one.md#pact-130

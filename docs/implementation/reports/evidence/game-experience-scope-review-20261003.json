@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-03",
+  "counts": {
+    "Done": 80,
+    "Todo": 18,
+    "Backlog": 28
+  },
+  "active_issues": 18,
+  "metadata_and_dependencies_and_acceptance_readback": true,
+  "historical_108_metadata_unchanged": true,
+  "plan_readback": true
+}

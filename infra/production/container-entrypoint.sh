@@ -16,6 +16,7 @@ read_secret RAID_SEED_ENCRYPTION_KEY_BASE64 /run/secrets/raid_seed_encryption_ke
 read_secret SEAL_ENCRYPTION_KEY_BASE64 /run/secrets/seal_encryption_key
 read_secret SMTP_URL /run/secrets/smtp_url
 read_secret TELEGRAM_BOT_ID /run/secrets/telegram_bot_id
+read_secret WEB_PUSH_PRIVATE_KEY /run/secrets/web_push_private_key
 read_secret TELEGRAM_BOT_TOKEN /run/secrets/telegram_bot_token
 read_secret TELEGRAM_WEBHOOK_SECRET /run/secrets/telegram_webhook_secret
 

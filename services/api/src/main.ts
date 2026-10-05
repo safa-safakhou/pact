@@ -1,6 +1,13 @@
+import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
-import { ChronicleFactReader, CommandDispatcher, GameCommandHandler, SocialCommandHandler } from "@pact/application";
+import {
+  ChronicleFactReader,
+  CommandDispatcher,
+  DispatcherError,
+  GameCommandHandler,
+  SocialCommandHandler,
+} from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
@@ -13,7 +20,7 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
-import { InboxService } from "@pact/inbox";
+import { InboxService, NotificationService } from "@pact/inbox";
 import {
   ActionLimitService,
   BuildingEngine,
@@ -24,10 +31,14 @@ import {
   CourtInvitationDestination,
   CourtService,
   GarrisonService,
+  gameNotificationCategories,
   ImmediateExposureAdapter,
   InvitationService,
   KingdomRetirementService,
   KingdomService,
+  ModerationError,
+  ModerationService,
+  OwnerRecordStates,
   PoliticsService,
   RaidRandomnessService,
   RaidService,
@@ -51,10 +62,11 @@ import { OnboardingService } from "@pact/onboarding";
 import { OpenRouterAuthService } from "@pact/openrouter";
 import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
 import { ExternalAgentActivity, RunError, RunService } from "@pact/runs";
-import { TelegramService } from "@pact/telegram";
+import { botRetention, TelegramBotService, TelegramError, TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { AgentGuideReader } from "./agent-guide.js";
 import { readEnvironment } from "./config.js";
+import { activityStateResolver } from "./external-activity-state.js";
 import { GameReportReader } from "./game-report-reader.js";
 import { loadOperatorPreflight } from "./operator-preflight.js";
 import { buildServer } from "./server.js";
@@ -74,7 +86,9 @@ const compromisedPasswordDigests = environment.COMPROMISED_PASSWORD_SHA256_FILE
       .filter((value) => /^[0-9a-f]{64}$/i.test(value))
   : baselineCompromisedPasswordDigests;
 const identity = new IdentityService(pool, {
+  connectionRefreshExpirations: (accountId) => oauth.refreshableGrantExpirations(accountId),
   productScope: "pact",
+  guestPlayEnabled: environment.PACT_GUEST_PLAY === "1",
   currentTermsVersion: environment.CURRENT_TERMS_VERSION,
   allowedOrigins: new Set([environment.PACT_ORIGIN]),
   clock,
@@ -104,6 +118,19 @@ const seasonViews = {
     readSeasonOverview(c, "pact", cohortStart, accountId),
 };
 const socialOverview = new SocialOverviewReader(pool, "pact");
+const notifications = new NotificationService(pool, {
+  productScope: "pact",
+  clock,
+  categories: gameNotificationCategories,
+  secretBox: new AesGcmSecretBox(Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url")),
+  publicBaseUrl: publicBaseUrl + "/",
+});
+const moderation = new ModerationService(pool, {
+  productScope: "pact",
+  clock,
+  secretBox: new AesGcmSecretBox(Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url")),
+  closeAccount: (accountId) => privacy.requestDeletion(accountId),
+});
 const inbox = new InboxService(pool, { productScope: "pact", clock });
 const runs = new RunService(pool, {
   productScope: "pact",
@@ -115,13 +142,29 @@ const runs = new RunService(pool, {
     }
   },
 });
-const externalActivity = new ExternalAgentActivity(pool, "pact", clock);
+const externalActivity = new ExternalAgentActivity(
+  pool,
+  "pact",
+  clock,
+  activityStateResolver(
+    new OwnerRecordStates(pool, "pact", world),
+    new ApprovalStatusReader(pool, "pact", clock, new URL(publicBaseUrl).pathname),
+  ),
+);
 const social = new SocialService(
   "pact",
   new ResourceLedger("pact"),
   new ActionLimitService("pact"),
   clock,
   new ImmediateExposureAdapter(new ExposureService("pact")),
+  async (client, accountId) => {
+    try {
+      await moderation.assertAllowed(client, accountId, "messaging");
+    } catch (error) {
+      if (error instanceof ModerationError) throw new DispatcherError("FORBIDDEN");
+      throw error;
+    }
+  },
 );
 const courts = new CourtService(pool, "pact", clock);
 const courtInvitations = new CourtInvitationDestination("pact", clock, courts);
@@ -198,6 +241,14 @@ const gameCommands = new GameCommandHandler(
 );
 const dispatcher = new CommandDispatcher({
   pool,
+  assertPlayAllowed: async (client, accountId) => {
+    try {
+      await moderation.assertAllowed(client, accountId, "play");
+    } catch (error) {
+      if (error instanceof ModerationError) throw new DispatcherError("FORBIDDEN");
+      throw error;
+    }
+  },
   clock,
   productScope: ProductScopeSchema.parse("pact"),
   onCommittedReceipt: async (client, principal, command, receipt) => {
@@ -238,6 +289,7 @@ const approvals = new ApprovalService(pool, {
   dispatcher,
   clock,
   origin: environment.PACT_ORIGIN,
+  webBasePath: new URL(publicBaseUrl).pathname,
   assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
   inbox,
 });
@@ -281,7 +333,7 @@ const mcp = new McpTransport({
   reports,
   inbox,
   conversations: new ConversationReader(pool, "pact"),
-  approvals: new ApprovalStatusReader(pool, "pact", clock),
+  approvals: new ApprovalStatusReader(pool, "pact", clock, new URL(publicBaseUrl).pathname),
   approvalProposals: approvals,
   runLeases: runs,
 });
@@ -312,6 +364,15 @@ const privacy = new PrivacyService(pool, {
   retirement,
   ownedData: [
     externalActivity.retention,
+    notifications.retention,
+    moderation.retention,
+    botRetention("pact"),
+    {
+      name: "kingdomExperience",
+      forgetAccount: (c, id) => kingdom.forgetExperience(c, id),
+      exportAccount: (c, id) => kingdom.exportExperience(c, id),
+      prune: async () => 0,
+    },
     {
       name: "seasonHonors",
       forgetAccount: (c, id) => honors.forgetAccount(c, id),
@@ -360,6 +421,125 @@ const privacy = new PrivacyService(pool, {
     ? { deletionRegistry: new FileDeletionRegistry(environment.PACT_DELETION_REGISTRY_FILE) }
     : {}),
 });
+const telegramBot = environment.TELEGRAM_BOT_ID
+  ? new TelegramBotService(pool, {
+      productScope: "pact",
+      clock,
+      botId: environment.TELEGRAM_BOT_ID,
+      miniAppUrl: publicBaseUrl + "/telegram/",
+      secretBox: new AesGcmSecretBox(Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url")),
+      ports: {
+        validateSettings: async (accountId, settings) => {
+          if (!credentialVault) throw new TelegramError("FORBIDDEN");
+          const saved = (await credentialVault.list(accountId)).find(
+            (c) => c.id === settings.credentialId && c.provider === settings.provider && c.status === "active",
+          );
+          if (!saved) throw new TelegramError("FORBIDDEN");
+        },
+        start: async (client, accountId, objective, settings) => {
+          await moderation.assertAllowed(client, accountId, "play");
+          return runs.start(
+            {
+              accountId,
+              objective,
+              provider: settings.provider,
+              model: settings.model,
+              credentialId: settings.credentialId,
+              limits: {
+                maxCalls: settings.maxCalls,
+                maxTokens: settings.maxTokens,
+                maxMessages: settings.maxMessages,
+                maxConversations: settings.maxConversations,
+              },
+            },
+            client,
+          );
+        },
+        stop: async (client, accountId, runIds) => {
+          if (runIds) {
+            for (const id of runIds) {
+              try {
+                await runs.stop(accountId, id, client);
+              } catch (error) {
+                if (!(error instanceof RunError && error.code === "NOT_FOUND")) throw error;
+              }
+            }
+          } else await runs.takeover(accountId, accountId, client);
+        },
+        read: async (accountId, command) => {
+          if (command === "world") {
+            const view = await worldViews.readSelf(accountId);
+            if (!view) return "No active kingdom. Open PACT to complete setup.";
+            return (
+              "@" +
+              view.profile.handle +
+              " / " +
+              view.worldStatus +
+              " / tick " +
+              view.committedTickSequence +
+              " / game " +
+              view.asOfGameTimeMs +
+              "ms\n" +
+              Object.entries(view.balances)
+                .map(
+                  ([name, b]) =>
+                    name +
+                    ": " +
+                    b.facts.ordinaryWhole +
+                    " ordinary; " +
+                    b.facts.allowanceWhole +
+                    " founding; " +
+                    b.facts.lockedWhole +
+                    " locked",
+                )
+                .join("\n") +
+              "\nBuilders: " +
+              view.builders.map((b) => (b.kind ? b.kind + " (" + b.state + ")" : "idle")).join(", ") +
+              "\nThese are committed game facts; no inference ran."
+            );
+          }
+          if (command === "inbox") {
+            const page = await inbox.list(accountId, undefined);
+            return (
+              "Latest owner inbox events:\n" +
+              page.events
+                .slice(-8)
+                .map((e) => e.type + " / " + e.eventId)
+                .join("\n") +
+              "\nOpen PACT for complete authenticated details and exact approval sheets. No inference ran."
+            );
+          }
+          const list = await runs.list(accountId);
+          return (
+            "Envoy runs:\n" +
+            list.runs
+              .slice(0, 5)
+              .map(
+                (r) =>
+                  r.runId +
+                  " / " +
+                  r.status +
+                  " / " +
+                  r.provider +
+                  "/" +
+                  r.model +
+                  " / " +
+                  r.usedCalls +
+                  "/" +
+                  r.maxCalls +
+                  " calls / " +
+                  r.usedTokens +
+                  "/" +
+                  r.maxTokens +
+                  " tokens",
+              )
+              .join("\n") +
+            "\n/status is a read. /stop releases the shared lease and stops further PACT inference; externally hosted agents must also be stopped in their host."
+          );
+        },
+      },
+    })
+  : undefined;
 const telegram =
   environment.TELEGRAM_BOT_ID && environment.TELEGRAM_BOT_TOKEN && environment.TELEGRAM_WEBHOOK_SECRET
     ? new TelegramService(pool, {
@@ -368,6 +548,12 @@ const telegram =
         botToken: environment.TELEGRAM_BOT_TOKEN,
         webhookSecret: environment.TELEGRAM_WEBHOOK_SECRET,
         clock,
+        ...(telegramBot
+          ? {
+              processBotUpdate: (c: import("pg").PoolClient, update: unknown) => telegramBot.process(c, update),
+              unlinkBot: (c: import("pg").PoolClient, id: string) => telegramBot.unlink(c, id),
+            }
+          : {}),
         issueHumanSession: (accountId, label) => identity.createLinkedHumanSession(accountId, label),
         revokeHumanSessions: (accountId, sessionIds) => identity.revokeLinkedHumanSessions(accountId, sessionIds),
       })
@@ -396,8 +582,12 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   externalActivity,
   openRouter,
   privacy,
+  notifications,
+  moderation,
+  webPushPublicKey: environment.WEB_PUSH_PUBLIC_KEY,
   ...(credentialVault ? { credentialVault } : {}),
   ...(telegram ? { telegram } : {}),
+  ...(telegramBot ? { telegramBot } : {}),
   origin: environment.PACT_ORIGIN,
   operatorPreflight,
 });
@@ -410,7 +600,16 @@ const privacyMaintenance = setInterval(
   24 * 60 * 60_000,
 );
 
+const moderationWorkerId = "api-moderation-" + randomUUID();
+const moderationMaintenance = setInterval(
+  () =>
+    void moderation
+      .processClosures(moderationWorkerId)
+      .catch((error: unknown) => server.log.error({ err: error }, "moderation closure failed")),
+  2000,
+);
 const shutdown = async (): Promise<void> => {
+  clearInterval(moderationMaintenance);
   clearInterval(privacyMaintenance);
   await server.close();
   await pool.end();

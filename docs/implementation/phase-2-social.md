@@ -1,8 +1,8 @@
 # Phase 2 — Social slice
 
-**20 tickets · 8 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**20 tickets · 12 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
-Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
+Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-054"></a>
 ## PACT-054 — Implement public profiles and handle lifecycle
@@ -199,7 +199,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-060"></a>
 ## PACT-060 — Deliver opt-in critical email and Web Push
 
-**Status:** todo · **Role:** Backend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
 
 **Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
 
@@ -217,8 +217,18 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] No push permission or email opt-in means no optional delivery; security mail remains transactional.
-- [ ] Offline delivery failure changes no deadline and invokes no LLM; previews expose no amounts or message text and a stale link cannot approve an expired action.
+- [x] No push permission or email opt-in means no optional delivery; security mail remains transactional.
+- [x] Offline delivery failure changes no deadline and invokes no LLM; previews expose no amounts or message text and a stale link cannot approve an expired action.
+
+**Assignee:** codex-social-channel
+
+**Evidence**
+
+- docs/implementation/reports/social-channel-resume-20261004.md
+- docs/api/social-channels.md
+- docs/operations/social-channels.md
+- Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2
+- docs/implementation/reports/evidence/social-channel-linear-final-20261004.json
 
 <a id="pact-061"></a>
 ## PACT-061 — Complete the first-session and social interface
@@ -287,7 +297,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-063"></a>
 ## PACT-063 — Build reporting, moderation, and appeals tools
 
-**Status:** todo · **Role:** Backend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Backend · **Size:** L · **Type:** implementation
 
 **Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
 
@@ -304,8 +314,18 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] A moderator sees only case-authorized private evidence and cannot use role powers to transfer game assets.
-- [ ] Seeded doxxing and abuse cases can be hidden and appealed with audit reasons; a different reviewer handles the appeal and expired evidence is purged.
+- [x] A moderator sees only case-authorized private evidence and cannot use role powers to transfer game assets.
+- [x] Seeded doxxing and abuse cases can be hidden and appealed with audit reasons; a different reviewer handles the appeal and expired evidence is purged.
+
+**Assignee:** codex-social-channel
+
+**Evidence**
+
+- docs/implementation/reports/social-channel-resume-20261004.md
+- docs/api/social-channels.md
+- docs/operations/social-channels.md
+- Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2
+- docs/implementation/reports/evidence/social-channel-linear-final-20261004.json
 
 <a id="pact-064"></a>
 ## PACT-064 — Extend privacy workflows to the complete social world
@@ -356,7 +376,7 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 <a id="pact-088"></a>
 ## PACT-088 — Deliver the complete Telegram Mini App
 
-**Status:** todo · **Role:** Frontend · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** M · **Type:** implementation
 
 **Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
 
@@ -373,13 +393,23 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] The same user can start in web, inspect in Telegram, and approve the current exact offer without losing destination or duplicating effects.
-- [ ] Telegram UI differences never change rules or expose private content; invalid/expired channel sessions reauthenticate before any write.
+- [x] The same user can start in web, inspect in Telegram, and approve the current exact offer without losing destination or duplicating effects.
+- [x] Telegram UI differences never change rules or expose private content; invalid/expired channel sessions reauthenticate before any write.
+
+**Assignee:** codex-social-channel
+
+**Evidence**
+
+- docs/implementation/reports/social-channel-resume-20261004.md
+- docs/api/social-channels.md
+- docs/operations/social-channels.md
+- Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2
+- docs/implementation/reports/evidence/social-channel-linear-final-20261004.json
 
 <a id="pact-089"></a>
 ## PACT-089 — Implement private-chat bot briefings and explicit run controls
 
-**Status:** todo · **Role:** Integrations · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
 
 **Delivery track:** later · [Approved Alpha scope](../pact/alpha.md)
 
@@ -396,8 +426,18 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Repeated/forwarded/expired buttons cannot start extra runs; a message or notification alone starts no inference.
-- [ ] Groups, unlinked accounts, and agent-generated chat cannot invoke human approvals; /stop acts on the same global run and private summaries exclude credentials.
+- [x] Repeated/forwarded/expired buttons cannot start extra runs; a message or notification alone starts no inference.
+- [x] Groups, unlinked accounts, and agent-generated chat cannot invoke human approvals; /stop acts on the same global run and private summaries exclude credentials.
+
+**Assignee:** codex-social-channel
+
+**Evidence**
+
+- docs/implementation/reports/social-channel-resume-20261004.md
+- docs/api/social-channels.md
+- docs/operations/social-channels.md
+- Local 2026-10-04: typecheck/lint/build, 278 unit and 315 integration tests passed (one existing skip); phone/desktop synthetic-host browser checks; verified testing release social-channel-20261004-2
+- docs/implementation/reports/evidence/social-channel-linear-final-20261004.json
 
 <a id="pact-090"></a>
 ## PACT-090 — Add Telegram notification delivery

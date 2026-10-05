@@ -40,7 +40,7 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
       const status =
         error.code === "FORBIDDEN"
           ? 403
-          : error.code === "STALE_VERSION"
+          : error.code === "STALE_VERSION" || error.code === "TICK_PENDING"
             ? 409
             : error.code === "RATE_LIMITED"
               ? 429

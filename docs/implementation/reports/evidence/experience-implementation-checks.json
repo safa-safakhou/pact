@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-03",
+  "scope": "uncommitted local experience increment",
+  "build": "passed all workspaces",
+  "typecheck": "passed",
+  "lint": "passed; existing informational warnings remain",
+  "unit": {
+    "passed": 230,
+    "failed": 0
+  },
+  "integration": {
+    "passed": 291,
+    "failed": 0,
+    "skipped": 1,
+    "skip": "optional live provider"
+  },
+  "targeted": {
+    "ambition_world_privacy": 17,
+    "context_baseline_smoke_regressions": 38
+  },
+  "backlog": "126 unique tasks, acyclic, source hashes match",
+  "diff_check": "passed",
+  "live_model": "failed before answer: Codex auth refresh",
+  "audio": "browser decode/play/ended passed, no auditory certification",
+  "deploy": "not deployed"
+}

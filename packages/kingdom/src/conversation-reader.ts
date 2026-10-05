@@ -1,4 +1,5 @@
 import type { Pool } from "pg";
+import { acknowledgeMessageRead } from "./message-read-state.js";
 
 export interface ConversationMessage {
   readonly messageId: string;
@@ -37,7 +38,13 @@ export class ConversationReader {
     return result.rows.length === counterpartyKingdomIds.length;
   }
 
-  async read(accountId: string, counterpartyKingdomId: string, limit = 5): Promise<ConversationPage | null> {
+  async read(
+    accountId: string,
+    counterpartyKingdomId: string,
+    limit = 5,
+    maxBytes = 3_600,
+  ): Promise<ConversationPage | null> {
+    const pageByteLimit = Math.min(3_600, Math.max(1_000, maxBytes));
     const owner = await this.pool.query<{ id: string }>(
       "SELECT id FROM kingdoms WHERE product_scope = $1 AND account_id = $2 AND status = 'ranked'",
       [this.productScope, accountId],
@@ -54,20 +61,42 @@ export class ConversationReader {
        FROM direct_messages WHERE product_scope = $1
          AND ((sender_kingdom_id = $2 AND recipient_kingdom_id = $3)
            OR (sender_kingdom_id = $3 AND recipient_kingdom_id = $2))
-       ORDER BY sent_game_time_ms DESC, id DESC LIMIT $4`,
+       ORDER BY (recipient_kingdom_id = $2 AND read_game_time_ms IS NULL) DESC, sent_game_time_ms DESC, id DESC LIMIT $4`,
       [this.productScope, ownerId, counterpartyKingdomId, Math.min(Math.max(limit, 1), 5)],
     );
-    return {
+    const page: ConversationPage = {
       counterpartyKingdomId,
       messages: rows.rows.map((row) => ({
         messageId: row.id,
         sender: row.sender_kingdom_id === ownerId ? "owner" : "counterparty",
         sentGameTimeMs: row.sent_game_time_ms,
-        ...(Buffer.byteLength(row.body, "utf8") <= 512
-          ? { body: row.body }
-          : { body: null, bodyOmitted: true as const }),
+        body: null,
+        bodyOmitted: true,
       })),
       untrustedContent: true,
     };
+    // Bound the serialized page before acknowledging it, including JSON escaping.
+    const messages = [...page.messages];
+    for (const [index, row] of rows.rows.entries()) {
+      if (Buffer.byteLength(row.body, "utf8") > 512) continue;
+      const previous = messages[index];
+      if (!previous) continue;
+      messages[index] = {
+        messageId: previous.messageId,
+        sender: previous.sender,
+        sentGameTimeMs: previous.sentGameTimeMs,
+        body: row.body,
+      };
+      if (Buffer.byteLength(JSON.stringify({ ...page, messages }), "utf8") > pageByteLimit) messages[index] = previous;
+    }
+    await acknowledgeMessageRead(
+      this.pool,
+      this.productScope,
+      ownerId,
+      messages
+        .filter((message) => message.sender === "counterparty" && message.body !== null)
+        .map((message) => message.messageId),
+    );
+    return { ...page, messages };
   }
 }

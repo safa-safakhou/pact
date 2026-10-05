@@ -507,6 +507,13 @@ export class GameCommandHandler {
       if (error instanceof ExposureError)
         throw new DispatcherError(error.code === "STALE_MANDATE" ? "STALE_VERSION" : "FORBIDDEN");
       if (error instanceof SocialError) {
+        if (
+          error.code === "MESSAGE_QUEUE_FULL" ||
+          error.code === "CONTACT_QUEUE_FULL" ||
+          error.code === "REQUEST_EXISTS" ||
+          error.code === "ALREADY_CONTACT"
+        )
+          throw new DispatcherError(error.code);
         throw new DispatcherError(
           error.code === "BLOCKED" || error.code === "NOT_CONTACT" ? "FORBIDDEN" : "INVALID_COMMAND",
         );

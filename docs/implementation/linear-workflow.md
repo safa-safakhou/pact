@@ -1,6 +1,21 @@
 # Linear delivery workflow
 
-## Current scope override — 1 October 2026
+**Current plan - 4 October 2026:** Four new tickets PACT-127-130 are Todo under **Active - Friends playtest: join, connect and play**. [Agreed scope and acceptance](friends-playtest.md): shared-link nickname-only guest entry and own-agent connection, compact opening, clear builder choices, friend discovery/contact. No PACT signup/password/email/verification. Current counts: **102 Done, 4 Todo, 24 Later Backlog**. Planning complete; implementation not started. Earlier zero-open-ticket and next-production-task statements below are historical.
+
+**Current scope - friends-only testing, 4 October 2026:** Founder parked all 24 remaining original roadmap tickets on 4 October 2026. Current priority is a playable, fun and interesting web game for a couple of friends. These future tickets are not prerequisites for the friends-only testing phase. No automatic selection of PACT-064/065 or other production/pilot/channel work. Original scope/acceptance/dependencies remain preserved for a later phase. **0 existing open playability/experience tickets**; four follow-up candidates in the prior playthrough are not yet ticketed. [Decision/readback](reports/evidence/friends-only-scope-20261004.json). Earlier next-task instructions below are historical.
+
+**Resumed roadmap - 4 October 2026:** PACT-060/063/088/089 are confirmed Done in Linear; milestone Completed - Resumed social and channel batch, 100%. Original acceptance preserved. [Completion report](reports/social-channel-resume-20261004.md), [API](../api/social-channels.md), [operations](../operations/social-channels.md). Testing release social-channel-20261004-2 verified. Current counts: **102 Done, 24 Backlog**, no active Todo/In Progress. PACT-064 is next dependency-ready; PACT-065 follows it. Remaining client/provider/device/pilot gates require their original evidence. Earlier assignment/count paragraphs below are historical and superseded by this snapshot.
+
+**Scope review — 3 October:** Eighteen experience tickets now use the bounded inventory and exact acceptance in [current plan](game-experience.md). Read [whole-backlog review](reports/game-experience-scope-review-20261003.md). Earlier expanded concepts are inspiration, not additional required work. The 28 Later tickets remain parked.
+
+**Current assignment — 3 October 2026:** PACT-109–126, 18 Todo under **Active — Game experience and generated assets**, label **PACT Experience**. All generated media is Codex-owned; no founder assets/accounts required. The 28 Later tasks stay postponed. Start with PACT-109 and the dependency-ready work; implementation has not started. See [current plan](game-experience.md).
+
+
+## Current planning override — 2 October 2026
+
+The founder assigned **PACT-100–108 / MNI-159–167** as one batch after the fresh playtest. All nine are verified **Done**, labeled PACT Alpha under **Completed — Alpha playtest fixes (2 October)**. [The plan](alpha-playtest-fixes.md), tasks.json and completion reports retain scope/dependency/acceptance evidence; Linear owns execution. The separate `alpha_followup` track preserves the original 13-ticket Alpha. Current totals: 108 issues, 80 Done, no In Progress/Todo, 28 Later Backlog. No Later work is activated.
+
+## Historical scope override — 1 October 2026
 
 Only the founder-approved [Version 1.4 Alpha](../pact/alpha.md) is active: 13 tickets in **Active — Game-only Alpha**, labeled **PACT Alpha**. Twenty-eight remaining unfinished tickets are postponed **PACT Later** / Backlog. Historical four-phase milestones/counts below are import records, not the current assignment. New PACT-099 is substantive missing agent implementation, not an umbrella. Preserve `original_plan` when narrowing scope and never infer full original S/L gate acceptance from Alpha completion.
 

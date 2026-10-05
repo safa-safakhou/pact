@@ -1,0 +1,22 @@
+{
+  "localDirectory": "C:/Users/ENDORFY/pact-population-20261004/final-evidence",
+  "containsCredentials": false,
+  "files": {
+    "budget.json": {
+      "bytes": 16,
+      "sha256": "174a37f14b14981d838ec195c7b52c1d4b564259440e58f221e7d7d223671834"
+    },
+    "events.jsonl": {
+      "bytes": 45190416,
+      "sha256": "007f003e59afc10271ea3965c17ff0efd360fde8b6944224b9f2f003cd12dae5"
+    },
+    "model-events.jsonl": {
+      "bytes": 374086,
+      "sha256": "d92104f22e947de62b122c441978496a36d00ca9fa03e03f7e91b4c9497c2e4d"
+    },
+    "status.json": {
+      "bytes": 24842,
+      "sha256": "c717211eff60c9920232acf8d13ffae980f98ff50e5dbc9bc256e37622c53336"
+    }
+  }
+}

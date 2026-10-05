@@ -1,0 +1,12 @@
+{
+  "ticket": "PACT-116",
+  "file": "motion.css",
+  "sha256": "7694ec979e858ebf43ed7277ad56a34312f9ac74cb5127f08d12fcad1febc17c",
+  "reveals": {
+    "build": 200,
+    "contact": 200,
+    "delivery": 200
+  },
+  "manual_honk_ms": 700,
+  "regenerate": "python3 assets/experience/export_motion.py"
+}

@@ -12,6 +12,14 @@ const EnvironmentSchema = z
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
     PACT_ORIGIN: z.url().default("http://127.0.0.1:5173"),
     PACT_PUBLIC_BASE_URL: z.url().optional(),
+    PACT_GUEST_PLAY: z.enum(["0", "1"]).default("0"),
+    WEB_PUSH_PUBLIC_KEY: z.preprocess(
+      (value) => (value === "" ? undefined : value),
+      z
+        .string()
+        .regex(/^[A-Za-z0-9_-]{87}$/)
+        .optional(),
+    ),
     CURRENT_TERMS_VERSION: z.string().min(1).max(64).default("development-v1"),
     IDENTITY_TOKEN_PEPPER: z.string().min(43).default(developmentPepper),
     IDENTITY_ENCRYPTION_KEY: z.string().min(43).default(developmentEncryptionKey),

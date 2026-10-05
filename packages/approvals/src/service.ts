@@ -13,6 +13,7 @@ import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
 import type { Pool, PoolClient } from "pg";
 import { hashExactCommand } from "./portable.js";
+import { approvalReviewPath } from "./review-link.js";
 
 export class ApprovalError extends Error {
   constructor(
@@ -55,6 +56,7 @@ export class ApprovalService {
       dispatcher: CommandDispatcher;
       clock: { now(): Date };
       origin?: string;
+      webBasePath?: string;
       assertAgentWriteLease?: (client: PoolClient, accountId: string, holderId: string) => Promise<void>;
       inbox?: {
         publishForAccount(
@@ -187,6 +189,17 @@ export class ApprovalService {
       });
     }
     return this.toView(row);
+  }
+
+  /** Read-only owner projection; expired requests never become pending decisions. */
+  async pendingForAccount(accountId: string): Promise<{ approvals: ApprovalView[]; truncated: boolean }> {
+    const rows = (
+      await this.pool.query<ApprovalRow>(
+        "SELECT * FROM approval_requests WHERE product_scope=$1 AND account_id=$2 AND status='pending' AND expires_at>$3 ORDER BY created_at,approval_id LIMIT 11",
+        [this.options.productScope, accountId, this.options.clock.now()],
+      )
+    ).rows;
+    return { approvals: rows.slice(0, 10).map((row) => this.toView(row)), truncated: rows.length > 10 };
   }
 
   async review(approvalId: string, accountId: string): Promise<ApprovalView> {
@@ -362,7 +375,7 @@ export class ApprovalService {
       commandId: row.command_id,
       expiresAt: row.expires_at,
       receipt: row.receipt,
-      deepLinkPath: `/approvals/${row.approval_id}`,
+      deepLinkPath: approvalReviewPath(row.approval_id, this.options.webBasePath),
     };
   }
 }

@@ -24,6 +24,8 @@ const minutes = (value: number): number => value * 60_000;
 const days = (value: number): number => value * 24 * 60 * 60_000;
 
 export interface IdentityServiceOptions {
+  readonly guestPlayEnabled?: boolean;
+  readonly connectionRefreshExpirations?: (accountId: string) => Promise<Record<string, Date>>;
   readonly productScope: string;
   readonly currentTermsVersion: string;
   readonly allowedOrigins: ReadonlySet<string>;
@@ -58,6 +60,51 @@ export class IdentityService {
     private readonly pool: Pool,
     private readonly options: IdentityServiceOptions,
   ) {}
+
+  get guestPlayEnabled(): boolean {
+    return this.options.guestPlayEnabled === true;
+  }
+
+  async joinGuest(entryKey: string): Promise<SessionTokens> {
+    if (!this.guestPlayEnabled || !/^[0-9a-f-]{36}$/i.test(entryKey)) throw new IdentityError("FORBIDDEN");
+    const now = this.options.clock.now();
+    return withTransaction(this.pool, async (client) => {
+      const hash = this.options.digester.digest(`guest:${entryKey}`);
+      const row = (
+        await client.query<{ id: string; status: string }>(
+          `INSERT INTO accounts(product_scope,email,password_hash,is_guest,guest_entry_hash,terms_version)
+         VALUES($1,NULL,'guest-no-password',true,$2,$3)
+         ON CONFLICT(product_scope,guest_entry_hash) WHERE guest_entry_hash IS NOT NULL
+         DO UPDATE SET guest_entry_hash=EXCLUDED.guest_entry_hash RETURNING id,status`,
+          [this.options.productScope, hash, this.options.currentTermsVersion],
+        )
+      ).rows[0];
+      if (row?.status !== "active") throw new IdentityError("FORBIDDEN");
+      const next = this.newSessionTokens(row.id, now);
+      await this.insertSession(client, next, "Guest play", now);
+      return next.tokens;
+    });
+  }
+
+  async isGuest(accountId: string): Promise<boolean> {
+    const result = await this.pool.query(
+      "SELECT id FROM accounts WHERE product_scope=$1 AND id=$2 AND is_guest AND status='active'",
+      [this.options.productScope, accountId],
+    );
+    return result.rowCount === 1;
+  }
+
+  /** Same-browser bootstrap: a deterministic per-session CSRF value survives tab/restart. */
+  async guestSession(sessionToken: string): Promise<{ accountId: string; csrfToken: string }> {
+    const session = await this.authenticate(sessionToken);
+    if (!this.guestPlayEnabled || !(await this.isGuest(session.accountId))) throw new IdentityError("FORBIDDEN");
+    const csrfToken = this.options.digester.digest(`guest-csrf:${sessionToken}`);
+    await this.pool.query("UPDATE sessions SET csrf_token_hash=$2 WHERE id=$1", [
+      session.sessionId,
+      this.options.digester.digest(csrfToken),
+    ]);
+    return { accountId: session.accountId, csrfToken };
+  }
 
   async signup(input: {
     email: string;
@@ -161,7 +208,7 @@ export class IdentityService {
       throw new IdentityError("INVALID_CREDENTIALS");
     }
     await withTransaction(this.pool, async (client) => this.requireMfa(client, account, input.mfaCode, now));
-    return this.createSession(account.id, input.label, input.requestId);
+    return this.createSession(account.id, input.label, input.requestId, Boolean(account.totp_secret_ciphertext));
   }
 
   async authenticate(sessionToken: string, touch = true): Promise<HumanSession> {
@@ -208,9 +255,24 @@ export class IdentityService {
 
   async requireRecentHumanSession(sessionToken: string, _action: SensitiveAction): Promise<HumanSession> {
     const session = await this.authenticate(sessionToken);
-    if (this.options.clock.now().getTime() - session.authenticatedAt.getTime() > minutes(5)) {
+    if (
+      !(this.guestPlayEnabled && (await this.isGuest(session.accountId))) &&
+      this.options.clock.now().getTime() - session.authenticatedAt.getTime() > minutes(5)
+    ) {
       throw new IdentityError("RECENT_AUTH_REQUIRED");
     }
+    return session;
+  }
+
+  async requireStaffSession(sessionToken: string): Promise<HumanSession> {
+    const session = await this.authenticate(sessionToken);
+    const row = await this.pool.query(
+      `SELECT s.id FROM sessions s JOIN accounts a ON a.id=s.account_id AND a.product_scope=s.product_scope
+       WHERE s.product_scope=$1 AND s.id=$2 AND a.role='staff' AND a.status='active'
+       AND a.totp_secret_ciphertext IS NOT NULL AND s.mfa_authenticated_at>=$3`,
+      [this.options.productScope, session.sessionId, new Date(this.options.clock.now().getTime() - minutes(5))],
+    );
+    if (!row.rowCount) throw new IdentityError("FORBIDDEN");
     return session;
   }
 
@@ -235,7 +297,7 @@ export class IdentityService {
     await withTransaction(this.pool, async (client) => {
       await this.requireMfa(client, account, input.mfaCode, now);
       await client.query("UPDATE sessions SET revoked_at = $2 WHERE id = $1", [session.sessionId, now]);
-      await this.insertSession(client, next, undefined, now);
+      await this.insertSession(client, next, undefined, now, Boolean(account.totp_secret_ciphertext));
       await this.securityEvent(client, account.id, "session.reauthenticated", input.requestId);
     });
     return next.tokens;
@@ -419,9 +481,10 @@ export class IdentityService {
 
   async connectionInventory(sessionToken: string): Promise<{
     sessions: Array<{ id: string; label: string | null; lastSeenAt: Date; absoluteExpiresAt: Date }>;
-    grants: Array<{ id: string; clientId: string; scopes: string[]; expiresAt: Date }>;
+    grants: Array<{ id: string; clientId: string; scopes: string[]; expiresAt: Date; refreshExpiresAt: Date | null }>;
   }> {
     const session = await this.authenticate(sessionToken);
+    const refreshExpirations = (await this.options.connectionRefreshExpirations?.(session.accountId)) ?? {};
     const [sessions, grants] = await Promise.all([
       this.pool.query<{ id: string; label: string | null; last_seen_at: Date; expires_at: Date }>(
         `SELECT id, label, last_seen_at, expires_at FROM sessions
@@ -431,9 +494,9 @@ export class IdentityService {
       ),
       this.pool.query<{ id: string; client_id: string; scopes: string[]; expires_at: Date }>(
         `SELECT id, client_id, scopes, expires_at FROM oauth_grants
-         WHERE product_scope = $1 AND account_id = $2 AND revoked_at IS NULL AND expires_at > $3
+         WHERE product_scope = $1 AND account_id = $2 AND revoked_at IS NULL
          ORDER BY created_at DESC`,
-        [this.options.productScope, session.accountId, this.options.clock.now()],
+        [this.options.productScope, session.accountId],
       ),
     ]);
     return {
@@ -443,12 +506,19 @@ export class IdentityService {
         lastSeenAt: row.last_seen_at,
         absoluteExpiresAt: row.expires_at,
       })),
-      grants: grants.rows.map((row) => ({
-        id: row.id,
-        clientId: row.client_id,
-        scopes: row.scopes,
-        expiresAt: row.expires_at,
-      })),
+      grants: grants.rows
+        .filter(
+          (row) =>
+            row.expires_at > this.options.clock.now() ||
+            (refreshExpirations[row.id]?.getTime() ?? 0) > this.options.clock.now().getTime(),
+        )
+        .map((row) => ({
+          id: row.id,
+          clientId: row.client_id,
+          refreshExpiresAt: refreshExpirations[row.id] ?? null,
+          scopes: row.scopes,
+          expiresAt: row.expires_at,
+        })),
     };
   }
 
@@ -495,7 +565,7 @@ export class IdentityService {
         await client.query("DELETE FROM email_change_tokens WHERE used_at IS NOT NULL OR expires_at <= $1", [now]),
       );
       const accounts = await client.query(
-        `DELETE FROM accounts WHERE product_scope = $1 AND email_verified_at IS NULL
+        `DELETE FROM accounts WHERE product_scope = $1 AND email_verified_at IS NULL AND NOT is_guest
          AND created_at <= $2`,
         [this.options.productScope, new Date(now.getTime() - days(7))],
       );
@@ -506,11 +576,16 @@ export class IdentityService {
     });
   }
 
-  private async createSession(accountId: string, label?: string, requestId?: string): Promise<SessionTokens> {
+  private async createSession(
+    accountId: string,
+    label?: string,
+    requestId?: string,
+    mfaVerified = false,
+  ): Promise<SessionTokens> {
     const now = this.options.clock.now();
     const next = this.newSessionTokens(accountId, now);
     await withTransaction(this.pool, async (client) => {
-      await this.insertSession(client, next, label, now);
+      await this.insertSession(client, next, label, now, mfaVerified);
       await this.securityEvent(client, accountId, "session.created", requestId);
     });
     return next.tokens;
@@ -540,12 +615,13 @@ export class IdentityService {
     next: { tokens: SessionTokens; sessionHash: string; csrfHash: string },
     label: string | undefined,
     now: Date,
+    mfaVerified = false,
   ): Promise<void> {
     await client.query(
       `INSERT INTO sessions(
          product_scope, account_id, audience, token_hash, csrf_token_hash, expires_at,
-         idle_expires_at, authenticated_at, last_seen_at, label
-       ) VALUES ($1, $2, 'human', $3, $4, $5, $6, $7, $7, $8)`,
+         idle_expires_at, authenticated_at, last_seen_at, label, mfa_authenticated_at
+       ) VALUES ($1, $2, 'human', $3, $4, $5, $6, $7, $7, $8, $9)`,
       [
         this.options.productScope,
         next.tokens.accountId,
@@ -555,6 +631,7 @@ export class IdentityService {
         next.tokens.idleExpiresAt,
         now,
         label?.slice(0, 100) ?? null,
+        mfaVerified ? now : null,
       ],
     );
   }

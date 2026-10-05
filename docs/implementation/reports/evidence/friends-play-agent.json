@@ -1,0 +1,75 @@
+{
+  "playerStartedAt": "2026-10-04T19:06:00.595Z",
+  "playerEndedAt": "2026-10-04T19:06:34.746Z",
+  "agent": {
+    "model": "gpt-6-luna",
+    "exitCode": 0,
+    "providerRequests": 8,
+    "overBudgetRequestsBlocked": 0,
+    "providerHttpStatuses": [
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200,
+      200
+    ],
+    "events": [
+      {
+        "type": "player_report",
+        "text": "I’ll use Pact only: read the kingdom and current rules, then submit one bounded lease and one affordable Farm II upgrade if the state allows it. I’ll stop as soon as the queue returns a receipt."
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_agent_guide_v1",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_agent_guide_v1",
+        "status": "completed"
+      },
+      {
+        "type": "player_report",
+        "text": "The authenticated kingdom is **gprofessort_834c9012**. The current rules show Farm II costs 40 Iron and 20 Silver, takes 10 game minutes, and both builder slots are free; I’m checking the live world and authority before opening the lease."
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_world_read_v1",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_agent_guide_v1",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "run.open",
+        "status": "completed"
+      },
+      {
+        "type": "tool_completed",
+        "tool": "pact_game_action_v1",
+        "status": "completed"
+      },
+      {
+        "type": "player_report",
+        "text": "**gprofessort_834c9012** queued Farm II in free slot 1. Receipt: **COMMITTED**, command `4d7fe4f3-4478-4aa9-aacc-76e7bd86be2c`; charged 40 Iron and 20 Silver. It should finish in **10 game minutes** after queueing. Come back to collect the Farm II production boost."
+      },
+      {
+        "type": "turn.completed",
+        "usage": {
+          "input_tokens": 195950,
+          "cached_input_tokens": 168960,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 500,
+          "reasoning_output_tokens": 0
+        }
+      }
+    ],
+    "cost": "Unknown: existing Codex subscription; no billed dollar amount returned."
+  }
+}

@@ -6,8 +6,15 @@ import {
   SCHEMA_VERSION,
   validateProviderGameCommand,
 } from "@pact/contracts";
+import { agentRecovery } from "./agent-recovery.js";
 import type { CommandDispatcher } from "./dispatcher.js";
-import { DispatcherError } from "./types.js";
+import { DispatcherError, type DispatcherFailureCode } from "./types.js";
+
+export type RunCommandOutcome = Omit<CommandReceipt, "code"> & {
+  code: CommandReceipt["code"] | DispatcherFailureCode;
+  receiptExists?: false;
+  recovery?: string;
+};
 
 /** PACT-owned provider tool; the generic provider router validates its arguments first. */
 export const pactRunCommandTool = {
@@ -47,7 +54,7 @@ export async function dispatchRunCommandTools(
   dispatcher: CommandDispatcher,
   productScope: ProductScope,
   input: RunCommandToolBatch,
-): Promise<readonly CommandReceipt[]> {
+): Promise<readonly RunCommandOutcome[]> {
   const principal = {
     accountId: input.run.accountId,
     productScope,
@@ -55,7 +62,7 @@ export async function dispatchRunCommandTools(
     sessionId: input.run.runId,
     agentScopes: ["game:act"] as const,
   };
-  const receipts: CommandReceipt[] = [];
+  const receipts: RunCommandOutcome[] = [];
   for (const call of input.calls) {
     if (call.name !== pactRunCommandTool.name || !call.id) throw new DispatcherError("INVALID_COMMAND");
     const parsed = validateProviderGameCommand(call.arguments);
@@ -78,6 +85,8 @@ export async function dispatchRunCommandTools(
         schemaVersion: SCHEMA_VERSION,
         commandId,
         code: error.code,
+        receiptExists: false,
+        recovery: agentRecovery(error.code),
         committedEventIds: [],
         recordVersions: {},
         charged: [],

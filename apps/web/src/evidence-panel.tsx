@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ReportControl } from "./moderation-panel.js";
 
 type Request = (path: string, method?: string, body?: unknown) => Promise<Record<string, unknown>>;
 type Preview = {
@@ -249,6 +250,7 @@ export function EvidencePanel({ request, canWrite }: { request: Request; canWrit
           )}
           {view.status === "removed" && <p>Hosted evidence removed or expired. No contents are available.</p>}
           {view.status === "key_compromised" && <p>The signing key is compromised; hosted evidence is unavailable.</p>}
+          {view.status === "published" && <ReportControl kind="seal" targetId={sealId} />}
           {payload && (
             <>
               <p>

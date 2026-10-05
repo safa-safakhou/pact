@@ -1,4 +1,4 @@
-import { agentRecovery } from "@pact/application";
+import { agentRecovery, type RunCommandOutcome } from "@pact/application";
 import type { CommandReceipt } from "@pact/contracts";
 import type { ConversationPage, KingdomWorldView } from "@pact/kingdom";
 
@@ -21,7 +21,22 @@ export function boundedGuideResult(guide: Record<string, unknown>): string {
     readMore:
       "Use authorized world, Chronicle, Court, politics, Seal, season and report tools for omitted records. Omitted data is unknown, never zero or permission.",
   };
-  const priority = ["state", "next", "rule", "principle", "discovery", "self", "resources", "mandate"];
+  const priority = [
+    "state",
+    "self",
+    "ambition",
+    "next",
+    "resources",
+    "resourceRules",
+    "builders",
+    "consequences",
+    "constructionStockChecks",
+    "mandate",
+    "next",
+    "rule",
+    "principle",
+    "discovery",
+  ];
   for (const field of new Set([...priority, ...Object.keys(guide)])) {
     if (field in selected || !(field in guide)) continue;
     const candidate = { ...selected, [field]: guide[field] };
@@ -44,12 +59,34 @@ export function boundedWorldResult(view: KingdomWorldView): string {
     worldStatus: view.worldStatus,
     truncated: true,
   };
-  const selected =
+  const selected: Record<string, unknown> = { ...common, omittedFields: [] as string[] };
+  const groups: Record<string, unknown> =
     view.audience === "owner"
-      ? { ...common, balances: view.balances, buildings: view.buildings, troops: view.troops, threats: view.threats }
-      : { ...common, sharedRecords: view.sharedRecords, publicEvents: view.publicEvents };
-  const compact = JSON.stringify(selected);
-  return Buffer.byteLength(compact, "utf8") <= maxBytes ? compact : JSON.stringify(common);
+      ? {
+          ambition: view.ambition,
+          balances: view.balances,
+          buildings: view.buildings,
+          builders: view.builders,
+          consequences: view.consequences
+            ? {
+                ...view.consequences,
+                truncated: true,
+                builds: view.consequences.builds.slice(0, 3),
+                contacts: view.consequences.contacts.slice(0, 3),
+                supplyContracts: view.consequences.supplyContracts.slice(0, 2),
+              }
+            : undefined,
+          troops: view.troops,
+          threats: view.threats,
+        }
+      : { sharedRecords: view.sharedRecords, publicEvents: view.publicEvents };
+  for (const [field, value] of Object.entries(groups)) {
+    if (value === undefined) continue;
+    if (Buffer.byteLength(JSON.stringify({ ...selected, [field]: value }), "utf8") <= maxBytes - 200)
+      selected[field] = value;
+    else (selected.omittedFields as string[]).push(field);
+  }
+  return JSON.stringify(selected);
 }
 
 export function boundedReportResult(kind: string, recordId: string, report: unknown): string {
@@ -67,7 +104,7 @@ export function boundedRecordResult(kind: "receipt" | "approval", recordId: stri
 }
 
 /** Persist only server-issued receipt metadata needed for a later versioned command. */
-export function boundedCommandReceiptResult(receipt: CommandReceipt): string {
+export function boundedCommandReceiptResult(receipt: RunCommandOutcome): string {
   const summary = {
     commandId: receipt.commandId,
     code: receipt.code,
@@ -76,16 +113,21 @@ export function boundedCommandReceiptResult(receipt: CommandReceipt): string {
       : {}),
     charged: receipt.charged,
     recordVersions: receipt.recordVersions,
+    ...(receipt.receiptExists === false ? { receiptExists: false } : {}),
     disposition:
-      Object.keys(receipt.recordVersions).some(
-        (key) =>
-          key.startsWith("supply-offer:") || key.startsWith("garrison-offer:") || key.startsWith("contact-request:"),
-      ) &&
-      !Object.keys(receipt.recordVersions).some(
-        (key) => key.startsWith("supply-contract:") || key.startsWith("garrison-contract:"),
-      )
-        ? "proposed"
-        : "committed",
+      receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED"
+        ? "not_committed"
+        : Object.keys(receipt.recordVersions).some(
+              (key) =>
+                key.startsWith("supply-offer:") ||
+                key.startsWith("garrison-offer:") ||
+                key.startsWith("contact-request:"),
+            ) &&
+            !Object.keys(receipt.recordVersions).some(
+              (key) => key.startsWith("supply-contract:") || key.startsWith("garrison-contract:"),
+            )
+          ? "proposed"
+          : "committed",
     committedEventIds: receipt.committedEventIds,
     ...(receipt.approvalId ? { approvalId: receipt.approvalId } : {}),
   };

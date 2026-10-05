@@ -1,0 +1,17 @@
+const fs=require("fs"),path=require("path"),{spawn}=require("child_process");
+const {chromium}=require("C:/Users/ENDORFY/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");
+const dir="C:/Users/ENDORFY/pact-friends-codex-private";fs.mkdirSync(dir,{recursive:true});
+fs.writeFileSync(path.join(dir,"config.toml"),'mcp_oauth_credentials_store = "file"\n[mcp_servers.pact]\nurl = "https://safa.dedyn.io/pact/mcp"\noauth_resource = "https://safa.dedyn.io/pact/mcp"\n');
+const child=spawn("C:/Users/ENDORFY/AppData/Local/OpenAI/Codex/bin/8aaf1547b825b104/codex.exe",["mcp","login","pact","--no-browser","--oauth-client-registration","dcr","--scopes","world:read,messages:write,game:act"],{env:{...process.env,CODEX_HOME:dir},stdio:["pipe","pipe","pipe"]});
+let text="",started=false,browser;
+async function output(chunk){text+=chunk.toString();const match=text.match(/https:\/\/safa\.dedyn\.io\/pact\/oauth\/authorize[^\s]+/);
+if(match&&!started){started=true;try{browser=await chromium.launch({channel:"chrome",headless:true});const context=await browser.newContext({storageState:"C:/Users/ENDORFY/pact-friends-1440-private.json"});const page=await context.newPage();
+await page.goto(match[0]);await page.getByRole("button",{name:"Connect to my kingdom"}).waitFor();
+const noPassword=await page.locator("input[type=password]").count()===0;
+let callback="";await page.route("http://localhost:*/**",async route=>{callback=route.request().url();await route.fulfill({body:"Connected"});});await page.route("http://127.0.0.1:*/**",async route=>{callback=route.request().url();await route.fulfill({body:"Connected"});});
+await page.getByRole("button",{name:"Connect to my kingdom"}).click();for(let i=0;i<50&&!callback;i++)await page.waitForTimeout(100);
+if(!callback)throw Error("No callback");child.stdin.write(callback+"\n");console.log(JSON.stringify({noPassword,authorized:true}));await context.close();await browser.close();
+}catch(e){console.log("Connection browser failed: "+e.message);child.kill();await browser?.close();}}}
+child.stdout.on("data",output);child.stderr.on("data",output);
+child.on("close",code=>{fs.writeFileSync("C:/Users/ENDORFY/pact-friends-connect-result.json",JSON.stringify({code,authorized:started,success:/Successfully logged in/.test(text)}));console.log(JSON.stringify({exitCode:code,success:/Successfully logged in/.test(text),diagnostic:started?undefined:text.replace(/https:\/\/[^\s]+/g,"[URL]")}));});
+setTimeout(()=>child.kill(),90000).unref();

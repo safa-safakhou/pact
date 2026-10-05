@@ -144,3 +144,28 @@ it("does not return rejected remote content", async () => {
   await client.initialize();
   await expect(client.call("pact_agent_guide_v1", {})).rejects.toThrow("MCP_TOOL_REJECTED");
 });
+
+it("closes an HTTP session through Fastify JSON parsing", async () => {
+  const { default: Fastify } = await import("fastify");
+  const server = Fastify();
+  let closed = false;
+  server.post("/mcp", async (request, reply) => {
+    const body = request.body as { method: string };
+    if (body.method === "notifications/initialized") return reply.code(202).send();
+    reply.header("Mcp-Session-Id", "fixture-http-session");
+    return { result: { protocolVersion: "2025-11-25" } };
+  });
+  server.delete("/mcp", async (_request, reply) => {
+    closed = true;
+    return reply.code(204).send();
+  });
+  const address = await server.listen({ host: "127.0.0.1", port: 0 });
+  try {
+    const client = new BaselineMcpClient(`${address}/mcp`, "fixture-token");
+    await client.initialize();
+    await client.close();
+    expect(closed).toBe(true);
+  } finally {
+    await server.close();
+  }
+});

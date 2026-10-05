@@ -44,6 +44,8 @@ export interface TelegramServiceOptions {
   readonly webhookSecret: string;
   readonly clock: { now(): Date };
   readonly issueHumanSession: (accountId: string, label: string) => Promise<IssuedHumanSession>;
+  readonly processBotUpdate?: (client: PoolClient, update: unknown) => Promise<void>;
+  readonly unlinkBot?: (client: PoolClient, accountId: string) => Promise<void>;
   readonly revokeHumanSessions: (accountId: string, sessionIds: readonly string[]) => Promise<void>;
 }
 
@@ -58,27 +60,52 @@ export class TelegramService {
     const launch = verifyTelegramInitData(rawInitData, this.options.botToken, now);
     const token = issueToken();
     const expiresAt = new Date(now.getTime() + BOOTSTRAP_TTL_MS);
+    let linked = false;
     try {
-      await this.pool.query(
-        `INSERT INTO telegram_link_bootstraps(
-           id, product_scope, telegram_user_id, init_fingerprint, token_hash, created_at, expires_at
-         ) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-        [randomUUID(), this.options.productScope, launch.userId, launch.fingerprint, token.hash, now, expiresAt],
-      );
+      await withTransaction(this.pool, async (client) => {
+        const current = (
+          await client.query<{ account_id: string }>(
+            `SELECT l.account_id FROM telegram_account_links l JOIN accounts a ON a.id=l.account_id AND a.product_scope=l.product_scope
+          WHERE l.product_scope=$1 AND l.telegram_user_id=$2 AND l.revoked_at IS NULL AND a.status='active' AND a.email_verified_at IS NOT NULL FOR UPDATE OF l`,
+            [this.options.productScope, launch.userId],
+          )
+        ).rows[0];
+        linked = Boolean(current);
+        await client.query(
+          `INSERT INTO telegram_link_bootstraps(id,product_scope,telegram_user_id,init_fingerprint,token_hash,created_at,expires_at,account_id,confirmed_at)
+           VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+          [
+            randomUUID(),
+            this.options.productScope,
+            launch.userId,
+            launch.fingerprint,
+            token.hash,
+            now,
+            expiresAt,
+            current?.account_id ?? null,
+            current ? now : null,
+          ],
+        );
+      });
     } catch (error) {
-      if (typeof error === "object" && error !== null && "code" in error && error.code === "23505") {
+      if (typeof error === "object" && error !== null && "code" in error && error.code === "23505")
         throw new TelegramError("BOOTSTRAP_REPLAYED");
-      }
       throw error;
     }
-    return { bootstrapToken: token.raw, telegramUserId: launch.userId, expiresAt };
+    return { bootstrapToken: token.raw, telegramUserId: launch.userId, expiresAt, linked };
   }
 
   async confirmLink(accountId: string, bootstrapToken: string): Promise<void> {
     await withTransaction(this.pool, async (client) => {
       const row = await this.loadBootstrap(client, bootstrapToken);
       this.assertLiveBootstrap(row);
-      if (row.account_id && row.account_id !== accountId) throw new TelegramError("FORBIDDEN");
+      if (row.account_id && row.account_id !== accountId) {
+        const linked = await client.query(
+          "SELECT id FROM telegram_account_links WHERE product_scope=$1 AND telegram_user_id=$2 AND revoked_at IS NULL",
+          [this.options.productScope, row.telegram_user_id],
+        );
+        throw new TelegramError(linked.rowCount ? "ALREADY_LINKED" : "FORBIDDEN");
+      }
       const existing = await client.query<{ account_id: string; telegram_user_id: string }>(
         `SELECT account_id, telegram_user_id FROM telegram_account_links
          WHERE product_scope = $1 AND revoked_at IS NULL
@@ -119,20 +146,27 @@ export class TelegramService {
 
     const human = await this.options.issueHumanSession(linked.account_id, "Telegram Mini App");
     try {
-      await this.pool.query(
-        `INSERT INTO telegram_channel_sessions(
+      await withTransaction(this.pool, async (client) => {
+        const active = await client.query(
+          "SELECT id FROM telegram_account_links WHERE id=$1 AND revoked_at IS NULL FOR UPDATE",
+          [linked.id],
+        );
+        if (!active.rowCount) throw new TelegramError("FORBIDDEN");
+        await client.query(
+          `INSERT INTO telegram_channel_sessions(
            id, product_scope, link_id, account_id, human_session_id, created_at, expires_at
          ) VALUES ($1,$2,$3,$4,$5,$6,$7)`,
-        [
-          randomUUID(),
-          this.options.productScope,
-          linked.id,
-          linked.account_id,
-          human.sessionId,
-          this.options.clock.now(),
-          human.absoluteExpiresAt,
-        ],
-      );
+          [
+            randomUUID(),
+            this.options.productScope,
+            linked.id,
+            linked.account_id,
+            human.sessionId,
+            this.options.clock.now(),
+            human.absoluteExpiresAt,
+          ],
+        );
+      });
     } catch (error) {
       await this.options.revokeHumanSessions(linked.account_id, [human.sessionId]);
       throw error;
@@ -158,6 +192,11 @@ export class TelegramService {
          RETURNING human_session_id`,
         [this.options.productScope, accountId, this.options.clock.now()],
       );
+      await client.query(
+        "DELETE FROM telegram_link_bootstraps WHERE product_scope=$1 AND account_id=$2 AND used_at IS NULL",
+        [this.options.productScope, accountId],
+      );
+      await this.options.unlinkBot?.(client, accountId);
       return sessions.rows.map((row) => row.human_session_id);
     });
     await this.options.revokeHumanSessions(accountId, sessionIds);
@@ -177,12 +216,19 @@ export class TelegramService {
       const message = update.message as { chat?: { type?: unknown } };
       if (message.chat?.type !== "private") throw new TelegramError("GROUP_CHAT_DENIED");
     }
-    const inserted = await this.pool.query(
-      `INSERT INTO telegram_webhook_updates(product_scope, bot_id, update_id, received_at)
-       VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`,
-      [this.options.productScope, this.options.botId, updateId, this.options.clock.now()],
-    );
-    return { accepted: inserted.rowCount === 1, duplicate: inserted.rowCount !== 1, privilegedAction: false };
+    return withTransaction(this.pool, async (client) => {
+      const inserted = await client.query(
+        `INSERT INTO telegram_webhook_updates(product_scope, bot_id, update_id, received_at)
+         VALUES ($1,$2,$3,$4) ON CONFLICT DO NOTHING`,
+        [this.options.productScope, this.options.botId, updateId, this.options.clock.now()],
+      );
+      if (inserted.rowCount === 1) await this.options.processBotUpdate?.(client, update);
+      return {
+        accepted: inserted.rowCount === 1,
+        duplicate: inserted.rowCount !== 1,
+        privilegedAction: false as const,
+      };
+    });
   }
 
   private async loadBootstrap(client: PoolClient, token: string): Promise<BootstrapRow> {

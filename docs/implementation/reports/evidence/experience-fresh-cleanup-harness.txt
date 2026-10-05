@@ -1,0 +1,25 @@
+const fs=require("fs"),{execFileSync}=require("child_process");
+const privatePath="C:/Users/ENDORFY/pact-experience-player-private.json",reportPath="C:/Users/ENDORFY/experience-fresh-player.json",base="https://safa.dedyn.io/pact",origin="https://safa.dedyn.io";
+(async()=>{
+const s=JSON.parse(fs.readFileSync(privatePath,"utf8")),r=JSON.parse(fs.readFileSync(reportPath,"utf8"));let cookie=s.cookie,csrf=s.csrf;
+async function call(path,method="GET",body){return fetch(base+path,{method,headers:{origin,cookie,"x-csrf-token":csrf,...(body?{"content-type":"application/json"}:{})},...(body?{body:JSON.stringify(body)}:{})});}
+let response=await call("/v1/auth/reauthenticate","POST",{password:s.password});if(!response.ok)throw Error("Cleanup reauthentication failed.");
+csrf=(await response.json()).csrfToken;cookie=response.headers.get("set-cookie")?.split(";")[0]??cookie;
+const m=await (await call("/v1/mandate")).json();
+response=await call("/v1/mandate","POST",{allowedActions:["world.read","inbox.read","message.send.contact"],resourceLimits:{iron:"0",silver:"0",grain:"0"},reserveFloors:{grain:"12000"},troopLimit:0,sessionLimit:1,expectedVersion:m.version});if(!response.ok)throw Error("Cleanup mandate failed.");
+const mandate=await response.json();if(mandate.allowedActions.includes("building.queue"))throw Error("Mandate still permits game commitments.");
+response=await call("/oauth/revoke","POST",{token:s.tokens.refresh_token});if(!response.ok)throw Error("Grant revoke failed.");
+const inventory=await (await call("/v1/auth/connections")).json();if(inventory.grants.length)throw Error("Grant remains in inventory.");
+response=await call("/v1/auth/sign-out-everywhere","POST",{});if(!response.ok)throw Error("Sign-out-everywhere failed.");
+const oldSession=await call("/v1/kingdom/me");
+const mcp=await fetch(base+"/mcp",{method:"POST",headers:{authorization:"Bearer "+s.tokens.access_token,"content-type":"application/json",accept:"application/json, text/event-stream"},body:JSON.stringify({jsonrpc:"2.0",id:1,method:"initialize",params:{protocolVersion:"2025-03-26",capabilities:{},clientInfo:{name:"revocation-check",version:"1"}}})});
+const refresh=await fetch(base+"/oauth/token",{method:"POST",headers:{origin,"content-type":"application/json"},body:JSON.stringify({grant_type:"refresh_token",refresh_token:s.tokens.refresh_token,resource:base+"/mcp"})});
+if(oldSession.ok||mcp.status!==401||refresh.ok)throw Error("Temporary authentication remains active.");
+const code="(async()=>{const {createPool}=await import('@pact/db');const {hashPassword}=await import('@pact/identity');const {randomBytes}=await import('node:crypto');const p=createPool(process.env.DATABASE_URL);try{const hash=await hashPassword(randomBytes(48).toString('base64url'));const q=await p.query(\"UPDATE accounts SET password_hash=$2,password_changed_at=now(),updated_at=now() WHERE product_scope='pact' AND role='player' AND id=(SELECT account_id FROM kingdoms WHERE product_scope='pact' AND id=$1)\",["+JSON.stringify(s.kingdomId)+",hash]);if(q.rowCount!==1)throw Error('Target mismatch');console.log(JSON.stringify({passwordInvalidated:true,accountsChanged:q.rowCount}));}finally{await p.end();}})().catch(()=>{console.error('Operator password cleanup failed');process.exit(1)})";
+const command="docker exec pact-connection-test-api-1 pact-entrypoint node -e 'eval(atob(String.fromCharCode("+[...Buffer.from(code).toString("base64")].map(c=>c.charCodeAt(0)).join(",")+")))'";
+const operator=JSON.parse(execFileSync("wsl.exe",["-d","Ubuntu","--","ssh","-o","BatchMode=yes","-o","ControlPath=/home/mnim/.ssh/pact-experience-%r@%h:%p","agentic@2.28.57.254",command],{encoding:"utf8",stdio:["ignore","pipe","ignore"],timeout:20000}));
+const oldPassword=await fetch(base+"/v1/auth/login",{method:"POST",headers:{origin,"content-type":"application/json"},body:JSON.stringify({email:s.email,password:s.password})});if(oldPassword.ok)throw Error("Old password remains valid.");
+r.cleanup={at:new Date().toISOString(),mandateRestricted:true,remainingGrants:inventory.grants.length,oldSessionRejected:oldSession.status,agentBearerRejected:mcp.status,refreshRejected:refresh.status,oldPasswordRejected:oldPassword.status,operatorPasswordInvalidation:operator,operatorScope:"Only this synthetic account's password hash/timestamps. Replacement random password created and discarded on server. No clocks/resources/gameplay records modified.",localCredentialFileDeleted:true};
+const content=JSON.stringify(r,null,2);for(const secret of [s.password,s.csrf,s.cookie,s.tokens.access_token,s.tokens.refresh_token])if(secret&&content.includes(secret))throw Error("Secret found in evidence.");
+fs.writeFileSync(reportPath,content);fs.unlinkSync(privatePath);console.log(JSON.stringify(r.cleanup));
+})().catch(e=>{console.error(e.message);process.exit(1)});

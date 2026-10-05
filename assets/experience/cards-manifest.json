@@ -1,0 +1,47 @@
+{
+  "ticket": "PACT-119",
+  "producer": "Codex authored native SVG and original copy",
+  "regenerate": "python3 assets/experience/generate_cards.py",
+  "assets": [
+    {
+      "file": "icons/build.svg",
+      "bytes": 307,
+      "sha256": "1e569aa02b20a2ddb34d2c8375238fae6178d75760789fe0effb3ea7958e4e1e"
+    },
+    {
+      "file": "icons/contact.svg",
+      "bytes": 296,
+      "sha256": "e62a6a29f9094a0f5666c2e73bd4368c84430fbb016f09f61e21f51e107d146a"
+    },
+    {
+      "file": "icons/delivery.svg",
+      "bytes": 334,
+      "sha256": "5ab2e06ca237ca523df7c32bcace9537ef5f16f45883f809dbe50f5ec492d531"
+    },
+    {
+      "file": "icons/signature.svg",
+      "bytes": 311,
+      "sha256": "f42ed1e2e231d5d4d1fef560613f7a3231ad40d7b668b333dce39e6b94ab1fc9"
+    },
+    {
+      "file": "icons/raid.svg",
+      "bytes": 295,
+      "sha256": "ba1ac9b8822a89d2053e22d8005b42f8905a460d3dbb7a3f5776c24a202c8c67"
+    },
+    {
+      "file": "icons/default.svg",
+      "bytes": 302,
+      "sha256": "074b69f421e8dd9b1feaf8210adb009f406e86c2b803f1235bcf2a81a12a117e"
+    },
+    {
+      "file": "icons/waiting.svg",
+      "bytes": 319,
+      "sha256": "ff114f57bd4c659785c49334752cb704c10c192ddb29f45a3605806f4d0c2cbc"
+    },
+    {
+      "file": "copy.json#templates",
+      "count": 7,
+      "sha256": "98d401430ce09b74545981a0af1a1e6b7ab23806ceba976f2a1a1aae6928a639"
+    }
+  ]
+}

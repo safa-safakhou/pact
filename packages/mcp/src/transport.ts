@@ -38,7 +38,7 @@ import {
   SCHEMA_VERSION,
   SealReadQuerySchema,
   SeasonReadQuerySchema,
-  WorldViewQuerySchema,
+  worldReadValidationHelp,
 } from "@pact/contracts";
 import type { Pool } from "pg";
 
@@ -113,6 +113,7 @@ export interface McpTransportOptions {
 /** Domain-owned projection behind a product-neutral MCP read port. */
 export interface WorldViewReader {
   read(accountId: string, targetKingdomId: string, forecastMinutes: number): Promise<unknown>;
+  readSelf?(accountId: string, forecastMinutes: number): Promise<unknown>;
 }
 
 /** Product-owned owner projection and learning guide; MCP never accepts a caller-supplied account. */
@@ -478,14 +479,31 @@ export class McpTransport {
     if (name === pactWorldReadTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.worldViews)
         throw new McpError("FORBIDDEN", 403);
-      const query = WorldViewQuerySchema.safeParse(args);
-      if (!query.success) throw new McpError("INVALID_REQUEST");
-      const view = await this.options.worldViews.read(
-        principal.accountId,
-        query.data.targetKingdomId,
-        query.data.forecastMinutes,
-      );
-      if (!view) throw new McpError("INVALID_REQUEST", 404);
+      const parsed = worldReadValidationHelp(args);
+      if (!parsed.valid) {
+        return {
+          isError: true,
+          content: [{ type: "text", text: JSON.stringify(parsed.error) }],
+          structuredContent: parsed.error,
+        };
+      }
+      const query = { data: parsed.query };
+      const view = query.data.targetKingdomId
+        ? await this.options.worldViews.read(
+            principal.accountId,
+            query.data.targetKingdomId,
+            query.data.forecastMinutes,
+          )
+        : await this.options.worldViews.readSelf?.(principal.accountId, query.data.forecastMinutes);
+      if (!view) {
+        const result = {
+          code: "NOT_FOUND",
+          receiptExists: false,
+          message:
+            "No authorized kingdom view is available. An unfounded owner must finish human signup and founding in PACT.",
+        };
+        return { isError: true, content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+      }
       return {
         content: [{ type: "text", text: JSON.stringify(view) }],
         structuredContent: view as Record<string, unknown>,
@@ -533,7 +551,15 @@ export class McpTransport {
       const query = ReceiptReadQuerySchema.safeParse(args);
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const receipt = await this.options.dispatcher.lookupReceipt(principal, query.data.commandId);
-      if (!receipt) throw new McpError("INVALID_REQUEST", 404);
+      if (!receipt) {
+        const result = {
+          code: "RECEIPT_NOT_FOUND",
+          receiptExists: false,
+          message:
+            "No receipt for this account and command ID. A deterministic validation/rules denial before commit creates no receipt. Correct the denied action; do not interpret this as success. After a transport timeout reconcile the same ID before retrying.",
+        };
+        return { isError: true, content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+      }
       return receiptToolResult(receipt);
     }
     if (name === pactApprovalStatusTool.name) {
@@ -543,9 +569,13 @@ export class McpTransport {
       if (!query.success) throw new McpError("INVALID_REQUEST");
       const status = await this.options.approvals.read(principal.accountId, query.data.approvalId);
       if (!status) throw new McpError("INVALID_REQUEST", 404);
+      const result = {
+        ...status,
+        deepLink: `${this.options.origin}${String((status as Record<string, unknown>).deepLinkPath)}`,
+      };
       return {
-        content: [{ type: "text", text: JSON.stringify(status) }],
-        structuredContent: status as Record<string, unknown>,
+        content: [{ type: "text", text: JSON.stringify(result) }],
+        structuredContent: result as Record<string, unknown>,
       };
     }
     if (name === pactApprovalProposalTool.name) {

@@ -1,0 +1,14 @@
+{
+  "checkpoint": "2026-10-04T22:01Z",
+  "actualUpstreamRequests": 80,
+  "cap": 200,
+  "successfulLocalJobs": 80,
+  "usage": {
+    "input_tokens": 1132845,
+    "cached_input_tokens": 410624,
+    "output_tokens": 20796
+  },
+  "statuses": {
+    "200": 80
+  }
+}

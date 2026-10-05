@@ -1,0 +1,13 @@
+{
+  "scope": "Actual Hall component; explicitly synthetic preview records; real SQL retention/privacy covered separately",
+  "checks": [
+    {
+      "width": 390,
+      "check": "Three static private keepsakes, missing/stale unavailable, stable source IDs/dates on replay, SVG decode/layout and failed-art facts"
+    },
+    {
+      "width": 1440,
+      "check": "Three static private keepsakes, missing/stale unavailable, stable source IDs/dates on replay, SVG decode/layout and failed-art facts"
+    }
+  ]
+}

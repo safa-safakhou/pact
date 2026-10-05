@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-04",
+  "release": "social-channel-20261004-2",
+  "testingURL": "https://safa.dedyn.io/pact/",
+  "sourceArchive": {
+    "path": "/srv/pact/state/operator/pact-social-channel-20261004.tar.gz",
+    "sha256": "65287d303f7c9802afdb99cf86942bffbc6258bf3c717a8400d7549e4461d196"
+  },
+  "completionMetadataOverlay": {
+    "path": "/srv/pact/state/operator/pact-social-channel-completion-docs-20261004.tar.gz",
+    "sha256": "321a4da02305874dd2468dba4180cd7ec828134ce3a010459f08fbf4153259b7",
+    "applied": true,
+    "scope": "AGENTS and implementation/API/operations documentation and evidence; no runtime code changes"
+  },
+  "resticDatabaseSnapshots": {
+    "preBatch": "9ac803f7",
+    "beforeReplacement": "3ea60253"
+  },
+  "migrationsThrough": "0050",
+  "deploymentVerification": "passed",
+  "publicAuthNoStoreCheck": "passed",
+  "paidModelConfiguration": "PACT_ENABLE_LIVE_MODEL_CALLS=0",
+  "revision": "uncommitted; existing dirty checkout preserved",
+  "hostedCI": "not claimed",
+  "realTelegramDeviceOrPushReceipt": "not exercised",
+  "remainingNextDependencyReady": "PACT-064"
+}

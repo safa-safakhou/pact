@@ -292,7 +292,7 @@ export class CourtService {
             gameTimeMs: gameTime,
           });
           await client.query(
-            "INSERT INTO court_pins(court_id,slot,author_kingdom_id,body,created_at) VALUES($1,$2,$3,$4,$5) ON CONFLICT(court_id,slot) DO UPDATE SET author_kingdom_id=EXCLUDED.author_kingdom_id,body=EXCLUDED.body,created_at=EXCLUDED.created_at",
+            "INSERT INTO court_pins(court_id,slot,author_kingdom_id,body,created_at) VALUES($1,$2,$3,$4,$5) ON CONFLICT(court_id,slot) DO UPDATE SET id=EXCLUDED.id,moderation_case_id=NULL,author_kingdom_id=EXCLUDED.author_kingdom_id,body=EXCLUDED.body,created_at=EXCLUDED.created_at",
             [id, action.slot, actor, action.body, this.clock.now()],
           );
           break;
@@ -349,7 +349,7 @@ export class CourtService {
         [court.id, offset],
       );
       const pins = await client.query(
-        'SELECT slot,body,author_kingdom_id AS "authorKingdomId" FROM court_pins WHERE court_id=$1 ORDER BY slot',
+        'SELECT id,slot,body,author_kingdom_id AS "authorKingdomId" FROM court_pins WHERE court_id=$1 ORDER BY slot',
         [court.id],
       );
       const events = await client.query<{ createdAt: Date; [key: string]: unknown }>(

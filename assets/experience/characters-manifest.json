@@ -1,0 +1,143 @@
+{
+  "ticket": "PACT-115",
+  "producer": "Built-in imagegen originals, Pillow12.3 geometry/encoding export",
+  "regenerate_export": "python assets/experience/export_characters.py",
+  "poses": 12,
+  "lines": 16,
+  "prompts": "assets/experience/characters/prompts.json",
+  "authority": "Cosmetic only: no accounts, agents, actions, contracts or inference.",
+  "assets": [
+    {
+      "file": "characters/honk-idle.png",
+      "dimensions": [230, 256],
+      "original_dimensions": [1190, 1322],
+      "source": "assets/experience/characters/originals/honk-idle.png",
+      "source_sha256": "8bad325eeb3a61b8b8ad5d3d5b6f024290570e9e7519bb165755d7bc96b4a1d4",
+      "bytes": 59070,
+      "sha256": "31706888ce3238cb2234cd7390aaff56eb8090de6265b60ab300c56a16731353",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.6404
+    },
+    {
+      "file": "characters/pebble-idle.png",
+      "dimensions": [250, 256],
+      "original_dimensions": [1240, 1269],
+      "source": "assets/experience/characters/originals/pebble-idle.png",
+      "source_sha256": "bac1d79ea8fe34ff0f0e8eacb1cdbcf90b63534c1fdcf27109717919526d81f4",
+      "bytes": 97942,
+      "sha256": "02106903e3c1efe134ed518fb698a868d56e00df4dde058ecb3bcd0b2667aead",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.4595
+    },
+    {
+      "file": "characters/pebble-pleased.png",
+      "dimensions": [250, 256],
+      "original_dimensions": [1240, 1269],
+      "source": "assets/experience/characters/originals/pebble-pleased.png",
+      "source_sha256": "27dc3d1f6e21948461a1e78e7251a626de97cb5e84c5a0dc5868751011de42ac",
+      "bytes": 98875,
+      "sha256": "cac610ca84fa039885d7a64ab855720b1ae2977e89580d7ff60b983bfe668d1b",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.4493
+    },
+    {
+      "file": "characters/pebble-concerned.png",
+      "dimensions": [250, 256],
+      "original_dimensions": [1240, 1269],
+      "source": "assets/experience/characters/originals/pebble-concerned.png",
+      "source_sha256": "385b1eb20cb6a6464e40475028bdc42deb91c1c3425d35d01440b702e1e28970",
+      "bytes": 98285,
+      "sha256": "ec2968fe83014309e7103711d36fa89cc39319247fc94f9782f70640ad613d3c",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.4394
+    },
+    {
+      "file": "characters/moth-idle.png",
+      "dimensions": [171, 256],
+      "original_dimensions": [1024, 1536],
+      "source": "assets/experience/characters/originals/moth-idle.png",
+      "source_sha256": "1bf5d2da2bb4107da94c29bf9e74391714d7bae860f928397f4b1cb03b142ca6",
+      "bytes": 52446,
+      "sha256": "7d7dc38b25979f1a8a63d2f3309fa7655a6cf890791ad1c4d56fb7f38825a41c",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.6036
+    },
+    {
+      "file": "characters/bean-idle.png",
+      "dimensions": [171, 256],
+      "original_dimensions": [1024, 1536],
+      "source": "assets/experience/characters/originals/bean-idle.png",
+      "source_sha256": "6d63725e0b10cf32d3809c0f7da6dbf2a4f1909bcfe3c6d109b4247ed7317078",
+      "bytes": 45178,
+      "sha256": "aa78f02d43fdccf4ac76570184c06940bb27e588a5efc54825ee9d470960f16e",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.6123
+    },
+    {
+      "file": "characters/honk-pleased.png",
+      "dimensions": [230, 256],
+      "original_dimensions": [1189, 1323],
+      "source": "assets/experience/characters/originals/honk-pleased.png",
+      "source_sha256": "eede1a0ba9169b5b5b1af5004b95e23349ec27d7261f6e027b8928689ca8ac7f",
+      "bytes": 62257,
+      "sha256": "68784b80aa71c6d9559f7bea45f955639bb9f5d97355a189c411748a204bd9e6",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.611
+    },
+    {
+      "file": "characters/honk-concerned.png",
+      "dimensions": [230, 256],
+      "original_dimensions": [1189, 1323],
+      "source": "assets/experience/characters/originals/honk-concerned.png",
+      "source_sha256": "b6c374b7a170a742017d6cd2633529f87ddf679b76eafd629b517307844d4d21",
+      "bytes": 55359,
+      "sha256": "cffba89526373c75a38203abdd2a5a6c9dc8a0d1e1f4fbff74b781599eae09a9",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.6562
+    },
+    {
+      "file": "characters/moth-pleased.png",
+      "dimensions": [171, 256],
+      "original_dimensions": [1024, 1536],
+      "source": "assets/experience/characters/originals/moth-pleased.png",
+      "source_sha256": "e5e7de0868d1dd2eec1c1430228ecab337f0eeca2ba0b548e04e86e5cecc0520",
+      "bytes": 57354,
+      "sha256": "6583246e433e2648d302ab8b630fb99d6e02ea80487fb456e2a9852001fe1d32",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.5685
+    },
+    {
+      "file": "characters/moth-concerned.png",
+      "dimensions": [171, 256],
+      "original_dimensions": [1024, 1536],
+      "source": "assets/experience/characters/originals/moth-concerned.png",
+      "source_sha256": "5924a3955c7c2737b0001a7f852985ae98c3f237a5695ba6970b1451bc6bb22c",
+      "bytes": 54349,
+      "sha256": "803b0718dccb9583b7585aa37c04a25d229b6107a00460cc3866546180c68070",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.5894
+    },
+    {
+      "file": "characters/bean-pleased.png",
+      "dimensions": [171, 256],
+      "original_dimensions": [1024, 1536],
+      "source": "assets/experience/characters/originals/bean-pleased.png",
+      "source_sha256": "ac3360bc230152ccf87e03281710fadde5bc6677a512e6fc55f5842e62e0a4b5",
+      "bytes": 47393,
+      "sha256": "8b9dda62603c1ddffc924e3b8099c0227b48c5df679d56f00d0c4ced7882da7a",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.608
+    },
+    {
+      "file": "characters/bean-concerned.png",
+      "dimensions": [171, 256],
+      "original_dimensions": [1024, 1536],
+      "source": "assets/experience/characters/originals/bean-concerned.png",
+      "source_sha256": "b5747e5d7d7ed0f6b35c988aec53b68db15d7b55ae8e28f0c15f5eebb7cfa992",
+      "bytes": 45973,
+      "sha256": "a8e209d3de94898c73cc47201162de4435d57843978d11a9ccf750a2784a36b6",
+      "alpha_range": [0, 255],
+      "transparent_fraction": 0.6176
+    }
+  ]
+}

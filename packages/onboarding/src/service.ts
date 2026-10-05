@@ -62,11 +62,11 @@ export class OnboardingService {
     }
     const now = this.options.now();
     return withTransaction(this.pool, async (client) => {
-      const account = await client.query<{ email_verified_at: Date | null }>(
-        "SELECT email_verified_at FROM accounts WHERE id = $1 AND product_scope = $2 FOR UPDATE",
+      const account = await client.query<{ is_guest: boolean; email_verified_at: Date | null }>(
+        "SELECT is_guest, email_verified_at FROM accounts WHERE id = $1 AND product_scope = $2 FOR UPDATE",
         [accountId, this.options.productScope],
       );
-      if (!account.rows[0]?.email_verified_at) throw new OnboardingError("FORBIDDEN");
+      if (!account.rows[0]?.email_verified_at && !account.rows[0]?.is_guest) throw new OnboardingError("FORBIDDEN");
       const existing = await client.query<DraftRow>(
         "SELECT * FROM kingdom_drafts WHERE account_id = $1 AND product_scope = $2 FOR UPDATE",
         [accountId, this.options.productScope],
@@ -145,17 +145,18 @@ export class OnboardingService {
   async validatedActivationDraft(client: PoolClient, accountId: string): Promise<ActivationDraft> {
     const now = this.options.now();
     const account = await client.query<{
+      is_guest: boolean;
       email_verified_at: Date | null;
       terms_version: string | null;
       status: string;
     }>(
-      "SELECT email_verified_at, terms_version, status FROM accounts WHERE id = $1 AND product_scope = $2 FOR UPDATE",
+      "SELECT is_guest, email_verified_at, terms_version, status FROM accounts WHERE id = $1 AND product_scope = $2 FOR UPDATE",
       [accountId, this.options.productScope],
     );
     const accountRow = account.rows[0];
     if (
       accountRow?.status !== "active" ||
-      !accountRow.email_verified_at ||
+      (!accountRow.email_verified_at && !accountRow.is_guest) ||
       accountRow.terms_version !== this.options.currentTermsVersion
     ) {
       throw new OnboardingError("FORBIDDEN");

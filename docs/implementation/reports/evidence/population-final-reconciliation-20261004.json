@@ -1,0 +1,183 @@
+{
+  "runId": "population-2026-10-04T21-13-18-681Z",
+  "finishedEvent": {
+    "at": "2026-10-04T23:13:59.959Z",
+    "runId": "population-2026-10-04T21-13-18-681Z",
+    "type": "run_finished",
+    "status": "finished",
+    "modelJobs": 200
+  },
+  "deadline": "2026-10-04T23:13:59.742Z",
+  "actualModelRequests": 200,
+  "uniqueRequestedCommands": 2465,
+  "uniqueCommittedCommands": 2321,
+  "lastRequestedActionAt": "2026-10-04T23:12:52.218Z",
+  "actionsRequestedAfterDeadline": [],
+  "denials": {
+    "FORBIDDEN": 1,
+    "INVALID_COMMAND": 103,
+    "INSUFFICIENT_STOCK": 2,
+    "SLOT_BUSY": 1,
+    "TICK_PENDING": 5
+  },
+  "receiptCodes": {
+    "COMMITTED": 2321,
+    "WORLD_PAUSED": 32
+  },
+  "luna": [
+    {
+      "actor": "Ada Byte",
+      "wave": 10,
+      "committedAgentActions": 8,
+      "kinds": {
+        "game.building.queue": 4,
+        "game.message.send": 3,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 1
+    },
+    {
+      "actor": "Captain Noodle",
+      "wave": 10,
+      "committedAgentActions": 7,
+      "kinds": {
+        "game.contact.request": 1,
+        "game.supply.sign": 1,
+        "game.message.send": 3,
+        "game.supply.counter": 1,
+        "game.building.queue": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 0
+    },
+    {
+      "actor": "Moss Compiler",
+      "wave": 10,
+      "committedAgentActions": 7,
+      "kinds": {
+        "game.building.queue": 2,
+        "game.message.send": 3,
+        "game.supply.sign": 1,
+        "game.supply.offer": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 1
+    },
+    {
+      "actor": "Lady Segfault",
+      "wave": 10,
+      "committedAgentActions": 11,
+      "kinds": {
+        "game.building.queue": 5,
+        "game.message.send": 5,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 0
+    },
+    {
+      "actor": "Professor Goose",
+      "wave": 10,
+      "committedAgentActions": 9,
+      "kinds": {
+        "game.building.queue": 3,
+        "game.message.send": 3,
+        "game.supply.sign": 2,
+        "game.supply.offer": 1
+      },
+      "contracts": 2,
+      "lastPlanActions": 0
+    },
+    {
+      "actor": "Pixel Paladin",
+      "wave": 10,
+      "committedAgentActions": 10,
+      "kinds": {
+        "game.building.queue": 3,
+        "game.message.send": 5,
+        "game.supply.offer": 1,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 0
+    },
+    {
+      "actor": "Null Wizard",
+      "wave": 10,
+      "committedAgentActions": 6,
+      "kinds": {
+        "game.building.queue": 2,
+        "game.message.send": 3,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 1
+    },
+    {
+      "actor": "Ruby Goblin",
+      "wave": 10,
+      "committedAgentActions": 8,
+      "kinds": {
+        "game.building.queue": 1,
+        "game.supply.counter": 1,
+        "game.message.send": 5,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 1
+    },
+    {
+      "actor": "Dr Turnip",
+      "wave": 10,
+      "committedAgentActions": 6,
+      "kinds": {
+        "game.building.queue": 4,
+        "game.message.send": 1,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 0
+    },
+    {
+      "actor": "Orbit Duck",
+      "wave": 10,
+      "committedAgentActions": 12,
+      "kinds": {
+        "game.building.queue": 4,
+        "game.message.send": 6,
+        "game.supply.counter": 1,
+        "game.supply.sign": 1
+      },
+      "contracts": 1,
+      "lastPlanActions": 0
+    }
+  ],
+  "unconsumedSuccessfulLocalResponses": [
+    {
+      "id": "6be69bd7-bc14-4240-9650-b4e0e444a3f0",
+      "actor": "Lady Segfault",
+      "phase": "plan",
+      "at": "2026-10-04T21:15:14.142Z",
+      "ok": true
+    },
+    {
+      "id": "095f5862-7d7b-4778-9c56-c897a13ed1e7",
+      "actor": "Pixel Paladin",
+      "phase": "report",
+      "at": "2026-10-04T21:17:13.105Z",
+      "ok": true
+    },
+    {
+      "id": "fb66ba2a-7b6d-4087-a2a7-58a9bd7cc52f",
+      "actor": "Dr Turnip",
+      "phase": "plan",
+      "at": "2026-10-04T21:18:00.106Z",
+      "ok": true
+    }
+  ],
+  "modelConsumed": 197,
+  "reportedTurns": 98,
+  "scriptModelJobs": 0,
+  "blockedActors": []
+}

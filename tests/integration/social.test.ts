@@ -2,7 +2,13 @@ import { randomUUID } from "node:crypto";
 import { ExposureService } from "@pact/authority";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { wholeResources } from "@pact/domain";
-import { ActionLimitService, ImmediateExposureAdapter, SocialService } from "@pact/kingdom";
+import {
+  ActionLimitService,
+  ConversationReader,
+  ImmediateExposureAdapter,
+  SocialOverviewReader,
+  SocialService,
+} from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -205,6 +211,97 @@ describe("contacts, messages, and transfers", () => {
         }),
       ),
     ).rejects.toMatchObject({ code: "BLOCKED" });
+  });
+
+  it("acknowledges only actually returned incoming messages and frees the send queue", async () => {
+    const sender = await kingdom(),
+      recipient = await kingdom(),
+      outsider = await kingdom();
+    await credit(sender.kingdomId, "silver", 2);
+    await connect(sender, recipient);
+    const ids: string[] = [];
+    for (let n = 0; n < 4; n++)
+      ids.push(
+        await withTransaction(pool, (client) =>
+          social.sendMessage(client, {
+            accountId: sender.accountId,
+            recipientKingdomId: recipient.kingdomId,
+            body: `Read fixture ${n}`,
+            agentOriginated: true,
+            operationKey: randomUUID(),
+            gameTimeMs: 300000 + n,
+          }),
+        ),
+      );
+    const reader = new ConversationReader(pool, "pact");
+    await reader.read(outsider.accountId, sender.kingdomId, 5);
+    await reader.read(sender.accountId, recipient.kingdomId, 5);
+    const unread = async () =>
+      Number(
+        (
+          await pool.query(
+            "SELECT count(*)::int AS n FROM direct_messages WHERE id=ANY($1::uuid[]) AND read_game_time_ms IS NULL",
+            [ids],
+          )
+        ).rows[0].n,
+      );
+    expect(await unread()).toBe(4);
+    const overview = new SocialOverviewReader(pool, "pact");
+    await overview.read(recipient.accountId);
+    expect(await unread()).toBe(4); // agent guide does not deliver message bodies
+    await reader.read(recipient.accountId, sender.kingdomId, 2);
+    expect(await unread()).toBe(2);
+    await reader.read(recipient.accountId, sender.kingdomId, 2);
+    expect(await unread()).toBe(0); // unread-first selection prevents starvation by repeated latest pages
+    const next = await withTransaction(pool, (client) =>
+      social.sendMessage(client, {
+        accountId: sender.accountId,
+        recipientKingdomId: recipient.kingdomId,
+        body: "Next message",
+        agentOriginated: true,
+        operationKey: randomUUID(),
+        gameTimeMs: 400000,
+      }),
+    );
+    ids.push(next);
+    expect(await unread()).toBe(1);
+    await overview.read(recipient.accountId, { acknowledgeDeliveredMessages: true });
+    expect(await unread()).toBe(0);
+    const omitted = await withTransaction(pool, (client) =>
+      social.sendMessage(client, {
+        accountId: sender.accountId,
+        recipientKingdomId: recipient.kingdomId,
+        body: "🦆".repeat(140),
+        agentOriginated: true,
+        operationKey: randomUUID(),
+        gameTimeMs: 500000,
+      }),
+    );
+    ids.push(omitted);
+    expect(
+      (await reader.read(recipient.accountId, sender.kingdomId, 5))?.messages.find((m) => m.messageId === omitted)
+        ?.bodyOmitted,
+    ).toBe(true);
+    expect(await unread()).toBe(1); // omitted bytes were not read by the agent
+    for (let n = 0; n < 3; n++)
+      ids.push(
+        await withTransaction(pool, (client) =>
+          social.sendMessage(client, {
+            accountId: sender.accountId,
+            recipientKingdomId: recipient.kingdomId,
+            body: "\u0001".repeat(200),
+            agentOriginated: true,
+            operationKey: randomUUID(),
+            gameTimeMs: 600000 + n,
+          }),
+        ),
+      );
+    const bounded = await reader.read(recipient.accountId, sender.kingdomId, 5);
+    expect(Buffer.byteLength(JSON.stringify(bounded), "utf8")).toBeLessThanOrEqual(3600);
+    expect(await unread()).toBe(2); // the escaped body omitted by the total page budget stays unread too
+    const excerpt = await reader.read(recipient.accountId, sender.kingdomId, 3, 1_000);
+    expect(Buffer.byteLength(JSON.stringify(excerpt), "utf8")).toBeLessThanOrEqual(1_000);
+    expect(await unread()).toBe(2); // a smaller initial-context budget also preserves omitted messages
   });
 
   it("uses a one-use direct invitation and commits an ordinary transfer once with overflow", async () => {

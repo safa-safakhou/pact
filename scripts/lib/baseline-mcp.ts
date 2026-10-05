@@ -74,6 +74,7 @@ export class BaselineMcpClient implements BaselineTools {
     const response = await fetch(this.endpoint, {
       method: "DELETE",
       headers: this.headers(),
+      body: "{}",
       signal: AbortSignal.timeout(10000),
       redirect: "error",
     });

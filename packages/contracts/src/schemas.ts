@@ -399,6 +399,33 @@ export const WorldViewQuerySchema = z
   .strict();
 export type WorldViewQuery = z.infer<typeof WorldViewQuerySchema>;
 
+/** Omit the subject to read the kingdom owned by the authenticated account. */
+export const AgentWorldReadQuerySchema = WorldViewQuerySchema.partial({ targetKingdomId: true });
+
+/** Bounded server-authored help; never echo invalid keys, values or ownership claims. */
+export function worldReadValidationHelp(input: unknown) {
+  const result = AgentWorldReadQuerySchema.safeParse(input);
+  if (result.success) return { valid: true as const, query: result.data };
+  return {
+    valid: false as const,
+    error: {
+      code: "INVALID_REQUEST",
+      receiptExists: false,
+      message:
+        "Use {} for your own kingdom; for another use targetKingdomId (UUID). forecastMinutes is an integer 1–60 or omit it (default 60). Do not supply kingdomId or ownership fields.",
+      fields: result.error.issues.slice(0, 5).map((issue) => ({
+        field:
+          issue.path[0] === "forecastMinutes"
+            ? "forecastMinutes"
+            : issue.path[0] === "targetKingdomId"
+              ? "targetKingdomId"
+              : "arguments",
+        problem: issue.code,
+      })),
+    },
+  };
+}
+
 /** Exact public identity lookup; no viewer or owner selector is accepted. */
 export const PlayerFindQuerySchema = z.object({ handle: z.string().regex(/^[A-Za-z][A-Za-z0-9_]{2,23}$/) }).strict();
 

@@ -18,6 +18,23 @@ describe("security email delivery", () => {
     );
   });
 
+  it.each([
+    ["reset_password", "Reset your PACT password"],
+    ["verify_new_email", "Confirm your new PACT email"],
+    ["email_changed_notice", "Your PACT email changed"],
+  ])("labels the emitted %s template with its account action", (template, subject) => {
+    const message = renderSecurityEmail({
+      payload: { accountId: "account-1", template },
+      recipient: "player@example.test",
+      token: "synthetic-code",
+      publicBaseUrl: "https://safa.dedyn.io/pact",
+      from: "PACT <noreply@safa.dedyn.io>",
+    });
+    expect(message.subject).toBe(subject);
+    expect(message.text).toContain(subject);
+    expect(message.text).toContain("synthetic-code");
+  });
+
   it("rejects malformed outbox payloads", () => {
     expect(() => parseSecurityEmailPayload({ template: "verify_email" })).toThrow("INVALID_SECURITY_EMAIL_PAYLOAD");
   });

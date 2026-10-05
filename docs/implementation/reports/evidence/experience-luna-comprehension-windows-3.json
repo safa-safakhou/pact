@@ -1,0 +1,24 @@
+{
+  "model": "gpt-6-luna",
+  "route": "Windows installed CLI",
+  "exitCode": 0,
+  "events": [
+    {
+      "type": "model_answer",
+      "text": "{\n  \"rates\": {\n    \"perMinute\": {\n      \"gross\": 0.75,\n      \"upkeep\": 0.25,\n      \"net\": 0.5\n    },\n    \"perHour\": {\n      \"gross\": 45,\n      \"upkeep\": 15,\n      \"net\": 30\n    }\n  },\n  \"forecast\": {\n    \"currentStock\": 60,\n    \"expectedEndingStock\": 90,\n    \"netGain\": 30,\n    \"distinction\": \"The forecasted ending stock is 90; the gain over current stock is 30.\"\n  },\n  \"checks\": {\n    \"activeBuildCompleted\": \"The waiting example says Farm II is active; it does not establish that the build is completed.\",\n    \"unsignedProposalActiveTrade\": false,\n    \"agentMayApproveHumanExceptions\": false,\n    \"agentSupplySignAlwaysRequiresExtraHumanDecision\": false,\n    \"staleFactsCurrent\": false\n  },\n  \"ambition\": \"trader\",\n  \"resultStates\": [\n    \"committed\",\n    \"proposed\",\n    \"failed\",\n    \"waiting\",\n    \"approval-needed\",\n    \"unknown\"\n  ]\n}"
+    },
+    {
+      "type": "turn.completed",
+      "usage": {
+        "input_tokens": 13181,
+        "cached_input_tokens": 7936,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 253,
+        "reasoning_output_tokens": 0
+      }
+    }
+  ],
+  "tool_calls": 0,
+  "http_retry_limit": 0,
+  "stream_retry_limit": 0
+}

@@ -1,0 +1,34 @@
+const {chromium}=require("C:/Users/ENDORFY/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");
+const fs=require("fs");
+const privatePath="C:/Users/ENDORFY/pact-experience-player-private.json",reportPath="C:/Users/ENDORFY/experience-fresh-player.json",base="https://safa.dedyn.io/pact",origin="https://safa.dedyn.io";
+(async()=>{
+ const saved=JSON.parse(fs.readFileSync(privatePath,"utf8")),report=JSON.parse(fs.readFileSync(reportPath,"utf8"));const visit=process.argv[2]??"first";
+ const b=await chromium.launch({channel:"chrome",headless:true});const c=await b.newContext({storageState:saved.state,viewport:{width:1440,height:900}});
+ await c.addInitScript(csrf=>sessionStorage.setItem("pact_csrf",csrf),saved.csrf);
+ await c.addInitScript(()=>{const Native=window.Audio;window.__experienceMedia=[];window.Audio=class extends Native{constructor(src){super(src);window.__experienceMedia.push(this)} };});
+ const p=await c.newPage(),errors=[];p.on("pageerror",e=>errors.push(e.message));await p.goto(base+"/");
+ await p.getByRole("heading",{name:"Kingdom",exact:true}).waitFor();await p.getByRole("combobox",{name:/^Private ambition/}).waitFor();await p.waitForTimeout(300);
+ const response=await c.request.get(base+"/v1/world/kingdoms/"+saved.kingdomId);if(!response.ok())throw Error("Owner state unavailable");const owner=await response.json();
+ const api={};for(const path of ["/v1/game/social","/v1/runs/external-activity","/v1/chronicle"]){const r=await c.request.get(base+path);api[path]={status:r.status(),...(r.ok()?{data:await r.json()}:{})};}
+ const checks=[],sources=[];for(const width of [1440,390]){
+ await p.setViewportSize({width,height:width===390?844:900});
+ for(const screen of ["Kingdom","Envoy","People","Chronicle"]){
+ await p.getByRole("navigation",{name:"Game areas"}).getByRole("button",{name:screen,exact:true}).click();await p.waitForTimeout(100);
+ const overflow=await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth);if(overflow)throw Error(screen+" horizontal overflow");
+ checks.push({screen,width,noHorizontalOverflow:true});await p.screenshot({path:"C:/Users/ENDORFY/experience-fresh-"+visit+"-"+width+"-"+screen+".png",fullPage:true});
+ for(const href of await p.locator('a[href*="/v1/"]').evaluateAll(links=>links.map(a=>a.href))){
+ const r=await c.request.get(href);sources.push({path:new URL(href).pathname,status:r.status()});if(!r.ok())throw Error("Live record link failed: "+new URL(href).pathname+" "+r.status());
+ }
+ }
+ }
+ await p.setViewportSize({width:1440,height:900});await p.getByRole("navigation",{name:"Game areas"}).getByRole("button",{name:"Kingdom",exact:true}).click();
+ await p.getByText("Sound, humour and motion",{exact:true}).click();await p.getByRole("button",{name:"Enable sound",exact:true}).click();await p.waitForTimeout(250);
+ const defaultMedia=await p.evaluate(()=>window.__experienceMedia.map(a=>({src:new URL(a.src).pathname,paused:a.paused,error:!!a.error})));
+ await p.getByLabel("Master mute",{exact:true}).check();await p.getByLabel("Humour",{exact:true}).uncheck();await p.getByLabel("Motion",{exact:true}).selectOption("off");await p.waitForTimeout(100);
+ const quiet=await p.evaluate(()=>({motion:document.documentElement.dataset.experienceMotion,humour:document.documentElement.dataset.experienceHumour,allPaused:window.__experienceMedia.every(a=>a.paused),visibleFlavour:[...document.querySelectorAll("[data-flavour]")].filter(e=>e.getBoundingClientRect().height>0&&getComputedStyle(e).display!=="none").length,defaultFacts:document.querySelectorAll("[data-outcome-fact]").length}));
+ if(quiet.motion!=="off"||quiet.humour!=="off"||!quiet.allPaused||quiet.visibleFlavour!==0)throw Error("Quiet mode failed");
+ await p.screenshot({path:"C:/Users/ENDORFY/experience-fresh-"+visit+"-quiet.png",fullPage:true});
+ const visitedAt=new Date().toISOString();report.visits??=[];report.visits.push({visit,visitedAt,release:visit==="first"?"experience-20261003-2":"experience-20261003-4",owner,checks,sources,defaultMedia,quiet,errors,api});
+ fs.writeFileSync(reportPath,JSON.stringify(report,null,2));await b.close();
+ console.log(JSON.stringify({visit,visitedAt,ambition:owner.profile.ambition,builds:owner.consequences?.builds,buildings:owner.buildings,builders:owner.builders,grain:owner.balances.grain.facts,quiet,sources,errors}));
+})().catch(e=>{console.error(e.message);process.exit(1)});

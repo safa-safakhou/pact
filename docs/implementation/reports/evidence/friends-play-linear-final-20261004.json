@@ -1,0 +1,576 @@
+{
+  "date": "2026-10-04",
+  "counts": {
+    "Done": 106,
+    "Backlog": 24
+  },
+  "hasNextPage": false,
+  "issues": [
+    {
+      "id": "MNI-224",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-223",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-222",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-221",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-85",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-129",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-130",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-134",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-135",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-136",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-137",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-131",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-138",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-139",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-142",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-143",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-145",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-146",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-147",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-148",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-149",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-150",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-151",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-152",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-153",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-154",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-157",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-156",
+      "status": "Backlog"
+    },
+    {
+      "id": "MNI-133",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-132",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-128",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-125",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-220",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-219",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-218",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-216",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-211",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-213",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-217",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-215",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-212",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-210",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-209",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-214",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-208",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-207",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-204",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-206",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-205",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-203",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-158",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-167",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-118",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-166",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-164",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-165",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-163",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-160",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-162",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-161",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-159",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-155",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-144",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-141",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-140",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-127",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-126",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-124",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-123",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-122",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-121",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-120",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-119",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-116",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-112",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-117",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-115",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-77",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-113",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-81",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-114",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-111",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-110",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-109",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-108",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-105",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-104",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-103",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-107",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-106",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-102",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-101",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-100",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-99",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-98",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-97",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-96",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-95",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-94",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-93",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-92",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-91",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-90",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-89",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-88",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-87",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-86",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-64",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-75",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-83",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-74",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-72",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-73",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-71",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-70",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-69",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-82",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-84",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-80",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-79",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-76",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-78",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-67",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-68",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-66",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-63",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-62",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-61",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-60",
+      "status": "Done"
+    },
+    {
+      "id": "MNI-65",
+      "status": "Done"
+    }
+  ],
+  "friends": [
+    {
+      "id": "MNI-224",
+      "uuid": "7d6ea718-1792-4e6a-98d4-4522e53e0fe7",
+      "status": "Done",
+      "title": "[PACT-130] Find friends in the shared world and start a conversation",
+      "projectMilestone": {
+        "id": "b2c10d4e-5414-4606-ade8-cebaccbb787d",
+        "name": "Completed - Friends playtest: join, connect and play"
+      },
+      "labels": []
+    },
+    {
+      "id": "MNI-223",
+      "uuid": "2f247a49-09c8-49b8-b372-7461a8be5c73",
+      "status": "Done",
+      "title": "[PACT-129] Show useful upgrade choices and use the free builder",
+      "projectMilestone": {
+        "id": "b2c10d4e-5414-4606-ade8-cebaccbb787d",
+        "name": "Completed - Friends playtest: join, connect and play"
+      },
+      "labels": []
+    },
+    {
+      "id": "MNI-222",
+      "uuid": "d61db6ef-c9a8-405b-9ea7-bb0a105e7b14",
+      "status": "Done",
+      "title": "[PACT-128] Make the opening kingdom screen short and actionable",
+      "projectMilestone": {
+        "id": "b2c10d4e-5414-4606-ade8-cebaccbb787d",
+        "name": "Completed - Friends playtest: join, connect and play"
+      },
+      "labels": []
+    },
+    {
+      "id": "MNI-221",
+      "uuid": "ef971131-446c-4560-bf21-4ff4f9a498c5",
+      "status": "Done",
+      "title": "[PACT-127] Join from one shared link and connect your own agent",
+      "projectMilestone": {
+        "id": "b2c10d4e-5414-4606-ade8-cebaccbb787d",
+        "name": "Completed - Friends playtest: join, connect and play"
+      },
+      "labels": []
+    }
+  ]
+}

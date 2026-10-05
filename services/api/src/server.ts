@@ -3,7 +3,7 @@ import type { ApprovalService } from "@pact/approvals";
 import type { AuthorityService } from "@pact/authority";
 import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
-import type { InboxService } from "@pact/inbox";
+import type { InboxService, NotificationService } from "@pact/inbox";
 import type { InvitationService, KingdomService, SocialOverviewReader, WorldViewService } from "@pact/kingdom";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
@@ -26,11 +26,14 @@ import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerChronicleRoutes } from "./chronicle-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
 import type { GameReportReader } from "./game-report-reader.js";
+import { registerGuestRoutes } from "./guest-routes.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
 import { registerInvitationRoutes } from "./invitation-routes.js";
 import { registerApprovalRoutes, registerInboxRoutes, registerMcpRoutes } from "./mcp-approval-inbox-routes.js";
 import { registerModelCredentialRoutes } from "./model-credential-routes.js";
+import { registerModerationRoutes } from "./moderation-routes.js";
 import { registerNativeRoutes } from "./native-routes.js";
+import { registerNotificationRoutes } from "./notification-routes.js";
 import { registerAuthorityRoutes, registerOAuthRoutes } from "./oauth-authority-routes.js";
 import { registerOpenRouterRoutes } from "./openrouter-routes.js";
 import { OperatorPreflight } from "./operator-preflight.js";
@@ -78,11 +81,15 @@ export interface ApiModules {
   mcp?: McpTransport;
   approvals?: ApprovalService;
   inbox?: InboxService;
+  notifications?: NotificationService;
+  moderation?: import("@pact/kingdom").ModerationService;
+  webPushPublicKey?: string | undefined;
   credentialVault?: CredentialVaultService;
   runs?: RunService;
   externalActivity?: ExternalAgentActivity;
   openRouter?: OpenRouterAuthService;
   telegram?: TelegramService;
+  telegramBot?: import("@pact/telegram").TelegramBotService;
   privacy?: PrivacyService;
   origin?: string;
   operatorPreflight?: OperatorPreflight;
@@ -164,6 +171,14 @@ export function buildServer(
       modules.operatorPreflight ?? OperatorPreflight.unavailable("operator register not supplied");
     registerIdentityRoutes(server, modules.identity, modules.onboarding, operatorPreflight, modules.kingdom);
     registerOperatorRoutes(server, operatorPreflight);
+    if (modules.kingdom)
+      registerGuestRoutes(
+        server,
+        modules.identity,
+        modules.onboarding,
+        modules.kingdom,
+        modules.origin ?? "https://pact.example",
+      );
     registerCommandRoutes(server, modules.identity, modules.dispatcher);
     if (modules.invitations && modules.gameTime)
       registerInvitationRoutes(
@@ -191,13 +206,22 @@ export function buildServer(
     if (modules.oauth && modules.approvals) {
       registerNativeRoutes(server, modules.oauth, modules.onboarding, modules.dispatcher, modules.approvals);
     }
+    if (modules.moderation)
+      registerModerationRoutes(
+        server,
+        modules.identity,
+        modules.moderation,
+        new Set([modules.origin ?? "https://pact.example"]),
+      );
+    if (modules.notifications)
+      registerNotificationRoutes(server, modules.identity, modules.notifications, modules.webPushPublicKey);
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
     if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs, modules.externalActivity);
     if (modules.openRouter) {
       registerOpenRouterRoutes(server, modules.identity, modules.openRouter, modules.credentialVault);
     }
-    if (modules.telegram) registerTelegramRoutes(server, modules.identity, modules.telegram);
+    if (modules.telegram) registerTelegramRoutes(server, modules.identity, modules.telegram, modules.telegramBot);
     if (modules.privacy) registerPrivacyRoutes(server, modules.identity, modules.privacy);
   }
   return server;

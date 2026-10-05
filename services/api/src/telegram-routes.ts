@@ -1,5 +1,5 @@
 import { IdentityError, type IdentityService } from "@pact/identity";
-import { TelegramError, type TelegramService } from "@pact/telegram";
+import { type TelegramBotService, TelegramError, type TelegramService } from "@pact/telegram";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
@@ -53,12 +53,41 @@ export function registerTelegramRoutes(
   server: FastifyInstance,
   identity: IdentityService,
   telegram: TelegramService,
+  bot?: TelegramBotService,
 ): void {
   server.addHook("onSend", async (request, reply, payload) => {
     if (request.url.startsWith("/v1/telegram/")) reply.header("cache-control", "no-store");
     return payload;
   });
 
+  if (bot) {
+    server.get("/v1/telegram/run-settings", async (request, reply) =>
+      safe(reply, async () => {
+        const raw = cookieValue(request, "pact_session");
+        if (!raw) throw new IdentityError("FORBIDDEN");
+        return bot.settings((await identity.authenticate(raw)).accountId);
+      }),
+    );
+    server.post("/v1/telegram/run-settings", async (request, reply) =>
+      safe(reply, async () => {
+        const context = writeContext(request),
+          session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+        const body = z
+          .object({
+            credentialId: z.uuid(),
+            provider: z.string().min(1).max(50),
+            model: z.string().min(1).max(200),
+            maxCalls: z.number().int().min(1).max(20),
+            maxTokens: z.number().int().min(1).max(40000),
+            maxMessages: z.number().int().min(1).max(24),
+            maxConversations: z.number().int().min(1).max(12),
+          })
+          .strict()
+          .parse(request.body);
+        return bot.saveSettings(session.accountId, body);
+      }),
+    );
+  }
   server.post("/v1/telegram/bootstrap", async (request, reply) =>
     safe(reply, async () => {
       const body = z.object({ initData: z.string().min(1).max(16_384) }).parse(request.body);

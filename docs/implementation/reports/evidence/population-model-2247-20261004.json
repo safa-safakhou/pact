@@ -1,0 +1,11 @@
+{
+  "requests": 160,
+  "cap": 200,
+  "providerRequests": 160,
+  "providerStatuses": {
+    "200": 160
+  },
+  "completedJobs": 160,
+  "failedJobs": 0,
+  "source": "Local model-events.jsonl and budget.json, read during 22:47 UTC checkpoint"
+}

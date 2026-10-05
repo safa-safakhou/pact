@@ -91,6 +91,24 @@ describe("bounded model read results", () => {
     expect(Buffer.byteLength(oversized, "utf8")).toBeLessThanOrEqual(3_600);
   });
 
+  it("never describes a rejected command as committed", () => {
+    for (const code of ["TICK_PENDING", "MESSAGE_QUEUE_FULL", "INVALID_COMMAND"] as const) {
+      expect(
+        JSON.parse(
+          boundedCommandReceiptResult({
+            schemaVersion: "pact.command.v1",
+            commandId: "11111111-1111-4111-8111-111111111111",
+            code,
+            charged: [],
+            recordVersions: {},
+            committedEventIds: [],
+            receiptExists: false,
+          }),
+        ),
+      ).toMatchObject({ code, disposition: "not_committed", receiptExists: false });
+    }
+  });
+
   it("marks oversized conversation prose as untrusted and omits it", () => {
     const page: ConversationPage = {
       counterpartyKingdomId: "11111111-1111-4111-8111-111111111111",

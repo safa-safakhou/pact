@@ -1,0 +1,58 @@
+{
+  "characters": {
+    "honk": [
+      "The ledger says honk. I have checked it twice.",
+      "A receipt is just a tiny shield against nonsense.",
+      "My visor is ceremonial. My suspicion is permanent.",
+      "Please form an orderly queue behind the enormous goose."
+    ],
+    "pebble": [
+      "I am the load-bearing member of this committee.",
+      "Measure twice. Stare at the stone a third time.",
+      "Progress is temporary. A properly placed rock is forever.",
+      "This helmet passed one extremely subjective inspection."
+    ],
+    "moth": [
+      "The letter is sealed. My nerves are not.",
+      "I deliver correspondence, not confidence.",
+      "Please do not mistake my antennae for an ETA.",
+      "I have brought a message and several small anxieties."
+    ],
+    "bean": [
+      "The beans refuse to peer-review themselves.",
+      "My spectacles magnify both numbers and concerns.",
+      "A forecast is a hypothesis wearing a fancy hat.",
+      "I have a theorem. Unfortunately, it contains turnips."
+    ]
+  },
+  "templates": {
+    "build": {
+      "title": "Build complete",
+      "flavour": "Pebble approves. The helmet is still under review."
+    },
+    "contact": {
+      "title": "Contact accepted",
+      "flavour": "Moth has filed the letter and only three small anxieties."
+    },
+    "delivery": {
+      "title": "First retained positive delivery",
+      "flavour": "Bean has counted the beans. Twice, out of professional fear."
+    },
+    "signature": {
+      "title": "Signature recorded",
+      "flavour": "Sir Honk considers this an excellent use of stationery."
+    },
+    "raid": {
+      "title": "Raid warning",
+      "flavour": "Sir Honk has put on the serious visor. It is the same visor."
+    },
+    "default": {
+      "title": "Contract default",
+      "flavour": "Bean would like the numbers to reconsider. They will not."
+    },
+    "waiting": {
+      "title": "Waiting on the world",
+      "flavour": "Moth is waiting politely, with both antennae crossed."
+    }
+  }
+}

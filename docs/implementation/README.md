@@ -1,10 +1,20 @@
+> Completed 4 October backend experiment: 10 Luna envoys + 90 scripted players, exactly 200 model requests, 2,321 committed commands and 131 contracts. Deadline respected; runner/model worker stopped and heartbeat paused; final report and evidence in [population playtest](reports/population-playtest-20261004.md). API/inference bug fixes remain deployed as `population-fixes-20261005-2`; rules worker unchanged. Explanation quality and pacing remain findings, not production certification. Deferred roadmap untouched; Linear remains at its free issue limit.
+
 # PACT implementation backlog
 
-**99 tickets · 71 Done, 0 remaining Alpha tickets, 28 postponed as of 1 October 2026.** Linear owns live execution status; [tasks.json](tasks.json) is the reconciled snapshot.
+**Current status — 5 October 2026:** **130 tickets: 106 Done, 24 Later/Backlog, no active Todo/In Progress.** The local `todo` values on those 24 deferred tickets preserve unimplemented production scope; they are not an active assignment. Linear remains the execution tracker, and its free issue limit prevented creating a separate population-experiment ticket.
 
-## Current assignment — game-only Alpha
+Completed batches: [Alpha follow-ups](reports/alpha-playtest-fixes.md), [generated experience and fresh-player review](reports/experience-fresh-player-20261003.md), [resumed social/channel tickets](reports/social-channel-resume-20261004.md), and [friends playtest PACT-127–130](reports/friends-playtest-20261004.md). The subsequent [backend population experiment](reports/population-playtest-20261004.md) is complete, with fixes, limitations and final evidence recorded.
 
-The founder-approved [Version 1.4 Alpha scope](../pact/alpha.md) is complete: **13/13**, including PACT-099 and PACT-080. See [agent completion](reports/agent-first-completion.md), [final rehearsal](reports/alpha-final-rehearsal.md), and [friend start guide](../operations/alpha-start.md). Hosted release is **alpha-20261001-1 / 88c273f**, with migrations 0036–0044. Three independent Luna players learned/acted from ordinary objectives; recorded results and mixed feedback are retained. No active Alpha implementation remains. The other 28 unfinished tickets stay **PACT Later** / Backlog; do not automatically resume them. PACT-080 closes private gameplay, not production Season One or proof of human enjoyment.
+The current priority remains a playable, enjoyable game for a few friends. All 24 production tasks remain deferred. There is no automatically authorized next implementation batch; the final report's suggestions are recommendations. [Repository documentation and verification checkpoint](reports/repository-checkpoint-20261005.md).
+
+## Previous assignment — completed Alpha playtest follow-ups
+
+The founder assigned **PACT-100–108** as one batch after the fresh-player findings. All nine are verified Done under **Completed — Alpha playtest fixes (2 October)**. See [ordered plan](alpha-playtest-fixes.md), [per-ticket implementation evidence](reports/alpha-playtest-fixes.md), and [final fresh three-player retest](reports/alpha-three-player-retest-20261002.md). No further assigned Alpha ticket remains; Later work needs a new assignment.
+
+## Original game-only Alpha — completed 1 October
+
+The approved [Version 1.4 scope](../pact/alpha.md) remains **13/13 Done**, including 099/080. Final follow-up release is **alpha-20261002-7**, an uncommitted source snapshot, migrations through 0044. Three fresh Luna players completed upgrades and established an actual delivering reciprocal trade; all temporary test access was revoked. Build/types/lint, 222 unit and 288 integration checks passed (one optional skipped). Setup assistance, model/harness failures and mixed assessments remain recorded. The 28 unfinished tickets stay **PACT Later** / Backlog; private Alpha does not certify production gates or human enjoyment.
 
 Narrowed acceptance and dependencies are explicit in tasks.json and Linear. Each changed ticket's `original_plan` preserves postponed requirements; Alpha completion does not certify original S/L gates. New PACT-099 owns complete agent-first learning/access and observable activity/reports. No payment, native/Telegram, large pilot, production or art/audio prerequisite blocks the Alpha path. The original four-phase plan below is retained for later reference, not current work selection. Historical completed evidence is unchanged.
 
@@ -38,7 +48,7 @@ Tasks inside a milestone can proceed independently once their listed dependencie
 
 Agents follow the repository [engineering instructions](../../AGENTS.md). Use the [first implementation prompt](kickoff.md) to assign the foundation batch: PACT-001 → PACT-082 → PACT-002 → PACT-003. These are four checkpoints within one assignment, not four required agents.
 
-The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 99 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the current assignment.
+The active [PACT — Season One Linear project](https://linear.app/mnim/project/pact-season-one-7dae7c737a2d) contains all 108 tickets and their dependencies. The [Linear workflow](linear-workflow.md) defines tracking ownership and required [completion documentation](reports/README.md). Use the [ID mapping](linear-map.json) to find each ticket; stable PACT IDs remain in every issue title. The [agent guide](https://linear.app/mnim/document/start-here-pact-implementation-62c10c1d2f93) contains the current assignment.
 
 1. **[PACT-001 — Workspace and CI](phase-0-connections.md#pact-001):** establish a reproducible local application and database environment.
 2. **[PACT-082 — Reusable module boundaries](phase-0-connections.md#pact-082):** define package ownership, product scoping, and forbidden dependencies before contracts spread through clients.

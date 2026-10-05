@@ -1,0 +1,9 @@
+{
+  "model": "gpt-6-luna",
+  "route": "Windows installed CLI",
+  "exitCode": 1,
+  "events": [],
+  "tool_calls": 0,
+  "http_retry_limit": 0,
+  "stream_retry_limit": 0
+}

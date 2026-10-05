@@ -1,0 +1,103 @@
+{
+  "scope": "Actual UI and actual media playback with explicitly synthetic authorized projection fixtures; no live game mutation or subjective hearing claim.",
+  "checks": [
+    {
+      "width": 390,
+      "check": "silent first load and zero-volume loops"
+    },
+    {
+      "width": 390,
+      "kind": "build",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 390,
+      "kind": "contact",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 390,
+      "kind": "delivery",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 390,
+      "kind": "signature",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 390,
+      "kind": "raid",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 390,
+      "kind": "default",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 390,
+      "check": "waiting silent; humour-off leaves exact factual consequence and all links"
+    },
+    {
+      "width": 390,
+      "check": "final manual honk asset, all seven SVG icons, layout and source links"
+    },
+    {
+      "width": 390,
+      "check": "persisted replay keys quiet after reload, first delivery only once per contract"
+    },
+    {
+      "width": 1440,
+      "check": "silent first load and zero-volume loops"
+    },
+    {
+      "width": 1440,
+      "kind": "build",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 1440,
+      "kind": "contact",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 1440,
+      "kind": "delivery",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 1440,
+      "kind": "signature",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 1440,
+      "kind": "raid",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 1440,
+      "kind": "default",
+      "check": "one actual media play beside factual card, duplicate snapshot quiet"
+    },
+    {
+      "width": 1440,
+      "check": "waiting silent; humour-off leaves exact factual consequence and all links"
+    },
+    {
+      "width": 1440,
+      "check": "final manual honk asset, all seven SVG icons, layout and source links"
+    },
+    {
+      "width": 1440,
+      "check": "persisted replay keys quiet after reload, first delivery only once per contract"
+    },
+    {
+      "check": "stale snapshot withheld; reconnect consumes silently; later fresh event plays with OS static motion"
+    },
+    {
+      "check": "missing art preserves seven readable outcomes"
+    }
+  ]
+}

@@ -7,6 +7,8 @@ import { GAME_MINUTE_MS, type WorldClockService, type WorldSnapshot } from "@pac
 import type { Pool, PoolClient } from "pg";
 import { uuidV7 } from "./uuid-v7.js";
 
+export const ambitionValues = ["neutral", "farmer", "trader", "defender"] as const;
+export type KingdomAmbition = (typeof ambitionValues)[number];
 const startingBuildings = ["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"] as const;
 
 interface KingdomRow {
@@ -61,6 +63,44 @@ export class KingdomService {
       ledger: ResourceLedger;
     },
   ) {}
+
+  /** Human-owned presentation setting. The authenticated HTTP boundary supplies the account. */
+  async setAmbition(accountId: string, ambition: KingdomAmbition): Promise<{ ambition: KingdomAmbition }> {
+    if (!ambitionValues.includes(ambition)) throw new Error("INVALID_AMBITION");
+    const result = await this.pool.query<{ ambition: KingdomAmbition }>(
+      "UPDATE kingdoms SET ambition=$3 WHERE product_scope=$1 AND account_id=$2 AND status='ranked' RETURNING ambition",
+      [this.options.productScope, accountId, ambition],
+    );
+    if (!result.rows[0]) throw new Error("KINGDOM_NOT_FOUND");
+    return result.rows[0];
+  }
+  async exportExperience(client: PoolClient, accountId: string) {
+    return (
+      await client.query(
+        "SELECT COALESCE(ambition,'neutral') AS ambition FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
+        [this.options.productScope, accountId],
+      )
+    ).rows;
+  }
+  async forgetExperience(client: PoolClient, accountId: string): Promise<void> {
+    await client.query("UPDATE kingdoms SET ambition=NULL WHERE product_scope=$1 AND account_id=$2", [
+      this.options.productScope,
+      accountId,
+    ]);
+  }
+  async guestNeighbors(accountId: string, offset = 0) {
+    const rows = (
+      await this.pool.query<{ kingdomId: string; handle: string; displayName: string }>(
+        `SELECT k.id AS "kingdomId",k.handle,k.display_name AS "displayName" FROM kingdoms k
+       JOIN accounts a ON a.id=k.account_id AND a.product_scope=k.product_scope
+       WHERE k.product_scope=$1 AND k.account_id<>$2 AND k.status='ranked' AND a.status='active'
+       AND a.is_guest AND k.moderation_case_id IS NULL
+       ORDER BY k.activated_at DESC,k.id LIMIT 21 OFFSET $3`,
+        [this.options.productScope, accountId, offset],
+      )
+    ).rows;
+    return { players: rows.slice(0, 20), hasMore: rows.length > 20, offset };
+  }
 
   async getByAccount(accountId: string): Promise<KingdomActivation | null> {
     const result = await this.pool.query<KingdomRow>(

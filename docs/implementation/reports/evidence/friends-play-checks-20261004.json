@@ -1,0 +1,21 @@
+{
+  "typecheck": "passed",
+  "lint": "passed; informational/style warnings remain",
+  "unitTests": 281,
+  "integrationTests": 319,
+  "integrationSkipped": 1,
+  "build": "passed; bundle-size warning remains",
+  "publishedSchemasUnchanged": 26,
+  "backlog": "130 tickets, all 37 release criteria covered, matching source snapshots",
+  "diffCheck": "passed",
+  "release": "friends-play-20261004-3",
+  "archiveSha256": "048feae6d19c9441ae917228a6882a14f78d40bb54f22dcd7389b3e30fee1654",
+  "deploymentVerification": "passed",
+  "liveModels": {
+    "hostedEnabled": false,
+    "client": "Codex CLI 0.160.0",
+    "model": "gpt-6-luna",
+    "providerCalls": 8,
+    "callCap": 8
+  }
+}

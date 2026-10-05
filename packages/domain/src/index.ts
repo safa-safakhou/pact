@@ -9,5 +9,6 @@ export interface KingdomDraft {
 
 export * from "./combat.js";
 export * from "./rational.js";
+export * from "./resource-facts.js";
 export * from "./rules-catalog.js";
 export * from "./upkeep.js";

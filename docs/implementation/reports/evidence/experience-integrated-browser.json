@@ -1,0 +1,265 @@
+{
+  "scope": "Actual main GameApp, synthetic authenticated read fixtures; no live game operation. Hidden state injected explicitly.",
+  "initialMediaBytesMaximum": 328465,
+  "checks": [
+    {
+      "width": 390,
+      "check": "silent initial load; generated media transfer measured",
+      "bytes": 230935,
+      "media": [
+        {
+          "url": "http://localhost:5174/public/experience/copy.json?t=1791060645351&import",
+          "bytes": 9257,
+          "encoded": 8957
+        },
+        {
+          "url": "http://localhost:5174/experience/characters/honk-idle.png",
+          "bytes": 59370,
+          "encoded": 59070
+        },
+        {
+          "url": "http://localhost:5174/experience/keepsakes/build.svg",
+          "bytes": 765,
+          "encoded": 465
+        },
+        {
+          "url": "http://localhost:5174/experience/icons/build.svg",
+          "bytes": 607,
+          "encoded": 307
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/banner.svg",
+          "bytes": 634,
+          "encoded": 334
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/hall-1.svg",
+          "bytes": 923,
+          "encoded": 623
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/farm-2.svg",
+          "bytes": 926,
+          "encoded": 626
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/mine-1.svg",
+          "bytes": 751,
+          "encoded": 451
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/market-1.svg",
+          "bytes": 851,
+          "encoded": 551
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/storehouse-1.svg",
+          "bytes": 928,
+          "encoded": 628
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/barracks-1.svg",
+          "bytes": 968,
+          "encoded": 668
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/wall-1.svg",
+          "bytes": 976,
+          "encoded": 676
+        },
+        {
+          "url": "http://localhost:5174/experience/characters/pebble-pleased.png",
+          "bytes": 99175,
+          "encoded": 98875
+        },
+        {
+          "url": "http://localhost:5174/experience/icons/waiting.svg",
+          "bytes": 619,
+          "encoded": 319
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/harvest-90.svg",
+          "bytes": 1439,
+          "encoded": 1139
+        },
+        {
+          "url": "http://localhost:5174/experience/characters/moth-idle.png",
+          "bytes": 52746,
+          "encoded": 52446
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "tab": "Kingdom",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 390,
+      "tab": "Envoy",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 390,
+      "tab": "People",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 390,
+      "tab": "Chronicle",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 390,
+      "check": "exact approval preview readable without commit"
+    },
+    {
+      "width": 390,
+      "check": "main GameApp shared engine plays fresh completion once; repeated owner refresh silent"
+    },
+    {
+      "width": 390,
+      "check": "one instance per loop across tabs; injected visibility hidden pauses actual media"
+    },
+    {
+      "width": 390,
+      "check": "offline/online stale labels; reconnect performs zero commands"
+    },
+    {
+      "width": 390,
+      "check": "all generated media failed; four actual screens and native build records remain readable"
+    },
+    {
+      "width": 1440,
+      "check": "silent initial load; generated media transfer measured",
+      "bytes": 328465,
+      "media": [
+        {
+          "url": "http://localhost:5174/public/experience/copy.json?t=1791060645351&import",
+          "bytes": 9257,
+          "encoded": 8957
+        },
+        {
+          "url": "http://localhost:5174/experience/characters/honk-idle.png",
+          "bytes": 59370,
+          "encoded": 59070
+        },
+        {
+          "url": "http://localhost:5174/experience/icons/build.svg",
+          "bytes": 607,
+          "encoded": 307
+        },
+        {
+          "url": "http://localhost:5174/experience/keepsakes/build.svg",
+          "bytes": 765,
+          "encoded": 465
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/banner.svg",
+          "bytes": 634,
+          "encoded": 334
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/hall-1.svg",
+          "bytes": 923,
+          "encoded": 623
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/farm-2.svg",
+          "bytes": 926,
+          "encoded": 626
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/mine-1.svg",
+          "bytes": 751,
+          "encoded": 451
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/market-1.svg",
+          "bytes": 851,
+          "encoded": 551
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/storehouse-1.svg",
+          "bytes": 928,
+          "encoded": 628
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/barracks-1.svg",
+          "bytes": 968,
+          "encoded": 668
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/wall-1.svg",
+          "bytes": 976,
+          "encoded": 676
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/parchment.png",
+          "bytes": 97530,
+          "encoded": 97230
+        },
+        {
+          "url": "http://localhost:5174/experience/characters/pebble-pleased.png",
+          "bytes": 99175,
+          "encoded": 98875
+        },
+        {
+          "url": "http://localhost:5174/experience/icons/waiting.svg",
+          "bytes": 619,
+          "encoded": 319
+        },
+        {
+          "url": "http://localhost:5174/experience/scene/harvest-90.svg",
+          "bytes": 1439,
+          "encoded": 1139
+        },
+        {
+          "url": "http://localhost:5174/experience/characters/moth-idle.png",
+          "bytes": 52746,
+          "encoded": 52446
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "tab": "Kingdom",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 1440,
+      "tab": "Envoy",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 1440,
+      "tab": "People",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 1440,
+      "tab": "Chronicle",
+      "check": "keyboard navigation, visible focus, 44px buttons, native contracts/notices, no overflow"
+    },
+    {
+      "width": 1440,
+      "check": "exact approval preview readable without commit"
+    },
+    {
+      "width": 1440,
+      "check": "main GameApp shared engine plays fresh completion once; repeated owner refresh silent"
+    },
+    {
+      "width": 1440,
+      "check": "one instance per loop across tabs; injected visibility hidden pauses actual media"
+    },
+    {
+      "width": 1440,
+      "check": "offline/online stale labels; reconnect performs zero commands"
+    },
+    {
+      "width": 1440,
+      "check": "all generated media failed; four actual screens and native build records remain readable"
+    }
+  ]
+}

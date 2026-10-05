@@ -1,0 +1,430 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "state": "art1",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 1\nmine 1\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "working",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 1\nActive construction\nmine 1\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 1,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "waiting",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 1\nmine 1\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "art2",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 2\nmine 2\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-2.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-2.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "arthigh",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 6\nBase illustration; actual level 6\nmine 6\nBase illustration; actual level 6\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "art1",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 1\nmine 1\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "working",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 1\nActive construction\nmine 1\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 1,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "waiting",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 1\nmine 1\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "art2",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 2\nmine 2\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-2.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-2.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "arthigh",
+      "text": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 6\nBase illustration; actual level 6\nmine 6\nBase illustration; actual level 6\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1",
+      "images": [
+        {
+          "url": "/experience/scene/banner.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/hall-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/farm-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/mine-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/market-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/storehouse-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/barracks-1.svg",
+          "loaded": true
+        },
+        {
+          "url": "/experience/scene/wall-1.svg",
+          "loaded": true
+        }
+      ],
+      "scaffolds": 0,
+      "animations": 0,
+      "pass": true
+    },
+    {
+      "state": "art-failed",
+      "pass": true,
+      "labels": "Your recorded settlement\nStatic art follows completed building levels. Scaffolding means active work.\nhall 1\nfarm 2\nmine 2\nmarket 1\nstorehouse 1\nbarracks 1\nwall 1"
+    }
+  ],
+  "errors": []
+}

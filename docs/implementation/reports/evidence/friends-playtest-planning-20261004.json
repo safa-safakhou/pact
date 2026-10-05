@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-04",
+  "counts": {
+    "Done": 102,
+    "Todo": 4,
+    "Backlog": 24
+  },
+  "milestone": {
+    "id": "b2c10d4e-5414-4606-ade8-cebaccbb787d",
+    "name": "Active - Friends playtest: join, connect and play",
+    "description": "Four concrete improvements for a couple of friends: one shared URL, nickname-only guest entry and own-agent connection; compact first screen; clear builder choices; visible friend discovery/contact. No PACT signup/password/email/verification or individual admission links. Original 24 Later tickets remain deferred. Planning requested; implementation not started.",
+    "progress": 0,
+    "sortOrder": 8061
+  },
+  "issues": [
+    {
+      "pactId": "PACT-127",
+      "id": "ef971131-446c-4560-bf21-4ff4f9a498c5",
+      "identifier": "MNI-221",
+      "url": "https://linear.app/mnim/issue/MNI-221/pact-127-join-from-one-shared-link-and-connect-your-own-agent",
+      "status": "Todo"
+    },
+    {
+      "pactId": "PACT-128",
+      "id": "d61db6ef-c9a8-405b-9ea7-bb0a105e7b14",
+      "identifier": "MNI-222",
+      "url": "https://linear.app/mnim/issue/MNI-222/pact-128-make-the-opening-kingdom-screen-short-and-actionable",
+      "status": "Todo"
+    },
+    {
+      "pactId": "PACT-129",
+      "id": "2f247a49-09c8-49b8-b372-7461a8be5c73",
+      "identifier": "MNI-223",
+      "url": "https://linear.app/mnim/issue/MNI-223/pact-129-show-useful-upgrade-choices-and-use-the-free-builder",
+      "status": "Todo"
+    },
+    {
+      "pactId": "PACT-130",
+      "id": "7d6ea718-1792-4e6a-98d4-4522e53e0fe7",
+      "identifier": "MNI-224",
+      "url": "https://linear.app/mnim/issue/MNI-224/pact-130-find-friends-in-the-shared-world-and-start-a-conversation",
+      "status": "Todo"
+    }
+  ],
+  "implementationStarted": false
+}

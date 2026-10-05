@@ -254,7 +254,11 @@ describe("recovery, reauthentication, and account security", () => {
     expect(confirmed.recoveryCodes).toHaveLength(10);
     const recoveryCode = confirmed.recoveryCodes[0];
     if (!recoveryCode) throw new Error("Recovery code fixture missing");
-    await expect(identity.login({ email, password, ip: "192.0.2.30", mfaCode: recoveryCode })).resolves.toBeDefined();
+    const staffSession = await identity.login({ email, password, ip: "192.0.2.30", mfaCode: recoveryCode });
+    await expect(identity.requireStaffSession(staffSession.sessionToken)).resolves.toMatchObject({
+      accountId: account.accountId,
+    });
+    await expect(identity.requireStaffSession(account.sessionToken)).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(identity.login({ email, password, ip: "192.0.2.31", mfaCode: recoveryCode })).rejects.toMatchObject({
       code: "INVALID_MFA",
     });

@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-04",
+  "release": "social-channel-20261004-2",
+  "checks": {
+    "/health": {
+      "status": 200,
+      "cacheControl": null
+    },
+    "/telegram/": {
+      "status": 200,
+      "cacheControl": null
+    },
+    "/notification-sw.js": {
+      "status": 200,
+      "cacheControl": null
+    },
+    "/v1/notifications/preferences": {
+      "status": 403,
+      "cacheControl": "no-store"
+    },
+    "/v1/moderation/mine": {
+      "status": 403,
+      "cacheControl": "no-store"
+    },
+    "/v1/moderation/queue": {
+      "status": 403,
+      "cacheControl": "no-store"
+    },
+    "/v1/telegram/run-settings": {
+      "status": 403,
+      "cacheControl": "no-store"
+    }
+  },
+  "noAuthenticatedMutation": true
+}

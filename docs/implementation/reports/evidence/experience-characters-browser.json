@@ -1,0 +1,187 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "state": "twelve-media",
+      "pass": true,
+      "images": [
+        {
+          "file": "honk-idle.png",
+          "width": 230,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "pebble-idle.png",
+          "width": 250,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "pebble-pleased.png",
+          "width": 250,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "pebble-concerned.png",
+          "width": 250,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "moth-idle.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "bean-idle.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "honk-pleased.png",
+          "width": 230,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "honk-concerned.png",
+          "width": 230,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "moth-pleased.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "moth-concerned.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "bean-pleased.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "bean-concerned.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "state": "fits",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "humour-off-keeps-facts",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "twelve-media",
+      "pass": true,
+      "images": [
+        {
+          "file": "honk-idle.png",
+          "width": 230,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "pebble-idle.png",
+          "width": 250,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "pebble-pleased.png",
+          "width": 250,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "pebble-concerned.png",
+          "width": 250,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "moth-idle.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "bean-idle.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "honk-pleased.png",
+          "width": 230,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "honk-concerned.png",
+          "width": 230,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "moth-pleased.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "moth-concerned.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "bean-pleased.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        },
+        {
+          "file": "bean-concerned.png",
+          "width": 171,
+          "height": 256,
+          "loaded": true
+        }
+      ]
+    },
+    {
+      "width": 1440,
+      "state": "fits",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "humour-off-keeps-facts",
+      "pass": true
+    },
+    {
+      "state": "failed-art-fallback",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

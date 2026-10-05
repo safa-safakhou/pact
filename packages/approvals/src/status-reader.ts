@@ -1,5 +1,6 @@
 import type { CommandReceipt } from "@pact/contracts";
 import type { Pool } from "pg";
+import { approvalReviewPath } from "./review-link.js";
 
 export interface ApprovalStatusView {
   readonly untrustedContent: true;
@@ -27,6 +28,7 @@ export class ApprovalStatusReader {
     private readonly pool: Pool,
     private readonly productScope: string,
     private readonly clock: { now(): Date },
+    private readonly webBasePath = "/",
   ) {}
 
   async read(accountId: string, approvalId: string): Promise<ApprovalStatusView | null> {
@@ -46,7 +48,7 @@ export class ApprovalStatusReader {
       effectsSummary: row.effects_summary,
       expiresAt: row.expires_at,
       receipt: row.receipt,
-      deepLinkPath: `/approvals/${row.approval_id}`,
+      deepLinkPath: approvalReviewPath(row.approval_id, this.webBasePath),
     };
   }
 }

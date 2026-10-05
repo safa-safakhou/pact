@@ -1,0 +1,39 @@
+const fs=require("fs"),http=require("http"),os=require("os"),path=require("path"),{spawn}=require("child_process"),{createInterface}=require("readline"),{Readable}=require("stream");
+const privatePath="C:/Users/ENDORFY/pact-experience-player-private.json",reportPath="C:/Users/ENDORFY/experience-fresh-player.json";
+const saved=JSON.parse(fs.readFileSync(privatePath,"utf8")),report=JSON.parse(fs.readFileSync(reportPath,"utf8"));
+let count=saved.providerRequests??0,blocked=0,child,events=[];const statuses=[];
+const server=http.createServer(async(req,res)=>{
+ if(req.method!=="POST"){res.writeHead(405);res.end();return;}
+ if(count>=8){blocked++;res.writeHead(429,{"content-type":"application/json"});res.end(JSON.stringify({error:{message:"The eight-request playtest budget is exhausted.",type:"budget_exhausted"}}));return;}
+ count++;saved.providerRequests=count;fs.writeFileSync(privatePath,JSON.stringify(saved));console.log(JSON.stringify({providerRequest:count}));
+ try{
+ const chunks=[];for await(const chunk of req)chunks.push(chunk);
+ const headers={...req.headers};delete headers.host;delete headers.connection;delete headers["content-length"];delete headers["accept-encoding"];
+ const upstream=await fetch("https://chatgpt.com/backend-api/codex"+req.url,{method:"POST",headers,body:Buffer.concat(chunks),signal:AbortSignal.timeout(120000)});
+ statuses.push(upstream.status);
+ const out={};for(const [k,v] of upstream.headers)if(!["content-encoding","content-length","transfer-encoding","connection"].includes(k))out[k]=v;
+ res.writeHead(upstream.status,out);if(upstream.body)Readable.fromWeb(upstream.body).pipe(res);else res.end();
+ }catch(e){if(!res.headersSent)res.writeHead(502);res.end();}
+});
+(async()=>{
+ await new Promise(r=>server.listen(0,"127.0.0.1",r));
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),"pact-experience-player-"));
+ const args=["exec","--ignore-user-config","--skip-git-repo-check","--ephemeral","--disable","shell_tool","--disable","multi_agent","-C",dir,"-m","gpt-6-luna","-c",'model_reasoning_effort="low"',"-c",'model_provider="experience_check"',"-c",'model_providers.experience_check.name="PACT bounded player"',"-c",'model_providers.experience_check.requires_openai_auth=true',"-c",'model_providers.experience_check.wire_api="responses"',"-c",'model_providers.experience_check.base_url="http://127.0.0.1:'+server.address().port+'"',"-c","model_providers.experience_check.request_max_retries=0","-c","model_providers.experience_check.stream_max_retries=0","-c","model_providers.experience_check.supports_websockets=false","-c",'mcp_servers.pact_experience.url="https://safa.dedyn.io/pact/mcp"',"-c",'mcp_servers.pact_experience.bearer_token_env_var="PACT_EXPERIENCE_TOKEN"',"-c",'mcp_servers.pact_experience.default_tools_approval_mode="approve"',"-c","mcp_servers.pact_experience.required=true","--json",
+ "Use only pact_experience for PACT. I just founded a kingdom and want to be a peaceful farmer. Please improve my food production and use my idle builders sensibly within the authority I enabled. Look for one real public social opportunity if affordable, without promising goods I do not have. Tell me what actually committed, what is still waiting, and one reason to come back. Bring human-only decisions to me. Keep this short: use at most six game tool calls and stop after your current decisions; do not wait or repeatedly poll for construction or replies. Do not use files, shell, or other services."];
+ report.playerStartedAt=new Date().toISOString();fs.writeFileSync(reportPath,JSON.stringify(report,null,2));
+ child=spawn("C:/Users/ENDORFY/AppData/Local/OpenAI/Codex/bin/be3fd7e5c1969ff6/codex.exe",args,{env:{...process.env,PACT_EXPERIENCE_TOKEN:saved.tokens.access_token},stdio:["ignore","pipe","pipe"],timeout:240000});
+ child.stderr.resume();const done=new Promise((resolve,reject)=>{child.on("error",reject);child.on("close",resolve)});
+ const lines=createInterface({input:child.stdout});
+ for await(const line of lines)try{
+ const e=JSON.parse(line);let safe;
+ if(e.type==="turn.completed")safe={type:e.type,usage:e.usage};
+ if(e.type==="turn.failed"||e.type==="error")safe={type:e.type,failure:true};
+ if(e.type==="item.completed"&&e.item?.type==="agent_message")safe={type:"player_report",text:e.item.text};
+ if(e.type==="item.completed"&&e.item?.type==="mcp_tool_call")safe={type:"tool_completed",tool:e.item.tool,status:e.item.status};
+ if(safe){events.push(safe);console.log(JSON.stringify(safe))}
+ }catch{}
+ const code=await done;
+ report.playerEndedAt=new Date().toISOString();report.agent={model:"gpt-6-luna",exitCode:code,providerRequests:count,overBudgetRequestsBlocked:blocked,providerHttpStatuses:statuses,events,cost:"Unknown: existing Codex subscription; no billed dollar amount returned."};
+ fs.writeFileSync(reportPath,JSON.stringify(report,null,2));saved.providerRequests=count;fs.writeFileSync(privatePath,JSON.stringify(saved));server.close();
+ console.log(JSON.stringify({exitCode:code,providerRequests:count,overBudgetRequestsBlocked:blocked,statuses}));
+})().catch(e=>{console.error("Bounded player launcher failed; credentials withheld.");child?.kill();server.close();process.exit(1)});

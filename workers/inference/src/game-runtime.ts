@@ -2,6 +2,7 @@ import {
   AgentGuideReader,
   ChronicleFactReader,
   CommandDispatcher,
+  DispatcherError,
   dispatchRunCommandTools,
   GameCommandHandler,
   pactRunCommandTool,
@@ -37,12 +38,13 @@ import {
   ReportReadQuerySchema,
   SealReadQuerySchema,
   SeasonReadQuerySchema,
-  WorldViewQuerySchema,
+  worldReadValidationHelp,
 } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
 import { InboxService } from "@pact/inbox";
 import {
   ActionLimitService,
+  assertModerationAllowed,
   BuildingEngine,
   ChronicleOutcomeReader,
   ChronicleService,
@@ -53,6 +55,7 @@ import {
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomService,
+  ModerationError,
   PoliticsService,
   RaidRandomnessService,
   RaidService,
@@ -95,6 +98,7 @@ export interface InferenceGameRuntimeOptions {
     operation: (credential: Uint8Array) => Promise<T>,
   ) => Promise<T>;
   readonly termsVersion: string;
+  readonly webBasePath?: string;
   readonly raidSeed?: Uint8Array;
 }
 
@@ -130,7 +134,7 @@ export async function createInferenceGameRuntime(
   );
   const inbox = new InboxService(pool, { productScope, clock });
   const conversations = new ConversationReader(pool, productScope);
-  const approvalStatuses = new ApprovalStatusReader(pool, productScope, clock);
+  const approvalStatuses = new ApprovalStatusReader(pool, productScope, clock, options.webBasePath ?? "/");
   const inboxReadTool = {
     ...pactInboxReadTool,
     parseArguments: (input: unknown) => InboxReadQuerySchema.parse(input),
@@ -139,7 +143,10 @@ export async function createInferenceGameRuntime(
     ...pactConversationReadTool,
     parseArguments: (input: unknown) => ConversationReadQuerySchema.parse(input),
   };
-  const worldReadTool = { ...pactWorldReadTool, parseArguments: (input: unknown) => WorldViewQuerySchema.parse(input) };
+  const worldReadTool = {
+    ...pactWorldReadTool,
+    parseArguments: (input: unknown) => input,
+  };
   const reportReadTool = {
     ...pactReportReadTool,
     parseArguments: (input: unknown) => ReportReadQuerySchema.parse(input),
@@ -266,7 +273,12 @@ export async function createInferenceGameRuntime(
             callId: call.id,
             content: receipt
               ? boundedRecordResult("receipt", query.commandId, receipt)
-              : JSON.stringify({ code: "NOT_FOUND" }),
+              : JSON.stringify({
+                  code: "RECEIPT_NOT_FOUND",
+                  receiptExists: false,
+                  message:
+                    "A deterministic precommit rejection has no receipt. For an uncertain transport result, reconcile the same commandId before retrying.",
+                }),
           });
           continue;
         }
@@ -307,8 +319,15 @@ export async function createInferenceGameRuntime(
           continue;
         }
         if (call.name === worldReadTool.name) {
-          const query = WorldViewQuerySchema.parse(call.arguments);
-          const view = await views.read(input.run.accountId, query.targetKingdomId, query.forecastMinutes);
+          const parsed = worldReadValidationHelp(call.arguments);
+          if (!parsed.valid) {
+            results.push({ callId: call.id, content: JSON.stringify(parsed.error), isError: true });
+            continue;
+          }
+          const query = parsed.query;
+          const view = query.targetKingdomId
+            ? await views.read(input.run.accountId, query.targetKingdomId, query.forecastMinutes)
+            : await views.readSelf(input.run.accountId, query.forecastMinutes);
           results.push({
             callId: call.id,
             content: view ? boundedWorldResult(view) : JSON.stringify({ code: "NOT_FOUND" }),
@@ -363,6 +382,14 @@ export async function createInferenceGameRuntime(
     new ActionLimitService(productScope),
     clock,
     new ImmediateExposureAdapter(exposure),
+    async (client, accountId) => {
+      try {
+        await assertModerationAllowed(client, productScope, accountId, "messaging", clock.now());
+      } catch (error) {
+        if (error instanceof ModerationError) throw new DispatcherError("FORBIDDEN");
+        throw error;
+      }
+    },
   );
   const troops = new TroopService(productScope, ledger, new ImmediateExposureAdapter(exposure));
   const permits = new ExactHumanPermitService(productScope);
@@ -432,6 +459,14 @@ export async function createInferenceGameRuntime(
     pool,
     clock,
     productScope: scope,
+    assertPlayAllowed: async (client, accountId) => {
+      try {
+        await assertModerationAllowed(client, productScope, accountId, "play", clock.now());
+      } catch (error) {
+        if (error instanceof ModerationError) throw new DispatcherError("FORBIDDEN");
+        throw error;
+      }
+    },
     game: {
       admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
       execute: (client, principal, command, gameTimeMs) => handler.execute(client, principal, command, gameTimeMs),
@@ -441,6 +476,7 @@ export async function createInferenceGameRuntime(
     productScope,
     dispatcher,
     clock,
+    ...(options.webBasePath ? { webBasePath: options.webBasePath } : {}),
     assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
     inbox,
   });

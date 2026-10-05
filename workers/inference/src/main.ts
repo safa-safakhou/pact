@@ -37,6 +37,8 @@ if (!databaseUrl) {
     providerRouter: createInferenceProviderRouter(liveProvidersEnabled, process.env.OPENROUTER_ROUTING_DISCLOSURE),
     ...(resolver ? { withCredential: createVaultBoundCredentialUse(resolver) } : {}),
     termsVersion: process.env.CURRENT_TERMS_VERSION ?? "connection-test-v1",
+    webBasePath: new URL(process.env.PACT_PUBLIC_BASE_URL ?? process.env.PACT_ORIGIN ?? "http://localhost:3000")
+      .pathname,
     ...(process.env.RAID_SEED_ENCRYPTION_KEY_BASE64
       ? { raidSeed: Buffer.from(process.env.RAID_SEED_ENCRYPTION_KEY_BASE64, "base64") }
       : {}),

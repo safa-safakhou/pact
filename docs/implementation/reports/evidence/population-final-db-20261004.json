@@ -1,0 +1,1221 @@
+{
+  "scope": "100 experiment kingdoms only; historical cutoff, no new gameplay",
+  "deadline": "2026-10-04T23:13:59.742Z",
+  "clock": {
+    "first_game_ms": 1791144960000,
+    "last_game_ms": 1791152160000,
+    "ticks": 120
+  },
+  "contracts": 131,
+  "contractStatuses": {
+    "active": 67,
+    "expired": 64
+  },
+  "contractRows": [
+    {
+      "id": "0b9a50af-4196-40d4-a05e-d1fd804593ca",
+      "kingdomA": "2910a96b-a1a3-4d6f-8ca8-f2ee5cee4e72",
+      "kingdomB": "179b46ce-273e-44da-998c-9da53438e2dc",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "2a2e685c-49c0-4b06-845d-73e6c176bc9f",
+      "kingdomA": "7f14fd10-ab0e-43e9-9edf-21e8487af504",
+      "kingdomB": "339a63f9-b1f6-4bf5-a4c0-a822065fc90d",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "2dc3b738-d990-49cf-8861-9cd630f57672",
+      "kingdomA": "c866790c-8cd1-4e1a-86ba-81ebadceac64",
+      "kingdomB": "c72c7456-a7ce-4f72-84f3-8f9c3d09a152",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "33c02d61-c4d3-4584-b87f-4c7102c3cde0",
+      "kingdomA": "26e783a6-e5f4-4b79-bd89-e269972e906d",
+      "kingdomB": "879a8dc3-f594-4354-a2b8-50849a8c1a9f",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "71abc43a-6608-43fc-91c5-fe4865195d75",
+      "kingdomA": "fcedb706-5275-4982-ba7e-f50b3ec7c2a5",
+      "kingdomB": "ed91aad9-b173-40d2-b588-11e9e8d4efeb",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "a52fbe4f-eaed-498a-be06-e9091299a94b",
+      "kingdomA": "187bc54f-7a9d-452a-a185-f4e0ea3c28b7",
+      "kingdomB": "b491e59d-7d04-4575-b2ef-ab674e50df4e",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "e5759a13-10fe-4b06-b35f-2de403015532",
+      "kingdomA": "b507226c-0ef5-471a-99b0-70adfcefe088",
+      "kingdomB": "15fa42f3-2e0b-4be8-92b8-3108644959fd",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "51341ef3-c6af-4639-bd0f-749a3f8926fe",
+      "kingdomA": "7e986872-e9c7-45c1-8cc3-f667a32895ca",
+      "kingdomB": "28ba3599-a9b9-4ad7-b468-51b18e0b6198",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "ee6850bf-efcc-4ee5-85ee-11c5fb66ebac",
+      "kingdomA": "8edab232-8158-4647-93b9-f11cde46567a",
+      "kingdomB": "cd3feca3-5895-4003-8ac8-e0e7f40af0a4",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "fad7137d-0a50-4060-94a5-2e3ebd4423af",
+      "kingdomA": "1b8f36e5-fced-4e1e-acb8-0dea9b6bd800",
+      "kingdomB": "57d9cf20-c48b-43ef-858c-c78f715d3419",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "181cca5a-4f33-4910-aee1-b3e66ac70d7d",
+      "kingdomA": "fdb3c39f-d35d-4a8d-82ff-d95198cd915c",
+      "kingdomB": "6db35c8b-f742-4561-ae1f-20d297515719",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "c36f6f99-24ad-49e6-97a2-f69477b7d918",
+      "kingdomA": "942c63db-39cd-485d-916a-cf3108509706",
+      "kingdomB": "9c34cee5-e4ff-4a21-b736-abc8e09f84b4",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "0341691d-e2cd-4716-8fce-be4f7e5ad3b4",
+      "kingdomA": "8c3c73ac-92b6-4b06-80ae-8bded9ec83b8",
+      "kingdomB": "2260f1e6-a106-4472-bf78-11c16e069681",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "d71f19fe-8087-4f89-8237-0b5d383d163d",
+      "kingdomA": "5bd29e13-6add-4e98-ac23-217511f3fec6",
+      "kingdomB": "55b82b3a-3818-44ae-aa0f-603406790ae1",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "9ab9c5fb-4565-4f58-81c7-aa1b41bbc8d6",
+      "kingdomA": "1286b846-ae30-4b93-bcfb-5fff8f2f55b7",
+      "kingdomB": "ee3db54e-11a0-4250-b3c8-ba26c4ef7123",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "69b35ecd-9d88-4020-a100-54ac8fcde8ef",
+      "kingdomA": "c44b52a1-6d5c-4486-8655-7c2e1e2b8a80",
+      "kingdomB": "267defd2-4d28-40af-9f59-8aae0c2e3f4f",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "b9122ef3-151a-4d94-9929-e70fc1d47536",
+      "kingdomA": "5efba51c-260f-4dd8-8399-fcf656759ec9",
+      "kingdomB": "899b7294-589c-4e24-9721-9477f4c1a968",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146520000,
+      "endGameTimeMs": 1791150120000
+    },
+    {
+      "id": "09c651b7-9687-47aa-9e17-6b9436232f4c",
+      "kingdomA": "8a18b5e9-2e46-40aa-b208-e460d6b25863",
+      "kingdomB": "fcf5f6bf-b42c-4b6d-baf2-eb02151fd314",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146580000,
+      "endGameTimeMs": 1791150180000
+    },
+    {
+      "id": "fc4b7fb4-37e0-498a-a2cb-fa5e9b7deec0",
+      "kingdomA": "7c421938-bb60-40c9-9e23-be9dcec268d8",
+      "kingdomB": "483d8261-3270-4293-b7b3-143bf62a3163",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147360000,
+      "endGameTimeMs": 1791150960000
+    },
+    {
+      "id": "26fb4b02-aea5-4148-abd0-a9cf7dd4e86a",
+      "kingdomA": "24c8bc49-b08d-4235-8cf9-595d57e6edc1",
+      "kingdomB": "54dcae9f-65ab-4cde-ac5c-de3f08152762",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147420000,
+      "endGameTimeMs": 1791151020000
+    },
+    {
+      "id": "4a817497-8183-456f-8e54-e8e5434be41c",
+      "kingdomA": "2c120004-106d-4b91-8273-27a00d6e3c2f",
+      "kingdomB": "f52ad954-d145-4370-ba11-0e2b2858f844",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147420000,
+      "endGameTimeMs": 1791151020000
+    },
+    {
+      "id": "4c341a56-4536-4690-b12d-0d4933f76ba9",
+      "kingdomA": "859698f0-f11e-4785-b456-a0a1f62ac38f",
+      "kingdomB": "7dc237f2-5e2c-40d9-a3a6-be9d30de6e9a",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147420000,
+      "endGameTimeMs": 1791151020000
+    },
+    {
+      "id": "7381eb79-9487-4e05-9f50-3943bdf9abdc",
+      "kingdomA": "98e9d5c1-2e8c-4258-8bae-44e56e8cb6ba",
+      "kingdomB": "d852e87b-c7ab-4d3c-addb-5d969c7f2688",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147420000,
+      "endGameTimeMs": 1791151020000
+    },
+    {
+      "id": "02a964ad-55a5-40d7-9ef2-630257fc3f9b",
+      "kingdomA": "d78add5b-48bc-457f-9461-ccc7bdd032f7",
+      "kingdomB": "a4dd82a5-9523-41e6-b315-7f052bbdb28b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "099098fe-479c-416d-8dc8-edf880bb233b",
+      "kingdomA": "fcedb706-5275-4982-ba7e-f50b3ec7c2a5",
+      "kingdomB": "f9ee72ec-75d3-4e04-9a2a-44976afffcd6",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "2614e86b-fc11-4a36-9705-df93d869b104",
+      "kingdomA": "7f14fd10-ab0e-43e9-9edf-21e8487af504",
+      "kingdomB": "18ec5bd3-43b2-4430-8279-3a7447211804",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "37f5a93a-ce8f-44a2-9ea7-8bc42a50b7a5",
+      "kingdomA": "2910a96b-a1a3-4d6f-8ca8-f2ee5cee4e72",
+      "kingdomB": "f8f5a609-0beb-40b0-bd0e-898e4bec361b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "7be42543-ef57-4118-ba29-e5f13f3da98e",
+      "kingdomA": "8871ec46-52a2-4258-90b6-a1f0f78f5a6d",
+      "kingdomB": "d10c0c8e-77e4-4a1d-8936-2d010ffe6891",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "47845b9c-ca00-4d4c-80bf-2bfda122d30a",
+      "kingdomA": "8edab232-8158-4647-93b9-f11cde46567a",
+      "kingdomB": "222c1a61-cd6a-49d0-8055-01a78ed1775a",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "e39a4e06-c274-4b34-a74d-99382685a967",
+      "kingdomA": "26e783a6-e5f4-4b79-bd89-e269972e906d",
+      "kingdomB": "c89dc3c5-09e7-4078-8556-9fe0984c7a9f",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "c47fdf59-9cd4-4b0a-a559-c6395c6ff7f4",
+      "kingdomA": "7e986872-e9c7-45c1-8cc3-f667a32895ca",
+      "kingdomB": "7c421938-bb60-40c9-9e23-be9dcec268d8",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "f4fe4015-b405-4ba5-ab40-905565f83029",
+      "kingdomA": "6402bfc3-187d-49bf-adac-792840f98bde",
+      "kingdomB": "7dc237f2-5e2c-40d9-a3a6-be9d30de6e9a",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149760000,
+      "endGameTimeMs": 1791153360000
+    },
+    {
+      "id": "91a31c7d-0b46-4b91-8b11-f3b41cc76322",
+      "kingdomA": "ed91aad9-b173-40d2-b588-11e9e8d4efeb",
+      "kingdomB": "a93dee28-eee5-480f-b7c9-c9ed6e7175a8",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149820000,
+      "endGameTimeMs": 1791153420000
+    },
+    {
+      "id": "584dee26-180c-4a20-a1c4-71c2f1b5780f",
+      "kingdomA": "bce95fb2-1a5d-42af-9c40-68868d1770ed",
+      "kingdomB": "adc41111-f832-4cbc-a6bc-eb8a917e374d",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147660000,
+      "endGameTimeMs": 1791151260000
+    },
+    {
+      "id": "6ba4d04f-0194-40d2-8930-8da219e83f41",
+      "kingdomA": "efd8a1b8-dae0-4f2c-b4da-8713fc24fc0e",
+      "kingdomB": "f7d60c0e-64df-44c9-b66c-dfaa3b9b562b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147660000,
+      "endGameTimeMs": 1791151260000
+    },
+    {
+      "id": "9a96e230-190d-440e-8cef-34332c0c775b",
+      "kingdomA": "942c63db-39cd-485d-916a-cf3108509706",
+      "kingdomB": "6f96ea66-b268-49a3-b017-7c018fe7ab4b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147660000,
+      "endGameTimeMs": 1791151260000
+    },
+    {
+      "id": "d40f27d2-2d78-43d6-be6a-18bf2b8a2a55",
+      "kingdomA": "187bc54f-7a9d-452a-a185-f4e0ea3c28b7",
+      "kingdomB": "a93dee28-eee5-480f-b7c9-c9ed6e7175a8",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147660000,
+      "endGameTimeMs": 1791151260000
+    },
+    {
+      "id": "fc8ef823-37dc-480f-923b-5615db0ffbb1",
+      "kingdomA": "5bd29e13-6add-4e98-ac23-217511f3fec6",
+      "kingdomB": "1d57564e-27e5-4a29-a642-347f35195ad5",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147660000,
+      "endGameTimeMs": 1791151260000
+    },
+    {
+      "id": "adc5dff7-fa80-4d98-baff-68c1b933d3b9",
+      "kingdomA": "efd8a1b8-dae0-4f2c-b4da-8713fc24fc0e",
+      "kingdomB": "ae44cc57-baa0-4f48-98af-6356fed34d6b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147840000,
+      "endGameTimeMs": 1791151440000
+    },
+    {
+      "id": "a519aede-9c71-4ec6-b521-b7d33edb27b3",
+      "kingdomA": "c44b52a1-6d5c-4486-8655-7c2e1e2b8a80",
+      "kingdomB": "81663ce3-8f91-4686-b255-44a9a043a40e",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147900000,
+      "endGameTimeMs": 1791151500000
+    },
+    {
+      "id": "4ff0b6f8-b631-4e8a-9ddc-dedd02fa82e5",
+      "kingdomA": "c866790c-8cd1-4e1a-86ba-81ebadceac64",
+      "kingdomB": "36c5ea6a-c8f6-4c02-81c8-855f731f369e",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791148020000,
+      "endGameTimeMs": 1791151620000
+    },
+    {
+      "id": "c6355881-9db0-4353-aae2-340e3523a635",
+      "kingdomA": "c6934789-b14c-455f-9221-b9b2d69d7331",
+      "kingdomB": "9c5540ed-df3f-459a-990e-286de413e0fe",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791148020000,
+      "endGameTimeMs": 1791151620000
+    },
+    {
+      "id": "1aa21e80-e3e3-4537-94d3-1a616f6132aa",
+      "kingdomA": "c866790c-8cd1-4e1a-86ba-81ebadceac64",
+      "kingdomB": "324abcd3-7c38-4473-a9fb-68a84e18afca",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791148080000,
+      "endGameTimeMs": 1791151680000
+    },
+    {
+      "id": "a7d345d8-7ccb-4df7-98db-d19148efad81",
+      "kingdomA": "c44b52a1-6d5c-4486-8655-7c2e1e2b8a80",
+      "kingdomB": "b4961d71-82f8-452a-80c4-510eab533124",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791148740000,
+      "endGameTimeMs": 1791152340000
+    },
+    {
+      "id": "9dd0f723-b3bf-4852-9636-e0785da3e22e",
+      "kingdomA": "1b9dc792-cb22-4ede-800c-8ea2b7fe9710",
+      "kingdomB": "4afb5996-e2ec-4c72-9f61-221226ee5cba",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791148860000,
+      "endGameTimeMs": 1791152460000
+    },
+    {
+      "id": "f638a35a-6d09-4d9f-b0ae-bdff2d9e13b0",
+      "kingdomA": "29554290-bcd9-43dc-81ff-70e2527c1ecc",
+      "kingdomB": "e76cd8a6-eb5f-4e99-873d-4f45b33ee282",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149520000,
+      "endGameTimeMs": 1791153120000
+    },
+    {
+      "id": "8fcbca8d-9a86-4406-91d8-76974390455c",
+      "kingdomA": "339a63f9-b1f6-4bf5-a4c0-a822065fc90d",
+      "kingdomB": "e76cd8a6-eb5f-4e99-873d-4f45b33ee282",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149820000,
+      "endGameTimeMs": 1791153420000
+    },
+    {
+      "id": "162e7dca-3bc8-4434-aa01-ba1dd1877725",
+      "kingdomA": "28ba3599-a9b9-4ad7-b468-51b18e0b6198",
+      "kingdomB": "c89dc3c5-09e7-4078-8556-9fe0984c7a9f",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149820000,
+      "endGameTimeMs": 1791153420000
+    },
+    {
+      "id": "4cc4eaaa-d437-4b83-b51b-90b32dd9d002",
+      "kingdomA": "ee3db54e-11a0-4250-b3c8-ba26c4ef7123",
+      "kingdomB": "cefb2fea-d466-42ea-890b-ac43a66e346b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149820000,
+      "endGameTimeMs": 1791153420000
+    },
+    {
+      "id": "109c0b72-687d-4e94-8fc9-18b2a2ba95e9",
+      "kingdomA": "267defd2-4d28-40af-9f59-8aae0c2e3f4f",
+      "kingdomB": "93608f04-3a10-45ba-9a44-d8c57c6de356",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149820000,
+      "endGameTimeMs": 1791153420000
+    },
+    {
+      "id": "2c717f1b-5a8d-4090-9e54-5d9fb26f65f1",
+      "kingdomA": "55b82b3a-3818-44ae-aa0f-603406790ae1",
+      "kingdomB": "929e3935-b93b-4121-bbcb-56547c5ba758",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149820000,
+      "endGameTimeMs": 1791153420000
+    },
+    {
+      "id": "8b6bdb00-35f6-48ed-b2d1-eee7fab52a34",
+      "kingdomA": "26d49c62-c3f2-48e9-b2dd-bf74df659857",
+      "kingdomB": "1d57564e-27e5-4a29-a642-347f35195ad5",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149940000,
+      "endGameTimeMs": 1791153540000
+    },
+    {
+      "id": "ef618a61-4938-4282-8ed4-c3a9c7419388",
+      "kingdomA": "0fce9e59-51dd-4aa3-8bf0-193f01860517",
+      "kingdomB": "54dcae9f-65ab-4cde-ac5c-de3f08152762",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791149940000,
+      "endGameTimeMs": 1791153540000
+    },
+    {
+      "id": "14bf6213-f92d-473e-9119-774efe7a1b75",
+      "kingdomA": "158c806a-5dc9-46c1-8cf0-736a40de427a",
+      "kingdomB": "22385eee-051b-4b24-a02f-716f382b2cac",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "21315e3e-719f-4bb3-b6db-446e005c29b5",
+      "kingdomA": "5efba51c-260f-4dd8-8399-fcf656759ec9",
+      "kingdomB": "e2324820-a982-4de7-8bd5-c88521be60e2",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "304a5b19-20a2-4295-9661-03520fbf6182",
+      "kingdomA": "98e9d5c1-2e8c-4258-8bae-44e56e8cb6ba",
+      "kingdomB": "08f056d5-8cb7-4ab9-8285-6c9355f8cb4b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "417b7ab1-ec2a-4875-90fe-a24f3795f2fc",
+      "kingdomA": "24c8bc49-b08d-4235-8cf9-595d57e6edc1",
+      "kingdomB": "6402bfc3-187d-49bf-adac-792840f98bde",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "694a006b-6e86-4580-bbf3-7d5878fa46da",
+      "kingdomA": "1b9dc792-cb22-4ede-800c-8ea2b7fe9710",
+      "kingdomB": "0fce9e59-51dd-4aa3-8bf0-193f01860517",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "7150a26e-56ef-452f-b0f6-2031bfa180e9",
+      "kingdomA": "2c120004-106d-4b91-8273-27a00d6e3c2f",
+      "kingdomB": "e8a2886e-cefd-4733-8ff0-0a463462afb6",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "75ed964c-be6f-44f1-bcbd-418c05ca7126",
+      "kingdomA": "8871ec46-52a2-4258-90b6-a1f0f78f5a6d",
+      "kingdomB": "97677f88-e1fa-4d68-a3d7-879518696ae3",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "b8d25482-cb27-40ce-b103-e99494f10526",
+      "kingdomA": "859698f0-f11e-4785-b456-a0a1f62ac38f",
+      "kingdomB": "26d49c62-c3f2-48e9-b2dd-bf74df659857",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146340000,
+      "endGameTimeMs": 1791149940000
+    },
+    {
+      "id": "0cb5cbf7-5019-43c8-b2ce-70071b260a01",
+      "kingdomA": "e8a2886e-cefd-4733-8ff0-0a463462afb6",
+      "kingdomB": "4fdce272-9bd2-4c44-bae9-e452eb230846",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "144355f5-cddd-47a3-86d9-c03bf3ce3d9e",
+      "kingdomA": "08f056d5-8cb7-4ab9-8285-6c9355f8cb4b",
+      "kingdomB": "f52ad954-d145-4370-ba11-0e2b2858f844",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "42db02d4-c6f0-496b-b8fb-1df03dde7998",
+      "kingdomA": "97677f88-e1fa-4d68-a3d7-879518696ae3",
+      "kingdomB": "d852e87b-c7ab-4d3c-addb-5d969c7f2688",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "53def0af-7fa4-42ee-ae05-cda7a3013d93",
+      "kingdomA": "22385eee-051b-4b24-a02f-716f382b2cac",
+      "kingdomB": "d10c0c8e-77e4-4a1d-8936-2d010ffe6891",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "12018c6b-b280-4772-b3d8-56fec5026a5a",
+      "kingdomA": "c72c7456-a7ce-4f72-84f3-8f9c3d09a152",
+      "kingdomB": "c6934789-b14c-455f-9221-b9b2d69d7331",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "7f9d443d-5a67-4d89-ae14-af58bbc5bbaa",
+      "kingdomA": "179b46ce-273e-44da-998c-9da53438e2dc",
+      "kingdomB": "36c5ea6a-c8f6-4c02-81c8-855f731f369e",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "f5c7011e-8f16-4897-a68b-8856aada34ee",
+      "kingdomA": "b491e59d-7d04-4575-b2ef-ab674e50df4e",
+      "kingdomB": "f8f5a609-0beb-40b0-bd0e-898e4bec361b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "c0476be8-5737-4a36-b616-5b8515d70a5c",
+      "kingdomA": "a7e95f94-cf26-444f-8351-323fc6762c50",
+      "kingdomB": "f9ee72ec-75d3-4e04-9a2a-44976afffcd6",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "1fc9e497-5e9b-4b99-aa22-75678c3d367e",
+      "kingdomA": "163589c5-4867-4379-9706-1275b665978f",
+      "kingdomB": "a4dd82a5-9523-41e6-b315-7f052bbdb28b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "4a9dd4ee-7016-48d6-8c1c-1c8c6f299e62",
+      "kingdomA": "c90dd065-a75b-4b33-ad1a-c406f2703190",
+      "kingdomB": "adc41111-f832-4cbc-a6bc-eb8a917e374d",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "1829d49e-8c41-47f9-9d2d-d9313c067a4b",
+      "kingdomA": "57d9cf20-c48b-43ef-858c-c78f715d3419",
+      "kingdomB": "6f96ea66-b268-49a3-b017-7c018fe7ab4b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "21e98f75-ce7d-4d7f-be07-3faf26c43979",
+      "kingdomA": "6db35c8b-f742-4561-ae1f-20d297515719",
+      "kingdomB": "f1513268-eac9-4fc9-9f13-55c684a273b7",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "a0698f43-7e06-4ae4-976c-95792ccf5dcc",
+      "kingdomA": "2f8ba868-4f00-4cdc-a8d8-c2f1402e6850",
+      "kingdomB": "ae44cc57-baa0-4f48-98af-6356fed34d6b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "db64722c-348d-4c0b-9336-3bbb2ee446cd",
+      "kingdomA": "15fa42f3-2e0b-4be8-92b8-3108644959fd",
+      "kingdomB": "18ec5bd3-43b2-4430-8279-3a7447211804",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "c7724a9d-6ae2-4919-b8d7-2d1e38817473",
+      "kingdomA": "879a8dc3-f594-4354-a2b8-50849a8c1a9f",
+      "kingdomB": "dea8a344-caeb-44d5-8be1-84473d4c035b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "8d038c4d-38e7-4a89-9d69-2bf6357020da",
+      "kingdomA": "9c34cee5-e4ff-4a21-b736-abc8e09f84b4",
+      "kingdomB": "222c1a61-cd6a-49d0-8055-01a78ed1775a",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "d8e97235-e472-4c21-91a9-dcc2bd72a3ff",
+      "kingdomA": "2260f1e6-a106-4472-bf78-11c16e069681",
+      "kingdomB": "43ed0773-e269-4b09-bd91-06294c11bd96",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "1a006421-4e7d-4fd3-8cdc-2c684648d8ea",
+      "kingdomA": "f7d60c0e-64df-44c9-b66c-dfaa3b9b562b",
+      "kingdomB": "b4961d71-82f8-452a-80c4-510eab533124",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "586dabc8-aa9f-43d8-8a53-7ebd6b91b2d3",
+      "kingdomA": "cd3feca3-5895-4003-8ac8-e0e7f40af0a4",
+      "kingdomB": "7c421938-bb60-40c9-9e23-be9dcec268d8",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150000000,
+      "endGameTimeMs": 1791153600000
+    },
+    {
+      "id": "7441651c-ed67-40a2-ad87-b0a2595a23ec",
+      "kingdomA": "6f296bfd-3d5c-4910-b0a1-622653a8839b",
+      "kingdomB": "2f8ba868-4f00-4cdc-a8d8-c2f1402e6850",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146400000,
+      "endGameTimeMs": 1791150000000
+    },
+    {
+      "id": "bfa5fb28-5042-4205-bff1-6c5437208488",
+      "kingdomA": "22385eee-051b-4b24-a02f-716f382b2cac",
+      "kingdomB": "f8dc55e0-d841-4d9b-9586-0d40a9b61ef3",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150120000,
+      "endGameTimeMs": 1791153720000
+    },
+    {
+      "id": "69441b5f-e65d-44aa-a43b-5789d807c241",
+      "kingdomA": "e8a2886e-cefd-4733-8ff0-0a463462afb6",
+      "kingdomB": "2c120004-106d-4b91-8273-27a00d6e3c2f",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150180000,
+      "endGameTimeMs": 1791153780000
+    },
+    {
+      "id": "68e18124-b58e-4f65-bf92-986bc5c35ddb",
+      "kingdomA": "08f056d5-8cb7-4ab9-8285-6c9355f8cb4b",
+      "kingdomB": "98e9d5c1-2e8c-4258-8bae-44e56e8cb6ba",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150180000,
+      "endGameTimeMs": 1791153780000
+    },
+    {
+      "id": "ca109e2b-55b4-43ec-9b67-3a3aeea43d0e",
+      "kingdomA": "97677f88-e1fa-4d68-a3d7-879518696ae3",
+      "kingdomB": "8871ec46-52a2-4258-90b6-a1f0f78f5a6d",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150180000,
+      "endGameTimeMs": 1791153780000
+    },
+    {
+      "id": "bc355f8c-4d30-472a-950e-84c82f48802a",
+      "kingdomA": "22385eee-051b-4b24-a02f-716f382b2cac",
+      "kingdomB": "158c806a-5dc9-46c1-8cf0-736a40de427a",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150180000,
+      "endGameTimeMs": 1791153780000
+    },
+    {
+      "id": "ec750e88-9beb-448c-997b-21a4ce032664",
+      "kingdomA": "fcf5f6bf-b42c-4b6d-baf2-eb02151fd314",
+      "kingdomB": "b0ef1f5b-ced9-4ddc-86d1-308f5e9c7e67",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150180000,
+      "endGameTimeMs": 1791153780000
+    },
+    {
+      "id": "6c8a3a71-e1cd-4548-91da-7748e39c5d6c",
+      "kingdomA": "9c5540ed-df3f-459a-990e-286de413e0fe",
+      "kingdomB": "6402bfc3-187d-49bf-adac-792840f98bde",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150180000,
+      "endGameTimeMs": 1791153780000
+    },
+    {
+      "id": "2f237590-a0ad-44a0-96af-5dd8967d05fe",
+      "kingdomA": "9a0ce42f-45fc-47af-a262-de697c3e86f1",
+      "kingdomB": "c90dd065-a75b-4b33-ad1a-c406f2703190",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146580000,
+      "endGameTimeMs": 1791150180000
+    },
+    {
+      "id": "55412600-5741-4441-9221-c56e3b0bae82",
+      "kingdomA": "bce95fb2-1a5d-42af-9c40-68868d1770ed",
+      "kingdomB": "163589c5-4867-4379-9706-1275b665978f",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146580000,
+      "endGameTimeMs": 1791150180000
+    },
+    {
+      "id": "7df3d7b2-5169-4f8b-b6a0-c55a5784f39d",
+      "kingdomA": "d78add5b-48bc-457f-9461-ccc7bdd032f7",
+      "kingdomB": "a7e95f94-cf26-444f-8351-323fc6762c50",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791146580000,
+      "endGameTimeMs": 1791150180000
+    },
+    {
+      "id": "4f3b04bf-ee8a-4449-9e5d-93dc621aa367",
+      "kingdomA": "267defd2-4d28-40af-9f59-8aae0c2e3f4f",
+      "kingdomB": "11985908-9677-491e-86b5-360972c3e679",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150300000,
+      "endGameTimeMs": 1791153900000
+    },
+    {
+      "id": "cbc3955c-ea04-44f0-9fd6-10b7faffff04",
+      "kingdomA": "26d49c62-c3f2-48e9-b2dd-bf74df659857",
+      "kingdomB": "859698f0-f11e-4785-b456-a0a1f62ac38f",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150300000,
+      "endGameTimeMs": 1791153900000
+    },
+    {
+      "id": "55199427-6d78-4e3b-b56d-fbf8b3675aac",
+      "kingdomA": "6402bfc3-187d-49bf-adac-792840f98bde",
+      "kingdomB": "24c8bc49-b08d-4235-8cf9-595d57e6edc1",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150300000,
+      "endGameTimeMs": 1791153900000
+    },
+    {
+      "id": "8d40ccf6-fa05-4118-afab-5865a2c42529",
+      "kingdomA": "0fce9e59-51dd-4aa3-8bf0-193f01860517",
+      "kingdomB": "1b9dc792-cb22-4ede-800c-8ea2b7fe9710",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150300000,
+      "endGameTimeMs": 1791153900000
+    },
+    {
+      "id": "d6422981-6f91-46f7-ae7d-a5578a7037e1",
+      "kingdomA": "e2324820-a982-4de7-8bd5-c88521be60e2",
+      "kingdomB": "48436254-42d7-45a0-9b07-f914d9ef75c8",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "9e348c49-6f21-4b54-8ad8-4dde1efbcc4e",
+      "kingdomA": "c72c7456-a7ce-4f72-84f3-8f9c3d09a152",
+      "kingdomB": "c866790c-8cd1-4e1a-86ba-81ebadceac64",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "c68346e9-b85b-4053-8943-912673d18f9d",
+      "kingdomA": "179b46ce-273e-44da-998c-9da53438e2dc",
+      "kingdomB": "2910a96b-a1a3-4d6f-8ca8-f2ee5cee4e72",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "cd897bbc-da8b-4b82-b509-b388c537fd91",
+      "kingdomA": "b491e59d-7d04-4575-b2ef-ab674e50df4e",
+      "kingdomB": "187bc54f-7a9d-452a-a185-f4e0ea3c28b7",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "06532d7f-446f-47e0-929a-d5c1bb1f867c",
+      "kingdomA": "ed91aad9-b173-40d2-b588-11e9e8d4efeb",
+      "kingdomB": "fcedb706-5275-4982-ba7e-f50b3ec7c2a5",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "7c3ecf3e-04ca-4971-957a-4418620e3ddf",
+      "kingdomA": "339a63f9-b1f6-4bf5-a4c0-a822065fc90d",
+      "kingdomB": "7f14fd10-ab0e-43e9-9edf-21e8487af504",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "a5ad4e48-5f95-4f0a-89b9-bdb423b780f5",
+      "kingdomA": "15fa42f3-2e0b-4be8-92b8-3108644959fd",
+      "kingdomB": "b507226c-0ef5-471a-99b0-70adfcefe088",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "08ba362b-fcf6-4cdc-817b-0e271bdcc2a0",
+      "kingdomA": "57d9cf20-c48b-43ef-858c-c78f715d3419",
+      "kingdomB": "1b8f36e5-fced-4e1e-acb8-0dea9b6bd800",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "19425342-b2d3-465f-9620-3995887932ec",
+      "kingdomA": "879a8dc3-f594-4354-a2b8-50849a8c1a9f",
+      "kingdomB": "26e783a6-e5f4-4b79-bd89-e269972e906d",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "8882470e-557e-41a3-b567-c640fe491d01",
+      "kingdomA": "55b82b3a-3818-44ae-aa0f-603406790ae1",
+      "kingdomB": "5bd29e13-6add-4e98-ac23-217511f3fec6",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "bbf35a4b-7d5e-4bf6-b6ce-2e65c7ad7526",
+      "kingdomA": "28ba3599-a9b9-4ad7-b468-51b18e0b6198",
+      "kingdomB": "7e986872-e9c7-45c1-8cc3-f667a32895ca",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "827c3655-cee5-4711-bc26-196e0faaba14",
+      "kingdomA": "2260f1e6-a106-4472-bf78-11c16e069681",
+      "kingdomB": "8c3c73ac-92b6-4b06-80ae-8bded9ec83b8",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "bf1204a6-bf11-481d-9640-9ab13ed36f75",
+      "kingdomA": "cd3feca3-5895-4003-8ac8-e0e7f40af0a4",
+      "kingdomB": "8edab232-8158-4647-93b9-f11cde46567a",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "84224338-71b7-40c5-aa79-4a6cdef284ee",
+      "kingdomA": "ee3db54e-11a0-4250-b3c8-ba26c4ef7123",
+      "kingdomB": "1286b846-ae30-4b93-bcfb-5fff8f2f55b7",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "d07b3fe3-d354-4cad-9c6b-01c155c4e5e5",
+      "kingdomA": "2f8ba868-4f00-4cdc-a8d8-c2f1402e6850",
+      "kingdomB": "6f296bfd-3d5c-4910-b0a1-622653a8839b",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "e0cd3a88-10e1-4c0c-941b-04b0ba63d76f",
+      "kingdomA": "9c34cee5-e4ff-4a21-b736-abc8e09f84b4",
+      "kingdomB": "942c63db-39cd-485d-916a-cf3108509706",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "8ceb1bc0-e479-4cc0-b781-e28fbc32ae84",
+      "kingdomA": "6db35c8b-f742-4561-ae1f-20d297515719",
+      "kingdomB": "fdb3c39f-d35d-4a8d-82ff-d95198cd915c",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "aac91765-0d36-48b5-b716-09e288a0a1fc",
+      "kingdomA": "267defd2-4d28-40af-9f59-8aae0c2e3f4f",
+      "kingdomB": "c44b52a1-6d5c-4486-8655-7c2e1e2b8a80",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150360000,
+      "endGameTimeMs": 1791153960000
+    },
+    {
+      "id": "ee0aebb3-6cc7-4a2a-b680-b40543a50197",
+      "kingdomA": "e2324820-a982-4de7-8bd5-c88521be60e2",
+      "kingdomB": "5efba51c-260f-4dd8-8399-fcf656759ec9",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150540000,
+      "endGameTimeMs": 1791154140000
+    },
+    {
+      "id": "f10b40ea-5074-4977-848d-897913920743",
+      "kingdomA": "a7e95f94-cf26-444f-8351-323fc6762c50",
+      "kingdomB": "d78add5b-48bc-457f-9461-ccc7bdd032f7",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150540000,
+      "endGameTimeMs": 1791154140000
+    },
+    {
+      "id": "a3c5f29c-83e4-4097-84a3-c974d26b80c0",
+      "kingdomA": "163589c5-4867-4379-9706-1275b665978f",
+      "kingdomB": "bce95fb2-1a5d-42af-9c40-68868d1770ed",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150540000,
+      "endGameTimeMs": 1791154140000
+    },
+    {
+      "id": "4b58f0cf-7a54-4a51-aba7-6a219209551f",
+      "kingdomA": "c90dd065-a75b-4b33-ad1a-c406f2703190",
+      "kingdomB": "9a0ce42f-45fc-47af-a262-de697c3e86f1",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150540000,
+      "endGameTimeMs": 1791154140000
+    },
+    {
+      "id": "e48df7c3-98d0-44cb-942e-bd1f97d1d289",
+      "kingdomA": "fcf5f6bf-b42c-4b6d-baf2-eb02151fd314",
+      "kingdomB": "8a18b5e9-2e46-40aa-b208-e460d6b25863",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150540000,
+      "endGameTimeMs": 1791154140000
+    },
+    {
+      "id": "a5544169-f117-4632-bc0a-f100218815f8",
+      "kingdomA": "e8a2886e-cefd-4733-8ff0-0a463462afb6",
+      "kingdomB": "252006b0-9fbb-4557-9046-7098e506f589",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791150900000,
+      "endGameTimeMs": 1791154500000
+    },
+    {
+      "id": "cdaafc51-eda2-48bb-9112-bcd58d2beb4c",
+      "kingdomA": "1b9dc792-cb22-4ede-800c-8ea2b7fe9710",
+      "kingdomB": "48436254-42d7-45a0-9b07-f914d9ef75c8",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147420000,
+      "endGameTimeMs": 1791151020000
+    },
+    {
+      "id": "f8226549-90d1-4e2d-9796-8771050db645",
+      "kingdomA": "5efba51c-260f-4dd8-8399-fcf656759ec9",
+      "kingdomB": "4fdce272-9bd2-4c44-bae9-e452eb230846",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147420000,
+      "endGameTimeMs": 1791151020000
+    },
+    {
+      "id": "360b7afd-3399-411f-8f3a-c9ee81c9ee36",
+      "kingdomA": "1b8f36e5-fced-4e1e-acb8-0dea9b6bd800",
+      "kingdomB": "f1513268-eac9-4fc9-9f13-55c684a273b7",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "5bee43c5-767b-448f-b4f1-bc2e95c605ed",
+      "kingdomA": "8c3c73ac-92b6-4b06-80ae-8bded9ec83b8",
+      "kingdomB": "b0ef1f5b-ced9-4ddc-86d1-308f5e9c7e67",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "7d9b2c11-fe4f-4377-a0b2-1ea19e718a83",
+      "kingdomA": "158c806a-5dc9-46c1-8cf0-736a40de427a",
+      "kingdomB": "c6934789-b14c-455f-9221-b9b2d69d7331",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "9b53a49e-c7e0-45af-ab0c-5bd91199bf55",
+      "kingdomA": "fdb3c39f-d35d-4a8d-82ff-d95198cd915c",
+      "kingdomB": "43ed0773-e269-4b09-bd91-06294c11bd96",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "a51b8d6a-e205-49e0-a826-9bf00a7cbc4b",
+      "kingdomA": "6f296bfd-3d5c-4910-b0a1-622653a8839b",
+      "kingdomB": "929e3935-b93b-4121-bbcb-56547c5ba758",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "b2f8d9a2-ff00-4ad2-b3cb-30ded4035bc4",
+      "kingdomA": "9a0ce42f-45fc-47af-a262-de697c3e86f1",
+      "kingdomB": "e76cd8a6-eb5f-4e99-873d-4f45b33ee282",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "c24f3007-0748-4d30-aa98-2740226a9e88",
+      "kingdomA": "b507226c-0ef5-471a-99b0-70adfcefe088",
+      "kingdomB": "dea8a344-caeb-44d5-8be1-84473d4c035b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "cb86d366-d75f-499b-bb55-bb5d3938201e",
+      "kingdomA": "1286b846-ae30-4b93-bcfb-5fff8f2f55b7",
+      "kingdomB": "93608f04-3a10-45ba-9a44-d8c57c6de356",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "f69f2b5b-a87c-4783-a191-0beb462ab630",
+      "kingdomA": "8a18b5e9-2e46-40aa-b208-e460d6b25863",
+      "kingdomB": "cefb2fea-d466-42ea-890b-ac43a66e346b",
+      "statusAtEnd": "expired",
+      "closeReason": "natural_expiry",
+      "startGameTimeMs": 1791147480000,
+      "endGameTimeMs": 1791151080000
+    },
+    {
+      "id": "905a8b12-f00e-43d8-a9e4-4af808e40ccc",
+      "kingdomA": "f7d60c0e-64df-44c9-b66c-dfaa3b9b562b",
+      "kingdomB": "efd8a1b8-dae0-4f2c-b4da-8713fc24fc0e",
+      "statusAtEnd": "active",
+      "closeReason": null,
+      "startGameTimeMs": 1791151620000,
+      "endGameTimeMs": 1791155220000
+    }
+  ],
+  "installmentRows": 12312,
+  "contractsWithInstallments": 131,
+  "failedInstallments": 0,
+  "deliveryTotals": [
+    {
+      "resource": "iron",
+      "due_marked": "119970",
+      "delivered_marked": "119970",
+      "overflow_marked": "0"
+    },
+    {
+      "resource": "grain",
+      "due_marked": "181080",
+      "delivered_marked": "181080",
+      "overflow_marked": "0"
+    },
+    {
+      "resource": "silver",
+      "due_marked": "68310",
+      "delivered_marked": "68310",
+      "overflow_marked": "0"
+    }
+  ],
+  "buildInstructions": 389,
+  "completedBuilds": 388,
+  "remainingBuilds": 1
+}

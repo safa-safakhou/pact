@@ -75,6 +75,13 @@ describe("API/database smoke", () => {
       { name: "0042_seasons.sql" },
       { name: "0043_season_honors.sql" },
       { name: "0044_external_agent_activity.sql" },
+      { name: "0045_kingdom_ambition.sql" },
+      { name: "0046_optional_notifications.sql" },
+      { name: "0047_game_notification_projection.sql" },
+      { name: "0048_staff_mfa_sessions.sql" },
+      { name: "0049_moderation_cases.sql" },
+      { name: "0050_bot_controls.sql" },
+      { name: "0051_guest_play.sql" },
     ]);
     await server.close();
   });

@@ -1,3 +1,71 @@
+> Completed 4 October backend experiment: 10 Luna envoys + 90 scripted players, exactly 200 model requests, 2,321 committed commands and 131 contracts. Deadline respected; runner/model worker stopped and heartbeat paused; final report and evidence in [population playtest](reports/population-playtest-20261004.md). API/inference bug fixes remain deployed as `population-fixes-20261005-2`; rules worker unchanged. Explanation quality and pacing remain findings, not production certification. Deferred roadmap untouched; Linear remains at its free issue limit.
+
+# Current handoff — friends playtest complete, 4 October 2026
+
+PACT-127–130 / MNI-221–224 are Done, read back in Linear. Milestone Completed - Friends playtest: join, connect and play is 100%. Current total: 106 Done, 24 Later Backlog, no Todo/In Progress. All original Later items remain deferred.
+
+Live testing release: friends-play-20261004-3 at https://safa.dedyn.io/pact/. PACT_GUEST_PLAY=1; hosted paid inference remains disabled. Nickname-only entry resumes a browser's kingdom. Real Codex CLI 0.160.0 guest authorization and gpt-6-luna first mission passed with eight calls maximum. Two real browser contexts built, discovered each other, accepted contact and exchanged messages; a third used its generated nickname. Normal build completion was observed without clock/resource manipulation. Final phone/desktop checks passed on all tabs.
+
+Read reports/friends-playtest-20261004.md and its evidence. Typecheck/lint/build, 281 unit + 319 integration tests passed; one existing optional live-model test skipped. One hundred additional model-free local guests exercised concurrent entry and pagination. No independent human enjoyment or 100-agent production certification claimed.
+
+Remaining game-design friction: first contact costs 2 ordinary Silver, taking 12 game minutes from fresh Market I. Existing economy intentionally retained and wait explained. No further task assigned. Preserve extensive dirty working tree; no commit/push/PR performed.
+
+Earlier planning/assignment/release notes below are historical.
+
+# Current handoff - friends playtest tickets, 4 October 2026
+
+Four bounded tickets created and read back Todo in their own active milestone: PACT-127/MNI-221 shared-link guest entry and own-agent connection; PACT-128/MNI-222 compact opening screen; PACT-129/MNI-223 useful upgrade cards/free builder selection; PACT-130/MNI-224 visible friends/contact/conversation plus combined walkthrough.
+
+Read [scope and acceptance](friends-playtest.md). Explicit founder decision: one shared URL, nickname only, browser remembers the guest kingdom. No PACT signup/password/email/verification or per-friend admission link. Agent remains in the player's own client and connects to the correct guest kingdom. Internal ownership, existing rules and explicit human decisions remain.
+
+102 Done, 4 Todo, 24 Later Backlog. No implementation/deployment in this planning turn. PACT-127/128/129 depend only on completed foundations; 130 additionally depends on 127/128/129 for its combined walkthrough. Use existing assets and commands, no additional production prerequisites. Tests/checks required per ticket; 130 records the integrated two-browser path. See reports/evidence/friends-playtest-planning-20261004.json.
+
+Earlier four-candidates-not-ticketed and production-resume instructions below are historical.
+
+# Current handoff - friends-only testing, 4 October 2026
+
+Founder parked all 24 remaining original roadmap tickets on 4 October 2026. Current priority is a playable, fun and interesting web game for a couple of friends. These future tickets are not prerequisites for the friends-only testing phase. No automatic selection of PACT-064/065 or other production/pilot/channel work. Original scope/acceptance/dependencies remain preserved for a later phase.
+
+Fresh Linear readback: 102 Done, 24 Backlog, all 24 labeled PACT Later, no active Todo/In Progress. All 18 experience tickets remain Done. No new tickets created. There are zero existing open tickets for the narrowed friends-only/playability scope. Four follow-up candidates remain from the latest playthrough: joining/agent setup (captured email still required operator code retrieval), shorter opening/phone page, clearer builder choices, and finding/inviting friends to contact/trade. These are candidate improvements, not four already-created tasks or verified blockers. Actual unaided friend onboarding and enjoyment still need observation.
+
+Testing release remains social-channel-20261004-2; no runtime/deployment changes in this scope update. Readback: reports/evidence/friends-only-scope-20261004.json. Prior handoffs and their PACT-064 next-step instruction below are superseded.
+
+# Current handoff - 4 October 2026
+
+Founder resumed the original Later roadmap. First batch **PACT-060/063/088/089 Done**; original acceptance checked and read back in Linear. **102 Done / 24 Backlog**, completed social/channel batch milestone 100%. No commit, push, PR or hosted CI claim. Preserve the extensive existing dirty checkout.
+
+Testing release **social-channel-20261004-2**, https://safa.dedyn.io/pact/, migrations through 0050. Encrypted pre-batch backup 9ac803f7 and replacement-release backup 3ea60253. Archive SHA-256 65287d303f7c9802afdb99cf86942bffbc6258bf3c717a8400d7549e4461d196; final completion documentation is a metadata-only overlay. Build/migrations/deletion replay/public verification passed; all seven application/gateway services running with zero restarts. Paid inference remains PACT_ENABLE_LIVE_MODEL_CALLS=0.
+
+Implemented opt-in critical email/Web Push; case-scoped MFA moderation, appeals, holds and retention; complete shared Mini App; deterministic private bot briefings with explicit one-use bounded run confirmation and shared stop. Runtime bot/settings wiring omission caught by live check, corrected and deployed; public settings now 403/no-store as required.
+
+Final verification: typecheck/lint/build, **278 unit / 315 integration passed**, one existing optional skip; 390/1440px synthetic Telegram host/API browser fixtures; actual public appeal-page bundle with synthetic response. Generated VAPID pair mounted privately only in notification worker. Real Telegram devices/chats/push receipt, staffed moderation and independent human pilots were not exercised. Existing Expo/React Native dependency audit advisories remain future remediation.
+
+Read [completion report](reports/social-channel-resume-20261004.md), [API additions](../api/social-channels.md), [operations](../operations/social-channels.md), [Linear readback](reports/evidence/social-channel-linear-final-20261004.json). Next dependency-ready **PACT-064** extends privacy through the whole social world; **PACT-065** follows. PACT-090 retains its stated APNs/Firebase/device prerequisites, and 091/092 retain dependencies. Do not imply those are completed or silently narrow their scope.
+
+Previous handoff below is history, including its no-current-assignment and server-version statements.
+
+# Current handoff - 3 October 2026
+
+Approved PACT-109-126: **18/18 Done**. Fresh full Linear readback126 issues: **98 Done,28 Later Backlog**, no active Todo/In Progress. Current milestone Completed - Game experience and generated assets (3 October),100%. No further assigned task; await founder prioritization. Preserve extensive pre-existing dirty changes. No commit/push/PR.
+
+Hosted **experience-20261003-4**, existing testing VPS, migration0045, encrypted predeployment backup and public verification passed. Shared AgenticWorld routes/host-only secrets preserved; in-app paid inference off. Source archive9d43c3be12fca65da46b39dcb042923fe5fca4d6321dab00d152a9023eecf64b plus corrective links/email-label source changes. Live record links use /v1/world/kingdoms/:kingdomId.
+
+Final review: one fresh @turnip_b20a66, kingdom60acfdd6-6f9d-4975-bfce-2c0b261197b4, farmer ambition, one actual Luna Envoy, two normal-clock visits. Exactly8 actual HTTP200 provider requests, no calls while waiting, conservative23 active minutes. FarmII actually completed: grain gross30 to45/hour, upkeep8 unchanged, net22 to37/hour; matching scene and earliest-retained Hall record. Slot2 stayed idle and discovery feeds empty; no invented peer/trade.
+
+Temporary mandate restricted and normal grants/sessions revoked. Former session403/bearer401/refresh400; only this synthetic account password invalidated by authorized operator cleanup, former password400. Replacement discarded, local credential JSON deleted. No clock/resource/gameplay DB edits. Account records remain.
+
+Full local build/types/lint269 units,294 integrations plus one optional skip. Final notification wording affected5 tests and deployed full build passed. Main GameApp synthetic20 checks, context22 checks; actual live16 screen/viewport checks with18 screenshots, source links200, quiet controls work. These are local/synthetic and actual testing-world checks, not hosted CI, human attachment or production certification.
+
+Inventory58 logical /47 physical media, all hashes regenerated identically. Public61 files3265067 bytes; measured initial328465 bytes. Sources/prompts/originals outside public. Read assets/experience/README.md, docs/api/kingdom-experience.md, reports/game-experience-implementation.md and reports/experience-fresh-player-20261003.md.
+
+Design limits remain: captured email/version-specific Codex assistance, long phone page/empty Hall slots, sparse public discovery, eight requests for one commitment. Founder accepted audio context tentatively. No unlimited redesign or Later activation.
+
+Vite5174 unshipped contextual preview and proof8092 remain available. Repo is WSL /home/mnim/repos/mine/random_idea; tool workdir C:/Users/ENDORFY, WSL Ubuntu with explicit Node24 path. Windows Codex auth works; WSL auth stale and must not be overwritten.
+
+Historical handoffs below are provenance only.
+
+---
+
 # PACT handoff — 1 October 2026
 
 ## Current final state — supersedes the historical checkpoints below

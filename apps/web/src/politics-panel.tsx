@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ReportControl } from "./moderation-panel.js";
 
 type Request = (path: string, method?: string, body?: unknown) => Promise<Record<string, unknown>>;
 type Article = { id: string; authorKingdomId: string; handle: string; version: number; title: string; body: string };
@@ -151,6 +152,7 @@ export function PoliticsPanel({
             {a.title} · @{a.handle} · v{a.version}
           </h3>
           <p style={{ whiteSpace: "pre-wrap" }}>{a.body}</p>
+          <ReportControl kind="article" targetId={a.id} />
           {a.authorKingdomId === kingdomId && (
             <>
               <button

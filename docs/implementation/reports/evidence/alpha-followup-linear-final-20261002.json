@@ -1,0 +1,120 @@
+{
+  "readAt": "2026-10-02 18:42:50 UTC",
+  "hasNextPage": false,
+  "total": 108,
+  "counts": {
+    "Done": 80,
+    "Backlog": 28
+  },
+  "followups": [
+    {
+      "id": "MNI-167",
+      "title": "[PACT-108] Repeat the fresh three-player journey and document remaining friction",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Improvement"
+      ]
+    },
+    {
+      "id": "MNI-166",
+      "title": "[PACT-107] Put connection, progress and next decisions first on desktop and phone",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Improvement"
+      ]
+    },
+    {
+      "id": "MNI-164",
+      "title": "[PACT-105] Keep external-agent activity ordered, refreshed and reconciled with current state",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Bug"
+      ]
+    },
+    {
+      "id": "MNI-165",
+      "title": "[PACT-106] Show remaining game time for builds and contracts",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Bug"
+      ]
+    },
+    {
+      "id": "MNI-163",
+      "title": "[PACT-104] Expose completed builds and actual trade deliveries to owners and agents",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Bug"
+      ]
+    },
+    {
+      "id": "MNI-160",
+      "title": "[PACT-101] Make private Alpha signup and Codex connection setup actionable",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Improvement"
+      ]
+    },
+    {
+      "id": "MNI-162",
+      "title": "[PACT-103] Clarify founding resources, affordability and trade authority for agents",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Improvement"
+      ]
+    },
+    {
+      "id": "MNI-161",
+      "title": "[PACT-102] Make current kingdom reads and validation errors reliable for small agents",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Bug"
+      ]
+    },
+    {
+      "id": "MNI-159",
+      "title": "[PACT-100] Fix exact approval links under the hosted PACT path",
+      "status": "Done",
+      "assignee": "Mohammad Safakhou",
+      "milestone": "Completed — Alpha playtest fixes (2 October)",
+      "acceptanceUnchecked": 0,
+      "labels": [
+        "PACT Alpha",
+        "Bug"
+      ]
+    }
+  ],
+  "originalAlphaDone": 13
+}

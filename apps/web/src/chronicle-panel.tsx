@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ReportControl } from "./moderation-panel.js";
+
+import { noticeDates } from "./social-freshness.js";
 
 type Request = (path: string, method?: string, body?: unknown) => Promise<Record<string, unknown>>;
 type Fact = {
@@ -17,6 +20,7 @@ type Post = {
   status: string;
   version: number;
   publishedAt?: string;
+  expiresGameTimeMs?: number | null;
   author?: { handle: string };
   courtHandle?: string;
   path?: string;
@@ -26,11 +30,13 @@ type Post = {
 export function StoryCard({ post }: { post: Post }) {
   return (
     <article className="game-card">
+      {post.status === "published" && <ReportControl kind="post" targetId={post.id} />}
       <h3>{post.title ?? "Removed publication"}</h3>
       <p>
         {post.status} · {post.type} {post.author && `by @${post.author.handle}`}{" "}
         {post.courtHandle && `· Court @${post.courtHandle}`}
       </p>
+      {post.type === "notice" && <p>{noticeDates(post)}</p>}
       {post.fact && (
         <div>
           <h4>Engine fact</h4>
@@ -213,7 +219,9 @@ export function ChroniclePanel({
           Refresh public feed
         </button>
       </form>
-      {!busy && !posts.length && <p>No published opportunities or stories match. Nobody has agreed to a trade yet.</p>}
+      {!busy && !posts.length && (
+        <p>No published opportunities or stories match. No acceptance is inferred. You can leave and return later.</p>
+      )}
       {posts.map((p) => (
         <div key={p.id}>
           <StoryCard post={p} />

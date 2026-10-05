@@ -1,0 +1,100 @@
+{
+  "ticket": "PACT-118",
+  "producer": "Original authored DSP, Python stdlib; no speech/recordings",
+  "regenerate": "python3 assets/experience/generate_effects.py",
+  "assets": [
+    {
+      "file": "audio/build.wav",
+      "duration_s": 1.2,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261003,
+      "normalization_gain": 1.5053183817878046,
+      "peak_dbfs": -9.8974,
+      "finite_samples": true,
+      "bytes": 52964,
+      "sha256": "fb68c11ce450272752f9327f7604131cfce69f3eb82f96e2f72ca70b7cfa08ff",
+      "caption": "A tiny construction clack followed by a wobbly two-note trumpet."
+    },
+    {
+      "file": "audio/paper.wav",
+      "duration_s": 0.7,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261004,
+      "normalization_gain": 0.797751027134098,
+      "peak_dbfs": -9.8974,
+      "finite_samples": true,
+      "bytes": 30914,
+      "sha256": "3d1fdcffba0005c0c13cd8c0971e434e6c87d5cc616ab023a1cd73da13c87c46",
+      "caption": "A brief flutter of paper."
+    },
+    {
+      "file": "audio/seal.wav",
+      "duration_s": 0.5,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261005,
+      "normalization_gain": 0.7737494000366075,
+      "peak_dbfs": -9.8974,
+      "finite_samples": true,
+      "bytes": 22094,
+      "sha256": "8411ef978e1ed54471d96206ff40c5ad9de6c7be90673d757aee92ae14cf8079",
+      "caption": "A small seal presses firmly onto a document."
+    },
+    {
+      "file": "audio/delivery.wav",
+      "duration_s": 1.2,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261006,
+      "normalization_gain": 0.9203277726500092,
+      "peak_dbfs": -9.8974,
+      "finite_samples": true,
+      "bytes": 52964,
+      "sha256": "39b6f7e0cb8ac6597dd1a04322e5e2e23478dd50339f4e856b2911f9355cf207",
+      "caption": "A clear little bell marks a recorded delivery."
+    },
+    {
+      "file": "audio/raid.wav",
+      "duration_s": 1.4,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261007,
+      "normalization_gain": 0.556331835277868,
+      "peak_dbfs": -9.8974,
+      "finite_samples": true,
+      "bytes": 61784,
+      "sha256": "84421cb97ac744053e35a1f1d32fb72b909944fd06b710bf6d9dfab019576bc8",
+      "caption": "Three low warning drum taps. Read the actual threat record."
+    },
+    {
+      "file": "audio/default.wav",
+      "duration_s": 0.9,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261008,
+      "normalization_gain": 1.0466230419496605,
+      "peak_dbfs": -9.8974,
+      "finite_samples": true,
+      "bytes": 39734,
+      "sha256": "743277dee8c437df7273e1f9a79a206d3b0baf598736e1f100b5a9e849b0e2a1",
+      "caption": "A short plucked cord drops in pitch. Read the recorded default."
+    },
+    {
+      "file": "audio/honk.wav",
+      "duration_s": 0.8,
+      "sample_rate": 22050,
+      "channels": 1,
+      "seed": 11820261009,
+      "normalization_gain": 0.9344487386825259,
+      "peak_dbfs": -12.0409,
+      "finite_samples": true,
+      "bytes": 35324,
+      "sha256": "06847435871839af806f367e314b8f9b94cdf0e520eb2e4ae158ba5a5379d87e",
+      "caption": "HONK. The goose has filed a noise complaint."
+    }
+  ],
+  "audition": "Founder listened on 3 October: \"Seems like clean, but I have to be able to listen to them in its place in the game to understand exactly what it does mean.\" Cleanliness accepted; contextual meaning remains for PACT-119.",
+  "mapping": "PACT-119 owns factual triggers; no tick/denial cues in this asset ticket."
+}

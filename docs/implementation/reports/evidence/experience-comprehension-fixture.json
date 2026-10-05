@@ -1,0 +1,87 @@
+{
+  "kind": "synthetic comprehension only; no live player or external message",
+  "rates": {
+    "gross": {
+      "perMinuteWhole": "0.75",
+      "perHourWhole": "45",
+      "label": "0.75/min = 45/hour"
+    },
+    "upkeep": {
+      "perMinuteWhole": "0.25",
+      "perHourWhole": "15",
+      "label": "0.25/min = 15/hour"
+    },
+    "net": {
+      "perMinuteWhole": "0.5",
+      "perHourWhole": "30",
+      "label": "0.5/min = 30/hour"
+    },
+    "excludes": "Trade, storage overflow and temporary allowance expiry; forecasts carry their own assumptions."
+  },
+  "forecast": {
+    "currentStockWhole": "60",
+    "expectedEndingStockWhole": "90",
+    "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue."
+  },
+  "examples": {
+    "committed": {
+      "ambition": "trader",
+      "state": "committed",
+      "latestResult": "committed / COMMITTED",
+      "currentDecision": "No pending decision established by these records.",
+      "nextStep": "Inspect current authorized records.",
+      "receiptId": "11111111-1111-4111-8111-111111111111",
+      "authority": "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting."
+    },
+    "proposed": {
+      "ambition": "trader",
+      "state": "proposed",
+      "latestResult": "proposed / COMMITTED",
+      "currentDecision": "No pending decision established by these records.",
+      "nextStep": "Inspect current authorized records.",
+      "receiptId": "11111111-1111-4111-8111-111111111111",
+      "authority": "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting."
+    },
+    "failed": {
+      "ambition": "trader",
+      "state": "failed",
+      "latestResult": "failed / STOCK_LOW",
+      "currentDecision": "No pending decision established by these records.",
+      "nextStep": "Inspect current authorized records.",
+      "receiptId": "11111111-1111-4111-8111-111111111111",
+      "authority": "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting."
+    },
+    "waiting": {
+      "ambition": "trader",
+      "state": "waiting",
+      "latestResult": "committed / COMMITTED",
+      "currentDecision": "Farm II: active",
+      "nextStep": "Wait on the game clock.",
+      "receiptId": "11111111-1111-4111-8111-111111111111",
+      "authority": "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting."
+    },
+    "approval": {
+      "ambition": "trader",
+      "state": "approval-needed",
+      "latestResult": "approval needed / APPROVAL_REQUIRED",
+      "currentDecision": "Exact human approval",
+      "nextStep": "Human: review exact terms.",
+      "receiptId": "11111111-1111-4111-8111-111111111111",
+      "reviewPath": "/pact/?approval=11111111-1111-4111-8111-111111111111",
+      "authority": "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting."
+    },
+    "unknown": {
+      "ambition": "trader",
+      "state": "unknown",
+      "latestResult": "No recorded gameplay result.",
+      "currentDecision": "Current records unavailable.",
+      "nextStep": "Reconnect and refresh before acting; retained receipts do not establish current state.",
+      "authority": "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting."
+    }
+  },
+  "authority": {
+    "agentMaySupplySignWithinMandate": true,
+    "humanOnlyContactAcceptance": true,
+    "humanOnlyAuthorityChanges": true
+  }
+}

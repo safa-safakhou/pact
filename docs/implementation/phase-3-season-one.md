@@ -1,8 +1,8 @@
 # Phase 3 — Season One release
 
-**21 tickets · 5 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**52 tickets · 36 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
-Dependencies are completion requirements. The approved Alpha track depends on the completed rules gate, not postponed production/pilot gates. Other phases retain their original gates. Only Alpha tickets are currently authorized. Owner roles are disciplines, not assigned people; size is not a time commitment.
+Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
 <a id="pact-084"></a>
 ## PACT-084 — Prove native iOS and Android login, linking, and approval
@@ -565,3 +565,1013 @@ Dependencies are completion requirements. The approved Alpha track depends on th
 
 - [ ] Every L01–L06 criterion passes, including native/Telegram distribution, verified payments, and the complete channel matrix; all blocking defects/external reviews are closed.
 - [ ] The release record names who can pause/recover the world and provides a reproducible go/no-go checklist; no task is marked completed merely because it is scheduled.
+
+<a id="pact-100"></a>
+## PACT-100 — Fix exact approval links under the hosted PACT path
+
+**Status:** done · **Role:** Integrations · **Size:** S · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099)
+
+**Components:** approvals, MCP transport, web exact approval routing.
+
+**Specification:** [alpha](../pact/alpha.md), [access](../pact/access.md), [runtime](../pact/runtime.md) · **Release checks:** G02, G03
+
+**Implement / deliver**
+
+- Generate one canonical configured approval URL for MCP proposal/status and web handoff; support /pact deployment and root deployment through shared link construction.
+- Preserve authenticated human preview and exact one-use approval/rejection; update the MCP/API guide and add a focused completion report.
+
+**Acceptance**
+
+- [x] Proposal and status tools return a link that opens PACT exact review and preselects the correct approval ID under /pact; it never opens the other hosted application.
+- [x] Root-path deployment also works; logged-out owners can authenticate and return to the intended review without approving automatically.
+- [x] Approve/reject uses existing exact-command handlers; an agent, wrong owner, expired request or repeated decision cannot gain authority or duplicate effects.
+- [x] Meaningful route/authorization checks and a synthetic hosted click-through are recorded separately from local tests.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-initial-20261002.json
+
+<a id="pact-101"></a>
+## PACT-101 — Make private Alpha signup and Codex connection setup actionable
+
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099)
+
+**Components:** web signup and Envoy connection entry, OAuth connection status, Alpha setup runbooks.
+
+**Specification:** [alpha](../pact/alpha.md), [access](../pact/access.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** G02, G04
+
+**Implement / deliver**
+
+- Present a clear external-Codex setup route with exact canonical resource, copyable commands, tested client version and useful unsupported-client/OAuth recovery feedback.
+- Show the authenticated external PACT connection independently of an optional saved in-app provider credential; never display or request tokens/passwords in chats.
+- State the current private captured-email limitation at signup and provide an explicit secure operator-to-owner verification handoff/runbook. Real outbound email remains PACT-078/060 Later; do not bypass email verification or introduce paid infrastructure.
+- Update alpha-start/codex-playtest guides and document recent-authentication recovery for authority changes.
+
+**Acceptance**
+
+- [x] A fresh synthetic owner can follow the published private signup/verification steps without guessing where the token comes from; captured email is labeled operator-assisted rather than delivered internet email.
+- [x] The tested Codex route completes sign-in, DCR/PKCE consent, own-account read and permitted write without conflicting OAuth resources; unsupported client versions receive actionable instructions.
+- [x] External connection account/status and revoke/reconnect instructions are visible without falsely requiring an in-app model API credential.
+- [x] Credentials remain separate and secret; no verification bypass, public Mailpit exposure, unauthenticated token retrieval or automatic inference occurs.
+- [x] Actual tested versions and interventions are recorded; unavailable client/SMTP routes are not certified or marked successful.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-initial-20261002.json
+
+<a id="pact-102"></a>
+## PACT-102 — Make current kingdom reads and validation errors reliable for small agents
+
+**Status:** done · **Role:** Integrations · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099)
+
+**Components:** shared read contracts, MCP tools, in-app tool registry, authorized world projections.
+
+**Specification:** [alpha](../pact/alpha.md), [access](../pact/access.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** G02, G03
+
+**Implement / deliver**
+
+- Provide an identity-derived own-kingdom read or equally discoverable unambiguous self-read shape while preserving targetKingdomId for authorized other-player projections.
+- Return bounded field-level validation/help for malformed world reads and invalid forecasts; teach the valid argument shape in tool descriptions and recovery lessons.
+- Distinguish deterministic precommit rejection/no receipt from uncertain committed-command recovery; share semantics across MCP and in-app adapters.
+
+**Acceptance**
+
+- [x] A fresh Luna agent reads its own current buildings/builders/resources from an ordinary status objective without supplied UUIDs or mechanical coaching.
+- [x] Malformed field names, absent required target and invalid forecast horizons identify the correction without returning private data or unsafe input text.
+- [x] Owner/contact/public projections retain authorization boundaries; caller-supplied ownership cannot change authenticated identity.
+- [x] Deterministic failed commands explain when no receipt exists; uncertain committed responses recover by the same command ID without duplicates.
+- [x] Focused contract/behavior checks cover valid reads, bad inputs, absent kingdoms and unauthorized views; live model results are documented independently.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-initial-20261002.json
+
+<a id="pact-103"></a>
+## PACT-103 — Clarify founding resources, affordability and trade authority for agents
+
+**Status:** done · **Role:** Gameplay · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099)
+
+**Components:** agent start guide and versioned lessons, authority resource projections, game error explanations, Codex playtest docs.
+
+**Specification:** [alpha](../pact/alpha.md), [rules](../pact/rules.md), [runtime](../pact/runtime.md), [access](../pact/access.md) · **Release checks:** G02, G03
+
+**Implement / deliver**
+
+- Explain ordinary versus restricted founding resources in whole units, eligible construction/training/food uses, reserve-floor inputs and actual current action affordability.
+- Give actionable stock shortfall or game-time waiting information without changing economy values, costs, reserve floors or authority limits.
+- Teach contact-request races/incoming human-only acceptance, proposal versus signature versus active contract, and when exact human review is genuinely required.
+- Resolve the documentation contradiction about unsigned supply proposals versus supply.sign authority by checking the owning specs and implementation. A substantive conflict requires an explicit documented correction and affected fixtures, not silent authority expansion.
+
+**Acceptance**
+
+- [x] Fresh-state fixtures show construction can use eligible founding allowances while cold contacts/transfers cannot spend restricted stock.
+- [x] The guide explains food-reserve calculations and ordinary/marked units accurately; small-model checks do not mistake construction allowance for transferable stock.
+- [x] Failure feedback identifies actual shortage/prerequisite and next legal step; it does not advise changing mandates or requesting approval for every permitted move.
+- [x] Incoming contact requests remain human-only and duplicate/opposing requests produce useful recovery rather than redundant approval.
+- [x] Supply-offer creation, signing authority and activation semantics agree across specs, guides and operator instructions; signing still reserves authorized exposure transactionally.
+- [x] Context/usage changes are measured against the recorded playtest, with no unsupported dollar-savings or enjoyment claim.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-initial-20261002.json
+
+<a id="pact-104"></a>
+## PACT-104 — Expose completed builds and actual trade deliveries to owners and agents
+
+**Status:** done · **Role:** Backend · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-102](phase-3-season-one.md#pact-102)
+
+**Components:** authorized consequence projections, Kingdom People Chronicle views, agent guide and reports.
+
+**Specification:** [alpha](../pact/alpha.md), [rules](../pact/rules.md), [runtime](../pact/runtime.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** G03, G04
+
+**Implement / deliver**
+
+- Expose current build completion, counterparty signatures, contract status and delivered/failed/overflow installment totals through shared authorized module interfaces.
+- Show readable named events and links in People/Chronicle and relevant agent views; distinguish original commit receipts from current consequences.
+- Implement explicit privacy, retention and export treatment for any newly persisted view data; prefer existing authoritative records over redundant state.
+
+**Acceptance**
+
+- [x] A normal owner and their agent can verify a completed Farm II and a signed active contract without database access.
+- [x] Actual minute deliveries show amount/resource/counterparty/as-of game time and pending/default/overflow status; an unsigned offer or committed message never appears as delivered trade.
+- [x] People/Chronicle first-session hints lead to visible relevant evidence; a completed build/contact/trade does not leave an empty misleading history.
+- [x] Other players cannot read private stocks, signatures/messages/installments beyond the specified view; reusable platform packages do not import PACT domain types.
+- [x] Replay and settlement checks preserve exact arithmetic, no duplicate totals, and consistent web/MCP facts; no model/network calls run inside transactions.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-consequences-20261002.json
+
+<a id="pact-105"></a>
+## PACT-105 — Keep external-agent activity ordered, refreshed and reconciled with current state
+
+**Status:** done · **Role:** Frontend · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-100](phase-3-season-one.md#pact-100), [PACT-104](phase-3-season-one.md#pact-104)
+
+**Components:** external activity query/report formatting, Envoy activity refresh, live consequence links.
+
+**Specification:** [alpha](../pact/alpha.md), [runtime](../pact/runtime.md), [product](../pact/product.md), [privacy](../pact/privacy.md) · **Release checks:** G03, G04
+
+**Implement / deliver**
+
+- Sort by numeric sequence/time, preserve factual historical tool outcomes, and attach current approval/contact/build/contract status with a clear next human decision.
+- Refresh recorded activity while the owner views it through bounded polling or an existing event mechanism; reading/refreshing must never initiate inference.
+- Use named actions, ordinary-unit costs, current result/as-of time and supporting receipts instead of bare UUID/status dumps; handle disconnected/stale/error states honestly.
+
+**Acceptance**
+
+- [x] IDs spanning 9/10/99/100 remain in chronological order, with stable pagination/deduplication.
+- [x] New external moves appear without a manual refresh while the screen is active; background/network behavior is bounded and cleaned up on unmount.
+- [x] Accepted contacts, approved/rejected requests and completed builds no longer display unresolved next steps; historical outcomes are retained and labeled.
+- [x] Unknown/offline current status is labeled stale rather than inferred; receipt/proposal/commit/completion meanings remain separate.
+- [x] No hidden reasoning, credentials or other-player private content is stored or displayed, and no refresh starts a model.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-activity-20261002.json
+- Build/type/lint passed; 221 unit, 287 integration (1 skipped); hosted polling/offline/reconnect/current approval/contact/build/trade passed.
+
+<a id="pact-106"></a>
+## PACT-106 — Show remaining game time for builds and contracts
+
+**Status:** done · **Role:** Frontend · **Size:** S · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099)
+
+**Components:** shared web game-clock display, builder contract scout and raid deadlines.
+
+**Specification:** [alpha](../pact/alpha.md), [rules](../pact/rules.md), [product](../pact/product.md) · **Release checks:** G03, G04
+
+**Implement / deliver**
+
+- Render remaining committed game time and active/paused/stale clock status for deadlines; label any absolute timestamp as game time.
+- Use explicit projection clock inputs, not assumptions that wall clock and game clock coincide; update player documentation.
+
+**Acceptance**
+
+- [x] A new one-hour contract still shows about one game hour remaining when the world is an hour behind wall time; it does not imply expiry in two wall minutes.
+- [x] Build, contract, scout and raid timing uses consistent labeling/remaining-game-time behavior across time zones and pause/resume.
+- [x] Offline/stale projections do not promise real-time completion; display refresh never mutates or advances the world.
+- [x] Meaningful offset/paused/boundary display checks and desktop/phone observations are recorded.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-timing-20261002.json
+- npm test: 221 passed; npm run test:integration: 287 passed, 1 skipped; hosted desktop/390px phone 59m game time remaining despite wall offset; local paused/boundary checks passed.
+
+<a id="pact-107"></a>
+## PACT-107 — Put connection, progress and next decisions first on desktop and phone
+
+**Status:** done · **Role:** Frontend · **Size:** M · **Type:** implementation
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-101](phase-3-season-one.md#pact-101), [PACT-105](phase-3-season-one.md#pact-105), [PACT-106](phase-3-season-one.md#pact-106)
+
+**Components:** web Envoy information order, People discovery/contact entry, first-session navigation.
+
+**Specification:** [alpha](../pact/alpha.md), [product](../pact/product.md), [architecture](../pact/architecture.md) · **Release checks:** G02, G04
+
+**Implement / deliver**
+
+- Surface current Codex connection, objective/last meaningful result, pending human decisions and next action before optional provider or advanced social controls.
+- Put basic contacts/real opportunities/negotiation ahead of Courts/articles/allegiance for a fresh player without deleting those Alpha features.
+- Preserve keyboard/focus/accessibility and clear separation of game facts from player/model claims; replace technical receipt JSON notices with readable outcomes and evidence access.
+
+**Acceptance**
+
+- [x] At 390px viewport a fresh owner can locate connection and current progress/decision without scrolling through unrelated provider and raw activity forms.
+- [x] Desktop/phone keep all authorized functionality, no horizontal overflow, usable focus order and keyboard activation of the primary journey.
+- [x] A pending human review links to its exact request and a completed decision produces readable status, not a persistent full receipt JSON dump.
+- [x] A disconnected/external-only account is clearly distinguished from an optional missing in-app model credential.
+- [x] Screen observations verify actual sequence and distances; physical-device usability is not claimed from viewport emulation.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-playtest-fixes.md
+- docs/implementation/reports/evidence/alpha-followup-layout-final-20261002.json
+- docs/implementation/reports/evidence/alpha-followup-layout-20261002.json
+- alpha-20261002-5 public deployment verification passed; keyboard/390px/1280px/no overflow/current connection/real exact rejection verified. Build/types/lint; 221 unit and 288 integration passed (1 skipped).
+
+<a id="pact-108"></a>
+## PACT-108 — Repeat the fresh three-player journey and document remaining friction
+
+**Status:** done · **Role:** QA · **Size:** M · **Type:** verification
+
+**Delivery track:** alpha_followup · [Alpha playtest follow-ups](alpha-playtest-fixes.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-100](phase-3-season-one.md#pact-100), [PACT-101](phase-3-season-one.md#pact-101), [PACT-102](phase-3-season-one.md#pact-102), [PACT-103](phase-3-season-one.md#pact-103), [PACT-104](phase-3-season-one.md#pact-104), [PACT-105](phase-3-season-one.md#pact-105), [PACT-106](phase-3-season-one.md#pact-106), [PACT-107](phase-3-season-one.md#pact-107)
+
+**Components:** fresh-player test harness, hosted synthetic journey evidence, Alpha handoff and completion reports.
+
+**Specification:** [alpha](../pact/alpha.md), [delivery](../pact/delivery.md), [access](../pact/access.md), [runtime](../pact/runtime.md), [product](../pact/product.md) · **Release checks:** G02, G03, G04, G06
+
+**Implement / deliver**
+
+- Re-run three fresh independently authenticated Luna players from ordinary objectives with normal resources/game clock, no supplied IDs/rules/action JSON or hidden mechanical coaching.
+- Exercise documented private verification, supported OAuth route, first improvement, discovery/human contact acceptance, exact approval, negotiation, signature and observable delivery/completion.
+- Record all setup assistance, model usage, failures and outcome disagreements; fix/retest acceptance failures before claiming this follow-up checkpoint complete.
+- Use the existing VPS only when a later implementation assignment covers deployment; never contact real testers or expand provider spending automatically.
+
+**Acceptance**
+
+- [x] Every PACT-100–107 dependency is Done with per-ticket evidence before this retest is claimed.
+- [x] Three account identities remain separate; real player discovery, authorized actions, human-only decisions and at least one contract with actual delivery are verified through normal owner/agent views.
+- [x] Models and owner screens agree on finished work and pending obligations; wrong reports/failed routes remain explicitly recorded and resolved or reported as blockers.
+- [x] Phone viewport/keyboard/approval links and disconnect/reconnect/revocation checks use dated real observations; no full production/provider/physical-device certification is inferred.
+- [x] Temporary grants/sessions and own local credentials are cleaned up while preserving reviewable synthetic gameplay records.
+- [x] A durable report names hosted revision, tested client/model, commands/results, token usage, assistance and limits. Real human enjoyment and Later pilot/SMTP work remain unproven unless separately observed.
+
+**Assignee:** Mohammad Safakhou / Codex
+
+**Evidence**
+
+- docs/implementation/reports/alpha-three-player-retest-20261002.md
+- docs/implementation/reports/evidence/alpha-three-player-retest-20261002.json
+- docs/implementation/reports/alpha-playtest-fixes.md
+
+<a id="pact-109"></a>
+## PACT-109 — Freeze the small web-experience scope and asset list
+
+**Status:** done · **Role:** Design · **Size:** S · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108)
+
+**Components:** Design, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G01, G06
+
+**Implement / deliver**
+
+- Write one brief with the existing five palette colours, four character silhouettes, the exact asset counts in PACT-114–119, and one table linking each cue to an existing authorized event.
+- Record presentation scope correction and affected-specification review before implementation. Preserve the economy, human decisions, receipts and the 28 Later tasks.
+
+**Acceptance**
+
+- [x] Brief contains an inventory with filename/format/producer/event/owner/privacy/fallback for every bounded asset; no 'and more' deliverable or extra channel is included.
+- [x] Every asset is Codex-generated through image generation, authored SVG/CSS or procedural WAV; no founder files, recording, new account or paid service is a prerequisite.
+- [x] Affected specification/ticket review is recorded, with any necessary source changes explicitly versioned; historical acceptance evidence remains tied to its original revision.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/pact/experience.md
+- docs/implementation/experience-inventory.json
+
+<a id="pact-110"></a>
+## PACT-110 — Prove image, motion and audio generation with four samples
+
+**Status:** done · **Role:** Assets · **Size:** S · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-109](phase-3-season-one.md#pact-109)
+
+**Components:** Assets, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G06
+
+**Implement / deliver**
+
+- Produce exactly four disposable proof samples: one transparent character image, one parchment texture, one 200 ms SVG/CSS transition and one two-second procedural WAV.
+- Save a small manifest and generation instructions; production tickets own their final asset exports. Use one shared manifest format, not a generator platform.
+
+**Acceptance**
+
+- [x] All four samples are actually generated and previewed; the WAV is auditioned, finite and unclipped, and dimensions/duration are recorded.
+- [x] Scripted outputs reproduce from saved code/seed; image prompt/reference/output are preserved without promising identical new model generations.
+- [x] Missing image tooling is reported explicitly rather than counted as proven. Optional TTS/video/music services and encoding tools are not prerequisites.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- assets/experience/proof/manifest.json
+- docs/implementation/reports/evidence/experience-proof.png
+- docs/implementation/reports/game-experience-implementation.md
+
+<a id="pact-111"></a>
+## PACT-111 — Persist one private ambition choice for the human and Envoy
+
+**Status:** done · **Role:** Web · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-109](phase-3-season-one.md#pact-109)
+
+**Components:** Web, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G01, G04
+
+**Implement / deliver**
+
+- Add one owner-only optional ambition: farmer, trader or defender, with neutral default and one-sentence descriptions. Persist through the existing identity/domain boundary and expose the same enum to owner HTTP/MCP context.
+- Show the choice and an explicit human edit control on Kingdom; each ambition changes guidance only. Reuse the existing kingdom name and banner rather than adding motto, publication or banner-customizer features.
+
+**Acceptance**
+
+- [x] All three choices and neutral default round-trip through owner reads, survive reload/reconnect and can only be changed by the authenticated human; another owner or agent cannot edit.
+- [x] The selected ambition appears in Envoy context; human editing does not start a run or change game permissions, resource costs or production.
+- [x] Missing/deleted ambition uses neutral guidance; no public projection reveals it and existing account export/deletion covers the new field.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/api/kingdom-experience.md
+- tests/integration/kingdom-ambition.test.ts
+
+<a id="pact-112"></a>
+## PACT-112 — Show one truthful next-decision card throughout the first session
+
+**Status:** done · **Role:** Web · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-111](phase-3-season-one.md#pact-111), [PACT-113](phase-3-season-one.md#pact-113)
+
+**Components:** Web, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G01, G04
+
+**Implement / deliver**
+
+- Use one deterministic card with priority: required human approval, failed action needing attention, pending recipient response, active build, available next choice. Keep source-record links.
+- Explain Farm II before/after and Mine/Market/Wall second-builder tradeoffs using existing catalog and snapshot facts. During waits link existing notices or allow leaving with a return expectation.
+
+**Acceptance**
+
+- [x] Fixtures cover unfounded, affordable/unaffordable Farm II, queued/active/completed/paused/stale build, outgoing pending/accepted/declined contact and expired approval; the card selects the documented priority.
+- [x] Construction allowance is labeled separately from ordinary Silver; costs and durations come from canonical facts and no balance/rule is changed.
+- [x] Sending a request changes guidance to waiting for its recipient. Countdown expiry or a historical success cannot imply a completed build or received response.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+
+<a id="pact-113"></a>
+## PACT-113 — Correct rate units and show a factual Envoy result summary
+
+**Status:** done · **Role:** Agent · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-109](phase-3-season-one.md#pact-109), [PACT-111](phase-3-season-one.md#pact-111)
+
+**Components:** Agent, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md), [experience](../pact/experience.md) · **Release checks:** G02, G03
+
+**Implement / deliver**
+
+- Create a deterministic summary of latest recorded result, current pending decision, selected ambition and next permitted step using existing authorized records. Keep free-form agent interpretation separately labeled.
+- Use one shared formatting path for whole-unit costs, gross production, upkeep, net rate and forecasts in web/HTTP/MCP. Preserve the existing bounded run and approval contracts.
+
+**Acceptance**
+
+- [x] A fixed fixture renders Grain 0.75/min = 45/hour, distinguishes ending stock from net increase and labels forecast assumptions; all three routes agree.
+- [x] Fixtures for committed/proposed/failed/waiting/approval-needed/unknown results link actual receipts and distinguish agent supply.sign authority from human-only decisions.
+- [x] One bounded cheap-model run of at most eight provider requests records the model and any disagreement. Deterministic facts remain correct even when model prose is wrong; no event-triggered inference is added.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-luna-comprehension.json
+
+<a id="pact-114"></a>
+## PACT-114 — Generate a small kingdom scene with two visible upgrade changes
+
+**Status:** done · **Role:** Art/Web · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-110](phase-3-season-one.md#pact-110)
+
+**Components:** Art/Web, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G01, G04
+
+**Implement / deliver**
+
+- Generate seven static building silhouettes in one owner-only scene, plus alternate Farm II and Mine II artwork: nine building states total. Include one parchment texture and one cloth banner; no Hall II/IV/VI evolution pack or new scene editor.
+- Integrate these into Kingdom using authoritative levels and one reusable static scaffold overlay for an active build. Preserve readable native resource values and controls.
+
+**Acceptance**
+
+- [x] Manifest contains exactly nine building states, one texture and one banner, with approved originals/export hashes and generation sources.
+- [x] Farm II and Mine II visibly change only after committed completion; scaffolding appears for active work and disappears on completion/cancel. Unknown higher levels retain text labels without fabricated variant art.
+- [x] At 390 and 1440 CSS px the scene fits without hiding controls; art failure retains text, reduced motion is static, and public projections/URLs do not expose private state.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+
+<a id="pact-115"></a>
+## PACT-115 — Generate four court characters with three poses each
+
+**Status:** done · **Role:** Art · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-110](phase-3-season-one.md#pact-110)
+
+**Components:** Art, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Generate Sir Honk, Pebble, Moth and Professor Bean, each with idle, pleased and concerned poses: exactly twelve exports, maximum 256×256 pixels each. Use the approved palette and character references.
+- Write sixteen original flavour lines, four per character, each at most 80 characters. Keep factual status outside the joke; no dialogue generation, conversation engine or comedy-mode library.
+
+**Acceptance**
+
+- [x] All twelve exports and sixteen lines are present, inspected for consistent silhouettes, transparency, scale and readable fallback, and listed in the manifest.
+- [x] Characters only present existing facts; they cannot negotiate, sign, create contacts or act as counterparties.
+- [x] Flavour may be disabled without losing status text. No further poses, cast members or joke variants are required for this ticket.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+
+<a id="pact-116"></a>
+## PACT-116 — Add three short milestone animations and one optional goose gag
+
+**Status:** done · **Role:** Web/Motion · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-112](phase-3-season-one.md#pact-112), [PACT-114](phase-3-season-one.md#pact-114), [PACT-115](phase-3-season-one.md#pact-115), [PACT-120](phase-3-season-one.md#pact-120)
+
+**Components:** Web/Motion, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Author three 150–250 ms reveals for confirmed build completion, accepted contact and first actual trade delivery. Add one optional clickable goose honk pose lasting at most one second; no separate raid/signature/banner/helmet/quill motion pack.
+- Use existing event IDs to deduplicate reveals across reload/reconnect, and obey the preferences from PACT-120. Animation changes presentation only.
+
+**Acceptance**
+
+- [x] Fixtures for queue success, local timer expiry, rejected action and pending contact produce no celebration; each confirmed mapped event produces one reveal.
+- [x] Refreshing/reconnecting or replaying the same event does not repeat the reveal, and routine settlement ticks stay quiet.
+- [x] All four motions are previewed at 390/1440 px with keyboard focus intact; reduced motion uses an immediate static state and no input is blocked.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json
+- docs/implementation/reports/evidence/experience-media-regeneration.json
+
+<a id="pact-117"></a>
+## PACT-117 — Generate one music loop, one ambience loop and one flourish
+
+**Status:** done · **Role:** Audio · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-110](phase-3-season-one.md#pact-110)
+
+**Components:** Audio, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Compose and synthesize one 30-second settlement music loop, one 15-second quiet wind/cloth ambience loop and one two-second achievement flourish. Save score/code/seed and original WAVs; no diplomacy/threat/season soundtrack variants.
+- Produce browser-playable mono assets at 22050 Hz or a documented smaller compatible export. These are outputs for the shared audio controls, not a new audio engine.
+
+**Acceptance**
+
+- [x] Exactly three generated assets play and are auditioned; durations, hashes, measured peaks and regeneration command are recorded.
+- [x] Music and ambience have no audible join click; all samples are finite with peak at or below -3 dBFS and a documented fade if seamless synthesis fails.
+- [x] Two refinement passes are the production allowance; an unacceptable result is recorded as incomplete and scoped explicitly, rather than opening unlimited generation work. No founder production account is required.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- assets/experience/music-manifest.json
+- docs/implementation/reports/evidence/experience-media-regeneration.json
+
+<a id="pact-118"></a>
+## PACT-118 — Generate six short event sounds and one synthesized goose honk
+
+**Status:** done · **Role:** Audio · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-110](phase-3-season-one.md#pact-110), [PACT-115](phase-3-season-one.md#pact-115)
+
+**Components:** Audio, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Generate six effects: build clack/trumpet, paper flutter, signature seal, first-delivery bell, raid drums and default snapped cord. Add one optional nonverbal goose honk. Each is at most two seconds; no speech/TTS or extra variants.
+- Save procedural source/seed, WAV/export, duration and gain in the shared manifest. PACT-119 owns event mapping; PACT-120 owns playback controls.
+
+**Acceptance**
+
+- [x] Exactly seven original finite assets are generated and auditioned with peaks at or below -3 dBFS; no clipping or copied recording is used.
+- [x] Honk is at most one second and no louder than the build cue; an original caption accompanies the manual gag.
+- [x] Critical warnings remain readable without audio; no resource tick or repeated denied command receives an audio cue.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json
+- docs/implementation/reports/evidence/experience-media-regeneration.json
+
+<a id="pact-119"></a>
+## PACT-119 — Add seven factual in-app event cards with generated icons
+
+**Status:** done · **Role:** Web/Notifications · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-112](phase-3-season-one.md#pact-112), [PACT-115](phase-3-season-one.md#pact-115), [PACT-118](phase-3-season-one.md#pact-118)
+
+**Components:** Web/Notifications, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Define exactly seven card templates: build complete, contact accepted, first delivery, signature, raid warning, default and waiting. Generate seven simple SVG icons and one optional flavour line per template.
+- Reuse existing authorized history/inbox/receipt IDs. Map the six PACT-118 effects to the six corresponding non-waiting events; honk is manual only. Reuse the PACT-116 animations when present.
+
+**Acceptance**
+
+- [x] Each template has a fixture for authorized data and missing/stale data, factual outcome text and a record link; waiting never celebrates or plays a sound.
+- [x] Duplicate/reconnected delivery of an event yields one card/cue; first delivery is once per contract, other settlement installments are silent.
+- [x] This extends existing in-app rendering only: no new inbox store, outbound email/push, or provider call. Errors/defaults retain exact consequence text when humour is disabled.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-context-browser.json
+
+<a id="pact-120"></a>
+## PACT-120 — Add silent-by-default audio controls and a reduced-motion option
+
+**Status:** done · **Role:** Web · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-110](phase-3-season-one.md#pact-110)
+
+**Components:** Web, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Provide Enable sound, master mute and separate music/effects/ambience/notifications sliders using one small shared playback helper. Honour OS reduced motion and expose an explicit motion override; add one Humour on/off choice instead of calm/dry/chaotic modes.
+- Persist preferences in owner-scoped browser storage, clear them on sign-out, pause audio in hidden tabs and release active audio on unmount. Implement controls using temporary proof assets; final assets are checked in PACT-124.
+
+**Acceptance**
+
+- [x] First load is silent until user gesture; mute/sliders, disabled notifications, humour-off and reduced-motion combinations are tested with keyboard labels and saved preferences.
+- [x] Global event cue cooldown is at least three seconds, manual honk cooldown ten seconds, and only one instance of each loop plays. Reconnect/hidden-tab return cannot replay an audio backlog.
+- [x] Humour-off removes flavour/manual gag while retaining every fact; motion-off replaces reveals with static output. No setting changes game allowance or triggers inference.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+
+<a id="pact-121"></a>
+## PACT-121 — Show notice freshness and actual contact waiting states
+
+**Status:** done · **Role:** Social/Web · **Size:** S · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-112](phase-3-season-one.md#pact-112)
+
+**Components:** Social/Web, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G03, G04
+
+**Implement / deliver**
+
+- Display created/expiry times on existing public notices; label missing dates as unknown and expired notices as expired.
+- For the current owner's outgoing contact request show pending/accepted/declined/expired and existing no-cost introduction/invitation routes; use explicit 'response time unknown' instead of presence or response-window prediction.
+
+**Acceptance**
+
+- [x] Fixtures cover fresh/expired/undated notices, all four request states and no notices/contacts; all use existing authoritative fields.
+- [x] Pending/expired requests cannot appear accepted; another owner's inbox, online state, stock and troops remain absent from public views.
+- [x] No new fee, free Silver, automatic retry, tester recruitment, scheduling field or NPC is introduced. Empty-state text permits leaving and returning.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json
+- docs/implementation/reports/evidence/experience-media-regeneration.json
+
+<a id="pact-122"></a>
+## PACT-122 — Show three private milestone keepsakes in the Hall
+
+**Status:** done · **Role:** Web · **Size:** S · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-111](phase-3-season-one.md#pact-111), [PACT-119](phase-3-season-one.md#pact-119)
+
+**Components:** Web, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Add three read-only Hall cards for first completed build, first accepted contact and first delivered trade. Generate three small SVG keepsake designs, including the agriculture plaque.
+- Derive first occurrences from existing retained authorized records and link their dated results; use the existing history view when none exists. No new collection database, pinning, export format or public sharing flow.
+
+**Acceptance**
+
+- [x] Exactly three templates use real first-occurrence IDs; reload/replay changes neither counts nor occurrence dates and queued/proposed events produce no keepsake.
+- [x] Missing/purged history is explicitly unavailable, not reconstructed as a false accomplishment. Cross-owner access remains denied.
+- [x] All three SVGs/texts are generated and saved; no Gems, purchases or catalog entitlement is awarded or consumed.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-keepsakes-browser.json
+- tests/integration/world-views.test.ts
+
+<a id="pact-123"></a>
+## PACT-123 — Show harvest conditions with three generated field overlays
+
+**Status:** done · **Role:** Web/Art · **Size:** S · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-114](phase-3-season-one.md#pact-114)
+
+**Components:** Web/Art, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md), [experience](../pact/experience.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Generate three static SVG field overlays for 100%, 90% and 80% public harvest multipliers, using the same scene style. Map six existing weeks to these three images; show exact multiplier and published schedule in text.
+- Reuse the single music/ambience loop unchanged. No weather simulation, private hunger mood, seasonal soundtrack or additional planning system.
+
+**Acceptance**
+
+- [x] Fixtures for all six weeks map 100/100/90/80/80/100 correctly, with paused and unavailable clock states visibly labeled.
+- [x] Exactly three overlays are saved; asset failure or silent/reduced-motion mode retains the complete textual schedule.
+- [x] Scenery uses public season data only; no production multiplier, clock, scoring or private public-portrait data changes.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-motion-social-harvest-browser.json
+- docs/implementation/reports/evidence/experience-media-regeneration.json
+
+<a id="pact-124"></a>
+## PACT-124 — Check the four-screen experience and enforce media budgets
+
+**Status:** done · **Role:** Web/QA · **Size:** M · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-112](phase-3-season-one.md#pact-112), [PACT-113](phase-3-season-one.md#pact-113), [PACT-114](phase-3-season-one.md#pact-114), [PACT-115](phase-3-season-one.md#pact-115), [PACT-116](phase-3-season-one.md#pact-116), [PACT-117](phase-3-season-one.md#pact-117), [PACT-118](phase-3-season-one.md#pact-118), [PACT-119](phase-3-season-one.md#pact-119), [PACT-120](phase-3-season-one.md#pact-120), [PACT-121](phase-3-season-one.md#pact-121), [PACT-122](phase-3-season-one.md#pact-122), [PACT-123](phase-3-season-one.md#pact-123)
+
+**Components:** Web/QA, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G04, G06
+
+**Implement / deliver**
+
+- Review the integrated Kingdom/Envoy/People/Chronicle flow; feature tickets own integration and acceptance. Fix only seams between completed features, not a second redesign.
+- Check Chromium at 390×844 and 1440×900, keyboard-only use, silent/reduced-motion mode, asset failures and reconnect. Measure generated-media transfer bytes and audio instances.
+
+**Acceptance**
+
+- [x] All four screens retain readable contracts/exact approvals, no horizontal overflow at the two sizes, visible keyboard focus and minimum 44 CSS px primary touch targets.
+- [x] Generated media is at most 3 MiB initially transferred and 8 MiB total shipped, excluding existing app assets. Lazy loading or procedural compression meets the budget; record measured bytes rather than a performance claim.
+- [x] Asset failure leaves text, reconnect preserves stale labels and does not repeat commands/cues, hidden tabs stop audio, and relevant build/type/lint/behavior checks pass with recorded results.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-integrated-browser.json
+
+<a id="pact-125"></a>
+## PACT-125 — Verify the bounded asset bundle and regeneration instructions
+
+**Status:** done · **Role:** Assets/Operations · **Size:** S · **Type:** implementation
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-110](phase-3-season-one.md#pact-110), [PACT-124](phase-3-season-one.md#pact-124)
+
+**Components:** Assets/Operations, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G06
+
+**Implement / deliver**
+
+- Check only the PACT-114–119/122/123 inventory against the shared manifest: source/prompt, approved export, hash, event/placement, dimensions/duration and generation method.
+- Write one regeneration/readme command index and existing-build packaging notes. Feature reports already own their implementation evidence; no additional publishing, server or deployment project.
+
+**Acceptance**
+
+- [x] Every bounded final asset and template has a source and export entry, no placeholders; procedural generation works from saved inputs and approved raster exports remain preserved.
+- [x] Inventory counts agree with revised tickets, generated bundle budget from PACT-124 passes, and no founder files or production account is needed.
+- [x] Document generated-tool use/cost where available and unknown where unavailable; no secret or copied stock media is packaged. No deployment is performed by this planning task.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- assets/experience/README.md
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/evidence/experience-final-regeneration.json
+
+<a id="pact-126"></a>
+## PACT-126 — Run one fresh-player session and record clarity and enjoyment limits
+
+**Status:** done · **Role:** QA · **Size:** M · **Type:** verification
+
+**Delivery track:** experience · [Generated experience](game-experience.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108), [PACT-109](phase-3-season-one.md#pact-109), [PACT-110](phase-3-season-one.md#pact-110), [PACT-111](phase-3-season-one.md#pact-111), [PACT-112](phase-3-season-one.md#pact-112), [PACT-113](phase-3-season-one.md#pact-113), [PACT-114](phase-3-season-one.md#pact-114), [PACT-115](phase-3-season-one.md#pact-115), [PACT-116](phase-3-season-one.md#pact-116), [PACT-117](phase-3-season-one.md#pact-117), [PACT-118](phase-3-season-one.md#pact-118), [PACT-119](phase-3-season-one.md#pact-119), [PACT-120](phase-3-season-one.md#pact-120), [PACT-121](phase-3-season-one.md#pact-121), [PACT-122](phase-3-season-one.md#pact-122), [PACT-123](phase-3-season-one.md#pact-123), [PACT-124](phase-3-season-one.md#pact-124), [PACT-125](phase-3-season-one.md#pact-125)
+
+**Components:** QA, generated game experience.
+
+**Specification:** [product](../pact/product.md), [alpha](../pact/alpha.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [experience](../pact/experience.md) · **Release checks:** G01, G02, G03, G04, G06
+
+**Implement / deliver**
+
+- Use one fresh account in the testing world with normal clocks/resources and one connected cheap agent; allow at most 30 active minutes across two visits, with the second after the normal Farm II deadline. Observe founding, Farm II, a second-builder choice and a real available social opportunity; no model calls while waiting.
+- Compare default versus silent/reduced-motion/humour-off, record actual build effects, waiting states, rate units, connection assistance and media. Social acceptance is conditional on an independent reply; no operated counterparty is required.
+
+**Acceptance**
+
+- [x] All seventeen preceding tickets are Done with their revised evidence. Record five observations: stated ambition, actual before/after, next decision, actual recipient wait/empty community and a reason to return; negative findings are valid recorded results.
+- [x] Any observed violation of factual/accessibility criteria is fixed and the affected step rerun before completion; unresolved subjective enjoyment concerns are reported without unlimited redesign.
+- [x] Screenshots/receipts identify release/browser/model, calls and cost if available. At most eight provider requests and 30 active minutes across two visits; a still-pending progression is reported as not observed, with no clock acceleration.
+- [x] Temporary sessions/grants/credentials are revoked. This is a synthetic design review, not measured human attachment, a mandatory successful trade, a production certification or a forced positive fun score.
+
+**Assignee:** codex-game-experience
+
+**Evidence**
+
+- docs/implementation/reports/game-experience-implementation.md
+- docs/implementation/reports/experience-fresh-player-20261003.md
+- docs/implementation/reports/evidence/experience-fresh-player-20261003.json
+
+<a id="pact-127"></a>
+## PACT-127 — Join from one shared link and connect your own agent
+
+**Status:** done · **Role:** Full stack · **Size:** M · **Type:** implementation
+
+**Delivery track:** friends_playtest · [Friends playtest](friends-playtest.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-108](phase-3-season-one.md#pact-108)
+
+**Components:** guest play.
+
+**Specification:** [alpha](../pact/alpha.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** G02, G04
+
+**Implement / deliver**
+
+- Provide a testing-mode shared URL: enter a nickname, automatically create a guest kingdom with the normal starting rules, and enter the game. No PACT account form, email, password, verification, operator code retrieval or per-person admission link.
+- Persist the browser's guest identity so refresh/return resumes the same kingdom. Reuse internal ownership/session machinery; joining does not give control over another guest. A new browser or cleared browser data starts fresh; cross-device recovery is outside this task.
+- Present Connect your agent in the entry flow with copyable instructions, the existing own-agent authorization route, a connection check and a ready-to-copy first mission. The agent runs in the player's own client, not an automatically purchased in-game model. Adapt existing guest-incompatible verified-email/reauth checks to the explicit testing identity, not invented email verification.
+
+**Acceptance**
+
+- [x] Two separate browser profiles use the same URL and only choose nicknames; each reaches its own kingdom without signup/email/password/verification. Reload and return preserve the same kingdom without duplicate founding.
+- [x] A guest connects their own supported Codex route without PACT login prompts or manually retrieving server tokens, and its first read identifies that exact kingdom. Existing explicit agent authorization and human decisions remain available in the guest session.
+- [x] Copy/check/reconnect states show actionable success or failure. No model starts merely from joining or connecting. Record the tested client version and an end-to-end first-mission result; use the cheapest available supported model with a small explicit call cap if live inference is exercised.
+
+**Assignee:** codex-friends-playtest
+
+**Evidence**
+
+- docs/implementation/reports/friends-playtest-20261004.md
+- docs/implementation/reports/evidence/friends-play-checks-20261004.json
+- Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified.
+
+<a id="pact-128"></a>
+## PACT-128 — Make the opening kingdom screen short and actionable
+
+**Status:** done · **Role:** Frontend · **Size:** S · **Type:** implementation
+
+**Delivery track:** friends_playtest · [Friends playtest](friends-playtest.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-126](phase-3-season-one.md#pact-126)
+
+**Components:** shared web features.
+
+**Specification:** [alpha](../pact/alpha.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** G04
+
+**Implement / deliver**
+
+- Reorder the existing Kingdom screen: scene, compact resource summary, active/free builders and one current next action first.
+- Collapse detailed forecasts, advanced controls and records. Replace the empty keepsake collection with a compact hint until the first keepsake is earned; keep full collection reachable afterward.
+- Reuse existing art, cast and factual next-decision logic. Do not add assets, tutorials, game rules or an additional dashboard.
+
+**Acceptance**
+
+- [x] At 390x844 and 1440x900 the next-action card appears in the initial viewport after kingdom entry, with no horizontal overflow; builders and progress are directly adjacent rather than behind empty collections.
+- [x] Keyboard users can reveal details, and existing actions/receipts remain reachable. Fresh, building, completed-build and pending-approval fixtures show the corresponding truthful next action.
+
+**Assignee:** codex-friends-playtest
+
+**Evidence**
+
+- docs/implementation/reports/friends-playtest-20261004.md
+- docs/implementation/reports/evidence/friends-play-checks-20261004.json
+- Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified.
+
+<a id="pact-129"></a>
+## PACT-129 — Show useful upgrade choices and use the free builder
+
+**Status:** done · **Role:** Frontend · **Size:** S · **Type:** implementation
+
+**Delivery track:** friends_playtest · [Friends playtest](friends-playtest.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-126](phase-3-season-one.md#pact-126)
+
+**Components:** shared web features.
+
+**Specification:** [alpha](../pact/alpha.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** G02, G04
+
+**Implement / deliver**
+
+- Show up to three deterministic upgrade cards using existing rules/catalog calculations, current resources and ambition. Each states exact benefit, costs, duration and a specific known blocker; keep all other choices available under All buildings.
+- Select an available builder automatically; show both slots clearly and do not overwrite a busy slot. Refresh/revalidate through the existing command path before a commitment.
+- Provide a copyable Ask my agent instruction for each choice; clicking it alone does not purchase inference or queue a build. Reuse existing character flavour sparingly around a genuinely idle builder.
+
+**Acceptance**
+
+- [x] Fixtures with zero, one and two available builders select only a free slot or explain that both are busy. Already queued/max-level upgrades are not suggested as immediately actionable.
+- [x] Each shown card's numbers match the shared catalog; unaffordable/prerequisite-blocked options explain why. Human submission or an authorized agent uses the existing game command/receipt without duplicate effects.
+- [x] After completing one upgrade, the choices and slot display update from fresh state; a free second builder remains visibly actionable while the first is busy.
+
+**Assignee:** codex-friends-playtest
+
+**Evidence**
+
+- docs/implementation/reports/friends-playtest-20261004.md
+- docs/implementation/reports/evidence/friends-play-checks-20261004.json
+- Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified.
+
+<a id="pact-130"></a>
+## PACT-130 — Find friends in the shared world and start a conversation
+
+**Status:** done · **Role:** Full stack · **Size:** M · **Type:** implementation
+
+**Delivery track:** friends_playtest · [Friends playtest](friends-playtest.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-127](phase-3-season-one.md#pact-127), [PACT-128](phase-3-season-one.md#pact-128), [PACT-129](phase-3-season-one.md#pact-129)
+
+**Components:** shared web features.
+
+**Specification:** [alpha](../pact/alpha.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** G01, G04, G06
+
+**Implement / deliver**
+
+- Put a compact list of actual public guest kingdoms from this testing world at the top of People: nickname/handle, public kingdom identity and contact action. Show up to 20 per page; exclude self/retired/hidden profiles and expose no private balances/messages.
+- Add Copy game link for the same common guest-entry URL. Do not require individual invitations, exact-handle lookup or pasted kingdom IDs; reuse existing explicit contact request/acceptance and messaging.
+- After contact acceptance, open the conversation with Say hello and Discuss a trade drafts; drafts are not sent automatically and trade discussion does not sign a contract.
+- Finish with a small integrated two-browser guest playthrough of joining, connecting an agent, seeing building progress, finding each other and messaging. Record actual results and deployment evidence without inventing human enjoyment.
+
+**Acceptance**
+
+- [x] Two guests using the same shared URL can discover each other, request/accept contact and exchange a message without UUID entry or email verification. Each sees only permitted public/own information.
+- [x] Copy game link returns the common entry URL. Empty and loading/error lists distinguish no players from unavailable data; no fake players, online indicators or invented trade success.
+- [x] Discuss a trade opens an editable conversation draft; sending, acceptance and any later financial agreement remain explicit. The integrated phone/desktop walkthrough records the tested release, outcomes and any remaining friction.
+
+**Assignee:** codex-friends-playtest
+
+**Evidence**
+
+- docs/implementation/reports/friends-playtest-20261004.md
+- docs/implementation/reports/evidence/friends-play-checks-20261004.json
+- Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified.

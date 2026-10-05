@@ -1,5 +1,17 @@
 import type { Pool, PoolClient } from "pg";
-import { factualRunReport } from "./report.js";
+import { factualRunReport, type ReportEntry } from "./report.js";
+
+export interface CurrentActivityFact {
+  label: string;
+  status: string;
+  nextStep: string;
+  asOfGameTimeMs?: number;
+  reviewPath?: string;
+}
+export type ActivityStateResolver = (
+  accountId: string,
+  entries: ReportEntry[],
+) => Promise<Record<string, CurrentActivityFact[]>>;
 
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -9,6 +21,7 @@ export class ExternalAgentActivity {
     private readonly pool: Pool,
     private readonly productScope: string,
     private readonly clock: { now(): Date },
+    private readonly resolveCurrent?: ActivityStateResolver,
   ) {}
 
   async record(
@@ -52,17 +65,40 @@ export class ExternalAgentActivity {
   async read(accountId: string) {
     const rows = (
       await this.pool.query<{ id: string; summary: string; created_at: Date }>(
-        "SELECT id::text,summary,created_at FROM external_agent_activity WHERE product_scope=$1 AND account_id=$2 ORDER BY id DESC LIMIT 50",
+        "SELECT id::text,summary,created_at FROM external_agent_activity WHERE product_scope=$1 AND account_id=$2 ORDER BY external_agent_activity.id DESC LIMIT 50",
         [this.productScope, accountId],
       )
     ).rows.reverse();
+    const report = factualRunReport(
+      rows.map((row) => ({ ...row, call_id: row.id })),
+      "recorded",
+      null,
+    );
+    let current: Record<string, CurrentActivityFact[]> = {},
+      stale = !this.resolveCurrent;
+    if (this.resolveCurrent) {
+      try {
+        current = await this.resolveCurrent(accountId, report.entries);
+      } catch {
+        stale = true;
+      }
+    }
     return {
       source: "external",
-      ...factualRunReport(
-        rows.map((row) => ({ ...row, call_id: row.id })),
-        "recorded",
-        null,
-      ),
+      ...report,
+      stale,
+      checkedAt: this.clock.now().toISOString(),
+      entries: report.entries.map((entry) => ({
+        ...entry,
+        currentFacts: current[entry.id] ?? [],
+        nextStep: stale
+          ? "Current state unavailable; historical result retained. Refresh before deciding."
+          : current[entry.id]?.length
+            ? current[entry.id]?.map((fact) => fact.nextStep).join(" ")
+            : entry.category === "failed"
+              ? "Historical failed attempt. Read current state before choosing a new move; no success is established by this result."
+              : "Historical result retained; current record status unknown. Inspect the authorized record before deciding.",
+      })),
       timestamps: Object.fromEntries(rows.map((row) => [row.id, row.created_at.toISOString()])),
     };
   }

@@ -1,0 +1,74 @@
+[
+  {
+    "name": "honk-idle",
+    "source": "assets/experience/characters/originals/honk-idle.png",
+    "prompt": "Approved PACT-110 original; exact prompt preserved in assets/experience/proof/prompts.json",
+    "reference": null
+  },
+  {
+    "name": "pebble-idle",
+    "prompt": "Use case: illustration-story. Project-bound game asset PACT-115, pebble-idle.png. One original character only: Pebble, a squat square stone foreman with chunky grey rock body, tiny earnest dark eyes, stubby arms and legs, a lopsided brass medieval work helmet and small deep-teal work sash. Idle pose: grounded, hands resting on hips, politely unimpressed. Warm shabby medieval storybook illustration with visible paper-like painted texture, crisp ink outlines, simple recognizable silhouette, comedy through serious tiny bureaucracy. Palette parchment #F4EBDD, ink #202A30, teal #174A4B, brass #AD7834, clay #A83F38. Full character centered with generous transparent padding, no cropped feet/helmet. Readable at 128px after export. Transparent background, actual alpha, no cast shadow/background scenery, no words, no border, no second figure. Cosmetic presenter only, not an opponent.",
+    "source": "assets/experience/characters/originals/pebble-idle.png",
+    "reference": null
+  },
+  {
+    "name": "pebble-pleased",
+    "prompt": "Edit target: the provided Pebble idle character. Project asset pebble-pleased.png. Preserve exactly this same square stone foreman, helmet, teal sash, paper-textured medieval illustration, brass palette and transparent background. Change only expression and pose: a tiny satisfied smile and one chunky thumb raised, other hand on hip. Full character, all feet and helmet visible, generous transparent margin. No text, no new objects, no additional characters. Same scale and silhouette family, readable at128px.",
+    "source": "assets/experience/characters/originals/pebble-pleased.png",
+    "reference": "assets/experience/characters/originals/pebble-idle.png"
+  },
+  {
+    "name": "pebble-concerned",
+    "prompt": "Edit target: the provided Pebble idle character. Project asset pebble-concerned.png. Preserve exactly this same square stone foreman, helmet, teal sash, paper-textured medieval illustration, brass palette and transparent background. Change only expression and pose: worried eyebrows, small uneasy downturned mouth, one chunky hand scratching side of helmet, other hand resting low. Full character, all feet and helmet visible, generous transparent margin. No text, no new objects, no additional characters. Same scale and silhouette family, readable at128px.",
+    "source": "assets/experience/characters/originals/pebble-concerned.png",
+    "reference": "assets/experience/characters/originals/pebble-idle.png"
+  },
+  {
+    "name": "moth-idle",
+    "prompt": "Use case: illustration-story. Project-bound game asset PACT-115. One original character only: Moth, a narrow small anthropomorphic winged courier with soft cream moth head, tiny antennae, large ink-dark earnest eyes, two folded dusty cream wings, skinny legs, a deep-teal satchel and a nervous folded parchment letter held in both hands. Idle pose: slightly hunched, shy and alert. No helmet, no abacus. Warm shabby medieval storybook illustration, paper-like painted texture, crisp ink outlines, simple recognizable silhouette, comedy through serious tiny bureaucracy. Palette parchment #F4EBDD, ink #202A30, deep teal #174A4B, brass #AD7834, clay #A83F38. Full character centered, all feet/head visible, generous transparent margin. Readable at128px. Transparent background actual alpha, no shadow/background scenery, no text, no border, no second character. Cosmetic presenter only.",
+    "source": "assets/experience/characters/originals/moth-idle.png",
+    "reference": null
+  },
+  {
+    "name": "bean-idle",
+    "prompt": "Use case: illustration-story. Project-bound game asset PACT-115. One original character only: Professor Bean, a tall bean-shaped cream and muted brown scholar with enormous round ink spectacles, tiny earnest eyes, slim dark arms and feet, a small deep-teal academic shawl with brass clasp and a tiny brass abacus held at waist. Idle pose: upright, thoughtfully adjusting spectacles with one hand. No wings, no helmet. Warm shabby medieval storybook illustration, paper-like painted texture, crisp ink outlines, simple recognizable silhouette, comedy through serious tiny bureaucracy. Palette parchment #F4EBDD, ink #202A30, deep teal #174A4B, brass #AD7834, clay #A83F38. Full character centered, all feet/head visible, generous transparent margin. Readable at128px. Transparent background actual alpha, no shadow/background scenery, no text, no border, no second character. Cosmetic presenter only.",
+    "source": "assets/experience/characters/originals/bean-idle.png",
+    "reference": null
+  },
+  {
+    "name": "honk-pleased",
+    "prompt": "Edit target: provided Sir Honk idle. Project PACT-115 honk-pleased.png. Preserve exactly the same white goose, oversized teal accountant visor, teal neckwear, brass abacus, ink outline and paper-painted medieval style. Change only pose and expression: a smug little smile, eyes happily half closed, one wing raised in a tiny triumph while the other holds the same abacus. Same full-body proportions and scale, all visor/feet/wings visible with generous transparent padding. Actual transparent alpha; preserve transparency, no background, glow or shadow. No text, no new objects or characters.",
+    "source": "assets/experience/characters/originals/honk-pleased.png",
+    "reference": "assets/experience/characters/originals/honk-idle.png"
+  },
+  {
+    "name": "honk-concerned",
+    "prompt": "Edit target: provided Sir Honk idle. Project PACT-115 honk-concerned.png. Preserve exactly the same white goose, oversized teal accountant visor, teal neckwear, brass abacus, ink outline and paper-painted medieval style. Change only pose and expression: worried raised eyebrows, beak slightly open in a tiny gasp, wings hugging the same abacus close. Same full-body proportions and scale, all visor/feet/wings visible with generous transparent padding. Actual transparent alpha; preserve transparency, no background, glow or shadow. No text, no new objects or characters.",
+    "source": "assets/experience/characters/originals/honk-concerned.png",
+    "reference": "assets/experience/characters/originals/honk-idle.png"
+  },
+  {
+    "name": "moth-pleased",
+    "prompt": "Edit target: provided Moth idle. Project PACT-115 moth-pleased.png. Preserve exactly the same narrow cream moth courier, antennae, folded wings, teal satchel, clay shawl, dark legs and paper letter, ink outlines and painted medieval style. Change only pose/expression: happy crescent eyes, a shy satisfied smile, one hand holding the same letter proudly forward, the other on the satchel strap. Same full-body proportions and scale; all antennae, wings and feet visible, generous transparent margin. Preserve actual transparent alpha, no background glow/shadow, no words, extra objects or other characters.",
+    "source": "assets/experience/characters/originals/moth-pleased.png",
+    "reference": "assets/experience/characters/originals/moth-idle.png"
+  },
+  {
+    "name": "moth-concerned",
+    "prompt": "Edit target: provided Moth idle. Project PACT-115 moth-concerned.png. Preserve exactly the same narrow cream moth courier, antennae, folded wings, teal satchel, clay shawl, dark legs and paper letter, ink outlines and painted medieval style. Change only pose/expression: worried drooping eyebrows, antennae slightly bent, clutching the same folded letter against the chest with both hands. Same full-body proportions and scale; all antennae, wings and feet visible, generous transparent margin. Preserve actual transparent alpha, no background glow/shadow, no words, extra objects or other characters.",
+    "source": "assets/experience/characters/originals/moth-concerned.png",
+    "reference": "assets/experience/characters/originals/moth-idle.png"
+  },
+  {
+    "name": "bean-pleased",
+    "prompt": "Edit target: provided Professor Bean idle. Project PACT-115 bean-pleased.png. Preserve exactly the same tall cream-brown bean scholar, enormous brass-rimmed ink spectacles, teal shawl with brass clasp, dark thin arms/feet and small abacus, same painted paper medieval illustration. Change only pose/expression: a small proud smile, relaxed happy eyes behind the same enormous spectacles, one thin hand raised with a single finger in a modest eureka gesture while the other holds the same tiny abacus. Same full-body proportions and scale; all head and feet visible, generous transparent margin. Preserve actual transparent alpha, no background glow/shadow, no text, extra objects or other characters.",
+    "source": "assets/experience/characters/originals/bean-pleased.png",
+    "reference": "assets/experience/characters/originals/bean-idle.png"
+  },
+  {
+    "name": "bean-concerned",
+    "prompt": "Edit target: provided Professor Bean idle. Project PACT-115 bean-concerned.png. Preserve exactly the same tall cream-brown bean scholar, enormous brass-rimmed ink spectacles, teal shawl with brass clasp, dark thin arms/feet and small abacus, same painted paper medieval illustration. Change only pose/expression: worried raised brows and small frown behind the same spectacles, one thin hand touching the cheek, the other hugging the same tiny abacus. Same full-body proportions and scale; all head and feet visible, generous transparent margin. Preserve actual transparent alpha, no background glow/shadow, no text, extra objects or other characters.",
+    "source": "assets/experience/characters/originals/bean-concerned.png",
+    "reference": "assets/experience/characters/originals/bean-idle.png"
+  }
+]

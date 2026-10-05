@@ -7,3 +7,7 @@ coverage/
 !.env.example
 *.log
 .DS_Store
+
+# Local Python bytecode is generated, not implementation evidence.
+__pycache__/
+*.py[cod]

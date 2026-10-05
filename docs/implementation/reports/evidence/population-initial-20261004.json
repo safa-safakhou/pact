@@ -1,0 +1,7260 @@
+{
+  "capturedAt": "2026-10-04T21:28:22.832Z",
+  "status": "running",
+  "runId": "population-2026-10-04T21-13-18-681Z",
+  "startedAt": "2026-10-04T21:13:59.742Z",
+  "endsAt": "2026-10-04T23:13:59.742Z",
+  "population": {
+    "uniqueKingdoms": 100,
+    "roles": {
+      "luna": 10,
+      "script": 90
+    },
+    "observed": 100
+  },
+  "model": {
+    "jobs": 32,
+    "results": {
+      "success": 28
+    },
+    "reports": 13,
+    "scriptModelJobs": 0
+  },
+  "actions": {
+    "uniqueRequests": 385,
+    "uniqueCommitted": 375,
+    "byKind": {
+      "game.building.queue": 279,
+      "game.contact.request": 84,
+      "game.contact.answer": 10,
+      "game.message.send": 2
+    },
+    "byRole": {
+      "script": 351,
+      "luna": 14,
+      "simulated-human": 10
+    },
+    "denials": [
+      {
+        "at": "2026-10-04T21:26:00.021Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Ada Byte",
+        "role": "luna",
+        "action": {
+          "kind": "game.message.send",
+          "recipientKingdomId": "8871ec46-52a2-4258-90b6-a1f0f78f5a6d",
+          "body": "I am improving iron production. What resource would you value in a one-hour reciprocal supply arrangement, and at what whole-unit hourly rate up to 12? I can compare that with keeping resources for construction before proposing terms."
+        },
+        "outcome": {
+          "commandId": "8c5af031-f1a4-4bcf-a5b5-2d696cb8b648",
+          "code": "FORBIDDEN",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      },
+      {
+        "at": "2026-10-04T21:27:53.757Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Sim Farmer 81",
+        "role": "script",
+        "action": {
+          "kind": "game.contact.request",
+          "recipientKingdomId": "81663ce3-8f91-4686-b255-44a9a043a40e",
+          "note": "[Scripted Sim Farmer 81] I am a simulated neighbour. Would you like to discuss a small reciprocal trade?"
+        },
+        "outcome": {
+          "commandId": "58b6d7ef-3cf4-4640-922a-a4fa1854aba1",
+          "code": "INVALID_COMMAND",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      },
+      {
+        "at": "2026-10-04T21:27:55.016Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Sim Merchant 83",
+        "role": "script",
+        "action": {
+          "kind": "game.contact.request",
+          "recipientKingdomId": "f8dc55e0-d841-4d9b-9586-0d40a9b61ef3",
+          "note": "[Scripted Sim Merchant 83] I am a simulated neighbour. Would you like to discuss a small reciprocal trade?"
+        },
+        "outcome": {
+          "commandId": "1a4dc924-97cc-4455-81fb-8309dd9cd101",
+          "code": "INVALID_COMMAND",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      },
+      {
+        "at": "2026-10-04T21:27:56.276Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Sim Merchant 86",
+        "role": "script",
+        "action": {
+          "kind": "game.contact.request",
+          "recipientKingdomId": "29554290-bcd9-43dc-81ff-70e2527c1ecc",
+          "note": "[Scripted Sim Merchant 86] I am a simulated neighbour. Would you like to discuss a small reciprocal trade?"
+        },
+        "outcome": {
+          "commandId": "ef0e0510-deed-47a6-97d9-93c84a789fc3",
+          "code": "INVALID_COMMAND",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      },
+      {
+        "at": "2026-10-04T21:27:56.731Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Sim Farmer 87",
+        "role": "script",
+        "action": {
+          "kind": "game.contact.request",
+          "recipientKingdomId": "324abcd3-7c38-4473-a9fb-68a84e18afca",
+          "note": "[Scripted Sim Farmer 87] I am a simulated neighbour. Would you like to discuss a small reciprocal trade?"
+        },
+        "outcome": {
+          "commandId": "0a45fabd-8ef7-4682-a38e-3ef5100edc2d",
+          "code": "INVALID_COMMAND",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      },
+      {
+        "at": "2026-10-04T21:27:57.208Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Sim Miner 88",
+        "role": "script",
+        "action": {
+          "kind": "game.contact.request",
+          "recipientKingdomId": "483d8261-3270-4293-b7b3-143bf62a3163",
+          "note": "[Scripted Sim Miner 88] I am a simulated neighbour. Would you like to discuss a small reciprocal trade?"
+        },
+        "outcome": {
+          "commandId": "30cb2d1c-5825-4975-a00f-f95f7f72c6b4",
+          "code": "INVALID_COMMAND",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      },
+      {
+        "at": "2026-10-04T21:27:58.221Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "action_denied",
+        "actor": "Sim Farmer 90",
+        "role": "script",
+        "action": {
+          "kind": "game.contact.request",
+          "recipientKingdomId": "11985908-9677-491e-86b5-360972c3e679",
+          "note": "[Scripted Sim Farmer 90] I am a simulated neighbour. Would you like to discuss a small reciprocal trade?"
+        },
+        "outcome": {
+          "commandId": "3b92c137-6395-47e0-848b-afad86a6d847",
+          "code": "INVALID_COMMAND",
+          "receiptExists": false,
+          "source": "server_rejection"
+        }
+      }
+    ],
+    "blockedActors": []
+  },
+  "social": {
+    "observedContactPairs": 10,
+    "observedOffers": 0,
+    "observedActiveContracts": 0,
+    "observedMessages": 0
+  },
+  "gameMinutesObserved": [
+    {
+      "name": "Sim Miner 01",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "f59e1803-1b16-46cb-9a5d-e25a82da4749",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "c13b36d0-5b2a-47a2-949d-2e77bd71d5f5",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "f59e1803-1b16-46cb-9a5d-e25a82da4749",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Ada Byte",
+      "role": "luna",
+      "minutes": 12,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145680000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "6181f192-3ec0-4322-b2e9-499e39009638",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "6181f192-3ec0-4322-b2e9-499e39009638",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 02",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "f9574113-44a2-4a85-aab3-16b24c7ff9e4",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "7308596c-e392-4a54-9de1-7ed7015a4fb7",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "f9574113-44a2-4a85-aab3-16b24c7ff9e4",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 03",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "319d5a30-44cd-4950-a5c5-5475f11b851e",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "7f70dfa3-aa6c-49ec-8946-bb1a149bd967",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "319d5a30-44cd-4950-a5c5-5475f11b851e",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 04",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "f0a358f0-1aad-4c47-8b6b-d6f428c27c61",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "1fc3280f-1763-4bea-86ea-842c71bfd453",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "f0a358f0-1aad-4c47-8b6b-d6f428c27c61",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 05",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3b957245-987d-4e79-bb83-267e36358220",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "cc65fde9-9fe5-42df-ae35-1abfacb1a4ef",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3b957245-987d-4e79-bb83-267e36358220",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 06",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3eb65e87-f909-47fc-98fe-78430482e734",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "046ffd92-8b47-4335-9440-3f98f75a4c3e",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3eb65e87-f909-47fc-98fe-78430482e734",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 07",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "66c3a812-0061-4e66-a4a4-20ae70492998",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "7400b407-ffc0-457d-9ceb-3e5d7b8ae661",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "66c3a812-0061-4e66-a4a4-20ae70492998",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 08",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "c1ce4243-8d42-4c40-afd6-952aa12692d3",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "0985211a-9330-47c8-a53e-a4afbd2b10a4",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "c1ce4243-8d42-4c40-afd6-952aa12692d3",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 09",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "8f2f3b56-a8d1-4ab9-8b4e-329b1bfb476c",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "0074e0c0-9eab-4b06-8f18-b001a46e1b86",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "8f2f3b56-a8d1-4ab9-8b4e-329b1bfb476c",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 10",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "ce4b8f99-11c2-495c-aeb1-072be444514f",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "ab41baac-091c-4067-b993-5d112edd42bb",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "ce4b8f99-11c2-495c-aeb1-072be444514f",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 11",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "d6276efe-f6cc-4b06-892e-e50b4409083e",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "c6836860-2eff-4fc1-b528-3cf73b63a65d",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "d6276efe-f6cc-4b06-892e-e50b4409083e",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 12",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3e7bf4cc-3de8-4416-9abe-523c352ed15a",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": {
+            "recordId": "899b7294-589c-4e24-9721-9477f4c1a968:1791145740000",
+            "occurredGameTimeMs": 1791145740000,
+            "summary": "Contact accepted with @gcaptainnoo_b2f88d63"
+          },
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "c7a8dfd5-a31d-4a42-ac5d-053dafb398ad",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3e7bf4cc-3de8-4416-9abe-523c352ed15a",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [
+          {
+            "kingdomId": "899b7294-589c-4e24-9721-9477f4c1a968",
+            "handle": "gcaptainnoo_b2f88d63",
+            "displayName": "Captain Noodle",
+            "acceptedGameTimeMs": "1791145740000"
+          }
+        ],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 13",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "229786f0-36be-4d83-aefc-f87e712b1990",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": {
+            "recordId": "5efba51c-260f-4dd8-8399-fcf656759ec9:1791145740000",
+            "occurredGameTimeMs": 1791145740000,
+            "summary": "Contact accepted with @gsimfarmer1_1ead9aaf"
+          },
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "a9962262-2da9-4338-8e5a-116ce8e852a2",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "229786f0-36be-4d83-aefc-f87e712b1990",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [
+          {
+            "kingdomId": "5efba51c-260f-4dd8-8399-fcf656759ec9",
+            "handle": "gsimfarmer1_1ead9aaf",
+            "displayName": "Sim Farmer 12",
+            "acceptedGameTimeMs": "1791145740000"
+          }
+        ],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 14",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "a328d5e1-218a-491a-838c-aa925552cb6b",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "b4e1e60d-a004-4111-bc54-a0e81f9f2ffd",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "a328d5e1-218a-491a-838c-aa925552cb6b",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 15",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "afb3852e-55a2-49fe-b892-78fbfe7c0b78",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "55d2c82c-e525-4707-94b5-dc48de412edf",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "afb3852e-55a2-49fe-b892-78fbfe7c0b78",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 16",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "02573c0d-0ad1-4ef0-9c0d-ca756e8fb937",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f3ba08c6-e3f2-4f37-a319-3d7d8cde419d",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "02573c0d-0ad1-4ef0-9c0d-ca756e8fb937",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 17",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "ddf419b2-267e-4c0c-8950-b6ffc6bd8662",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "6ffa77ca-ebe4-4e77-9253-c2a68431d9e2",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "ddf419b2-267e-4c0c-8950-b6ffc6bd8662",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 18",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "1ee47acf-28b8-4c1d-bee5-f2a1d9fee557",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "44006480-3e22-4bc3-8d6c-3734b699b9ec",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "1ee47acf-28b8-4c1d-bee5-f2a1d9fee557",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 19",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "e653b0ad-a47a-459e-88e1-2b71cf37d74b",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "33f6a77f-0f8a-4eae-8543-e4e7643866cb",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "e653b0ad-a47a-459e-88e1-2b71cf37d74b",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 20",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "fcef797c-43dd-4dde-a7b6-f2cdcee6a903",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "31871cb6-ae5e-4a8f-a3e2-a0741a83f759",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "fcef797c-43dd-4dde-a7b6-f2cdcee6a903",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 21",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "86cdcb39-abe0-49c0-9e91-da9e1f5be91f",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "28a6236d-f863-4653-a3aa-dc91d914a9db",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "86cdcb39-abe0-49c0-9e91-da9e1f5be91f",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 22",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "a4a0e718-b279-438e-a8f7-2bf2602beeaf",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "a45a74f4-e689-4e33-a5b8-30b7ccc43292",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "a4a0e718-b279-438e-a8f7-2bf2602beeaf",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 23",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "5b3dd8e8-9838-4a41-b687-36baea3afead",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "274e0bf8-3c8c-43c9-b2a9-549802d0b507",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "5b3dd8e8-9838-4a41-b687-36baea3afead",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 24",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "6cd5adcd-6dcb-4829-98af-e057b7834b18",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "ec19ddb8-91c7-470b-a316-873c7ab5486d",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791145980000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "6cd5adcd-6dcb-4829-98af-e057b7834b18",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 25",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "135ef994-61f7-470f-bc3b-ecbf6ca40c71",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "e1379957-c22c-4934-9550-1f487fe7e7f1",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 5
+          },
+          {
+            "id": "135ef994-61f7-470f-bc3b-ecbf6ca40c71",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 26",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "795e5aa0-7990-4322-9e94-a2aac6b5c4c9",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "95de4b42-939c-46ca-b409-1528e19fc9ed",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 5
+          },
+          {
+            "id": "795e5aa0-7990-4322-9e94-a2aac6b5c4c9",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 27",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "d832d975-7717-4a16-becd-48109624723c",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "7c708fee-20af-4c98-9ef0-2f550c36247b",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 5
+          },
+          {
+            "id": "d832d975-7717-4a16-becd-48109624723c",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 28",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "4d0dc0bf-8031-4a8d-8265-c0cc56f438f6",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "d2af2bb3-0e31-48ee-99b9-542e9e8ee336",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 5
+          },
+          {
+            "id": "4d0dc0bf-8031-4a8d-8265-c0cc56f438f6",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 29",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "fb3b0dc5-ce19-41a3-bfee-99bbcbf3fd75",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "eef2ca92-c05b-4b40-a014-053464b09f32",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 5
+          },
+          {
+            "id": "fb3b0dc5-ce19-41a3-bfee-99bbcbf3fd75",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 30",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "8a4efcd5-e363-45bd-a501-f74a37b2339b",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "d9fb6123-60bd-495d-8137-3b897950ebec",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 5
+          },
+          {
+            "id": "8a4efcd5-e363-45bd-a501-f74a37b2339b",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 31",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "feb19858-ac2b-479b-b494-11f812227a53",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "1eb1a32b-9ab9-4383-b1b1-bd664984e5e5",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "feb19858-ac2b-479b-b494-11f812227a53",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 32",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "7c8826f7-0631-4f68-9eb9-c04b3b1e2881",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "653b2fa4-a522-4324-b301-53d1f192d216",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "7c8826f7-0631-4f68-9eb9-c04b3b1e2881",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 33",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "f2a3bb44-1bd2-471b-9bf3-b3a29ffeefdf",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "98fd5185-e32f-443f-a39c-5b50060c8e44",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "f2a3bb44-1bd2-471b-9bf3-b3a29ffeefdf",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 34",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "13020b1b-a010-480d-a003-556ce6ef6728",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f0ebe35d-232b-4aab-a63c-8d17ae59c43d",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "13020b1b-a010-480d-a003-556ce6ef6728",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 35",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "92fa5b49-511b-44bf-b25d-6a8b7ebf6d8f",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "5e403533-ca4f-411d-b409-be3a3445d879",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "92fa5b49-511b-44bf-b25d-6a8b7ebf6d8f",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 36",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "82d56e50-17cb-4d46-a938-c4c9d27ad6d2",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "8209be41-c867-4aee-91c5-b696c8a996aa",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "82d56e50-17cb-4d46-a938-c4c9d27ad6d2",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 37",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "086c1b00-3245-412c-a406-9cbd36f32269",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "9e86816a-2d40-4333-aa29-a55d9e2a37da",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "086c1b00-3245-412c-a406-9cbd36f32269",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 38",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "f14344e4-fd56-4b76-b99b-0245131218a4",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "9204f8d5-2eac-4865-85d3-2530d29d07a5",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "f14344e4-fd56-4b76-b99b-0245131218a4",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 39",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "8d626485-ee4d-4ac2-a293-0fabb3c0d45f",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "72aef40f-84a7-4737-a767-a8ec3ccf3623",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "8d626485-ee4d-4ac2-a293-0fabb3c0d45f",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 40",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "281c23bd-a0c0-472b-bed9-c3d254e896e6",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f7132838-9575-4a61-ba8d-b9ee675cb3ee",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "281c23bd-a0c0-472b-bed9-c3d254e896e6",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 41",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "106297a7-9a68-4678-af9f-64d0f447a19c",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f07db611-5c59-4338-9387-4e29fe3b6b47",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "106297a7-9a68-4678-af9f-64d0f447a19c",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 42",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "61cd521e-669c-46f8-a116-d1c0e33768af",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "6618d5a0-c00c-48e3-90f8-045491baf86c",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "61cd521e-669c-46f8-a116-d1c0e33768af",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 43",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "8c2832c6-66a9-4e09-85e0-9bde566ec621",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "fc4d03e0-baea-4266-af83-a2f37f7d3106",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "8c2832c6-66a9-4e09-85e0-9bde566ec621",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 44",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "645e69fb-ed4f-4286-8cd4-a4654869bcbd",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "5b52c55f-91cf-4823-87ca-f0b109b0bc54",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "645e69fb-ed4f-4286-8cd4-a4654869bcbd",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 45",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "63ef7e9d-f9cd-4746-95de-b2ae138db08d",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "4a818927-d8c1-4f72-8113-4040cce5c3cb",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "63ef7e9d-f9cd-4746-95de-b2ae138db08d",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 46",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3afeaf21-5a20-4ecf-a22b-2e39d5bc8660",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "b39105d6-4086-43df-9278-8c6d8cd4dd24",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3afeaf21-5a20-4ecf-a22b-2e39d5bc8660",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 47",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "0126fc53-568d-410f-8dfb-88d98768f325",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "8563f5e1-4212-402c-90a0-9ee1cd04917c",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "0126fc53-568d-410f-8dfb-88d98768f325",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 48",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "4fe51c48-ad34-4941-bf5d-4a654048b96e",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "7112a8af-182c-4953-bdd7-8b85e347fcd5",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "4fe51c48-ad34-4941-bf5d-4a654048b96e",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 49",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "75fcd9bc-14ff-4e2b-99d9-10830df014c8",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "00bada10-166f-4138-ba99-fd2ad22cee6a",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "75fcd9bc-14ff-4e2b-99d9-10830df014c8",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 50",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "0f0adad8-6f91-4faf-b90a-edb5d6820fb9",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "bab325b7-1d9a-4a27-9677-8a8565c95ddf",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "0f0adad8-6f91-4faf-b90a-edb5d6820fb9",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 51",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "dad35a7c-3da4-4f7f-89ac-74eb06a20524",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f9cd3f12-fb34-4535-9e8b-e740fe31cc62",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "dad35a7c-3da4-4f7f-89ac-74eb06a20524",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 52",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "f2947af7-b07d-401a-a5d8-7364fc683947",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "14f18edf-9498-40b8-b80c-e7a9ad628bd4",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "f2947af7-b07d-401a-a5d8-7364fc683947",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 53",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "b88f2937-a8d1-4f20-96db-6821d0074f98",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "5d99eea2-c121-4c72-8743-c57ef0bc4953",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "b88f2937-a8d1-4f20-96db-6821d0074f98",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 54",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "470e8739-8289-4f8d-8f32-fe3c1f0ddbe0",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f4681276-534e-4cf9-8550-ceaf85747a29",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "470e8739-8289-4f8d-8f32-fe3c1f0ddbe0",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 55",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "1c2dd094-bd25-4d06-9bee-633b1653366a",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "c39e2004-2f1b-49d2-ae06-42eac30be2ca",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "1c2dd094-bd25-4d06-9bee-633b1653366a",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 56",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "c31a3e89-e50c-425f-b8b4-2a8717450fb5",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "ed957439-2aee-46e1-b162-fe78b88f9c05",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "c31a3e89-e50c-425f-b8b4-2a8717450fb5",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 57",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "4211f3f5-3c6a-4038-b846-327f74572a6b",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "04b9c9d3-ec36-44a9-8ff0-aeda6595d594",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "4211f3f5-3c6a-4038-b846-327f74572a6b",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 58",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "af840b35-36fd-45e5-87fd-a05e75862351",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "dea94d52-70c1-432e-a161-dca93931f8d2",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "af840b35-36fd-45e5-87fd-a05e75862351",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 59",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "ac8340bc-2112-4e96-966a-324827e7247c",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "71bfff1a-1ac7-4b09-9e2f-2748cdc70064",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "ac8340bc-2112-4e96-966a-324827e7247c",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 60",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "10f3a8bb-6c43-4817-bc15-02b486d3b770",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "aff8ab1d-68bb-45e4-9088-7101b87ec915",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "10f3a8bb-6c43-4817-bc15-02b486d3b770",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 61",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3311e50f-8633-4d6d-b845-6e9ce27d222e",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "b9e705ca-f676-4073-9d94-1ac782651cac",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3311e50f-8633-4d6d-b845-6e9ce27d222e",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 62",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "a6844493-f746-4890-b075-26ce6d6c884a",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "fc9910f4-1705-4eaa-85cd-153f230f10a6",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "a6844493-f746-4890-b075-26ce6d6c884a",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 63",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "8333ba08-1997-453f-af99-a3b690a95482",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "7e9f4e36-cc42-4220-8b60-1f08123262bf",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "8333ba08-1997-453f-af99-a3b690a95482",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 64",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3bb9e968-0ec5-4344-b89c-d10b492e2c5e",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "6b096f2c-7863-4512-8a1c-7e96f8912562",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3bb9e968-0ec5-4344-b89c-d10b492e2c5e",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 65",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "bf3fba92-f1f5-4c5f-bb5f-4931303eedf7",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "3cb8029a-fd10-43d6-9e3c-df8d4a5bc663",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "bf3fba92-f1f5-4c5f-bb5f-4931303eedf7",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 66",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "0a3fd3cb-1c4e-4b49-9894-1d6eddd932ea",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "6a7a1984-c17c-447d-a9c3-036b9b135e53",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "0a3fd3cb-1c4e-4b49-9894-1d6eddd932ea",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 67",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "b6291ef3-ffb9-4635-816e-b5fca29afd02",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "cf71f4b7-d68a-427a-9042-157064aa7e25",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "b6291ef3-ffb9-4635-816e-b5fca29afd02",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 68",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "1c0ce8c4-e88d-44bf-852b-aabc212e90f7",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "6706c7a5-305f-4fa6-ae20-ab82e3d63d98",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "1c0ce8c4-e88d-44bf-852b-aabc212e90f7",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 69",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "67a17961-2b7e-486a-824d-919655d53386",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "d990cb65-beda-4e90-af6c-62c96e5b7acd",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "67a17961-2b7e-486a-824d-919655d53386",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 70",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "116cd979-aa30-49ce-922f-ae713b67ab21",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "1ab7846e-917b-4728-8d40-4bedd7ccbe9f",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "116cd979-aa30-49ce-922f-ae713b67ab21",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 71",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "845e4b09-5f30-4284-a5c5-12d71ea42fe9",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "df2860df-9483-441d-881f-cf7bcd1f3c4e",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "845e4b09-5f30-4284-a5c5-12d71ea42fe9",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Captain Noodle",
+      "role": "luna",
+      "minutes": 12,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145680000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 72",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "19dbcda8-6f03-4b63-9b96-fe8aa3b84ce4",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "d4da8ee9-ee37-4ebc-8588-cecb4fe55923",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "19dbcda8-6f03-4b63-9b96-fe8aa3b84ce4",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 73",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "1e827978-b894-49d6-90c5-6f956f27c6dc",
+            "occurredGameTimeMs": 1791145620000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "74e6b72b-40e2-4b8a-a7a6-fc5573b746bb",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "1e827978-b894-49d6-90c5-6f956f27c6dc",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145620000,
+            "settledGameTimeMs": 1791145620000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 74",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "5276aec0-e871-4971-965a-d39f76eb239a",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146220000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 7
+          },
+          {
+            "id": "6e910493-71a9-4988-a354-8ce71c7fea57",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 75",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "5413c670-030a-459a-90d8-ec09e7ab46a8",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146220000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 7
+          },
+          {
+            "id": "cc0fbd8f-365d-4a7a-928a-02bc4e974166",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 76",
+      "role": "script",
+      "minutes": 14,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "314d9963-3ce7-4e5c-9252-c4f8fee8e9ac",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "eabb7047-442c-4f0c-bc1b-122f047f9c42",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "314d9963-3ce7-4e5c-9252-c4f8fee8e9ac",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 77",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "1e29d3df-5a22-4223-973d-07f02557f001",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "b850473a-a318-474e-ab76-3f8a026ebc5c",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "1e29d3df-5a22-4223-973d-07f02557f001",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 78",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "c38ccb17-1166-4167-92ff-6d1b46a6a7e6",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "49483cf6-2a7e-400a-a263-c89a35376096",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "c38ccb17-1166-4167-92ff-6d1b46a6a7e6",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 79",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "15feba65-28cd-4f10-82f9-bca1e6347fcf",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "a604d66c-900e-43d9-a73f-785f74fe3bcb",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "15feba65-28cd-4f10-82f9-bca1e6347fcf",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 80",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "96f5cb79-f350-43ad-9dac-5068806b4772",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "24f716e2-0c60-4fac-bf5f-549372e55687",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "96f5cb79-f350-43ad-9dac-5068806b4772",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 81",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "c5540c0b-d6ae-45bf-98ae-e47179422621",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "61387e00-91ad-4339-aed3-973e0e05b0b2",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "c5540c0b-d6ae-45bf-98ae-e47179422621",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 82",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "b9548509-a46c-49a4-96f3-ee66907c820f",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "e82a57a1-571e-450d-b28a-809f422c8027",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "b9548509-a46c-49a4-96f3-ee66907c820f",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 83",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "ebae27f6-ad28-41f4-8030-c4fd1706f286",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "d7058236-6226-42a7-aa87-48a9ab77884e",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "ebae27f6-ad28-41f4-8030-c4fd1706f286",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 84",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "2312610f-286e-4946-b424-cb859a45ccba",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "49315858-e6fc-4bdd-9a2e-e808903ce063",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "2312610f-286e-4946-b424-cb859a45ccba",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 85",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "e8e7013e-4118-42ee-8535-c4e12a782ea1",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "eefb7435-9308-4d8d-823e-fc4aa1b2a560",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "e8e7013e-4118-42ee-8535-c4e12a782ea1",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 86",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "bfc6b3ae-3b2d-4cf5-845a-5e4d0f365288",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "28d057ec-87fb-4a10-b6cd-3f6354732f60",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "bfc6b3ae-3b2d-4cf5-845a-5e4d0f365288",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 87",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "3fbf51c6-8f89-46d6-94b2-b74954368516",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "f24f7a9d-e205-451f-b83d-b3dd5135a724",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "3fbf51c6-8f89-46d6-94b2-b74954368516",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Miner 88",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "c3e14f73-b09e-4ebf-b6ed-3ad73f9f4c3f",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "61e0917c-d3b8-428b-8e9c-be5b890e5e7b",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "c3e14f73-b09e-4ebf-b6ed-3ad73f9f4c3f",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Merchant 89",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 2
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "78b3afe7-5db1-4b7b-bd1b-8a312c03d3dd",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "market level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "b2581d06-9259-47de-9878-3bde061ab2b0",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "78b3afe7-5db1-4b7b-bd1b-8a312c03d3dd",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Sim Farmer 90",
+      "role": "script",
+      "minutes": 13,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "6fce7059-cae8-452d-8b26-b1be09778513",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "e9ac9d42-1744-4e31-9a91-7054c63b666e",
+            "building": "market",
+            "targetLevel": 2,
+            "state": "active",
+            "dueGameTimeMs": 1791146040000,
+            "settledGameTimeMs": null,
+            "remainingGameMinutes": 4
+          },
+          {
+            "id": "6fce7059-cae8-452d-8b26-b1be09778513",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Moss Compiler",
+      "role": "luna",
+      "minutes": 12,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "70474ac5-4ef9-4473-9002-1549cf3238f1",
+            "occurredGameTimeMs": 1791145680000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "70474ac5-4ef9-4473-9002-1549cf3238f1",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145680000,
+            "settledGameTimeMs": 1791145680000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Lady Segfault",
+      "role": "luna",
+      "minutes": 12,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145740000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "26060a3e-391b-4f1d-a5a9-226559f6fab0",
+            "occurredGameTimeMs": 1791145740000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": {
+            "recordId": "7dc237f2-5e2c-40d9-a3a6-be9d30de6e9a:1791145740000",
+            "occurredGameTimeMs": 1791145740000,
+            "summary": "Contact accepted with @gsimminer04_2e30e841"
+          },
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "26060a3e-391b-4f1d-a5a9-226559f6fab0",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145740000,
+            "settledGameTimeMs": 1791145740000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [
+          {
+            "kingdomId": "e8a2886e-cefd-4733-8ff0-0a463462afb6",
+            "handle": "gsimmerchan_f64541e3",
+            "displayName": "Sim Merchant 14",
+            "acceptedGameTimeMs": "1791145740000"
+          },
+          {
+            "kingdomId": "7dc237f2-5e2c-40d9-a3a6-be9d30de6e9a",
+            "handle": "gsimminer04_2e30e841",
+            "displayName": "Sim Miner 04",
+            "acceptedGameTimeMs": "1791145740000"
+          }
+        ],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Professor Goose",
+      "role": "luna",
+      "minutes": 12,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "14798613-cd3c-4889-affb-9a5eaad4880c",
+            "occurredGameTimeMs": 1791145800000,
+            "summary": "farm level 2 completed"
+          },
+          "contact": {
+            "recordId": "9a0ce42f-45fc-47af-a262-de697c3e86f1:1791145800000",
+            "occurredGameTimeMs": 1791145800000,
+            "summary": "Contact accepted with @gsimfarmer4_665c73dd"
+          },
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "14798613-cd3c-4889-affb-9a5eaad4880c",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145800000,
+            "settledGameTimeMs": 1791145800000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [
+          {
+            "kingdomId": "ed91aad9-b173-40d2-b588-11e9e8d4efeb",
+            "handle": "gsimmerchan_dc7a5302",
+            "displayName": "Sim Merchant 35",
+            "acceptedGameTimeMs": "1791145800000"
+          },
+          {
+            "kingdomId": "c89dc3c5-09e7-4078-8556-9fe0984c7a9f",
+            "handle": "gsimminer55_d6153999",
+            "displayName": "Sim Miner 55",
+            "acceptedGameTimeMs": "1791145800000"
+          },
+          {
+            "kingdomId": "9a0ce42f-45fc-47af-a262-de697c3e86f1",
+            "handle": "gsimfarmer4_665c73dd",
+            "displayName": "Sim Farmer 45",
+            "acceptedGameTimeMs": "1791145800000"
+          }
+        ],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Pixel Paladin",
+      "role": "luna",
+      "minutes": 11,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 2
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 2
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145800000,
+        "limit": 20,
+        "firstRetained": {
+          "build": {
+            "recordId": "a5511c5b-7266-4ab7-bb57-f6ee40c8a519",
+            "occurredGameTimeMs": 1791145800000,
+            "summary": "mine level 2 completed"
+          },
+          "contact": {
+            "recordId": "28ba3599-a9b9-4ad7-b468-51b18e0b6198:1791145800000",
+            "occurredGameTimeMs": 1791145800000,
+            "summary": "Contact accepted with @gsimmerchan_2287dd7f"
+          },
+          "delivery": null
+        },
+        "builds": [
+          {
+            "id": "e1119e97-bdf5-4e15-a8a4-8ec38491463a",
+            "building": "farm",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145800000,
+            "settledGameTimeMs": 1791145800000,
+            "remainingGameMinutes": 0
+          },
+          {
+            "id": "a5511c5b-7266-4ab7-bb57-f6ee40c8a519",
+            "building": "mine",
+            "targetLevel": 2,
+            "state": "completed",
+            "dueGameTimeMs": 1791145800000,
+            "settledGameTimeMs": 1791145800000,
+            "remainingGameMinutes": 0
+          }
+        ],
+        "contacts": [
+          {
+            "kingdomId": "e76cd8a6-eb5f-4e99-873d-4f45b33ee282",
+            "handle": "gsimminer46_80631b0d",
+            "displayName": "Sim Miner 46",
+            "acceptedGameTimeMs": "1791145800000"
+          },
+          {
+            "kingdomId": "cefb2fea-d466-42ea-890b-ac43a66e346b",
+            "handle": "gsimminer76_82beafdc",
+            "displayName": "Sim Miner 76",
+            "acceptedGameTimeMs": "1791145800000"
+          },
+          {
+            "kingdomId": "28ba3599-a9b9-4ad7-b468-51b18e0b6198",
+            "handle": "gsimmerchan_2287dd7f",
+            "displayName": "Sim Merchant 56",
+            "acceptedGameTimeMs": "1791145800000"
+          }
+        ],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Null Wizard",
+      "role": "luna",
+      "minutes": 0,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145140000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Ruby Goblin",
+      "role": "luna",
+      "minutes": 0,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145200000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Dr Turnip",
+      "role": "luna",
+      "minutes": 0,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145200000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    },
+    {
+      "name": "Orbit Duck",
+      "role": "luna",
+      "minutes": 0,
+      "buildings": [
+        {
+          "kind": "barracks",
+          "level": 1
+        },
+        {
+          "kind": "farm",
+          "level": 1
+        },
+        {
+          "kind": "hall",
+          "level": 1
+        },
+        {
+          "kind": "market",
+          "level": 1
+        },
+        {
+          "kind": "mine",
+          "level": 1
+        },
+        {
+          "kind": "storehouse",
+          "level": 1
+        },
+        {
+          "kind": "wall",
+          "level": 1
+        }
+      ],
+      "consequences": {
+        "asOfGameTimeMs": 1791145200000,
+        "limit": 20,
+        "firstRetained": {
+          "build": null,
+          "contact": null,
+          "delivery": null
+        },
+        "builds": [],
+        "contacts": [],
+        "supplyContracts": []
+      }
+    }
+  ],
+  "lastReports": [
+    {
+      "at": "2026-10-04T21:16:25.737Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Lady Segfault",
+      "role": "luna",
+      "report": {
+        "summary": "The level 2 mine upgrade is queued and currently active, due in about 11 game minutes. It has not finished yet.",
+        "whatChanged": "The build command was committed. The receipt confirms that 30,000 marked iron and 15,000 marked silver were charged. The builder in slot 1 is working on the mine; slot 2 is free. The mine itself is still shown at level 1, so completion is not confirmed. No trade or contact was proposed or signed, and there are no active supply contracts. Nothing was rejected.",
+        "nextDecision": "Wait for the mine upgrade to finish, then review the updated state before choosing another build or considering trade.",
+        "reasonToReturn": "Return when the mine upgrade is finished so you can choose the next growth move with current resource and building information.",
+        "confusion": "The plan said the upgrade was affordable using its listed cost of 50 iron and 25 silver, while the receipt reports charges of 30,000 marked iron and 15,000 marked silver. The record shows the command committed, but does not explain that unit difference."
+      }
+    },
+    {
+      "at": "2026-10-04T21:16:53.409Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Professor Goose",
+      "role": "luna",
+      "report": {
+        "summary": "The farm upgrade was accepted and is now underway. The world and your kingdom remain active.",
+        "whatChanged": "The queue command was committed, and 24,000 marked iron plus 12,000 marked silver were charged. The farm is still level 1 while it is being built; builder slot 1 is active, with about 11 game minutes remaining. The upgrade is therefore queued and active as construction, but not finished. No contact or supply contract was created. Nothing was rejected, proposed, or signed in the receipts or current state.",
+        "nextDecision": "Wait for the farm upgrade to finish, then check its level and updated production before choosing another move.",
+        "reasonToReturn": "Return when construction is due so you can confirm the farm reached level 2 and decide what to build or pursue diplomatically next.",
+        "confusion": "The plan called the upgrade affordable at 24,000 iron and 12,000 silver, but the after-state lists level 2 costs of only 40 iron and 20 silver in whole units. The receipt confirms what was charged, but the supplied facts do not explain that discrepancy."
+      }
+    },
+    {
+      "at": "2026-10-04T21:17:33.471Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Null Wizard",
+      "role": "luna",
+      "report": {
+        "summary": "The Farm upgrade to level 2 was accepted and is now active as construction, due in about 11 game minutes. It has not finished yet.",
+        "whatChanged": "The receipt says COMMITTED and records 24,000 marked Iron and 12,000 marked Silver charged. The after-state confirms a level-2 Farm build instruction in builder slot 1. The Farm itself is still listed at level 1 until construction completes. No trade or contact was proposed, signed, or made active. Nothing was rejected or merely queued without acceptance: the command committed, and the build is underway.",
+        "nextDecision": "Wait for the Farm construction to finish, then check its level and the resulting production before choosing another move.",
+        "reasonToReturn": "Return when the build is due in about 11 game minutes, or sooner if you want to review a different available upgrade.",
+        "confusion": "The plan described affordability using whole-resource costs, while the receipt reports marked units; here 24,000 Iron and 12,000 Silver correspond to 40 and 20 whole units at 600 marked per whole. Also, the receipt has no committed event IDs, but the active builder and consequence records confirm the construction instruction is running."
+      }
+    },
+    {
+      "at": "2026-10-04T21:17:51.791Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Ruby Goblin",
+      "role": "luna",
+      "report": {
+        "summary": "Your Mine level 2 upgrade was accepted and is now active construction. It has not finished yet, so increased income is not confirmed.",
+        "whatChanged": "The receipt says COMMITTED and records 30,000 marked Iron and 15,000 marked Silver charged. The updated state shows builder slot 1 working on the Mine with about 11 game minutes remaining; the Mine itself is still level 1 until construction finishes. No trade offers or contracts were present. Nothing was rejected, queued without a receipt, proposed, or signed in this turn.",
+        "nextDecision": "Wait for the Mine upgrade to finish, then check its new level and production before choosing another upgrade. Compare partners once contacts and concrete offers are available.",
+        "reasonToReturn": "Return after the Mine finishes so you can judge its actual production effect and decide whether another affordable upgrade or trade makes sense.",
+        "confusion": "The receipt says COMMITTED, while the state calls the build active. These fit together: the command was accepted and construction is underway, but the upgrade is not finished. The charged figures are marked units, while the resource display also reports whole units and founding allowances, so the separate numbers can be hard to compare."
+      }
+    },
+    {
+      "at": "2026-10-04T21:18:22.416Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Orbit Duck",
+      "role": "luna",
+      "report": {
+        "summary": "Both upgrade commands were accepted and are now underway: the farm and mine are each upgrading to level 2, with about 11 game minutes remaining. Neither upgrade is finished yet.",
+        "whatChanged": "The server committed both queues and charged 24,000 iron plus 12,000 silver for the farm, and 30,000 iron plus 15,000 silver for the mine. Both builders are active. The buildings still show level 1 because construction has not settled. There are no contacts, proposals, or supply contracts in the supplied state.",
+        "nextDecision": "Wait for construction to finish, then check the receipts and builder availability before choosing another upgrade. Grain is low in ordinary stock but nets 22 per hour; iron nets 20 and silver 10 per hour. Construction spent from founding allowance first, which cannot be used for cold contacts or trade.",
+        "reasonToReturn": "Return after roughly 11 game minutes to see whether both upgrades finished and review the new production rates.",
+        "confusion": "The plan described upgrades costing 40 iron and 20 silver for the farm, and 50 iron and 25 silver for the mine, but receipts report much larger charged amounts. The supplied facts do not explain that difference. The receipts confirm the charges and committed queues, while the active builder records show the work is still in progress."
+      }
+    },
+    {
+      "at": "2026-10-04T21:26:23.075Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Ada Byte",
+      "role": "luna",
+      "report": {
+        "summary": "The mine upgrade finished. No actions were submitted, so nothing was queued, proposed, signed, or newly made active.",
+        "whatChanged": "The mine is now level 2. Both builders are free, and a farm upgrade to level 2 is affordable at 40 iron and 20 silver. Current net grain production is 22 per hour. There are no contacts, requests, offers, or supply contracts.",
+        "nextDecision": "When ready to build, compare the farm’s production change and cost with current grain needs before choosing an upgrade. The turn records no farm output forecast, so its payoff cannot yet be calculated.",
+        "reasonToReturn": "Return when farm-upgrade production data or a new resource need is available; then the upgrade’s payoff can be compared with other affordable choices.",
+        "confusion": "The plan says to wait because it lacks a farm action example and construction is not allowed, but the current mandate explicitly allows building queues. The receipts are empty, so no action was submitted; affordability alone does not show that a queue was attempted or accepted."
+      }
+    },
+    {
+      "at": "2026-10-04T21:26:53.909Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Captain Noodle",
+      "role": "luna",
+      "report": {
+        "summary": "Captain Noodle’s contact request to the farmer was committed. Two ordinary Silver were charged, leaving about 0.333 ordinary Silver. The request is waiting for the farmer’s human controller to accept it; no trade has been proposed or started.",
+        "whatChanged": "A contact request was recorded and is outgoing, with an expiry shown in the state. There are still no established contacts, open supply offers, or active supply contracts. Captain Noodle and the world remain active.",
+        "nextDecision": "The farmer’s controller decides whether to accept the request. If accepted, check current stock, mandate, and messages before discussing specific trade terms.",
+        "reasonToReturn": "Return when the farmer responds, so you can decide whether to propose a fair food-for-metal trade using the then-current facts.",
+        "confusion": "The plan says there were no existing contacts, offers, contracts, or messages, but the provided after-state shows contact requests and supply offers/contracts without listing messages; it does not establish whether any messages existed. The receipt confirms the request committed, but does not say it was accepted. No request was rejected, queued, finished, proposed, signed, or made active as a trade."
+      }
+    },
+    {
+      "at": "2026-10-04T21:27:20.027Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Moss Compiler",
+      "role": "luna",
+      "report": {
+        "summary": "The farm upgrade to level 2 is finished, and the world is active. No trade or contact action was taken.",
+        "whatChanged": "The receipt confirms farm level 2 completed. Current ordinary grain is about 5.63 whole, below the stated 20-whole reserve floor, though it is growing by about 37 whole per hour. There are no contacts, requests, offers, or active supply contracts. Nothing was rejected, queued, proposed, or signed in this turn; there is no new active agreement.",
+        "nextDecision": "Wait for grain reserves to recover and for an accepted contact or a real offer. Then check the buyer and terms against current stock and the reserve floor before deciding whether to respond.",
+        "reasonToReturn": "Return when a contact is accepted or a concrete supply offer appears, so its terms and the grain available for delivery can be reviewed.",
+        "confusion": "The plan describes the farm as complete and says there are no contacts or offers; the receipt confirms those facts, but also shows the current ordinary grain reserve is only about 5.63 whole, well below the 20-whole floor. The reserve is rising, but deliveries would spend ordinary grain."
+      }
+    },
+    {
+      "at": "2026-10-04T21:27:43.266Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Lady Segfault",
+      "role": "luna",
+      "report": {
+        "summary": "The mine upgrade finished, and the level 2 market upgrade was queued successfully.",
+        "whatChanged": "The receipt confirms the market build was committed: 40 iron and 30 silver were charged, and builder slot 1 is working on it with about 11 game minutes remaining. The mine is finished at level 2. The market is still level 1 while its upgrade is active. No trade offer was proposed, signed, or active; there are no active supply contracts. The mandate permits signing but does not permit making offers or counters. An incoming contact request is awaiting your acceptance.",
+        "nextDecision": "Wait for the market upgrade to finish, then review resources and build options. If you want to trade, first check whether the mandate allows making or countering offers; the facts provided do not authorize either action.",
+        "reasonToReturn": "Return when the market upgrade finishes or when you want to decide whether to accept the incoming contact request.",
+        "confusion": "The plan says there were no contact requests, but the updated state shows an incoming request from @gsimfarmer2_c297eb57 awaiting your acceptance. The receipt confirms the market was queued, not finished."
+      }
+    },
+    {
+      "at": "2026-10-04T21:28:04.999Z",
+      "runId": "population-2026-10-04T21-13-18-681Z",
+      "type": "human_report",
+      "actor": "Professor Goose",
+      "role": "luna",
+      "report": {
+        "summary": "The farm upgrade finished, and the proposed mine upgrade was accepted by the game and is now active in builder slot 1. It should finish in about 11 game minutes.",
+        "whatChanged": "The mine queue was committed with a receipt. It spent 50 iron and 25 silver, leaving 5 ordinary iron and 2.5 ordinary silver; the mine itself is still level 1 while the upgrade is underway. The farm is level 2. Three contacts are already active, while five incoming contact requests still await your acceptance. There are no open supply offers or active supply contracts.",
+        "nextDecision": "No action was issued. When the mine upgrade finishes, choose whether to queue another affordable building upgrade; the current checks list barracks, market, storehouse, and wall as affordable. You can also decide whether to accept any of the pending contact requests.",
+        "reasonToReturn": "Return when the mine upgrade finishes or if you want to review the pending contact requests; that will make the next building choice clearer.",
+        "confusion": "The plan described the mine queue as proposed and expected a receipt, but the receipt confirms it was committed. The snapshot says the farm is level 2, matching its completed record. The plan mentions three pending contact requests, but the supplied snapshot lists five."
+      }
+    }
+  ],
+  "harness": {
+    "recovery": [
+      {
+        "at": "2026-10-04T21:20:13.889Z",
+        "runId": "population-2026-10-04T21-13-18-681Z",
+        "type": "operator_recovery",
+        "note": "Closed orphaned synthetic cohort MCP sessions through their own grants; SELECT-only DB read recovered lost session IDs.",
+        "closed": 280
+      }
+    ],
+    "failures": {
+      "MCP_RESULT_MISSING": 90,
+      "MODEL_JOB_TIMEOUT": 2,
+      "MCP_TOOL_run.open_RUN_ALREADY_ACTIVE": 90
+    },
+    "latestFailure": "2026-10-04T21:17:56.451Z"
+  }
+}

@@ -1,5 +1,15 @@
 # PACT engineering instructions
 
+## Completed assignment — backend population experiment, 4 October 2026
+
+The founder authorized ten distinct GPT Luna envoys and ninety scripted players, a two-hour initial observation and a global 200-model-request cap including retries. The live experiment ends at 2026-10-04T23:13:59.742Z; do not extend it or reset its budget. Read docs/operations/population-playtest.md and docs/implementation/reports/population-playtest-20261004.md before touching the runner. It finished at the original deadline with 200 requests, 100 original players, 2,321 committed commands and 131 contracts. See the final report for evidence and limitations; no further run or roadmap work is authorized automatically. Linear issue creation failed at the workspace free issue limit; the report is the execution record. The 24 Later production tasks remain deferred.
+
+## Previous scope — friends playtest complete, 4 October 2026
+
+PACT-127 through PACT-130 are Done in Linear, completed friends milestone 100%. Current counts: 106 Done, 24 Later Backlog, no Todo/In Progress. Testing release friends-play-20261004-3 at https://safa.dedyn.io/pact/ uses nickname-only guest entry and the player's own agent; no email/password/verification. Read docs/implementation/reports/friends-playtest-20261004.md for actual browser, Codex and regression evidence.
+
+All 24 old unfinished roadmap tasks remain deferred and are not prerequisites for this friends-only test. The subsequent population experiment above is the current assignment. Preserve the normal economy and internal per-kingdom ownership. Earlier planning-only and production-resume instructions are superseded.
+
 ## Start here
 
 PACT is a competitive kingdom game operated by humans and their LLM Envoys. This repository starts with an approved design and an implementation backlog; do not assume a documented feature exists in code.
@@ -7,7 +17,7 @@ PACT is a competitive kingdom game operated by humans and their LLM Envoys. This
 Before editing:
 1. Read [the specification index](docs/pact/README.md), [architecture](docs/pact/architecture.md), and [implementation workflow](docs/implementation/README.md).
 2. Read your ticket in `docs/implementation/tasks.json` and its linked specification documents. Inspect the working tree and any applicable directory instructions.
-3. Confirm dependencies are `done` in the active tracker. Linear is active; use `docs/implementation/linear-map.json` to find issues and reconcile the local snapshot before selecting work. The current assignment is the 13-ticket **game-only Alpha** in `docs/pact/alpha.md`: select only `delivery_track: alpha` / Linear **PACT Alpha**; `later` tickets are postponed, not authorized or done. Choose the first dependency-ready, unassigned active ticket in backlog order. The initial historical sequence was **PACT-001 → PACT-082 → PACT-002 → PACT-003**.
+3. Confirm dependencies are `done` in the active tracker. Linear is active; use `docs/implementation/linear-map.json` to find issues and reconcile the local snapshot before selecting work. The Alpha, experience, friends-playtest and bounded population assignments are complete. There is no automatically selected next queue. Select implementation only under a covering founder assignment; documentation/commit cleanup does not authorize new roadmap work. Later tickets remain postponed, not authorized or done. Choose the first dependency-ready, unassigned active ticket in backlog order. The initial historical sequence was **PACT-001 → PACT-082 → PACT-002 → PACT-003**.
 
 ## Sources of truth
 

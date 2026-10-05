@@ -101,7 +101,7 @@ describe("owner Envoy context boundary", () => {
     expect(messages[0]?.content).not.toContain(hostile);
     expect(messages.some((message) => message.role === "user" && message.content.includes(hostile))).toBe(true);
     expect(JSON.stringify(messages)).not.toContain(fixture.inboxPayload);
-    expect(vi.mocked(fixture.conversations.read)).toHaveBeenCalledWith(accountId, counterpartyKingdomId, 3);
+    expect(vi.mocked(fixture.conversations.read)).toHaveBeenCalledWith(accountId, counterpartyKingdomId, 3, 3_600);
   });
 
   it("fails closed when the requested owner projection is not owner-authorized", async () => {

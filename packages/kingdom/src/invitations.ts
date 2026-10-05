@@ -218,7 +218,7 @@ export class InvitationService {
   }
   async remember(client: PoolClient, accountId: string, token: string, gameTimeMs: number): Promise<InvitationView> {
     const account = await client.query(
-      "SELECT id FROM accounts WHERE product_scope = $1 AND id = $2 AND status = 'active' AND email_verified_at IS NOT NULL FOR UPDATE",
+      "SELECT id FROM accounts WHERE product_scope = $1 AND id = $2 AND status = 'active' AND (email_verified_at IS NOT NULL OR is_guest) FOR UPDATE",
       [this.productScope, accountId],
     );
     if (!account.rowCount) throw new InvitationError("FORBIDDEN");

@@ -1,3 +1,4 @@
+@import url("../public/experience/motion.css");
 :root {
   color: #24312d;
   background: #e9e6dc;
@@ -482,4 +483,262 @@ main {
 .court-result {
   overflow-wrap: anywhere;
   user-select: text;
+}
+
+.kingdom-scene {
+  position: relative;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 2px solid #ad7834;
+  border-radius: 12px;
+  color: #202a30;
+  background: #f4ebdd url("/experience/scene/parchment.png");
+}
+.kingdom-scene figcaption {
+  padding-right: 52px;
+}
+.kingdom-scene figcaption span {
+  display: block;
+  margin-top: 0.35rem;
+}
+.settlement-banner {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+.settlement-buildings {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.settlement-building {
+  min-width: 0;
+  text-align: center;
+}
+.settlement-building strong,
+.settlement-building small {
+  display: block;
+}
+.building-picture {
+  position: relative;
+}
+.building-picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.building-scaffold {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 600px) {
+  .settlement-buildings {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+[data-experience-motion="off"] .experience-reveal,
+[data-experience-motion="off"] .experience-gag {
+  animation: none;
+  transition: none;
+}
+.experience-controls label {
+  display: block;
+  margin: 0.75rem 0;
+}
+.experience-controls input[type="range"] {
+  width: 100%;
+  min-height: 44px;
+}
+.experience-controls select {
+  min-height: 44px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-experience-motion="on"]) .experience-reveal,
+  html:not([data-experience-motion="on"]) .experience-gag {
+    animation: none;
+    transition: none;
+  }
+}
+
+.harvest-fields {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #ad7834;
+  background: #f4ebdd;
+  color: #202a30;
+}
+.harvest-fields img {
+  max-width: 100%;
+  height: auto;
+}
+
+.outcome-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 12px;
+}
+.outcome-cards > h2,
+.outcome-cards > p {
+  grid-column: 1 / -1;
+}
+.outcome-cards h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.outcome-cards code {
+  overflow-wrap: anywhere;
+}
+.outcome-cards [data-flavour] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.outcome-cards [data-flavour] img {
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+:root[data-experience-humour="off"] [data-flavour] {
+  display: none;
+}
+
+/* Friends playtest: one clear next move, compact live status, details on demand. */
+.guest-entry {
+  max-width: 36rem;
+  padding-top: 8vh;
+}
+.guest-entry h1 {
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  line-height: 1.1;
+}
+.guest-entry form {
+  display: grid;
+  gap: 1rem;
+}
+.guest-entry button {
+  font-size: 1.2rem;
+}
+.friends-play .game-header {
+  margin: 0;
+  padding: 0.5rem 0;
+  gap: 0.5rem;
+}
+.friends-play .game-header h1 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+.friends-play .game-header p {
+  margin: 0.15rem 0;
+  font-size: 0.8rem;
+}
+.friends-play .game-header details {
+  font-size: 0.75rem;
+}
+.friends-play .game-header-actions {
+  gap: 0.25rem;
+}
+.friends-play .game-header-actions button {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+}
+.friends-play .game-nav {
+  margin: 0.5rem 0;
+}
+.friends-play [aria-label="First-session progress"] {
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+}
+.friends-play [aria-label="First-session progress"] h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.friends-play [aria-label="First-session progress"] p {
+  margin: 0.35rem 0;
+}
+.friends-play [aria-label="First-session progress"] details {
+  font-size: 0.8rem;
+  margin: 0.3rem 0;
+}
+.friends-play [aria-label="First-session progress"] a {
+  font-size: 0.8rem;
+}
+.builder-strip,
+.resource-strip {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+.builder-strip > div,
+.resource-strip > div {
+  flex: 1;
+  display: grid;
+  padding: 0.6rem;
+  background: #fffdf8;
+  border: 1px solid #c4bbae;
+  border-radius: 0.6rem;
+}
+.builder-strip span,
+.resource-strip span {
+  font-size: 0.85rem;
+}
+.resource-strip small {
+  display: block;
+  font-size: 0.7rem;
+}
+.friends-play .kingdom-scene {
+  margin: 1rem 0;
+}
+.friends-play .kingdom-scene figcaption span {
+  display: none;
+}
+.friends-play .kingdom-scene > img {
+  max-height: 9rem;
+  object-fit: cover;
+}
+.friends-play .settlement-buildings {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.3rem;
+}
+.friends-play .settlement-building strong {
+  font-size: 0.7rem;
+}
+.friends-play .building-picture img {
+  width: 100%;
+  height: auto;
+}
+.quick-builds h2 {
+  font-size: 1.3rem;
+  margin: 0.6rem 0;
+}
+.quick-builds .game-card {
+  padding: 0.8rem;
+}
+.quick-builds .game-card p {
+  margin: 0.4rem 0;
+}
+.quiet {
+  color: #53605b;
+  font-size: 0.85rem;
+}
+@media (max-width: 600px) {
+  .friends-play .game-header {
+    align-items: start;
+  }
+  .friends-play .game-header-actions {
+    flex-direction: column;
+  }
+  .friends-play .game-nav button {
+    padding: 0.55rem 0.3rem;
+  }
+  .builder-strip > div {
+    padding: 0.45rem;
+  }
+  .friends-play .game-shell {
+    width: calc(100vw - 1rem);
+  }
 }

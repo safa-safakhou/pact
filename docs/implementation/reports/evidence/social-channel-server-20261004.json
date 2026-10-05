@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-04",
+  "release": "social-channel-20261004-2",
+  "configured": {
+    "telegram_bot_id": true,
+    "telegram_bot_token": true,
+    "telegram_webhook_secret": true,
+    "web_push_private_key": true,
+    "web_push_public_key": true
+  },
+  "services": {
+    "api": {
+      "state": "running",
+      "restarts": 0
+    },
+    "rules": {
+      "state": "running",
+      "restarts": 0
+    },
+    "seals": {
+      "state": "running",
+      "restarts": 0
+    },
+    "inference": {
+      "state": "running",
+      "restarts": 0
+    },
+    "notification": {
+      "state": "running",
+      "restarts": 0
+    },
+    "channel": {
+      "state": "running",
+      "restarts": 0
+    },
+    "gateway": {
+      "state": "running",
+      "restarts": 0
+    }
+  },
+  "inferenceConfiguration": [
+    "PACT_ENABLE_LIVE_MODEL_CALLS=0"
+  ]
+}

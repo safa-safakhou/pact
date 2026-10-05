@@ -66,6 +66,7 @@ export const pactCourtReadTool = {
 import {
   AgentGameActionSchema,
   AgentGuideQuerySchema,
+  AgentWorldReadQuerySchema,
   ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   CommandEnvelopeSchema,
@@ -89,6 +90,8 @@ export const receiptJsonSchema = z.toJSONSchema(CommandReceiptSchema, { target: 
 export const eventJsonSchema = z.toJSONSchema(EventEnvelopeSchema, { target: "draft-7" });
 export const toolCallJsonSchema = z.toJSONSchema(ToolCallSchema, { target: "draft-7" });
 export const worldViewQueryJsonSchema = z.toJSONSchema(WorldViewQuerySchema, { target: "draft-7" });
+/** Additive agent shape; retain the published HTTP v1 target requirement. */
+export const agentWorldReadQueryJsonSchema = z.toJSONSchema(AgentWorldReadQuerySchema, { target: "draft-7" });
 export const playerFindQueryJsonSchema = z.toJSONSchema(PlayerFindQuerySchema, { target: "draft-7" });
 
 export const pactPlayerFindTool = {
@@ -136,8 +139,9 @@ export const pactAgentGuideTool = {
 
 export const pactWorldReadTool = {
   name: "pact_world_read_v1",
-  description: "Read an authorized factual kingdom view. Other players' hidden state is never returned.",
-  inputSchema: worldViewQueryJsonSchema,
+  description:
+    "Read CURRENT state. Pass {} for your own authenticated kingdom; no ID is needed. For another real player use targetKingdomId (not kingdomId). Optional forecastMinutes is an integer 1–60, default 60; zero is invalid. Other players' hidden state is never returned. Use remainingGameMinutes for pending builders/contracts; calendar timestamps are game time, not wall deadlines. Do not invent calendar conversions. Original command receipts are historical and do not prove a build finished or a trade delivered.",
+  inputSchema: agentWorldReadQueryJsonSchema,
 } as const;
 
 export const pactReportReadTool = {

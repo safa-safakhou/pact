@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-04",
+  "release": "social-channel-20261004-2",
+  "bundle": "actual public testing release",
+  "appealResponse": "synthetic HTTP fixture; no real moderation case",
+  "fragmentRemoved": true,
+  "submitDisabled": true,
+  "noOverflow": true,
+  "errors": [],
+  "writes": [
+    {
+      "path": "/pact/v1/moderation/appeal",
+      "method": "POST",
+      "body": {
+        "token": "synthetic-one-use-fixture",
+        "reason": "Please review this synthetic fixture."
+      }
+    }
+  ]
+}

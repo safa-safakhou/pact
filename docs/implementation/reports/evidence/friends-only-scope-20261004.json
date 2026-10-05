@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-04",
+  "counts": {
+    "Done": 102,
+    "Backlog": 24
+  },
+  "deferred": [
+    {
+      "id": "MNI-85",
+      "title": "[PACT-084] Prove native iOS and Android login, linking, and approval",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-129",
+      "title": "[PACT-064] Extend privacy workflows to the complete social world",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-130",
+      "title": "[PACT-065] Implement privacy-bounded product measurement",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-134",
+      "title": "[PACT-090] Add Telegram notification delivery",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-135",
+      "title": "[PACT-091] Complete cross-channel session and privacy lifecycle",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-136",
+      "title": "[PACT-092] Verify MVP cross-channel and assistant handoff end to end",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-137",
+      "title": "[PACT-066] Run the social integration and load suite",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-131",
+      "title": "[PACT-087] Build complete native kingdom and Envoy screens",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-138",
+      "title": "[PACT-067] Run the three-week social pilot",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-139",
+      "title": "[PACT-068] Accept the social slice",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-142",
+      "title": "[PACT-071] Produce and integrate the illustrated kingdom and cosmetics",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-143",
+      "title": "[PACT-072] Integrate optional audio, motion, and notification feedback",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-145",
+      "title": "[PACT-074] Implement the cosmetic catalog, wallet, and unlock flow",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-146",
+      "title": "[PACT-075] Integrate hosted payments and verified purchase receipts",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-147",
+      "title": "[PACT-076] Implement refunds, reversals, and cosmetic reconciliation",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-148",
+      "title": "[PACT-077] Run the competitive abuse and moderation release review",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-149",
+      "title": "[PACT-093] Implement StoreKit and Google Play cosmetic purchases",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-150",
+      "title": "[PACT-094] Implement Telegram Stars cosmetic purchases",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-151",
+      "title": "[PACT-078] Provision and rehearse production operations",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-152",
+      "title": "[PACT-079] Re-certify external clients and complete distribution",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-153",
+      "title": "[PACT-095] Prepare and certify mobile-store and Telegram distribution",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-154",
+      "title": "[PACT-097] Certify the full production channel matrix",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-157",
+      "title": "[PACT-098] Replace MVP operator placeholders with reviewed production facts",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    },
+    {
+      "id": "MNI-156",
+      "title": "[PACT-081] Accept and prepare the Season One release",
+      "status": "Backlog",
+      "labels": [
+        "PACT Later"
+      ]
+    }
+  ],
+  "openExistingExperienceTickets": 0,
+  "newTicketsCreated": 0
+}

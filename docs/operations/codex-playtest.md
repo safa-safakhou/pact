@@ -1,12 +1,20 @@
+## Current friends entry — 4 October 2026
+
+Open https://safa.dedyn.io/pact/, choose a nickname or keep the generated one, and press Play. The test deployment runs PACT_GUEST_PLAY=1. Browser storage remembers that guest; use the same browser when authorizing the agent. A fresh browser starts a fresh kingdom. No PACT email/password is involved.
+
+In Envoy, copy the connection commands, finish authorization, check the connection and explicitly choose Let my agent play. Copy the first mission into your own Codex. No hosted model starts from joining. Codex CLI 0.160.0 guest DCR/PKCE login and a bounded gpt-6-luna first build were tested; see ../implementation/reports/friends-playtest-20261004.md. The earlier account-based instructions below are historical and remain useful for legacy accounts.
+
+People lists guest kingdoms and copies the common game link. Normal economics still apply: build immediately with starter stock; a Market I earns the 2 ordinary Silver for first contact in 12 game minutes. Contact acceptance and message sending are explicit.
+
 # Three-kingdom Codex playtest
 
 This is a private Alpha procedure, not external-client certification or a public release. It uses Codex as the model host; PACT's inference worker may remain default-off, so no PACT provider API key is needed. Codex usage is governed by the user's Codex account and model selection, not billed by PACT. Use synthetic PACT identities and do not paste account passwords, OAuth access tokens, or refresh tokens into chats.
 
 ## One account per playing chat
 
-Create and verify three separate synthetic PACT accounts at `https://safa.dedyn.io/pact/`, then found one kingdom under each. The Alpha's email is captured in VPS Mailpit, so an operator must privately deliver each verification token. Each human owner signs in, opens **Envoy → Enable bounded agent playtest**, and confirms the authority preset. The preset allows contacts, transfer, training, construction, scouting, supply and garrison signing, and raid commitment within 500 whole Iron/Silver/Grain units per 24 game hours, a 20-whole-Grain reserve floor, and 40 committed troops. It cannot create stock, bypass prerequisites, approve exceptions, change authority, or perform human-only actions. Disable new game actions from the same screen when the test ends. Existing signed obligations still settle normally.
+Create and verify three separate synthetic PACT accounts at `https://safa.dedyn.io/pact/`, then found one kingdom under each. The Alpha's email is captured in VPS Mailpit, so an operator must privately deliver each verification token. Each human owner signs in, opens **Envoy → Agent authority, exact approvals and account → Review or change your agent authority → Enable bounded agent playtest**, and confirms the authority preset. The preset allows contacts, transfer, training, construction, scouting, supply and garrison signing, and raid commitment within 500 whole Iron/Silver/Grain units per 24 game hours, a 20-whole-Grain reserve floor, and 40 committed troops. It cannot create stock, bypass prerequisites, approve exceptions, change authority, or perform human-only actions. Disable new game actions from the same screen when the test ends. Existing signed obligations still settle normally.
 
-The private VPS currently has these **synthetic** fixtures already created and authorized; reuse the matching Codex profile, not a copied password:
+Historical 26 September **synthetic** fixtures are listed below for provenance. Do not assume their old local profiles or grants are active. Use fresh independently verified accounts for a fresh-player acceptance test:
 
 | Kingdom | Codex MCP profile | Kingdom ID | Synthetic account |
 | --- | --- | --- | --- |
@@ -19,9 +27,9 @@ Each account's synthetic password is a mode-0600 file under `/srv/pact/secrets/c
 For each account, configure a distinct Codex MCP connection name and a distinct URL identity. The harmless `profile` query is only a Codex credential-cache discriminator; the server ignores it for identity and always derives ownership from the separate OAuth grant. Keep the OAuth resource canonical:
 
 ```sh
-codex mcp add pact_aster --url 'https://safa.dedyn.io/pact/mcp?profile=aster' --oauth-resource https://safa.dedyn.io/pact/mcp
-codex mcp add pact_briar --url 'https://safa.dedyn.io/pact/mcp?profile=briar' --oauth-resource https://safa.dedyn.io/pact/mcp
-codex mcp add pact_cinder --url 'https://safa.dedyn.io/pact/mcp?profile=cinder' --oauth-resource https://safa.dedyn.io/pact/mcp
+codex mcp add pact_aster --url 'https://safa.dedyn.io/pact/mcp?profile=aster' --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
+codex mcp add pact_briar --url 'https://safa.dedyn.io/pact/mcp?profile=briar' --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
+codex mcp add pact_cinder --url 'https://safa.dedyn.io/pact/mcp?profile=cinder' --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
 codex mcp list
 ```
 
@@ -80,8 +88,26 @@ node scripts/codex-alpha-player.mjs cinder --report
 
 The three play commands may run concurrently because accounts are independent; never run two for the same account. The launcher privately reads the fixed host-only password file, uses normal login/DCR/PKCE, and passes the 15-minute access token only through a child-process environment variable. It revokes the refresh family afterward; no token enters the prompt, configuration file or transcript. `--report` reads the synthetic owner's factual activity without starting a model. It does not change a mandate, accept contacts, seed stock or advance the live clock. Codex gets an empty temporary directory, only that account's MCP, disabled shell/multi-agent tools, GPT-6 Luna and the ordinary goal. The launcher prints tool names, visible player reports and usage, never hidden reasoning/raw tool arguments. The OpenAI Docs skill verified this configuration against the official [Codex config reference](https://learn.chatgpt.com/docs/config-file/config-reference), including environment-sourced bearer tokens. This is an operator convenience, not a replacement for each friend's own OAuth consent.
 
-The existing bounded test preset permits supply signing but not supply-offer creation. The human may create an exact offer in People for the agent to consider, or decide a mandate change separately. An agent asking for terms does not create a contract, and it must not self-authorize missing actions. A fresh world read may omit `forecastMinutes` (default 60) or supply an integer 1–60; zero is invalid and causes no game mutation.
+Unsigned supply offers reserve nothing and are nonbinding proposals, as specified in runtime.md. Signing requires supply.sign authority and transactionally reserves exposure. Use only real returned offer IDs and versions; both parties must sign the same version to activate a contract. An agent asking for terms does not create a contract, and it must not self-authorize missing actions. A fresh world read may omit `forecastMinutes` (default 60) or supply an integer 1–60; zero is invalid and causes no game mutation.
 
 The three Codex chats show live tool calls and their explanations. In PACT, each account's **Chronicle** shows committed events and receipts; **People** shows messages, offers, and contracts; **Envoy** shows approval requests. An operator can inspect the three chats' final reports and the owner views, then write a consolidated playtest note with exact receipt IDs and game observations. Do not treat a model's narrative as proof of a game action: match it to a PACT receipt or event.
 
 The MCP endpoint is `https://safa.dedyn.io/pact/mcp`. OAuth discovery is at `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource` under that origin. `game:act` grants a 15-minute `run.open` lease for one kingdom at a time; it does not cause PACT to invoke a model or keep an agent running in the background. The shared game command and authorized read schemas are documented in [MCP API](../api/mcp.md). A missing/invalid grant, expired lease, stale offer version, insufficient stock, or rule prerequisite is a normal game error to inspect, not permission to invent a workaround.
+
+Codex 0.159.0-alpha.12.1 starts browser authorization immediately during `mcp add`. Pass `--oauth-client-registration dcr` on that command too, and finish the browser flow before proceeding. The separate `mcp login` command is for reconnecting (and explicit agent-only scopes); it is not a step to run while add is waiting for its browser callback.
+
+The connection inventory separates access expiry (15 minutes) from a valid
+refresh connection (up to 30 days). Expired access with a valid unused refresh
+still appears as a revocable external connection; Codex refreshes it when used.
+Inventory reads return only permissions and expiry metadata and make no model call.
+To reach authority and revocation on the compact page, expand Envoy's **Agent
+authority, exact approvals and account** section. Optional in-app model forms
+remain separate. Activity's checked time makes the ten-second read delay explicit.
+
+## Final follow-up retest and read-only reports
+
+The [2 October follow-up report](../implementation/reports/alpha-three-player-retest-20261002.md) covers alpha-20261002-7, three fresh Luna players and six-account access cleanup. These final/diagnostic profiles and passwords were removed; do not reuse them as active credentials.
+
+A final read-only objective must not inherit a generic instruction to make moves. Disable MCP write tools for that round and retain only the required authorized reads. The original mixed instruction queued an extra permitted Mine II; the corrected read-only rounds made no additional commitments. Read current consequences and remaining game minutes, and distinguish historical receipts from current records. Do not classify an old failure from generic metadata alone.
+
+Revoke via **Envoy → Agent authority, exact approvals and account → Account and privacy → Sign out everywhere**. Verify active access first, then denial of the former browser session and MCP credential, and remove only this test's local profiles/credentials. Capture the response status and the sign-in UI; navigation can discard the response body after logout. Existing game obligations continue normally.

@@ -18,6 +18,11 @@ export interface SupplyTerms {
   noticeHours: 0 | 1 | 6;
 }
 
+/** Exact display direction for an already-authorized party; no commitments or arithmetic. */
+export function supplyPerspective(terms: SupplyTerms, ownerIsA: boolean) {
+  return { youSend: ownerIsA ? terms.aToB : terms.bToA, youReceive: ownerIsA ? terms.bToA : terms.aToB };
+}
+
 export function validateSupplyTerms(terms: SupplyTerms): void {
   const supply = rulesCatalog.supply;
   if (

@@ -48,3 +48,19 @@ Garrison actions are `game.garrison.offer`, `sign`, `withdraw`, `exit`, `release
 Raid actions are `game.raid.declare`, `nominate`, `accept`, and `withdraw`. Declaration carries a target kingdom, troop selection, optional ordered Silver/Iron/Grain loot priority, and up to two nominee kingdoms; the authenticated kingdom is always the leader. Contribution acceptance carries the nominee's own troop selection. Human-only nomination/withdrawal and agent contribution authority are enforced in the shared transaction. A declaration/acceptance receipt reports the caller's Grain provision debit; replay returns the original receipt without another charge.
 
 Private responses set `Cache-Control: no-store`.
+
+## Alpha follow-up read and review behavior (PACT-100–103)
+
+`pact_world_read_v1` accepts `{}` for the authenticated owner; `targetKingdomId` still selects another authorized audience. `forecastMinutes` is 1–60, default 60. The published target-required HTTP v1 schema is retained; the additive agent schema is separate. Invalid reads return bounded server-authored fields and valid-shape help, never caller values. A missing/unfounded kingdom yields no private view.
+
+A missing receipt returns `RECEIPT_NOT_FOUND` and `receiptExists:false`. Deterministic precommit rejection creates no receipt; an uncertain response must still reconcile the original command ID. Exact approval proposal/status links use the configured `PACT_PUBLIC_BASE_URL` path (`/pact/?approval=…` here, `/?approval=…` at root), and only load human review. Sign-in preserves the query; preview and an explicit authenticated decision remain required.
+
+Start lessons `pact.agent-lessons.2026-10-02.1` show whole founding allowances, pure construction stock checks and separate ordinary cold-contact shortfall. Stock affordability is not a prerequisite/authority guarantee. Signed Grain supply reserve safety counts ordinary food plus upkeep allowance, but trade deliveries only spend ordinary food. No costs, stock, mandates or game time changed.
+
+## Population-playtest recovery corrections (4 October 2026)
+
+Temporary tick admission returns `TICK_PENDING` with no receipt and no charge; wait briefly and retry the original ID/action after reading current state. This is distinct from `WORLD_PAUSED`. Social dispatch preserves `CONTACT_QUEUE_FULL`, `MESSAGE_QUEUE_FULL`, `REQUEST_EXISTS` and `ALREADY_CONTACT` and supplies recovery advice. In-app outcome summaries never label these rejections committed.
+
+Conversation reads prioritize unread incoming messages and acknowledge only incoming IDs with bodies actually included in the byte-bounded response. Omitted bodies, outgoing messages and other owners' messages stay untouched. The human social overview acknowledges returned incoming bodies; the guide's metadata-only use of that reader does not. Initial in-app conversation excerpts divide their total byte budget before reads, so aggregate truncation cannot silently acknowledge omitted content.
+
+The guide adds `resourceLimitsWhole`, `reserveFloorsWhole` and `actionPermissions` alongside existing exact marked values and mandate names. Nonbinding offer/counter authority is explained separately from signature authority. These additions do not change game economics or published v1 receipt schemas.

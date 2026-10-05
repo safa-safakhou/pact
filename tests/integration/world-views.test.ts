@@ -4,7 +4,7 @@ import { ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
 import type { IdentityService } from "@pact/identity";
-import { ActionLimitService, TroopService, WorldViewService } from "@pact/kingdom";
+import { ActionLimitService, OwnerRecordStates, TroopService, WorldViewService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
 import { WorldClockService } from "@pact/world";
@@ -59,6 +59,201 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("keeps earliest retained milestones beyond latest pages and never reconstructs purged history", async () => {
+    const owner = await kingdom(),
+      partner = await kingdom(),
+      outsider = await kingdom();
+    const firstBuild = randomUUID(),
+      offer = randomUUID(),
+      contract = randomUUID();
+    await pool.query(
+      `INSERT INTO building_instructions(id,product_scope,kingdom_id,account_id,builder_slot,building_kind,target_level,actor_kind,authority_ref,state,queued_game_time_ms,settled_game_time_ms)
+      VALUES($1,'pact',$2,$3,1,'farm',2,'human','fixture','completed',0,0)`,
+      [firstBuild, owner.kingdomId, owner.accountId],
+    );
+    for (let n = 1; n <= 21; n++)
+      await pool.query(
+        `INSERT INTO building_instructions(id,product_scope,kingdom_id,account_id,builder_slot,building_kind,target_level,actor_kind,authority_ref,state,queued_game_time_ms,settled_game_time_ms)
+      VALUES($1,'pact',$2,$3,1,'mine',2,'human','fixture','completed',$4,$4)`,
+        [randomUUID(), owner.kingdomId, owner.accountId, n],
+      );
+    await pool.query(
+      `INSERT INTO social_contacts(product_scope,kingdom_a,kingdom_b,accepted_game_time_ms) VALUES('pact',LEAST($1::uuid,$2::uuid),GREATEST($1::uuid,$2::uuid),10)`,
+      [owner.kingdomId, partner.kingdomId],
+    );
+    const terms = {
+      aToB: { resource: "iron", wholePerHour: 1 },
+      bToA: null,
+      aBond: null,
+      bBond: null,
+      durationHours: 1,
+      noticeHours: 0,
+    };
+    await pool.query(
+      `INSERT INTO supply_offers(id,product_scope,kingdom_a,kingdom_b,version,terms,status,expires_game_time_ms,created_game_time_ms,updated_game_time_ms) VALUES($1,'pact',$2,$3,1,$4,'active',3600000,0,0)`,
+      [offer, owner.kingdomId, partner.kingdomId, terms],
+    );
+    await pool.query(
+      `INSERT INTO supply_contracts(id,product_scope,offer_id,offer_version,kingdom_a,kingdom_b,terms,start_game_time_ms,end_game_time_ms,status) VALUES($1,'pact',$2,1,$3,$4,$5,0,3600000,'active')`,
+      [contract, offer, owner.kingdomId, partner.kingdomId, terms],
+    );
+    for (const [time, amount] of [
+      [0, 0],
+      [60000, 600],
+      [120000, 1200],
+    ])
+      await pool.query(
+        `INSERT INTO supply_installments(product_scope,contract_id,game_time_ms,payer_kingdom_id,recipient_kingdom_id,resource,due_units,delivered_units,overflow_units) VALUES('pact',$1,$2,$3,$4,'iron',1200,$5,0)`,
+        [contract, time, owner.kingdomId, partner.kingdomId, amount],
+      );
+    const views = new WorldViewService(pool, scope),
+      read = await views.readSelf(owner.accountId);
+    expect(read?.consequences.builds).toHaveLength(20);
+    expect(read?.consequences.builds.some((b) => b.id === firstBuild)).toBe(false);
+    expect(read?.consequences.firstRetained).toMatchObject({
+      build: { recordId: firstBuild, occurredGameTimeMs: 0 },
+      contact: { recordId: `${partner.kingdomId}:10`, occurredGameTimeMs: 10 },
+      delivery: {
+        recordId: contract,
+        occurredGameTimeMs: 60000,
+        summary: "Sent 600 marked iron; overflow 0 marked (not credited)",
+      },
+    });
+    expect((await views.readSelf(owner.accountId))?.consequences.firstRetained).toEqual(
+      read?.consequences.firstRetained,
+    );
+    expect((await views.readSelf(outsider.accountId))?.consequences.firstRetained).toEqual({
+      build: null,
+      contact: null,
+      delivery: null,
+    });
+    expect(await views.read(outsider.accountId, owner.kingdomId)).not.toHaveProperty("consequences");
+    await pool.query("DELETE FROM building_instructions WHERE kingdom_id=$1", [owner.kingdomId]);
+    await pool.query("DELETE FROM social_contacts WHERE kingdom_a=$1 OR kingdom_b=$1", [owner.kingdomId]);
+    await pool.query("DELETE FROM supply_installments WHERE contract_id=$1", [contract]);
+    expect((await views.readSelf(owner.accountId))?.consequences.firstRetained).toEqual({
+      build: null,
+      contact: null,
+      delivery: null,
+    });
+  });
+
+  it("projects completed builds and exact settled supply totals only for their owner", async () => {
+    const owner = await kingdom(),
+      partner = await kingdom(),
+      outsider = await kingdom();
+    const buildId = randomUUID(),
+      offerId = randomUUID(),
+      contractId = randomUUID();
+    await pool.query(
+      `INSERT INTO building_instructions(id,product_scope,kingdom_id,account_id,builder_slot,building_kind,target_level,actor_kind,authority_ref,state,queued_game_time_ms,due_game_time_ms,settled_game_time_ms)
+      VALUES($1,'pact',$2,$3,1,'farm',2,'human','fixture','completed',0,0,0)`,
+      [buildId, owner.kingdomId, owner.accountId],
+    );
+    const terms = {
+      aToB: { resource: "iron", wholePerHour: 1 },
+      bToA: { resource: "grain", wholePerHour: 1 },
+      aBond: null,
+      bBond: null,
+      durationHours: 1,
+      noticeHours: 0,
+    };
+    await pool.query(
+      `INSERT INTO supply_offers(id,product_scope,kingdom_a,kingdom_b,version,terms,status,expires_game_time_ms,created_game_time_ms,updated_game_time_ms)
+      VALUES($1,'pact',$2,$3,1,$4,'active',3600000,0,0)`,
+      [offerId, owner.kingdomId, partner.kingdomId, terms],
+    );
+    await pool.query(
+      `INSERT INTO supply_contracts(id,product_scope,offer_id,offer_version,kingdom_a,kingdom_b,terms,start_game_time_ms,end_game_time_ms,status)
+      VALUES($1,'pact',$2,1,$3,$4,$5,0,3600000,'active')`,
+      [contractId, offerId, owner.kingdomId, partner.kingdomId, terms],
+    );
+    for (const party of [owner.kingdomId, partner.kingdomId])
+      await pool.query(
+        `INSERT INTO supply_offer_signatures(product_scope,offer_id,version,kingdom_id,actor_kind,signed_game_time_ms) VALUES('pact',$1,1,$2,'human',0)`,
+        [offerId, party],
+      );
+    await pool.query(
+      `INSERT INTO supply_installments(product_scope,contract_id,game_time_ms,payer_kingdom_id,recipient_kingdom_id,resource,due_units,delivered_units,overflow_units,failure_reason)
+      VALUES('pact',$1,0,$2,$3,'iron',100,50,10,'insufficient_stock')`,
+      [contractId, owner.kingdomId, partner.kingdomId],
+    );
+    const views = new WorldViewService(pool, scope);
+    const view = await views.readSelf(owner.accountId);
+    expect(view).toMatchObject({
+      consequences: {
+        builds: [{ id: buildId, building: "farm", targetLevel: 2, state: "completed" }],
+        supplyContracts: [
+          {
+            id: contractId,
+            youSend: { resource: "iron", wholePerHour: 1 },
+            youReceive: { resource: "grain", wholePerHour: 1 },
+            signedBy: expect.arrayContaining([owner.kingdomId, partner.kingdomId]),
+            deliveries: [
+              {
+                direction: "sent",
+                resource: "iron",
+                installments: 1,
+                dueMarked: "100",
+                deliveredMarked: "50",
+                overflowMarked: "10",
+                failedInstallments: 1,
+              },
+            ],
+          },
+        ],
+      },
+    });
+    await pool.query("UPDATE supply_contracts SET end_game_time_ms=$2 WHERE id=$1", [
+      contractId,
+      (view?.asOfGameTimeMs ?? 0) + 3600000,
+    ]);
+    const timed = await views.readSelf(owner.accountId);
+    expect(timed?.consequences.supplyContracts[0]?.remainingGameMinutes).toBe(60);
+    expect(timed?.consequences.builds[0]?.remainingGameMinutes).toBe(0);
+    await pool.query("UPDATE supply_contracts SET end_game_time_ms=3600000 WHERE id=$1", [contractId]);
+    const states = new OwnerRecordStates(pool, scope, new WorldClockService(pool, scope));
+    const refs = [`building:${buildId}`, `supply-offer:${offerId}`, `supply-contract:${contractId}`];
+    expect(await states.read(owner.accountId, refs)).toMatchObject([
+      { status: "completed", nextStep: expect.stringContaining("finished") },
+      { status: "active", nextStep: expect.stringContaining("No proposal signature is pending") },
+      { status: "active" },
+    ]);
+    expect(await states.read(outsider.accountId, refs)).toEqual([]);
+    const requestId = randomUUID();
+    await pool.query(
+      `INSERT INTO cold_contact_requests(id,product_scope,sender_kingdom_id,recipient_kingdom_id,note,operation_key,created_game_time_ms,expires_game_time_ms,status) VALUES($1,'pact',$2,$3,'synthetic', $4,0,3600000,'accepted')`,
+      [requestId, owner.kingdomId, partner.kingdomId, randomUUID()],
+    );
+    expect(await states.read(owner.accountId, [`contact-request:${requestId}`])).toMatchObject([
+      { status: "accepted", nextStep: expect.stringContaining("no further acceptance") },
+    ]);
+    expect(await states.read(outsider.accountId, [`contact-request:${requestId}`])).toEqual([]);
+
+    expect((await views.readSelf(partner.accountId))?.consequences.supplyContracts[0]).toMatchObject({
+      youSend: { resource: "grain", wholePerHour: 1 },
+      youReceive: { resource: "iron", wholePerHour: 1 },
+    });
+    expect(await views.readSelf(owner.accountId)).toEqual(view);
+    expect(await views.readSelf(outsider.accountId)).toMatchObject({
+      consequences: { builds: [], supplyContracts: [] },
+    });
+    expect(await views.read(outsider.accountId, owner.kingdomId)).not.toHaveProperty("consequences");
+  });
+  it("derives self from the account and never upgrades another kingdom to owner", async () => {
+    const owner = await kingdom();
+    const other = await kingdom();
+    const views = new WorldViewService(pool, scope);
+    expect(await views.readSelf(owner.accountId, 3)).toMatchObject({
+      audience: "owner",
+      profile: { kingdomId: owner.kingdomId },
+    });
+    expect(await views.readSelf(randomUUID())).toBeNull();
+    const publicView = await views.read(owner.accountId, other.kingdomId, 3);
+    expect(publicView?.audience).toBe("public");
+    expect(publicView).not.toHaveProperty("balances");
+    expect(publicView).not.toHaveProperty("builders");
+  });
   it("finds real players by exact handle with identical public HTTP and MCP views, never owner state", async () => {
     const owner = await kingdom();
     await pool.query("UPDATE kingdoms SET handle = 'player_alpha' WHERE id = $1", [owner.kingdomId]);
@@ -308,6 +503,69 @@ describe("authorized world views", () => {
     const participant = await service.read(b.accountId, a.kingdomId);
     expect(participant?.audience).toBe("participant");
     expect(JSON.stringify(participant)).not.toMatch(/ordinaryUnits|buildings|terms|model|accountId|commitment/);
+  });
+
+  it("shares exact whole-unit rates and forecast assumptions over HTTP and MCP", async () => {
+    const owner = await kingdom();
+    await pool.query(
+      "UPDATE resource_balances SET production_per_minute_units=450 WHERE product_scope=$1 AND kingdom_id=$2 AND resource='grain'",
+      [scope, owner.kingdomId],
+    );
+    const views = new WorldViewService(pool, scope);
+    const view = await views.read(owner.accountId, owner.kingdomId, 1);
+    if (view?.audience !== "owner") throw new Error("OWNER_VIEW_MISSING");
+    expect(view.balances.grain.facts.rates).toMatchObject({
+      gross: { perMinuteWhole: "0.75", perHourWhole: "45", label: "0.75/min = 45/hour" },
+      upkeep: { perMinuteWhole: "0", perHourWhole: "0" },
+      net: { perMinuteWhole: "0.75", perHourWhole: "45" },
+    });
+    const server = Fastify();
+    registerWorldViewRoutes(
+      server,
+      { authenticate: async () => ({ accountId: owner.accountId }) } as unknown as IdentityService,
+      views,
+    );
+    const mcp = new McpTransport({
+      pool,
+      productScope: scope,
+      dispatcher: {} as CommandDispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      worldViews: views,
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope: ProductScopeSchema.parse(scope),
+      audience: "agent" as const,
+      agentScopes: ["world:read" as const],
+    };
+    const initialized = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    try {
+      const http = await server.inject({
+        method: "GET",
+        url: `/v1/world/kingdoms/${owner.kingdomId}?forecastMinutes=1`,
+        headers: { cookie: "pact_session=fixture" },
+      });
+      expect(http.statusCode).toBe(200);
+      const response = await mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 2,
+          params: { name: "pact_world_read_v1", arguments: { targetKingdomId: owner.kingdomId, forecastMinutes: 1 } },
+        },
+        initialized.sessionId,
+      );
+      expect((response.response.result as { structuredContent: unknown }).structuredContent).toEqual(http.json());
+      expect(http.json().balances.grain.facts).toEqual(view.balances.grain.facts);
+      expect(http.json().forecast.assumption).toMatch(/Scenario only/);
+    } finally {
+      await server.close();
+    }
   });
 
   it("owner reads exact committed state and a bounded conditional forecast", async () => {

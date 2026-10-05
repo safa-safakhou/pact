@@ -128,6 +128,18 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
         )
         .header("referrer-policy", "no-referrer")
         .type("text/html; charset=utf-8");
+      const guestCookie = request.headers.cookie?.split(";").find((part) => part.trim().startsWith("pact_session="));
+      const guestToken = guestCookie ? decodeURIComponent(guestCookie.trim().slice("pact_session=".length)) : "";
+      const guest = identity.guestPlayEnabled ? await identity.guestSession(guestToken).catch(() => null) : null;
+      if (guest)
+        return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Connect your agent</title><style>body{font:18px system-ui;max-width:30rem;margin:3rem auto;padding:1rem}button{font:inherit;padding:1rem}p{line-height:1.5}</style><h1>Connect your agent</h1><p id="kingdom">Your current guest kingdom</p><p>Connect ${clientName} to read your world and play within the limits you choose.</p><button id="connect">Connect to my kingdom</button><p id="status" role="status"></p><script>
+const q=${encoded},csrf=${JSON.stringify(guest.csrfToken)};
+fetch('../v1/kingdom/me').then(r=>r.json()).then(k=>{document.getElementById('kingdom').textContent=k.handle?'Playing as @'+k.handle:'Your current guest kingdom'});
+document.getElementById('connect').onclick=async()=>{
+const button=document.getElementById('connect'),status=document.getElementById('status');button.disabled=true;status.textContent='Connecting...';
+try{const r=await fetch('authorize',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':csrf},body:JSON.stringify(q)});const result=await r.json();if(!r.ok)throw Error(result.error?.code||'Connection failed');const target=new URL(q.redirect_uri);target.searchParams.set("code",result.code);target.searchParams.set("state",q.state);window.location.assign(target.toString());}
+catch(e){status.textContent=String(e);button.disabled=false}};
+</script></html>`;
       return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize PACT connection</title><style>body{font:16px system-ui;max-width:28rem;margin:3rem auto;padding:1rem}label{display:block;margin:.8rem 0}input,button{box-sizing:border-box;width:100%;padding:.7rem}#error{color:#a00}</style><h1>Connect ${clientName} to PACT</h1><p>This client requests: ${scopes}. It can act only within your kingdom mandate. It cannot approve its own exceptions or change that mandate.</p><form id="login"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in and authorize</button></form><p id="status" role="status"></p><p id="error" role="alert"></p><script>
 const q=${encoded};
 document.getElementById('login').addEventListener('submit',async(e)=>{

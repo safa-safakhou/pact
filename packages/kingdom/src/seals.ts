@@ -29,7 +29,7 @@ export class SealService {
   private async actor(client: PoolClient, accountId: string) {
     const row = (
       await client.query<{ id: string }>(
-        "SELECT k.id FROM kingdoms k JOIN accounts a ON a.id=k.account_id WHERE k.product_scope=$1 AND k.account_id=$2 AND k.status='ranked' AND a.status='active' AND a.email_verified_at IS NOT NULL FOR UPDATE OF k",
+        "SELECT k.id FROM kingdoms k JOIN accounts a ON a.id=k.account_id WHERE k.product_scope=$1 AND k.account_id=$2 AND k.status='ranked' AND a.status='active' AND (a.email_verified_at IS NOT NULL OR a.is_guest) FOR UPDATE OF k",
         [this.scope, accountId],
       )
     ).rows[0];

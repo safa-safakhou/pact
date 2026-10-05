@@ -1,0 +1,1177 @@
+{
+  "release": "alpha-20261002-2",
+  "snapshotSha256": "b775ff14109dcad3d048e892277e7acea7f19e1ef24b9b6ade42bab536f1d357",
+  "ownerViews": {
+    "cedar": {
+      "me": {
+        "status": 200,
+        "body": {
+          "kingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+          "handle": "cedar_7bf6cc",
+          "activatedAt": "2026-10-02T16:49:34.566Z",
+          "gameTimeMs": 1790956320000,
+          "tickSequence": "9573",
+          "firstTickGameTimeMs": 1790956380000,
+          "activationEventId": "5a93ab4b-693c-456a-93af-013a48e8cf94"
+        }
+      },
+      "world": {
+        "status": 200,
+        "body": {
+          "audience": "owner",
+          "consequences": {
+            "asOfGameTimeMs": 1790958240000,
+            "limit": 20,
+            "builds": [
+              {
+                "id": "a897f4d2-d24f-4d4f-a880-f8ebbbd7e211",
+                "building": "farm",
+                "targetLevel": 2,
+                "state": "completed",
+                "dueGameTimeMs": 1790957460000,
+                "settledGameTimeMs": 1790957460000
+              }
+            ],
+            "contacts": [
+              {
+                "kingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+                "handle": "marsh_82349a",
+                "displayName": "Willow Crossing",
+                "acceptedGameTimeMs": "1790957880000"
+              }
+            ],
+            "supplyContracts": [
+              {
+                "id": "d6954217-6014-48f5-9498-d97a94625ab4",
+                "offerId": "8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "offerVersion": 1,
+                "status": "active",
+                "counterparty": {
+                  "handle": "marsh_82349a",
+                  "kingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+                  "displayName": "Willow Crossing"
+                },
+                "endGameTimeMs": 1790961840000,
+                "noticeEndGameTimeMs": null,
+                "closeReason": null,
+                "signedBy": [
+                  "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+                  "e70c9ca0-20f5-46b3-9a95-e97da3409eca"
+                ],
+                "deliveries": [
+                  {
+                    "resource": "grain",
+                    "direction": "sent",
+                    "dueMarked": "10",
+                    "installments": 1,
+                    "lastGameTimeMs": 1790958240000,
+                    "overflowMarked": "0",
+                    "deliveredMarked": "10",
+                    "failedInstallments": 0
+                  },
+                  {
+                    "resource": "iron",
+                    "direction": "received",
+                    "dueMarked": "10",
+                    "installments": 1,
+                    "lastGameTimeMs": 1790958240000,
+                    "overflowMarked": "0",
+                    "deliveredMarked": "10",
+                    "failedInstallments": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "profile": {
+            "kingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+            "handle": "cedar_7bf6cc",
+            "displayName": "Juniper Reach",
+            "portrait": "alpha-default"
+          },
+          "asOfGameTimeMs": 1790958240000,
+          "committedTickSequence": "9605",
+          "worldStatus": "active",
+          "lastCommittedEventId": "10618",
+          "charges": [
+            {
+              "available": 3,
+              "capacity": 3,
+              "nextRegenerationGameTimeMs": null,
+              "retryAtGameTimeMs": null,
+              "kind": "raid",
+              "regenerationHours": 8
+            },
+            {
+              "available": 4,
+              "capacity": 4,
+              "nextRegenerationGameTimeMs": null,
+              "retryAtGameTimeMs": null,
+              "kind": "scout",
+              "regenerationHours": 6
+            }
+          ],
+          "balances": {
+            "grain": {
+              "ordinaryUnits": "9130",
+              "foundingAllowanceUnits": "48000",
+              "lockedUnits": "0",
+              "capacityUnits": "360000",
+              "productionPerMinuteUnits": "450",
+              "version": "66"
+            },
+            "iron": {
+              "ordinaryUnits": "6410",
+              "foundingAllowanceUnits": "96000",
+              "lockedUnits": "0",
+              "capacityUnits": "360000",
+              "productionPerMinuteUnits": "200",
+              "version": "35"
+            },
+            "silver": {
+              "ordinaryUnits": "3200",
+              "foundingAllowanceUnits": "48000",
+              "lockedUnits": "0",
+              "capacityUnits": "360000",
+              "productionPerMinuteUnits": "100",
+              "version": "34"
+            }
+          },
+          "buildings": [
+            {
+              "kind": "barracks",
+              "level": 1
+            },
+            {
+              "kind": "farm",
+              "level": 2
+            },
+            {
+              "kind": "hall",
+              "level": 1
+            },
+            {
+              "kind": "market",
+              "level": 1
+            },
+            {
+              "kind": "mine",
+              "level": 1
+            },
+            {
+              "kind": "storehouse",
+              "level": 1
+            },
+            {
+              "kind": "wall",
+              "level": 1
+            }
+          ],
+          "builders": [
+            {
+              "slot": 1,
+              "instructionId": null,
+              "kind": null,
+              "state": null,
+              "dueGameTimeMs": null
+            },
+            {
+              "slot": 2,
+              "instructionId": null,
+              "kind": null,
+              "state": null,
+              "dueGameTimeMs": null
+            }
+          ],
+          "troops": [
+            {
+              "type": "spearman",
+              "placement": "home",
+              "ownerKingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+              "hostKingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+              "homeGuard": true,
+              "count": 8
+            }
+          ],
+          "training": [],
+          "upkeep": {
+            "perMinuteUnits": "80",
+            "hungry": false
+          },
+          "contracts": [
+            {
+              "id": "d6954217-6014-48f5-9498-d97a94625ab4",
+              "counterpartyKingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+              "endsGameTimeMs": 1790961840000,
+              "noticeEndsGameTimeMs": null,
+              "terms": {
+                "aToB": {
+                  "resource": "grain",
+                  "wholePerHour": 1
+                },
+                "bToA": {
+                  "resource": "iron",
+                  "wholePerHour": 1
+                },
+                "aBond": null,
+                "bBond": null,
+                "noticeHours": 0,
+                "durationHours": 1
+              }
+            }
+          ],
+          "raids": [],
+          "scouts": [],
+          "threats": [],
+          "records": [],
+          "forecast": {
+            "throughGameTimeMs": 1790961840000,
+            "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+            "harvestPercentByMinute": [
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100
+            ],
+            "expected": {
+              "iron": {
+                "ordinaryUnits": "19000",
+                "foundingAllowanceUnits": "96000"
+              },
+              "silver": {
+                "ordinaryUnits": "9200",
+                "foundingAllowanceUnits": "48000"
+              },
+              "grain": {
+                "ordinaryUnits": "30740",
+                "foundingAllowanceUnits": "48000"
+              }
+            },
+            "assumedDeliveries": [
+              {
+                "contractId": "d6954217-6014-48f5-9498-d97a94625ab4",
+                "direction": "outgoing",
+                "resource": "grain",
+                "units": "590"
+              },
+              {
+                "contractId": "d6954217-6014-48f5-9498-d97a94625ab4",
+                "direction": "incoming",
+                "resource": "iron",
+                "units": "590"
+              }
+            ]
+          }
+        }
+      },
+      "activity": {
+        "status": 200,
+        "body": {
+          "source": "external",
+          "label": "Engine facts \u2014 server-recorded tool results",
+          "entries": [
+            {
+              "id": "47",
+              "category": "failed",
+              "callId": "47",
+              "code": "FORBIDDEN",
+              "records": [],
+              "nextStep": "Read current state and exact record version, then replan. Do not claim success or blindly repeat the failed move."
+            },
+            {
+              "id": "48",
+              "category": "committed",
+              "callId": "48",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "building:a897f4d2-d24f-4d4f-a880-f8ebbbd7e211",
+                  "version": 1
+                }
+              ],
+              "commandId": "a897f4d2-d24f-4d4f-a880-f8ebbbd7e211",
+              "nextStep": "Inspect the referenced record for its actual consequence; a committed instruction can still be pending."
+            },
+            {
+              "id": "53",
+              "category": "committed",
+              "callId": "53",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "message:51cf11b2-46e6-47d4-b320-e95e39fc8abe",
+                  "version": 1
+                }
+              ],
+              "commandId": "786f2f73-60d6-44e5-86f1-1c0bf7946782",
+              "nextStep": "Inspect the referenced record for its actual consequence; a committed instruction can still be pending."
+            },
+            {
+              "id": "54",
+              "category": "proposed",
+              "callId": "54",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                  "version": 1
+                }
+              ],
+              "commandId": "8c79b233-3d49-41a9-9bef-1a8947d99dae",
+              "nextStep": "Wait for the other party to accept/sign the exact version; no agreement is active yet."
+            },
+            {
+              "id": "56",
+              "category": "committed",
+              "callId": "56",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                  "version": 1
+                },
+                {
+                  "record": "supply-contract:d6954217-6014-48f5-9498-d97a94625ab4",
+                  "version": 1
+                }
+              ],
+              "commandId": "c22ef324-5bb3-4c3b-8c53-6b02029cbe96",
+              "nextStep": "Inspect the referenced record for its actual consequence; a committed instruction can still be pending."
+            }
+          ],
+          "assessments": [],
+          "status": "recorded",
+          "lastErrorCode": null,
+          "truncated": false,
+          "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+          "timestamps": {
+            "47": "2026-10-02T16:54:42.950Z",
+            "48": "2026-10-02T16:58:05.398Z",
+            "53": "2026-10-02T17:17:23.426Z",
+            "54": "2026-10-02T17:17:27.177Z",
+            "56": "2026-10-02T17:21:25.206Z"
+          }
+        }
+      }
+    },
+    "marsh": {
+      "me": {
+        "status": 200,
+        "body": {
+          "kingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+          "handle": "marsh_82349a",
+          "activatedAt": "2026-10-02T16:50:27.290Z",
+          "gameTimeMs": 1790956380000,
+          "tickSequence": "9574",
+          "firstTickGameTimeMs": 1790956440000,
+          "activationEventId": "2c15341d-cfda-42c0-a52a-34efe375c916"
+        }
+      },
+      "world": {
+        "status": 200,
+        "body": {
+          "audience": "owner",
+          "consequences": {
+            "asOfGameTimeMs": 1790958240000,
+            "limit": 20,
+            "builds": [
+              {
+                "id": "d5ded244-2297-46a9-b9cf-d9f3b169d1e1",
+                "building": "mine",
+                "targetLevel": 2,
+                "state": "completed",
+                "dueGameTimeMs": 1790957520000,
+                "settledGameTimeMs": 1790957520000
+              }
+            ],
+            "contacts": [
+              {
+                "kingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+                "handle": "cedar_7bf6cc",
+                "displayName": "Juniper Reach",
+                "acceptedGameTimeMs": "1790957880000"
+              }
+            ],
+            "supplyContracts": [
+              {
+                "id": "d6954217-6014-48f5-9498-d97a94625ab4",
+                "offerId": "8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                "offerVersion": 1,
+                "status": "active",
+                "counterparty": {
+                  "handle": "cedar_7bf6cc",
+                  "kingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+                  "displayName": "Juniper Reach"
+                },
+                "endGameTimeMs": 1790961840000,
+                "noticeEndGameTimeMs": null,
+                "closeReason": null,
+                "signedBy": [
+                  "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+                  "e70c9ca0-20f5-46b3-9a95-e97da3409eca"
+                ],
+                "deliveries": [
+                  {
+                    "resource": "grain",
+                    "direction": "received",
+                    "dueMarked": "10",
+                    "installments": 1,
+                    "lastGameTimeMs": 1790958240000,
+                    "overflowMarked": "0",
+                    "deliveredMarked": "10",
+                    "failedInstallments": 0
+                  },
+                  {
+                    "resource": "iron",
+                    "direction": "sent",
+                    "dueMarked": "10",
+                    "installments": 1,
+                    "lastGameTimeMs": 1790958240000,
+                    "overflowMarked": "0",
+                    "deliveredMarked": "10",
+                    "failedInstallments": 0
+                  }
+                ]
+              }
+            ]
+          },
+          "profile": {
+            "kingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+            "handle": "marsh_82349a",
+            "displayName": "Willow Crossing",
+            "portrait": "alpha-default"
+          },
+          "asOfGameTimeMs": 1790958240000,
+          "committedTickSequence": "9605",
+          "worldStatus": "active",
+          "lastCommittedEventId": "10618",
+          "charges": [
+            {
+              "available": 3,
+              "capacity": 3,
+              "nextRegenerationGameTimeMs": null,
+              "retryAtGameTimeMs": null,
+              "kind": "raid",
+              "regenerationHours": 8
+            },
+            {
+              "available": 4,
+              "capacity": 4,
+              "nextRegenerationGameTimeMs": null,
+              "retryAtGameTimeMs": null,
+              "kind": "scout",
+              "regenerationHours": 6
+            }
+          ],
+          "balances": {
+            "grain": {
+              "ordinaryUnits": "6830",
+              "foundingAllowanceUnits": "48000",
+              "lockedUnits": "0",
+              "capacityUnits": "360000",
+              "productionPerMinuteUnits": "300",
+              "version": "64"
+            },
+            "iron": {
+              "ordinaryUnits": "7490",
+              "foundingAllowanceUnits": "90000",
+              "lockedUnits": "0",
+              "capacityUnits": "360000",
+              "productionPerMinuteUnits": "300",
+              "version": "34"
+            },
+            "silver": {
+              "ordinaryUnits": "1900",
+              "foundingAllowanceUnits": "45000",
+              "lockedUnits": "0",
+              "capacityUnits": "360000",
+              "productionPerMinuteUnits": "100",
+              "version": "34"
+            }
+          },
+          "buildings": [
+            {
+              "kind": "barracks",
+              "level": 1
+            },
+            {
+              "kind": "farm",
+              "level": 1
+            },
+            {
+              "kind": "hall",
+              "level": 1
+            },
+            {
+              "kind": "market",
+              "level": 1
+            },
+            {
+              "kind": "mine",
+              "level": 2
+            },
+            {
+              "kind": "storehouse",
+              "level": 1
+            },
+            {
+              "kind": "wall",
+              "level": 1
+            }
+          ],
+          "builders": [
+            {
+              "slot": 1,
+              "instructionId": null,
+              "kind": null,
+              "state": null,
+              "dueGameTimeMs": null
+            },
+            {
+              "slot": 2,
+              "instructionId": null,
+              "kind": null,
+              "state": null,
+              "dueGameTimeMs": null
+            }
+          ],
+          "troops": [
+            {
+              "type": "spearman",
+              "placement": "home",
+              "ownerKingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+              "hostKingdomId": "e70c9ca0-20f5-46b3-9a95-e97da3409eca",
+              "homeGuard": true,
+              "count": 8
+            }
+          ],
+          "training": [],
+          "upkeep": {
+            "perMinuteUnits": "80",
+            "hungry": false
+          },
+          "contracts": [
+            {
+              "id": "d6954217-6014-48f5-9498-d97a94625ab4",
+              "counterpartyKingdomId": "3b218fff-e4d5-414b-86ab-a8254958ebf9",
+              "endsGameTimeMs": 1790961840000,
+              "noticeEndsGameTimeMs": null,
+              "terms": {
+                "aToB": {
+                  "resource": "grain",
+                  "wholePerHour": 1
+                },
+                "bToA": {
+                  "resource": "iron",
+                  "wholePerHour": 1
+                },
+                "aBond": null,
+                "bBond": null,
+                "noticeHours": 0,
+                "durationHours": 1
+              }
+            }
+          ],
+          "raids": [],
+          "scouts": [],
+          "threats": [],
+          "records": [],
+          "forecast": {
+            "throughGameTimeMs": 1790961840000,
+            "assumption": "Scenario only: current production, troop upkeep and active signed supply flows continue; each delivery is assumed funded and accepted. No new orders, defaults, combat, reserve-floor changes or building completions are predicted. Harvest percentages are supplied by the configured test/season clock.",
+            "harvestPercentByMinute": [
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100,
+              100
+            ],
+            "expected": {
+              "iron": {
+                "ordinaryUnits": "24900",
+                "foundingAllowanceUnits": "90000"
+              },
+              "silver": {
+                "ordinaryUnits": "7900",
+                "foundingAllowanceUnits": "45000"
+              },
+              "grain": {
+                "ordinaryUnits": "20620",
+                "foundingAllowanceUnits": "48000"
+              }
+            },
+            "assumedDeliveries": [
+              {
+                "contractId": "d6954217-6014-48f5-9498-d97a94625ab4",
+                "direction": "incoming",
+                "resource": "grain",
+                "units": "590"
+              },
+              {
+                "contractId": "d6954217-6014-48f5-9498-d97a94625ab4",
+                "direction": "outgoing",
+                "resource": "iron",
+                "units": "590"
+              }
+            ]
+          }
+        }
+      },
+      "activity": {
+        "status": 200,
+        "body": {
+          "source": "external",
+          "label": "Engine facts \u2014 server-recorded tool results",
+          "entries": [
+            {
+              "id": "50",
+              "category": "committed",
+              "callId": "50",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "building:d5ded244-2297-46a9-b9cf-d9f3b169d1e1",
+                  "version": 1
+                }
+              ],
+              "commandId": "d5ded244-2297-46a9-b9cf-d9f3b169d1e1",
+              "nextStep": "Inspect the referenced record for its actual consequence; a committed instruction can still be pending."
+            },
+            {
+              "id": "51",
+              "category": "failed",
+              "callId": "51",
+              "code": "INSUFFICIENT_STOCK",
+              "records": [],
+              "nextStep": "Read current state and exact record version, then replan. Do not claim success or blindly repeat the failed move."
+            },
+            {
+              "id": "52",
+              "category": "proposed",
+              "callId": "52",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "contact-request:fa17aa47-1f1f-4b2d-8203-25fc696c2d74",
+                  "version": 1
+                }
+              ],
+              "commandId": "b56a8d6e-e128-4fcb-9530-acf8d564075b",
+              "nextStep": "Wait for the other party to accept/sign the exact version; no agreement is active yet."
+            },
+            {
+              "id": "55",
+              "category": "proposed",
+              "callId": "55",
+              "code": "COMMITTED",
+              "records": [
+                {
+                  "record": "supply-offer:8c79b233-3d49-41a9-9bef-1a8947d99dae",
+                  "version": 1
+                }
+              ],
+              "commandId": "2c2dcbd2-f898-4e24-8c23-1b1585672fd3",
+              "nextStep": "Wait for the other party to accept/sign the exact version; no agreement is active yet."
+            }
+          ],
+          "assessments": [],
+          "status": "recorded",
+          "lastErrorCode": null,
+          "truncated": false,
+          "nextStep": "Review committed records and pending counterparties before choosing another objective.",
+          "timestamps": {
+            "50": "2026-10-02T16:59:03.053Z",
+            "51": "2026-10-02T16:59:07.527Z",
+            "52": "2026-10-02T17:14:53.963Z",
+            "55": "2026-10-02T17:19:17.440Z"
+          }
+        }
+      }
+    }
+  },
+  "turns": [
+    {
+      "player": "marsh",
+      "round": "second",
+      "start": "2026-10-02T17:14:10.470Z",
+      "end": "2026-10-02T17:15:17.232Z",
+      "model": "gpt-6-luna",
+      "goal": "Find a real newcomer who recently posted a trade notice, approach them for a tiny safe trade, and act within my existing authority. Read the live state first, verify completed work, and return human-only decisions.",
+      "exit": 0,
+      "events": [
+        {
+          "type": "player_report",
+          "text": "I\u2019ll inspect the live PACT state and the allowed actions on your `pact_willowfix` connection first. I\u2019ll stick to its existing authority, verify any completed move against the live state, and bring back anything that requires a human decision."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_profile_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_chronicle_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "There\u2019s a recent notice from `cedar_7bf6cc` inviting a modest Grain/Iron trade, so I\u2019ll use that real author. The notice is only an invitation to talk; it doesn\u2019t authorize a trade. I\u2019m checking the current world, their public profile, and any existing requests before contacting them."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_player_find_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_inbox_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "The author resolves to a real active kingdom, Juniper Reach. There are no existing contact requests or contacts, and your current authority allows `contact.request`. I\u2019ll send a short, nonbinding invitation to discuss a one-unit Grain/Iron exchange; their player must accept contact and agree to any actual terms."
+        },
+        {
+          "type": "tool",
+          "tool": "run.open",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_game_action_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "The contact request committed and charged 1,200 marked ordinary Silver (2 whole units). I\u2019m checking the receipt and live world now to confirm the request exists and nothing has been mistaken for a completed trade."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_receipt_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "## What happened\n\n- I found `cedar_7bf6cc`\u2019s recent notice inviting modest Grain/Iron trade discussions and verified they are a real, active player: Juniper Reach.\n- Your mandate allowed a contact request. I sent a nonbinding message proposing a tiny one-unit-for-one-unit Grain/Iron exchange, with no terms agreed.\n- The request **committed**. I verified its receipt and confirmed 1,200 marked ordinary Silver (2 whole units) was charged. Your ordinary Silver is now 1,200 marked.\n- **No trade has happened yet.** The live world still shows no contact or supply contract. Juniper Reach\u2019s player must accept the request before you can message or negotiate further.\n\n## Human decision\n\nIf Juniper Reach accepts, review any proposed terms before signing. A notice or message does not make a contract.\n\n## First-time player assessment\n\nI understood the notice as an invitation to talk, not an agreement. The distinction between sending a contact request and completing a trade was clear; waiting for the other player is the main pause. The request made a small but meaningful opening and had a visible Silver cost. Next, I\u2019d check for their acceptance, then negotiate and verify both signatures before calling anything a trade."
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 162297,
+            "cached_input_tokens": 132352,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1195,
+            "reasoning_output_tokens": 101
+          }
+        }
+      ]
+    },
+    {
+      "player": "cedar",
+      "round": "third",
+      "start": "2026-10-02T17:16:55.408Z",
+      "end": "2026-10-02T17:17:41.047Z",
+      "model": "gpt-6-luna",
+      "goal": "I accepted Willow Crossing as a contact in PACT. Read the current situation, send a friendly message, and propose a very small fair Grain-for-Iron exchange for one game hour. Sign only within my current authority and real stock, and report proposals separately from active trade and actual delivery.",
+      "exit": 0,
+      "events": [
+        {
+          "type": "player_report",
+          "text": "I\u2019ll use only the `pact_juniperfix` PACT connection to inspect the current situation and my available authority, then make only the permitted in-game moves. I\u2019ll distinguish any proposal from active trade or delivered goods."
+        },
+        {
+          "type": "player_report",
+          "text": "The PACT tools are available under the `mcp__pact_juniperfix__...` names. I\u2019m starting with the connection\u2019s read only guide and will check current state and contact status before opening any write lease."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_conversation_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "Willow is already an accepted contact. Current stock is modest (12 whole Grain ordinary and 9 whole Iron ordinary), and the mandate allows supply signing within its marked limits. For a one hour trial, a small reciprocal rate of 1 Grain/hour for 1 Iron/hour is within real stock and leaves the Grain reserve floor intact. I\u2019ll send a friendly note and propose those terms; this is only a proposal until Willow signs."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "run.open",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_profile_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_game_action_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_game_action_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "The friendly message and one hour offer both committed. Since signing is the binding step and the offer is still awaiting Willow\u2019s signature, I\u2019m checking current contract state and the exact record before reporting whether anything became active or delivered."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_conversation_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_receipt_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_inbox_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "## What happened\n\n- **Message:** Sent Willow Crossing a friendly note introducing Juniper Reach and suggesting a small one-hour exchange.\n- **Proposal:** Committed an offer for **1 Grain per game hour from me for 1 Iron per game hour from Willow**, lasting one game hour with no notice period. It is nonbinding unless Willow signs the same offer.\n- **Active trade:** None shown in the current state.\n- **Delivery:** None shown. The latest world read listed no active contracts or deliveries, and the inbox had no new events.\n\nThe offer was within my mandate. Current stock at the latest read was 7,660 marked ordinary Grain and 5,600 marked ordinary Iron; the founding allowance was not counted as trade stock. I made no human-only decisions or exception requests.\n\n## First-time player assessment\n\nI understood that a message starts the conversation, while both players must sign the same offer to activate a trade. It was a little confusing that the tools expose detailed authority and stock separately from the offer itself. The actions felt meaningful because I could make a small, bounded proposal without committing resources before Willow responds. Next, I\u2019d check for Willow\u2019s reply or signature, then verify the contract and any actual delivery."
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 394996,
+            "cached_input_tokens": 360192,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1390,
+            "reasoning_output_tokens": 0
+          }
+        }
+      ]
+    },
+    {
+      "player": "marsh",
+      "round": "third",
+      "start": "2026-10-02T17:18:54.786Z",
+      "end": "2026-10-02T17:19:27.577Z",
+      "model": "gpt-6-luna",
+      "goal": "Juniper Reach has sent a message and proposed a tiny trade. Read the actual message and terms. Accept and sign if the exchange is fair and safely affordable within my authority; otherwise explain. Verify actual current contract and delivery status.",
+      "exit": 0,
+      "events": [
+        {
+          "type": "player_report",
+          "text": "I\u2019ll inspect the PACT connection for Juniper Reach\u2019s actual message and current contract/delivery status, then take only actions that fit your existing authority and are safe to afford. I\u2019ll keep any human-only choice for you and report the exact outcome, followed by a brief first-time player assessment."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "Juniper Reach\u2019s offer is present: one hour, one whole Grain per hour each way exchanged for one whole Iron per hour, with no bonds or notice period. It is within the stated supply-signing authority, but I\u2019m checking their actual message plus live stock and contract state before signing, including whether Grain\u2019s reserve floor leaves enough ordinary stock for delivery."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_conversation_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "The message matches the posted terms exactly. Live balances show 6,160 marked Grain ordinary stock and a 12,000 marked Grain reserve floor; with the additional 48,000 marked food allowance, the signing rule\u2019s safety calculation is 54,160, above the floor, and the scheduled Grain delivery spends ordinary stock only. Iron has 6,600 marked ordinary stock. The one-hour exposure is 600 marked of each resource, comfortably below your 300,000 marked per-resource mandate limits. There is no active contract yet, so I\u2019m opening the permitted write lease and signing the real offer version."
+        },
+        {
+          "type": "tool",
+          "tool": "run.open",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_game_action_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_envoy_report_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "## What happened\n\nJuniper Reach\u2019s actual message proposed a one-hour exchange of **1 whole Grain for 1 whole Iron per game hour**. The live offer matched it: no bonds, zero notice, one-hour duration.\n\nI signed offer **8c79b233\u20269dae, version 1**. PACT returned **COMMITTED** for my signature. **The trade is not active yet:** Juniper Reach must also sign. The fresh world read still showed no active supply contract and no completed delivery, so nothing has been exchanged yet.\n\nAt the time of signing, my ordinary stock was 6,160 marked Grain and 6,600 marked Iron. The offer\u2019s one-hour amounts were within my mandate limits, and Grain\u2019s reserve check included my food allowance. No human-only decision was needed for my signature. The next meaningful step is Juniper Reach\u2019s signature; delivery status should then be checked in the current world state.\n\n## First-time player assessment\n\n- **Understood:** The message and offer agreed on the exchange, and both players must sign before it becomes a contract.\n- **Confusing:** \u201cSigned\u201d can sound complete, even though the counterparty\u2019s signature is still needed; the current contract view clarified that.\n- **Meaningful:** Signing was a small but real commitment, with a clear affordability check.\n- **Next:** Wait for Juniper Reach to sign, then verify the contract and its first delivery."
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 233377,
+            "cached_input_tokens": 204800,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1051,
+            "reasoning_output_tokens": 0
+          }
+        }
+      ]
+    },
+    {
+      "player": "cedar",
+      "round": "fourth",
+      "start": "2026-10-02T17:20:53.181Z",
+      "end": "2026-10-02T17:21:34.766Z",
+      "model": "gpt-6-luna",
+      "goal": "Willow Crossing has reviewed and signed our small offer. Read the real offer and current state, sign the same version if it remains safe within my authority, then verify whether the contract is active and what has actually been delivered. Also confirm my Farm upgrade from current game evidence.",
+      "exit": 0,
+      "events": [
+        {
+          "type": "player_report",
+          "text": "I\u2019ll inspect the live Pact state and the exact offer through your `pact_juniperfix` connection, then act only where the current state and your authority make it safe. I\u2019ll verify delivery and the Farm upgrade from game evidence, and return any human-only choices to you."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "The current guide shows a real Willow Crossing offer, signed by them only: 1 whole Grain/hour from you for 1 whole Iron/hour from them, no bonds, immediate start, one hour. Your mandate includes `supply.sign`, and current grain reserve plus allowance covers the signed-supply reserve check, but I\u2019m checking the exact offer terms, your latest state, and development rules before committing."
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_agent_guide_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "run.open",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_profile_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_command_v1",
+          "status": "completed"
+        },
+        {
+          "type": "tool",
+          "tool": "pact_world_read_v1",
+          "status": "completed"
+        },
+        {
+          "type": "player_report",
+          "text": "Signed Willow Crossing\u2019s **version 1** offer. The offer was still current, they had already signed it, and `supply.sign` was within your mandate. It committed successfully.\n\nThe contract is **active** for one game hour from game time `1790958240000`, with no bonds or notice period. The first delivery has already settled: **10 marked Grain sent** and **10 marked Iron received** (one installment each; no failures or overflow).\n\nYour Farm upgrade is confirmed complete: it reached **level 2** at game time `1790957460000`. Current evidence shows both builder slots are free. I did not queue another upgrade.\n\n**First-time player assessment:** I understood the exchange and the importance of both signatures. It was initially unclear whether Willow\u2019s signature meant the contract was already active; the live state confirmed it needed yours. Signing felt meaningful because it immediately activated the deal and settled its first installment. Next, I\u2019d watch the one-hour contract and compare future deliveries against Grain reserves and Iron needs."
+        },
+        {
+          "type": "turn.completed",
+          "usage": {
+            "input_tokens": 366157,
+            "cached_input_tokens": 327680,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 1060,
+            "reasoning_output_tokens": 0
+          }
+        }
+      ]
+    }
+  ]
+}

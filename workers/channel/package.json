@@ -10,5 +10,10 @@
   },
   "devDependencies": {
     "tsx": "4.23.14"
+  },
+  "dependencies": {
+    "@pact/db": "0.1.0",
+    "@pact/identity": "0.1.0",
+    "@pact/telegram": "0.1.0"
   }
 }

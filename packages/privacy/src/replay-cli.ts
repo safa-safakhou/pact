@@ -1,4 +1,5 @@
 import { createPool } from "@pact/db";
+import { notificationRetention } from "@pact/inbox";
 import { FileDeletionRegistry } from "./file-registry.js";
 import { PrivacyService } from "./service.js";
 
@@ -10,6 +11,7 @@ try {
   if (!registryPath) throw new Error("PACT_DELETION_REGISTRY_FILE is required");
   const privacy = new PrivacyService(pool, {
     productScope: "pact",
+    ownedData: [notificationRetention("pact")],
     clock: { now: () => new Date() },
     deletionRegistry: new FileDeletionRegistry(registryPath),
   });

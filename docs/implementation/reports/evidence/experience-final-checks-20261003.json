@@ -1,0 +1,39 @@
+{
+  "build": {
+    "passed": true,
+    "command": "npm run build",
+    "log": "/home/mnim/experience-final-build.log"
+  },
+  "typecheck": {
+    "passed": true,
+    "command": "npm run typecheck",
+    "log": "/home/mnim/experience-final-type.log"
+  },
+  "lint": {
+    "passed": true,
+    "command": "npm run lint",
+    "log": "/home/mnim/experience-final-lint.log"
+  },
+  "unit": {
+    "passed": 269,
+    "log": "/home/mnim/experience-final-unit.log"
+  },
+  "integration": {
+    "passed": 294,
+    "skipped": 1,
+    "log": "/home/mnim/experience-keepsakes-integration.log",
+    "note": "Last full integration run; later edits only web href and notification template mapping."
+  },
+  "subsequent_notification_wording": {
+    "targeted_passed": 5,
+    "deployed_full_build_passed": true
+  },
+  "inventory": {
+    "logical": 58,
+    "public_files": 61,
+    "public_bytes": 3265067,
+    "physical_media_regenerated_identically": 47
+  },
+  "live_review": "experience-fresh-player-20261003.json",
+  "local_checks_not_hosted_ci": true
+}

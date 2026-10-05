@@ -2,9 +2,9 @@
 
 **Decision baseline: Version 1.4, 1 October 2026. Status: specified; implementation evidence is tracked separately.**
 
-**Current assignment: [game-only private Alpha](alpha.md). Only 13 unfinished tickets are active; 28 are postponed.** The Alpha document owns this approved scope correction and takes precedence over broader release requirements below. Game mechanics and existing authority boundaries are unchanged; original production requirements remain later work.
+**Current testing scope:** the [game-only Alpha](alpha.md), [generated web experience](experience.md) and [friends playtest](../implementation/friends-playtest.md) are implemented. The [backend population experiment](../implementation/reports/population-playtest-20261004.md) is complete. **24 production tasks remain deferred.** These testing results do not certify the broader release requirements below. Game mechanics and existing authority boundaries remain unchanged.
 
-**Implementation work:** [99 dependency-ordered technical tickets](../implementation/README.md), including the 13-ticket Alpha track, with acceptance criteria and deferred release scope preserved.
+**Implementation work:** [130 dependency-ordered tickets](../implementation/README.md): 106 Done and 24 deferred. The handoff and completion reports own current execution status; the baseline specifications below retain their original later-release requirements.
 
 PACT is a competitive, persistent kingdom game. You build your kingdom and set your priorities. Your Envoy negotiates with other players' Envoys, makes agreements within your authority, and brings consequential choices back to you. Everyone shares one world. Relationships are chosen by players; the engine enforces resources, ownership, deadlines, and signed actions.
 
@@ -27,6 +27,7 @@ PACT is a competitive, persistent kingdom game. You build your kingdom and set y
 
 | Document | Purpose and authority |
 | --- | --- |
+| [Bounded generated web experience](experience.md) | Current presentation extension: frozen asset inventory, ambition and factual guidance; no economy/channel/authority changes |
 | [Game-only Alpha scope](alpha.md) | Current private finish line, active 13 tickets, explicit deferrals and G01–G06 acceptance; overrides broader release/channel/pilot gates only |
 | [Product brief](product.md) | Player promise, screens, first session, season, progression, and monetization |
 | [Channels and reusable architecture](architecture.md) | Client coverage, shared modules, native/Telegram identity, cross-channel state, payments, and portability |

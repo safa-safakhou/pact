@@ -1,0 +1,20 @@
+const fs=require("fs");const {chromium}=require("C:/Users/ENDORFY/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright");
+const base="https://safa.dedyn.io/pact/",out="C:/Users/ENDORFY/pact-friends-",report={startedAt:new Date().toISOString(),players:[],errors:[]};
+(async()=>{const browser=await chromium.launch({channel:"chrome",headless:true});try{
+for(const [name,width] of [["Professor Turnip",1440],["Captain Noodles",390]]){
+ const context=await browser.newContext({viewport:{width,height:width===390?844:900}});const page=await context.newPage();
+ page.on("pageerror",e=>report.errors.push(e.message));
+ await page.goto(base);await page.getByLabel("Your nickname").waitFor({timeout:30000});await page.getByLabel("Your nickname").fill(name);
+ const joined=page.waitForResponse(r=>r.url().endsWith("/v1/play/join")&&r.ok());await page.getByRole("button",{name:"Play",exact:true}).click();const response=await joined;const data=await response.json();
+ if(!response.ok())throw Error("Join failed "+response.status());
+ await page.getByRole("navigation",{name:"Game areas"}).waitFor({timeout:30000});
+ const player={name,width,accountId:data.accountId,kingdomId:data.kingdomId,handle:data.handle,joinStatus:response.status()};
+ player.layout=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,next:document.querySelector('[aria-label="First-session progress"]')?.getBoundingClientRect().toJSON(),height:innerHeight}));
+ await page.screenshot({path:out+width+"-fresh.png",fullPage:true});
+ await context.storageState({path:out+width+"-private.json"});
+ await page.reload();await page.getByRole("navigation",{name:"Game areas"}).waitFor();
+ player.resumed=(await (await page.request.get(base+"v1/kingdom/me")).json()).kingdomId===data.kingdomId;
+ report.players.push(player);fs.writeFileSync(out+"report.json",JSON.stringify(report,null,2));await context.close();
+}
+console.log(JSON.stringify(report));
+}finally{await browser.close();}})().catch(e=>{fs.writeFileSync(out+"report.json",JSON.stringify({...report,failure:e.message},null,2));console.error(e.message);process.exit(1)});

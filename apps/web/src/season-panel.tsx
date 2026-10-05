@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { HarvestFields } from "./harvest-fields.js";
+
 export type SeasonView = {
   current: {
     configured: boolean;
@@ -47,8 +49,22 @@ export type SeasonView = {
     }[];
   };
 };
-export function SeasonSummary({ view, kingdomId }: { view: SeasonView; kingdomId: string }) {
-  if (!view.current.configured) return <p>Season opens with the next committed game tick.</p>;
+export function SeasonSummary({
+  view,
+  kingdomId,
+  worldStatus = "unknown",
+}: {
+  view: SeasonView;
+  kingdomId: string;
+  worldStatus?: string;
+}) {
+  if (!view.current.configured)
+    return (
+      <>
+        <p>Season opens with the next committed game tick.</p>
+        <HarvestFields current={view.current} worldStatus={worldStatus} />
+      </>
+    );
   const own = view.standings.find((p) => p.kingdomId === kingdomId);
   const newcomer = view.cohorts.find((p) => p.kingdomId === kingdomId);
   const minutes = Math.max(
@@ -57,6 +73,7 @@ export function SeasonSummary({ view, kingdomId }: { view: SeasonView; kingdomId
   );
   return (
     <>
+      <HarvestFields current={view.current} worldStatus={worldStatus} />
       <h3>
         Season {view.current.number} · Week {view.current.week}/6
       </h3>
@@ -123,9 +140,11 @@ export function SeasonSummary({ view, kingdomId }: { view: SeasonView; kingdomId
 export function SeasonPanel({
   request,
   kingdomId,
+  worldStatus = "unknown",
 }: {
   request: (path: string) => Promise<Record<string, unknown>>;
   kingdomId: string;
+  worldStatus?: string;
 }) {
   const [view, setView] = useState<SeasonView | null>(null);
   const [error, setError] = useState("");
@@ -160,7 +179,7 @@ export function SeasonPanel({
   return (
     <section className="game-card">
       <h2>Season & Fortune</h2>
-      {view ? <SeasonSummary view={view} kingdomId={kingdomId} /> : <p>Loading season…</p>}
+      {view ? <SeasonSummary view={view} kingdomId={kingdomId} worldStatus={worldStatus} /> : <p>Loading season…</p>}
       {error && <p role="alert">{error}</p>}
       <button type="button" onClick={() => void load()}>
         Refresh season

@@ -1,0 +1,37 @@
+{
+  "build": {
+    "passed": true,
+    "summary": []
+  },
+  "type": {
+    "passed": true,
+    "summary": []
+  },
+  "lint": {
+    "passed": true,
+    "summary": [
+      "> biome check . && npm run check:boundaries && npm run check:build-order && npm run check:contracts",
+      "Checked 475 files in 118ms. No fixes applied.",
+      "> pact@0.1.0 check:boundaries",
+      "> node scripts/check-boundaries.mjs && node scripts/verify-boundary-fixture.mjs",
+      "Architecture boundaries are valid.",
+      "Package build order follows workspace dependencies.",
+      "PASS: 26 published v1 schemas unchanged"
+    ]
+  },
+  "unit": {
+    "passed": true,
+    "summary": [
+      " Test Files  78 passed (78)",
+      "      Tests  244 passed (244)"
+    ]
+  },
+  "integration": {
+    "passed": true,
+    "summary": [
+      " Test Files  47 passed (47)",
+      "      Tests  293 passed | 1 skipped (294)"
+    ]
+  },
+  "checkpoint_note": "Historical intermediate check before the final Hall/live-review increment; current full totals and logs are experience-final-checks-20261003.json."
+}

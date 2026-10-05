@@ -9,9 +9,13 @@ export interface SecurityEmailPayload {
 
 const subjects: Readonly<Record<string, string>> = {
   verify_email: "Verify your PACT email",
+  moderation_decision: "A PACT moderation decision is available",
   password_reset: "Reset your PACT password",
+  reset_password: "Reset your PACT password",
   email_change_old: "Your PACT email is changing",
   email_change_new: "Confirm your new PACT email",
+  verify_new_email: "Confirm your new PACT email",
+  email_changed_notice: "Your PACT email changed",
   password_changed: "Your PACT password changed",
 };
 
@@ -37,6 +41,16 @@ export function renderSecurityEmail(input: {
   readonly from: string;
 }): SendMailOptions {
   const subject = subjects[input.payload.template] ?? "PACT account security notice";
+  if (input.payload.template === "moderation_decision") {
+    const url = new URL(input.publicBaseUrl.replace(/\/$/, "") + "/");
+    if (input.token) url.hash = "appeal=" + input.token;
+    return {
+      from: input.from,
+      to: input.recipient,
+      subject,
+      text: `${subject}. You can submit one appeal within fourteen days at ${url.href}. A different staff member reviews appeals within seven days. This link grants only the right to appeal this case; it cannot open an account or change game state.`,
+    };
+  }
   const tokenLine = input.token ? `\nOne-time code: ${input.token}\n` : "";
   return {
     from: input.from,

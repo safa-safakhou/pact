@@ -47,10 +47,24 @@ docker inspect "$inference" --format '{{range .Mounts}}{{println .Destination}}{
 telegram_destination=/run/secrets/telegram_bot_token
 api="$(${compose} ps -q api)"
 docker inspect "$api" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$telegram_destination"
-for service in rules inference notification channel; do
+for service in rules inference notification; do
   container="$(${compose} ps -q "$service")"
   if docker inspect "$container" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$telegram_destination"; then
     echo "$service can read the Telegram bot token" >&2
+    exit 1
+  fi
+done
+
+channel="$(${compose} ps -q channel)"
+docker inspect "$channel" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$telegram_destination"
+
+push_destination=/run/secrets/web_push_private_key
+notification="$(${compose} ps -q notification)"
+docker inspect "$notification" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$push_destination"
+for service in api rules inference channel; do
+  container="$(${compose} ps -q "$service")"
+  if docker inspect "$container" --format '{{range .Mounts}}{{println .Destination}}{{end}}' | grep -qx "$push_destination"; then
+    echo "$service can read the private Web Push key" >&2
     exit 1
   fi
 done

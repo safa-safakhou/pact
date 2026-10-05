@@ -1,0 +1,84 @@
+{
+  "ticket": "PACT-117",
+  "producer": "Original authored score, Python stdlib additive/noise synthesis",
+  "seed": 11720261003,
+  "production_pass": 1,
+  "maximum_refinements": 2,
+  "regenerate": "python3 assets/experience/generate_music.py",
+  "loop_join": "Music 60ms and ambience 350ms explicit fades to zero; a quiet breathing join, not a seamless sustained pad.",
+  "audition": "Founder contextual audition reply 3 October: I think it should be okay. Tentative acceptance; not an enjoyment guarantee.",
+  "score": {
+    "settlement": {
+      "title": "The Kingdom Is Probably Fine",
+      "tempo_bpm": 96,
+      "bars": 12,
+      "meter": 4,
+      "melody_midi": [
+        [64, 67, 69, 67],
+        [62, 64, 67, 64],
+        [60, 64, 67, 72],
+        [59, 62, 67, 62],
+        [64, 67, 71, 69],
+        [62, 67, 69, 67],
+        [60, 64, 67, 64],
+        [59, 62, 65, 62],
+        [64, 67, 69, 72],
+        [62, 64, 67, 69],
+        [60, 64, 67, 64],
+        [59, 62, 67, 59]
+      ],
+      "bass_midi": [48, 50, 48, 43, 48, 50, 48, 43, 48, 50, 48, 43]
+    },
+    "ambience": {
+      "title": "Wind in a Very Small Banner",
+      "seed": 11720261003,
+      "fade_s": 0.35
+    },
+    "flourish": {
+      "title": "A Historically Significant Turnip",
+      "notes_midi": [60, 64, 67, 72],
+      "beat_s": 0.4
+    }
+  },
+  "assets": [
+    {
+      "file": "audio/settlement.wav",
+      "duration_s": 30.0,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak_dbfs": -12.6015,
+      "finite_samples": true,
+      "fade_s": 0.06,
+      "join_delta_pcm": 0,
+      "max_adjacent_delta_pcm": 1231,
+      "bytes": 1323044,
+      "sha256": "85d8a7f14ee7df8a2a3ceac11c4cbfc573130f9cd94be510eadd9eb1613f37ad"
+    },
+    {
+      "file": "audio/ambience.wav",
+      "duration_s": 15.0,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak_dbfs": -27.8121,
+      "finite_samples": true,
+      "fade_s": 0.35,
+      "join_delta_pcm": 0,
+      "max_adjacent_delta_pcm": 68,
+      "bytes": 661544,
+      "sha256": "b927ad96f015fb5425c15b558fa262b4a263cf7d2adf574d1cb45b53ceaef7bc"
+    },
+    {
+      "file": "audio/flourish.wav",
+      "duration_s": 2.0,
+      "sample_rate": 22050,
+      "channels": 1,
+      "peak_dbfs": -10.327,
+      "finite_samples": true,
+      "fade_s": 0.06,
+      "join_delta_pcm": 0,
+      "max_adjacent_delta_pcm": 2230,
+      "bytes": 88244,
+      "sha256": "7632851b6f9878fa321751bcf272df3e1827400293bfe9cfbf8a0e8d7d38615c"
+    }
+  ]
+}

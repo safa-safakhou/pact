@@ -1,9 +1,11 @@
 import { withTransaction } from "@pact/db";
-import { rulesCatalog } from "@pact/domain";
+import { resourceRateFacts, rulesCatalog, wholeUnitText } from "@pact/domain";
 import type { Pool, PoolClient } from "pg";
 import { ActionLimitService, type ChargeView } from "./action-limits.js";
+import { type GameConsequences, readGameConsequences } from "./consequences.js";
 import { SeasonService, seasonPosition } from "./seasons.js";
-import type { SupplyTerms } from "./supply-terms.js";
+import type { KingdomAmbition } from "./service.js";
+import { type SupplyTerms, supplyPerspective } from "./supply-terms.js";
 
 type Resource = "iron" | "silver" | "grain";
 const resources: readonly Resource[] = ["iron", "silver", "grain"];
@@ -15,6 +17,7 @@ interface KingdomRow {
   handle: string;
   display_name: string;
   portrait: string;
+  ambition: KingdomAmbition | null;
   status: string;
 }
 interface BalanceRow {
@@ -59,7 +62,9 @@ export interface PublicKingdomView {
 }
 
 export interface OwnerKingdomView {
+  consequences: GameConsequences;
   audience: "owner";
+  ambition: KingdomAmbition;
   profile: PublicKingdomView["profile"];
   asOfGameTimeMs: number;
   committedTickSequence: string;
@@ -74,6 +79,13 @@ export interface OwnerKingdomView {
       lockedUnits: string;
       capacityUnits: string;
       productionPerMinuteUnits: string;
+      facts: {
+        ordinaryWhole: string;
+        allowanceWhole: string;
+        lockedWhole: string;
+        capacityWhole: string;
+        rates: ReturnType<typeof resourceRateFacts>;
+      };
       version: string;
     }
   >;
@@ -84,6 +96,7 @@ export interface OwnerKingdomView {
     kind: string | null;
     state: string | null;
     dueGameTimeMs: number | null;
+    remainingGameMinutes?: number | null;
   }[];
   troops: {
     type: string;
@@ -108,6 +121,8 @@ export interface OwnerKingdomView {
     endsGameTimeMs: number;
     noticeEndsGameTimeMs: number | null;
     terms: SupplyTerms;
+    youSend?: SupplyTerms["aToB"];
+    youReceive?: SupplyTerms["bToA"];
   }[];
   raids: {
     raidId: string;
@@ -149,6 +164,27 @@ export class WorldViewService {
     private readonly harvestPercentAt: (gameTimeMs: number) => number = () => 100,
     private readonly politics?: { publicFor(client: PoolClient, kingdomId: string): Promise<unknown> },
   ) {}
+
+  async readSelf(accountId: string, forecastMinutes = 60): Promise<OwnerKingdomView | null> {
+    if (!validId(accountId)) return null;
+    if (!Number.isSafeInteger(forecastMinutes) || forecastMinutes < 1 || forecastMinutes > 60)
+      throw new Error("INVALID_FORECAST_HORIZON");
+    return withTransaction(
+      this.pool,
+      async (client) => {
+        const owner = (
+          await client.query<{ id: string }>(
+            "SELECT id FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
+            [this.productScope, accountId],
+          )
+        ).rows[0];
+        if (!owner) return null;
+        const view = await this.readSnapshot(client, accountId, owner.id, forecastMinutes);
+        return view?.audience === "owner" ? view : null;
+      },
+      { isolation: "REPEATABLE READ" },
+    );
+  }
 
   /** Always public, even when an authenticated caller searches their own handle. */
   async publicProfile(handle: string): Promise<PublicKingdomView | null> {
@@ -195,7 +231,7 @@ export class WorldViewService {
   ): Promise<KingdomWorldView | null> {
     const kingdom = (
       await client.query<KingdomRow>(
-        "SELECT id, account_id, handle, display_name, portrait, status FROM kingdoms WHERE product_scope = $1 AND id = $2 AND status = 'ranked'",
+        "SELECT id, account_id, handle, display_name, portrait, status, ambition FROM kingdoms WHERE product_scope = $1 AND id = $2 AND status = 'ranked'",
         [this.productScope, targetId],
       )
     ).rows[0];
@@ -297,6 +333,10 @@ export class WorldViewService {
       kind: row.kind,
       state: row.state,
       dueGameTimeMs: row.due_game_time_ms === null ? null : Number(row.due_game_time_ms),
+      remainingGameMinutes:
+        row.due_game_time_ms === null
+          ? null
+          : Math.max(0, Math.ceil((Number(row.due_game_time_ms) - gameTimeMs) / 60_000)),
     }));
     const troops = (
       await client.query<{
@@ -467,6 +507,8 @@ export class WorldViewService {
       ).rows[0]?.id ?? "0";
     return {
       audience: "owner",
+      ambition: kingdom.ambition ?? "neutral",
+      consequences: await readGameConsequences(client, this.productScope, targetId, gameTimeMs),
       ...common,
       lastCommittedEventId,
       charges: await new ActionLimitService(this.productScope).readCharges(client, targetId, gameTimeMs),
@@ -482,6 +524,18 @@ export class WorldViewService {
               row.resource === "grain"
                 ? ((BigInt(row.production_per_minute_units) * BigInt(harvestPercentAt(gameTimeMs))) / 100n).toString()
                 : row.production_per_minute_units,
+            facts: {
+              ordinaryWhole: wholeUnitText(row.ordinary_units),
+              allowanceWhole: wholeUnitText(row.allowance_units),
+              lockedWhole: wholeUnitText(row.locked_units),
+              capacityWhole: wholeUnitText(row.storage_cap_units),
+              rates: resourceRateFacts(
+                row.resource === "grain"
+                  ? (BigInt(row.production_per_minute_units) * BigInt(harvestPercentAt(gameTimeMs))) / 100n
+                  : row.production_per_minute_units,
+                row.resource === "grain" ? upkeep : 0n,
+              ),
+            },
             version: row.version,
           },
         ]),
@@ -497,6 +551,7 @@ export class WorldViewService {
         endsGameTimeMs: Number(row.end_game_time_ms),
         noticeEndsGameTimeMs: row.notice_end_game_time_ms === null ? null : Number(row.notice_end_game_time_ms),
         terms: row.terms,
+        ...supplyPerspective(row.terms, row.kingdom_a === targetId),
       })),
       raids,
       scouts,

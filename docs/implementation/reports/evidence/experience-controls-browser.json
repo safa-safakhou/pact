@@ -1,0 +1,126 @@
+{
+  "checks": [
+    {
+      "width": 390,
+      "state": "initial-silent",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "keyboard-enable",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "mute",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "independent-volumes",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "manual-cooldown",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "humour-off",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "system-reduced-motion",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "override-motion",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "simulated-hidden-pause",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "return-no-backlog",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "phone-fit",
+      "pass": true
+    },
+    {
+      "width": 390,
+      "state": "saved-silent-reload",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "initial-silent",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "keyboard-enable",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "mute",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "independent-volumes",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "manual-cooldown",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "humour-off",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "system-reduced-motion",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "override-motion",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "simulated-hidden-pause",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "return-no-backlog",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "phone-fit",
+      "pass": true
+    },
+    {
+      "width": 1440,
+      "state": "saved-silent-reload",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "visibility": "document hidden property simulated in browser; helper disposal/cooldown separately unit-tested"
+}

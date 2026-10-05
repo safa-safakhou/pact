@@ -1,0 +1,88 @@
+{
+  "capturedAt": "2026-10-04T23:07:45.065Z",
+  "uniqueCommitted": 2314,
+  "byKind": {
+    "game.building.queue": 389,
+    "game.contact.request": 180,
+    "game.contact.answer": 180,
+    "game.message.send": 884,
+    "game.supply.offer": 272,
+    "game.supply.sign": 405,
+    "game.supply.counter": 4
+  },
+  "social": {
+    "observedContactPairs": 180,
+    "observedOffers": 272,
+    "observedActiveContracts": 131,
+    "observedMessages": 878
+  },
+  "blocked": [],
+  "contractStatuses": {
+    "expired": 64,
+    "active": 67
+  },
+  "failedInstallments": 0,
+  "latestPlans": [
+    {
+      "actor": "Ada Byte",
+      "at": "2026-10-04T23:02:12.639Z",
+      "actions": 1,
+      "intent": "Keep building reserves and explore a one-hour trade that could help meet the wall's silver cost, without signing a contract or spending stock now."
+    },
+    {
+      "actor": "Captain Noodle",
+      "at": "2026-10-04T23:02:33.198Z",
+      "actions": 0,
+      "intent": "Wait for Farmer 72's response; avoid making a commitment without an observed offer and sufficient stock."
+    },
+    {
+      "actor": "Moss Compiler",
+      "at": "2026-10-04T23:02:57.825Z",
+      "actions": 1,
+      "intent": "Protect the Grain reserve and seek a dependable Silver buyer by proposing a modest one-hour renewal for after the current contract. The proposal is nonbinding and needs both signatures to activate."
+    },
+    {
+      "actor": "Lady Segfault",
+      "at": "2026-10-04T23:03:19.732Z",
+      "actions": 0,
+      "intent": "Preserve grain reserves and avoid further commitments while the existing trade runs; wait for stock and build status to change before reassessing the mine upgrade."
+    },
+    {
+      "actor": "Professor Goose",
+      "at": "2026-10-04T23:03:39.638Z",
+      "actions": 0,
+      "intent": "Wait for Miner 25\u2019s contract to end and review the next state before making another commitment."
+    },
+    {
+      "actor": "Pixel Paladin",
+      "at": "2026-10-04T23:03:54.966Z",
+      "actions": 0,
+      "intent": "Wait for the active contract to finish and reassess current stock and offers then."
+    },
+    {
+      "actor": "Null Wizard",
+      "at": "2026-10-04T23:04:22.548Z",
+      "actions": 1,
+      "intent": "Avoid a new commitment without exact terms; ask Merchant 17 for a specific trade proposal that can be checked against reserves."
+    },
+    {
+      "actor": "Ruby Goblin",
+      "at": "2026-10-04T23:04:50.400Z",
+      "actions": 1,
+      "intent": "Answer Farmer 18 with a specific, bounded grain-for-iron proposal. Keep it nonbinding until both parties sign an offer."
+    },
+    {
+      "actor": "Orbit Duck",
+      "at": "2026-10-04T23:05:37.125Z",
+      "actions": 0,
+      "intent": "Wait for production and the active contract to finish before proposing another trade; no useful permitted action is supported by the supplied facts now."
+    },
+    {
+      "actor": "Dr Turnip",
+      "at": "2026-10-04T23:05:13.804Z",
+      "actions": 0,
+      "intent": "Wait for the existing trade to end, then review updated stock and any new proposals before committing to another action."
+    }
+  ],
+  "recentProblems": []
+}

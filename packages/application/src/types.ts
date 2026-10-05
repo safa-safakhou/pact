@@ -13,6 +13,11 @@ export interface AuthenticatedPrincipal {
 }
 
 export type DispatcherFailureCode =
+  | "TICK_PENDING"
+  | "MESSAGE_QUEUE_FULL"
+  | "CONTACT_QUEUE_FULL"
+  | "REQUEST_EXISTS"
+  | "ALREADY_CONTACT"
   | "INVALID_COMMAND"
   | "FORBIDDEN"
   | "STALE_VERSION"

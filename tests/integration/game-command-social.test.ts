@@ -454,7 +454,7 @@ describe("shared gameplay command admission", () => {
     };
     expect(firstResult.structuredContent).toMatchObject({
       code: "APPROVAL_REQUIRED",
-      deepLink: `https://pact.example/approvals/${firstResult.structuredContent.approvalId}`,
+      deepLink: `https://pact.example/?approval=${firstResult.structuredContent.approvalId}`,
     });
     const retry = await mcp.handlePost(
       agent,
@@ -1789,7 +1789,9 @@ describe("shared gameplay command admission", () => {
       return rows.rows[0]?.summary ?? "";
     }
     expect(await modelRead(owner.accountId, "pact_receipt_read_v1", { commandId })).toContain('"code":"COMMITTED"');
-    expect(await modelRead(outsider.accountId, "pact_receipt_read_v1", { commandId })).toContain('"code":"NOT_FOUND"');
+    expect(await modelRead(outsider.accountId, "pact_receipt_read_v1", { commandId })).toContain(
+      '"code":"RECEIPT_NOT_FOUND"',
+    );
     const ownerApproval = await modelRead(owner.accountId, "pact_approval_status_v1", { approvalId });
     expect(ownerApproval).toContain("Synthetic owner approval");
     expect(ownerApproval).toContain('"untrustedContent":true');
@@ -1838,10 +1840,16 @@ describe("shared gameplay command admission", () => {
       id: 7,
       params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
     });
-    for (const [name, args] of [
-      ["pact_receipt_read_v1", { commandId }],
-      ["pact_approval_status_v1", { approvalId }],
-    ] as const)
+    const outsiderReceipt = await mcp.handlePost(
+      outsiderPrincipal,
+      { method: "tools/call", id: 70, params: { name: "pact_receipt_read_v1", arguments: { commandId } } },
+      outsiderSession.sessionId,
+    );
+    expect(outsiderReceipt.response).toMatchObject({
+      result: { isError: true, structuredContent: { code: "RECEIPT_NOT_FOUND", receiptExists: false } },
+    });
+    expect(JSON.stringify(outsiderReceipt.response)).not.toContain(commandId);
+    for (const [name, args] of [["pact_approval_status_v1", { approvalId }]] as const)
       await expect(
         mcp.handlePost(
           outsiderPrincipal,
@@ -3850,6 +3858,41 @@ describe("shared gameplay command admission", () => {
     } finally {
       await server.close();
     }
+  });
+
+  it("returns bounded owner-only outgoing history with recorded terminal states", async () => {
+    const owner = await kingdom(),
+      peer = await kingdom(),
+      stranger = await kingdom();
+    const ids: string[] = [];
+    for (let n = 0; n < 12; n++) {
+      const id = randomUUID();
+      ids.push(id);
+      await pool.query(
+        `INSERT INTO cold_contact_requests(id,product_scope,sender_kingdom_id,recipient_kingdom_id,note,operation_key,created_game_time_ms,expires_game_time_ms,status)
+        VALUES ($1::uuid,'pact',$2,$3,'private fixture',$1::text,$4,$5,$6)`,
+        [id, owner.kingdomId, peer.kingdomId, n, n + 1000, ["pending", "accepted", "declined", "expired"][n % 4]],
+      );
+    }
+    const reader = new SocialOverviewReader(pool, "pact");
+    const result = await reader.read(owner.accountId);
+    expect(result?.requestHistory).toHaveLength(10);
+    expect(result?.requestHistory.map((entry) => entry.id)).toEqual(ids.slice(2).reverse());
+    expect(new Set(result?.requestHistory.map((entry) => entry.status))).toEqual(
+      new Set(["pending", "accepted", "declined", "expired"]),
+    );
+    expect(result?.requestHistory.every((entry) => entry.kingdomId === peer.kingdomId)).toBe(true);
+    expect(result?.requestHistory.some((entry) => "note" in entry)).toBe(false);
+    expect((await reader.read(stranger.accountId))?.requestHistory).toEqual([]);
+    expect((await reader.read(peer.accountId))?.requestHistory).toEqual([]);
+    expect(await reader.read(randomUUID())).toBeNull();
+    expect(
+      (
+        await pool.query("SELECT count(*)::int AS count FROM cold_contact_requests WHERE sender_kingdom_id=$1", [
+          owner.kingdomId,
+        ])
+      ).rows[0]?.count,
+    ).toBe(12);
   });
 
   it("rejects unscoped agents, unfunded transfers, and changed idempotency payloads", async () => {
