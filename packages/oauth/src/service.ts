@@ -94,6 +94,7 @@ export class OAuthService {
       revocation_endpoint: `${this.options.issuer}/oauth/revoke`,
       code_challenge_methods_supported: ["S256"],
       response_types_supported: ["code"],
+      authorization_response_iss_parameter_supported: true,
       grant_types_supported: ["authorization_code", "refresh_token"],
       scopes_supported: ["world:read", "messages:write", "game:act"],
       token_endpoint_auth_methods_supported: ["none"],

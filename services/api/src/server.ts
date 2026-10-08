@@ -25,6 +25,7 @@ import type { Pool } from "pg";
 import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerChronicleRoutes } from "./chronicle-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
+import { registerCouncilRoutes } from "./council-routes.js";
 import type { GameReportReader } from "./game-report-reader.js";
 import { registerGuestRoutes } from "./guest-routes.js";
 import { registerIdentityRoutes } from "./identity-routes.js";
@@ -67,6 +68,12 @@ export interface ApiModules {
   kingdom?: KingdomService;
   worldViews?: WorldViewService;
   socialOverview?: SocialOverviewReader;
+  council?: import("@pact/kingdom").CouncilReader;
+  readCouncil?: (
+    accountId: string,
+    query: { search: string; offset: number },
+    human?: boolean,
+  ) => Promise<Record<string, unknown>>;
   invitations?: InvitationService;
   gameTime?: () => Promise<number>;
   courts?: import("@pact/kingdom").CourtService;
@@ -195,6 +202,8 @@ export function buildServer(
     if (modules.chronicle && modules.gameTime)
       registerChronicleRoutes(server, modules.identity, modules.chronicle, modules.gameTime);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.council && modules.readCouncil)
+      registerCouncilRoutes(server, modules.identity, modules.council, modules.readCouncil);
     if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);
     if (modules.reports) registerReportRoutes(server, modules.identity, modules.reports, modules.oauth);
     if (modules.oauth) registerOAuthRoutes(server, modules.oauth, modules.identity);

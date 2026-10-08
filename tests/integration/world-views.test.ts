@@ -59,6 +59,43 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("explains a waiting Hall prerequisite without exposing the owner queue publicly", async () => {
+    const owner = await kingdom(),
+      outsider = await kingdom();
+    await pool.query("UPDATE kingdom_buildings SET level=1 WHERE kingdom_id=$1", [owner.kingdomId]);
+    for (const [kind, level] of [
+      ["farm", 2],
+      ["barracks", 1],
+      ["storehouse", 1],
+      ["market", 1],
+      ["mine", 1],
+      ["wall", 1],
+    ])
+      await pool.query("INSERT INTO kingdom_buildings(product_scope,kingdom_id,kind,level) VALUES('pact',$1,$2,$3)", [
+        owner.kingdomId,
+        kind,
+        level,
+      ]);
+    await pool.query(
+      `INSERT INTO building_instructions(id,product_scope,kingdom_id,account_id,builder_slot,building_kind,target_level,actor_kind,authority_ref,state,queued_game_time_ms)
+      VALUES($1,'pact',$2,$3,1,'hall',2,'human','fixture','waiting',0)`,
+      [randomUUID(), owner.kingdomId, owner.accountId],
+    );
+    const views = new WorldViewService(pool, scope);
+    expect((await views.readSelf(owner.accountId))?.builders[0]).toMatchObject({
+      state: "waiting",
+      prerequisiteCheck: "hall_prerequisite",
+      missingBuildings: [{ kind: "barracks", level: 2 }],
+      dueGameTimeMs: null,
+    });
+    await pool.query("UPDATE kingdom_buildings SET level=2 WHERE kingdom_id=$1 AND kind='barracks'", [owner.kingdomId]);
+    expect((await views.readSelf(owner.accountId))?.builders[0]).toMatchObject({
+      state: "waiting",
+      prerequisiteCheck: "ready",
+      missingBuildings: [],
+    });
+    expect(await views.read(outsider.accountId, owner.kingdomId)).not.toHaveProperty("builders");
+  });
   it("keeps earliest retained milestones beyond latest pages and never reconstructs purged history", async () => {
     const owner = await kingdom(),
       partner = await kingdom(),

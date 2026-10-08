@@ -7,6 +7,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./play-view": {
+      "types": "./dist/play-view.d.ts",
+      "default": "./dist/play-view.js"
     }
   },
   "scripts": {

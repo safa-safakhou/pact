@@ -59,8 +59,10 @@ export class GameCommandHandler {
       if (!principal.sessionId || !this.assertAgentLease) throw new DispatcherError("FORBIDDEN");
       try {
         await this.assertAgentLease(client, principal.accountId, principal.sessionId);
-      } catch {
-        throw new DispatcherError("FORBIDDEN");
+      } catch (error) {
+        const missingLease =
+          typeof error === "object" && error !== null && "code" in error && error.code === "FORBIDDEN";
+        throw new DispatcherError("FORBIDDEN", missingLease ? "WRITE_LEASE_REQUIRED" : undefined);
       }
     }
     const action = command.action;

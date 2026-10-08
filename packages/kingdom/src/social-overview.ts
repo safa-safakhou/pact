@@ -22,6 +22,7 @@ export interface SocialOverview {
   messages: (SocialParty & {
     id: string;
     senderKingdomId: string;
+    authorKind: "agent" | "human";
     body: string;
     sentGameTimeMs: string;
   })[];
@@ -80,6 +81,7 @@ type RequestRow = PartyRow & {
 type MessageRow = PartyRow & {
   id: string;
   sender_kingdom_id: string;
+  agent_originated: boolean;
   body: string;
   sent_game_time_ms: string;
 };
@@ -177,7 +179,7 @@ export class SocialOverviewReader {
         args,
       ),
       this.pool.query<MessageRow>(
-        `SELECT m.id, m.sender_kingdom_id, m.body, m.sent_game_time_ms::text,
+        `SELECT m.id, m.sender_kingdom_id, m.agent_originated, m.body, m.sent_game_time_ms::text,
              peer.id AS kingdom_id, peer.handle, peer.display_name
            FROM direct_messages m
            JOIN kingdoms peer ON peer.product_scope = m.product_scope
@@ -272,6 +274,7 @@ export class SocialOverviewReader {
         ...party(row),
         id: row.id,
         senderKingdomId: row.sender_kingdom_id,
+        authorKind: row.agent_originated ? "agent" : "human",
         body: row.body,
         sentGameTimeMs: row.sent_game_time_ms,
       })),

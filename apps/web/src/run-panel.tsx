@@ -39,7 +39,7 @@ type Report = {
   nextStep: string;
   truncated: boolean;
 };
-export function RunResult({ report, ambition = "neutral" }: { report: Report; ambition?: string }) {
+export function RunResult({ report, ambition = "" }: { report: Report; ambition?: string }) {
   const brief = resultSummary(report, ambition);
   return (
     <article className="game-card">
@@ -47,7 +47,7 @@ export function RunResult({ report, ambition = "neutral" }: { report: Report; am
       <section aria-label="Factual result summary">
         <h4>Recorded result and current decision</h4>
         <p>
-          Ambition: {brief.ambition}. Result state: {brief.state}.
+          Notes: {brief.ambition}. Result state: {brief.state}.
         </p>
         <p>Latest receipt: {brief.latestResult}</p>
         <p>Current decision: {brief.currentDecision}</p>
@@ -164,7 +164,7 @@ export function RunPanel({
   request,
   contacts,
   canWrite = true,
-  ambition = "neutral",
+  ambition = "",
 }: {
   request: Request;
   contacts: { kingdomId: string; handle: string }[];

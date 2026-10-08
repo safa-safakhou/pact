@@ -8,7 +8,7 @@ export type ResultEntry = {
 };
 export type ResultReport = { stale?: boolean; status: string; entries: ResultEntry[]; nextStep: string };
 /** Authorized record facts only; agent prose never establishes a command outcome. */
-export function resultSummary(report: ResultReport, ambition = "neutral") {
+export function resultSummary(report: ResultReport, ambition = "") {
   const latest = report.entries.at(-1);
   const approval = report.entries
     .flatMap((e) => e.currentFacts ?? [])

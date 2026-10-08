@@ -71,6 +71,23 @@ beforeAll(async () => {
     dispatcher,
     origin,
     clock,
+    playView: {
+      read: async (accountId, query) => ({
+        world: { viewer: accountId },
+        interactions: { messages: [] },
+        players: { players: [] },
+        discovery: query,
+      }),
+    },
+    notes: {
+      read: async (accountId) => ({ text: "Any workflow", version: 1, viewer: accountId }),
+      write: async (accountId, text, expectedVersion) => ({
+        saved: true,
+        text,
+        version: expectedVersion + 1,
+        viewer: accountId,
+      }),
+    },
     runLeases: runs,
     activity: { record: (accountId, sessionId, summary) => activity.record(pool, { accountId, sessionId, summary }) },
     approvalProposals: {
@@ -122,6 +139,60 @@ async function verifiedAccount(email: string): Promise<{ accountId: string; sess
 }
 
 describe("PACT-017 MCP transport", () => {
+  it("resumes reconnects only within one authenticated OAuth grant and keeps its bounded lease", async () => {
+    const { accountId } = await verifiedAccount(`mcp-reconnect-${randomUUID()}@example.test`);
+    const grants = [randomUUID(), randomUUID()] as const;
+    for (const grantId of grants) {
+      await pool.query(
+        `INSERT INTO oauth_grants(id, product_scope, account_id, client_id, token_family_id, scopes, expires_at)
+         VALUES ($1, 'pact', $2, 'synthetic-host', $3, ARRAY['world:read','game:act'], '2027-01-01')`,
+        [grantId, accountId, randomUUID()],
+      );
+    }
+    const principal = {
+      accountId,
+      productScope,
+      audience: "agent" as const,
+      agentScopes: ["world:read" as const, "game:act" as const],
+      agentGrantId: grants[0],
+    };
+    const init = { method: "initialize", id: 1, params: { protocolVersion: MCP_PROTOCOL_PRIMARY } };
+    const first = await mcp.handlePost(principal, init);
+    const sessionId = first.sessionId as string;
+    await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 2, params: { name: "run.open", arguments: {} } },
+      sessionId,
+    );
+    const reconnects = await Promise.all(Array.from({ length: 4 }, () => mcp.handlePost(principal, init)));
+    expect(reconnects.map((r) => r.sessionId)).toEqual(Array(4).fill(sessionId));
+    const runs = new RunService(pool, {
+      productScope: "pact",
+      clock: { now: () => new Date("2026-09-20T20:00:00.000Z") },
+    });
+    await withTransaction(pool, (client) =>
+      runs.assertMcpWriteLease(client, accountId, reconnects[0]?.sessionId as string),
+    );
+    const other = { ...principal, agentGrantId: grants[1] };
+    const otherSession = (await mcp.handlePost(other, init)).sessionId as string;
+    expect(otherSession).not.toBe(sessionId);
+    await expect(mcp.openStream(other, sessionId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(mcp.closeSession(other, sessionId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const { agentGrantId: _grant, ...unboundPrincipal } = principal;
+    await expect(mcp.openStream(unboundPrincipal, sessionId)).rejects.toMatchObject({
+      code: "FORBIDDEN",
+    });
+    await expect(
+      withTransaction(pool, (client) => runs.assertMcpWriteLease(client, accountId, otherSession)),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await mcp.closeSession(principal, sessionId);
+    await expect(
+      withTransaction(pool, (client) => runs.assertMcpWriteLease(client, accountId, sessionId)),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect((await mcp.handlePost(principal, init)).sessionId).not.toBe(sessionId);
+    await expect(mcp.openStream(other, otherSession)).resolves.toBeDefined();
+  });
+
   it("persists owner-only external activity atomically, deduplicates receipts and survives session closure", async () => {
     const { accountId, sessionToken } = await verifiedAccount(`activity-${randomUUID()}@example.test`);
     const other = await verifiedAccount(`activity-other-${randomUUID()}@example.test`);
@@ -546,7 +617,10 @@ describe("PACT-017 MCP transport", () => {
     expect(JSON.stringify(guideTools.response)).toContain("pact_agent_guide_v1");
     expect(JSON.stringify(guideTools.response)).not.toContain("pact_game_action_v1");
     const tools = (guideTools.response.result as { tools: { name: string; _meta?: Record<string, unknown> }[] }).tools;
-    expect(tools.find((tool) => tool.name === "pact_profile_v1")?._meta).toEqual({ "openai/profile": true });
+    expect(tools.find((tool) => tool.name === "pact_profile_v1")?._meta).toMatchObject({
+      "openai/profile": true,
+      securitySchemes: [{ type: "oauth2", scopes: ["world:read"] }],
+    });
     const profile = await actionMcp.handlePost(
       reader,
       { method: "tools/call", id: 23, params: { name: "pact_profile_v1", arguments: {} } },
@@ -994,5 +1068,130 @@ describe("PACT-022 inbox", () => {
     expect(expired.resyncRequired).toBe(true);
 
     inbox.assertNoProviderInvocation();
+  });
+});
+
+describe("ChatGPT MCP App boundary", () => {
+  it("serves the UI and private notes only through an owner-bound session and scope", async () => {
+    const { accountId } = await verifiedAccount(`chatgpt-${randomUUID()}@example.test`);
+    const principal = { accountId, productScope, audience: "agent" as const, agentScopes: ["world:read" as const] };
+    const init = await mcp.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const session = init.sessionId;
+    const list = await mcp.handlePost(principal, { method: "tools/list", id: 2 }, session);
+    const tools = (list.response.result as { tools: { name: string; _meta: unknown; annotations: unknown }[] }).tools;
+    expect(tools.find((t) => t.name === "pact_play_view_v1")).toMatchObject({
+      _meta: {
+        ui: { resourceUri: expect.stringMatching(/^ui:\/\/pact\/play-[a-f0-9]{16}\.html$/) },
+        "openai/outputTemplate": expect.stringMatching(/^ui:\/\/pact\/play-[a-f0-9]{16}\.html$/),
+      },
+      annotations: { readOnlyHint: true },
+    });
+    expect(tools.some((t) => t.name === "pact_notes_write_v1")).toBe(false);
+    const view = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 3, params: { name: "pact_play_view_v1", arguments: {} } },
+      session,
+    );
+    expect(view.response.result).toMatchObject({
+      structuredContent: { world: { viewer: accountId }, untrustedContent: true },
+    });
+    const searched = await mcp.handlePost(
+      principal,
+      {
+        method: "tools/call",
+        id: 33,
+        params: { name: "pact_play_view_v1", arguments: { search: "Cinder", offset: 8 } },
+      },
+      session,
+    );
+    expect(searched.response.result).toMatchObject({
+      structuredContent: { discovery: { search: "Cinder", offset: 8 }, world: { viewer: accountId } },
+    });
+    for (const arguments_ of [
+      { search: "x".repeat(81) },
+      { offset: -1 },
+      { offset: 1.5 },
+      { offset: 10001 },
+      { accountId: randomUUID() },
+    ]) {
+      await expect(
+        mcp.handlePost(
+          principal,
+          { method: "tools/call", id: 34, params: { name: "pact_play_view_v1", arguments: arguments_ } },
+          session,
+        ),
+      ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    }
+    const html = await mcp.handlePost(
+      principal,
+      { method: "resources/read", id: 4, params: { uri: "ui://pact/play-v1.html" } },
+      session,
+    );
+    expect(html.response.result).toMatchObject({
+      contents: [{ mimeType: "text/html;profile=mcp-app", text: expect.stringContaining("ui/initialize") }],
+    });
+    const resourceList = await mcp.handlePost(principal, { method: "resources/list", id: 40 }, session);
+    const uri = (resourceList.response.result as { resources: { uri: string }[] }).resources[0]?.uri;
+    expect(uri).not.toBe("ui://pact/play-v1.html");
+    const currentHtml = await mcp.handlePost(principal, { method: "resources/read", id: 41, params: { uri } }, session);
+    expect(currentHtml.response.result).toMatchObject({
+      contents: [{ uri, text: expect.stringContaining("Your negotiations") }],
+    });
+    await expect(
+      mcp.handlePost(
+        principal,
+        { method: "resources/read", id: 42, params: { uri: "ui://pact/not-registered.html" } },
+        session,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(
+      mcp.handlePost(
+        principal,
+        {
+          method: "tools/call",
+          id: 5,
+          params: { name: "pact_notes_write_v1", arguments: { text: "anything", expectedVersion: 1 } },
+        },
+        session,
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const writer = { ...principal, agentScopes: ["world:read" as const, "game:act" as const] };
+    const save = await mcp.handlePost(
+      writer,
+      {
+        method: "tools/call",
+        id: 6,
+        params: { name: "pact_notes_write_v1", arguments: { text: "anything", expectedVersion: 1 } },
+      },
+      session,
+    );
+    expect(save.response.result).toMatchObject({
+      structuredContent: { text: "anything", viewer: accountId, saved: true },
+    });
+    await expect(
+      mcp.handlePost(
+        writer,
+        {
+          method: "tools/call",
+          id: 7,
+          params: {
+            name: "pact_notes_write_v1",
+            arguments: { text: "anything", expectedVersion: 1, accountId: randomUUID() },
+          },
+        },
+        session,
+      ),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(
+      mcp.handlePost(
+        { ...writer, accountId: randomUUID() },
+        { method: "resources/read", id: 8, params: { uri: "ui://pact/play-v1.html" } },
+        session,
+      ),
+    ).rejects.toBeInstanceOf(McpError);
   });
 });

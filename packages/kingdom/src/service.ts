@@ -7,8 +7,7 @@ import { GAME_MINUTE_MS, type WorldClockService, type WorldSnapshot } from "@pac
 import type { Pool, PoolClient } from "pg";
 import { uuidV7 } from "./uuid-v7.js";
 
-export const ambitionValues = ["neutral", "farmer", "trader", "defender"] as const;
-export type KingdomAmbition = (typeof ambitionValues)[number];
+export type KingdomAmbition = string;
 const startingBuildings = ["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"] as const;
 
 interface KingdomRow {
@@ -66,18 +65,33 @@ export class KingdomService {
 
   /** Human-owned presentation setting. The authenticated HTTP boundary supplies the account. */
   async setAmbition(accountId: string, ambition: KingdomAmbition): Promise<{ ambition: KingdomAmbition }> {
-    if (!ambitionValues.includes(ambition)) throw new Error("INVALID_AMBITION");
+    if (ambition.length > 8000) throw new Error("INVALID_AMBITION");
     const result = await this.pool.query<{ ambition: KingdomAmbition }>(
-      "UPDATE kingdoms SET ambition=$3 WHERE product_scope=$1 AND account_id=$2 AND status='ranked' RETURNING ambition",
+      "UPDATE kingdoms SET ambition=$3, ambition_version=ambition_version+1 WHERE product_scope=$1 AND account_id=$2 AND status='ranked' RETURNING ambition",
       [this.options.productScope, accountId, ambition],
     );
     if (!result.rows[0]) throw new Error("KINGDOM_NOT_FOUND");
     return result.rows[0];
   }
+  async readNotes(accountId: string) {
+    const result = await this.pool.query<{ text: string; version: number }>(
+      "SELECT COALESCE(ambition,'') AS text, ambition_version AS version FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
+      [this.options.productScope, accountId],
+    );
+    return result.rows[0] ?? null;
+  }
+  async writeNotes(accountId: string, text: string, expectedVersion: number) {
+    const result = await this.pool.query<{ text: string; version: number }>(
+      "UPDATE kingdoms SET ambition=$3, ambition_version=ambition_version+1 WHERE product_scope=$1 AND account_id=$2 AND status='ranked' AND ambition_version=$4 RETURNING ambition AS text, ambition_version AS version",
+      [this.options.productScope, accountId, text, expectedVersion],
+    );
+    if (result.rows[0]) return { ...result.rows[0], saved: true };
+    return { saved: false, code: "STALE_VERSION", current: await this.readNotes(accountId) };
+  }
   async exportExperience(client: PoolClient, accountId: string) {
     return (
       await client.query(
-        "SELECT COALESCE(ambition,'neutral') AS ambition FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
+        "SELECT COALESCE(ambition,'') AS ambition, ambition_version AS version FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
         [this.options.productScope, accountId],
       )
     ).rows;
@@ -100,6 +114,25 @@ export class KingdomService {
       )
     ).rows;
     return { players: rows.slice(0, 20), hasMore: rows.length > 20, offset };
+  }
+
+  /** Chat discovery exposes only identity and the founder-approved public Hall level. */
+  async discoverKingdoms(accountId: string, query = "", offset = 0) {
+    if (query.length > 80 || !Number.isSafeInteger(offset) || offset < 0 || offset > 10000)
+      throw new Error("INVALID_DISCOVERY_QUERY");
+    const rows = (
+      await this.pool.query<{ kingdomId: string; handle: string; displayName: string; hallLevel: number | null }>(
+        `SELECT k.id AS "kingdomId", k.handle, k.display_name AS "displayName", b.level AS "hallLevel"
+         FROM kingdoms k JOIN accounts a ON a.id=k.account_id AND a.product_scope=k.product_scope
+         LEFT JOIN kingdom_buildings b ON b.product_scope=k.product_scope AND b.kingdom_id=k.id AND b.kind='hall'
+         WHERE k.product_scope=$1 AND k.account_id<>$2 AND k.status='ranked' AND a.status='active'
+           AND k.moderation_case_id IS NULL
+           AND ($3='' OR strpos(lower(k.handle),lower($3))>0 OR strpos(lower(k.display_name),lower($3))>0)
+         ORDER BY lower(k.display_name),k.id LIMIT 9 OFFSET $4`,
+        [this.options.productScope, accountId, query.trim().replace(/^@/, ""), offset],
+      )
+    ).rows;
+    return { players: rows.slice(0, 8), hasMore: rows.length > 8, offset, pageSize: 8, query };
   }
 
   async getByAccount(accountId: string): Promise<KingdomActivation | null> {

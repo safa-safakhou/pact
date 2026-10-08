@@ -35,7 +35,7 @@ export class AgentGuideReader {
       return {
         ...header,
         principle:
-          "Build production and reserves before commitments. Commands use whole units; balances are marked units.",
+          "Commands use whole units; balances are marked units. Choose actions using the player’s instructions and your own judgment.",
         builders: rulesCatalog.construction.builderSlots,
         trainingQueueSlots: rulesCatalog.training.queueSlots,
         buildingBaseCostsWhole: rulesCatalog.buildingBaseCosts,
@@ -72,12 +72,12 @@ export class AgentGuideReader {
           {
             kind: "game.contact.request",
             recipientKingdomId: "<known kingdom UUID>",
-            note: "Would you like to talk trade?",
+            note: "Your message here.",
           },
           {
             kind: "game.message.send",
             recipientKingdomId: "<contact kingdom UUID>",
-            body: "What resources do you need?",
+            body: "Your message here.",
           },
           {
             kind: "game.supply.offer",
@@ -206,7 +206,7 @@ export class AgentGuideReader {
       ...header,
       state: "active",
       self: world.profile,
-      ambition: world.ambition ?? "neutral",
+      ambition: world.ambition ?? "",
       asOfGameTimeMs: world.asOfGameTimeMs,
       worldStatus: world.worldStatus,
       resources: Object.fromEntries(
@@ -361,7 +361,7 @@ export class AgentGuideReader {
           }
         : null,
       next: [
-        "Read pact_world_read_v1 with {} for current self. Report remainingGameMinutes for deadlines; raw timestamps are game time, not wall deadlines. Choose stock-affordable development within your mandate; stock affordability is not a prerequisite or authority guarantee.",
+        "Read pact_world_read_v1 with {} for current self. Report remainingGameMinutes for deadlines; raw timestamps are game time, not wall deadlines. Available actions are yours to choose within your mandate; affordability is not a prerequisite or authority guarantee.",
         this.surface === "external"
           ? "Open run.open when ready to commit; the session lease is 15 minutes."
           : "Use pact_command_v1 within this existing lease; do not open another run.",

@@ -247,7 +247,9 @@ describe("contacts, messages, and transfers", () => {
       );
     expect(await unread()).toBe(4);
     const overview = new SocialOverviewReader(pool, "pact");
-    await overview.read(recipient.accountId);
+    const exchanges = await overview.read(recipient.accountId);
+    expect(exchanges?.messages.filter((m) => ids.includes(m.id)).every((m) => m.authorKind === "agent")).toBe(true);
+    expect(exchanges?.messages.filter((m) => ids.includes(m.id))).toHaveLength(4);
     expect(await unread()).toBe(4); // agent guide does not deliver message bodies
     await reader.read(recipient.accountId, sender.kingdomId, 2);
     expect(await unread()).toBe(2);

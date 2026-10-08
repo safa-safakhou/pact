@@ -6,6 +6,8 @@ export interface AuthenticatedPrincipal {
   readonly productScope: ProductScope;
   readonly audience: "human" | "agent" | "service";
   readonly sessionId?: string;
+  /** Authenticated OAuth connection, never supplied by a tool argument. */
+  readonly agentGrantId?: string;
   /** Transport-derived origin, never copied from a command actor. */
   readonly agentOrigin?: "external" | "in_app";
   /** Granted by the authenticating route, never copied from a command envelope. */
@@ -31,7 +33,10 @@ export type DispatcherFailureCode =
   | "INVALID_LEVEL";
 
 export class DispatcherError extends Error {
-  constructor(readonly code: DispatcherFailureCode) {
+  constructor(
+    readonly code: DispatcherFailureCode,
+    readonly reason?: "WRITE_LEASE_REQUIRED",
+  ) {
     super(code);
     this.name = "DispatcherError";
   }

@@ -129,3 +129,50 @@ it("paginates a world with 100 more model-free guests without duplicates or priv
   expect(ids.size).toBe(101);
   expect(ids.has(created[0].kingdomId)).toBe(false);
 });
+
+it("resumes an existing guest during a domain move without creating another account or kingdom", async () => {
+  const a = await join();
+  const before = (
+    await pool.query(
+      "SELECT (SELECT count(*) FROM accounts)::int AS accounts, (SELECT count(*) FROM kingdoms)::int AS kingdoms",
+    )
+  ).rows[0];
+  const resumed = await server.inject({
+    method: "POST",
+    url: "/v1/play/join",
+    headers: { origin },
+    payload: { entryKey: a.entryKey, existingOnly: true },
+  });
+  expect(resumed.statusCode, resumed.body).toBe(200);
+  expect(resumed.json()).toMatchObject({ accountId: a.accountId, kingdomId: a.kingdomId, handle: a.handle });
+  expect(
+    (
+      await pool.query(
+        "SELECT (SELECT count(*) FROM accounts)::int AS accounts, (SELECT count(*) FROM kingdoms)::int AS kingdoms",
+      )
+    ).rows[0],
+  ).toEqual(before);
+});
+
+it("rejects an unknown recovery key instead of founding a replacement kingdom", async () => {
+  const before = (
+    await pool.query(
+      "SELECT (SELECT count(*) FROM accounts)::int AS accounts, (SELECT count(*) FROM kingdoms)::int AS kingdoms",
+    )
+  ).rows[0];
+  const response = await server.inject({
+    method: "POST",
+    url: "/v1/play/join",
+    headers: { origin },
+    payload: { entryKey: randomUUID(), existingOnly: true },
+  });
+  expect(response.statusCode).toBe(403);
+  expect(response.headers["set-cookie"]).toBeUndefined();
+  expect(
+    (
+      await pool.query(
+        "SELECT (SELECT count(*) FROM accounts)::int AS accounts, (SELECT count(*) FROM kingdoms)::int AS kingdoms",
+      )
+    ).rows[0],
+  ).toEqual(before);
+});

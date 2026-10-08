@@ -19,7 +19,7 @@ function fixture(): OwnerView {
     worldStatus: "running",
   } as unknown as OwnerView;
 }
-it("prioritizes ambition with catalog costs and removes queued and maximum upgrades", () => {
+it("lists catalog costs without strategy selection and removes queued and maximum upgrades", () => {
   const view = fixture();
   expect(suggestedBuilds(view)[0]).toMatchObject({
     building: "farm",

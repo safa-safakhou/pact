@@ -82,6 +82,9 @@ describe("API/database smoke", () => {
       { name: "0049_moderation_cases.sql" },
       { name: "0050_bot_controls.sql" },
       { name: "0051_guest_play.sql" },
+      { name: "0052_freeform_notes.sql" },
+      { name: "0053_mcp_grant_sessions.sql" },
+      { name: "0054_council_characters.sql" },
     ]);
     await server.close();
   });

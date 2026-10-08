@@ -65,18 +65,22 @@ export class IdentityService {
     return this.options.guestPlayEnabled === true;
   }
 
-  async joinGuest(entryKey: string): Promise<SessionTokens> {
+  async joinGuest(entryKey: string, existingOnly = false): Promise<SessionTokens> {
     if (!this.guestPlayEnabled || !/^[0-9a-f-]{36}$/i.test(entryKey)) throw new IdentityError("FORBIDDEN");
     const now = this.options.clock.now();
     return withTransaction(this.pool, async (client) => {
       const hash = this.options.digester.digest(`guest:${entryKey}`);
       const row = (
         await client.query<{ id: string; status: string }>(
-          `INSERT INTO accounts(product_scope,email,password_hash,is_guest,guest_entry_hash,terms_version)
+          existingOnly
+            ? `SELECT id,status FROM accounts WHERE product_scope=$1 AND guest_entry_hash=$2 AND is_guest FOR UPDATE`
+            : `INSERT INTO accounts(product_scope,email,password_hash,is_guest,guest_entry_hash,terms_version)
          VALUES($1,NULL,'guest-no-password',true,$2,$3)
          ON CONFLICT(product_scope,guest_entry_hash) WHERE guest_entry_hash IS NOT NULL
          DO UPDATE SET guest_entry_hash=EXCLUDED.guest_entry_hash RETURNING id,status`,
-          [this.options.productScope, hash, this.options.currentTermsVersion],
+          existingOnly
+            ? [this.options.productScope, hash]
+            : [this.options.productScope, hash, this.options.currentTermsVersion],
         )
       ).rows[0];
       if (row?.status !== "active") throw new IdentityError("FORBIDDEN");

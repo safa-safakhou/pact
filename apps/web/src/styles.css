@@ -742,3 +742,61 @@ main {
     width: calc(100vw - 1rem);
   }
 }
+
+.approval-shell {
+  max-width: 760px;
+  margin: 5vh auto;
+  padding: 24px;
+}
+.approval-review {
+  background: #faf5e8;
+  border: 1px solid #cbbd9e;
+  border-radius: 12px;
+  padding: 28px;
+  color: #283b32;
+}
+.approval-decision h1 {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  text-transform: capitalize;
+  line-height: 1.2;
+}
+.approval-cost {
+  font-size: 24px;
+  font-weight: 700;
+  color: #224b3b;
+}
+.approval-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0;
+}
+.approval-actions button {
+  min-height: 48px;
+}
+.approval-review p {
+  line-height: 1.6;
+}
+.approval-review [role="alert"] {
+  border-left: 4px solid #9a482c;
+  padding: 12px;
+}
+.approval-review [role="status"] {
+  font-weight: 600;
+  background: #eee5cf;
+  padding: 12px;
+  border-radius: 6px;
+}
+@media (max-width: 520px) {
+  .approval-shell {
+    margin: 16px auto;
+    padding: 12px;
+  }
+  .approval-review {
+    padding: 20px;
+  }
+  .approval-actions button {
+    width: 100%;
+  }
+}

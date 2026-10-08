@@ -28,6 +28,7 @@ import {
   ChronicleService,
   ConstructionExposureAdapter,
   ConversationReader,
+  CouncilReader,
   CourtInvitationDestination,
   CourtService,
   GarrisonService,
@@ -300,6 +301,14 @@ const mcp = new McpTransport({
   origin: environment.PACT_ORIGIN,
   clock,
   worldViews,
+  notes: {
+    read: (accountId) => kingdom.readNotes(accountId),
+    write: (accountId, text, version) => kingdom.writeNotes(accountId, text, version),
+  },
+  playView: {
+    read: (accountId, query) => readCouncil(accountId, query ?? { search: "", offset: 0 }),
+  },
+  councilThreads: { read: (accountId, peerId, before) => council.thread(accountId, peerId, before) },
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   seasons: {
     read: (query, accountId) =>
@@ -337,6 +346,54 @@ const mcp = new McpTransport({
   approvalProposals: approvals,
   runLeases: runs,
 });
+const council = new CouncilReader(
+  pool,
+  "pact",
+  socialOverview,
+  async (accountIds) => {
+    const [runs, observed] = await Promise.all([
+      externalActivity.councilActivity(accountIds),
+      mcp.councilObservations(accountIds),
+    ]);
+    for (const id of accountIds) {
+      const previous = runs[id] ?? { lastObservedAt: null, runActive: false };
+      const contact = observed[id];
+      runs[id] = {
+        ...previous,
+        lastObservedAt:
+          contact && (!previous.lastObservedAt || contact > previous.lastObservedAt)
+            ? contact
+            : previous.lastObservedAt,
+      };
+    }
+    return runs;
+  },
+  clock.now,
+);
+async function readCouncil(
+  accountId: string,
+  query: { search: string; offset: number },
+  human = false,
+): Promise<Record<string, unknown>> {
+  const players = await kingdom.discoverKingdoms(accountId, query.search, query.offset);
+  const details = await council.read(
+    accountId,
+    players.players.map((p) => p.kingdomId),
+    human,
+  );
+  return {
+    world: await worldViews.readSelf(accountId),
+    ...details,
+    players,
+    characterEditUrl: new URL("?envoy=edit", publicBaseUrl).href,
+    decisions: (await approvals.pendingForAccount(accountId)).approvals.map((approval) => ({
+      effectsSummary: approval.effectsSummary,
+      expiresAt: approval.expiresAt,
+      reviewUrl: new URL(approval.deepLinkPath, publicBaseUrl).href,
+    })),
+    untrustedContent: true,
+  };
+}
 const credentialVault = environment.MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE
   ? new CredentialVaultService(pool, {
       productScope: "pact",
@@ -364,6 +421,7 @@ const privacy = new PrivacyService(pool, {
   retirement,
   ownedData: [
     externalActivity.retention,
+    council.retention,
     notifications.retention,
     moderation.retention,
     botRetention("pact"),
@@ -564,6 +622,8 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   kingdom,
   worldViews,
   socialOverview,
+  council,
+  readCouncil,
   invitations,
   seasons: seasonViews,
   courts,

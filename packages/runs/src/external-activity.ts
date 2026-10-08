@@ -24,6 +24,28 @@ export class ExternalAgentActivity {
     private readonly resolveCurrent?: ActivityStateResolver,
   ) {}
 
+  /** Public observation only; never objectives, approvals, model data or a guaranteed reply. */
+  async councilActivity(accountIds: string[]) {
+    const rows = (
+      await this.pool.query<{ account_id: string; observed_at: Date | null; run_active: boolean }>(
+        `SELECT a.id AS account_id,
+       GREATEST((SELECT max(created_at) FROM external_agent_activity e WHERE e.product_scope=$1 AND e.account_id=a.id),
+         (SELECT max(updated_at) FROM envoy_runs r WHERE r.product_scope=$1 AND r.account_id=a.id)) AS observed_at,
+       EXISTS(SELECT 1 FROM envoy_runs r WHERE r.product_scope=$1 AND r.account_id=a.id AND r.status='running'
+         AND r.deadline_at>$3 AND EXISTS(SELECT 1 FROM write_leases l WHERE l.product_scope=r.product_scope
+           AND l.run_id=r.run_id AND l.released_at IS NULL AND l.expires_at>$3)) AS run_active
+       FROM accounts a WHERE a.product_scope=$1 AND a.id=ANY($2::uuid[])`,
+        [this.productScope, accountIds, this.clock.now()],
+      )
+    ).rows;
+    return Object.fromEntries(
+      rows.map((r) => [
+        r.account_id,
+        { lastObservedAt: r.observed_at?.toISOString() ?? null, runActive: r.run_active },
+      ]),
+    );
+  }
+
   async record(
     client: PoolClient | Pool,
     input: { accountId: string; sessionId: string; summary: Record<string, unknown> },

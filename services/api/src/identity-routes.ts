@@ -1,6 +1,6 @@
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
-import { ambitionValues, KingdomError, type KingdomService } from "@pact/kingdom";
+import { KingdomError, type KingdomService } from "@pact/kingdom";
 import type { OnboardingService } from "@pact/onboarding";
 import { OnboardingError } from "@pact/onboarding";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
@@ -233,7 +233,7 @@ export function registerIdentityRoutes(
         const context = writeContext(request);
         const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
         const input = z
-          .object({ ambition: z.enum(ambitionValues) })
+          .object({ ambition: z.string().max(8000) })
           .strict()
           .parse(request.body);
         if (!(await kingdom.getByAccount(session.accountId)))

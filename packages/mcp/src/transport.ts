@@ -41,10 +41,21 @@ import {
   worldReadValidationHelp,
 } from "@pact/contracts";
 import type { Pool } from "pg";
+import {
+  chatgptDescriptor,
+  councilThreadTool,
+  LEGACY_PLAY_RESOURCE,
+  notesReadTool,
+  notesWriteTool,
+  PLAY_MIME,
+  PLAY_RESOURCE,
+  playHtml,
+  playTool,
+} from "./chatgpt.js";
 
 export const MCP_PROTOCOL_PRIMARY = "2025-11-25";
 export const MCP_PROTOCOL_COMPAT = "2025-06-18";
-export const SUPPORTED_MCP_PROTOCOLS = new Set([MCP_PROTOCOL_PRIMARY, MCP_PROTOCOL_COMPAT]);
+export const SUPPORTED_MCP_PROTOCOLS = new Set([MCP_PROTOCOL_PRIMARY, MCP_PROTOCOL_COMPAT, "2025-03-26"]);
 
 function receiptToolResult(receipt: CommandReceipt) {
   const denied = receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED";
@@ -81,6 +92,16 @@ export interface McpJsonRpcRequest {
 }
 
 export interface McpTransportOptions {
+  readonly playView?: {
+    read(accountId: string, query?: { search: string; offset: number }): Promise<Record<string, unknown>>;
+  };
+  readonly councilThreads?: {
+    read(accountId: string, peerId: string, before?: { gameTimeMs: string; id: string }): Promise<unknown>;
+  };
+  readonly notes?: {
+    read(accountId: string): Promise<unknown>;
+    write(accountId: string, text: string, expectedVersion: number): Promise<unknown>;
+  };
   readonly pool: Pool;
   readonly productScope: string;
   readonly dispatcher: CommandDispatcher;
@@ -238,11 +259,61 @@ export class McpTransport {
         return { response: {}, ...(sessionId ? { sessionId } : {}) };
       case "ping":
         return { response: this.result(body.id, {}), ...(sessionId ? { sessionId } : {}) };
+      case "resources/list":
+        await this.requireSession(principal, sessionId);
+        if (!principal.agentScopes?.includes("world:read")) throw new McpError("FORBIDDEN", 403);
+        return {
+          response: this.result(body.id, {
+            resources: this.options.playView
+              ? [
+                  {
+                    uri: PLAY_RESOURCE,
+                    name: "PACT game",
+                    mimeType: PLAY_MIME,
+                    _meta: {
+                      "openai/ui": {
+                        availableDisplayModes: ["inline", "fullscreen"],
+                        preferredDisplayMode: "fullscreen",
+                      },
+                    },
+                    description: "Your kingdom and participating exchanges",
+                  },
+                ]
+              : [],
+          }),
+        };
+      case "resources/read":
+        await this.requireSession(principal, sessionId);
+        if (!principal.agentScopes?.includes("world:read") || !this.options.playView)
+          throw new McpError("FORBIDDEN", 403);
+        if (body.params?.uri !== PLAY_RESOURCE && body.params?.uri !== LEGACY_PLAY_RESOURCE)
+          throw new McpError("INVALID_REQUEST");
+        return {
+          response: this.result(body.id, {
+            contents: [
+              {
+                uri: body.params.uri,
+                mimeType: PLAY_MIME,
+                text: playHtml,
+                _meta: {
+                  ui: { csp: { connectDomains: [], resourceDomains: [] } },
+                  "openai/ui": { availableDisplayModes: ["inline", "fullscreen"], preferredDisplayMode: "fullscreen" },
+                  "openai/widgetDescription": "PACT kingdom and actual correspondence, refreshed on request",
+                },
+              },
+            ],
+          }),
+        };
       case "tools/list":
-        await this.requireSession(principal.accountId, sessionId);
+        await this.requireSession(principal, sessionId);
         return {
           response: this.result(body.id, {
             tools: [
+              ...(this.options.playView && principal.agentScopes?.includes("world:read")
+                ? [playTool, ...(this.options.councilThreads ? [councilThreadTool] : [])]
+                : []),
+              ...(this.options.notes && principal.agentScopes?.includes("world:read") ? [notesReadTool] : []),
+              ...(this.options.notes && principal.agentScopes?.includes("game:act") ? [notesWriteTool] : []),
               ...(this.options.profile && principal.agentScopes?.includes("world:read") ? [pactProfileTool] : []),
               ...(this.options.seasons && principal.agentScopes?.includes("world:read") ? [pactSeasonReadTool] : []),
               ...(this.options.agentGuide && principal.agentScopes?.includes("world:read") ? [pactAgentGuideTool] : []),
@@ -274,12 +345,12 @@ export class McpTransport {
                 : []),
               ...(principal.agentScopes?.includes("game:act") ? [pactGameActionTool] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
-            ],
+            ].map(chatgptDescriptor),
           }),
           ...(sessionId ? { sessionId } : {}),
         };
       case "tools/call":
-        await this.requireSession(principal.accountId, sessionId);
+        await this.requireSession(principal, sessionId);
         try {
           const result = await this.callTool({ ...principal, agentOrigin: "external" }, body.params ?? {}, sessionId);
           const summary = result.structuredContent;
@@ -310,7 +381,7 @@ export class McpTransport {
   }
 
   async openStream(principal: AuthenticatedPrincipal, sessionId: string): Promise<{ protocolVersion: string }> {
-    const row = await this.requireSession(principal.accountId, sessionId);
+    const row = await this.requireSession(principal, sessionId);
     return { protocolVersion: row.protocol_version };
   }
 
@@ -325,7 +396,7 @@ export class McpTransport {
 
   /** MCP HTTP DELETE: terminate only the authenticated session and its matching write lease. */
   async closeSession(principal: AuthenticatedPrincipal, sessionId: string): Promise<void> {
-    await this.requireSession(principal.accountId, sessionId);
+    await this.requireSession(principal, sessionId);
     await this.options.runLeases?.releaseMcpLease({ accountId: principal.accountId, holderId: sessionId });
     await this.options.pool.query(`DELETE FROM mcp_sessions WHERE id = $1 AND product_scope = $2 AND account_id = $3`, [
       sessionId,
@@ -342,18 +413,29 @@ export class McpTransport {
     if (!SUPPORTED_MCP_PROTOCOLS.has(requested)) {
       throw new McpError("UNSUPPORTED_PROTOCOL");
     }
-    const sessionId = randomUUID();
     const now = this.options.clock.now();
-    await this.options.pool.query(
-      `INSERT INTO mcp_sessions(id, product_scope, account_id, protocol_version, created_at, last_seen_at)
-       VALUES ($1, $2, $3, $4, $5, $5)`,
-      [sessionId, this.options.productScope, principal.accountId, requested, now],
+    const inserted = await this.options.pool.query<{ id: string }>(
+      `INSERT INTO mcp_sessions(id, product_scope, account_id, protocol_version, created_at, last_seen_at, oauth_grant_id)
+       VALUES ($1, $2, $3, $4, $5, $5, $6)
+       ON CONFLICT (product_scope, oauth_grant_id)
+         WHERE oauth_grant_id IS NOT NULL AND closed_at IS NULL
+       DO UPDATE SET last_seen_at = EXCLUDED.last_seen_at, protocol_version = EXCLUDED.protocol_version
+       WHERE mcp_sessions.account_id = EXCLUDED.account_id
+       RETURNING id`,
+      [randomUUID(), this.options.productScope, principal.accountId, requested, now, principal.agentGrantId ?? null],
     );
+    const sessionId = inserted.rows[0]?.id;
+    if (!sessionId) throw new McpError("FORBIDDEN", 403);
     return {
       sessionId,
       response: this.result(body.id, {
         protocolVersion: requested,
-        capabilities: { tools: { listChanged: false } },
+        capabilities: {
+          tools: { listChanged: false },
+          ...(this.options.playView
+            ? { resources: { listChanged: false }, extensions: { "io.modelcontextprotocol/ui": {} } }
+            : {}),
+        },
         serverInfo: { name: "pact", version: "0.1.0" },
       }),
     };
@@ -374,6 +456,76 @@ export class McpTransport {
     )
       throw new McpError("INVALID_REQUEST");
     const args = (params.arguments ?? {}) as Record<string, unknown>;
+    if (name === councilThreadTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.councilThreads)
+        throw new McpError("FORBIDDEN", 403);
+      const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (
+        Object.keys(args).some((k) => !["kingdomId", "beforeGameTimeMs", "beforeId"].includes(k)) ||
+        typeof args.kingdomId !== "string" ||
+        !uuid.test(args.kingdomId) ||
+        Boolean(args.beforeId) !== Boolean(args.beforeGameTimeMs) ||
+        (args.beforeId !== undefined && (typeof args.beforeId !== "string" || !uuid.test(args.beforeId))) ||
+        (args.beforeGameTimeMs !== undefined &&
+          (typeof args.beforeGameTimeMs !== "string" || !/^\d{1,18}$/.test(args.beforeGameTimeMs)))
+      )
+        throw new McpError("INVALID_REQUEST");
+      const data = await this.options.councilThreads.read(
+        principal.accountId,
+        args.kingdomId,
+        typeof args.beforeId === "string" && typeof args.beforeGameTimeMs === "string"
+          ? { id: args.beforeId, gameTimeMs: args.beforeGameTimeMs }
+          : undefined,
+      );
+      return {
+        content: [{ type: "text", text: JSON.stringify(data), annotations: { audience: ["assistant"] } }],
+        structuredContent: data,
+      };
+    }
+    if (name === playTool.name || name === notesReadTool.name) {
+      if (!principal.agentScopes?.includes("world:read")) throw new McpError("FORBIDDEN", 403);
+      const port = name === playTool.name ? this.options.playView : this.options.notes;
+      if (!port) throw new McpError("FORBIDDEN", 403);
+      if (name === notesReadTool.name && Object.keys(args).length) throw new McpError("INVALID_REQUEST");
+      if (
+        name === playTool.name &&
+        (Object.keys(args).some((k) => !["search", "offset"].includes(k)) ||
+          (args.search !== undefined && (typeof args.search !== "string" || args.search.length > 80)) ||
+          (args.offset !== undefined &&
+            (!Number.isSafeInteger(args.offset) || Number(args.offset) < 0 || Number(args.offset) > 10000)))
+      )
+        throw new McpError("INVALID_REQUEST");
+      const result =
+        name === playTool.name
+          ? await this.options.playView?.read(principal.accountId, {
+              search: String(args.search ?? ""),
+              offset: Number(args.offset ?? 0),
+            })
+          : await this.options.notes?.read(principal.accountId);
+      const data = { ...(result && typeof result === "object" ? result : { result }), untrustedContent: true };
+      return {
+        content: [{ type: "text", text: JSON.stringify(data), annotations: { audience: ["assistant"] } }],
+        structuredContent: data,
+      };
+    }
+    if (name === notesWriteTool.name) {
+      if (!principal.agentScopes?.includes("game:act") || !this.options.notes) throw new McpError("FORBIDDEN", 403);
+      if (
+        Object.keys(args).some((k) => !["text", "expectedVersion"].includes(k)) ||
+        typeof args.text !== "string" ||
+        args.text.length > 8000 ||
+        !Number.isSafeInteger(args.expectedVersion) ||
+        Number(args.expectedVersion) < 1
+      )
+        throw new McpError("INVALID_REQUEST");
+      const result = await this.options.notes.write(principal.accountId, args.text, Number(args.expectedVersion));
+      const data = { ...(result && typeof result === "object" ? result : { result }), untrustedContent: true };
+      return {
+        content: [{ type: "text", text: JSON.stringify(data) }],
+        structuredContent: data,
+        ...("saved" in data && data.saved === false ? { isError: true } : {}),
+      };
+    }
     if (name === pactProfileTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.profile) throw new McpError("FORBIDDEN", 403);
       if (
@@ -657,19 +809,35 @@ export class McpTransport {
     return receiptToolResult(receipt);
   }
 
+  /** Last authenticated MCP request, not a continuously connected agent. */
+  async councilObservations(accountIds: string[]) {
+    const rows = (
+      await this.options.pool.query<{ account_id: string; observed_at: Date }>(
+        "SELECT account_id,max(last_seen_at) AS observed_at FROM mcp_sessions WHERE product_scope=$1 AND account_id=ANY($2::uuid[]) GROUP BY account_id",
+        [this.options.productScope, accountIds],
+      )
+    ).rows;
+    return Object.fromEntries(rows.map((r) => [r.account_id, r.observed_at.toISOString()]));
+  }
+
   private async requireSession(
-    accountId: string,
+    principal: Pick<AuthenticatedPrincipal, "accountId" | "agentGrantId">,
     sessionId: string | undefined,
   ): Promise<{ protocol_version: string }> {
     if (!sessionId) throw new McpError("SESSION_NOT_FOUND", 404);
-    const result = await this.options.pool.query<{ protocol_version: string; account_id: string }>(
-      `SELECT protocol_version, account_id FROM mcp_sessions
+    const result = await this.options.pool.query<{
+      protocol_version: string;
+      account_id: string;
+      oauth_grant_id: string | null;
+    }>(
+      `SELECT protocol_version, account_id, oauth_grant_id FROM mcp_sessions
        WHERE id = $1 AND product_scope = $2 AND closed_at IS NULL`,
       [sessionId, this.options.productScope],
     );
     const row = result.rows[0];
     if (!row) throw new McpError("SESSION_NOT_FOUND", 404);
-    if (row.account_id !== accountId) throw new McpError("FORBIDDEN", 403);
+    if (row.account_id !== principal.accountId || row.oauth_grant_id !== (principal.agentGrantId ?? null))
+      throw new McpError("FORBIDDEN", 403);
     await this.options.pool.query("UPDATE mcp_sessions SET last_seen_at = $2 WHERE id = $1", [
       sessionId,
       this.options.clock.now(),

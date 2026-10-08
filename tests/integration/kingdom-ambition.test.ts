@@ -75,7 +75,38 @@ async function player() {
   const session = await identity.login({ email, password, ip: "127.0.0.1" });
   return { id, kingdomId, session };
 }
-describe("private human ambition", () => {
+describe("private free-form notes", () => {
+  it("searches and pages public kingdoms including registered players without leaking private state", async () => {
+    const owner = await player();
+    const marker = `Realm${randomUUID().slice(0, 8)}`;
+    const people = await Promise.all(Array.from({ length: 10 }, () => player()));
+    for (const [i, p] of people.entries()) {
+      await pool.query("UPDATE kingdoms SET display_name=$2,ambition='secret strategy' WHERE id=$1", [
+        p.kingdomId,
+        `${marker} ${i}`,
+      ]);
+      await pool.query(
+        "INSERT INTO kingdom_buildings(product_scope,kingdom_id,kind,level) VALUES('pact',$1,'hall',3)",
+        [p.kingdomId],
+      );
+    }
+    await pool.query("UPDATE kingdoms SET display_name=$2 WHERE id=$1", [owner.kingdomId, marker]);
+    await pool.query("UPDATE accounts SET status='closed' WHERE id=$1", [people[9]?.id]);
+    const first = await kingdomService.discoverKingdoms(owner.id, marker.toLowerCase());
+    expect(first.players).toHaveLength(8);
+    expect(first.hasMore).toBe(true);
+    expect(first.players.every((p) => p.hallLevel === 3)).toBe(true);
+    expect(first.players.some((p) => p.kingdomId === owner.kingdomId)).toBe(false);
+    expect(Object.keys(first.players[0] ?? {}).sort()).toEqual(["displayName", "hallLevel", "handle", "kingdomId"]);
+    const second = await kingdomService.discoverKingdoms(owner.id, marker, 8);
+    expect(second.players).toHaveLength(1);
+    expect(second.hasMore).toBe(false);
+    expect(first.players.some((p) => p.kingdomId === second.players[0]?.kingdomId)).toBe(false);
+    const exact = await kingdomService.discoverKingdoms(owner.id, `@${first.players[0]?.handle}`);
+    expect(exact.players).toHaveLength(1);
+    expect((await kingdomService.discoverKingdoms(owner.id, "%_'")).players).toHaveLength(0);
+    await expect(kingdomService.discoverKingdoms(owner.id, "", -1)).rejects.toThrow("INVALID_DISCOVERY_QUERY");
+  });
   it("persists all choices through human writes and keeps every other projection private", async () => {
     const owner = await player(),
       other = await player(),
@@ -92,7 +123,7 @@ describe("private human ambition", () => {
       origin,
     };
     const views = new WorldViewService(pool, "pact");
-    for (const ambition of ["farmer", "trader", "defender", "neutral"]) {
+    for (const ambition of ["farmer", "trader", "defender", "", "Any plan: explore, wait, or invent something 🌍"]) {
       const r = await server.inject({ method: "PATCH", url: "/v1/kingdom/ambition", headers, payload: { ambition } });
       expect(r.statusCode).toBe(200);
       expect(r.json()).toEqual({ ambition });
@@ -104,7 +135,7 @@ describe("private human ambition", () => {
       expect(publicView?.profile).not.toHaveProperty("ambition");
     }
     for (const payload of [
-      { ambition: "mage" },
+      { ambition: "x".repeat(8001) },
       { ambition: "trader", accountId: other.id },
       { ambition: "farmer", kingdomId: other.kingdomId },
     ]) {
@@ -143,7 +174,7 @@ describe("private human ambition", () => {
       ).statusCode,
     ).toBe(403);
     expect((await pool.query("SELECT ambition FROM kingdoms WHERE id=$1", [other.kingdomId])).rows[0].ambition).toBe(
-      "neutral",
+      "",
     );
     await server.close();
   });
@@ -158,9 +189,9 @@ describe("private human ambition", () => {
     await kingdomService.setAmbition(p.id, "farmer");
     const client = await pool.connect();
     try {
-      expect(await kingdomService.exportExperience(client, p.id)).toEqual([{ ambition: "farmer" }]);
+      expect(await kingdomService.exportExperience(client, p.id)).toEqual([{ ambition: "farmer", version: 2 }]);
       await kingdomService.forgetExperience(client, p.id);
-      expect(await kingdomService.exportExperience(client, p.id)).toEqual([{ ambition: "neutral" }]);
+      expect(await kingdomService.exportExperience(client, p.id)).toEqual([{ ambition: "", version: 2 }]);
     } finally {
       client.release();
     }
@@ -175,5 +206,18 @@ describe("private human ambition", () => {
     expect((await pool.query("SELECT count(*)::int AS n FROM envoy_runs WHERE account_id=$1", [p.id])).rows[0].n).toBe(
       0,
     );
+  });
+  it("checks note versions and keeps simultaneous chats and owners separate", async () => {
+    const owner = await player(),
+      other = await player();
+    expect(await kingdomService.readNotes(owner.id)).toEqual({ text: "", version: 1 });
+    const note = "My own workflow 🌍\n<script>untrusted data</script>";
+    expect(await kingdomService.writeNotes(owner.id, note, 1)).toEqual({ text: note, version: 2, saved: true });
+    expect(await kingdomService.writeNotes(owner.id, "stale overwrite", 1)).toMatchObject({
+      saved: false,
+      code: "STALE_VERSION",
+      current: { text: note, version: 2 },
+    });
+    expect(await kingdomService.readNotes(other.id)).toEqual({ text: "", version: 1 });
   });
 });

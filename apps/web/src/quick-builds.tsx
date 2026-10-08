@@ -5,7 +5,6 @@ import type { OwnerView } from "./game-app.js";
 import { remainingGameTime } from "./game-time.js";
 export function suggestedBuilds(view: OwnerView) {
   const levels = Object.fromEntries(view.buildings.map((b) => [b.kind, b.level])) as BuildingLevels;
-  const desired = view.ambition === "farmer" ? "farm" : view.ambition === "defender" ? "wall" : "mine";
   return developmentChoices(view)
     .filter((c) => !view.builders.some((b) => b.instructionId && b.kind === c.building))
     .map((c) => ({
@@ -17,11 +16,7 @@ export function suggestedBuilds(view: OwnerView) {
             ? "Need more Iron or Silver"
             : null,
     }))
-    .sort(
-      (a, b) =>
-        Number(Boolean(a.blocker)) - Number(Boolean(b.blocker)) ||
-        Number(b.building === desired) - Number(a.building === desired),
-    )
+    .sort((a, b) => Number(Boolean(a.blocker)) - Number(Boolean(b.blocker)))
     .slice(0, 3);
 }
 export function BuilderStatus({ view }: { view: OwnerView }) {
@@ -68,9 +63,7 @@ export function QuickBuilds({
   return (
     <section className="quick-builds" aria-label="Suggested upgrades">
       <h2>Make your next move</h2>
-      <p>
-        {free ? "A builder is free. Put the tiny hard hat to work." : "Both builders are busy. Time for diplomacy."}
-      </p>
+      <p>{free ? "A builder is free. Put the tiny hard hat to work." : "Both builders are busy."}</p>
       <div className="game-grid">
         {choices.map((c) => (
           <article className="game-card" key={c.building}>
@@ -101,7 +94,7 @@ export function QuickBuilds({
         ))}
       </div>
       {!choices.length && (
-        <p>These buildings are upgraded or already queued. Meet someone in People, or inspect All buildings.</p>
+        <p>These buildings are upgraded or already queued. Inspect All buildings for the complete catalog.</p>
       )}
       <p role="status">{notice}</p>
     </section>

@@ -1,4 +1,4 @@
-import type { IdentityService } from "@pact/identity";
+import { IdentityError, type IdentityService } from "@pact/identity";
 import type { KingdomService } from "@pact/kingdom";
 import type { OnboardingService } from "@pact/onboarding";
 import type { FastifyInstance, FastifyRequest } from "fastify";
@@ -46,13 +46,17 @@ export function registerGuestRoutes(
     if (!identity.guestPlayEnabled) return reply.code(404).send({ error: { code: "NOT_FOUND" } });
     if (request.headers.origin !== origin) return reply.code(403).send({ error: { code: "FORBIDDEN" } });
     const input = z
-      .object({ entryKey: z.uuid(), nickname: z.string().max(200).default("") })
+      .object({
+        entryKey: z.uuid(),
+        nickname: z.string().max(200).default(""),
+        existingOnly: z.boolean().default(false),
+      })
       .strict()
       .safeParse(request.body);
     if (!input.success) return reply.code(400).send({ error: { code: "INVALID_INPUT" } });
     try {
       return await retryGuest(async () => {
-        const tokens = await identity.joinGuest(input.data.entryKey);
+        const tokens = await identity.joinGuest(input.data.entryKey, input.data.existingOnly);
         const guest = await identity.guestSession(tokens.sessionToken);
         // Set the cookie before founding; ordinary world-tick retries resume the same account.
         reply.header(
@@ -60,6 +64,8 @@ export function registerGuestRoutes(
           `pact_session=${encodeURIComponent(tokens.sessionToken)}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`,
         );
         let current = await kingdom.getByAccount(tokens.accountId);
+        if (!current && input.data.existingOnly)
+          return reply.code(409).send({ error: { code: "EXISTING_KINGDOM_REQUIRED" } });
         if (!current) {
           const nickname =
             input.data.nickname
@@ -95,6 +101,8 @@ export function registerGuestRoutes(
         return { ...guest, kingdomId: current.kingdomId, handle: current.handle };
       });
     } catch (error) {
+      if (error instanceof IdentityError && error.code === "FORBIDDEN")
+        return reply.code(403).send({ error: { code: "FORBIDDEN" } });
       const code = error && typeof error === "object" && "code" in error ? String(error.code) : "";
       if (["40001", "40P01", "DRAFT_EXPIRED"].includes(code))
         return reply.code(409).send({ error: { code: "JOIN_RETRY" } });

@@ -57,3 +57,7 @@ This baseline fixes implementation decisions. Provider certification, security c
 | Database, scheduler, live updates, hosting, outage behavior | Execution contract |
 | Tribute | Allegiance in the social specification plus ordinary supply contracts in the rulebook; no separate tax engine |
 | Cost, intelligence trade, script performance, pride, stability, fairness | Measurable acceptance and playtest work in the build checklist |
+
+## ChatGPT extension, 6 October 2026
+
+[ChatGPT play and agent freedom](chatgpt.md) owns the founder-authorized personal plugin, private free-form notes and actual interaction view. It supersedes fixed ambition choices in the experience design.

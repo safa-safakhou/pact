@@ -1,5 +1,12 @@
 import { withTransaction } from "@pact/db";
-import { resourceRateFacts, rulesCatalog, wholeUnitText } from "@pact/domain";
+import {
+  type BuildingKind,
+  type BuildingLevels,
+  checkUpgrade,
+  resourceRateFacts,
+  rulesCatalog,
+  wholeUnitText,
+} from "@pact/domain";
 import type { Pool, PoolClient } from "pg";
 import { ActionLimitService, type ChargeView } from "./action-limits.js";
 import { type GameConsequences, readGameConsequences } from "./consequences.js";
@@ -94,9 +101,12 @@ export interface OwnerKingdomView {
     slot: number;
     instructionId: string | null;
     kind: string | null;
+    targetLevel?: number | null;
     state: string | null;
     dueGameTimeMs: number | null;
     remainingGameMinutes?: number | null;
+    prerequisiteCheck?: string | null;
+    missingBuildings?: { kind: string; level: number }[];
   }[];
   troops: {
     type: string;
@@ -308,20 +318,22 @@ export class WorldViewService {
     ).rows;
     if (balances.length !== 3) throw new Error("KINGDOM_BALANCES_INCOMPLETE");
     const buildings = (
-      await client.query<{ kind: string; level: number }>(
+      await client.query<{ kind: BuildingKind; level: number }>(
         "SELECT kind, level FROM kingdom_buildings WHERE product_scope = $1 AND kingdom_id = $2 ORDER BY kind",
         [this.productScope, targetId],
       )
     ).rows;
+    const levels = Object.fromEntries(buildings.map((b) => [b.kind, b.level])) as unknown as BuildingLevels;
     const builders = (
       await client.query<{
         slot: number;
         instruction_id: string | null;
         kind: string | null;
+        target_level: number | null;
         state: string | null;
         due_game_time_ms: string | null;
       }>(
-        `SELECT s.slot, i.id AS instruction_id, i.building_kind AS kind, i.state, i.due_game_time_ms
+        `SELECT s.slot, i.id AS instruction_id, i.building_kind AS kind, i.target_level, i.state, i.due_game_time_ms
        FROM kingdom_builder_slots s LEFT JOIN building_instructions i ON i.product_scope = s.product_scope
          AND i.kingdom_id = s.kingdom_id AND i.builder_slot = s.slot AND i.state IN ('active','waiting')
        WHERE s.product_scope = $1 AND s.kingdom_id = $2 ORDER BY s.slot, i.state`,
@@ -331,7 +343,20 @@ export class WorldViewService {
       slot: row.slot,
       instructionId: row.instruction_id,
       kind: row.kind,
+      targetLevel: row.target_level,
       state: row.state,
+      prerequisiteCheck:
+        row.kind && row.target_level && row.state === "waiting"
+          ? checkUpgrade(levels, row.kind as BuildingKind, row.target_level)
+          : null,
+      missingBuildings:
+        row.kind === "hall" && row.target_level && row.state === "waiting"
+          ? [
+              { kind: "farm", level: row.target_level },
+              { kind: "barracks", level: row.target_level },
+              { kind: "storehouse", level: row.target_level - 1 },
+            ].filter((b) => levels[b.kind as BuildingKind] < b.level)
+          : [],
       dueGameTimeMs: row.due_game_time_ms === null ? null : Number(row.due_game_time_ms),
       remainingGameMinutes:
         row.due_game_time_ms === null
@@ -507,7 +532,7 @@ export class WorldViewService {
       ).rows[0]?.id ?? "0";
     return {
       audience: "owner",
-      ambition: kingdom.ambition ?? "neutral",
+      ambition: kingdom.ambition ?? "",
       consequences: await readGameConsequences(client, this.productScope, targetId, gameTimeMs),
       ...common,
       lastCommittedEventId,

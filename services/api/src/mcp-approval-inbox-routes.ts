@@ -112,6 +112,7 @@ export function registerMcpRoutes(
         productScope: ProductScopeSchema.parse("pact"),
         audience: "agent" as const,
         agentScopes: z.array(AgentScopeSchema).parse(token.scopes),
+        agentGrantId: token.grantId,
       };
       const sessionHeader = request.headers["mcp-session-id"];
       const sessionId = typeof sessionHeader === "string" ? sessionHeader : undefined;
@@ -130,11 +131,24 @@ export function registerMcpRoutes(
             error instanceof z.ZodError)
         ) {
           const code = error instanceof z.ZodError ? "INVALID_INPUT" : error.code;
+          const missingLease =
+            (error instanceof RunError && code === "FORBIDDEN") ||
+            (error instanceof DispatcherError && error.reason === "WRITE_LEASE_REQUIRED");
           return {
             jsonrpc: "2.0",
             id: body.id ?? null,
             result: {
-              content: [{ type: "text", text: JSON.stringify({ error: { code }, recovery: agentRecovery(code) }) }],
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify({
+                    error: { code, ...(missingLease ? { reason: "WRITE_LEASE_REQUIRED" } : {}) },
+                    recovery: missingLease
+                      ? "Call run.open with empty arguments to open or renew this connection’s 15-minute write lease, then retry the same intended command. This denial does not establish a missing kingdom permission. Do not ask the human to expand authority unless a separate mandate denial requires it."
+                      : agentRecovery(code),
+                  }),
+                },
+              ],
               isError: true,
             },
           };
@@ -162,6 +176,7 @@ export function registerMcpRoutes(
           productScope: ProductScopeSchema.parse("pact"),
           audience: "agent",
           agentScopes: z.array(AgentScopeSchema).parse(token.scopes),
+          agentGrantId: token.grantId,
         },
         sessionHeader,
       );
@@ -186,6 +201,7 @@ export function registerMcpRoutes(
           productScope: ProductScopeSchema.parse("pact"),
           audience: "agent",
           agentScopes: z.array(AgentScopeSchema).parse(token.scopes),
+          agentGrantId: token.grantId,
         },
         sessionHeader,
       );

@@ -3,10 +3,12 @@ import { wholeUnitText } from "@pact/domain/resource-facts";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type Ambition, AmbitionChoice } from "./ambition.js";
+import { ApprovalReview } from "./approval-review.js";
 import { ChroniclePanel } from "./chronicle-panel.js";
 import { pactBaseUrl } from "./client-location.js";
 import { CodexConnection } from "./codex-connection.js";
 import { Consequences, type ConsequenceView } from "./consequences.js";
+import { CouncilFrame } from "./council-frame.js";
 import { CourtPanel } from "./court-panel.js";
 import { developmentChoices } from "./development-choices.js";
 import { EvidencePanel } from "./evidence-panel.js";
@@ -240,7 +242,8 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
     new URLSearchParams(window.location.search).has("chronicle") ||
     new URLSearchParams(window.location.search).has("sealSource")
       ? "Chronicle"
-      : new URLSearchParams(window.location.search).has("court") ||
+      : new URLSearchParams(window.location.search).get("council") === "introductions" ||
+          new URLSearchParams(window.location.search).has("court") ||
           new URLSearchParams(window.location.search).has("politics")
         ? "People"
         : new URLSearchParams(window.location.search).has("approval") ||
@@ -738,315 +741,337 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
         {notice && <p role="status">{notice}</p>}
       </main>
     );
+  const linkedApproval = new URLSearchParams(window.location.search).get("approval");
+  if (linkedApproval)
+    return (
+      <main className="game-shell approval-shell">
+        {connectionNotice}
+        <ApprovalReview
+          key={kingdomId}
+          approvalId={linkedApproval}
+          kingdomName={view?.profile.displayName}
+          request={request}
+          canWrite={canWrite}
+          onRefresh={refresh}
+        />
+      </main>
+    );
   return (
     <ReportingContext.Provider value={{ request, canWrite }}>
       <main className={guestMode ? "game-shell friends-play" : "game-shell"} id="game-content" tabIndex={-1}>
-        <a className="skip-link" href="#game-areas">
-          Skip to game areas
-        </a>
-        <header className="game-header">
-          <div>
-            <p className="eyebrow">PACT · friends world</p>
-            <h1>{view?.profile.displayName ?? "Kingdom"}</h1>
-            <p>
-              @{view?.profile.handle} {view?.worldStatus === "paused" ? " · World paused" : ""}
-            </p>
-            <details>
-              <summary>Kingdom reference</summary>
-              <code>{kingdomId}</code>
-            </details>
-          </div>
-          <div className="game-header-actions">
-            <button
-              type="button"
-              onClick={() => {
-                void refresh();
-              }}
-              disabled={busy}
-            >
-              Refresh
-            </button>
-            <button
-              type="button"
-              className="secondary"
-              disabled={busy}
-              onClick={() => {
-                if (
-                  guestPlayer &&
-                  !window.confirm("Start a new kingdom in this browser? Your current guest will be left behind.")
-                )
-                  return;
-                if (guestPlayer) {
-                  localStorage.removeItem("pact_guest_entry");
-                  localStorage.removeItem("pact_guest_name");
-                }
-                clearExperiencePreferences(localStorage);
-                refreshGate.current.pause();
-                setNotice("");
-                setRefreshFailure("");
-                setTarget("");
-                setSocial(null);
-                setView(null);
-                setDecisions(null);
-                setLocalFailure(null);
-                setPendingAction(null);
-                setInbox([]);
-                setKingdomId("");
-                setDraft(null);
-                setAuth("login");
-                setLastRefreshed(null);
-              }}
-            >
-              {guestPlayer ? "New guest" : "Switch test player"}
-            </button>
-          </div>
-        </header>
-        {view && (
-          <ExperienceControls
-            key={view.profile.kingdomId}
-            owner={view.profile.kingdomId}
-            onAudioReady={setExperienceAudio}
-          />
-        )}
-        {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
-        {connectionNotice}
-        <nav className="game-nav" id="game-areas" tabIndex={-1} aria-label="Game areas">
-          {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
-            <button
-              type="button"
-              key={item}
-              aria-current={tab === item ? "page" : undefined}
-              onClick={() => setTab(item)}
-            >
-              {item}
-            </button>
-          ))}
-        </nav>
-        {tab === "Envoy" && (
-          <details className="game-card">
-            <summary>Reports and appeals</summary>
-            <ModerationPanel request={request} canWrite={canWrite} />
-          </details>
-        )}
-        {tab === "Envoy" && !host && (
-          <CodexConnection request={request} handle={view?.profile.handle} guest={guestPlayer} />
-        )}
-        {view && (
-          <FirstSession
-            compact
-            stage={{
-              stale: !canWrite || Boolean(refreshFailure),
-              approvalsAvailable: decisions?.kingdomId === view.profile.kingdomId,
-              approvals: decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : [],
-              failure:
-                localFailure ?? (decisions?.kingdomId === view.profile.kingdomId ? decisions.failure : undefined),
-              ambition: view.ambition,
-              asOfGameTimeMs: view.asOfGameTimeMs,
-              worldStatus: view.worldStatus,
-              requests: social?.requests,
-              contactOutcome: social?.requestHistory?.find((r) =>
-                ["accepted", "declined", "expired"].includes(r.status),
-              ),
-              build: (() => {
-                const b = view.builders.find(
-                  (b) => b.instructionId && b.kind && ["waiting", "active"].includes(b.state ?? ""),
-                );
-                return b?.instructionId && b.kind
-                  ? { ...b, instructionId: b.instructionId, kind: b.kind, state: b.state ?? "waiting" }
-                  : undefined;
-              })(),
-              freeBuilders: view.builders.filter((b) => !b.instructionId).length,
-              choices: developmentChoices(view),
-              ownerSource: `${pactBaseUrl()}v1/world/kingdoms/${view.profile.kingdomId}`,
-              socialAvailable: social !== null,
-              farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
-              farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
-              contacts: social?.contacts.length ?? 0,
-              pendingRequests: social?.requests.length ?? 0,
-              pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
-              contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
-            }}
-            onArea={setTab}
-          />
-        )}
-        {view && tab === "Kingdom" && <BuilderStatus view={view} />}
-        {view && (
-          <details className="game-card">
-            <summary>Game moments and notifications</summary>
-            <OutcomeCards
+        <CouncilFrame request={request} />
+        <details
+          className="kingdom-controls"
+          open={new URLSearchParams(window.location.search).get("council") === "introductions" || undefined}
+        >
+          <summary>Kingdom actions, introductions and agent permissions</summary>
+          <a className="skip-link" href="#game-areas">
+            Skip to game areas
+          </a>
+          <header className="game-header">
+            <div>
+              <p className="eyebrow">PACT · friends world</p>
+              <h1>{view?.profile.displayName ?? "Kingdom"}</h1>
+              <p>
+                @{view?.profile.handle} {view?.worldStatus === "paused" ? " · World paused" : ""}
+              </p>
+              <details>
+                <summary>Kingdom reference</summary>
+                <code>{kingdomId}</code>
+              </details>
+            </div>
+            <div className="game-header-actions">
+              <button
+                type="button"
+                onClick={() => {
+                  void refresh();
+                }}
+                disabled={busy}
+              >
+                Refresh
+              </button>
+              <button
+                type="button"
+                className="secondary"
+                disabled={busy}
+                onClick={() => {
+                  if (
+                    guestPlayer &&
+                    !window.confirm("Start a new kingdom in this browser? Your current guest will be left behind.")
+                  )
+                    return;
+                  if (guestPlayer) {
+                    localStorage.removeItem("pact_guest_entry");
+                    localStorage.removeItem("pact_guest_name");
+                  }
+                  clearExperiencePreferences(localStorage);
+                  refreshGate.current.pause();
+                  setNotice("");
+                  setRefreshFailure("");
+                  setTarget("");
+                  setSocial(null);
+                  setView(null);
+                  setDecisions(null);
+                  setLocalFailure(null);
+                  setPendingAction(null);
+                  setInbox([]);
+                  setKingdomId("");
+                  setDraft(null);
+                  setAuth("login");
+                  setLastRefreshed(null);
+                }}
+              >
+                {guestPlayer ? "New guest" : "Switch test player"}
+              </button>
+            </div>
+          </header>
+          {view && (
+            <ExperienceControls
               key={view.profile.kingdomId}
               owner={view.profile.kingdomId}
+              onAudioReady={setExperienceAudio}
+            />
+          )}
+          {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
+          {connectionNotice}
+          <nav className="game-nav" id="game-areas" tabIndex={-1} aria-label="Game areas">
+            {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
+              <button
+                type="button"
+                key={item}
+                aria-current={tab === item ? "page" : undefined}
+                onClick={() => setTab(item)}
+              >
+                {item}
+              </button>
+            ))}
+          </nav>
+          {tab === "Envoy" && (
+            <details className="game-card">
+              <summary>Reports and appeals</summary>
+              <ModerationPanel request={request} canWrite={canWrite} />
+            </details>
+          )}
+          {tab === "Envoy" && !host && (
+            <CodexConnection request={request} handle={view?.profile.handle} guest={guestPlayer} />
+          )}
+          {view && (
+            <FirstSession
+              compact
+              stage={{
+                stale: !canWrite || Boolean(refreshFailure),
+                approvalsAvailable: decisions?.kingdomId === view.profile.kingdomId,
+                approvals: decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : [],
+                failure:
+                  localFailure ?? (decisions?.kingdomId === view.profile.kingdomId ? decisions.failure : undefined),
+                ambition: view.ambition,
+                asOfGameTimeMs: view.asOfGameTimeMs,
+                worldStatus: view.worldStatus,
+                requests: social?.requests,
+                contactOutcome: social?.requestHistory?.find((r) =>
+                  ["accepted", "declined", "expired"].includes(r.status),
+                ),
+                build: (() => {
+                  const b = view.builders.find(
+                    (b) => b.instructionId && b.kind && ["waiting", "active"].includes(b.state ?? ""),
+                  );
+                  return b?.instructionId && b.kind
+                    ? { ...b, instructionId: b.instructionId, kind: b.kind, state: b.state ?? "waiting" }
+                    : undefined;
+                })(),
+                freeBuilders: view.builders.filter((b) => !b.instructionId).length,
+                choices: developmentChoices(view),
+                ownerSource: `${pactBaseUrl()}v1/world/kingdoms/${view.profile.kingdomId}`,
+                socialAvailable: social !== null,
+                farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
+                farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
+                contacts: social?.contacts.length ?? 0,
+                pendingRequests: social?.requests.length ?? 0,
+                pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
+                contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
+              }}
+              onArea={setTab}
+            />
+          )}
+          {view && tab === "Kingdom" && <BuilderStatus view={view} />}
+          {view && (
+            <details className="game-card">
+              <summary>Game moments and notifications</summary>
+              <OutcomeCards
+                key={view.profile.kingdomId}
+                owner={view.profile.kingdomId}
+                view={view}
+                stale={!csrf || connectionStatus !== "live" || Boolean(refreshFailure)}
+                offers={social?.supplyOffers}
+                requests={social?.requests}
+                approvals={decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : undefined}
+                audio={experienceAudio}
+                onNotice={setNotice}
+              />
+            </details>
+          )}
+
+          {notice && (
+            <p className="game-notice" role="status">
+              {notice}
+            </p>
+          )}
+          {refreshFailure && (
+            <p className="game-notice" role="status">
+              {refreshFailure}
+            </p>
+          )}
+          {pendingAction && (
+            <section
+              className="game-confirm"
+              aria-label="Confirm game action"
+              ref={confirmation}
+              tabIndex={-1}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setPendingAction(null);
+                  returnFocus.current?.focus();
+                }
+              }}
+            >
+              <div>
+                <strong>Confirm this action</strong>
+                <p>{pendingAction.summary}</p>
+              </div>
+              <button
+                type="button"
+                disabled={!canWrite}
+                onClick={() => {
+                  const action = pendingAction.action;
+                  setPendingAction(null);
+                  void act(action);
+                }}
+              >
+                Confirm
+              </button>
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => {
+                  setPendingAction(null);
+                  returnFocus.current?.focus();
+                }}
+              >
+                Cancel
+              </button>
+            </section>
+          )}
+          {tab === "Kingdom" && view && (
+            <details className="game-card">
+              <summary>Private notes</summary>
+              <AmbitionChoice
+                value={view.ambition ?? ""}
+                disabled={!canWrite}
+                save={async (ambition) => {
+                  await request("/v1/kingdom/ambition", "PATCH", { ambition });
+                  await refresh();
+                }}
+              />
+            </details>
+          )}
+          {tab === "Kingdom" && view && (
+            <Kingdom
               view={view}
-              stale={!csrf || connectionStatus !== "live" || Boolean(refreshFailure)}
-              offers={social?.supplyOffers}
-              requests={social?.requests}
-              approvals={decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : undefined}
-              audio={experienceAudio}
+              busy={!canWrite}
+              act={act}
+              social={social}
+              kingdomId={kingdomId}
+              onPeople={() => setTab("People")}
+              queueSuggested={queueSuggested}
+            />
+          )}
+          {tab === "Envoy" && (
+            <Envoy
+              canWrite={canWrite}
+              inbox={inbox}
+              request={request}
               onNotice={setNotice}
+              onRefresh={refresh}
+              apiOrigin={apiOrigin}
+              openAccount={host?.openAccount}
+              onCsrfChange={(token) => {
+                sessionStorage.setItem("pact_csrf", token);
+                setCsrf(token);
+              }}
             />
-          </details>
-        )}
+          )}
+          {tab === "Envoy" && !host && <NotificationSettings request={request} canWrite={canWrite} />}
+          {tab === "Envoy" && (
+            <RunPanel
+              request={request}
+              contacts={social?.contacts ?? []}
+              canWrite={canWrite}
+              ambition={view?.ambition ?? ""}
+            />
+          )}
+          {tab === "People" && (
+            <People
+              friends={Boolean(guestMode)}
+              request={request}
+              client={client}
+              act={act}
+              busy={!canWrite}
+              view={view}
+              kingdomId={kingdomId}
+              social={social}
+              target={target}
+              setTarget={setTarget}
+              confirmAction={confirmAction}
+              hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
+              charges={view?.charges ?? []}
+            />
+          )}
 
-        {notice && (
-          <p className="game-notice" role="status">
-            {notice}
-          </p>
-        )}
-        {refreshFailure && (
-          <p className="game-notice" role="status">
-            {refreshFailure}
-          </p>
-        )}
-        {pendingAction && (
-          <section
-            className="game-confirm"
-            aria-label="Confirm game action"
-            ref={confirmation}
-            tabIndex={-1}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") {
-                setPendingAction(null);
-                returnFocus.current?.focus();
+          {tab === "Kingdom" && (
+            <SeasonPanel request={request} kingdomId={kingdomId} worldStatus={view?.worldStatus ?? "unknown"} />
+          )}
+
+          {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
+          {tab === "Chronicle" && view && (
+            <Chronicle
+              view={view}
+              client={client}
+              inbox={inbox}
+              social={social}
+              busy={busy}
+              confirmAction={confirmAction}
+              onKingdom={() => setTab("Kingdom")}
+            />
+          )}
+          {tab === "People" && (
+            <details
+              className="game-card"
+              open={Boolean(
+                new URLSearchParams(window.location.search).get("court") ||
+                  new URLSearchParams(window.location.search).get("invite") ||
+                  new URLSearchParams(window.location.search).get("politics"),
+              )}
+            >
+              <summary>Courts, allegiance and invitations</summary>
+              <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
+              <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
+              <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
+            </details>
+          )}
+          {tab === "Chronicle" && (
+            <details
+              className="game-card"
+              open={
+                new URLSearchParams(window.location.search).has("post") ||
+                new URLSearchParams(window.location.search).has("chronicle")
               }
-            }}
-          >
-            <div>
-              <strong>Confirm this action</strong>
-              <p>{pendingAction.summary}</p>
-            </div>
-            <button
-              type="button"
-              disabled={!canWrite}
-              onClick={() => {
-                const action = pendingAction.action;
-                setPendingAction(null);
-                void act(action);
-              }}
             >
-              Confirm
-            </button>
-            <button
-              type="button"
-              className="secondary"
-              onClick={() => {
-                setPendingAction(null);
-                returnFocus.current?.focus();
-              }}
-            >
-              Cancel
-            </button>
-          </section>
-        )}
-        {tab === "Kingdom" && view && (
-          <details className="game-card">
-            <summary>Choose your kingdom’s ambition</summary>
-            <AmbitionChoice
-              value={view.ambition ?? "neutral"}
-              disabled={!canWrite}
-              save={async (ambition) => {
-                await request("/v1/kingdom/ambition", "PATCH", { ambition });
-                await refresh();
-              }}
-            />
-          </details>
-        )}
-        {tab === "Kingdom" && view && (
-          <Kingdom
-            view={view}
-            busy={!canWrite}
-            act={act}
-            social={social}
-            kingdomId={kingdomId}
-            onPeople={() => setTab("People")}
-            queueSuggested={queueSuggested}
-          />
-        )}
-        {tab === "Envoy" && (
-          <Envoy
-            canWrite={canWrite}
-            inbox={inbox}
-            request={request}
-            onNotice={setNotice}
-            onRefresh={refresh}
-            apiOrigin={apiOrigin}
-            openAccount={host?.openAccount}
-            onCsrfChange={(token) => {
-              sessionStorage.setItem("pact_csrf", token);
-              setCsrf(token);
-            }}
-          />
-        )}
-        {tab === "Envoy" && !host && <NotificationSettings request={request} canWrite={canWrite} />}
-        {tab === "Envoy" && (
-          <RunPanel
-            request={request}
-            contacts={social?.contacts ?? []}
-            canWrite={canWrite}
-            ambition={view?.ambition ?? "neutral"}
-          />
-        )}
-        {tab === "People" && (
-          <People
-            friends={Boolean(guestMode)}
-            request={request}
-            client={client}
-            act={act}
-            busy={!canWrite}
-            view={view}
-            kingdomId={kingdomId}
-            social={social}
-            target={target}
-            setTarget={setTarget}
-            confirmAction={confirmAction}
-            hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
-            charges={view?.charges ?? []}
-          />
-        )}
-
-        {tab === "Kingdom" && (
-          <SeasonPanel request={request} kingdomId={kingdomId} worldStatus={view?.worldStatus ?? "unknown"} />
-        )}
-
-        {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
-        {tab === "Chronicle" && view && (
-          <Chronicle
-            view={view}
-            client={client}
-            inbox={inbox}
-            social={social}
-            busy={busy}
-            confirmAction={confirmAction}
-            onKingdom={() => setTab("Kingdom")}
-          />
-        )}
-        {tab === "People" && (
-          <details
-            className="game-card"
-            open={Boolean(
-              new URLSearchParams(window.location.search).get("court") ||
-                new URLSearchParams(window.location.search).get("invite") ||
-                new URLSearchParams(window.location.search).get("politics"),
-            )}
-          >
-            <summary>Courts, allegiance and invitations</summary>
-            <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
-            <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
-            <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
-          </details>
-        )}
-        {tab === "Chronicle" && (
-          <details
-            className="game-card"
-            open={
-              new URLSearchParams(window.location.search).has("post") ||
-              new URLSearchParams(window.location.search).has("chronicle")
-            }
-          >
-            <summary>Public Chronicle and evidence publishing</summary>
-            <ChroniclePanel request={request} canWrite={canWrite} />
-            <EvidencePanel request={request} canWrite={canWrite} />
-          </details>
-        )}
+              <summary>Public Chronicle and evidence publishing</summary>
+              <ChroniclePanel request={request} canWrite={canWrite} />
+              <EvidencePanel request={request} canWrite={canWrite} />
+            </details>
+          )}
+        </details>
       </main>
     </ReportingContext.Provider>
   );
@@ -1516,17 +1541,6 @@ function Envoy({
   onCsrfChange: (token: string) => void;
   openAccount?: (() => void) | undefined;
 }): React.JSX.Element {
-  const [approvalId, setApprovalId] = useState(() => new URLSearchParams(window.location.search).get("approval") ?? "");
-  const approvalGeneration = useRef(0);
-  const [loadedApprovalId, setLoadedApprovalId] = useState("");
-  const [review, setReview] = useState<Json | null>(null);
-  useEffect(() => {
-    if (!canWrite) {
-      approvalGeneration.current++;
-      setReview(null);
-      setLoadedApprovalId("");
-    }
-  }, [canWrite]);
   const [mandate, setMandate] = useState<{
     version: number;
     allowedActions: string[];
@@ -1584,32 +1598,8 @@ function Envoy({
       onNotice(`Mandate update failed: ${failure(error)}. Sign in again if recent authentication is required.`);
     }
   }
-  async function decide(approve: boolean): Promise<void> {
-    if (
-      !canWrite ||
-      !review ||
-      !window.confirm(`${approve ? "Approve" : "Reject"} this exact server-rendered request?`)
-    )
-      return;
-    try {
-      const result = await request(
-        `/v1/approvals/${encodeURIComponent(loadedApprovalId)}/${approve ? "approve" : "reject"}`,
-        "POST",
-      );
-      const receipt = result.receipt as { code?: string } | null;
-      onNotice(
-        approve
-          ? `Exact request approved · ${receipt?.code ?? result.status ?? "resolved"}. Read current consequences for completion.`
-          : "Exact request rejected. No command was approved.",
-      );
-      setReview(null);
-      await onRefresh();
-    } catch (error) {
-      onNotice(failure(error));
-    }
-  }
   return (
-    <details className="game-card" open={Boolean(approvalId)}>
+    <details className="game-card" open>
       <summary>Agent authority, exact approvals and account</summary>
       <h2>Envoy</h2>
       <p>Manual actions remain available without a model connection. Reading an approval never commits it.</p>
@@ -1642,74 +1632,7 @@ function Envoy({
           </p>
         </details>
       </article>
-      <article className="game-card">
-        <details open={Boolean(approvalId)}>
-          <summary>Exact approval review</summary>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              const generation = ++approvalGeneration.current;
-              const requestedId = approvalId;
-              setReview(null);
-              setLoadedApprovalId("");
-              void request(`/v1/approvals/${encodeURIComponent(approvalId)}`)
-                .then((value) => {
-                  if (generation !== approvalGeneration.current) return;
-                  setReview(value);
-                  setLoadedApprovalId(requestedId);
-                })
-                .catch((error: unknown) => onNotice(failure(error)));
-            }}
-          >
-            <label>
-              Approval ID
-              <input
-                required
-                value={approvalId}
-                onChange={(event) => {
-                  approvalGeneration.current++;
-                  setApprovalId(event.target.value);
-                  setReview(null);
-                  setLoadedApprovalId("");
-                }}
-              />
-            </label>
-            <button type="submit">Preview</button>
-          </form>
-          {review && (
-            <div>
-              <p>Reviewing exact approval {loadedApprovalId}</p>
-              <p>
-                Status: {String(review.status)} · expires {new Date(String(review.expiresAt)).toLocaleString()}.
-              </p>
-              <p>{String(review.effectsSummary)}</p>
-              <details>
-                <summary>Exact request and receipt references</summary>
-                <pre>{JSON.stringify(review, null, 2)}</pre>
-              </details>
-              <button
-                type="button"
-                disabled={!canWrite || review.status !== "pending"}
-                onClick={() => {
-                  void decide(true);
-                }}
-              >
-                Approve
-              </button>
-              <button
-                type="button"
-                className="secondary"
-                disabled={!canWrite || review.status !== "pending"}
-                onClick={() => {
-                  void decide(false);
-                }}
-              >
-                Reject
-              </button>
-            </div>
-          )}
-        </details>
-      </article>
+      <ApprovalReview request={request} canWrite={canWrite} onRefresh={onRefresh} />
       <details className="game-card">
         <summary>Inbox notifications</summary>
         {inbox.length ? (
