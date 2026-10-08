@@ -24,6 +24,9 @@ if [ -n "${PACT_LOCAL_BACKUP_DIR:-}" ]; then
 fi
 
 compose="docker compose --env-file $deploy_env -f infra/production/compose.yaml"
+if [ -n "${PACT_COMPOSE_OVERRIDE_FILE:-}" ]; then
+  compose="$compose -f $PACT_COMPOSE_OVERRIDE_FILE"
+fi
 $compose exec -T -u postgres postgres sh -eu -c '
   find /var/lib/postgresql/basebackup -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
   pg_basebackup -U pact -D /var/lib/postgresql/basebackup/data -Fp -Xs -c fast

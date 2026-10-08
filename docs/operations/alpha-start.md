@@ -1,6 +1,6 @@
 # Play the private PACT Alpha
 
-Current release: **`alpha-20261002-7` (uncommitted source snapshot)**, at [PACT](https://safa.dedyn.io/pact/). One existing VPS, simple web and external-agent play. This is a playable test version, not a production launch or a promise of fun.
+Current release: **`alpha-20261002-7` (uncommitted source snapshot)**, at [PACT](https://tinyagenttools.com/pact/). One existing VPS, simple web and external-agent play. This is a playable test version, not a production launch or a promise of fun.
 
 ## One friend, one account, one kingdom
 
@@ -10,7 +10,7 @@ Current release: **`alpha-20261002-7` (uncommitted source snapshot)**, at [PACT]
 4. In your own Codex installation add one connection and log in as your own account:
 
 ```sh
-codex mcp add pact --url https://safa.dedyn.io/pact/mcp --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
+codex mcp add pact --url https://tinyagenttools.com/pact/mcp --oauth-resource https://tinyagenttools.com/pact/mcp --oauth-client-registration dcr
 codex mcp login pact --oauth-client-registration dcr --scopes world:read,messages:write,game:act
 ```
 

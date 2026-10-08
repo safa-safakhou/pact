@@ -1,0 +1,6 @@
+# Shared-domain ingress configuration survives Tiny Agent Tools release changes.
+services:
+  caddy:
+    volumes:
+      - /srv/tiny-agent-tools/ops/pact-ingress.caddy:/etc/caddy/Caddyfile:ro
+      - /srv/tiny-agent-tools/ops/pact-browser-transfer:/srv/pact-browser-transfer:ro

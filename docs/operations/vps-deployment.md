@@ -1,17 +1,19 @@
 # Single-VPS deployment
 
+**Current hosting, 8 October 2026:** PACT services/data and HTTPS run directly at `https://pact.tinyagenttools.com/` on `2.31.62.91`. The old edge retains only browser handoff and temporary legacy connection compatibility. Follow the [dedicated-host runbook](dedicated-pact-host.md). Older addresses and deployment narratives below are historical.
+
 ## Current private Alpha — 1 October 2026
 
 Release `alpha-20261001-1` was built from pinned source `88c273f` and deployed after encrypted backup `537793fe`. Migrations 0036–0044, deletion-registry replay and public `verify.sh` passed. All PACT application processes, including the same-VPS Seal signer, use the release image; paid in-app inference remains default-off. The shared edge now routes the exact `/.well-known/pact-signing-keys.json` path to PACT. Configuration validated before installation; prior edge file is `/srv/agentic-world/infra/production/Caddyfile.pact-alpha-20261001-backup`. Do not replace unrelated edge handlers or overwrite host-only signing/other secrets. Application rollback uses previous images and forward-compatible additive tables; do not restore the database to undo a web change. See [final rehearsal](../implementation/reports/alpha-final-rehearsal.md) and [friend instructions](alpha-start.md). Earlier dated rollout narratives below remain historical.
 
-PACT connection testing runs as an isolated Docker Compose project on the existing EU-hosted VPS. It does not require AWS, Kubernetes, Redis, or a second database host. The checked-in connection-test environment uses `https://safa.dedyn.io/pact`; only synthetic accounts are allowed until PACT-025 passes.
+PACT connection testing runs as an isolated Docker Compose project on the existing EU-hosted VPS. It does not require AWS, Kubernetes, Redis, or a second database host. The checked-in connection-test environment uses `https://tinyagenttools.com/pact`; only synthetic accounts are allowed until PACT-025 passes.
 
 ## Layout and isolation
 
 - Source and deployment state: `/srv/pact/source` and `/srv/pact/state`.
 - Runtime secrets: `/srv/pact/secrets/connection-test`, mode `0600`; never copy this directory into a release or backup report.
 - Public edge: the existing Caddy container handles `/pact/*` and strips `/pact` before proxying to `pact-connection-test-gateway-1:8080` over `pact-edge`.
-- For Codex/MCP OAuth with the path-based issuer `https://safa.dedyn.io/pact`, the shared edge also proxies the two exact root well-known paths in [`shared-edge-oauth.caddy`](../../infra/production/shared-edge-oauth.caddy) to the PACT gateway. These exact handlers precede the other app's `/mcp*` and catch-all routes; do not route all root OAuth traffic to PACT. Back up and validate the shared Caddyfile before reloading.
+- For Codex/MCP OAuth with the path-based issuer `https://tinyagenttools.com/pact`, the shared edge also proxies the two exact root well-known paths in [`shared-edge-oauth.caddy`](../../infra/production/shared-edge-oauth.caddy) to the PACT gateway. These exact handlers precede the other app's `/mcp*` and catch-all routes; do not route all root OAuth traffic to PACT. Back up and validate the shared Caddyfile before reloading.
 - The shared edge removes its default `X-Frame-Options: DENY` only for `/pact/telegram/*` and applies `Content-Security-Policy: frame-ancestors https://web.telegram.org https://*.web.telegram.org`; all other routes retain the default framing denial.
 - The PACT gateway also binds `127.0.0.1:8088` for host-local recovery checks. PostgreSQL has no host port and joins only the internal `data` network.
 - API, rules, inference, notification, and channel processes are separate containers built from one pinned Node 24 image. Only inference mounts `model_credential_private_key`; API receives the public wrapping key. Rules, API, and inference mount the same `raid_seed_encryption_key` for deterministic raid commitments and shared game-command execution. The worker registers only a fake provider while `PACT_ENABLE_LIVE_MODEL_CALLS=0` (the Compose default and checked-in example). Set it to `1` only after explicitly accepting external provider costs and verifying the chosen API route; the mount alone does not enable network inference. OpenRouter also stays unregistered until `OPENROUTER_ROUTING_DISCLOSURE` is supplied. The worker requires `MODEL_CREDENTIAL_WRAPPING_KEY_ID` to match the key ID used by the API. This opt-in has only synthetic local fixture evidence, not a deployed or billable-provider certification.
@@ -55,7 +57,7 @@ Synchronize the repository without `.git`, `node_modules`, build output, or loca
 ```sh
 cd /srv/pact/source
 ./infra/production/bin/deploy.sh infra/production/vps-connection-test.env <release-id>
-./infra/production/bin/verify.sh infra/production/vps-connection-test.env https://safa.dedyn.io/pact
+./infra/production/bin/verify.sh infra/production/vps-connection-test.env https://tinyagenttools.com/pact
 ```
 
 Deployment builds immutable release-tagged runtime and gateway images, starts PostgreSQL, applies migrations once, imports the append-only deletion registry, then replaces application containers after API readiness succeeds. API and all workers depend on the successful `privacy-replay` one-shot service. To return to the previously recorded images without rolling the database backward:
@@ -99,7 +101,7 @@ The notification worker leases `security.email.requested.v1` outbox events, decr
 
 ## Telegram test bot
 
-The test bot is `@test_pact1211_bot`, with Mini App short name `PactGameTest` and public launch link `https://t.me/test_pact1211_bot/PactGameTest`. It uses the Mini App at `https://safa.dedyn.io/pact/telegram/` and webhook at `https://safa.dedyn.io/pact/telegram/webhook`. Bot ID, token, and webhook secret are mounted only into the API container from root-readable files. Never copy them into a deployment report or checked-in environment. The test token was previously shared in conversation; rotate it before broader testing and update only the host secret file and Telegram webhook configuration.
+The test bot is `@test_pact1211_bot`, with Mini App short name `PactGameTest` and public launch link `https://t.me/test_pact1211_bot/PactGameTest`. It uses the Mini App at `https://tinyagenttools.com/pact/telegram/` and webhook at `https://tinyagenttools.com/pact/telegram/webhook`. Bot ID, token, and webhook secret are mounted only into the API container from root-readable files. Never copy them into a deployment report or checked-in environment. The test token was previously shared in conversation; rotate it before broader testing and update only the host secret file and Telegram webhook configuration.
 
 The synthetic walkthrough account is `pact-mvp-owner@example.test`. Its verified password is generated on the VPS and remains in `/srv/pact/secrets/connection-test/operator_test_password` with mode `0600`. An authorized operator retrieves it directly without copying it into Git, Linear, or logs:
 
@@ -120,3 +122,7 @@ Prepare and validate the register using the procedure in [Identity and onboardin
 Release `mvp-20260923-1` demonstrated the absent-register state on 23 September 2026: deployment verification passed, registration status was false, a synthetic signup probe returned `503 REGISTRATION_UNAVAILABLE`, and no account row was created.
 
 The same release was then configured with `operator-register.mvp-test.json`: preflight reported ready/enabled, the public notice identified `PACT MVP Test Operator`, registration status became true, and an empty signup probe reached normal `400 INVALID_INPUT` validation rather than the closed-gate 503. These values authorize synthetic-data MVP testing only; PACT-098 replaces them before production or paid signup.
+
+## Owned domain, 6 October 2026
+
+Agentic World now uses `https://tinyagenttools.com/`, PACT uses `https://tinyagenttools.com/pact/`, and the old hostname has been removed from the shared edge. The full reference configuration is [`tinyagenttools.caddy`](../../infra/production/tinyagenttools.caddy). The Agentic World Compose edge must declare the external `pact-edge` network so container recreation preserves PACT routing. Its protected `PUBLIC_HOSTNAME` and encrypted `product.humanWorkspacePublicOrigin` must agree with the new apex domain. See [migration evidence and account effects](../implementation/reports/domain-migration-20261006.md).

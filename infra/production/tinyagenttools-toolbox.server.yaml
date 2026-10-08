@@ -1,0 +1,17 @@
+services:
+  app:
+    ports: ["127.0.0.1:18080:8080"]
+  caddy:
+    networks:
+      private:
+        ipv4_address: 172.30.0.2
+      pact-edge: {}
+volumes:
+  caddy_data:
+    external: true
+    name: agentic-world-production_caddy-data
+
+networks:
+  pact-edge:
+    external: true
+    name: pact-edge

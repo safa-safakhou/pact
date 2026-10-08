@@ -1,6 +1,6 @@
 ## Current friends entry — 4 October 2026
 
-Open https://safa.dedyn.io/pact/, choose a nickname or keep the generated one, and press Play. The test deployment runs PACT_GUEST_PLAY=1. Browser storage remembers that guest; use the same browser when authorizing the agent. A fresh browser starts a fresh kingdom. No PACT email/password is involved.
+Open https://tinyagenttools.com/pact/, choose a nickname or keep the generated one, and press Play. The test deployment runs PACT_GUEST_PLAY=1. Browser storage remembers that guest; use the same browser when authorizing the agent. A fresh browser starts a fresh kingdom. No PACT email/password is involved.
 
 In Envoy, copy the connection commands, finish authorization, check the connection and explicitly choose Let my agent play. Copy the first mission into your own Codex. No hosted model starts from joining. Codex CLI 0.160.0 guest DCR/PKCE login and a bounded gpt-6-luna first build were tested; see ../implementation/reports/friends-playtest-20261004.md. The earlier account-based instructions below are historical and remain useful for legacy accounts.
 
@@ -12,7 +12,7 @@ This is a private Alpha procedure, not external-client certification or a public
 
 ## One account per playing chat
 
-Create and verify three separate synthetic PACT accounts at `https://safa.dedyn.io/pact/`, then found one kingdom under each. The Alpha's email is captured in VPS Mailpit, so an operator must privately deliver each verification token. Each human owner signs in, opens **Envoy → Agent authority, exact approvals and account → Review or change your agent authority → Enable bounded agent playtest**, and confirms the authority preset. The preset allows contacts, transfer, training, construction, scouting, supply and garrison signing, and raid commitment within 500 whole Iron/Silver/Grain units per 24 game hours, a 20-whole-Grain reserve floor, and 40 committed troops. It cannot create stock, bypass prerequisites, approve exceptions, change authority, or perform human-only actions. Disable new game actions from the same screen when the test ends. Existing signed obligations still settle normally.
+Create and verify three separate synthetic PACT accounts at `https://tinyagenttools.com/pact/`, then found one kingdom under each. The Alpha's email is captured in VPS Mailpit, so an operator must privately deliver each verification token. Each human owner signs in, opens **Envoy → Agent authority, exact approvals and account → Review or change your agent authority → Enable bounded agent playtest**, and confirms the authority preset. The preset allows contacts, transfer, training, construction, scouting, supply and garrison signing, and raid commitment within 500 whole Iron/Silver/Grain units per 24 game hours, a 20-whole-Grain reserve floor, and 40 committed troops. It cannot create stock, bypass prerequisites, approve exceptions, change authority, or perform human-only actions. Disable new game actions from the same screen when the test ends. Existing signed obligations still settle normally.
 
 Historical 26 September **synthetic** fixtures are listed below for provenance. Do not assume their old local profiles or grants are active. Use fresh independently verified accounts for a fresh-player acceptance test:
 
@@ -27,9 +27,9 @@ Each account's synthetic password is a mode-0600 file under `/srv/pact/secrets/c
 For each account, configure a distinct Codex MCP connection name and a distinct URL identity. The harmless `profile` query is only a Codex credential-cache discriminator; the server ignores it for identity and always derives ownership from the separate OAuth grant. Keep the OAuth resource canonical:
 
 ```sh
-codex mcp add pact_aster --url 'https://safa.dedyn.io/pact/mcp?profile=aster' --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
-codex mcp add pact_briar --url 'https://safa.dedyn.io/pact/mcp?profile=briar' --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
-codex mcp add pact_cinder --url 'https://safa.dedyn.io/pact/mcp?profile=cinder' --oauth-resource https://safa.dedyn.io/pact/mcp --oauth-client-registration dcr
+codex mcp add pact_aster --url 'https://tinyagenttools.com/pact/mcp?profile=aster' --oauth-resource https://tinyagenttools.com/pact/mcp --oauth-client-registration dcr
+codex mcp add pact_briar --url 'https://tinyagenttools.com/pact/mcp?profile=briar' --oauth-resource https://tinyagenttools.com/pact/mcp --oauth-client-registration dcr
+codex mcp add pact_cinder --url 'https://tinyagenttools.com/pact/mcp?profile=cinder' --oauth-resource https://tinyagenttools.com/pact/mcp --oauth-client-registration dcr
 codex mcp list
 ```
 
@@ -92,7 +92,7 @@ Unsigned supply offers reserve nothing and are nonbinding proposals, as specifie
 
 The three Codex chats show live tool calls and their explanations. In PACT, each account's **Chronicle** shows committed events and receipts; **People** shows messages, offers, and contracts; **Envoy** shows approval requests. An operator can inspect the three chats' final reports and the owner views, then write a consolidated playtest note with exact receipt IDs and game observations. Do not treat a model's narrative as proof of a game action: match it to a PACT receipt or event.
 
-The MCP endpoint is `https://safa.dedyn.io/pact/mcp`. OAuth discovery is at `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource` under that origin. `game:act` grants a 15-minute `run.open` lease for one kingdom at a time; it does not cause PACT to invoke a model or keep an agent running in the background. The shared game command and authorized read schemas are documented in [MCP API](../api/mcp.md). A missing/invalid grant, expired lease, stale offer version, insufficient stock, or rule prerequisite is a normal game error to inspect, not permission to invent a workaround.
+The MCP endpoint is `https://tinyagenttools.com/pact/mcp`. OAuth discovery is at `/.well-known/oauth-authorization-server` and `/.well-known/oauth-protected-resource` under that origin. `game:act` grants a 15-minute `run.open` lease for one kingdom at a time; it does not cause PACT to invoke a model or keep an agent running in the background. The shared game command and authorized read schemas are documented in [MCP API](../api/mcp.md). A missing/invalid grant, expired lease, stale offer version, insufficient stock, or rule prerequisite is a normal game error to inspect, not permission to invent a workaround.
 
 Codex 0.159.0-alpha.12.1 starts browser authorization immediately during `mcp add`. Pass `--oauth-client-registration dcr` on that command too, and finish the browser flow before proceeding. The separate `mcp login` command is for reconnecting (and explicit agent-only scopes); it is not a step to run while add is waiting for its browser callback.
 

@@ -8,10 +8,15 @@ set -a
 . "${PACT_STATE_DIR:-/srv/pact/state}/previous.env"
 set +a
 
-# Older images predate the signing entry point. Stop only this worker; queued Seals remain durable.
-docker compose --env-file "$env_file" -f infra/production/compose.yaml stop seals
-docker compose --env-file "$env_file" -f infra/production/compose.yaml up -d --no-build api rules inference notification channel gateway
-if docker run --rm --entrypoint test "$PACT_IMAGE" -f /app/workers/rules/dist/seal-main.js; then
-  docker compose --env-file "$env_file" -f infra/production/compose.yaml up -d --no-build seals
+compose="docker compose --env-file $env_file -f infra/production/compose.yaml"
+if [ -n "${PACT_COMPOSE_OVERRIDE_FILE:-}" ]; then
+  compose="$compose -f $PACT_COMPOSE_OVERRIDE_FILE"
 fi
-docker compose --env-file "$env_file" -f infra/production/compose.yaml ps
+
+# Older images predate the signing entry point. Stop only this worker; queued Seals remain durable.
+$compose stop seals
+$compose up -d --no-build api rules inference notification channel gateway
+if docker run --rm --entrypoint test "$PACT_IMAGE" -f /app/workers/rules/dist/seal-main.js; then
+  $compose up -d --no-build seals
+fi
+$compose ps

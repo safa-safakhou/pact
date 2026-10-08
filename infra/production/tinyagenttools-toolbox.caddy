@@ -1,0 +1,54 @@
+{
+ # Cloudflare published ranges checked 2026-10-07. Keep this list current.
+ servers {
+  trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+  trusted_proxies_strict
+  client_ip_headers CF-Connecting-IP X-Forwarded-For
+ }
+}
+{$DOMAIN} {
+ encode zstd gzip
+ @pact_telegram path /pact/telegram/*
+ header @pact_telegram {
+  -X-Frame-Options
+  Content-Security-Policy "frame-ancestors https://web.telegram.org https://*.web.telegram.org"
+ }
+ redir /pact /pact/ 308
+ @pact_browser path /pact/ /pact/move
+ handle @pact_browser {
+  header Cache-Control no-store
+  header Referrer-Policy no-referrer
+  header Content-Security-Policy "frame-src https://pact.tinyagenttools.com; frame-ancestors 'none'"
+  root * /srv/pact-browser-transfer
+  rewrite * /source.html
+  file_server
+ }
+ # Older Mini App entry links switch origins before loading their assets.
+ @pact_telegram_entry path /pact/telegram/ /pact/telegram
+ handle @pact_telegram_entry {
+  redir https://pact.tinyagenttools.com/telegram/ 307
+ }
+ handle_path /pact/* {
+  reverse_proxy 10.77.0.2:8088
+ }
+ handle /.well-known/oauth-authorization-server/pact {
+  rewrite * /.well-known/oauth-authorization-server
+  reverse_proxy 10.77.0.2:8088
+ }
+ handle /.well-known/oauth-protected-resource/pact/mcp {
+  rewrite * /.well-known/oauth-protected-resource
+  reverse_proxy 10.77.0.2:8088
+ }
+ handle /.well-known/pact-signing-keys.json {
+  reverse_proxy 10.77.0.2:8088
+ }
+ handle {
+  reverse_proxy app:8080 {
+   # Go trusts this private Caddy address and accepts one validated client IP.
+   header_up X-Forwarded-For {client_ip}
+  }
+ }
+}
+www.{$DOMAIN} {
+ redir https://{$DOMAIN}{uri} permanent
+}

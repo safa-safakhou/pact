@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>PACT secure sign-in</title><script>
+const source='https://tinyagenttools.com';let busy=false,done=false;
+addEventListener('message',async e=>{
+  if(e.origin!==source||e.source!==parent||e.data?.type!=='pact-transfer-entry'||busy||done)return;
+  const {entryKey,nickname,accountId}=e.data;
+  if(typeof entryKey!=='string'||typeof accountId!=='string'||typeof nickname!=='string')return;
+  busy=true;
+  try{
+    const r=await fetch('/v1/play/join',{method:'POST',credentials:'same-origin',headers:{'content-type':'application/json'},body:JSON.stringify({entryKey,nickname,existingOnly:true}),signal:AbortSignal.timeout(30000)});
+    const result=await r.json();
+    if(!r.ok||result.accountId!==accountId||!result.kingdomId)throw Error('Existing kingdom unavailable');
+    localStorage.setItem('pact_guest_entry',entryKey);localStorage.setItem('pact_guest_name',nickname);done=true;
+    parent.postMessage({type:'pact-transfer-complete'},source);
+  }catch{parent.postMessage({type:'pact-transfer-failed'},source)}finally{busy=false}
+});
+if(parent!==window)parent.postMessage({type:'pact-transfer-ready'},source);
+</script></html>

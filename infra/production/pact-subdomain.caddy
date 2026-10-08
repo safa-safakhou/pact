@@ -1,0 +1,23 @@
+pact.tinyagenttools.com {
+  encode zstd gzip
+  header Referrer-Policy no-referrer
+  @telegram path /telegram/* /pact/telegram/*
+  header @telegram {
+    -X-Frame-Options
+    Content-Security-Policy "frame-ancestors https://web.telegram.org https://*.web.telegram.org"
+  }
+  handle /browser-transfer {
+    header Cache-Control no-store
+    header Content-Security-Policy "frame-ancestors https://tinyagenttools.com"
+    root * /srv/transfer
+    rewrite * /destination.html
+    file_server
+  }
+  # Temporary compatibility for previously published asset/Mini App paths.
+  handle_path /pact/* {
+    reverse_proxy gateway:8080
+  }
+  handle {
+    reverse_proxy gateway:8080
+  }
+}

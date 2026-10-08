@@ -11,11 +11,11 @@
   },
   "documents": {
     "termsVersion": "connection-test-v1",
-    "termsUrl": "https://safa.dedyn.io/pact/v1/legal/notices#terms",
+    "termsUrl": "https://tinyagenttools.com/pact/v1/legal/notices#terms",
     "privacyVersion": "connection-test-v1",
-    "privacyUrl": "https://safa.dedyn.io/pact/v1/legal/notices#privacy",
+    "privacyUrl": "https://tinyagenttools.com/pact/v1/legal/notices#privacy",
     "rightsAndComplaintRoute": "Connection testers contact the test operator; production rights and complaint details are deferred to PACT-098.",
-    "privacyRequestUrl": "https://safa.dedyn.io/pact/v1/legal/notices#privacy-request"
+    "privacyRequestUrl": "https://tinyagenttools.com/pact/v1/legal/notices#privacy-request"
   },
   "processing": {
     "purposesAndLawfulBases": [
@@ -52,7 +52,7 @@
   },
   "transactionalEmail": {
     "mode": "captured_smtp",
-    "from": "PACT MVP Test <noreply@safa.dedyn.io>",
+    "from": "PACT MVP Test <noreply@tinyagenttools.com>",
     "deliveryEvidence": {
       "checkedAt": "2026-09-22T00:00:00.000Z",
       "reference": "Internal Mailpit security-email delivery verified for the synthetic MVP"

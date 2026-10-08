@@ -129,3 +129,5 @@ PACT-127,Join from one shared link and connect your own agent,3,done,implementat
 PACT-128,Make the opening kingdom screen short and actionable,3,done,implementation,Frontend,S,PACT-053;PACT-126,G04,phase-3-season-one.md#pact-128
 PACT-129,Show useful upgrade choices and use the free builder,3,done,implementation,Frontend,S,PACT-053;PACT-126,G02;G04,phase-3-season-one.md#pact-129
 PACT-130,Find friends in the shared world and start a conversation,3,done,implementation,Full stack,M,PACT-053;PACT-127;PACT-128;PACT-129,G01;G04;G06,phase-3-season-one.md#pact-130
+PACT-131,Connect ChatGPT play with free-form notes and actual interaction views,3,in_progress,implementation,Platform,L,PACT-053;PACT-099;PACT-127;PACT-130,G01,phase-3-season-one.md#pact-131
+PACT-132,"Ship the kingdom Council, public Envoy characters and observed activity",3,done,implementation,Product,L,PACT-053;PACT-099;PACT-127;PACT-130,G01,phase-3-season-one.md#pact-132

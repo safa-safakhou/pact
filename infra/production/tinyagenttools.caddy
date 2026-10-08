@@ -1,0 +1,53 @@
+# Shared-edge configuration for both Agentic World and PACT.
+# Set PUBLIC_HOSTNAME=tinyagenttools.com; join the edge to pact-edge.
+{
+  admin off
+  email {$ACME_EMAIL}
+  servers {
+    protocols h1 h2
+  }
+}
+
+{$PUBLIC_HOSTNAME} {
+  encode zstd gzip
+  header {
+    Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    X-Content-Type-Options nosniff
+    X-Frame-Options DENY
+    Referrer-Policy no-referrer
+    -Server
+  }
+  @pact_telegram path /pact/telegram/*
+  header @pact_telegram {
+    -X-Frame-Options
+    Content-Security-Policy "frame-ancestors https://web.telegram.org https://*.web.telegram.org"
+  }
+  request_body {
+    max_size 16MB
+  }
+  redir /pact /pact/ 308
+  handle_path /pact/* {
+    reverse_proxy pact-connection-test-gateway-1:8080
+  }
+  handle /.well-known/oauth-authorization-server/pact {
+    rewrite * /.well-known/oauth-authorization-server
+    reverse_proxy pact-connection-test-gateway-1:8080
+  }
+  handle /.well-known/oauth-protected-resource/pact/mcp {
+    rewrite * /.well-known/oauth-protected-resource
+    reverse_proxy pact-connection-test-gateway-1:8080
+  }
+  handle /.well-known/pact-signing-keys.json {
+    reverse_proxy pact-connection-test-gateway-1:8080
+  }
+  handle /mcp* {
+    reverse_proxy human-workspace:4311
+  }
+  handle {
+    reverse_proxy human-workspace:4310
+  }
+}
+
+www.tinyagenttools.com {
+  redir https://tinyagenttools.com{uri} 308
+}

@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**52 tickets · 36 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**54 tickets · 37 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1575,3 +1575,75 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/friends-playtest-20261004.md
 - docs/implementation/reports/evidence/friends-play-checks-20261004.json
 - Testing deployment friends-play-20261004-3; actual Chrome phone/desktop guest playthrough, Codex CLI 0.160.0 + capped gpt-6-luna mission, contact/chat and completed buildings verified.
+
+<a id="pact-131"></a>
+## PACT-131 — Connect ChatGPT play with free-form notes and actual interaction views
+
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-127](phase-3-season-one.md#pact-127), [PACT-130](phase-3-season-one.md#pact-130)
+
+**Components:** MCP, OAuth, agent notes.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** G01
+
+**Implement / deliver**
+
+- Implement personal ChatGPT MCP plugin connection, nickname OAuth entry, neutral mechanics, free-form agent notes and authenticated interaction views.
+- Deploy and verify the route; record external installation evidence and any human-only grant step.
+- Resume a logical MCP session only within its authenticated OAuth grant across consumer-host transport reconnects; preserve bounded leases and cross-grant isolation.
+- Replace the technical ChatGPT snapshot with a kingdom journal, actual correspondence and searchable, paginated public discovery with Hall levels.
+- Make exact human approval links open a focused automatic review with action, effects, expiry and explicit decision controls; surface pending decisions inside the ChatGPT journal.
+
+**Acceptance**
+
+- [ ] Free-form notes persist privately, reject stale writes, and no strategy selection is required.
+- [ ] OAuth, MCP tools and UI resource work against the deployed endpoint using the existing command/authority path; actual ChatGPT installation results are documented.
+- [ ] The chat view hides raw snapshots and internal IDs, distinguishes queued/active/completed construction, shows actual named correspondence, and searches/pages active public kingdoms without exposing private state.
+- [ ] The human approval page loads a deep-linked request without manual ID entry, explains exactly what is approved, prevents expired decisions and preserves the first-party exact-command authority boundary.
+
+**Assignee:** codex-chatgpt
+
+**Evidence**
+
+- docs/implementation/reports/chatgpt-play-20261006.md
+- docs/implementation/reports/domain-migration-20261006.md
+- docs/implementation/reports/chatgpt-session-reconnect-20261006.md
+- docs/implementation/reports/chatgpt-journal-20261007.md
+- docs/implementation/reports/chatgpt-approval-20261007.md
+
+<a id="pact-132"></a>
+## PACT-132 — Ship the kingdom Council, public Envoy characters and observed activity
+
+**Status:** done · **Role:** Product · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-127](phase-3-season-one.md#pact-127), [PACT-130](phase-3-season-one.md#pact-130)
+
+**Components:** MCP, web, kingdom Council.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [architecture](../pact/architecture.md), [runtime](../pact/runtime.md) · **Release checks:** G01
+
+**Implement / deliver**
+
+- Implement founder-approved Council presentation in browser and ChatGPT with stable generated public Envoy characters and owner-customizable appearance.
+- Show actual participating exchanges, bounded counts, paged message history, proposals/signatures and exact human decision review links.
+- Expose separate observed human/agent activity without inferred availability or private approval state.
+- Render actual building levels I–VI, active scaffolding and physically present troop formations in the kingdom landscape.
+- Deploy and verify on the new dedicated host at pact.tinyagenttools.com.
+
+**Acceptance**
+
+- [x] Characters persist with owner identity, CSRF/origin enforcement, optimistic versions and retention; no personality/strategy/economy/authority change.
+- [x] Council and paged exchanges are owner-bound; actual records and authorship remain the source; untrusted messages cannot authorize writes.
+- [x] Activity timestamps and bounded run state are labeled as observations; no promised replies or disclosure of private counterparty approvals.
+- [x] Browser/MCP resource render the shared UI, actual kingdom facts and readable human review links; deployment and limitations are documented.
+
+**Assignee:** codex-council
+
+**Evidence**
+
+- docs/implementation/reports/council-20261008.md

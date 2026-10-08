@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PACT has a new home</title><style>body{font:18px/1.6 system-ui;max-width:620px;margin:12vh auto;padding:24px;background:#f4eedf;color:#283b32}button{font:inherit;padding:12px 20px;background:#224b3b;color:white;border:0;border-radius:6px}iframe{width:1px;height:1px;border:0;position:absolute;left:-9999px}</style>
+<h1>Your kingdom has a new home.</h1><p>PACT now lives at <strong>pact.tinyagenttools.com</strong>. Continue with the kingdom remembered by this browser. No new kingdom will be created.</p>
+<button type="button" id="continue" disabled>Continue with my kingdom</button><p id="status" role="status">Connecting to the new home…</p><p><a href="https://pact.tinyagenttools.com/">Sign in on the new site</a> if you use an email account or a different browser.</p>
+<iframe id="transfer" title="Secure kingdom sign-in" src="https://pact.tinyagenttools.com/browser-transfer"></iframe>
+<script>
+const target='https://pact.tinyagenttools.com',frame=document.getElementById('transfer'),button=document.getElementById('continue'),status=document.getElementById('status');
+let ready=false,busy=false;
+addEventListener('message',e=>{
+  if(e.origin!==target||e.source!==frame.contentWindow)return;
+  if(e.data?.type==='pact-transfer-ready'){ready=true;button.disabled=false;status.textContent='Your existing kingdom can be carried over securely.'}
+  if(e.data?.type==='pact-transfer-complete'&&busy){const destination=new URL('/',target);destination.search=location.search;location.replace(destination.href)}
+  if(e.data?.type==='pact-transfer-failed'){busy=false;button.disabled=false;status.textContent='Could not resume this kingdom. Your old kingdom has not been replaced. Keep this browser open and ask for help.'}
+});
+button.onclick=async()=>{
+  if(!ready||busy)return;busy=true;button.disabled=true;status.textContent='Signing into your existing kingdom…';
+  try{
+    const key=localStorage.getItem('pact_guest_entry');
+    if(!key)throw Error('No remembered guest key');
+    const r=await fetch('/pact/v1/play',{credentials:'same-origin',cache:'no-store'});const current=await r.json();
+    if(!r.ok||!current.guest||!current.accountId)throw Error('Existing guest session required');
+    frame.contentWindow.postMessage({type:'pact-transfer-entry',entryKey:key,nickname:localStorage.getItem('pact_guest_name')||'',accountId:current.accountId},target);
+  }catch{busy=false;button.disabled=false;status.textContent='This browser needs its existing guest session to continue. Sign in again on the old site or ask for recovery help; do not create a replacement kingdom.'}
+};
+</script></html>

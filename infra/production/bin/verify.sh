@@ -9,6 +9,9 @@ set -a
 set +a
 
 compose="docker compose --env-file $deploy_env -f infra/production/compose.yaml"
+if [ -n "${PACT_COMPOSE_OVERRIDE_FILE:-}" ]; then
+  compose="$compose -f $PACT_COMPOSE_OVERRIDE_FILE"
+fi
 $compose ps --status running --services | grep -qx api
 $compose ps --status running --services | grep -qx mailpit
 $compose ps --status running --services | grep -qx notification
@@ -19,7 +22,7 @@ curl -fsS "$public_base_url/v1/legal/registration-status" | grep -Eq '"registrat
 curl -fsS "$public_base_url/" >/dev/null
 telegram_html="$(curl -fsS "$public_base_url/telegram/")"
 printf '%s' "$telegram_html" | grep -Fq 'https://telegram.org/js/telegram-web-app.js?63'
-printf '%s' "$telegram_html" | grep -Fq '/pact/telegram/assets/'
+printf '%s' "$telegram_html" | grep -Fq "${PACT_TELEGRAM_BASE_PATH:-/pact/telegram/}assets/"
 telegram_headers="$(curl -fsS -D - -o /dev/null "$public_base_url/telegram/" | tr -d '\r')"
 if printf '%s\n' "$telegram_headers" | grep -qi '^x-frame-options:'; then
   echo "Telegram Mini App unexpectedly denies framing" >&2

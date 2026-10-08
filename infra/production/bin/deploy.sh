@@ -45,10 +45,14 @@ docker build --target runtime --build-arg "PACT_WEB_BASE_PATH=${PACT_WEB_BASE_PA
 docker build --target gateway --build-arg "PACT_WEB_BASE_PATH=${PACT_WEB_BASE_PATH:-/}" --build-arg "PACT_TELEGRAM_BASE_PATH=${PACT_TELEGRAM_BASE_PATH:-/telegram/}" -t "$PACT_GATEWAY_IMAGE" .
 
 compose="docker compose --env-file $env_file -f infra/production/compose.yaml"
+if [ -n "${PACT_COMPOSE_OVERRIDE_FILE:-}" ]; then
+  compose="$compose -f $PACT_COMPOSE_OVERRIDE_FILE"
+fi
 $compose up -d postgres
 $compose run --rm migrate
 $compose run --rm privacy-replay
 $compose up -d --remove-orphans api rules seals inference notification channel gateway
+if [ "${PACT_PUBLIC_EDGE:-0}" = 1 ]; then $compose up -d public-edge; fi
 
 cat >"$state_dir/releases/$release_id.env" <<EOF
 PACT_IMAGE=$PACT_IMAGE

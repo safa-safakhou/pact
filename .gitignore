@@ -11,3 +11,6 @@ coverage/
 # Local Python bytecode is generated, not implementation evidence.
 __pycache__/
 *.py[cod]
+
+# Private owner acceptance evidence stays local.
+/artifacts/subdomain-20261008/kingdom-new-domain.png

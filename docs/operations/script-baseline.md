@@ -8,7 +8,7 @@ Use Node 24 and the repository's installed dependencies. Authenticate a **synthe
 
 Required environment names:
 
-- `PACT_BASELINE_MCP_URL`: `https://safa.dedyn.io/pact/mcp` (HTTPS; plaintext only allowed on localhost).
+- `PACT_BASELINE_MCP_URL`: `https://tinyagenttools.com/pact/mcp` (HTTPS; plaintext only allowed on localhost).
 - `PACT_BASELINE_ACCESS_TOKEN`: synthetic account's normal OAuth access token with `world:read` and `game:act`.
 - Optional `PACT_BASELINE_PARTNER_ID`: an already accepted contact's kingdom UUID. Otherwise the script selects the first contact in the server guide.
 

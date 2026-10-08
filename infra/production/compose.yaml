@@ -44,7 +44,7 @@ services:
       - -c
       - archive_mode=on
       - -c
-      - archive_command=test ! -f /var/lib/postgresql/wal-archive/%f && cp %p /var/lib/postgresql/wal-archive/%f
+      - archive_command=(test -f /var/lib/postgresql/wal-archive/%f && cmp -s %p /var/lib/postgresql/wal-archive/%f) || (test ! -f /var/lib/postgresql/wal-archive/%f && cp %p /var/lib/postgresql/wal-archive/%f.tmp && mv /var/lib/postgresql/wal-archive/%f.tmp /var/lib/postgresql/wal-archive/%f)
       - -c
       - archive_timeout=300
     secrets:
@@ -164,7 +164,7 @@ services:
     command: ["npm", "run", "start", "--workspace", "@pact/notification-worker"]
     environment:
       <<: *runtime-environment
-      SMTP_FROM: ${SMTP_FROM:-PACT MVP <noreply@safa.dedyn.io>}
+      SMTP_FROM: ${SMTP_FROM:-PACT MVP <noreply@tinyagenttools.com>}
       WEB_PUSH_SUBJECT: ${WEB_PUSH_SUBJECT:-}
       WEB_PUSH_PRIVATE_KEY: ${WEB_PUSH_PRIVATE_KEY:-}
     secrets:

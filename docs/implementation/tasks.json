@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "specification": "../pact/README.md",
-  "status": "test_scope_complete_production_deferred",
+  "status": "chatgpt_assignment_in_progress",
   "tasks": [
     {
       "id": "PACT-001",
@@ -5473,7 +5473,14 @@
           "PACT-109"
         ]
       },
-      "scope_review_date": "2026-10-03"
+      "scope_review_date": "2026-10-03",
+      "scope_corrections": [
+        {
+          "assignment": "PACT-131",
+          "source": "docs/pact/chatgpt.md",
+          "correction": "Founder direction 2026-10-06 replaces fixed ambition choices/strategic presets with private free-form text and agent-selected decisions. Historical completion evidence remains dated; new behavior and revised acceptance are verified under PACT-131."
+        }
+      ]
     },
     {
       "id": "PACT-112",
@@ -5622,7 +5629,14 @@
           "PACT-109"
         ]
       },
-      "scope_review_date": "2026-10-03"
+      "scope_review_date": "2026-10-03",
+      "scope_corrections": [
+        {
+          "assignment": "PACT-131",
+          "source": "docs/pact/chatgpt.md",
+          "correction": "Founder direction 2026-10-06 replaces fixed ambition choices/strategic presets with private free-form text and agent-selected decisions. Historical completion evidence remains dated; new behavior and revised acceptance are verified under PACT-131."
+        }
+      ]
     },
     {
       "id": "PACT-114",
@@ -6646,7 +6660,14 @@
           "PACT-125"
         ]
       },
-      "scope_review_date": "2026-10-03"
+      "scope_review_date": "2026-10-03",
+      "scope_corrections": [
+        {
+          "assignment": "PACT-131",
+          "source": "docs/pact/chatgpt.md",
+          "correction": "Founder direction 2026-10-06 replaces fixed ambition choices/strategic presets with private free-form text and agent-selected decisions. Historical completion evidence remains dated; new behavior and revised acceptance are verified under PACT-131."
+        }
+      ]
     },
     {
       "id": "PACT-127",
@@ -6777,7 +6798,14 @@
       "assignee": "codex-friends-playtest",
       "blocked_by_external": [],
       "block_reason": null,
-      "delivery_track": "friends_playtest"
+      "delivery_track": "friends_playtest",
+      "scope_corrections": [
+        {
+          "assignment": "PACT-131",
+          "source": "docs/pact/chatgpt.md",
+          "correction": "Founder direction 2026-10-06 replaces fixed ambition choices/strategic presets with private free-form text and agent-selected decisions. Historical completion evidence remains dated; new behavior and revised acceptance are verified under PACT-131."
+        }
+      ]
     },
     {
       "id": "PACT-130",
@@ -6826,6 +6854,106 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "friends_playtest"
+    },
+    {
+      "id": "PACT-131",
+      "title": "Connect ChatGPT play with free-form notes and actual interaction views",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-127",
+        "PACT-130"
+      ],
+      "sources": [
+        "chatgpt",
+        "runtime",
+        "architecture"
+      ],
+      "covers": [
+        "G01"
+      ],
+      "scope": [
+        "Implement personal ChatGPT MCP plugin connection, nickname OAuth entry, neutral mechanics, free-form agent notes and authenticated interaction views.",
+        "Deploy and verify the route; record external installation evidence and any human-only grant step.",
+        "Resume a logical MCP session only within its authenticated OAuth grant across consumer-host transport reconnects; preserve bounded leases and cross-grant isolation.",
+        "Replace the technical ChatGPT snapshot with a kingdom journal, actual correspondence and searchable, paginated public discovery with Hall levels.",
+        "Make exact human approval links open a focused automatic review with action, effects, expiry and explicit decision controls; surface pending decisions inside the ChatGPT journal."
+      ],
+      "acceptance": [
+        "Free-form notes persist privately, reject stale writes, and no strategy selection is required.",
+        "OAuth, MCP tools and UI resource work against the deployed endpoint using the existing command/authority path; actual ChatGPT installation results are documented.",
+        "The chat view hides raw snapshots and internal IDs, distinguishes queued/active/completed construction, shows actual named correspondence, and searches/pages active public kingdoms without exposing private state.",
+        "The human approval page loads a deep-linked request without manual ID entry, explains exactly what is approved, prevents expired decisions and preserves the first-party exact-command authority boundary."
+      ],
+      "components": [
+        "MCP",
+        "OAuth",
+        "agent notes"
+      ],
+      "evidence": [
+        "docs/implementation/reports/chatgpt-play-20261006.md",
+        "docs/implementation/reports/domain-migration-20261006.md",
+        "docs/implementation/reports/chatgpt-session-reconnect-20261006.md",
+        "docs/implementation/reports/chatgpt-journal-20261007.md",
+        "docs/implementation/reports/chatgpt-approval-20261007.md"
+      ],
+      "assignee": "codex-chatgpt",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
+    },
+    {
+      "id": "PACT-132",
+      "title": "Ship the kingdom Council, public Envoy characters and observed activity",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Product",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-099",
+        "PACT-127",
+        "PACT-130"
+      ],
+      "sources": [
+        "chatgpt",
+        "architecture",
+        "runtime"
+      ],
+      "covers": [
+        "G01"
+      ],
+      "scope": [
+        "Implement founder-approved Council presentation in browser and ChatGPT with stable generated public Envoy characters and owner-customizable appearance.",
+        "Show actual participating exchanges, bounded counts, paged message history, proposals/signatures and exact human decision review links.",
+        "Expose separate observed human/agent activity without inferred availability or private approval state.",
+        "Render actual building levels I–VI, active scaffolding and physically present troop formations in the kingdom landscape.",
+        "Deploy and verify on the new dedicated host at pact.tinyagenttools.com."
+      ],
+      "acceptance": [
+        "Characters persist with owner identity, CSRF/origin enforcement, optimistic versions and retention; no personality/strategy/economy/authority change.",
+        "Council and paged exchanges are owner-bound; actual records and authorship remain the source; untrusted messages cannot authorize writes.",
+        "Activity timestamps and bounded run state are labeled as observations; no promised replies or disclosure of private counterparty approvals.",
+        "Browser/MCP resource render the shared UI, actual kingdom facts and readable human review links; deployment and limitations are documented."
+      ],
+      "components": [
+        "MCP",
+        "web",
+        "kingdom Council"
+      ],
+      "evidence": [
+        "docs/implementation/reports/council-20261008.md"
+      ],
+      "assignee": "codex-council",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
     }
   ],
   "source_sha256": {
@@ -6838,7 +6966,8 @@
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
     "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0",
     "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9",
-    "../pact/experience.md": "cac7b2eafe414046dba481a00949b66bebae07d2b2df59dbb91d35fef5b2794d"
+    "../pact/experience.md": "cac7b2eafe414046dba481a00949b66bebae07d2b2df59dbb91d35fef5b2794d",
+    "../pact/chatgpt.md": "ee31da0fd9d0cf8ad6091954faa4eeea101b1dfde000d8815673117a7b262efc"
   },
   "task_status_values": [
     "todo",
