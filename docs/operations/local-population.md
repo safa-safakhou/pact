@@ -1,5 +1,9 @@
 # Bounded local-model population
 
+## Current machine cooling profile — PACT-143
+
+Founder-requested at 21:11 Berlin on 9 October: the same fifty-owner Qwen 9B run now uses **hourly minimum owner turns**, initially staggered 72 seconds apart, a **persisted sixty-second quiet gap after each turn**, and **immediate model unloading after inference**. This reduces sustained load; individual GPU bursts still occur. Identities, counters, conversation memory, pending-command recovery and authority are retained. [Settings, cooling and verification](../implementation/reports/continuous-low-pressure-20261009.md). This overrides the historical five-minute pacing described below; it does not reopen finite experiments or change gameplay rules. Reapply only through the locked authorized `low-pressure.mjs` operator; do not reset private state or silently increase load.
+
 ## Social workflow repair — PACT-141
 
 **Verified 9 October:** the twenty-minute fresh-pair check is terminal, with 36 attempts, one accepted introduction and three activated contracts that subsequently defaulted from insufficient stock; it produced no dialogue. The ongoing fifty-player run completed 125 observed turns with 144 messages and eleven acceptances after the repair. [Actual results and quality limits](../implementation/reports/social-repair-20261009.md). Keep both finite historical experiments terminal; the fifty-player continuous task remains active.

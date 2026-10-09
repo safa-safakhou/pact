@@ -1,0 +1,56 @@
+{
+  "ticket": "PACT-143",
+  "applied": {
+    "runId": "full-game-1791537512736-10b87b6c",
+    "at": "2026-10-09T19:11:11.333Z",
+    "previousIntervalSeconds": 300,
+    "intervalSeconds": 3600,
+    "minimumTurnGapSeconds": 60,
+    "keepAlive": 0,
+    "requests": 4773,
+    "authorization": "Founder requested reducing pressure on the computer now, 9 October 2026.",
+    "nextTurnAt": "2026-10-09T19:16:11.333Z",
+    "accounts": 50
+  },
+  "live": {
+    "observedAt": "2026-10-09T19:12:13.2953127Z",
+    "runId": "full-game-1791537512736-10b87b6c",
+    "sameOwners": true,
+    "requestsBefore": 4772,
+    "requestsNow": 4773,
+    "status": "running",
+    "model": "qwen3.5:9b",
+    "accounts": 50,
+    "intervalSeconds": 3600,
+    "minimumTurnGapSeconds": 60,
+    "keepAlive": 0,
+    "pending": 0,
+    "currentFailures": 0,
+    "firstDue": "2026-10-09T21:16:11.333+02:00",
+    "lastDue": "2026-10-09T22:14:59.333+02:00"
+  },
+  "taskState": "Running",
+  "residentModelsDuringCooldown": 0,
+  "gpuSamples": [
+    {
+      "utilizationPercent": 7,
+      "phase": "after unload",
+      "memoryMiB": 1220,
+      "powerW": 33.42,
+      "temperatureC": 51
+    },
+    {
+      "observedAtBerlin": "2026-10-09T21:11:12+02:00",
+      "powerW": 30.31,
+      "utilizationPercent": 1,
+      "memoryMiB": 1220,
+      "temperatureC": 39
+    }
+  ],
+  "checks": {
+    "nativeWindowsTestsPassed": 2,
+    "runnerAndClientTestsPassed": 66,
+    "biome": "passed"
+  },
+  "limitation": "Live evidence verifies resumed controller during initial quiet cooldown, not a completed post-change hourly cycle."
+}

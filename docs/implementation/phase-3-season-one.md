@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**64 tickets · 47 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**65 tickets · 48 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1983,3 +1983,35 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/evidence/continuous-model-switch-20261009.json
 - Implementation 9e5595c; 64 Node tests and native Windows switch verification passed; pinned 9B applied to same fifty owners at 4,213 lifetime attempts.
 - Live snapshot: 12 actual Qwen 9B turns, 19 messages and one signature committed; zero failed turns/pending commands. All 50 configured, same run ID/owners, indefinite bounds and pacing preserved. No completed historical experiment resumed.
+
+<a id="pact-143"></a>
+## PACT-143 — Reduce continuous local-player machine load with staggered hourly pacing
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-138](phase-3-season-one.md#pact-138), [PACT-142](phase-3-season-one.md#pact-142)
+
+**Components:** local population controller.
+
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md) · **Release checks:** S01, R07
+
+**Implement / deliver**
+
+- Apply founder-requested low-pressure profile to existing continuous owners, preserving identities/counters/pending payloads and authority.
+- Use staggered hourly scheduling, persisted inter-turn cooling and immediate model unloading; verify quiet idle and bounded live resumption.
+
+**Acceptance**
+
+- [x] Existing continuous identities, counters, pending commands and game authority remain unchanged under the applied pacing change.
+- [x] Staggering and a persisted cooling gap prevent an overdue cohort burst; normal finite profiles remain unchanged.
+- [x] Transport forwards explicit zero keep-alive and live GPU/controller observations verify unloading and reduced scheduling.
+
+**Assignee:** codex-low-pressure
+
+**Evidence**
+
+- docs/implementation/reports/continuous-low-pressure-20261009.md
+- docs/implementation/reports/evidence/continuous-low-pressure-20261009.json
+- Runner/client Node tests: 66 passed; native Windows low-pressure tests: 2 passed; Biome passed. Same 50 owners retained; resumed task Running; zero resident models during cooldown; GPU 39 C / 1 percent at 21:11 Berlin.

@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Low-pressure local players](continuous-low-pressure-20261009.md) — PACT-143, hourly staggered pacing, persisted cooling and immediate model unloading for the same fifty continuous owners.
+
 - [Daily token and Luna cost estimate](continuous-token-budget-20261009.md) — measured local token usage and current official API/credit rates; read-only projection, no paid model switch.
 
 - [Continuous model switch](continuous-model-switch-20261009.md) — PACT-142, founder-authorized Qwen 9B replacement on the same fifty continuous owners; identities, counters and indefinite authorization preserved.

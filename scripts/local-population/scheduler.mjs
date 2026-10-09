@@ -4,6 +4,15 @@ export function nextActor(actors, now) {
     .sort((a, b) => a.nextDue - b.nextDue || a.index - b.index)[0];
 }
 
+export function nextContinuousActor(state, now) {
+  if (now < (state.nextTurnAt ?? 0)) return undefined;
+  return nextActor(state.actors, now);
+}
+
+export function coolAfterTurn(state, now) {
+  if (state.config.minimumTurnGapSeconds) state.nextTurnAt = now + state.config.minimumTurnGapSeconds * 1000;
+}
+
 export function finishTurn(actor, due, now, intervalMs) {
   // Coalesce missed periods; never catch up by issuing a burst of old plans.
   actor.nextDue = Math.max(due + intervalMs, now + intervalMs);

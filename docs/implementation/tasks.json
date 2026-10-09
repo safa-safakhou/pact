@@ -7422,6 +7422,50 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt"
+    },
+    {
+      "id": "PACT-143",
+      "title": "Reduce continuous local-player machine load with staggered hourly pacing",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-138",
+        "PACT-142"
+      ],
+      "sources": [
+        "social",
+        "runtime",
+        "rules"
+      ],
+      "covers": [
+        "S01",
+        "R07"
+      ],
+      "scope": [
+        "Apply founder-requested low-pressure profile to existing continuous owners, preserving identities/counters/pending payloads and authority.",
+        "Use staggered hourly scheduling, persisted inter-turn cooling and immediate model unloading; verify quiet idle and bounded live resumption."
+      ],
+      "acceptance": [
+        "Existing continuous identities, counters, pending commands and game authority remain unchanged under the applied pacing change.",
+        "Staggering and a persisted cooling gap prevent an overdue cohort burst; normal finite profiles remain unchanged.",
+        "Transport forwards explicit zero keep-alive and live GPU/controller observations verify unloading and reduced scheduling."
+      ],
+      "components": [
+        "local population controller"
+      ],
+      "evidence": [
+        "docs/implementation/reports/continuous-low-pressure-20261009.md",
+        "docs/implementation/reports/evidence/continuous-low-pressure-20261009.json",
+        "Runner/client Node tests: 66 passed; native Windows low-pressure tests: 2 passed; Biome passed. Same 50 owners retained; resumed task Running; zero resident models during cooldown; GPU 39 C / 1 percent at 21:11 Berlin."
+      ],
+      "assignee": "codex-low-pressure",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
     }
   ],
   "source_sha256": {

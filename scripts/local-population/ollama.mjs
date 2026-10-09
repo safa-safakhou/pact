@@ -35,7 +35,7 @@ export class LocalModel {
         stream: false,
         think: false,
         format: schema,
-        keep_alive: "10m",
+        keep_alive: this.config.keepAlive ?? "10m",
         options: { num_ctx: this.config.context, num_predict: this.config.outputTokens, temperature: 0 },
       }),
     });

@@ -15,7 +15,7 @@ import {
   recoverFullCommand,
 } from "./full-game.mjs";
 import { LocalModel } from "./ollama.mjs";
-import { finishTurn, nextActor } from "./scheduler.mjs";
+import { coolAfterTurn, finishTurn, nextContinuousActor } from "./scheduler.mjs";
 import { collectSocialWork, rememberSocialOutcome, socialActionGuard } from "./social-work.mjs";
 import { atomicJson, RunStore } from "./state.mjs";
 
@@ -220,7 +220,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
     const peers = state.actors.map(({ kingdomId, nickname }) => ({ kingdomId, nickname }));
     let turns = 0;
     while (active() && turns < turnLimit) {
-      const actor = nextActor(state.actors, Date.now());
+      const actor = nextContinuousActor(state, Date.now());
       if (!actor) {
         await delay(500);
         continue;
@@ -346,6 +346,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
           }
         }
         finishTurn(actor, due, Date.now(), state.config.intervalSeconds * 1000);
+        coolAfterTurn(state, Date.now());
         // Failed actors retry later rather than permanently disappearing. Pending exact commands recover first.
         if (actor.failures > 1)
           actor.nextDue = Math.max(actor.nextDue, Date.now() + Math.min(3600000, actor.failures * 300000));
