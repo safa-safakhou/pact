@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Daily token and Luna cost estimate](continuous-token-budget-20261009.md) — measured local token usage and current official API/credit rates; read-only projection, no paid model switch.
+
 - [Continuous model switch](continuous-model-switch-20261009.md) — PACT-142, founder-authorized Qwen 9B replacement on the same fifty continuous owners; identities, counters and indefinite authorization preserved.
 
 - [Local-model shortlist](local-model-shortlist-20261009.md) — founder-requested research: hardware fit, recent alternatives and bounded comparison recommendations; live model unchanged.

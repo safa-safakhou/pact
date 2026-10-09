@@ -1,0 +1,101 @@
+{
+  "observedAt": "2026-10-09T18:44:01.931Z",
+  "since": "2026-10-09T17:31:40.460Z",
+  "accounts": 50,
+  "model": "qwen3.5:9b",
+  "billingAssumptions": {
+    "model": "gpt-6-luna",
+    "inputUsdPerMillion": 0.1,
+    "outputUsdPerMillion": 0.5,
+    "cachedInputUsdPerMillion": 0.01,
+    "noCacheAssumed": true,
+    "noReasoningTokensInObservedLocalRun": true
+  },
+  "sinceSwitch": {
+    "elapsedMinutes": 72.35785,
+    "successfulModelCalls": 412,
+    "measuredCalls": 412,
+    "failedCalls": [],
+    "totalInputTokens": 11082789,
+    "totalOutputTokens": 138673,
+    "meanInputTokens": 26899.973300970873,
+    "meanOutputTokens": 336.5849514563107,
+    "p95InputTokens": 30639,
+    "p95OutputTokens": 547,
+    "projectedPerDay": {
+      "calls": 8199.24859569487,
+      "inputTokens": 220559568.3122149,
+      "outputTokens": 2759743.690560181,
+      "lunaUsd": 23.435828676501583
+    }
+  },
+  "recent15Minutes": {
+    "elapsedMinutes": 15,
+    "successfulModelCalls": 88,
+    "measuredCalls": 88,
+    "failedCalls": [],
+    "totalInputTokens": 2379225,
+    "totalOutputTokens": 27491,
+    "meanInputTokens": 27036.647727272728,
+    "meanOutputTokens": 312.39772727272725,
+    "p95InputTokens": 30757,
+    "p95OutputTokens": 547,
+    "projectedPerDay": {
+      "calls": 8448,
+      "inputTokens": 228405600,
+      "outputTokens": 2639136,
+      "lunaUsd": 24.160128
+    }
+  },
+  "scenarios": [
+    {
+      "intervalMinutes": 5,
+      "callsPerDay": 14400,
+      "inputTokensPerDay": 387359615.53398055,
+      "outputTokensPerDay": 4846823.300970874,
+      "lunaUsdPerDay": 41.15937320388349,
+      "lunaUsd30Days": 1234.7811961165048
+    },
+    {
+      "intervalMinutes": 10,
+      "callsPerDay": 7200,
+      "inputTokensPerDay": 193679807.76699027,
+      "outputTokensPerDay": 2423411.650485437,
+      "lunaUsdPerDay": 20.579686601941745,
+      "lunaUsd30Days": 617.3905980582524
+    },
+    {
+      "intervalMinutes": 15,
+      "callsPerDay": 4800,
+      "inputTokensPerDay": 129119871.8446602,
+      "outputTokensPerDay": 1615607.7669902914,
+      "lunaUsdPerDay": 13.719791067961166,
+      "lunaUsd30Days": 411.593732038835
+    },
+    {
+      "intervalMinutes": 30,
+      "callsPerDay": 2400,
+      "inputTokensPerDay": 64559935.9223301,
+      "outputTokensPerDay": 807803.8834951457,
+      "lunaUsdPerDay": 6.859895533980583,
+      "lunaUsd30Days": 205.7968660194175
+    },
+    {
+      "intervalMinutes": 60,
+      "callsPerDay": 1200,
+      "inputTokensPerDay": 32279967.96116505,
+      "outputTokensPerDay": 403901.94174757286,
+      "lunaUsdPerDay": 3.4299477669902916,
+      "lunaUsd30Days": 102.89843300970875
+    }
+  ],
+  "sources": [
+    "https://developers.openai.com/api/docs/models/gpt-6-luna",
+    "https://developers.openai.com/api/docs/models/gpt-6-sol",
+    "https://developers.openai.com/api/docs/guides/reasoning",
+    "https://learn.chatgpt.com/docs/pricing"
+  ],
+  "checkedDate": "2026-10-09",
+  "projectionOnly": true,
+  "runtimeChanged": false
+}
