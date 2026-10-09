@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**64 tickets · 46 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**64 tickets · 47 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1955,7 +1955,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-142"></a>
 ## PACT-142 — Switch existing continuous fifty-player population to tested Qwen 9B
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -1972,7 +1972,14 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Model switch refuses active, terminal, unauthorized or pending-command states and preserves existing game identity, lifetime counters and authority.
-- [ ] All fifty accounts are configured for the pinned Qwen 3.5 9B model and observed live results are reported separately from configuration.
+- [x] Model switch refuses active, terminal, unauthorized or pending-command states and preserves existing game identity, lifetime counters and authority.
+- [x] All fifty accounts are configured for the pinned Qwen 3.5 9B model and observed live results are reported separately from configuration.
 
 **Assignee:** codex-model-switch
+
+**Evidence**
+
+- docs/implementation/reports/continuous-model-switch-20261009.md
+- docs/implementation/reports/evidence/continuous-model-switch-20261009.json
+- Implementation 9e5595c; 64 Node tests and native Windows switch verification passed; pinned 9B applied to same fifty owners at 4,213 lifetime attempts.
+- Live snapshot: 12 actual Qwen 9B turns, 19 messages and one signature committed; zero failed turns/pending commands. All 50 configured, same run ID/owners, indefinite bounds and pacing preserved. No completed historical experiment resumed.

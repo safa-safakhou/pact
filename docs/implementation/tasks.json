@@ -7382,7 +7382,7 @@
       "id": "PACT-142",
       "title": "Switch existing continuous fifty-player population to tested Qwen 9B",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7412,7 +7412,12 @@
       "components": [
         "local population controller"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/continuous-model-switch-20261009.md",
+        "docs/implementation/reports/evidence/continuous-model-switch-20261009.json",
+        "Implementation 9e5595c; 64 Node tests and native Windows switch verification passed; pinned 9B applied to same fifty owners at 4,213 lifetime attempts.",
+        "Live snapshot: 12 actual Qwen 9B turns, 19 messages and one signature committed; zero failed turns/pending commands. All 50 configured, same run ID/owners, indefinite bounds and pacing preserved. No completed historical experiment resumed."
+      ],
       "assignee": "codex-model-switch",
       "blocked_by_external": [],
       "block_reason": null,

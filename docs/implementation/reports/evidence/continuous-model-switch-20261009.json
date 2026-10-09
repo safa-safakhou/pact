@@ -1,0 +1,63 @@
+{
+  "at": "2026-10-09T17:34:05.342Z",
+  "transition": {
+    "runId": "full-game-1791537512736-10b87b6c",
+    "at": "2026-10-09T17:31:40.460Z",
+    "from": "qwen3.5:4b",
+    "to": "qwen3.5:9b",
+    "previousDigest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+    "requests": 4213,
+    "authorization": "Founder requested switching the existing fifty accounts to the better tested model, 9 October 2026.",
+    "accounts": 50
+  },
+  "runId": "full-game-1791537512736-10b87b6c",
+  "status": "running",
+  "requests": 4225,
+  "configured9B": 50,
+  "sameOwners": true,
+  "intervalSeconds": 300,
+  "deadline": null,
+  "requestCap": null,
+  "plans": 12,
+  "models": [
+    "qwen3.5:9b"
+  ],
+  "emptyPlans": 1,
+  "completedTurns": 12,
+  "completedOwners": 12,
+  "outcomes": {
+    "game.message.send:COMMITTED": 19,
+    "game.supply.sign:INVALID_COMMAND": 1,
+    "game.supply.sign:COMMITTED": 1
+  },
+  "failedTurns": [],
+  "pending": 0,
+  "currentFailures": [],
+  "latencyMs": {
+    "p50": 9296.927800000005,
+    "p95": 17461.0629
+  },
+  "turnActors": [
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "verification": {
+    "nodeTests": 64,
+    "nativeWindowsSwitchTest": 1,
+    "implementationCommit": "9e5595c",
+    "gpuResidencyBytes": 6684284026,
+    "gpuContext": 32768,
+    "finiteExperimentsRemainTerminal": true
+  }
+}
