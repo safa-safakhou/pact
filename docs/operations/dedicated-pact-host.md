@@ -25,7 +25,7 @@ WireGuard `pact` is enabled on both hosts: old `10.77.0.1/30`, new `10.77.0.2/30
 - `/srv/pact/state`: privacy registry, operator register, release images, configuration rollback and evidence.
 - `/srv/pact/backups/restic`: encrypted backups, 35-day retention, six-hour timer. These remain on the same host under the MVP baseline and do not protect against loss of that host. Frozen old-host data and historical backups remain available.
 
-Current release is `subdomain-20261008-1`; previous images are `chatgpt-approval-20261007-3`. The new images layer the tested existing runtime with the existing-only guest recovery change and rebuild browser assets for root paths; no database migration or economy change is introduced. Docker logs use the local driver with 20 MB × 3 files per container; journald is limited to 256 MB.
+Current release is **`local-reliability-20261009-1`**; previous images are `council-20261008-2`. This release fixes consistent supply-offer expiry and restricted capacity/closed-offer recovery details. Deployment verification passed; no new database migration or economy change was introduced. [Verification and limitations](../implementation/reports/local-reliability-20261009.md). The earlier subdomain release established existing-only guest recovery and root browser paths. Docker logs use the local driver with 20 MB × 3 files per container; journald is limited to 256 MB.
 
 Deployment, backup, verification and rollback scripts honor the Compose override. Do not omit it for manual operations. Future deployment builds use the root asset paths from the protected environment and start the direct public edge.
 

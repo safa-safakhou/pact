@@ -1,0 +1,31 @@
+{
+  "observedAt": "2026-10-09T08:09:17.145Z",
+  "release": "local-reliability-20261009-1",
+  "kingdomId": "557552df-b070-46f5-a56d-8449325f580b",
+  "result": {
+    "commandId": "c7bef40b-ea24-4367-a03e-ff4050f2b8da",
+    "code": "EXPIRED",
+    "receiptExists": false
+  },
+  "events": [
+    {
+      "type": "action_requested",
+      "actor": 34,
+      "commandId": "c7bef40b-ea24-4367-a03e-ff4050f2b8da",
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "74981212-0f46-4455-9b97-e68a7ca83915",
+        "version": 1
+      },
+      "role": "agent"
+    },
+    {
+      "type": "action_denied",
+      "actor": 34,
+      "commandId": "c7bef40b-ea24-4367-a03e-ff4050f2b8da",
+      "code": "EXPIRED"
+    }
+  ],
+  "modelRequests": 0,
+  "note": "Original failed signature target checked against deployed corrected error; no committed game effect or historical run restart."
+}

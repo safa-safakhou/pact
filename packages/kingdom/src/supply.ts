@@ -156,8 +156,9 @@ export class SupplyService {
 
   private assertOpen(offer: OfferRow, gameTimeMs: number, version: number): void {
     if (offer.version !== version) throw new SupplyError("STALE_VERSION");
+    if (offer.status === "expired" || Number(offer.expires_game_time_ms) <= gameTimeMs)
+      throw new SupplyError("OFFER_EXPIRED");
     if (offer.status !== "open") throw new SupplyError("OFFER_CLOSED");
-    if (Number(offer.expires_game_time_ms) <= gameTimeMs) throw new SupplyError("OFFER_EXPIRED");
   }
 
   private async validateRates(client: PoolClient, offer: OfferRow): Promise<void> {

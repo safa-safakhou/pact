@@ -1,5 +1,9 @@
 # PACT engineering instructions
 
+## Founder preference — 9 October 2026
+
+Always commit completed, verified changes before handing work back. This is standing authorization for local commits; push, deployment and new experiments still require covering authorization. Preserve unrelated work and never commit credentials or private runtime state.
+
 ## Completed assignment — backend population experiment, 4 October 2026
 
 The founder authorized ten distinct GPT Luna envoys and ninety scripted players, a two-hour initial observation and a global 200-model-request cap including retries. The live experiment ends at 2026-10-04T23:13:59.742Z; do not extend it or reset its budget. Read docs/operations/population-playtest.md and docs/implementation/reports/population-playtest-20261004.md before touching the runner. It finished at the original deadline with 200 requests, 100 original players, 2,321 committed commands and 131 contracts. See the final report for evidence and limitations; no further run or roadmap work is authorized automatically. Linear issue creation failed at the workspace free issue limit; the report is the execution record. The 24 Later production tasks remain deferred.

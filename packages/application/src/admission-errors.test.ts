@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { type CommandEnvelope, ProductScopeSchema } from "@pact/contracts";
-import { SocialError, type SocialService } from "@pact/kingdom";
+import { SocialError, type SocialService, SupplyError, type SupplyService } from "@pact/kingdom";
 import type { Pool, PoolClient } from "pg";
 import { expect, it, vi } from "vitest";
 import { agentRecovery } from "./agent-recovery.js";
@@ -12,6 +12,33 @@ const principal = {
   productScope: ProductScopeSchema.parse("pact"),
   audience: "human" as const,
 };
+it.each(["CONTRACT_CAPACITY", "OFFER_CLOSED", "OFFER_EXPIRED"] as const)(
+  "preserves safe supply diagnostic %s and game recovery without widening authority",
+  async (detail) => {
+    const supply = {
+      signOffer: async () => {
+        throw new SupplyError(detail);
+      },
+    } as unknown as SupplyService;
+    const handler = new GameCommandHandler(
+      {} as SocialService,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      supply,
+    );
+    const action = { kind: "game.supply.sign" as const, offerId: randomUUID(), version: 1 };
+    await expect(handler.execute({} as PoolClient, principal, { ...command(), action }, 0)).rejects.toMatchObject({
+      code: detail === "OFFER_EXPIRED" ? "EXPIRED" : "INVALID_COMMAND",
+      detail: detail === "OFFER_EXPIRED" ? undefined : detail,
+    });
+    expect(agentRecovery(detail === "OFFER_EXPIRED" ? "EXPIRED" : "INVALID_COMMAND", detail)).not.toContain(
+      "Correct the arguments",
+    );
+  },
+);
 function command() {
   return {
     schemaVersion: "pact.command.v1",

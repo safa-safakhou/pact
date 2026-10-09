@@ -6,6 +6,18 @@
 
 ## Current completed work
 
+- [Local-player reliability and negotiation verification](local-reliability-20261009.md) — PACT-137, deployed expiry/recovery fixes, prerequisite cleanup, bounded live probes, 87 integration checks and Qwen replay; substantive bargaining and coverage gaps quantified.
+
+- [Final local Qwen population investigation](local-population-final-20261009.md) — PACT-135/136 observation complete at 08:00 Berlin: 2,969 requests, 4,164 commands, 272 settled contracts; three accounts stopped on truncation.
+
+- [Authorized local-run extension](local-extension-20261009.md) — PACT-136, same 50 owners resumed with preserved budgets until 08:00 Berlin on 9 October; observation now complete; see final investigation above.
+
+- [50-account local background startup](local-background-20261009.md) — PACT-135, Windows background supervisor installed, all fifty first turns verified; original two-hour observation subsequently extended by PACT-136 to 08:00 Berlin on 9 October.
+
+- [Automatic local-player owner decisions](local-owner-approvals-20261009.md) — PACT-134, bounded synthetic-owner approval controller and actual live exact-command approval.
+
+- [Local-model population and capacity](local-population-20261009.md) — PACT-133, 48 local Qwen accounts verified in a bounded live run; full-turn p95 capacity estimates and limitations recorded. Linear remains at its free issue limit.
+
 - [Repository checkpoint and verification — 9 October](repository-checkpoint-20261009.md) — reviewed changes, local checks and private-evidence handling.
 
 - [Council and kingdom characters](council-20261008.md) — PACT-132, shared browser/ChatGPT Council verified and shipped on the dedicated host.

@@ -754,7 +754,7 @@
       ],
       "acceptance": [
         "Same ID and payload produce one mutation and the original receipt; changed payload with reused ID returns conflict.",
-        "A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account’s result."
+        "A timed-out write can be reconciled through receipt lookup without re-execution or exposing another account\u2019s result."
       ],
       "components": [
         "command gateway",
@@ -1161,7 +1161,7 @@
         "Include Telegram sandbox-session/link cleanup and backup suppression before recruiting real connection testers; native-session cleanup is added when signed native testing begins."
       ],
       "acceptance": [
-        "Export excludes credentials and other players’ data; delete disables access immediately and meets specified live-store deadlines.",
+        "Export excludes credentials and other players\u2019 data; delete disables access immediately and meets specified live-store deadlines.",
         "Restore a pre-deletion backup and replay the deletion/revocation registry before traffic; removed credentials and content cannot reappear."
       ],
       "components": [
@@ -1386,11 +1386,11 @@
         "A09"
       ],
       "scope": [
-        "Collect Version 1.4 A01–A09 synthetic-MVP evidence, the truthful supported-route matrix, repeated setup fixtures, privacy preflight, and test-environment release revision.",
+        "Collect Version 1.4 A01\u2013A09 synthetic-MVP evidence, the truthful supported-route matrix, repeated setup fixtures, privacy preflight, and test-environment release revision.",
         "Record pass/fail for every MVP criterion and the real-client/key/human-study work deferred to PACT-079 before production support is advertised."
       ],
       "acceptance": [
-        "All Version 1.4 A01–A09 synthetic-MVP checks pass, including Telegram test-bot identity, local native-PKCE fixtures, truthful unavailable-host labels, and reusable-module contracts, with no live economic world exposed.",
+        "All Version 1.4 A01\u2013A09 synthetic-MVP checks pass, including Telegram test-bot identity, local native-PKCE fixtures, truthful unavailable-host labels, and reusable-module contracts, with no live economic world exposed.",
         "The gate identifies recorded fixtures as fixtures and carries live clients/keys, distribution, and unfamiliar-human measurement into PACT-079 rather than claiming them."
       ],
       "components": [
@@ -1438,7 +1438,7 @@
         "pure rules catalog and arithmetic"
       ],
       "evidence": [
-        "docs/implementation/reports/rules-catalog.md — 2026-09-23: pact-s1-v1 Zod catalog, exact BigInt resource and rational power helpers, grant-first construction, deterministic fixtures, UUID ordering, and API decimal-string round-trip; npm run build, npm test (81), npm run typecheck, npm run lint passed under Node 24."
+        "docs/implementation/reports/rules-catalog.md \u2014 2026-09-23: pact-s1-v1 Zod catalog, exact BigInt resource and rational power helpers, grant-first construction, deterministic fixtures, UUID ordering, and API decimal-string round-trip; npm run build, npm test (81), npm run typecheck, npm run lint passed under Node 24."
       ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
@@ -1477,7 +1477,7 @@
         "rules worker"
       ],
       "evidence": [
-        "docs/implementation/reports/world-clock.md — 2026-09-23: PostgreSQL-fenced world lease, committed game-minute clock, atomic ordered tick transaction/outbox, command admission, suspension/resume without catch-up. Node 24 npm run build, lint, typecheck, test (83), test:integration (41) passed against PostgreSQL 17."
+        "docs/implementation/reports/world-clock.md \u2014 2026-09-23: PostgreSQL-fenced world lease, committed game-minute clock, atomic ordered tick transaction/outbox, command admission, suspension/resume without catch-up. Node 24 npm run build, lint, typecheck, test (83), test:integration (41) passed against PostgreSQL 17."
       ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
@@ -1517,7 +1517,7 @@
         "storage"
       ],
       "evidence": [
-        "docs/implementation/reports/resource-ledger.md — 2026-09-23: exact ordinary/restricted/locked balances, idempotent movement/provenance records, storage overflow, cancellation loss, grant expiry and atomic production hooks. Node 24 npm run lint, typecheck, build, test (87), test:integration (46) passed against PostgreSQL 17."
+        "docs/implementation/reports/resource-ledger.md \u2014 2026-09-23: exact ordinary/restricted/locked balances, idempotent movement/provenance records, storage overflow, cancellation loss, grant expiry and atomic production hooks. Node 24 npm run lint, typecheck, build, test (87), test:integration (46) passed against PostgreSQL 17."
       ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
@@ -1559,7 +1559,7 @@
         "kingdom founding"
       ],
       "evidence": [
-        "docs/implementation/reports/kingdom-founding.md — 2026-09-23: atomic one-time ranked activation, human-only API, founding state, rollback/retention checks. Node 24 npm run build, typecheck, test (88), test:integration (51), lint passed against PostgreSQL 17."
+        "docs/implementation/reports/kingdom-founding.md \u2014 2026-09-23: atomic one-time ranked activation, human-only API, founding state, rollback/retention checks. Node 24 npm run build, typecheck, test (88), test:integration (51), lint passed against PostgreSQL 17."
       ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
@@ -1599,7 +1599,7 @@
         "building rules and queues"
       ],
       "evidence": [
-        "docs/implementation/reports/building-queues.md — 2026-09-23: 35 legal level-I–VI upgrades, two active/one waiting per slot, ordered funded/authorized starts, provenance refunds, retry/rollback checks. Node 24 npm run build, typecheck, test (90), test:integration (55), lint passed against PostgreSQL 17."
+        "docs/implementation/reports/building-queues.md \u2014 2026-09-23: 35 legal level-I\u2013VI upgrades, two active/one waiting per slot, ordered funded/authorized starts, provenance refunds, retry/rollback checks. Node 24 npm run build, typecheck, test (90), test:integration (55), lint passed against PostgreSQL 17."
       ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
@@ -1638,7 +1638,7 @@
         "unit inventory and training"
       ],
       "evidence": [
-        "docs/implementation/reports/troop-training.md — 2026-09-23: ordinary-paid sequential batches, immutable UUIDv7 units, capacity/placement locks, Home Guard restrictions, 80% partial cancellation, battle-ID snapshots. Node 24 npm run build, typecheck, test (90), test:integration (60), lint passed against PostgreSQL 17."
+        "docs/implementation/reports/troop-training.md \u2014 2026-09-23: ordinary-paid sequential batches, immutable UUIDv7 units, capacity/placement locks, Home Guard restrictions, 80% partial cancellation, battle-ID snapshots. Node 24 npm run build, typecheck, test (90), test:integration (60), lint passed against PostgreSQL 17."
       ],
       "assignee": "codex-rules-foundation",
       "blocked_by_external": [],
@@ -1993,11 +1993,11 @@
       ],
       "scope": [
         "Implement CSPRNG seeds, encrypted storage, RFC-8785 commitment payloads, HMAC rejection-sampling dice, reveal-on-resolution/cancellation, and seed-access audit.",
-        "Publish a small verification routine and the specification’s fixed fixture; keep cryptographic and game-power calculations separate."
+        "Publish a small verification routine and the specification\u2019s fixed fixture; keep cryptographic and game-power calculations separate."
       ],
       "acceptance": [
         "The reference seed yields the published commitment and attacker 6 / defender 1.",
-        "Rejection of byte values 252–255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed."
+        "Rejection of byte values 252\u2013255, modified seed/raid/version, and pre-resolution read attempts are tested; canceled raids reveal the original seed."
       ],
       "components": [
         "randomness and verification"
@@ -2080,7 +2080,7 @@
         "Resolve raids in chronological/declaration order against surviving IDs, apply loot only to the leader, release pending returns, and retain participant/public report variants."
       ],
       "acceptance": [
-        "An earlier battle’s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.",
+        "An earlier battle\u2019s casualties are absent from every later resolution; no unit can fight from two placements or be duplicated as reinforcement.",
         "Same-boundary completion/lock/withdrawal, hunger changes, leader cancellation, pinned visitors, last-second requests, and missing units resolve exactly once."
       ],
       "components": [
@@ -2165,7 +2165,7 @@
       ],
       "acceptance": [
         "Build/train conversions preserve marked wealth; grants, Home Guard, expected income, borrowed units, and cosmetics never count.",
-        "Transfer, default, cancellation, loot, and seizure fixtures change the correct owner’s wealth once and allow negative Fortune."
+        "Transfer, default, cancellation, loot, and seizure fixtures change the correct owner\u2019s wealth once and allow negative Fortune."
       ],
       "components": [
         "wealth accounting and rankings"
@@ -2450,22 +2450,22 @@
         "Rehearse backup restore and outbox replay; compare recomputed wealth and unit placement to the authoritative state after recovery."
       ],
       "acceptance": [
-        "All R01–R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.",
+        "All R01\u2013R06 assertions have reproducible passing evidence, including overlapping raids and multi-client authority races.",
         "No negative stock, duplicate troop, repeated reward, partially published tick, or lost committed receipt survives a generated scenario."
       ],
       "components": [
         "rules property/recovery suites"
       ],
       "evidence": [
-        "24 Sep 2026: MNI-115 remains In Progress. Revisions 7eccf06, 804198c, b38c5f5. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, simultaneous cross-account supply signatures with same-ID receipt recovery, and a revocation-first agent transfer race with no stock or receipt effect. Node 24 typecheck/lint and 138 PostgreSQL integration tests passed. The R01–R06 matrix remains partial; broad cross-module fault injection is not Done.",
+        "24 Sep 2026: MNI-115 remains In Progress. Revisions 7eccf06, 804198c, b38c5f5. docs/implementation/reports/rules-verification-progress.md records a passing 120-operation seeded rollback/replay/journal fixture, isolated schema dump/restore rehearsal, simultaneous cross-account supply signatures with same-ID receipt recovery, and a revocation-first agent transfer race with no stock or receipt effect. Node 24 typecheck/lint and 138 PostgreSQL integration tests passed. The R01\u2013R06 matrix remains partial; broad cross-module fault injection is not Done.",
         "24 Sep 2026: revision f7febfc injects a deterministic failure after a fake-provider game command commits but before run reconciliation; one recoverable receipt/message remains, the run fails conservatively, and a repeated model step is not invoked. Node 24 lint and 140 PostgreSQL integration tests passed. See docs/implementation/reports/rules-verification-progress.md. This is one R06 interleaving, not complete process-death, transition, or VPS recovery evidence.",
-        "24 Sep 2026: overlapping-raid resolution fixture injects a pre-commit failure after two battles and verifies unchanged troop placement, stock, locked raids, and zero resolution events; retry commits two reports/events exactly once. Node 24 build/typecheck/lint, 108 unit, and 142 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. R01–R06 matrix and full VPS recovery remain incomplete; keep In Progress.",
-        "24 Sep 2026: revision 1ef8025 adds R06 run-tool handoff fixtures proving one persisted receipt summary reaches the next provider step, finished-run replay does not duplicate it, and run deletion cascades it; a shared worker fixture proves the summary omits message prose. Node 24 build/typecheck/lint, 108 unit, and 144 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker-death recovery and full R01–R06 matrix remain incomplete; keep In Progress.",
-        "24 Sep 2026: revision 014f4a9 adds R06 credential-boundary fixtures: owner/provider-bound vault use, one bounded synthetic adapter response without network, and wrong-provider denial before transport. Node 24 build/typecheck/lint, 110 unit, 146 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full R01–R06 matrix, process death, and VPS base/WAL restore remain; keep In Progress.",
-        "24 Sep 2026: revision 70c8597 adds a deterministic R06 redelivery fixture: an unresolved model call becomes failed/ambiguous, reservation and lease clear, late completion does not restart, and no second provider request occurs. Node 24 build/typecheck/lint, 110 unit, 147 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker kill, full R01–R06 matrix, and VPS restore remain; keep In Progress.",
-        "24 Sep 2026: revision 9dc4c46 adds an R04/R06 cross-route scenario with authenticated web, fake model, and MCP. MCP write-lease acquisition fails during the in-app run and succeeds after completion; all three message receipts are sender-owned. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. This is one interleaving, not full R01–R06, actual process kill, or VPS restore; keep In Progress.",
-        "24 Sep 2026: a separate Node ledger writer killed with SIGKILL before COMMIT leaves no stock movement; killed after COMMIT leaves exactly one durable movement and an idempotent replay. The isolated game-command fixture also avoids a real-minute rollover during the full suite. Node 24 build/typecheck/lint, 110 unit, 150 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Inference-worker death, full base/WAL restore, and full R01–R06 remain; keep In Progress.",
-        "25 Sep 2026: tests/integration/run-process-death.test.ts kills a separate inference executor after durable job claim and in-flight model reservation, then reclaims the expired job and runs conservative recovery. It observes ambiguous failure, zero reservation, released write lease, completed job, no second provider request or tool result. Node 24 build/typecheck/lint, 110 unit, 151 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/rules-verification.md, and docs/implementation/reports/rules-verification-progress.md. Production binary restart, death after game-command commit, full base/WAL restore, and full R01–R06 remain; keep In Progress.",
+        "24 Sep 2026: overlapping-raid resolution fixture injects a pre-commit failure after two battles and verifies unchanged troop placement, stock, locked raids, and zero resolution events; retry commits two reports/events exactly once. Node 24 build/typecheck/lint, 108 unit, and 142 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. R01\u2013R06 matrix and full VPS recovery remain incomplete; keep In Progress.",
+        "24 Sep 2026: revision 1ef8025 adds R06 run-tool handoff fixtures proving one persisted receipt summary reaches the next provider step, finished-run replay does not duplicate it, and run deletion cascades it; a shared worker fixture proves the summary omits message prose. Node 24 build/typecheck/lint, 108 unit, and 144 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker-death recovery and full R01\u2013R06 matrix remain incomplete; keep In Progress.",
+        "24 Sep 2026: revision 014f4a9 adds R06 credential-boundary fixtures: owner/provider-bound vault use, one bounded synthetic adapter response without network, and wrong-provider denial before transport. Node 24 build/typecheck/lint, 110 unit, 146 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full R01\u2013R06 matrix, process death, and VPS base/WAL restore remain; keep In Progress.",
+        "24 Sep 2026: revision 70c8597 adds a deterministic R06 redelivery fixture: an unresolved model call becomes failed/ambiguous, reservation and lease clear, late completion does not restart, and no second provider request occurs. Node 24 build/typecheck/lint, 110 unit, 147 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Actual worker kill, full R01\u2013R06 matrix, and VPS restore remain; keep In Progress.",
+        "24 Sep 2026: revision 9dc4c46 adds an R04/R06 cross-route scenario with authenticated web, fake model, and MCP. MCP write-lease acquisition fails during the in-app run and succeeds after completion; all three message receipts are sender-owned. Node 24 build/typecheck/lint, 110 unit, 149 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. This is one interleaving, not full R01\u2013R06, actual process kill, or VPS restore; keep In Progress.",
+        "24 Sep 2026: a separate Node ledger writer killed with SIGKILL before COMMIT leaves no stock movement; killed after COMMIT leaves exactly one durable movement and an idempotent replay. The isolated game-command fixture also avoids a real-minute rollover during the full suite. Node 24 build/typecheck/lint, 110 unit, 150 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Inference-worker death, full base/WAL restore, and full R01\u2013R06 remain; keep In Progress.",
+        "25 Sep 2026: tests/integration/run-process-death.test.ts kills a separate inference executor after durable job claim and in-flight model reservation, then reclaims the expired job and runs conservative recovery. It observes ambiguous failure, zero reservation, released write lease, completed job, no second provider request or tool result. Node 24 build/typecheck/lint, 110 unit, 151 PostgreSQL integration tests pass. See docs/api/runs.md, docs/architecture/rules-verification.md, and docs/implementation/reports/rules-verification-progress.md. Production binary restart, death after game-command commit, full base/WAL restore, and full R01\u2013R06 remain; keep In Progress.",
         "25 Sep 2026: PACT-049 inbox-read fixture adds partial R06 cross-account evidence: fake-model and read-only MCP return only owner event IDs, reject caller accountId, and omit oversized payload. Node 24 build/typecheck/lint, 110 unit, 152 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Generated cross-account and full restore matrix remain; keep In Progress.",
         "25 Sep 2026: PACT-049 world/report read fixture adds R04/R06 cross-account evidence: owner model result contains balances and a completed scout report, outsider model result has public-only view and NOT_FOUND for private report; MCP rejects supplied accountId. Unit fixtures check bounded truncation. Node 24 build/typecheck/lint, 112 unit, 153 PostgreSQL integration tests pass. See docs/implementation/reports/rules-verification-progress.md. Generated cross-module and full restore matrix remain; keep In Progress.",
         "25 Sep 2026: additional R04/R06 owner-scoped receipt and approval-status model/MCP reads reject outsider and caller-supplied owner IDs. A fixed-clock retirement fixture now aligns synthetic ledger/closure timestamps so 180-day retention checks remain reproducible. Local Node 24 build/typecheck/lint, 113 unit, and 154 PostgreSQL integration tests pass. See docs/architecture/rules-verification.md and docs/implementation/reports/rules-verification-progress.md. Full generated transition and VPS recovery matrix remain; keep In Progress.",
@@ -2576,7 +2576,7 @@
       ],
       "acceptance": [
         "The fixture compiles/runs independently and completes a bounded action/approval cycle without kingdom types or production services.",
-        "PACT’s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes."
+        "PACT\u2019s integrated stock-plus-authority transaction tests still pass; CI blocks prohibited imports and unversioned breaking contract changes."
       ],
       "components": [
         "non-game fixture",
@@ -2645,15 +2645,15 @@
         "Review the eight rules acceptance checks without treating design arithmetic as implemented tests."
       ],
       "acceptance": [
-        "R01–R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.",
+        "R01\u2013R08 pass against the committed implementation, recovery environment, and independent non-game reuse fixture.",
         "The release record lists precise reproduction commands and evidence; no unresolved ledger or identity corruption is carried into the social slice."
       ],
       "components": [
         "rules release gate"
       ],
       "evidence": [
-        "29 Sep 2026: MNI-118 claimed In Progress by Mohammad Safakhou after all 27 dependencies were read Done in Linear. R01–R08 gate audit and release record under way; no gate acceptance claimed yet.",
-        "29 Sep 2026: e8a2be8 records the R01–R08 gate acceptance and precise reproduction at docs/implementation/reports/rules-gate.md. Reviewed playable VPS alpha-20260929-4/2143d92, catalog pact-s1-v1, command/event/API v1 schemas and 14 fingerprint guards, R01–R06 replay/fault/conservation fixtures, R07 actual local-model script-win comparison, R08 independent non-game fixture, PACT-048 Chrome matrix, fresh local restore and prior physical VPS Restic restore. Node 24.19 build/typecheck/lint, 175 unit and 226 PostgreSQL 17.11 integration tests, npm run check:non-game, node scripts/rehearse-rules-restore.mjs, and read-only VPS verify.sh passed. No known ledger/identity corruption; no pilot/fun/production certification. Linear both acceptance items checked and Done/assignee read back; comment 76c9b9f2-ff1e-4777-973a-e942455f04c0."
+        "29 Sep 2026: MNI-118 claimed In Progress by Mohammad Safakhou after all 27 dependencies were read Done in Linear. R01\u2013R08 gate audit and release record under way; no gate acceptance claimed yet.",
+        "29 Sep 2026: e8a2be8 records the R01\u2013R08 gate acceptance and precise reproduction at docs/implementation/reports/rules-gate.md. Reviewed playable VPS alpha-20260929-4/2143d92, catalog pact-s1-v1, command/event/API v1 schemas and 14 fingerprint guards, R01\u2013R06 replay/fault/conservation fixtures, R07 actual local-model script-win comparison, R08 independent non-game fixture, PACT-048 Chrome matrix, fresh local restore and prior physical VPS Restic restore. Node 24.19 build/typecheck/lint, 175 unit and 226 PostgreSQL 17.11 integration tests, npm run check:non-game, node scripts/rehearse-rules-restore.mjs, and read-only VPS verify.sh passed. No known ledger/identity corruption; no pilot/fun/production certification. Linear both acceptance items checked and Done/assignee read back; comment 76c9b9f2-ff1e-4777-973a-e942455f04c0."
       ],
       "assignee": "Mohammad Safakhou",
       "blocked_by_external": [],
@@ -2807,7 +2807,7 @@
         "Court service"
       ],
       "evidence": [
-        "docs/implementation/reports/courts.md — implementation 490f304; Node 24.19/npm 11.19 build/typecheck/lint, 181 unit and 253 PostgreSQL integration pass / one optional local-model skipped; 13 Court checks plus 13 invitation checks; atomic limits/roles/consented transfer, HTTP/MCP parity, real contract delivery after closure and owned-data lifecycle.",
+        "docs/implementation/reports/courts.md \u2014 implementation 490f304; Node 24.19/npm 11.19 build/typecheck/lint, 181 unit and 253 PostgreSQL integration pass / one optional local-model skipped; 13 Court checks plus 13 invitation checks; atomic limits/roles/consented transfer, HTTP/MCP parity, real contract delivery after closure and owned-data lifecycle.",
         "Linear MNI-121 Done and both Alpha checks read back 2026-10-01; comment b70c7e50-9b0b-4305-9a22-cc193d6832be. Original acceptance remains unchecked for later. No new deployment, Chrome, real-model or player observation; PACT-057 owns actual allegiance records and their Court noninterference fixture."
       ],
       "assignee": "Codex / Mohammad Safakhou",
@@ -2820,7 +2820,7 @@
           "Implement consenting ownership transfer, immediate leave/removal, closure, and deleted-owner archive behavior."
         ],
         "acceptance": [
-          "Concurrent joins cannot exceed a kingdom’s membership limit; moderators cannot remove owners or other moderators or seize game assets.",
+          "Concurrent joins cannot exceed a kingdom\u2019s membership limit; moderators cannot remove owners or other moderators or seize game assets.",
           "Leaving/closing a Court does not cancel contracts or allegiance; an accepted invitation grants only the stated membership."
         ],
         "depends_on": [
@@ -3286,7 +3286,7 @@
       ],
       "acceptance": [
         "Deletion during combat plus Court ownership preserves only necessary economic state while removing identifying/private data within real-time deadlines.",
-        "Restoring a backup or regenerating a share preview cannot resurrect removed content; exports never include a counterparty’s withheld private data."
+        "Restoring a backup or regenerating a share preview cannot resurrect removed content; exports never include a counterparty\u2019s withheld private data."
       ],
       "components": [
         "social retention and deletion"
@@ -3328,7 +3328,7 @@
       ],
       "acceptance": [
         "Raw prompts/messages and provider secrets never enter analytics; events expire at 90 days before de-identified aggregation.",
-        "Day-8–14 returns, referred-player windows, incomplete observation, and intelligence-sale labels can be reproduced from fixtures without counting opens as meaningful play."
+        "Day-8\u201314 returns, referred-player windows, incomplete observation, and intelligence-sale labels can be reproduced from fixtures without counting opens as meaningful play."
       ],
       "components": [
         "product event pipeline and dashboards"
@@ -3665,7 +3665,7 @@
       ],
       "acceptance": [
         "p95 authorized state reads are under 500 ms and command receipts under one second at the specified load, with no skipped or duplicate tick.",
-        "S01–S05 have recorded passing evidence, including compromised key, removed evidence, blocked messaging, and a privacy restore drill."
+        "S01\u2013S05 have recorded passing evidence, including compromised key, removed evidence, blocked messaging, and a privacy restore drill."
       ],
       "components": [
         "social/load validation"
@@ -3707,7 +3707,7 @@
         "Include web, native mobile, and Telegram users in the same pilot world; record channel-specific setup failures and handoffs without increasing gameplay quotas."
       ],
       "acceptance": [
-        "Record at least 7/10 correct explanations of a consequential human decision; evaluate 20/50 meaningful returns in days 8–14, five voluntary sharers, and three referred returning players.",
+        "Record at least 7/10 correct explanations of a consequential human decision; evaluate 20/50 meaningful returns in days 8\u201314, five voluntary sharers, and three referred returning players.",
         "Report full denominators, incomplete referral windows, staff coverage, incidents, and actual failures; do not mark criteria passed before each observation window closes."
       ],
       "components": [
@@ -3768,7 +3768,7 @@
         "S08"
       ],
       "scope": [
-        "Compile S01–S08 evidence and the pilot release revision; distinguish technical checks from observed player behavior.",
+        "Compile S01\u2013S08 evidence and the pilot release revision; distinguish technical checks from observed player behavior.",
         "Record whether the baseline advances or requires a versioned interaction revision and another pilot."
       ],
       "acceptance": [
@@ -4161,7 +4161,7 @@
       "acceptance": [
         "Duplicate and out-of-order refund events cannot over-reverse, credit Gems, or affect ordinary game balances, Fortune, troops, buildings, or achievements.",
         "Full/partial refunds and mixed-funding fixtures reconcile to payment receipts with a human-readable explanation and support audit trail.",
-        "Refund reconciliation retains original purchase-channel provenance and cannot debit another channel’s paid lot to hide an attribution error."
+        "Refund reconciliation retains original purchase-channel provenance and cannot debit another channel\u2019s paid lot to hide an attribution error."
       ],
       "components": [
         "refund reconciliation"
@@ -4436,7 +4436,7 @@
       ],
       "scope": [
         "Prepare iOS/Android signed releases, privacy/data disclosures, account deletion access, report/block controls, review accounts, production app links/push, and supported-device testing.",
-        "Complete required store reviews, Telegram Mini App/bot metadata/deep links, and each channel’s digital-purchase checks; record policy versions and acceptance evidence."
+        "Complete required store reviews, Telegram Mini App/bot metadata/deep links, and each channel\u2019s digital-purchase checks; record policy versions and acceptance evidence."
       ],
       "acceptance": [
         "Release artifacts are reproducible and the tested binaries match submitted builds; production links resolve to the correct account/destination.",
@@ -4551,7 +4551,7 @@
       ],
       "evidence": [
         "OAuth button follow-up: e07dd47 / alpha-20261001-2; docs/implementation/reports/oauth-button-fix.md. Same-origin CSP, visible pending/failure feedback, request timeouts and duplicate submission guard. API build/typecheck/lint, 212 unit and 4 targeted integration tests pass. Backup e55cbc60, deployment/public verification pass. Fresh Chrome dummy login visibly sends POST and shows rejection with button restored, no script errors; personal owner authorization remains for owner. Linear MNI-158 Done, comment 97d3c0f0-7e94-4960-97f5-8949fd10fbf0.",
-        "Complete: 8789315 / 88c273f; docs/implementation/reports/agent-first-completion.md. Atomic external journal, owner Envoy/API/MCP reporting, short lessons and recovery. Build/typecheck/lint, 212 unit and 284 integration pass, optional live-model skip. Deployed alpha-20261001-1 with migrations 0036–0044 and public verification. Three fresh independent Luna accounts learned/discovered/acted from ordinary objectives without UUID/action/repository coaching; five committed moves match owner reports, negotiations/human offer authority remain honestly pending. Normal temporary OAuth grants revoked. Linear MNI-158 Done; comment db6bb46a-bdbd-4be9-9b2c-0400ded0498a.",
+        "Complete: 8789315 / 88c273f; docs/implementation/reports/agent-first-completion.md. Atomic external journal, owner Envoy/API/MCP reporting, short lessons and recovery. Build/typecheck/lint, 212 unit and 284 integration pass, optional live-model skip. Deployed alpha-20261001-1 with migrations 0036\u20130044 and public verification. Three fresh independent Luna accounts learned/discovered/acted from ordinary objectives without UUID/action/repository coaching; five committed moves match owner reports, negotiations/human offer authority remain honestly pending. Normal temporary OAuth grants revoked. Linear MNI-158 Done; comment db6bb46a-bdbd-4be9-9b2c-0400ded0498a.",
         "Partial PACT-099 learning/discovery increment: 8789315; docs/implementation/reports/agent-first-progress.md. Shared owner guide and public handle lookup across MCP/in-app worker; versioned lessons and bounded complete-field output. Node 24 build/typecheck/lint pass, 212 unit and 283 PostgreSQL integration tests pass, one optional live-model skip; final targeted owner/start/lookup fake-provider test passes. No external activity journal or fresh uncoached model play yet; acceptance remains incomplete, In Progress. Local only, hosted 2143d92 unchanged."
       ],
       "assignee": "Mohammad Safakhou / Codex",
@@ -4607,7 +4607,7 @@
         "full-season release validation"
       ],
       "evidence": [
-        "Complete narrowed Alpha: docs/implementation/reports/alpha-final-rehearsal.md; friends docs/operations/alpha-start.md. All 13 dependencies freshly Done before claim. Full integration rerun 284 pass/one optional live-model skip, covering real command/contract/battle/political publication and isolated six-week closure/carryover/provisional results. Three independent live Luna accounts, coherent owner activity and matching Chrome deployment observed; mixed feedback recorded, no unobserved fun/production claims. Live alpha-20261001-1 / 88c273f, backup 537793fe, migrations 0036–0044, deploy verification pass. Linear MNI-155 Done; comment 5cb5a440-3216-4a6c-b70a-74716d5845e5. Original Later acceptance remains postponed."
+        "Complete narrowed Alpha: docs/implementation/reports/alpha-final-rehearsal.md; friends docs/operations/alpha-start.md. All 13 dependencies freshly Done before claim. Full integration rerun 284 pass/one optional live-model skip, covering real command/contract/battle/political publication and isolated six-week closure/carryover/provisional results. Three independent live Luna accounts, coherent owner activity and matching Chrome deployment observed; mixed feedback recorded, no unobserved fun/production claims. Live alpha-20261001-1 / 88c273f, backup 537793fe, migrations 0036\u20130044, deploy verification pass. Linear MNI-155 Done; comment 5cb5a440-3216-4a6c-b70a-74716d5845e5. Original Later acceptance remains postponed."
       ],
       "assignee": "Mohammad Safakhou / Codex",
       "blocked_by_external": [],
@@ -4619,7 +4619,7 @@
           "Execute final accessibility, load, security, provider-error, and recovery regressions at the planned release capacity and record the tested limit."
         ],
         "acceptance": [
-          "L01–L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.",
+          "L01\u2013L06 have linked evidence; no asset/progression/receipt inconsistency appears across the season boundary or a restore.",
           "Critical defects are fixed and their affected scenarios rerun; a 50-player slice test is not mislabeled proof of unlimited global-world capacity."
         ],
         "depends_on": [
@@ -4742,7 +4742,7 @@
         "Prepare the deploy command and controlled signup enablement; actual release execution is a separate explicit operational action, not an effect of generating this backlog."
       ],
       "acceptance": [
-        "Every L01–L06 criterion passes, including native/Telegram distribution, verified payments, and the complete channel matrix; all blocking defects/external reviews are closed.",
+        "Every L01\u2013L06 criterion passes, including native/Telegram distribution, verified payments, and the complete channel matrix; all blocking defects/external reviews are closed.",
         "The release record names who can pause/recover the world and provides a reproducible go/no-go checklist; no task is marked completed merely because it is scheduled."
       ],
       "components": [
@@ -5233,7 +5233,7 @@
         "Use the existing VPS only when a later implementation assignment covers deployment; never contact real testers or expand provider spending automatically."
       ],
       "acceptance": [
-        "Every PACT-100–107 dependency is Done with per-ticket evidence before this retest is claimed.",
+        "Every PACT-100\u2013107 dependency is Done with per-ticket evidence before this retest is claimed.",
         "Three account identities remain separate; real player discovery, authorized actions, human-only decisions and at least one contract with actual delivery are verified through normal owner/agent views.",
         "Models and owner screens agree on finished work and pending obligations; wrong reports/failed routes remain explicitly recorded and resolved or reported as blockers.",
         "Phone viewport/keyboard/approval links and disconnect/reconnect/revocation checks use dated real observations; no full production/provider/physical-device certification is inferred.",
@@ -5284,7 +5284,7 @@
         "generated game experience"
       ],
       "scope": [
-        "Write one brief with the existing five palette colours, four character silhouettes, the exact asset counts in PACT-114–119, and one table linking each cue to an existing authorized event.",
+        "Write one brief with the existing five palette colours, four character silhouettes, the exact asset counts in PACT-114\u2013119, and one table linking each cue to an existing authorized event.",
         "Record presentation scope correction and affected-specification review before implementation. Preserve the economy, human decisions, receipts and the 28 Later tasks."
       ],
       "acceptance": [
@@ -5739,7 +5739,7 @@
         "generated game experience"
       ],
       "scope": [
-        "Generate Sir Honk, Pebble, Moth and Professor Bean, each with idle, pleased and concerned poses: exactly twelve exports, maximum 256×256 pixels each. Use the approved palette and character references.",
+        "Generate Sir Honk, Pebble, Moth and Professor Bean, each with idle, pleased and concerned poses: exactly twelve exports, maximum 256\u00d7256 pixels each. Use the approved palette and character references.",
         "Write sixteen original flavour lines, four per character, each at most 80 characters. Keep factual status outside the joke; no dialogue generation, conversation engine or comedy-mode library."
       ],
       "acceptance": [
@@ -5813,7 +5813,7 @@
         "generated game experience"
       ],
       "scope": [
-        "Author three 150–250 ms reveals for confirmed build completion, accepted contact and first actual trade delivery. Add one optional clickable goose honk pose lasting at most one second; no separate raid/signature/banner/helmet/quill motion pack.",
+        "Author three 150\u2013250 ms reveals for confirmed build completion, accepted contact and first actual trade delivery. Add one optional clickable goose honk pose lasting at most one second; no separate raid/signature/banner/helmet/quill motion pack.",
         "Use existing event IDs to deduplicate reveals across reload/reconnect, and obey the preferences from PACT-120. Animation changes presentation only."
       ],
       "acceptance": [
@@ -6421,7 +6421,7 @@
       ],
       "scope": [
         "Review the integrated Kingdom/Envoy/People/Chronicle flow; feature tickets own integration and acceptance. Fix only seams between completed features, not a second redesign.",
-        "Check Chromium at 390×844 and 1440×900, keyboard-only use, silent/reduced-motion mode, asset failures and reconnect. Measure generated-media transfer bytes and audio instances."
+        "Check Chromium at 390\u00d7844 and 1440\u00d7900, keyboard-only use, silent/reduced-motion mode, asset failures and reconnect. Measure generated-media transfer bytes and audio instances."
       ],
       "acceptance": [
         "All four screens retain readable contracts/exact approvals, no horizontal overflow at the two sizes, visible keyboard focus and minimum 44 CSS px primary touch targets.",
@@ -6502,7 +6502,7 @@
         "generated game experience"
       ],
       "scope": [
-        "Check only the PACT-114–119/122/123 inventory against the shared manifest: source/prompt, approved export, hash, event/placement, dimensions/duration and generation method.",
+        "Check only the PACT-114\u2013119/122/123 inventory against the shared manifest: source/prompt, approved export, hash, event/placement, dimensions/duration and generation method.",
         "Write one regeneration/readme command index and existing-build packaging notes. Feature reports already own their implementation evidence; no additional publishing, server or deployment project."
       ],
       "acceptance": [
@@ -6632,7 +6632,7 @@
           "Document actual release, browser, model usage, asset coverage, assistance, remaining friction and grant/credential cleanup; optional real-player feedback is separate, not fabricated."
         ],
         "acceptance": [
-          "All PACT-109–125 dependencies are Done with per-ticket code/asset/docs evidence before this checkpoint is claimed.",
+          "All PACT-109\u2013125 dependencies are Done with per-ticket code/asset/docs evidence before this checkpoint is claimed.",
           "Dated real observations show completed improvements and pending social decisions accurately; wrong agent rates or false celebrations are recorded and acceptance failures fixed/retested.",
           "Original generated assets are visible/playable and their accessibility settings work; no unauditioned/unseen media or fake human reply is certified.",
           "Temporary access is cleaned while reviewable gameplay records remain. Synthetic/design assessment is distinguished from measured human enjoyment; no full Later pilot or production gate claim."
@@ -6933,7 +6933,7 @@
         "Implement founder-approved Council presentation in browser and ChatGPT with stable generated public Envoy characters and owner-customizable appearance.",
         "Show actual participating exchanges, bounded counts, paged message history, proposals/signatures and exact human decision review links.",
         "Expose separate observed human/agent activity without inferred availability or private approval state.",
-        "Render actual building levels I–VI, active scaffolding and physically present troop formations in the kingdom landscape.",
+        "Render actual building levels I\u2013VI, active scaffolding and physically present troop formations in the kingdom landscape.",
         "Deploy and verify on the new dedicated host at pact.tinyagenttools.com."
       ],
       "acceptance": [
@@ -6954,6 +6954,242 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt"
+    },
+    {
+      "id": "PACT-133",
+      "title": "Implement and measure a bounded local-model population runner",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-052",
+        "PACT-053",
+        "PACT-099",
+        "PACT-127",
+        "PACT-130"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Implement an operator-run, local-only Ollama population harness with independent synthetic guest kingdoms using normal OAuth/MCP commands.",
+        "Persist immutable run limits, actor identity, request counts, write recovery and fair coalescing schedules; preserve the completed October 4 experiment.",
+        "Benchmark Qwen3.5 4B on the owner GPU and measure bounded live account capacity; no Luna, paid inference, economy change or deferred roadmap work."
+      ],
+      "acceptance": [
+        "Loopback local weights, structured plan/action validation and owner/cohort authority boundaries pass meaningful failure-path tests.",
+        "Persistent request/deadline/process locks, uncertain-write receipt recovery and fair scheduling are tested without resetting limits or duplicating commands.",
+        "Actual inference timings, projected capacities and observed live cohort results are distinguished with credential-free evidence.",
+        "A small bounded live cohort uses ordinary game ticks/stock and public APIs, and reproducible operations and a completion report are recorded."
+      ],
+      "components": [
+        "operator population harness",
+        "local inference",
+        "capacity measurements"
+      ],
+      "evidence": [
+        "docs/implementation/reports/local-population-20261009.md",
+        "docs/implementation/reports/evidence/local-population-20261009-capacity.json"
+      ],
+      "assignee": "codex-local-population",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-134",
+      "title": "Automate bounded synthetic-owner approvals for local players",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-017",
+        "PACT-053",
+        "PACT-133"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Automate exact owner decisions for locally simulated accounts through ordinary authenticated approval/command routes.",
+        "Persist bounded owner decisions and recover uncertain writes without new command IDs; preserve Envoy and human credential separation."
+      ],
+      "acceptance": [
+        "Only runner-owned exact allowed actions receive automatic synthetic-owner decisions; outsiders, unsafe terms, unknown requests, expired runs and stock/rule failures are excluded.",
+        "Decision counts and resource ceilings persist across restart; uncertain decisions reconcile the original receipt and exact payload.",
+        "Tests cover both owner approval and command routes, identity separation, budget exhaustion, expiry and retry recovery; document actual live verification."
+      ],
+      "components": [
+        "operator population harness",
+        "local inference",
+        "capacity measurements"
+      ],
+      "evidence": [
+        "docs/implementation/reports/local-owner-approvals-20261009.md",
+        "docs/implementation/reports/evidence/local-owner-approvals-20261009-live.json"
+      ],
+      "assignee": "codex-local-population",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-135",
+      "title": "Run 50 local players independently under a bounded background supervisor",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-133",
+        "PACT-134"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Reuse existing synthetic owners in a distinct, immutable two-hour, 50-account run with bounded automatic owner decisions.",
+        "Install a user-scoped background supervisor that preserves deadline/budget across crashes and logon; expose status and stop controls."
+      ],
+      "acceptance": [
+        "Run 50 distinct existing synthetic owners independently of this chat, with local Qwen, five-minute minimum cadence and automatic bounded owner decisions.",
+        "Supervisor cannot duplicate a live worker or reset a completed run; crash recovery confirms the original process died before clearing its stale lock.",
+        "Publish actual startup/first-wave evidence, fixed limits, background task identity, PC availability requirements and stop/resume instructions."
+      ],
+      "components": [
+        "operator population harness",
+        "local inference",
+        "capacity measurements"
+      ],
+      "evidence": [
+        "docs/implementation/reports/local-background-20261009.md",
+        "docs/implementation/reports/evidence/local-background-20261009-startup.json",
+        "docs/implementation/reports/local-population-final-20261009.md"
+      ],
+      "assignee": "codex-local-population",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-136",
+      "title": "Apply the founder-authorized 08:00 Berlin extension without resetting the live run",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-135"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Extend the same running 50-account population to 08:00 Berlin on 9 October under explicit founder authorization.",
+        "Preserve identity, used requests, approval budgets, pending exact commands and original bounds; update the background watchdog and publish verified resumed health."
+      ],
+      "acceptance": [
+        "Explicit extension records preserve prior bounds and consumed budgets; terminal completed and expired runs cannot be automatically reopened.",
+        "Current run resumes through normal locks and receipt recovery with 50 existing owners, exact 08:00 Berlin deadline and sufficient bounded request capacity.",
+        "Meaningful extension failure-path tests pass and actual task/heartbeat verification and operating instructions are documented."
+      ],
+      "components": [
+        "operator population harness",
+        "local inference",
+        "capacity measurements"
+      ],
+      "evidence": [
+        "docs/implementation/reports/local-extension-20261009.md",
+        "docs/implementation/reports/evidence/local-extension-20261009.json",
+        "35 local/historical population tests and five Windows limits/supervisor tests passed; Biome and typecheck passed; planning render/check and git diff --check passed. Same task running at 01:19 UTC with 50 owners, zero blocked and effective 06:00 UTC deadline.",
+        "docs/implementation/reports/local-population-final-20261009.md"
+      ],
+      "assignee": "codex-local-population",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-137",
+      "title": "Repair local player reliability and verify negotiation lifecycle coverage",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-135",
+        "PACT-136"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Fix observed truncation, quota/inbox repetition, attempt counters and construction/offer validation without changing the game economy or authority.",
+        "Diagnose waiting construction and rejected signatures; reconstruct negotiation durations, counters and completion from exact run evidence.",
+        "Verify missing peaceful local-player lifecycle paths with deterministic integration checks and bounded local-model replay; preserve finished experiments and deferred production scope."
+      ],
+      "acceptance": [
+        "Observed local-player failures have concrete diagnoses and tested repairs, with meaningful failure/retry/ownership checks.",
+        "Negotiation report distinguishes offers, counter versions, signatures, activation, expiry and measured durations; evidence covers original run and verification.",
+        "Coverage matrix explicitly separates live exercised, integration verified and out-of-scope/unverified paths; no claim of whole-game coverage from the peaceful run."
+      ],
+      "components": [
+        "operator population harness",
+        "local inference",
+        "capacity measurements"
+      ],
+      "evidence": [
+        "docs/implementation/reports/local-reliability-20261009.md",
+        "43 Node harness tests; 8 new cases also pass native Windows; 11 admission tests; 87 integration tests across 8 suites passed.",
+        "Typecheck, package build, targeted formatting and planning checks passed; release local-reliability-20261009-1 deployment verification passed.",
+        "144 inference-only replay attempts: final schema 47/48 valid, zero truncations, one invented offer ID rejected before write.",
+        "19 live probe checks; exact owner approvals and completed Farm II; 13 prerequisite-blocked queues canceled normally; deployed expired signature returns EXPIRED.",
+        "751 offers, 272 agreements, 6 genuinely changed-counter agreements; median activation 5m30s, changed-counter median 14m26s; live/test/unverified coverage matrix recorded."
+      ],
+      "assignee": "codex-local-reliability",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
     }
   ],
   "source_sha256": {
@@ -6981,7 +7217,7 @@
     "L": "Cross-cutting lifecycle or integration, usually delivered as multiple reviewable pull requests"
   },
   "source_of_truth": "tasks.json owns planned scope, dependencies, and acceptance criteria. Linear owns execution status, assignment, blockers, and evidence; local execution fields are manually reconciled snapshots. See linear-workflow.md and linear-map.json. Markdown phase pages are generated views. Game behavior remains owned by ../pact/.",
-  "specification_revision": "1.4 — 2026-10-01 game-only Alpha",
+  "specification_revision": "1.4 \u2014 2026-10-01 game-only Alpha",
   "alpha": {
     "approved_at": "2026-10-01",
     "scope": "../pact/alpha.md",
@@ -7019,7 +7255,7 @@
     ],
     "gate": "PACT-108",
     "execution": "completed",
-    "note": "All nine founder-assigned PACT-100–108 tickets completed and verified; see reports/alpha-playtest-fixes.md."
+    "note": "All nine founder-assigned PACT-100\u2013108 tickets completed and verified; see reports/alpha-playtest-fixes.md."
   },
   "experience": {
     "approved_at": "2026-10-03",
@@ -7095,5 +7331,80 @@
     "model_requests": 200,
     "completion_report": "reports/population-playtest-20261004.md",
     "note": "Ten Luna envoys plus ninety scripted players; observed bugs fixed under founder authorization. Monitor paused. No new Linear issue could be created because its free issue limit was reached."
+  },
+  "local_population": {
+    "execution": "completed",
+    "active_ids": [
+      "PACT-133"
+    ],
+    "completion_report": "reports/local-population-20261009.md",
+    "tracking": "Linear issue creation rejected at workspace free issue limit; repository report is the execution record.",
+    "completed_at": "2026-10-09",
+    "run_id": "local-1791505243810-9441c8da",
+    "ended_at": "2026-10-09T00:37:43.899Z",
+    "model_requests": 155,
+    "accounts": 48
+  },
+  "local_owner_approvals": {
+    "execution": "completed",
+    "active_ids": [
+      "PACT-134"
+    ],
+    "completion_report": "reports/local-owner-approvals-20261009.md",
+    "tracking": "Local record; existing Linear free issue limit remains unresolved.",
+    "completed_at": "2026-10-09"
+  },
+  "local_background": {
+    "execution": "finished",
+    "active_ids": [
+      "PACT-135"
+    ],
+    "completion_report": "reports/local-background-20261009.md",
+    "tracking": "Local report; known Linear free issue limit remains unresolved.",
+    "implementation_status": "completed",
+    "run_id": "local-background-1791507229557-092e5567",
+    "started_at": "2026-10-09T00:53:49.557Z",
+    "ends_at": "2026-10-09T06:00:00.000Z",
+    "accounts": 50,
+    "model_request_cap": 4000,
+    "task_name": "PACT Local Players 50 20261009",
+    "original_ends_at": "2026-10-09T02:53:49.557Z",
+    "original_model_request_cap": 1250,
+    "observation_status": "completed",
+    "final_report": "reports/local-population-final-20261009.md",
+    "actual_model_requests": 2969,
+    "successful_turns": 2867,
+    "committed_commands": 4164,
+    "blocked_accounts": 3,
+    "stop_reason": "DEADLINE"
+  },
+  "local_extension": {
+    "execution": "finished",
+    "active_ids": [
+      "PACT-136"
+    ],
+    "completion_report": "reports/local-extension-20261009.md",
+    "implementation_status": "completed",
+    "tracking": "Local report; known Linear free issue limit remains unresolved.",
+    "run_id": "local-background-1791507229557-092e5567",
+    "ends_at": "2026-10-09T06:00:00.000Z",
+    "model_request_cap": 4000,
+    "observation_status": "completed",
+    "final_report": "reports/local-population-final-20261009.md",
+    "actual_model_requests": 2969,
+    "successful_turns": 2867,
+    "committed_commands": 4164,
+    "blocked_accounts": 3,
+    "stop_reason": "DEADLINE"
+  },
+  "local_reliability": {
+    "execution": "completed",
+    "active_ids": [
+      "PACT-137"
+    ],
+    "completion_report": "reports/local-reliability-20261009.md",
+    "tracking": "Local report; known Linear free issue limit remains unresolved.",
+    "completed_at": "2026-10-09",
+    "release": "local-reliability-20261009-1"
   }
 }

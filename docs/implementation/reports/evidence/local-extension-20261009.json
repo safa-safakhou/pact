@@ -1,0 +1,12 @@
+{
+  "runId": "local-background-1791507229557-092e5567",
+  "appliedAt": "2026-10-09T01:16:51.731Z",
+  "previousEndsAt": "2026-10-09T02:53:49.557Z",
+  "endsAt": "2026-10-09T06:00:00.000Z",
+  "originalRequestCap": 1250,
+  "effectiveRequestCap": 4000,
+  "requestsPreserved": 236,
+  "actorsPreserved": 50,
+  "pendingPreserved": 0,
+  "ownerBudgetsPreserved": true
+}

@@ -358,7 +358,7 @@ describe("versioned supply offers and activation", () => {
           operationKey: "late",
         }),
       ),
-    ).rejects.toMatchObject({ code: "OFFER_CLOSED" });
+    ).rejects.toMatchObject({ code: "OFFER_EXPIRED" });
     await credit(a.kingdomId, "silver", 65);
     const cappedId = randomUUID();
     await withTransaction(pool, (client) =>
@@ -479,6 +479,19 @@ describe("versioned supply offers and activation", () => {
           actorKind: "human",
           gameTimeMs: 360_000,
           operationKey: "expiry-sign",
+        }),
+      ),
+    ).rejects.toMatchObject({ code: "OFFER_EXPIRED" });
+    await withTransaction(pool, (client) => supply.expireOffers(client, 360_000));
+    await expect(
+      withTransaction(pool, (client) =>
+        supply.signOffer(client, {
+          accountId: a.accountId,
+          offerId,
+          version: 1,
+          actorKind: "human",
+          gameTimeMs: 360_000,
+          operationKey: "after-expiry-worker",
         }),
       ),
     ).rejects.toMatchObject({ code: "OFFER_EXPIRED" });

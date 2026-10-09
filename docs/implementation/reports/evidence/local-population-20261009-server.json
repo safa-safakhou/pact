@@ -1,0 +1,28 @@
+[
+  {
+    "observedAt": "2026-10-09T00:38:03.547043+00:00",
+    "world": {
+      "status": "active",
+      "tick_sequence": 16772
+    },
+    "buildings": {
+      "waiting": 19,
+      "active": 35,
+      "completed": 75
+    },
+    "contacts": 24,
+    "requests": {
+      "accepted": 24
+    },
+    "messages": 8,
+    "offers": {
+      "open": 12
+    },
+    "contracts": 0
+  },
+  {
+    "liveLeases": 0,
+    "installments": 0,
+    "deliveredUnits": 0
+  }
+]

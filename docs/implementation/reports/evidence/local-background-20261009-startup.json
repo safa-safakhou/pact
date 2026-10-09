@@ -1,0 +1,525 @@
+{
+  "runId": "local-background-1791507229557-092e5567",
+  "status": "running",
+  "config": {
+    "base": "https://pact.tinyagenttools.com",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen3.5:4b",
+    "accounts": 50,
+    "durationMinutes": 120,
+    "intervalSeconds": 300,
+    "requestCap": 1250,
+    "context": 16384,
+    "outputTokens": 600,
+    "timeoutMs": 90000,
+    "ownerApprovals": "bounded",
+    "ownerApprovalCap": 20,
+    "ownerResourceLimit": 500
+  },
+  "weights": {
+    "name": "qwen3.5:4b",
+    "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "size": 3324173934,
+    "details": {
+      "parent_model": "model.gguf",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "4.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 262144,
+      "embedding_length": 2560
+    }
+  },
+  "startedAt": "2026-10-09T00:53:49.557Z",
+  "endsAt": "2026-10-09T02:53:49.557Z",
+  "requests": 50,
+  "updatedAt": "2026-10-09T00:56:33.489Z",
+  "actors": [
+    {
+      "index": 0,
+      "nickname": "Local Qwen mv07yt2b 01",
+      "kingdomId": "53e1c743-d8ae-4075-a9de-32f5279aa677",
+      "turns": 1,
+      "nextDue": 1791507558430,
+      "failures": 0
+    },
+    {
+      "index": 1,
+      "nickname": "Local Qwen mv07yt2b 02",
+      "kingdomId": "1bb2e6f8-4dab-457c-afd8-536a42199358",
+      "turns": 1,
+      "nextDue": 1791507562035,
+      "failures": 0
+    },
+    {
+      "index": 2,
+      "nickname": "Local Qwen mv07yt2b 03",
+      "kingdomId": "c4cd955f-4252-4b3b-b89f-3dcb0814ef88",
+      "turns": 1,
+      "nextDue": 1791507563439,
+      "failures": 0
+    },
+    {
+      "index": 3,
+      "nickname": "Local Qwen mv07yt2b 04",
+      "kingdomId": "1f591172-5f9c-4884-a76a-6a82911f89ce",
+      "turns": 1,
+      "nextDue": 1791507567451,
+      "failures": 0
+    },
+    {
+      "index": 4,
+      "nickname": "Local Qwen mv07yt2b 05",
+      "kingdomId": "f6363fd7-4059-48ac-a7a7-4710f65e2592",
+      "turns": 1,
+      "nextDue": 1791507570227,
+      "failures": 0
+    },
+    {
+      "index": 5,
+      "nickname": "Local Qwen mv07yt2b 06",
+      "kingdomId": "37416666-7543-4955-8d57-c128ad2fd784",
+      "turns": 1,
+      "nextDue": 1791507572187,
+      "failures": 0
+    },
+    {
+      "index": 6,
+      "nickname": "Local Qwen mv07yt2b 07",
+      "kingdomId": "80c838e7-975b-41cd-8626-b12872bca8dc",
+      "turns": 1,
+      "nextDue": 1791507577083,
+      "failures": 0
+    },
+    {
+      "index": 7,
+      "nickname": "Local Qwen mv07yt2b 08",
+      "kingdomId": "9edf2dcd-fab8-41d8-924c-c98030a67a6a",
+      "turns": 1,
+      "nextDue": 1791507579903,
+      "failures": 0
+    },
+    {
+      "index": 8,
+      "nickname": "Local Qwen mv07yt2b 09",
+      "kingdomId": "7d63f13d-e5ef-46d4-b0e9-347b306b1d19",
+      "turns": 1,
+      "nextDue": 1791507582082,
+      "failures": 0
+    },
+    {
+      "index": 9,
+      "nickname": "Local Qwen mv07yt2b 10",
+      "kingdomId": "44f007be-aae9-4bab-a9b1-baf9c3902113",
+      "turns": 1,
+      "nextDue": 1791507585392,
+      "failures": 0
+    },
+    {
+      "index": 10,
+      "nickname": "Local Qwen mv07yt2b 11",
+      "kingdomId": "a942de6a-2a85-4007-b62c-a21049ba150e",
+      "turns": 1,
+      "nextDue": 1791507587768,
+      "failures": 0
+    },
+    {
+      "index": 11,
+      "nickname": "Local Qwen mv07yt2b 12",
+      "kingdomId": "e350f0a0-d395-42f1-921d-dacd58e24fb8",
+      "turns": 1,
+      "nextDue": 1791507590721,
+      "failures": 0
+    },
+    {
+      "index": 12,
+      "nickname": "Local Qwen mv07yt2b 13",
+      "kingdomId": "22b7f6c6-bb2b-4583-9a6b-15db738b8095",
+      "turns": 1,
+      "nextDue": 1791507592997,
+      "failures": 0
+    },
+    {
+      "index": 13,
+      "nickname": "Local Qwen mv07yt2b 14",
+      "kingdomId": "c6e305d0-8859-4b4f-8cb6-7b8b771def67",
+      "turns": 1,
+      "nextDue": 1791507594451,
+      "failures": 0
+    },
+    {
+      "index": 14,
+      "nickname": "Local Qwen mv07yt2b 15",
+      "kingdomId": "abef3c25-3c2a-46ae-9a7a-b4e54c3c4d80",
+      "turns": 1,
+      "nextDue": 1791507598735,
+      "failures": 0
+    },
+    {
+      "index": 15,
+      "nickname": "Local Qwen mv07yt2b 16",
+      "kingdomId": "34984467-c1d7-411c-b6d8-92e785303846",
+      "turns": 1,
+      "nextDue": 1791507601660,
+      "failures": 0
+    },
+    {
+      "index": 16,
+      "nickname": "Local Qwen mv07yt2b 17",
+      "kingdomId": "6881358b-2791-408e-b6e2-64c3a1d8c0f1",
+      "turns": 1,
+      "nextDue": 1791507603535,
+      "failures": 0
+    },
+    {
+      "index": 17,
+      "nickname": "Local Qwen mv07yt2b 18",
+      "kingdomId": "e920de16-6178-4ade-93b7-664400ca1c14",
+      "turns": 1,
+      "nextDue": 1791507607274,
+      "failures": 0
+    },
+    {
+      "index": 18,
+      "nickname": "Local Qwen mv07yt2b 19",
+      "kingdomId": "a35af8e1-3c1d-4ff2-83fc-f01e379205b0",
+      "turns": 1,
+      "nextDue": 1791507611577,
+      "failures": 0
+    },
+    {
+      "index": 19,
+      "nickname": "Local Qwen mv07yt2b 20",
+      "kingdomId": "3b1978ce-b5d4-4fef-bdf5-ba963e2f5dd3",
+      "turns": 1,
+      "nextDue": 1791507615773,
+      "failures": 0
+    },
+    {
+      "index": 20,
+      "nickname": "Local Qwen mv07yt2b 21",
+      "kingdomId": "556ef48f-6f45-454b-b9c5-9a50e300d0e1",
+      "turns": 1,
+      "nextDue": 1791507618584,
+      "failures": 0
+    },
+    {
+      "index": 21,
+      "nickname": "Local Qwen mv07yt2b 22",
+      "kingdomId": "7d3fc973-9eb9-4674-8ec2-16a430c4e73a",
+      "turns": 1,
+      "nextDue": 1791507620511,
+      "failures": 0
+    },
+    {
+      "index": 22,
+      "nickname": "Local Qwen mv07yt2b 23",
+      "kingdomId": "cad21681-3479-48af-a605-c6c512b6880c",
+      "turns": 1,
+      "nextDue": 1791507623589,
+      "failures": 0
+    },
+    {
+      "index": 23,
+      "nickname": "Local Qwen mv07yt2b 24",
+      "kingdomId": "72a29466-3360-4cb6-af81-bca0a040a25a",
+      "turns": 1,
+      "nextDue": 1791507627414,
+      "failures": 0
+    },
+    {
+      "index": 24,
+      "nickname": "Local Qwen mv07yt2b 25",
+      "kingdomId": "9ee5060c-27eb-412d-b6f7-a0835f3b4ab7",
+      "turns": 1,
+      "nextDue": 1791507632533,
+      "failures": 0
+    },
+    {
+      "index": 25,
+      "nickname": "Local Qwen mv07yt2b 26",
+      "kingdomId": "bcf7dbc1-4f8b-4ada-9460-40da803b06ec",
+      "turns": 1,
+      "nextDue": 1791507635552,
+      "failures": 0
+    },
+    {
+      "index": 26,
+      "nickname": "Local Qwen mv07yt2b 27",
+      "kingdomId": "1199198e-976e-4dda-be7a-8850af5ea43d",
+      "turns": 1,
+      "nextDue": 1791507637081,
+      "failures": 0
+    },
+    {
+      "index": 27,
+      "nickname": "Local Qwen mv07yt2b 28",
+      "kingdomId": "9b832484-7b95-4143-b952-1be5558473e2",
+      "turns": 1,
+      "nextDue": 1791507640928,
+      "failures": 0
+    },
+    {
+      "index": 28,
+      "nickname": "Local Qwen mv07yt2b 29",
+      "kingdomId": "b7829d59-ba83-47d9-bf12-7465d29f27c5",
+      "turns": 1,
+      "nextDue": 1791507643430,
+      "failures": 0
+    },
+    {
+      "index": 29,
+      "nickname": "Local Qwen mv07yt2b 30",
+      "kingdomId": "bdb85d34-5874-45ea-9481-19b4434c9806",
+      "turns": 1,
+      "nextDue": 1791507645278,
+      "failures": 0
+    },
+    {
+      "index": 30,
+      "nickname": "Local Qwen mv07yt2b 31",
+      "kingdomId": "4ff016aa-5374-47f8-ab55-6635cc87d279",
+      "turns": 1,
+      "nextDue": 1791507646827,
+      "failures": 0
+    },
+    {
+      "index": 31,
+      "nickname": "Local Qwen mv07yt2b 32",
+      "kingdomId": "e34079aa-8735-40ac-89c1-55a1346026b5",
+      "turns": 1,
+      "nextDue": 1791507648349,
+      "failures": 0
+    },
+    {
+      "index": 32,
+      "nickname": "Local Qwen mv07yt2b 33",
+      "kingdomId": "850ccb63-23f7-4414-948b-6d5a47bcd649",
+      "turns": 1,
+      "nextDue": 1791507649940,
+      "failures": 0
+    },
+    {
+      "index": 33,
+      "nickname": "Local Qwen mv07yt2b 34",
+      "kingdomId": "12d52f12-f429-40ff-94be-3b2e4ff9e201",
+      "turns": 1,
+      "nextDue": 1791507651800,
+      "failures": 0
+    },
+    {
+      "index": 34,
+      "nickname": "Local Qwen mv07yt2b 35",
+      "kingdomId": "557552df-b070-46f5-a56d-8449325f580b",
+      "turns": 1,
+      "nextDue": 1791507653914,
+      "failures": 0
+    },
+    {
+      "index": 35,
+      "nickname": "Local Qwen mv07yt2b 36",
+      "kingdomId": "1189678e-1ce6-472a-9500-9c56b979d628",
+      "turns": 1,
+      "nextDue": 1791507657461,
+      "failures": 0
+    },
+    {
+      "index": 36,
+      "nickname": "Local Qwen mv07yt2b 37",
+      "kingdomId": "bd4ce380-5614-4f16-a1ca-b5ea859b53ee",
+      "turns": 1,
+      "nextDue": 1791507658988,
+      "failures": 0
+    },
+    {
+      "index": 37,
+      "nickname": "Local Qwen mv07yt2b 38",
+      "kingdomId": "d8ef9434-cdde-4966-bd38-ea6c38b7fb46",
+      "turns": 1,
+      "nextDue": 1791507661896,
+      "failures": 0
+    },
+    {
+      "index": 38,
+      "nickname": "Local Qwen mv07yt2b 39",
+      "kingdomId": "676b1f8d-f3fb-4cb1-8052-b58c35556c96",
+      "turns": 1,
+      "nextDue": 1791507665697,
+      "failures": 0
+    },
+    {
+      "index": 39,
+      "nickname": "Local Qwen mv07yt2b 40",
+      "kingdomId": "191990d0-626a-4055-b0f0-682efa30ccb2",
+      "turns": 1,
+      "nextDue": 1791507667187,
+      "failures": 0
+    },
+    {
+      "index": 40,
+      "nickname": "Local Qwen mv07yt2b 41",
+      "kingdomId": "f75b7184-a6f3-4c00-9f3d-10b815608433",
+      "turns": 1,
+      "nextDue": 1791507669599,
+      "failures": 0
+    },
+    {
+      "index": 41,
+      "nickname": "Local Qwen mv07yt2b 42",
+      "kingdomId": "4a628138-6730-4e10-bca5-d1e6d835b965",
+      "turns": 1,
+      "nextDue": 1791507672775,
+      "failures": 0
+    },
+    {
+      "index": 42,
+      "nickname": "Local Qwen mv07yt2b 43",
+      "kingdomId": "ad9f9a04-3934-44bf-9ed3-ed07240c10a4",
+      "turns": 1,
+      "nextDue": 1791507674305,
+      "failures": 0
+    },
+    {
+      "index": 43,
+      "nickname": "Local Qwen mv07yt2b 44",
+      "kingdomId": "c7e1cb02-c2e0-49ba-be67-38ea5470bdda",
+      "turns": 1,
+      "nextDue": 1791507676003,
+      "failures": 0
+    },
+    {
+      "index": 44,
+      "nickname": "Local Qwen mv07yt2b 45",
+      "kingdomId": "0077395f-cda0-48ac-95cf-b5d37102cc21",
+      "turns": 1,
+      "nextDue": 1791507679034,
+      "failures": 0
+    },
+    {
+      "index": 45,
+      "nickname": "Local Qwen mv07yt2b 46",
+      "kingdomId": "a892e24d-409f-43ee-bb82-7008f037baa3",
+      "turns": 1,
+      "nextDue": 1791507683430,
+      "failures": 0
+    },
+    {
+      "index": 46,
+      "nickname": "Local Qwen mv07yt2b 47",
+      "kingdomId": "7cd6c11a-dfcc-410c-a362-48b8cfc84519",
+      "turns": 1,
+      "nextDue": 1791507686310,
+      "failures": 0
+    },
+    {
+      "index": 47,
+      "nickname": "Local Qwen mv07yt2b 48",
+      "kingdomId": "a7fc6693-35b7-498b-abfd-641cea27b34b",
+      "turns": 1,
+      "nextDue": 1791507688475,
+      "failures": 0
+    },
+    {
+      "index": 48,
+      "nickname": "Local Qwen mv07xt8i 01",
+      "kingdomId": "32cf009a-105f-4e16-ac17-ba60b7b74d83",
+      "turns": 1,
+      "nextDue": 1791507691971,
+      "failures": 0
+    },
+    {
+      "index": 49,
+      "nickname": "Local Qwen mv07xt8i 02",
+      "kingdomId": "40e0b5aa-1e8a-46ab-9bc3-bb040b00b742",
+      "turns": 1,
+      "nextDue": 1791507693487,
+      "failures": 0
+    }
+  ],
+  "distinctKingdoms": 50,
+  "turnCounts": {
+    "1": 50
+  },
+  "completedModelResults": 50,
+  "modelInputTokens": 181114,
+  "modelOutputTokens": 12041,
+  "uniqueCommittedCommands": 84,
+  "agentCommands": 66,
+  "simulatedHumanCommands": 18,
+  "automaticOwnerDecisions": 0,
+  "commandKinds": {
+    "game.contact.request": 18,
+    "game.supply.offer": 13,
+    "game.message.send": 13,
+    "game.contact.answer": 18,
+    "game.building.queue": 16,
+    "game.supply.sign": 5,
+    "game.supply.counter": 1
+  },
+  "receiptCodes": {
+    "COMMITTED": 84
+  },
+  "commandDenials": {
+    "INSUFFICIENT_STOCK": 2
+  },
+  "planRejections": {
+    "BUILD_NO_LONGER_AVAILABLE": 6
+  },
+  "turnFailures": {},
+  "modelCapacity": {
+    "samples": 50,
+    "meanMs": 2145.8061660000008,
+    "p95Ms": 3925.690300000002,
+    "headroom": 0.3,
+    "projections": [
+      {
+        "seconds": 300,
+        "meanAccounts": 97,
+        "p95Accounts": 53
+      },
+      {
+        "seconds": 600,
+        "meanAccounts": 195,
+        "p95Accounts": 106
+      },
+      {
+        "seconds": 900,
+        "meanAccounts": 293,
+        "p95Accounts": 160
+      }
+    ]
+  },
+  "turnCapacity": {
+    "samples": 50,
+    "meanMs": 2825.14,
+    "p95Ms": 4892,
+    "headroom": 0.3,
+    "projections": [
+      {
+        "seconds": 300,
+        "meanAccounts": 74,
+        "p95Accounts": 42
+      },
+      {
+        "seconds": 600,
+        "meanAccounts": 148,
+        "p95Accounts": 85
+      },
+      {
+        "seconds": 900,
+        "meanAccounts": 222,
+        "p95Accounts": 128
+      }
+    ]
+  },
+  "repeatTurnCapacity": null,
+  "maximumRepeatLatenessMs": 0,
+  "maximumLatenessMs": 27999,
+  "modelValidation": {
+    "parseSucceeded": 50,
+    "note": "Committed receipt evidence determines successful gameplay; generated text is not a receipt."
+  }
+}

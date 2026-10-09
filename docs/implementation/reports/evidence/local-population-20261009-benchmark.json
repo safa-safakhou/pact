@@ -1,0 +1,122 @@
+{
+  "weights": {
+    "name": "qwen3.5:4b",
+    "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "size": 3324173934,
+    "details": {
+      "parent_model": "model.gguf",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "4.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 262144,
+      "embedding_length": 2560
+    }
+  },
+  "config": {
+    "base": "https://pact.tinyagenttools.com",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen3.5:4b",
+    "accounts": 4,
+    "durationMinutes": 20,
+    "intervalSeconds": 300,
+    "requestCap": 100,
+    "context": 16384,
+    "outputTokens": 600,
+    "timeoutMs": 90000
+  },
+  "samples": 24,
+  "validPlans": 24,
+  "requests": 24,
+  "cold": {
+    "index": 0,
+    "promptCharacters": 7262,
+    "output": {
+      "understanding": "Neighbour offered 3 iron/hour for 3 grain/hour; I have surplus iron and need grain.",
+      "intent": "Accept the neighbour's offer to secure grain while maintaining sustainable trade rates.",
+      "nextCheck": "Monitor contract activation and verify grain inflow matches production needs.",
+      "actions": [
+        {
+          "reason": "Neighbour offered reciprocal 3 iron/hour for 3 grain/hour; I have excess iron and need grain.",
+          "action": {
+            "kind": "game.supply.offer",
+            "counterpartyKingdomId": "00000000-0000-4000-8000-000000000002",
+            "terms": {
+              "aToB": {
+                "resource": "iron",
+                "wholePerHour": 3
+              },
+              "bToA": {
+                "resource": "grain",
+                "wholePerHour": 3
+              },
+              "aBond": null,
+              "bBond": null,
+              "durationHours": 1,
+              "noticeHours": 0
+            }
+          }
+        }
+      ]
+    },
+    "wallMs": 2247.4428,
+    "inputTokens": 2037,
+    "outputTokens": 284,
+    "promptEvalMs": 348.33,
+    "generationMs": 1743.103,
+    "loadMs": 2.3247,
+    "valid": true,
+    "invalid": []
+  },
+  "warmCapacity": {
+    "samples": 23,
+    "meanMs": 2123.590160869565,
+    "p95Ms": 2953.727999999999,
+    "headroom": 0.3,
+    "projections": [
+      {
+        "seconds": 300,
+        "meanAccounts": 98,
+        "p95Accounts": 71
+      },
+      {
+        "seconds": 600,
+        "meanAccounts": 197,
+        "p95Accounts": 142
+      },
+      {
+        "seconds": 900,
+        "meanAccounts": 296,
+        "p95Accounts": 213
+      }
+    ]
+  },
+  "fullCapacity": {
+    "samples": 24,
+    "meanMs": 2128.7506874999995,
+    "p95Ms": 2953.727999999999,
+    "headroom": 0.3,
+    "projections": [
+      {
+        "seconds": 300,
+        "meanAccounts": 98,
+        "p95Accounts": 71
+      },
+      {
+        "seconds": 600,
+        "meanAccounts": 197,
+        "p95Accounts": 142
+      },
+      {
+        "seconds": 900,
+        "meanAccounts": 295,
+        "p95Accounts": 213
+      }
+    ]
+  },
+  "promptSource": "Synthetic fixture; shape and cohort action validation",
+  "note": "Serial inference throughput only; game/OAuth/network overhead and sustained multiplayer capacity are not measured here."
+}

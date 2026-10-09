@@ -186,6 +186,8 @@ export class Mcp {
       } catch {}
       const e = Error(`MCP_TOOL_${name}_${detail?.error?.code ?? "RESULT_MISSING"}`);
       if (r.isError && detail?.error?.code) e.serverCode = detail.error.code;
+      if (r.isError && ["CONTRACT_CAPACITY", "OFFER_CLOSED"].includes(detail?.error?.detail))
+        e.serverDetail = detail.error.detail;
       throw e;
     }
     return r.structuredContent;

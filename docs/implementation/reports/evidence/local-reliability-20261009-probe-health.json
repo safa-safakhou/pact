@@ -1,0 +1,1 @@
+{"observedAt" : "2026-10-09T08:23:51.671812+00:00", "world" : {"status":"active","tick_sequence":17237}, "buildings" : [{"kingdom_id":"e25387e9-0fae-4886-bb19-b8b1d217c12c","building_kind":"farm","target_level":2,"state":"completed"}], "contract" : {"status" : "active", "closeReason" : null}, "installments" : 42, "installmentFailures" : 0, "liveLeases" : 0}

@@ -541,6 +541,8 @@ export class GameCommandHandler {
               : error.code === "OFFER_EXPIRED"
                 ? "EXPIRED"
                 : "INVALID_COMMAND",
+          undefined,
+          error.code === "CONTRACT_CAPACITY" || error.code === "OFFER_CLOSED" ? error.code : undefined,
         );
       if (error instanceof ScoutError)
         throw new DispatcherError(

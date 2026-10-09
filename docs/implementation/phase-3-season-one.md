@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**54 tickets · 37 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**59 tickets · 42 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1647,3 +1647,168 @@ Dependencies are completion requirements. The original Alpha track depends on th
 **Evidence**
 
 - docs/implementation/reports/council-20261008.md
+
+<a id="pact-133"></a>
+## PACT-133 — Implement and measure a bounded local-model population runner
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-052](phase-1-rules.md#pact-052), [PACT-053](phase-1-rules.md#pact-053), [PACT-099](phase-3-season-one.md#pact-099), [PACT-127](phase-3-season-one.md#pact-127), [PACT-130](phase-3-season-one.md#pact-130)
+
+**Components:** operator population harness, local inference, capacity measurements.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Implement an operator-run, local-only Ollama population harness with independent synthetic guest kingdoms using normal OAuth/MCP commands.
+- Persist immutable run limits, actor identity, request counts, write recovery and fair coalescing schedules; preserve the completed October 4 experiment.
+- Benchmark Qwen3.5 4B on the owner GPU and measure bounded live account capacity; no Luna, paid inference, economy change or deferred roadmap work.
+
+**Acceptance**
+
+- [x] Loopback local weights, structured plan/action validation and owner/cohort authority boundaries pass meaningful failure-path tests.
+- [x] Persistent request/deadline/process locks, uncertain-write receipt recovery and fair scheduling are tested without resetting limits or duplicating commands.
+- [x] Actual inference timings, projected capacities and observed live cohort results are distinguished with credential-free evidence.
+- [x] A small bounded live cohort uses ordinary game ticks/stock and public APIs, and reproducible operations and a completion report are recorded.
+
+**Assignee:** codex-local-population
+
+**Evidence**
+
+- docs/implementation/reports/local-population-20261009.md
+- docs/implementation/reports/evidence/local-population-20261009-capacity.json
+
+<a id="pact-134"></a>
+## PACT-134 — Automate bounded synthetic-owner approvals for local players
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-017](phase-0-connections.md#pact-017), [PACT-053](phase-1-rules.md#pact-053), [PACT-133](phase-3-season-one.md#pact-133)
+
+**Components:** operator population harness, local inference, capacity measurements.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Automate exact owner decisions for locally simulated accounts through ordinary authenticated approval/command routes.
+- Persist bounded owner decisions and recover uncertain writes without new command IDs; preserve Envoy and human credential separation.
+
+**Acceptance**
+
+- [x] Only runner-owned exact allowed actions receive automatic synthetic-owner decisions; outsiders, unsafe terms, unknown requests, expired runs and stock/rule failures are excluded.
+- [x] Decision counts and resource ceilings persist across restart; uncertain decisions reconcile the original receipt and exact payload.
+- [x] Tests cover both owner approval and command routes, identity separation, budget exhaustion, expiry and retry recovery; document actual live verification.
+
+**Assignee:** codex-local-population
+
+**Evidence**
+
+- docs/implementation/reports/local-owner-approvals-20261009.md
+- docs/implementation/reports/evidence/local-owner-approvals-20261009-live.json
+
+<a id="pact-135"></a>
+## PACT-135 — Run 50 local players independently under a bounded background supervisor
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-133](phase-3-season-one.md#pact-133), [PACT-134](phase-3-season-one.md#pact-134)
+
+**Components:** operator population harness, local inference, capacity measurements.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Reuse existing synthetic owners in a distinct, immutable two-hour, 50-account run with bounded automatic owner decisions.
+- Install a user-scoped background supervisor that preserves deadline/budget across crashes and logon; expose status and stop controls.
+
+**Acceptance**
+
+- [x] Run 50 distinct existing synthetic owners independently of this chat, with local Qwen, five-minute minimum cadence and automatic bounded owner decisions.
+- [x] Supervisor cannot duplicate a live worker or reset a completed run; crash recovery confirms the original process died before clearing its stale lock.
+- [x] Publish actual startup/first-wave evidence, fixed limits, background task identity, PC availability requirements and stop/resume instructions.
+
+**Assignee:** codex-local-population
+
+**Evidence**
+
+- docs/implementation/reports/local-background-20261009.md
+- docs/implementation/reports/evidence/local-background-20261009-startup.json
+- docs/implementation/reports/local-population-final-20261009.md
+
+<a id="pact-136"></a>
+## PACT-136 — Apply the founder-authorized 08:00 Berlin extension without resetting the live run
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-135](phase-3-season-one.md#pact-135)
+
+**Components:** operator population harness, local inference, capacity measurements.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Extend the same running 50-account population to 08:00 Berlin on 9 October under explicit founder authorization.
+- Preserve identity, used requests, approval budgets, pending exact commands and original bounds; update the background watchdog and publish verified resumed health.
+
+**Acceptance**
+
+- [x] Explicit extension records preserve prior bounds and consumed budgets; terminal completed and expired runs cannot be automatically reopened.
+- [x] Current run resumes through normal locks and receipt recovery with 50 existing owners, exact 08:00 Berlin deadline and sufficient bounded request capacity.
+- [x] Meaningful extension failure-path tests pass and actual task/heartbeat verification and operating instructions are documented.
+
+**Assignee:** codex-local-population
+
+**Evidence**
+
+- docs/implementation/reports/local-extension-20261009.md
+- docs/implementation/reports/evidence/local-extension-20261009.json
+- 35 local/historical population tests and five Windows limits/supervisor tests passed; Biome and typecheck passed; planning render/check and git diff --check passed. Same task running at 01:19 UTC with 50 owners, zero blocked and effective 06:00 UTC deadline.
+- docs/implementation/reports/local-population-final-20261009.md
+
+<a id="pact-137"></a>
+## PACT-137 — Repair local player reliability and verify negotiation lifecycle coverage
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-135](phase-3-season-one.md#pact-135), [PACT-136](phase-3-season-one.md#pact-136)
+
+**Components:** operator population harness, local inference, capacity measurements.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Fix observed truncation, quota/inbox repetition, attempt counters and construction/offer validation without changing the game economy or authority.
+- Diagnose waiting construction and rejected signatures; reconstruct negotiation durations, counters and completion from exact run evidence.
+- Verify missing peaceful local-player lifecycle paths with deterministic integration checks and bounded local-model replay; preserve finished experiments and deferred production scope.
+
+**Acceptance**
+
+- [x] Observed local-player failures have concrete diagnoses and tested repairs, with meaningful failure/retry/ownership checks.
+- [x] Negotiation report distinguishes offers, counter versions, signatures, activation, expiry and measured durations; evidence covers original run and verification.
+- [x] Coverage matrix explicitly separates live exercised, integration verified and out-of-scope/unverified paths; no claim of whole-game coverage from the peaceful run.
+
+**Assignee:** codex-local-reliability
+
+**Evidence**
+
+- docs/implementation/reports/local-reliability-20261009.md
+- 43 Node harness tests; 8 new cases also pass native Windows; 11 admission tests; 87 integration tests across 8 suites passed.
+- Typecheck, package build, targeted formatting and planning checks passed; release local-reliability-20261009-1 deployment verification passed.
+- 144 inference-only replay attempts: final schema 47/48 valid, zero truncations, one invented offer ID rejected before write.
+- 19 live probe checks; exact owner approvals and completed Farm II; 13 prerequisite-blocked queues canceled normally; deployed expired signature returns EXPIRED.
+- 751 offers, 272 agreements, 6 genuinely changed-counter agreements; median activation 5m30s, changed-counter median 14m26s; live/test/unverified coverage matrix recorded.

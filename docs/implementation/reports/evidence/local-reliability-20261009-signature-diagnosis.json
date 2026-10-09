@@ -1,0 +1,80 @@
+[
+  {
+    "at": "2026-10-09T03:49:41.292Z",
+    "actor": 33,
+    "action": {
+      "kind": "game.supply.sign",
+      "offerId": "02ca046c-eed7-46e6-8388-3ff18da7c033",
+      "version": 1
+    },
+    "activeContractCounts": {
+      "12d52f12-f429-40ff-94be-3b2e4ff9e201": 6,
+      "a7fc6693-35b7-498b-abfd-641cea27b34b": 8
+    }
+  },
+  {
+    "at": "2026-10-09T03:50:14.048Z",
+    "actor": 41,
+    "action": {
+      "kind": "game.supply.sign",
+      "offerId": "3fddb3e6-2839-4a64-a88f-8bee51e36644",
+      "version": 1
+    },
+    "activeContractCounts": {
+      "4a628138-6730-4e10-bca5-d1e6d835b965": 4,
+      "bd4ce380-5614-4f16-a1ca-b5ea859b53ee": 8
+    }
+  },
+  {
+    "at": "2026-10-09T04:00:38.524Z",
+    "actor": 42,
+    "action": {
+      "kind": "game.supply.sign",
+      "offerId": "21bb1863-ee0c-4d14-a04e-d8a010dc4f55",
+      "version": 1
+    },
+    "activeContractCounts": {
+      "12d52f12-f429-40ff-94be-3b2e4ff9e201": 8,
+      "ad9f9a04-3934-44bf-9ed3-ed07240c10a4": 2
+    }
+  },
+  {
+    "at": "2026-10-09T04:09:27.272Z",
+    "actor": 24,
+    "action": {
+      "kind": "game.supply.sign",
+      "offerId": "4499986f-6ee5-4817-9ae3-b8b1410f1dc2",
+      "version": 1
+    },
+    "activeContractCounts": {
+      "9ee5060c-27eb-412d-b6f7-a0835f3b4ab7": 8,
+      "44f007be-aae9-4bab-a9b1-baf9c3902113": 4
+    }
+  },
+  {
+    "at": "2026-10-09T04:14:43.248Z",
+    "actor": 28,
+    "action": {
+      "kind": "game.supply.sign",
+      "offerId": "432d3830-548d-4e56-a51c-3717f4daad11",
+      "version": 1
+    },
+    "activeContractCounts": {
+      "b7829d59-ba83-47d9-bf12-7465d29f27c5": 0,
+      "9ee5060c-27eb-412d-b6f7-a0835f3b4ab7": 8
+    }
+  },
+  {
+    "at": "2026-10-09T04:50:59.747Z",
+    "actor": 34,
+    "action": {
+      "kind": "game.supply.sign",
+      "offerId": "74981212-0f46-4455-9b97-e68a7ca83915",
+      "version": 1
+    },
+    "activeContractCounts": {
+      "c7e1cb02-c2e0-49ba-be67-38ea5470bdda": 2,
+      "557552df-b070-46f5-a56d-8449325f580b": 4
+    }
+  }
+]

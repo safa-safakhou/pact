@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-09T00:45:22.532Z",
+  "kingdomId": "501cf80f-733d-476e-bacc-9709f250df40",
+  "commandId": "c2b83ef0-db3a-4311-92e2-50cde7b239be",
+  "agentDenial": "FORBIDDEN",
+  "ownerReceipt": {
+    "code": "COMMITTED",
+    "charged": [
+      {
+        "asset": "iron",
+        "units": "24000"
+      },
+      {
+        "asset": "silver",
+        "units": "12000"
+      }
+    ],
+    "commandId": "c2b83ef0-db3a-4311-92e2-50cde7b239be",
+    "committedAt": "2026-10-09T00:45:23.519Z",
+    "schemaVersion": "pact.command.v1",
+    "recordVersions": {
+      "building:c2b83ef0-db3a-4311-92e2-50cde7b239be": 1
+    },
+    "committedEventIds": []
+  },
+  "ownerDecision": {
+    "commandId": "c2b83ef0-db3a-4311-92e2-50cde7b239be",
+    "action": {
+      "kind": "game.building.queue",
+      "building": "farm",
+      "targetLevel": 2,
+      "slot": 1
+    },
+    "route": "approval",
+    "policy": "local-synthetic-v1",
+    "costs": {
+      "iron": "40",
+      "silver": "20",
+      "grain": "0"
+    }
+  },
+  "mandateVersion": 3,
+  "allowedActions": [
+    "world.read",
+    "inbox.read"
+  ],
+  "pendingApprovals": 0,
+  "modelRequests": 0,
+  "note": "Recovered the original exact decision within its original two-minute deadline; no budget reset or new command ID."
+}

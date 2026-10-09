@@ -1,0 +1,97 @@
+{
+  "observedAt": "2026-10-09T08:02:49.563Z",
+  "modelRequests": 0,
+  "dispatches": 13,
+  "actors": [
+    {
+      "index": 0,
+      "kingdomId": "a86c525e-a301-4ff2-a36d-ec3ee24ad5be"
+    },
+    {
+      "index": 1,
+      "kingdomId": "e25387e9-0fae-4886-bb19-b8b1d217c12c"
+    }
+  ],
+  "checks": [
+    {
+      "name": "formal_offer",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "first_signature",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "changed_counter",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "stale_signature_rejected",
+      "code": "STALE_VERSION"
+    },
+    {
+      "name": "new_version_first_signature",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "restricted_agent_cannot_approve",
+      "code": "FORBIDDEN"
+    },
+    {
+      "name": "bounded_owner_exact_supply_signature",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "owner_receipt_recovery_same_id",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "both_signatures_activate_counter_version",
+      "code": "ACTIVE"
+    },
+    {
+      "name": "unread_message_1",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "unread_message_2",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "unread_message_3",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "unread_message_4",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "unread_queue_rejected",
+      "code": "MESSAGE_QUEUE_FULL"
+    },
+    {
+      "name": "queue_backoff_blocks_repeat_without_dispatch",
+      "code": "LOCAL_BACKOFF"
+    },
+    {
+      "name": "read_acknowledgment_frees_queue",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "bounded_owner_proposal_build_approval",
+      "code": "COMMITTED"
+    },
+    {
+      "name": "missing_hall_prerequisite_excluded",
+      "code": "BUILD_NO_LONGER_AVAILABLE"
+    },
+    {
+      "name": "owner_exceptions_do_not_widen_mandate",
+      "code": "UNCHANGED"
+    }
+  ],
+  "offerId": "82b011fd-0e8b-46bc-870f-c1b9c18df974",
+  "ownerDecisions": 2,
+  "pending": 0,
+  "note": "New isolated synthetic owners; normal public invitations, mandates, commands and exact-owner approvals. No budget reset, direct database mutation, free resources or model inference. Contract settlement and building completion continue under normal ticks."
+}

@@ -1,0 +1,1018 @@
+{
+  "observedAt": "2026-10-09T07:37:48.016Z",
+  "eventTypes": {
+    "run_started": 2,
+    "actor_ready": 100,
+    "model_result": 2869,
+    "turn_completed": 2867,
+    "turn_timing": 2969,
+    "action_requested": 4722,
+    "receipt": 4164,
+    "plan_action_rejected": 72,
+    "action_denied": 558,
+    "turn_failed": 102,
+    "run_finished": 2,
+    "run_extended": 1
+  },
+  "lifecycle": [
+    {
+      "at": "2026-10-09T00:54:11.954Z",
+      "type": "run_started",
+      "resumed": false
+    },
+    {
+      "at": "2026-10-09T01:16:31.339Z",
+      "type": "run_finished",
+      "status": "stopped",
+      "stopReason": "STOP_FILE",
+      "requests": 236
+    },
+    {
+      "at": "2026-10-09T01:16:51.731Z",
+      "type": "run_extended",
+      "requests": 236
+    },
+    {
+      "at": "2026-10-09T01:16:53.416Z",
+      "type": "run_started",
+      "resumed": true
+    },
+    {
+      "at": "2026-10-09T06:00:00.438Z",
+      "type": "run_finished",
+      "status": "finished",
+      "stopReason": "DEADLINE",
+      "requests": 2969
+    }
+  ],
+  "scheduledTurns": 2969,
+  "successfulTurns": 2867,
+  "successfulTurnsRange": [
+    36,
+    61
+  ],
+  "unblockedSuccessRange": [
+    53,
+    61
+  ],
+  "perActor": [
+    {
+      "index": 0,
+      "account": 1,
+      "scheduledTurns": 61,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 4
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 1,
+      "account": 2,
+      "scheduledTurns": 61,
+      "successfulTurns": 60,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 2,
+      "account": 3,
+      "scheduledTurns": 61,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 3,
+      "account": 4,
+      "scheduledTurns": 61,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 4,
+      "account": 5,
+      "scheduledTurns": 61,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 5,
+      "account": 6,
+      "scheduledTurns": 61,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 6,
+      "account": 7,
+      "scheduledTurns": 53,
+      "successfulTurns": 49,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 4
+      },
+      "blocked": "THREE_TURN_FAILURES",
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 7,
+      "account": 8,
+      "scheduledTurns": 41,
+      "successfulTurns": 36,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 5
+      },
+      "blocked": "THREE_TURN_FAILURES",
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 8,
+      "account": 9,
+      "scheduledTurns": 61,
+      "successfulTurns": 61,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 9,
+      "account": 10,
+      "scheduledTurns": 61,
+      "successfulTurns": 60,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 10,
+      "account": 11,
+      "scheduledTurns": 61,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 11,
+      "account": 12,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 12,
+      "account": 13,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 13,
+      "account": 14,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 14,
+      "account": 15,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 15,
+      "account": 16,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 16,
+      "account": 17,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 17,
+      "account": 18,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 18,
+      "account": 19,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 19,
+      "account": 20,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 20,
+      "account": 21,
+      "scheduledTurns": 46,
+      "successfulTurns": 43,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "blocked": "THREE_TURN_FAILURES",
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 21,
+      "account": 22,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 22,
+      "account": 23,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 23,
+      "account": 24,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 24,
+      "account": 25,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 25,
+      "account": 26,
+      "scheduledTurns": 60,
+      "successfulTurns": 56,
+      "failures": {
+        "LOCAL_HTTP_500": 1,
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 26,
+      "account": 27,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 27,
+      "account": 28,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "TIMEOUT": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 28,
+      "account": 29,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 29,
+      "account": 30,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 30,
+      "account": 31,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 31,
+      "account": 32,
+      "scheduledTurns": 60,
+      "successfulTurns": 54,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 6
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 32,
+      "account": 33,
+      "scheduledTurns": 60,
+      "successfulTurns": 56,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 4
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 33,
+      "account": 34,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 34,
+      "account": 35,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 35,
+      "account": 36,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "RUN_STOPPED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 36,
+      "account": 37,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 37,
+      "account": 38,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 38,
+      "account": 39,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 39,
+      "account": 40,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 40,
+      "account": 41,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 41,
+      "account": 42,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 42,
+      "account": 43,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 43,
+      "account": 44,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 44,
+      "account": 45,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 45,
+      "account": 46,
+      "scheduledTurns": 60,
+      "successfulTurns": 59,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 1
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 46,
+      "account": 47,
+      "scheduledTurns": 60,
+      "successfulTurns": 60,
+      "failures": {},
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 47,
+      "account": 48,
+      "scheduledTurns": 60,
+      "successfulTurns": 57,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 48,
+      "account": 49,
+      "scheduledTurns": 60,
+      "successfulTurns": 53,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 7
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    },
+    {
+      "index": 49,
+      "account": 50,
+      "scheduledTurns": 60,
+      "successfulTurns": 58,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 2
+      },
+      "pending": false,
+      "ownerDecisionCount": 0
+    }
+  ],
+  "blocked": [
+    {
+      "index": 6,
+      "account": 7,
+      "scheduledTurns": 53,
+      "successfulTurns": 49,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 4
+      },
+      "blocked": "THREE_TURN_FAILURES",
+      "pending": false,
+      "ownerDecisionCount": 0,
+      "lastFailures": [
+        {
+          "at": "2026-10-09T02:05:49.153Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T05:08:58.556Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T05:14:04.397Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T05:19:09.861Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        }
+      ],
+      "lastSuccess": "2026-10-09T05:03:53.166Z"
+    },
+    {
+      "index": 7,
+      "account": 8,
+      "scheduledTurns": 41,
+      "successfulTurns": 36,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 5
+      },
+      "blocked": "THREE_TURN_FAILURES",
+      "pending": false,
+      "ownerDecisionCount": 0,
+      "lastFailures": [
+        {
+          "at": "2026-10-09T03:57:50.197Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T04:08:00.023Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T04:13:08.829Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T04:18:13.585Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        }
+      ],
+      "lastSuccess": "2026-10-09T04:02:54.906Z"
+    },
+    {
+      "index": 20,
+      "account": 21,
+      "scheduledTurns": 46,
+      "successfulTurns": 43,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 3
+      },
+      "blocked": "THREE_TURN_FAILURES",
+      "pending": false,
+      "ownerDecisionCount": 0,
+      "lastFailures": [
+        {
+          "at": "2026-10-09T04:34:32.880Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T04:39:37.865Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        },
+        {
+          "at": "2026-10-09T04:44:43.124Z",
+          "code": "MODEL_OUTPUT_TRUNCATED"
+        }
+      ],
+      "lastSuccess": "2026-10-09T04:29:27.880Z"
+    }
+  ],
+  "hours": [
+    {
+      "hourUtc": "2026-10-09T00",
+      "success": 62,
+      "failures": {},
+      "denials": {
+        "INSUFFICIENT_STOCK": 2
+      }
+    },
+    {
+      "hourUtc": "2026-10-09T01",
+      "success": 577,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 9,
+        "RUN_STOPPED": 1,
+        "LOCAL_HTTP_500": 1
+      },
+      "denials": {
+        "INSUFFICIENT_STOCK": 5,
+        "TICK_PENDING": 7,
+        "MESSAGE_QUEUE_FULL": 8,
+        "RATE_LIMITED": 8
+      }
+    },
+    {
+      "hourUtc": "2026-10-09T02",
+      "success": 580,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 20
+      },
+      "denials": {
+        "RATE_LIMITED": 24,
+        "MESSAGE_QUEUE_FULL": 24,
+        "REQUEST_EXISTS": 1,
+        "TICK_PENDING": 5,
+        "INSUFFICIENT_STOCK": 1
+      }
+    },
+    {
+      "hourUtc": "2026-10-09T03",
+      "success": 565,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 17,
+        "TIMEOUT": 1
+      },
+      "denials": {
+        "MESSAGE_QUEUE_FULL": 31,
+        "RATE_LIMITED": 22,
+        "TICK_PENDING": 4,
+        "INVALID_COMMAND": 2
+      }
+    },
+    {
+      "hourUtc": "2026-10-09T04",
+      "success": 552,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 26
+      },
+      "denials": {
+        "MESSAGE_QUEUE_FULL": 63,
+        "INVALID_COMMAND": 4,
+        "RATE_LIMITED": 86,
+        "REQUEST_EXISTS": 1,
+        "ALREADY_CONTACT": 3,
+        "TICK_PENDING": 3
+      }
+    },
+    {
+      "hourUtc": "2026-10-09T05",
+      "success": 531,
+      "failures": {
+        "MODEL_OUTPUT_TRUNCATED": 27
+      },
+      "denials": {
+        "RATE_LIMITED": 180,
+        "MESSAGE_QUEUE_FULL": 64,
+        "TICK_PENDING": 7,
+        "ALREADY_CONTACT": 3
+      }
+    },
+    {
+      "hourUtc": "2026-10-09T06",
+      "success": 0,
+      "failures": {},
+      "denials": {}
+    }
+  ],
+  "nonTruncations": [
+    {
+      "at": "2026-10-09T01:16:31.296Z",
+      "type": "turn_failed",
+      "actor": 35,
+      "code": "RUN_STOPPED"
+    },
+    {
+      "at": "2026-10-09T01:36:23.808Z",
+      "type": "turn_failed",
+      "actor": 25,
+      "code": "LOCAL_HTTP_500"
+    },
+    {
+      "at": "2026-10-09T03:44:13.907Z",
+      "type": "turn_failed",
+      "actor": 27,
+      "code": "TIMEOUT"
+    }
+  ],
+  "pendingCount": 0,
+  "ownerDecisionCount": 0,
+  "lastModel": "2026-10-09T05:59:52.809Z",
+  "lastAction": "2026-10-09T05:59:53.182Z",
+  "actionsAfterDeadline": 0,
+  "modelsAfterDeadline": 0,
+  "emptyPlans": 671,
+  "failedEventCount": 102,
+  "sampleLatePlans": [
+    {
+      "actor": 4,
+      "at": "2026-10-09T05:59:26.001Z",
+      "output": {
+        "understanding": "I have an active supply offer with a35af8e1-3c1d-4ff2-83fc-f01e379205b0 for grain/silver, but the conversation history shows they are confirming grain/iron terms.",
+        "intent": "Send a clarifying message to the counterparty to confirm which resource pair is being finalized before proceeding.",
+        "nextCheck": "Await the reply confirming whether we are finalizing the grain/silver or grain/iron exchange.",
+        "actions": [
+          {
+            "reason": "The existing offer specifies silver, but the peer's message implies iron; clarification prevents signing an incorrect contract.",
+            "action": {
+              "kind": "game.message.send",
+              "recipientKingdomId": "a35af8e1-3c1d-4ff2-83fc-f01e379205b0",
+              "body": "[Local model] To ensure we sign correctly, please confirm: are we finalizing the grain/silver exchange or the grain/iron one?"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "actor": 5,
+      "at": "2026-10-09T05:59:28.946Z",
+      "output": {
+        "understanding": "A pending supply offer exists for reciprocal grain/iron trade with an existing contact, awaiting signature.",
+        "intent": "Sign the pending offer to activate the contract and maintain resource flow.",
+        "nextCheck": "Monitor active contracts for expiration and prepare new offers if current ones lapse.",
+        "actions": [
+          {
+            "reason": "The pending offer matches existing trade terms and preserves reserves; signing activates the contract immediately.",
+            "action": {
+              "kind": "game.supply.sign",
+              "offerId": "01703d3c-3d00-4c70-a36c-de6ae1c235f7",
+              "version": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "actor": 8,
+      "at": "2026-10-09T05:59:39.512Z",
+      "output": {
+        "understanding": "I have an active contract with peer 0077395f-cda0-48ac-95cf-b5d37102cc21 and a pending signed offer with e920de16-6178-4ade-93b7-664400ca1c14.",
+        "intent": "Sign the pending supply offer to activate the contract and diversify my resource flow.",
+        "nextCheck": "Verify if any peer has initiated a cold contact request that I can accept.",
+        "actions": [
+          {
+            "reason": "Activate the existing signed offer to begin trading iron for grain with e920de16-6178-4ade-93b7-664400ca1c14.",
+            "action": {
+              "kind": "game.supply.sign",
+              "offerId": "22dc0c42-d0af-4101-a20e-c6ae850fee36",
+              "version": 1
+            }
+          }
+        ]
+      }
+    },
+    {
+      "actor": 9,
+      "at": "2026-10-09T05:59:47.295Z",
+      "output": {
+        "understanding": "Existing contracts are active; waiting for server confirmation of activation status before proposing new terms.",
+        "intent": "Monitor contract flow rates and confirm activation status via message to peer 34984467-c1d7-411c-b6d8-92e785303846.",
+        "nextCheck": "Verify server confirmation of the signed contract activation and monitor resource flow rates.",
+        "actions": [
+          {
+            "reason": "Confirming active contract status remains COMMITTED; no new offers pending.",
+            "action": {
+              "kind": "game.message.send",
+              "recipientKingdomId": "34984467-c1d7-411c-b6d8-92e785303846",
+              "body": "[Local model] Contract with peer 34984467 is confirmed COMMITTED. Waiting for server confirmation of activation."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "actor": 10,
+      "at": "2026-10-09T05:59:52.809Z",
+      "output": {
+        "understanding": "Existing contracts are active; no new offers or contacts needed yet.",
+        "intent": "Send renewal confirmations to all four active partners to extend trade for the next hour.",
+        "nextCheck": "Verify that all four supply contracts remain active after sending the renewal messages.",
+        "actions": [
+          {
+            "reason": "Renewing trade with partner 44f007be...",
+            "action": {
+              "kind": "game.message.send",
+              "recipientKingdomId": "44f007be-aae9-4bab-a9b1-baf9c3902113",
+              "body": "[Local model] Confirming active trade of 3 grain/hour and 3 iron/hour for the next hour."
+            }
+          },
+          {
+            "reason": "Renewing trade with partner 80c838e7...",
+            "action": {
+              "kind": "game.message.send",
+              "recipientKingdomId": "80c838e7-975b-41cd-8626-b12872bca8dc",
+              "body": "[Local model] Confirming active trade of 3 grain/hour and 3 iron/hour for the next hour."
+            }
+          },
+          {
+            "reason": "Renewing trade with partner 22b7f6c6...",
+            "action": {
+              "kind": "game.message.send",
+              "recipientKingdomId": "22b7f6c6-bb2b-4583-9a6b-15db738b8095",
+              "body": "[Local model] Confirming active trade of 3 grain/hour and 3 iron/hour for the next hour."
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "invalidCommands": [
+    {
+      "at": "2026-10-09T03:49:41.292Z",
+      "actor": 33,
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "02ca046c-eed7-46e6-8388-3ff18da7c033",
+        "version": 1
+      }
+    },
+    {
+      "at": "2026-10-09T03:50:14.048Z",
+      "actor": 41,
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "3fddb3e6-2839-4a64-a88f-8bee51e36644",
+        "version": 1
+      }
+    },
+    {
+      "at": "2026-10-09T04:00:38.524Z",
+      "actor": 42,
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "21bb1863-ee0c-4d14-a04e-d8a010dc4f55",
+        "version": 1
+      }
+    },
+    {
+      "at": "2026-10-09T04:09:27.272Z",
+      "actor": 24,
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "4499986f-6ee5-4817-9ae3-b8b1410f1dc2",
+        "version": 1
+      }
+    },
+    {
+      "at": "2026-10-09T04:14:43.248Z",
+      "actor": 28,
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "432d3830-548d-4e56-a51c-3717f4daad11",
+        "version": 1
+      }
+    },
+    {
+      "at": "2026-10-09T04:50:59.747Z",
+      "actor": 34,
+      "action": {
+        "kind": "game.supply.sign",
+        "offerId": "74981212-0f46-4455-9b97-e68a7ca83915",
+        "version": 1
+      }
+    }
+  ],
+  "denialKinds": {
+    "INSUFFICIENT_STOCK:game.contact.request": 8,
+    "TICK_PENDING:game.building.queue": 2,
+    "MESSAGE_QUEUE_FULL:game.message.send": 190,
+    "TICK_PENDING:game.supply.offer": 3,
+    "TICK_PENDING:game.contact.answer": 3,
+    "RATE_LIMITED:game.contact.request": 58,
+    "TICK_PENDING:game.supply.sign": 8,
+    "REQUEST_EXISTS:game.contact.request": 2,
+    "TICK_PENDING:game.message.send": 9,
+    "RATE_LIMITED:game.supply.counter": 11,
+    "RATE_LIMITED:game.supply.sign": 111,
+    "RATE_LIMITED:game.supply.offer": 140,
+    "INVALID_COMMAND:game.supply.sign": 6,
+    "ALREADY_CONTACT:game.contact.request": 6,
+    "TICK_PENDING:game.contact.request": 1
+  },
+  "nonTruncationContexts": [
+    {
+      "at": "2026-10-09T01:16:31.296Z",
+      "actor": 35,
+      "code": "RUN_STOPPED",
+      "events": [
+        {
+          "at": "2026-10-09T01:16:31.295Z",
+          "type": "model_result",
+          "modelWallMs": 2859.7975999999326
+        }
+      ]
+    },
+    {
+      "at": "2026-10-09T01:36:23.808Z",
+      "actor": 25,
+      "code": "LOCAL_HTTP_500",
+      "events": []
+    },
+    {
+      "at": "2026-10-09T03:44:13.907Z",
+      "actor": 27,
+      "code": "TIMEOUT",
+      "events": [
+        {
+          "at": "2026-10-09T03:43:53.892Z",
+          "type": "model_result",
+          "modelWallMs": 3368.9231000002474
+        }
+      ]
+    }
+  ]
+}

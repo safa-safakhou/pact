@@ -36,7 +36,7 @@ def validate(data):
         for dependency in task["depends_on"]:
             assert dependency in by_id, f"Missing dependency {dependency}"
             assert by_id[dependency]["phase"] <= task["phase"], "Dependency on a later milestone"
-        if task.get("delivery_track") in {"alpha", "alpha_followup", "experience", "friends_playtest", "chatgpt"}:
+        if task.get("delivery_track") in {"alpha", "alpha_followup", "experience", "friends_playtest", "chatgpt", "local_population"}:
             assert "PACT-053" in task["depends_on"], f"Missing rules gate: {task['id']}"
             assert all(by_id[d].get("delivery_track") != "later" for d in task["depends_on"]), f"Alpha blocked by deferred work: {task['id']}"
         elif task["phase"]:
@@ -87,7 +87,7 @@ def validate(data):
     for phase, gate_id in GATES.items():
         # New follow-ups have their own checkpoint; do not rewrite historical gate acceptance.
         phase_tasks = {t["id"] for t in tasks if t["phase"] == phase and t["id"] != gate_id
-                       and t.get("delivery_track") not in {"alpha_followup", "experience", "friends_playtest", "chatgpt"}}
+                       and t.get("delivery_track") not in {"alpha_followup", "experience", "friends_playtest", "chatgpt", "local_population"}}
         assert phase_tasks <= set(by_id[gate_id]["depends_on"]), f"Incomplete gate {gate_id}"
     for source, expected in data["source_sha256"].items():
         actual = hashlib.sha256((ROOT / source).read_bytes()).hexdigest()
@@ -159,7 +159,7 @@ def render(data, by_id, criteria):
     lines += ["## Current game-only Alpha", "", "Original A/R/S/L coverage above includes deferred original scope and is not evidence that narrowed Alpha tickets satisfy full production criteria.", "", "| Criterion | Active tickets | Alpha checkpoint |", "| --- | --- | --- |"]
     for criterion in sorted(c for c in criteria if c.startswith("G")):
         members = [t for t in tasks if criterion in t["covers"] and t["id"] != data["alpha"]["gate"]
-                   and t.get("delivery_track") not in {"alpha_followup", "experience", "friends_playtest", "chatgpt"}]
+                   and t.get("delivery_track") not in {"alpha_followup", "experience", "friends_playtest", "chatgpt", "local_population"}]
         lines += [f"| {criterion} | " + (", ".join(link(t["id"]) for t in members) or "Observed final rehearsal") + f" | {link(data['alpha']['gate'])} |"]
     if data.get("alpha_followup"):
         plan = data["alpha_followup"]

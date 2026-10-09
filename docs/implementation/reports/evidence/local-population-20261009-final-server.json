@@ -1,0 +1,35 @@
+{
+  "observedAt": "2026-10-09T07:34:47.237367+00:00",
+  "world": {
+    "status": "active",
+    "tick_sequence": 17188
+  },
+  "buildings": {
+    "completed": 239,
+    "waiting": 16
+  },
+  "contacts": 262,
+  "contracts": {
+    "expired": 272
+  },
+  "installments": 32640,
+  "installmentFailures": 0,
+  "deliveries": [
+    {
+      "resource": "iron",
+      "due_units": "505200",
+      "delivered_units": "505200"
+    },
+    {
+      "resource": "grain",
+      "due_units": "492600",
+      "delivered_units": "492600"
+    },
+    {
+      "resource": "silver",
+      "due_units": "82200",
+      "delivered_units": "82200"
+    }
+  ],
+  "liveLeases": 0
+}

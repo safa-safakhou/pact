@@ -26,7 +26,7 @@ Every criterion in the [design delivery checklist](../pact/delivery.md) is mappe
 | R04 | [PACT-032](phase-1-rules.md#pact-032), [PACT-035](phase-1-rules.md#pact-035), [PACT-036](phase-1-rules.md#pact-036), [PACT-037](phase-1-rules.md#pact-037), [PACT-039](phase-1-rules.md#pact-039), [PACT-040](phase-1-rules.md#pact-040), [PACT-041](phase-1-rules.md#pact-041), [PACT-049](phase-1-rules.md#pact-049), [PACT-051](phase-1-rules.md#pact-051) | [PACT-053](phase-1-rules.md#pact-053) |
 | R05 | [PACT-028](phase-1-rules.md#pact-028), [PACT-042](phase-1-rules.md#pact-042), [PACT-043](phase-1-rules.md#pact-043), [PACT-044](phase-1-rules.md#pact-044), [PACT-048](phase-1-rules.md#pact-048), [PACT-051](phase-1-rules.md#pact-051) | [PACT-053](phase-1-rules.md#pact-053) |
 | R06 | [PACT-029](phase-1-rules.md#pact-029), [PACT-030](phase-1-rules.md#pact-030), [PACT-045](phase-1-rules.md#pact-045), [PACT-049](phase-1-rules.md#pact-049), [PACT-050](phase-1-rules.md#pact-050), [PACT-051](phase-1-rules.md#pact-051) | [PACT-053](phase-1-rules.md#pact-053) |
-| R07 | [PACT-052](phase-1-rules.md#pact-052) | [PACT-053](phase-1-rules.md#pact-053) |
+| R07 | [PACT-052](phase-1-rules.md#pact-052), [PACT-133](phase-3-season-one.md#pact-133), [PACT-134](phase-3-season-one.md#pact-134), [PACT-135](phase-3-season-one.md#pact-135), [PACT-136](phase-3-season-one.md#pact-136), [PACT-137](phase-3-season-one.md#pact-137) | [PACT-053](phase-1-rules.md#pact-053) |
 | R08 | [PACT-096](phase-1-rules.md#pact-096) | [PACT-053](phase-1-rules.md#pact-053) |
 
 ## Phase 2 — Social slice

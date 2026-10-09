@@ -1,5 +1,11 @@
 /** Recovery is advice, never a grant or a claim that a game effect succeeded. */
-export function agentRecovery(code: string): string {
+export function agentRecovery(code: string, detail?: string): string {
+  if (detail === "CONTRACT_CAPACITY")
+    return "The contract was not activated: one party has reached the normal incoming/outgoing contract limit. Wait for a contract to end, then re-read the still-open offer and exact version. Approval cannot increase capacity.";
+  if (detail === "OFFER_CLOSED" || code === "EXPIRED")
+    return "This offer cannot be signed now. Re-read open offers and their exact versions; an expired or closed offer is not an active agreement. Create new terms only if still wanted and available.";
+  if (code === "RATE_LIMITED")
+    return "This action was not committed because its normal game quota is exhausted. Wait for the game-time rolling window to free allowance. Rewriting terms, approval or faster inference cannot bypass the limit.";
   if (code === "TICK_PENDING")
     return "The next world tick is due; this command was not committed. This is a temporary admission wait, not a paused world. Wait briefly, re-read current state, and retry the same command ID and exact action if it is still intended.";
   if (code === "MESSAGE_QUEUE_FULL")

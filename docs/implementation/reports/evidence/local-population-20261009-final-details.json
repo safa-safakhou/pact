@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-10-09T07:36:42.371765+00:00",
+  "runContracts": {
+    "expired": 272
+  },
+  "contractCloseReasons": {
+    "natural_expiry": 272
+  },
+  "runInstallments": 32640,
+  "runBuildingStates": {
+    "completed": 119,
+    "waiting": 6
+  },
+  "unreadCohortMessages": 199
+}

@@ -1,0 +1,146 @@
+{
+  "runId": "local-1791505197378-e80a9a6a",
+  "status": "finished",
+  "config": {
+    "base": "https://pact.tinyagenttools.com",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen3.5:4b",
+    "accounts": 4,
+    "durationMinutes": 5,
+    "intervalSeconds": 300,
+    "requestCap": 4,
+    "context": 16384,
+    "outputTokens": 600,
+    "timeoutMs": 90000
+  },
+  "weights": {
+    "name": "qwen3.5:4b",
+    "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+    "size": 3324173934,
+    "details": {
+      "parent_model": "model.gguf",
+      "format": "gguf",
+      "family": "qwen35",
+      "families": [
+        "qwen35"
+      ],
+      "parameter_size": "4.2B",
+      "quantization_level": "Q4_K_M",
+      "context_length": 262144,
+      "embedding_length": 2560
+    }
+  },
+  "startedAt": "2026-10-09T00:19:57.378Z",
+  "endsAt": "2026-10-09T00:24:57.378Z",
+  "requests": 4,
+  "updatedAt": "2026-10-09T00:20:08.876Z",
+  "actors": [
+    {
+      "index": 0,
+      "nickname": "Local Qwen mv07xt8i 01",
+      "kingdomId": "32cf009a-105f-4e16-ac17-ba60b7b74d83",
+      "turns": 1,
+      "nextDue": 1791505500872,
+      "failures": 0
+    },
+    {
+      "index": 1,
+      "nickname": "Local Qwen mv07xt8i 02",
+      "kingdomId": "40e0b5aa-1e8a-46ab-9bc3-bb040b00b742",
+      "turns": 1,
+      "nextDue": 1791505502160,
+      "failures": 0
+    },
+    {
+      "index": 2,
+      "nickname": "Local Qwen mv07xt8i 03",
+      "kingdomId": "8bb10a51-d063-4c7b-8234-d6b4e8ab6bd0",
+      "turns": 1,
+      "nextDue": 1791505505662,
+      "failures": 0
+    },
+    {
+      "index": 3,
+      "nickname": "Local Qwen mv07xt8i 04",
+      "kingdomId": "2f88c523-3869-47bc-b337-070344bad9c6",
+      "turns": 1,
+      "nextDue": 1791505508861,
+      "failures": 0
+    }
+  ],
+  "stopReason": "REQUEST_CAP",
+  "distinctKingdoms": 4,
+  "turnCounts": {
+    "1": 4
+  },
+  "completedModelResults": 4,
+  "modelInputTokens": 10934,
+  "modelOutputTokens": 896,
+  "uniqueCommittedCommands": 3,
+  "agentCommands": 3,
+  "simulatedHumanCommands": 0,
+  "commandKinds": {
+    "game.building.queue": 3
+  },
+  "receiptCodes": {
+    "COMMITTED": 3
+  },
+  "commandDenials": {
+    "BUILDING_BUSY": 4
+  },
+  "planRejections": {},
+  "turnFailures": {},
+  "modelCapacity": {
+    "samples": 4,
+    "meanMs": 1891.12975,
+    "p95Ms": 2606.4663,
+    "headroom": 0.3,
+    "projections": [
+      {
+        "seconds": 300,
+        "meanAccounts": 111,
+        "p95Accounts": 80
+      },
+      {
+        "seconds": 600,
+        "meanAccounts": 222,
+        "p95Accounts": 161
+      },
+      {
+        "seconds": 900,
+        "meanAccounts": 333,
+        "p95Accounts": 241
+      }
+    ]
+  },
+  "turnCapacity": {
+    "samples": 4,
+    "meanMs": 2498.75,
+    "p95Ms": 3489,
+    "headroom": 0.3,
+    "projections": [
+      {
+        "seconds": 300,
+        "meanAccounts": 84,
+        "p95Accounts": 60
+      },
+      {
+        "seconds": 600,
+        "meanAccounts": 168,
+        "p95Accounts": 120
+      },
+      {
+        "seconds": 900,
+        "meanAccounts": 252,
+        "p95Accounts": 180
+      }
+    ]
+  },
+  "repeatTurnCapacity": null,
+  "maximumRepeatLatenessMs": 0,
+  "maximumLatenessMs": 3853,
+  "modelValidation": {
+    "parseSucceeded": 4,
+    "note": "Committed receipt evidence determines successful gameplay; generated text is not a receipt."
+  }
+}

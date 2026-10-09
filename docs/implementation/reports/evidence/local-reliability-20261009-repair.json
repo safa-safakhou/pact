@@ -1,0 +1,256 @@
+{
+  "observedAt": "2026-10-09T08:07:48.475Z",
+  "sourceRunId": "local-background-1791507229557-092e5567",
+  "modelRequests": 0,
+  "applied": 13,
+  "decisions": [
+    {
+      "actor": 2,
+      "kingdomId": "c4cd955f-4252-4b3b-b89f-3dcb0814ef88",
+      "instructionId": "9433adc2-40f4-4b08-9f35-8b21b81ceb9b",
+      "reason": "hall_limit",
+      "commandId": "6a60b35b-05f7-41f2-a1ea-b704495ce930",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "6a60b35b-05f7-41f2-a1ea-b704495ce930",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:9433adc2-40f4-4b08-9f35-8b21b81ceb9b": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:06:54.608Z"
+      }
+    },
+    {
+      "actor": 4,
+      "kingdomId": "f6363fd7-4059-48ac-a7a7-4710f65e2592",
+      "instructionId": "70921538-0bd7-4563-bfa8-6c28264ff5da",
+      "reason": "hall_prerequisite",
+      "commandId": "5bd1f390-d0d5-4cb6-bdf0-4924b36a68b2",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "5bd1f390-d0d5-4cb6-bdf0-4924b36a68b2",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:70921538-0bd7-4563-bfa8-6c28264ff5da": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:06:54.893Z"
+      }
+    },
+    {
+      "actor": 12,
+      "kingdomId": "22b7f6c6-bb2b-4583-9a6b-15db738b8095",
+      "instructionId": "cd54d165-12a3-4e9f-b464-40666a1bfe68",
+      "reason": "hall_limit",
+      "commandId": "d0fd0eed-46e6-44cb-9ca8-57f16046ab35",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "d0fd0eed-46e6-44cb-9ca8-57f16046ab35",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:cd54d165-12a3-4e9f-b464-40666a1bfe68": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:44.343Z"
+      }
+    },
+    {
+      "actor": 12,
+      "kingdomId": "22b7f6c6-bb2b-4583-9a6b-15db738b8095",
+      "instructionId": "e5e5a52f-55c0-4916-a0b1-5dfc5b9fcb4f",
+      "reason": "hall_limit",
+      "commandId": "5c114b8f-a33b-4f5f-a041-ff1064a63492",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "5c114b8f-a33b-4f5f-a041-ff1064a63492",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:e5e5a52f-55c0-4916-a0b1-5dfc5b9fcb4f": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:45.356Z"
+      }
+    },
+    {
+      "actor": 14,
+      "kingdomId": "abef3c25-3c2a-46ae-9a7a-b4e54c3c4d80",
+      "instructionId": "2e4100ea-c802-4988-aa07-26d490418e83",
+      "reason": "hall_prerequisite",
+      "commandId": "823d6532-5142-4fac-abdd-337ca8131ce3",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "823d6532-5142-4fac-abdd-337ca8131ce3",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:2e4100ea-c802-4988-aa07-26d490418e83": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:45.644Z"
+      }
+    },
+    {
+      "actor": 34,
+      "kingdomId": "557552df-b070-46f5-a56d-8449325f580b",
+      "instructionId": "b5252720-1831-4cb0-813c-7632300dd877",
+      "reason": "hall_prerequisite",
+      "commandId": "8b0db111-fedc-462c-8db8-37333da8a101",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "8b0db111-fedc-462c-8db8-37333da8a101",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:b5252720-1831-4cb0-813c-7632300dd877": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:47.084Z"
+      }
+    },
+    {
+      "actor": 35,
+      "kingdomId": "1189678e-1ce6-472a-9500-9c56b979d628",
+      "instructionId": "148bbbba-6acf-4cd5-9d88-fb8852dd83fa",
+      "reason": "hall_prerequisite",
+      "commandId": "0bec82bd-3b97-4941-adfc-4bfe485bb80a",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "0bec82bd-3b97-4941-adfc-4bfe485bb80a",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:148bbbba-6acf-4cd5-9d88-fb8852dd83fa": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:47.243Z"
+      }
+    },
+    {
+      "actor": 38,
+      "kingdomId": "676b1f8d-f3fb-4cb1-8052-b58c35556c96",
+      "instructionId": "de495fb5-7fe1-4c43-8ab8-e2d79cba4063",
+      "reason": "hall_limit",
+      "commandId": "7c55314d-93a7-4188-be86-ed27cbabc5d6",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "7c55314d-93a7-4188-be86-ed27cbabc5d6",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:de495fb5-7fe1-4c43-8ab8-e2d79cba4063": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:47.546Z"
+      }
+    },
+    {
+      "actor": 38,
+      "kingdomId": "676b1f8d-f3fb-4cb1-8052-b58c35556c96",
+      "instructionId": "a00e8f5f-ae66-41f8-88c2-3c1e7c33a035",
+      "reason": "hall_prerequisite",
+      "commandId": "eb291827-a70b-4770-ac6f-18ef80153233",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "eb291827-a70b-4770-ac6f-18ef80153233",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:a00e8f5f-ae66-41f8-88c2-3c1e7c33a035": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:47.663Z"
+      }
+    },
+    {
+      "actor": 39,
+      "kingdomId": "191990d0-626a-4055-b0f0-682efa30ccb2",
+      "instructionId": "6ddae739-6541-40d7-9718-7144cd884297",
+      "reason": "hall_prerequisite",
+      "commandId": "82184575-a57e-4a03-bb19-ad511708726e",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "82184575-a57e-4a03-bb19-ad511708726e",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:6ddae739-6541-40d7-9718-7144cd884297": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:47.817Z"
+      }
+    },
+    {
+      "actor": 42,
+      "kingdomId": "ad9f9a04-3934-44bf-9ed3-ed07240c10a4",
+      "instructionId": "286fbb83-19da-4991-ba5c-f325f6eba902",
+      "reason": "hall_limit",
+      "commandId": "c82f1e34-115c-4484-81d3-0db88c770172",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "c82f1e34-115c-4484-81d3-0db88c770172",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:286fbb83-19da-4991-ba5c-f325f6eba902": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:48.150Z"
+      }
+    },
+    {
+      "actor": 43,
+      "kingdomId": "c7e1cb02-c2e0-49ba-be67-38ea5470bdda",
+      "instructionId": "d5c687dd-4d77-4fcd-bfed-aa9d006c86e3",
+      "reason": "hall_prerequisite",
+      "commandId": "12cac7c1-53cf-4f37-9520-fd343d11a138",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "12cac7c1-53cf-4f37-9520-fd343d11a138",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:d5c687dd-4d77-4fcd-bfed-aa9d006c86e3": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:48.335Z"
+      }
+    },
+    {
+      "actor": 48,
+      "kingdomId": "32cf009a-105f-4e16-ac17-ba60b7b74d83",
+      "instructionId": "1e39ed22-8e1f-432f-abaa-4b77f8bf9d28",
+      "reason": "hall_limit",
+      "commandId": "a285d36d-8489-45e0-8ad5-6a9093ad0562",
+      "applied": true,
+      "receipt": {
+        "schemaVersion": "pact.command.v1",
+        "commandId": "a285d36d-8489-45e0-8ad5-6a9093ad0562",
+        "code": "COMMITTED",
+        "committedEventIds": [],
+        "recordVersions": {
+          "building:1e39ed22-8e1f-432f-abaa-4b77f8bf9d28": 2
+        },
+        "charged": [],
+        "committedAt": "2026-10-09T08:07:48.733Z"
+      }
+    }
+  ],
+  "note": "Normal owner commands cancel only unpaid prerequisite-blocked waiting work. Stock-limited legal waiting work remains. No original state, model budget, balances, mandates or historical receipts were rewritten."
+}
