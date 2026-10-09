@@ -7335,7 +7335,7 @@
       "id": "PACT-141",
       "title": "Repair social read acknowledgment and local-player conversation workflow",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7367,7 +7367,12 @@
         "kingdom council",
         "local population controller"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/social-repair-20261009.md",
+        "docs/implementation/reports/evidence/social-repair-20261009.json",
+        "Implementation commits b439754 and a4dc043; kingdom build/typecheck, 59 integration tests, 62 initial Node tests and 16 follow-up tests on Linux/native Windows passed.",
+        "Production release social-repair-20261009-1 verified; twenty-minute independent run finished without resetting its deadline/cap. Actual contact acceptance and three contract activations observed; insufficient-stock defaults and missing dialogue reported. Original fifty owners preserved, 144 messages and eleven acceptances observed across 125 post-reload turns."
+      ],
       "assignee": "codex-social-repair",
       "blocked_by_external": [],
       "block_reason": null,

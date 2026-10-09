@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**63 tickets · 45 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**63 tickets · 46 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1921,7 +1921,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-141"></a>
 ## PACT-141 — Repair social read acknowledgment and local-player conversation workflow
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -1939,8 +1939,15 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Thread delivery clears only its authenticated recipient incoming returned page and permits normal subsequent sending; other pairs and omitted rows remain unread.
-- [ ] Synthetic controller observes fresh social state and rejects wrong-recipient acceptance and repeated unsuccessful actions with useful guidance; relevant tests pass.
-- [ ] A short independently bounded verification reports actual introductions, messages, negotiation receipts/effects and remaining quality limits; no terminal experiment or existing budget is reset.
+- [x] Thread delivery clears only its authenticated recipient incoming returned page and permits normal subsequent sending; other pairs and omitted rows remain unread.
+- [x] Synthetic controller observes fresh social state and rejects wrong-recipient acceptance and repeated unsuccessful actions with useful guidance; relevant tests pass.
+- [x] A short independently bounded verification reports actual introductions, messages, negotiation receipts/effects and remaining quality limits; no terminal experiment or existing budget is reset.
 
 **Assignee:** codex-social-repair
+
+**Evidence**
+
+- docs/implementation/reports/social-repair-20261009.md
+- docs/implementation/reports/evidence/social-repair-20261009.json
+- Implementation commits b439754 and a4dc043; kingdom build/typecheck, 59 integration tests, 62 initial Node tests and 16 follow-up tests on Linux/native Windows passed.
+- Production release social-repair-20261009-1 verified; twenty-minute independent run finished without resetting its deadline/cap. Actual contact acceptance and three contract activations observed; insufficient-stock defaults and missing dialogue reported. Original fifty owners preserved, 144 messages and eleven acceptances observed across 125 post-reload turns.

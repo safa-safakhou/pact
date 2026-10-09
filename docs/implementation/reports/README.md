@@ -12,6 +12,8 @@
 
 ## Current completed work
 
+- [Social workflow repair and bounded verification](social-repair-20261009.md) — PACT-141, restored live communication in the original fifty-player run; fresh-pair contact/contract execution verified, bargaining and overcommitment failures retained in the report.
+
 - [Communication diagnosis](communication-diagnosis-20261009.md) — PACT-139 follow-up: wrong-owner acceptance, neglected requests and missing Council-thread read acknowledgment; corrects the earlier fresh-request explanation.
 
 - [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, finished at the original 16:48 Berlin deadline; 555 attempts, 553 completed turns, 38 commitments and no contracts/dialogue/scouting/raids. Qwen 9B led actual development; all candidates have substantial gameplay-quality limitations.

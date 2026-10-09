@@ -2,6 +2,8 @@
 
 ## Social workflow repair — PACT-141
 
+**Verified 9 October:** the twenty-minute fresh-pair check is terminal, with 36 attempts, one accepted introduction and three activated contracts that subsequently defaulted from insufficient stock; it produced no dialogue. The ongoing fifty-player run completed 125 observed turns with 144 messages and eleven acceptances after the repair. [Actual results and quality limits](../implementation/reports/social-repair-20261009.md). Keep both finite historical experiments terminal; the fifty-player continuous task remains active.
+
 The full-game controller now reads the authorized Council view before each model decision, retains delivered incoming messages in its private checkpoint, and puts incoming introductions and pending replies at the front of the prompt. A committed reply clears the corresponding work; a failed reply does not. Incoming and outgoing requests are distinguished, impossible acceptances and unchanged denied social actions are rejected locally with recovery guidance, and committed social actions refresh contacts/offers before the next action in the same plan. The separate synthetic-owner bridge remains responsible for exact human-only decisions; normal player permissions and economic limits still apply.
 
 Council thread reads acknowledge only incoming messages actually returned in the authenticated page. Pagination lookahead, older omitted rows, outgoing messages and other owners' messages remain untouched. This clears normal unread-message backpressure without increasing message limits.

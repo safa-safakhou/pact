@@ -1,0 +1,319 @@
+{
+  "observedAt": "2026-10-09T16:37:54.050Z",
+  "implementationCommits": [
+    "b439754",
+    "a4dc043"
+  ],
+  "productionRelease": "social-repair-20261009-1",
+  "testEvidence": {
+    "integration": 59,
+    "initialNodeHarness": 62,
+    "followupLinux": 16,
+    "followupNativeWindows": 16
+  },
+  "verification": {
+    "runId": "social-verification-1791562652893-13de4d04",
+    "status": "finished",
+    "accounts": 2,
+    "requests": 36,
+    "deadline": "2026-10-09T16:37:33.361Z",
+    "requestCap": 60,
+    "completedTurns": 35,
+    "completedActors": 2,
+    "acceptedModelPlans": 35,
+    "emptyPlans": 15,
+    "failedTurns": [
+      {
+        "actor": 1,
+        "code": "TRANSPORT_OR_RESULT_ERROR"
+      }
+    ],
+    "currentFailures": [
+      {
+        "index": 1,
+        "failures": 1
+      }
+    ],
+    "pendingCommands": 0,
+    "outcomeCounts": {
+      "game.contact.answer:CONTACT_REQUEST_NOT_INCOMING": 1,
+      "game.message.send:CONTACT_REQUIRED": 3,
+      "game.supply.offer:COMMITTED": 4,
+      "game.supply.sign:COMMITTED": 6,
+      "game.supply.sign:INVALID_COMMAND": 3,
+      "game.supply.offer:FORBIDDEN": 1,
+      "game.supply.sign:REPEATED_DENIED_ACTION": 5,
+      "game.contact.request:COMMITTED": 1,
+      "game.contact.answer:COMMITTED": 1
+    },
+    "committedMessageAuthors": 0,
+    "distinctMessageTexts": 0,
+    "inferenceWallMs": {
+      "samples": 35,
+      "p50": 7605.347900000052,
+      "p95": 10228.064599999983,
+      "max": 11518.628999999999
+    },
+    "modelLoadMs": {
+      "samples": 35,
+      "p50": 3.2954,
+      "p95": 18.3973,
+      "max": 8480.1533
+    },
+    "turnWallMs": {
+      "samples": 35,
+      "p50": 8290,
+      "p95": 11763,
+      "max": 12085
+    },
+    "firstCommitAt": "2026-10-09T16:19:02.085Z",
+    "ownerDecisions": 9,
+    "controllerExits": [
+      {
+        "at": "2026-10-09T16:37:33.397Z",
+        "status": "finished",
+        "requests": 36
+      }
+    ],
+    "database": {
+      "observedAt": "2026-10-09T16:37:55.513068+00:00",
+      "world": {
+        "status": "active",
+        "tick_sequence": 17731
+      },
+      "requests": [
+        {
+          "status": "accepted",
+          "n": 1
+        }
+      ],
+      "contacts": 1,
+      "messages": 0,
+      "unread": 0,
+      "offers": [
+        {
+          "id": "510d2a86-712b-4ae5-bf3d-34d040f7ffba",
+          "version": 1,
+          "status": "active",
+          "terms": {
+            "aToB": {
+              "resource": "iron",
+              "wholePerHour": 20
+            },
+            "bToA": {
+              "resource": "grain",
+              "wholePerHour": 22
+            },
+            "aBond": null,
+            "bBond": null,
+            "noticeHours": 0,
+            "durationHours": 1
+          },
+          "created_game_time_ms": 1791444720000,
+          "updated_game_time_ms": 1791444720000
+        },
+        {
+          "id": "203f4ac3-8a22-43f6-a222-11ce06d4b6a0",
+          "version": 1,
+          "status": "active",
+          "terms": {
+            "aToB": {
+              "resource": "iron",
+              "wholePerHour": 20
+            },
+            "bToA": {
+              "resource": "grain",
+              "wholePerHour": 22
+            },
+            "aBond": null,
+            "bBond": null,
+            "noticeHours": 0,
+            "durationHours": 1
+          },
+          "created_game_time_ms": 1791445020000,
+          "updated_game_time_ms": 1791445020000
+        },
+        {
+          "id": "aacfc43c-1be1-415f-9760-31dc1cc8bf07",
+          "version": 1,
+          "status": "active",
+          "terms": {
+            "aToB": {
+              "resource": "iron",
+              "wholePerHour": 20
+            },
+            "bToA": {
+              "resource": "grain",
+              "wholePerHour": 22
+            },
+            "aBond": null,
+            "bBond": null,
+            "noticeHours": 0,
+            "durationHours": 1
+          },
+          "created_game_time_ms": 1791445560000,
+          "updated_game_time_ms": 1791445560000
+        },
+        {
+          "id": "778069b5-e4b0-4b08-92ae-30461715f0ee",
+          "version": 1,
+          "status": "open",
+          "terms": {
+            "aToB": {
+              "resource": "iron",
+              "wholePerHour": 20
+            },
+            "bToA": {
+              "resource": "grain",
+              "wholePerHour": 22
+            },
+            "aBond": null,
+            "bBond": null,
+            "noticeHours": 0,
+            "durationHours": 1
+          },
+          "created_game_time_ms": 1791445800000,
+          "updated_game_time_ms": 1791445800000
+        }
+      ],
+      "contracts": [
+        {
+          "id": "3758d059-dc2d-4591-bbc8-e713a859a591",
+          "offer_id": "510d2a86-712b-4ae5-bf3d-34d040f7ffba",
+          "status": "defaulted",
+          "created_at": "2026-10-09T16:20:10.054999+00:00",
+          "start_game_time_ms": 1791444840000,
+          "end_game_time_ms": 1791448440000
+        },
+        {
+          "id": "5639b6c1-bc9a-41a1-8763-17c68824527e",
+          "offer_id": "aacfc43c-1be1-415f-9760-31dc1cc8bf07",
+          "status": "defaulted",
+          "created_at": "2026-10-09T16:34:40.9697+00:00",
+          "start_game_time_ms": 1791445680000,
+          "end_game_time_ms": 1791449280000
+        },
+        {
+          "id": "c0c970ef-4250-41fc-b97e-e3ed48c0bd0a",
+          "offer_id": "203f4ac3-8a22-43f6-a222-11ce06d4b6a0",
+          "status": "defaulted",
+          "created_at": "2026-10-09T16:32:22.869711+00:00",
+          "start_game_time_ms": 1791445560000,
+          "end_game_time_ms": 1791449160000
+        }
+      ],
+      "installments": 38,
+      "failures": 6
+    },
+    "deliveries": {
+      "observedAt": "2026-10-09T16:37:56.053752+00:00",
+      "deliveries": [
+        {
+          "resource": "grain",
+          "installments": 19,
+          "due_units": "4180",
+          "delivered_units": "3960",
+          "overflow_units": "0"
+        },
+        {
+          "resource": "iron",
+          "installments": 19,
+          "due_units": "3800",
+          "delivered_units": "3600",
+          "overflow_units": "0"
+        }
+      ]
+    },
+    "failureReasons": {
+      "insufficient_stock": 6
+    },
+    "contactRequestCommittedAt": "2026-10-09T16:35:50.618Z",
+    "contactAcceptedAt": "2026-10-09T16:36:30.852Z",
+    "activationWallSeconds": [
+      67.97,
+      456.61,
+      101.483
+    ],
+    "substantiveCounteroffers": 0,
+    "preservation": {
+      "sameRunId": true,
+      "same2KingdomIds": true,
+      "sameDeadline": true,
+      "sameCap": true,
+      "reloadedDuringActiveRunForContextBookkeepingFix": true,
+      "terminalNotRestarted": true
+    }
+  },
+  "continuous": {
+    "runId": "full-game-1791537512736-10b87b6c",
+    "status": "running",
+    "accounts": 50,
+    "requests": 3820,
+    "deadline": null,
+    "requestCap": null,
+    "completedTurns": 125,
+    "completedActors": 50,
+    "acceptedModelPlans": 125,
+    "emptyPlans": 38,
+    "failedTurns": [],
+    "currentFailures": [],
+    "pendingCommands": 0,
+    "outcomeCounts": {
+      "game.message.send:COMMITTED": 144,
+      "game.supply.offer:INVALID_COMMAND": 4,
+      "game.message.send:CONTACT_REQUIRED": 2,
+      "game.contact.answer:COMMITTED": 11,
+      "game.supply.sign:TICK_PENDING": 3,
+      "game.supply.counter:INVALID_COMMAND": 2,
+      "game.supply.sign:COMMITTED": 4,
+      "game.supply.sign:STALE_VERSION": 8,
+      "game.supply.sign:EXPIRED": 2,
+      "game.contact.answer:CONTACT_REQUEST_NOT_INCOMING": 4,
+      "game.message.send:DUPLICATE_MESSAGE": 4,
+      "game.supply.counter:REPEATED_DENIED_ACTION": 1,
+      "game.supply.offer:REPEATED_DENIED_ACTION": 1,
+      "game.message.send:TICK_PENDING": 1,
+      "game.supply.sign:INVALID_COMMAND": 3
+    },
+    "committedMessageAuthors": 37,
+    "distinctMessageTexts": 124,
+    "inferenceWallMs": {
+      "samples": 125,
+      "p50": 7986.59169999999,
+      "p95": 12440.599099999992,
+      "max": 13723.350399999996
+    },
+    "modelLoadMs": {
+      "samples": 125,
+      "p50": 3.1123,
+      "p95": 15.2437,
+      "max": 19.0195
+    },
+    "turnWallMs": {
+      "samples": 125,
+      "p50": 9021,
+      "p95": 13819,
+      "max": 15099
+    },
+    "firstCommitAt": "2026-10-09T16:18:19.673Z",
+    "ownerDecisions": 11,
+    "controllerExits": [],
+    "backlog": {
+      "observedAt": "2026-10-09T16:37:56.602559+00:00",
+      "contacts": 264,
+      "unread_messages": 54,
+      "recipients_with_unread": 27,
+      "full_pairs": 3,
+      "recipients_at_agent_cap": 0
+    },
+    "preservation": {
+      "sameRunId": true,
+      "same50KingdomIds": true,
+      "beforeRequests": 3692,
+      "afterRequests": 3820,
+      "modelUnchanged": "qwen3.5:4b",
+      "globalDeadlineUnchanged": null,
+      "globalRequestCapUnchanged": null
+    }
+  }
+}
