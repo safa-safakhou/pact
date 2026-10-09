@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Continuous full-game local players](full-game-local-20261009.md) — PACT-138, all implemented mechanics available; fifty existing kingdoms running until explicitly stopped. Implementation complete; continuing observation is ongoing.
+
 - [ChatGPT play and free-form notes](chatgpt-play-20261006.md) — PACT-131, founder-authorized implementation and deployment.
 
 ## Current completed work

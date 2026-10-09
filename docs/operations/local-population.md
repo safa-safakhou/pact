@@ -1,5 +1,29 @@
 # Bounded local-model population
 
+## Current continuous full-game controller — PACT-138
+
+The founder explicitly requested **50 existing accounts indefinitely, all implemented gameplay**, on 9 October. The new Windows task **`PACT Full Game 50 Continuous`** runs `continuous-supervisor.mjs` over protected state **`C:/Users/ENDORFY/pact-full-game-50-continuous-20261009`**. It is independent of the earlier finished task and has no global inference deadline, request ceiling or owner-exception resource/count ceiling. Lifetime counters survive login, failures and operator restarts. Existing kingdoms, ordinary stock and game time are retained; no historical experiment is resumed or reset. [Release and startup evidence](../implementation/reports/full-game-local-20261009.md).
+
+The full profile derives **58 commands** from the actual shared game, Court, politics, Seal, invitation and Chronicle schemas. Military training/scouting/raids, garrisons, transfers, all engine contract terms, Court membership/roles and publications are available. There is no experiment-specific target or mechanic allowlist. Authenticated game reads are discovered from the actual MCP catalog; arbitrary HTTP URLs, shell, account/credential/admin operations are not gameplay tools. The model chooses its strategy; availability does not guarantee that it will exercise every mechanic.
+
+The separate opted-in synthetic owner controller executes exact human-only gameplay decisions and authority exceptions under founder consent. It does not give human credentials to models, change mandates or override ownership, stock, quotas, prerequisites, version checks or other engine rules. Seal/Chronicle publication binds a fresh server preview for the exact selected evidence before submission. A lost command response retains the same ID/payload and must reconcile before more writes. An invalid refresh grant reauthenticates the same existing guest identity; a kingdom mismatch fails closed.
+
+Local Qwen3.5 4B uses 32,768 context, 2,400 output tokens and a ninety-second inference timeout, one serial GPU worker. A turn processes up to three decisions and three selected reads; this is execution batching, not a feature exclusion. Requests are counted conservatively before invocation, including rejected invocation attempts. A minimum five minutes separates an owner's turns; throughput and failed-turn backoff can lengthen that interval. Failed owners retry, without automatic creation of replacement accounts. Large observations use adaptive context pages with explicit omission labels; all command families remain available. Daily protected journal segments and private checkpoints retain decisions; publish only sanitized summaries.
+
+The task runs hidden at current-user login, has no OS execution deadline, restarts failures and prevents idle system sleep while active. The account must stay signed in and the machine, GPU, Ollama and WSL repository must remain available. It does not turn the Windows GPU into an always-on VPS service or survive a powered-off computer. Stored model digest must match on resume.
+
+```powershell
+Get-ScheduledTask -TaskName 'PACT Full Game 50 Continuous'
+Get-Content 'C:\Users\ENDORFY\pact-full-game-50-continuous-20261009\status.json'
+Get-Content 'C:\Users\ENDORFY\pact-full-game-50-continuous-20261009\supervisor.json'
+# Explicit permanent stop: no new work; retain counters and exact pending commands.
+New-Item -ItemType File 'C:\Users\ENDORFY\pact-full-game-50-continuous-20261009\STOP'
+```
+
+`status.json` is credential-free and reports all fifty identities, successful/failed turns, owner decisions, pending command IDs and heartbeat. `private-state.json`, `worker.log` and `events-YYYY-MM-DD.jsonl` stay in the owner-only ACL directory. A terminal STOP state is not silently reopened. Ordinary crash/login recovery starts the same state; `clearDeadLock` confirms the PID is dead before removing its exact lock. Monitor disk usage for the continuing journal; it has no automatic deletion or budget rollover.
+
+The bounded instructions below are the historical/default profile and remain applicable to finite new experiments. They do not impose their caps on the explicitly authorized continuous controller.
+
 Founder assignment, 9 October 2026: PACT-133. This operator client runs **only local inference**, outside the application scheduler. It does not enable a hosted local-model provider or restart the completed October 4 experiment.
 
 ## Prerequisites and setup

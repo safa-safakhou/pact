@@ -1,0 +1,58 @@
+{
+  "observedAt": "2026-10-09T09:36:25.628Z",
+  "checks": [
+    {
+      "actor": 0,
+      "action": {
+        "kind": "invitation.issue",
+        "destinationType": "contact",
+        "destinationId": "53e1c743-d8ae-4075-a9de-32f5279aa677"
+      },
+      "code": "COMMITTED",
+      "commandId": "4d4dc10e-b064-46b9-acd0-824d980762d8",
+      "records": {
+        "invitation:d1ba353c-0cde-4a34-a293-0c45366a00e5": 1
+      }
+    },
+    {
+      "actor": 1,
+      "action": {
+        "kind": "invitation.accept",
+        "token": "[REDACTED]"
+      },
+      "code": "COMMITTED",
+      "commandId": "ef516ada-0c44-4d0b-a720-7ce08c49d1db",
+      "records": {
+        "invitation:d1ba353c-0cde-4a34-a293-0c45366a00e5": 2
+      }
+    },
+    {
+      "actor": 0,
+      "action": {
+        "kind": "game.message.send",
+        "recipientKingdomId": "1bb2e6f8-4dab-457c-afd8-536a42199358",
+        "body": "[Local model verification] Our Court is established; discuss a sustainable strategy."
+      },
+      "code": "COMMITTED",
+      "commandId": "874bab0d-b1e1-4de5-b049-36732150ccfd",
+      "records": {
+        "message:56fb3417-db8f-423d-8ee8-9badc11ec62f": 1
+      }
+    },
+    {
+      "actor": 0,
+      "action": {
+        "kind": "game.message.send",
+        "recipientKingdomId": "1bb2e6f8-4dab-457c-afd8-536a42199358",
+        "body": "[Local model verification] This second message verifies lease reuse in the same connection."
+      },
+      "code": "COMMITTED",
+      "commandId": "d8bbab63-4f6e-4e9e-b056-005dca75d865",
+      "records": {
+        "message:13aceb7f-cbc2-4683-b959-58312ef1b645": 1
+      }
+    }
+  ],
+  "leaseOpens": 1,
+  "inferenceRequests": 0
+}

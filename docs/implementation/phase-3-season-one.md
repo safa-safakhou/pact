@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**59 tickets · 42 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**60 tickets · 43 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1812,3 +1812,39 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - 144 inference-only replay attempts: final schema 47/48 valid, zero truncations, one invented offer ID rejected before write.
 - 19 live probe checks; exact owner approvals and completed Farm II; 13 prerequisite-blocked queues canceled normally; deployed expired signature returns EXPIRED.
 - 751 offers, 272 agreements, 6 genuinely changed-counter agreements; median activation 5m30s, changed-counter median 14m26s; live/test/unverified coverage matrix recorded.
+
+<a id="pact-138"></a>
+## PACT-138 — Release continuous full-game local population with synthetic owner decisions
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-137](phase-3-season-one.md#pact-137)
+
+**Components:** operator population harness, local inference, synthetic owner controller.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Remove experiment-specific mechanic, target and supply-term restrictions for the existing 50 synthetic kingdoms using all implemented shared command schemas.
+- Run indefinitely until explicit stop with local inference, lifetime counters, fair scheduling, recoverable exact commands and separate synthetic-owner decisions; preserve game economy, ownership and finished historical runs.
+- Verify Courts, social/publication and military adapters plus restart/STOP/uncertain outcomes; publish actual release and startup evidence without claiming deferred production certification.
+
+**Acceptance**
+
+- [x] Full implemented command catalog and authorized read tools are reachable without historical experiment restrictions; synthetic owner policy never exposes human credentials or mutates game rules.
+- [x] Existing 50 kingdoms run under a new persistent continuous controller, with no archive/budget resets and no automatic recreation; actual startup and representative live mechanics are verified.
+- [x] Meaningful adapter, authorization, recovery and gameplay checks pass; full-game readiness limits and continuous operating instructions are documented and committed.
+
+**Assignee:** codex-full-game
+
+**Evidence**
+
+- docs/implementation/reports/full-game-local-20261009.md
+- 54 Node tests and 11 native Windows tests passed; 60 integration tests across Courts/politics/publication/military passed; typecheck and 28-file Biome check passed.
+- Seven live Court/publication/training observations including same-ID social receipt recovery; all 50 existing owners completed successful full-game turns.
+- New Windows task PACT Full Game 50 Continuous running without a lifetime deadline/request cap; rolling update retained run ID, all kingdoms and 75 requests, with no new context failures at the startup observation.
+- Planning render/check and staged whitespace passed; local implementation committed under founder standing instruction; deferred production scope and historical caps unchanged.
+- Final lease-reuse fix verified by four live invitation/message commits with one lease open; same run restarted at 173 attempts; release health shows 50 successful owners and no new turn failures after context fix.

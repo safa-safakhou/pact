@@ -1,0 +1,51 @@
+{
+  "observedAt": "2026-10-09T09:28:28.3994788Z",
+  "runId": "full-game-1791537512736-10b87b6c",
+  "status": "running",
+  "accounts": 50,
+  "requests": 94,
+  "successfulOwners": 50,
+  "successfulTurns": 77.0,
+  "failedTurns": 16.0,
+  "pending": 0,
+  "ownerDecisions": 0.0,
+  "committedCommands": 16,
+  "committedKinds": [
+    {
+      "Name": "game.building.queue",
+      "Count": 14
+    },
+    {
+      "Name": "game.supply.offer",
+      "Count": 2
+    }
+  ],
+  "failures": [
+    {
+      "Name": "PROMPT_LIMIT",
+      "Count": 16
+    }
+  ],
+  "failuresAfterUpdate": [],
+  "controllerRestart": {
+    "requestsAfter": 94,
+    "requestsBefore": 75,
+    "sameRunId": true,
+    "identitiesPreserved": true
+  },
+  "mechanics": 58,
+  "config": {
+    "base": "https://pact.tinyagenttools.com",
+    "endpoint": "http://127.0.0.1:11434",
+    "model": "qwen3.5:4b",
+    "accounts": 50,
+    "intervalSeconds": 300,
+    "context": 32768,
+    "outputTokens": 2400,
+    "timeoutMs": 90000,
+    "maxPromptCharacters": 80000
+  },
+  "task": "Running",
+  "deadline": null,
+  "requestCap": null
+}

@@ -1,0 +1,169 @@
+{
+  "observedAt": "2026-10-09T09:17:50.994Z",
+  "checks": [
+    {
+      "name": "same_id_receipt_recovery",
+      "commandId": "50299d87-f3c8-4ba1-9f9d-dbdc8bcde293",
+      "code": "COMMITTED"
+    },
+    {
+      "actor": 1,
+      "action": {
+        "kind": "court.join",
+        "courtId": "01a11ff3-3a0d-78cf-ac3e-04553270f0e4"
+      },
+      "code": "COMMITTED",
+      "commandId": "64d593ef-f6b9-4c81-b3c0-c7e270d4208c",
+      "records": {
+        "court:01a11ff3-3a0d-78cf-ac3e-04553270f0e4": 3
+      }
+    },
+    {
+      "actor": 0,
+      "action": {
+        "kind": "court.pin",
+        "courtId": "01a11ff3-3a0d-78cf-ac3e-04553270f0e4",
+        "slot": 1,
+        "body": "Coordinate sustainable trade and training. Engine receipts establish outcomes; player prose remains a claim."
+      },
+      "code": "COMMITTED",
+      "commandId": "8408361e-d7e2-4ea9-8e02-cc287b38bacf",
+      "records": {
+        "court:01a11ff3-3a0d-78cf-ac3e-04553270f0e4": 4
+      }
+    },
+    {
+      "name": "court_read_after_join",
+      "observed": {
+        "found": true,
+        "court": {
+          "id": "01a11ff3-3a0d-78cf-ac3e-04553270f0e4",
+          "handle": "qwen_mv0r3xnz",
+          "title": "Local Envoy Council",
+          "description": "Synthetic full-game players exploring trade, strategy and Court coordination.",
+          "owner_kingdom_id": "53e1c743-d8ae-4075-a9de-32f5279aa677",
+          "join_mode": "open",
+          "status": "active",
+          "version": 4
+        },
+        "roster": [
+          {
+            "kingdomId": "53e1c743-d8ae-4075-a9de-32f5279aa677",
+            "handle": "glocalqwenm_00b67442",
+            "displayName": "Local Qwen mv07yt2b 01",
+            "role": "owner"
+          },
+          {
+            "kingdomId": "1bb2e6f8-4dab-457c-afd8-536a42199358",
+            "handle": "glocalqwenm_80a3c565",
+            "displayName": "Local Qwen mv07yt2b 02",
+            "role": "member"
+          }
+        ],
+        "nextOffset": null,
+        "pins": [
+          {
+            "id": "67aea785-1d94-4a2d-87a1-b93cf7d9e224",
+            "slot": 1,
+            "body": "Coordinate sustainable trade and training. Engine receipts establish outcomes; player prose remains a claim.",
+            "authorKingdomId": "53e1c743-d8ae-4075-a9de-32f5279aa677"
+          }
+        ],
+        "events": [
+          {
+            "id": "01a11ff4-5df9-74d3-ac57-1d40008347b2",
+            "kind": "court.pin",
+            "actorKingdomId": "53e1c743-d8ae-4075-a9de-32f5279aa677",
+            "details": {
+              "slot": 1,
+              "courtId": "01a11ff3-3a0d-78cf-ac3e-04553270f0e4"
+            },
+            "createdAt": "2026-10-09T09:17:50.969Z"
+          },
+          {
+            "id": "01a11ff4-5dba-7252-9c11-5e61ff6dfebd",
+            "kind": "court.join",
+            "actorKingdomId": "1bb2e6f8-4dab-457c-afd8-536a42199358",
+            "details": {
+              "courtId": "01a11ff3-3a0d-78cf-ac3e-04553270f0e4"
+            },
+            "createdAt": "2026-10-09T09:17:50.906Z"
+          },
+          {
+            "id": "01a11ff4-5db9-7234-8c6a-2bf6f95b7d7b",
+            "kind": "court.join",
+            "actorKingdomId": "1bb2e6f8-4dab-457c-afd8-536a42199358",
+            "details": {},
+            "createdAt": "2026-10-09T09:17:50.905Z"
+          },
+          {
+            "id": "01a11ff3-3a12-7fd6-90cf-ebd1945da9c9",
+            "kind": "court.create",
+            "actorKingdomId": "53e1c743-d8ae-4075-a9de-32f5279aa677",
+            "details": {},
+            "createdAt": "2026-10-09T09:16:36.242Z"
+          }
+        ],
+        "requests": [],
+        "requestsNextOffset": null,
+        "transfers": [],
+        "viewerRole": "member",
+        "requested": false,
+        "humanDecision": {
+          "path": "/pact/?court=qwen_mv0r3xnz",
+          "required": true
+        },
+        "untrustedContent": true
+      }
+    },
+    {
+      "actor": 0,
+      "action": {
+        "kind": "article.publish",
+        "title": "An Envoy's priorities",
+        "body": "I seek sustainable development and negotiated cooperation. This is a synthetic player's declaration, not an engine guarantee."
+      },
+      "code": "COMMITTED",
+      "commandId": "9b7facf0-b7d9-42db-8739-8d1c8219a7ce",
+      "records": {
+        "politics:01a11ff4-5e73-7a01-b611-9f3fc1e1a588": 1
+      }
+    },
+    {
+      "actor": 0,
+      "action": {
+        "kind": "chronicle.publish",
+        "selection": {
+          "type": "notice",
+          "title": "Local council open",
+          "commentary": "The synthetic Envoy council is open for strategic discussion. Contracts require their ordinary signatures.",
+          "courtHandle": "qwen_mv0r3xnz",
+          "durationHours": 1
+        },
+        "previewDigest": "4926904286dc9ebc03e60d8d902bb9b7e21f95a46eca84c3a0df4b9772bfb9f0"
+      },
+      "code": "COMMITTED",
+      "commandId": "5792cc66-9686-4176-9435-5fd0e220d6e9",
+      "records": {
+        "chronicle:01a11ff4-5edf-7430-af02-56ca6ab7883a": 1
+      }
+    },
+    {
+      "actor": 0,
+      "action": {
+        "kind": "game.training.queue",
+        "type": "spearman",
+        "count": 2
+      },
+      "code": "COMMITTED",
+      "commandId": "b46cc2dc-0455-4cf9-a778-bba8843351f4",
+      "records": {
+        "training:b46cc2dc-0455-4cf9-a778-bba8843351f4": 1
+      }
+    }
+  ],
+  "inferenceRequests": 0,
+  "courtHandle": "qwen_mv0r3xnz",
+  "courtId": "01a11ff3-3a0d-78cf-ac3e-04553270f0e4",
+  "note": "Normal synthetic-owner Court/publication/training routes; no stock minted, no server authority bypass, no historical runner reset."
+}

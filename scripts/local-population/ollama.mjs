@@ -20,7 +20,7 @@ export class LocalModel {
     return { name: model.name, digest: model.digest, size: model.size, details: model.details };
   }
   async invoke(prompt, schema, deadline) {
-    if (prompt.length > 48000) throw Error("PROMPT_LIMIT");
+    if (prompt.length > (this.config.maxPromptCharacters ?? 48000)) throw Error("PROMPT_LIMIT");
     const remaining = deadline - Date.now();
     if (remaining <= 0) throw Error("DEADLINE");
     const began = performance.now();

@@ -7190,6 +7190,55 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-138",
+      "title": "Release continuous full-game local population with synthetic owner decisions",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-137"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Remove experiment-specific mechanic, target and supply-term restrictions for the existing 50 synthetic kingdoms using all implemented shared command schemas.",
+        "Run indefinitely until explicit stop with local inference, lifetime counters, fair scheduling, recoverable exact commands and separate synthetic-owner decisions; preserve game economy, ownership and finished historical runs.",
+        "Verify Courts, social/publication and military adapters plus restart/STOP/uncertain outcomes; publish actual release and startup evidence without claiming deferred production certification."
+      ],
+      "acceptance": [
+        "Full implemented command catalog and authorized read tools are reachable without historical experiment restrictions; synthetic owner policy never exposes human credentials or mutates game rules.",
+        "Existing 50 kingdoms run under a new persistent continuous controller, with no archive/budget resets and no automatic recreation; actual startup and representative live mechanics are verified.",
+        "Meaningful adapter, authorization, recovery and gameplay checks pass; full-game readiness limits and continuous operating instructions are documented and committed."
+      ],
+      "components": [
+        "operator population harness",
+        "local inference",
+        "synthetic owner controller"
+      ],
+      "evidence": [
+        "docs/implementation/reports/full-game-local-20261009.md",
+        "54 Node tests and 11 native Windows tests passed; 60 integration tests across Courts/politics/publication/military passed; typecheck and 28-file Biome check passed.",
+        "Seven live Court/publication/training observations including same-ID social receipt recovery; all 50 existing owners completed successful full-game turns.",
+        "New Windows task PACT Full Game 50 Continuous running without a lifetime deadline/request cap; rolling update retained run ID, all kingdoms and 75 requests, with no new context failures at the startup observation.",
+        "Planning render/check and staged whitespace passed; local implementation committed under founder standing instruction; deferred production scope and historical caps unchanged.",
+        "Final lease-reuse fix verified by four live invitation/message commits with one lease open; same run restarted at 173 attempts; release health shows 50 successful owners and no new turn failures after context fix."
+      ],
+      "assignee": "codex-full-game",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
     }
   ],
   "source_sha256": {
@@ -7406,5 +7455,23 @@
     "tracking": "Local report; known Linear free issue limit remains unresolved.",
     "completed_at": "2026-10-09",
     "release": "local-reliability-20261009-1"
+  },
+  "full_game_local": {
+    "execution": "running",
+    "active_ids": [
+      "PACT-138"
+    ],
+    "completion_report": "reports/full-game-local-20261009.md",
+    "tracking": "Local execution record; known Linear issue limit unresolved.",
+    "authorization": "Founder requested all implemented mechanics and 50 accounts indefinitely, 9 October 2026.",
+    "implementation_status": "completed",
+    "run_id": "full-game-1791537512736-10b87b6c",
+    "accounts": 50,
+    "task_name": "PACT Full Game 50 Continuous",
+    "model": "qwen3.5:4b",
+    "observation_status": "ongoing",
+    "ends_at": null,
+    "model_request_cap": null,
+    "completed_at": "2026-10-09"
   }
 }

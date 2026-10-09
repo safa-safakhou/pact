@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-10-09T09:37:33.4611540Z",
+  "runId": "full-game-1791537512736-10b87b6c",
+  "status": "running",
+  "task": "Running",
+  "accounts": 50,
+  "requests": 182,
+  "successfulOwners": 50,
+  "successfulTurns": 164.0,
+  "failedTurns": 16.0,
+  "pending": 0,
+  "ownerDecisions": 1.0,
+  "committed": 24,
+  "committedKinds": [
+    {
+      "Name": "game.building.queue",
+      "Count": 20
+    },
+    {
+      "Name": "game.supply.offer",
+      "Count": 4
+    }
+  ],
+  "failuresAfterAdaptiveUpdate": [],
+  "finalRestart": {
+    "requestsBefore": 173,
+    "sameRunId": true,
+    "identitiesPreserved": true,
+    "requestsAfter": 182,
+    "pendingBefore": 0
+  },
+  "deadline": null,
+  "requestCap": null
+}
