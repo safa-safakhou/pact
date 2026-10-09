@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**63 tickets · 46 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**64 tickets · 46 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1951,3 +1951,28 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/evidence/social-repair-20261009.json
 - Implementation commits b439754 and a4dc043; kingdom build/typecheck, 59 integration tests, 62 initial Node tests and 16 follow-up tests on Linux/native Windows passed.
 - Production release social-repair-20261009-1 verified; twenty-minute independent run finished without resetting its deadline/cap. Actual contact acceptance and three contract activations observed; insufficient-stock defaults and missing dialogue reported. Original fifty owners preserved, 144 messages and eleven acceptances observed across 125 post-reload turns.
+
+<a id="pact-142"></a>
+## PACT-142 — Switch existing continuous fifty-player population to tested Qwen 9B
+
+**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-138](phase-3-season-one.md#pact-138), [PACT-139](phase-3-season-one.md#pact-139), [PACT-141](phase-3-season-one.md#pact-141)
+
+**Components:** local population controller.
+
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md) · **Release checks:** S01, R07
+
+**Implement / deliver**
+
+- Perform founder-authorized pinned local model change on the existing fifty continuous identities without resetting counters, authority, pacing or conversation state.
+- Verify actual new-model live turns and report operational and gameplay limits without restarting terminal experiments.
+
+**Acceptance**
+
+- [ ] Model switch refuses active, terminal, unauthorized or pending-command states and preserves existing game identity, lifetime counters and authority.
+- [ ] All fifty accounts are configured for the pinned Qwen 3.5 9B model and observed live results are reported separately from configuration.
+
+**Assignee:** codex-model-switch

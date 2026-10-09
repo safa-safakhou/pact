@@ -7377,6 +7377,46 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt"
+    },
+    {
+      "id": "PACT-142",
+      "title": "Switch existing continuous fifty-player population to tested Qwen 9B",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-138",
+        "PACT-139",
+        "PACT-141"
+      ],
+      "sources": [
+        "social",
+        "runtime",
+        "rules"
+      ],
+      "covers": [
+        "S01",
+        "R07"
+      ],
+      "scope": [
+        "Perform founder-authorized pinned local model change on the existing fifty continuous identities without resetting counters, authority, pacing or conversation state.",
+        "Verify actual new-model live turns and report operational and gameplay limits without restarting terminal experiments."
+      ],
+      "acceptance": [
+        "Model switch refuses active, terminal, unauthorized or pending-command states and preserves existing game identity, lifetime counters and authority.",
+        "All fifty accounts are configured for the pinned Qwen 3.5 9B model and observed live results are reported separately from configuration."
+      ],
+      "components": [
+        "local population controller"
+      ],
+      "evidence": [],
+      "assignee": "codex-model-switch",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
     }
   ],
   "source_sha256": {
