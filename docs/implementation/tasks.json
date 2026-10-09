@@ -7245,7 +7245,7 @@
       "id": "PACT-139",
       "title": "Compare five local models with five fresh players each for two hours",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7270,7 +7270,8 @@
       "acceptance": [
         "All five shortlisted weights are local and pinned; 25 unique new kingdoms exist, five assigned to each model with matched roles.",
         "The comparison starts successfully with a fixed two-hour deadline, serial comparison worker, restart-safe state and deadline/cap tests, without resetting the original run.",
-        "Startup evidence and operational instructions are committed; two-hour results remain explicitly ongoing until the actual deadline observation."
+        "Startup evidence and operational instructions are committed; two-hour results remain explicitly ongoing until the actual deadline observation.",
+        "Actual bounded run completion, per-model gameplay/communication/negotiation quality, timing, shared GPU limits and read-only cohort effects are reported with preserved deadlines and identities."
       ],
       "components": [
         "operator population comparison",
@@ -7281,7 +7282,8 @@
         "docs/implementation/reports/local-model-comparison-20261009.md",
         "58 Node harness tests and seven targeted native Windows tests passed; typecheck passed; three-file Biome check passed.",
         "Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff.",
-        "docs/implementation/reports/evidence/local-model-comparison-20261009-startup.json \u2014 all five local digests pinned, 25 distinct new kingdoms, all 25 first model turns valid; started 12:48:51.147 UTC, original deadline 14:48:51.147 UTC; comparative observation ongoing."
+        "docs/implementation/reports/evidence/local-model-comparison-20261009-startup.json \u2014 all five local digests pinned, 25 distinct new kingdoms, all 25 first model turns valid; started 12:48:51.147 UTC, original deadline 14:48:51.147 UTC; comparative observation ongoing.",
+        "docs/implementation/reports/evidence/local-model-comparison-20261009-final.json \u2014 finished at 14:48:51.209 UTC against unchanged 14:48:51.147 UTC deadline; 555 attempts, 553 completed turns, 38 committed actions, zero pending commands. Scoped database snapshot confirms no contracts, messages, successful scouting or raids; two actual Court memberships and five trained ordinary troops."
       ],
       "assignee": "codex-local-comparison",
       "blocked_by_external": [],
@@ -7563,7 +7565,7 @@
     "completed_at": "2026-10-09"
   },
   "local_model_comparison": {
-    "execution": "running",
+    "execution": "finished",
     "active_ids": [
       "PACT-139"
     ],
@@ -7572,11 +7574,17 @@
     "tracking": "Local execution record; previously confirmed Linear free-issue-limit prevents new execution issues.",
     "task_name": "PACT Local Model Comparison 25 20261009",
     "state_directory": "C:/Users/ENDORFY/pact-model-comparison-25-20261009",
-    "observation_status": "ongoing",
-    "implementation_status": "startup_verified",
+    "observation_status": "completed",
+    "implementation_status": "completed",
     "request_cap": 1000,
     "run_id": "model-comparison-mv0yortl-1a273d13",
     "started_at": "2026-10-09T12:48:51.147Z",
-    "ends_at": "2026-10-09T14:48:51.147Z"
+    "ends_at": "2026-10-09T14:48:51.147Z",
+    "actual_model_requests": 555,
+    "successful_turns": 553,
+    "committed_commands": 38,
+    "stop_reason": "DEADLINE",
+    "finished_at": "2026-10-09T14:48:51.209Z",
+    "final_report": "reports/local-model-comparison-20261009.md"
   }
 }

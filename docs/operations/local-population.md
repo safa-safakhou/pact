@@ -2,6 +2,8 @@
 
 ## Five-model comparison — PACT-139
 
+**Completed 9 October:** the original two-hour deadline was respected; 555 attempts, 553 completed turns and 38 commitments were observed. The task is Ready and its checkpoint is terminal. No contracts, direct dialogue, successful scouting or raids were achieved. The [final comparison report](../implementation/reports/local-model-comparison-20261009.md) separates quality findings from successful startup. Preserve this finished run; do not restart or extend it. The observation heartbeat is disabled after the final report.
+
 The founder authorized five new kingdoms each for Gemma 4 12B, Qwen 3.5 9B, Granite 4.2 8B, Ornith 1.5 9B and LFM2.5 8B. Windows task `PACT Local Model Comparison 25 20261009` downloads missing weights, provisions 25 stable normal identities and runs `comparison.mjs` for a fixed two hours after provisioning, with 1,000 total attempts maximum. Protected native state is `C:/Users/ENDORFY/pact-model-comparison-25-20261009`. It shares the GPU with the existing continuous worker; minimum intervals can lengthen. Five matched roles and identical non-thinking inference settings are used. Read [setup, actual status and monitoring](../implementation/reports/local-model-comparison-20261009.md) before operating it. A Running download task does not mean models are already playing. Keep terminal/deadline state and do not replace identities or reset counters on retry.
 
 ## Current continuous full-game controller — PACT-138

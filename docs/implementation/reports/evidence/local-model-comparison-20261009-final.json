@@ -1,0 +1,792 @@
+{
+  "observedAt": "2026-10-09T15:03:06.840Z",
+  "runId": "model-comparison-mv0yortl-1a273d13",
+  "status": "finished",
+  "startedAt": "2026-10-09T12:48:51.147Z",
+  "deadline": "2026-10-09T14:48:51.147Z",
+  "requests": 555,
+  "terminalUpdatedAt": "2026-10-09T14:48:51.209Z",
+  "lastGameplayAt": "2026-10-09T14:48:49.996Z",
+  "exit": {
+    "at": "2026-10-09T14:48:51.210Z",
+    "type": "controller_exit",
+    "status": "finished",
+    "requests": 555
+  },
+  "pendingOwners": 0,
+  "models": [
+    {
+      "model": "gemma4:12b",
+      "owners": 5,
+      "attempts": 115,
+      "validTurns": 113,
+      "failures": [
+        {
+          "at": "2026-10-09T12:54:57.199Z",
+          "actor": 0,
+          "code": "LOCAL_HTTP_500"
+        },
+        {
+          "at": "2026-10-09T14:48:51.168Z",
+          "actor": 4,
+          "code": "TRANSPORT_OR_RESULT_ERROR"
+        }
+      ],
+      "emptyPlans": 54,
+      "readOnlyPlans": 53,
+      "committed": 6,
+      "committedKinds": {
+        "court.join": 1,
+        "game.building.queue": 4,
+        "game.contact.request": 1
+      },
+      "outcomeCodes": {
+        "BUILDING_BUSY": 12,
+        "COMMITTED": 6,
+        "FORBIDDEN": 4,
+        "INSUFFICIENT_STOCK": 1,
+        "INVALID_COMMAND": 34,
+        "INVALID_LEVEL": 1,
+        "REQUEST_EXISTS": 5,
+        "SLOT_BUSY": 1,
+        "TICK_PENDING": 1
+      },
+      "proposedKinds": {
+        "court.join": 1,
+        "court.request": 4,
+        "game.building.queue": 18,
+        "game.contact.answer": 11,
+        "game.contact.request": 7,
+        "game.scout.start": 24
+      },
+      "timing": {
+        "wallMedianMs": 8331.61,
+        "wallP95Ms": 23685.75,
+        "loadMedianMs": 3.15,
+        "loadP95Ms": 15237.02,
+        "promptMedianMs": 5548.52,
+        "generationMedianMs": 1959.7,
+        "inputTokensMedian": 10627,
+        "outputTokensMedian": 94,
+        "revisitMedianSeconds": 324.07,
+        "revisitP95Seconds": 328.54
+      },
+      "committedOwners": 3,
+      "repeatedDenials": [
+        {
+          "actor": 3,
+          "code": "INVALID_COMMAND",
+          "kind": "game.scout.start",
+          "count": 15
+        },
+        {
+          "actor": 0,
+          "code": "BUILDING_BUSY",
+          "kind": "game.building.queue",
+          "count": 11
+        },
+        {
+          "actor": 1,
+          "code": "INVALID_COMMAND",
+          "kind": "game.contact.answer",
+          "count": 10
+        },
+        {
+          "actor": 3,
+          "code": "INVALID_COMMAND",
+          "kind": "game.scout.start",
+          "count": 6
+        },
+        {
+          "actor": 2,
+          "code": "FORBIDDEN",
+          "kind": "court.request",
+          "count": 4
+        },
+        {
+          "actor": 1,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "model": "qwen3.5:9b",
+      "owners": 5,
+      "attempts": 110,
+      "validTurns": 110,
+      "failures": [],
+      "emptyPlans": 86,
+      "readOnlyPlans": 85,
+      "committed": 15,
+      "committedKinds": {
+        "court.join": 1,
+        "game.building.queue": 12,
+        "game.training.queue": 2
+      },
+      "outcomeCodes": {
+        "BUILDING_BUSY": 4,
+        "COMMITTED": 15,
+        "INSUFFICIENT_STOCK": 3,
+        "INVALID_COMMAND": 9,
+        "TICK_PENDING": 1
+      },
+      "proposedKinds": {
+        "court.join": 1,
+        "game.building.queue": 16,
+        "game.contact.request": 1,
+        "game.scout.start": 9,
+        "game.supply.offer": 1,
+        "game.training.queue": 4
+      },
+      "timing": {
+        "wallMedianMs": 6293.07,
+        "wallP95Ms": 16839.28,
+        "loadMedianMs": 2.66,
+        "loadP95Ms": 12957.37,
+        "promptMedianMs": 3651.79,
+        "generationMedianMs": 1538.79,
+        "inputTokensMedian": 11230,
+        "outputTokensMedian": 92,
+        "revisitMedianSeconds": 323.56,
+        "revisitP95Seconds": 331.33
+      },
+      "committedOwners": 4,
+      "repeatedDenials": [
+        {
+          "actor": 8,
+          "code": "INVALID_COMMAND",
+          "kind": "game.scout.start",
+          "count": 8
+        },
+        {
+          "actor": 5,
+          "code": "BUILDING_BUSY",
+          "kind": "game.building.queue",
+          "count": 2
+        },
+        {
+          "actor": 8,
+          "code": "BUILDING_BUSY",
+          "kind": "game.building.queue",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "model": "granite4.2:8b",
+      "owners": 5,
+      "attempts": 110,
+      "validTurns": 110,
+      "failures": [],
+      "emptyPlans": 0,
+      "readOnlyPlans": 0,
+      "committed": 1,
+      "committedKinds": {
+        "game.contact.request": 1
+      },
+      "outcomeCodes": {
+        "COMMITTED": 1,
+        "INSUFFICIENT_STOCK": 2,
+        "INVALID_COMMAND": 89,
+        "REQUEST_EXISTS": 19
+      },
+      "proposedKinds": {
+        "game.contact.request": 44,
+        "game.supply.sign": 45,
+        "game.troop.disband": 22
+      },
+      "timing": {
+        "wallMedianMs": 14447.03,
+        "wallP95Ms": 19989.05,
+        "loadMedianMs": 10593.6,
+        "loadP95Ms": 14318.87,
+        "promptMedianMs": 1836.5,
+        "generationMedianMs": 1919.92,
+        "inputTokensMedian": 9316,
+        "outputTokensMedian": 195,
+        "revisitMedianSeconds": 324.73,
+        "revisitP95Seconds": 333.12
+      },
+      "committedOwners": 1,
+      "repeatedDenials": [
+        {
+          "actor": 11,
+          "code": "INVALID_COMMAND",
+          "kind": "game.supply.sign",
+          "count": 22
+        },
+        {
+          "actor": 13,
+          "code": "INVALID_COMMAND",
+          "kind": "game.troop.disband",
+          "count": 22
+        },
+        {
+          "actor": 12,
+          "code": "INVALID_COMMAND",
+          "kind": "game.contact.request",
+          "count": 21
+        },
+        {
+          "actor": 10,
+          "code": "INVALID_COMMAND",
+          "kind": "game.supply.sign",
+          "count": 20
+        },
+        {
+          "actor": 14,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 19
+        },
+        {
+          "actor": 10,
+          "code": "INVALID_COMMAND",
+          "kind": "game.supply.sign",
+          "count": 2
+        },
+        {
+          "actor": 14,
+          "code": "INSUFFICIENT_STOCK",
+          "kind": "game.contact.request",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "model": "ornith-1.5:9b",
+      "owners": 5,
+      "attempts": 110,
+      "validTurns": 110,
+      "failures": [],
+      "emptyPlans": 39,
+      "readOnlyPlans": 38,
+      "committed": 10,
+      "committedKinds": {
+        "game.contact.request": 10
+      },
+      "outcomeCodes": {
+        "COMMITTED": 10,
+        "INSUFFICIENT_STOCK": 11,
+        "INVALID_COMMAND": 13,
+        "REQUEST_EXISTS": 58,
+        "TICK_PENDING": 1
+      },
+      "proposedKinds": {
+        "game.contact.request": 84,
+        "game.scout.start": 9
+      },
+      "timing": {
+        "wallMedianMs": 7950.45,
+        "wallP95Ms": 19476.01,
+        "loadMedianMs": 2.63,
+        "loadP95Ms": 15618.9,
+        "promptMedianMs": 4329.97,
+        "generationMedianMs": 2301.12,
+        "inputTokensMedian": 13287,
+        "outputTokensMedian": 149,
+        "revisitMedianSeconds": 326.21,
+        "revisitP95Seconds": 335.02
+      },
+      "committedOwners": 5,
+      "repeatedDenials": [
+        {
+          "actor": 16,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 11
+        },
+        {
+          "actor": 17,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 7
+        },
+        {
+          "actor": 17,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 7
+        },
+        {
+          "actor": 18,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 4
+        },
+        {
+          "actor": 18,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 4
+        },
+        {
+          "actor": 18,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 3
+        },
+        {
+          "actor": 18,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 3
+        },
+        {
+          "actor": 18,
+          "code": "INVALID_COMMAND",
+          "kind": "game.scout.start",
+          "count": 2
+        },
+        {
+          "actor": 18,
+          "code": "INVALID_COMMAND",
+          "kind": "game.scout.start",
+          "count": 2
+        },
+        {
+          "actor": 18,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 2
+        },
+        {
+          "actor": 18,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 2
+        },
+        {
+          "actor": 19,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "model": "lfm2.5:8b",
+      "owners": 5,
+      "attempts": 110,
+      "validTurns": 110,
+      "failures": [],
+      "emptyPlans": 22,
+      "readOnlyPlans": 1,
+      "committed": 6,
+      "committedKinds": {
+        "game.building.queue": 2,
+        "game.contact.request": 1,
+        "game.training.queue": 3
+      },
+      "outcomeCodes": {
+        "BUILDING_BUSY": 5,
+        "COMMITTED": 6,
+        "INSUFFICIENT_STOCK": 21,
+        "INVALID_COMMAND": 21,
+        "INVALID_LEVEL": 15,
+        "REQUEST_EXISTS": 18,
+        "TICK_PENDING": 2
+      },
+      "proposedKinds": {
+        "game.building.queue": 22,
+        "game.contact.request": 22,
+        "game.supply.sign": 22,
+        "game.training.queue": 22
+      },
+      "timing": {
+        "wallMedianMs": 2255.96,
+        "wallP95Ms": 12231.73,
+        "loadMedianMs": 2.63,
+        "loadP95Ms": 9831.68,
+        "promptMedianMs": 1079.72,
+        "generationMedianMs": 912.08,
+        "inputTokensMedian": 10180,
+        "outputTokensMedian": 141,
+        "revisitMedianSeconds": 325.68,
+        "revisitP95Seconds": 333.67
+      },
+      "committedOwners": 3,
+      "repeatedDenials": [
+        {
+          "actor": 21,
+          "code": "INVALID_COMMAND",
+          "kind": "game.supply.sign",
+          "count": 20
+        },
+        {
+          "actor": 23,
+          "code": "INSUFFICIENT_STOCK",
+          "kind": "game.training.queue",
+          "count": 19
+        },
+        {
+          "actor": 24,
+          "code": "REQUEST_EXISTS",
+          "kind": "game.contact.request",
+          "count": 18
+        },
+        {
+          "actor": 20,
+          "code": "INVALID_LEVEL",
+          "kind": "game.building.queue",
+          "count": 15
+        },
+        {
+          "actor": 20,
+          "code": "BUILDING_BUSY",
+          "kind": "game.building.queue",
+          "count": 4
+        },
+        {
+          "actor": 21,
+          "code": "TICK_PENDING",
+          "kind": "game.supply.sign",
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "database": {
+    "observedAt": "2026-10-09T15:04:05.347972+00:00",
+    "world": {
+      "status": "active",
+      "tick_sequence": 17638
+    },
+    "models": [
+      {
+        "model": "granite4.2:8b",
+        "kingdoms": 5,
+        "contact_requests": 1,
+        "request_status": {
+          "pending": 1
+        },
+        "sent_messages": 0,
+        "received_messages": 0,
+        "contact_edges": 0,
+        "supply_offers": 0,
+        "supply_contracts": 0,
+        "garrison_contracts": 0,
+        "court_memberships": 0,
+        "court_audit": null,
+        "articles": 0,
+        "publications": 0,
+        "scout_operations": 0,
+        "raids": 0,
+        "building_instructions": null,
+        "training": null,
+        "ordinary_troops": 0,
+        "installments": 0
+      },
+      {
+        "model": "gemma4:12b",
+        "kingdoms": 5,
+        "contact_requests": 1,
+        "request_status": {
+          "pending": 1
+        },
+        "sent_messages": 0,
+        "received_messages": 0,
+        "contact_edges": 0,
+        "supply_offers": 0,
+        "supply_contracts": 0,
+        "garrison_contracts": 0,
+        "court_memberships": 1,
+        "court_audit": {
+          "court.join": 2
+        },
+        "articles": 0,
+        "publications": 0,
+        "scout_operations": 0,
+        "raids": 0,
+        "building_instructions": {
+          "completed": 2,
+          "waiting": 2
+        },
+        "training": null,
+        "ordinary_troops": 0,
+        "installments": 0
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "kingdoms": 5,
+        "contact_requests": 10,
+        "request_status": {
+          "pending": 10
+        },
+        "sent_messages": 0,
+        "received_messages": 0,
+        "contact_edges": 0,
+        "supply_offers": 0,
+        "supply_contracts": 0,
+        "garrison_contracts": 0,
+        "court_memberships": 0,
+        "court_audit": null,
+        "articles": 0,
+        "publications": 0,
+        "scout_operations": 0,
+        "raids": 0,
+        "building_instructions": null,
+        "training": null,
+        "ordinary_troops": 0,
+        "installments": 0
+      },
+      {
+        "model": "qwen3.5:9b",
+        "kingdoms": 5,
+        "contact_requests": 0,
+        "request_status": null,
+        "sent_messages": 0,
+        "received_messages": 0,
+        "contact_edges": 0,
+        "supply_offers": 0,
+        "supply_contracts": 0,
+        "garrison_contracts": 0,
+        "court_memberships": 1,
+        "court_audit": {
+          "court.join": 2
+        },
+        "articles": 0,
+        "publications": 0,
+        "scout_operations": 0,
+        "raids": 0,
+        "building_instructions": {
+          "completed": 10,
+          "waiting": 2
+        },
+        "training": [
+          {
+            "status": "completed",
+            "batches": 2,
+            "requested": 2,
+            "completed": 2
+          }
+        ],
+        "ordinary_troops": 2,
+        "installments": 0
+      },
+      {
+        "model": "lfm2.5:8b",
+        "kingdoms": 5,
+        "contact_requests": 1,
+        "request_status": {
+          "pending": 1
+        },
+        "sent_messages": 0,
+        "received_messages": 0,
+        "contact_edges": 0,
+        "supply_offers": 0,
+        "supply_contracts": 0,
+        "garrison_contracts": 0,
+        "court_memberships": 0,
+        "court_audit": null,
+        "articles": 0,
+        "publications": 0,
+        "scout_operations": 0,
+        "raids": 0,
+        "building_instructions": {
+          "completed": 1,
+          "waiting": 1
+        },
+        "training": [
+          {
+            "status": "completed",
+            "batches": 3,
+            "requested": 3,
+            "completed": 3
+          }
+        ],
+        "ordinary_troops": 3,
+        "installments": 0
+      }
+    ]
+  },
+  "databaseDetails": {
+    "observedAt": "2026-10-09T15:05:42.01167+00:00",
+    "requests": [
+      {
+        "model": "granite4.2:8b",
+        "created_at": "2026-10-09T13:02:59.485912+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:03:21.394577+00:00",
+        "status": "pending",
+        "recipient_in_comparison": false
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:03:28.528103+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:03:37.458721+00:00",
+        "status": "pending",
+        "recipient_in_comparison": false
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:03:46.813665+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:03:54.489989+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "lfm2.5:8b",
+        "created_at": "2026-10-09T13:04:16.445262+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "gemma4:12b",
+        "created_at": "2026-10-09T13:05:59.271517+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:25:24.018771+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:25:24.140652+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:36:08.643461+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T13:52:25.558131+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      },
+      {
+        "model": "ornith-1.5:9b",
+        "created_at": "2026-10-09T14:03:19.117602+00:00",
+        "status": "pending",
+        "recipient_in_comparison": true
+      }
+    ],
+    "waiting": [
+      {
+        "model": "gemma4:12b",
+        "building_kind": "mine",
+        "target_level": 3,
+        "builder_slot": 1,
+        "levels": {
+          "hall": 1,
+          "market": 1,
+          "storehouse": 1,
+          "barracks": 1,
+          "wall": 1,
+          "farm": 2,
+          "mine": 2
+        }
+      },
+      {
+        "model": "gemma4:12b",
+        "building_kind": "hall",
+        "target_level": 2,
+        "builder_slot": 1,
+        "levels": {
+          "hall": 1,
+          "farm": 1,
+          "mine": 1,
+          "market": 1,
+          "storehouse": 1,
+          "barracks": 1,
+          "wall": 1
+        }
+      },
+      {
+        "model": "qwen3.5:9b",
+        "building_kind": "hall",
+        "target_level": 2,
+        "builder_slot": 1,
+        "levels": {
+          "hall": 1,
+          "mine": 1,
+          "market": 1,
+          "storehouse": 1,
+          "wall": 1,
+          "barracks": 2,
+          "farm": 2
+        }
+      },
+      {
+        "model": "qwen3.5:9b",
+        "building_kind": "hall",
+        "target_level": 2,
+        "builder_slot": 2,
+        "levels": {
+          "hall": 1,
+          "storehouse": 1,
+          "wall": 1,
+          "barracks": 2,
+          "market": 2,
+          "mine": 2,
+          "farm": 2
+        }
+      },
+      {
+        "model": "lfm2.5:8b",
+        "building_kind": "farm",
+        "target_level": 3,
+        "builder_slot": 1,
+        "levels": {
+          "hall": 1,
+          "mine": 1,
+          "market": 1,
+          "storehouse": 1,
+          "barracks": 1,
+          "wall": 1,
+          "farm": 2
+        }
+      }
+    ],
+    "memberships": [
+      {
+        "model": "qwen3.5:9b",
+        "role": "member",
+        "handle": "qwen_mv0r3xnz"
+      },
+      {
+        "model": "gemma4:12b",
+        "role": "member",
+        "handle": "qwen_mv0r3xnz"
+      }
+    ]
+  },
+  "originalContinuous": {
+    "runId": "full-game-1791537512736-10b87b6c",
+    "status": "running",
+    "owners": 50,
+    "requests": 3005,
+    "deadline": null,
+    "updatedAt": "2026-10-09T15:06:39.068Z"
+  },
+  "limitations": [
+    "Shared GPU with continuing original 50 owners; no controlled hardware isolation or per-call GPU residency evidence.",
+    "Read requests run after actions and appear next turn; incoming social requests not automatically refreshed every turn.",
+    "Non-thinking 32K/2400 output-token configuration; conclusions apply to tested settings.",
+    "Database snapshot after controller deadline; normal engine settlements continue.",
+    "INVALID_COMMAND groups multiple business denials; malformed plan JSON and unsuccessful gameplay are distinct."
+  ]
+}

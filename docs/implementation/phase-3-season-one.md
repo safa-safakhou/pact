@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**62 tickets · 44 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**62 tickets · 45 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1853,7 +1853,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-139"></a>
 ## PACT-139 — Compare five local models with five fresh players each for two hours
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
 
@@ -1871,9 +1871,10 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] All five shortlisted weights are local and pinned; 25 unique new kingdoms exist, five assigned to each model with matched roles.
-- [ ] The comparison starts successfully with a fixed two-hour deadline, serial comparison worker, restart-safe state and deadline/cap tests, without resetting the original run.
-- [ ] Startup evidence and operational instructions are committed; two-hour results remain explicitly ongoing until the actual deadline observation.
+- [x] All five shortlisted weights are local and pinned; 25 unique new kingdoms exist, five assigned to each model with matched roles.
+- [x] The comparison starts successfully with a fixed two-hour deadline, serial comparison worker, restart-safe state and deadline/cap tests, without resetting the original run.
+- [x] Startup evidence and operational instructions are committed; two-hour results remain explicitly ongoing until the actual deadline observation.
+- [x] Actual bounded run completion, per-model gameplay/communication/negotiation quality, timing, shared GPU limits and read-only cohort effects are reported with preserved deadlines and identities.
 
 **Assignee:** codex-local-comparison
 
@@ -1883,6 +1884,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - 58 Node harness tests and seven targeted native Windows tests passed; typecheck passed; three-file Biome check passed.
 - Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff.
 - docs/implementation/reports/evidence/local-model-comparison-20261009-startup.json — all five local digests pinned, 25 distinct new kingdoms, all 25 first model turns valid; started 12:48:51.147 UTC, original deadline 14:48:51.147 UTC; comparative observation ongoing.
+- docs/implementation/reports/evidence/local-model-comparison-20261009-final.json — finished at 14:48:51.209 UTC against unchanged 14:48:51.147 UTC deadline; 555 attempts, 553 completed turns, 38 committed actions, zero pending commands. Scoped database snapshot confirms no contracts, messages, successful scouting or raids; two actual Court memberships and five trained ordinary troops.
 
 <a id="pact-140"></a>
 ## PACT-140 — Reveal human Court destinations from shared game links

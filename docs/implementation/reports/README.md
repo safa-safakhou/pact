@@ -2,8 +2,6 @@
 
 ## Current assignment
 
-- [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, all five downloads and all 25 first turns verified; live 14:48–16:48 Berlin, two-hour comparative results pending.
-
 - [Local-model shortlist](local-model-shortlist-20261009.md) — founder-requested research: hardware fit, recent alternatives and bounded comparison recommendations; live model unchanged.
 
 - [Continuous-run health and model assessment](full-game-health-20261009.md) — PACT-138 follow-up: controller healthy at the snapshot; weak autonomous gameplay, repeated denials and missing dialogue documented separately from adapter verification.
@@ -13,6 +11,8 @@
 - [ChatGPT play and free-form notes](chatgpt-play-20261006.md) — PACT-131, founder-authorized implementation and deployment.
 
 ## Current completed work
+
+- [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, finished at the original 16:48 Berlin deadline; 555 attempts, 553 completed turns, 38 commitments and no contracts/dialogue/scouting/raids. Qwen 9B led actual development; all candidates have substantial gameplay-quality limitations.
 
 - [Court human-link visibility](court-human-link-20261009.md) — PACT-140, corrected the reported Court handle and deployed browser navigation that reveals Join Court; membership remains an explicit human action.
 
