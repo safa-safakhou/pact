@@ -1,5 +1,13 @@
 # Bounded local-model population
 
+## Social workflow repair — PACT-141
+
+The full-game controller now reads the authorized Council view before each model decision, retains delivered incoming messages in its private checkpoint, and puts incoming introductions and pending replies at the front of the prompt. A committed reply clears the corresponding work; a failed reply does not. Incoming and outgoing requests are distinguished, impossible acceptances and unchanged denied social actions are rejected locally with recovery guidance, and committed social actions refresh contacts/offers before the next action in the same plan. The separate synthetic-owner bridge remains responsible for exact human-only decisions; normal player permissions and economic limits still apply.
+
+Council thread reads acknowledge only incoming messages actually returned in the authenticated page. Pagination lookahead, older omitted rows, outgoing messages and other owners' messages remain untouched. This clears normal unread-message backpressure without increasing message limits.
+
+`social-verification.mjs --state <new protected native directory>` is a separate two-player Qwen3.5 9B verification. It requires `PACT_SOCIAL_VERIFICATION_AUTHORIZATION=two-new-players-twenty-minutes-social-verification`, persists identities before provisioning, and fixes a twenty-minute deadline after provisioning with sixty inference attempts maximum and a sixty-second minimum turn interval. These verification settings do not change the original fifty-player controller. The pair earns normal resources and attempts introduction, recipient acceptance, dialogue and a modest reciprocal supply negotiation. Never restart a terminal verification, reset its budget, seed contacts/resources or count stated intentions as successful gameplay. Setup and regression checks alone do not establish model quality.
+
 ## Five-model comparison — PACT-139
 
 **Completed 9 October:** the original two-hour deadline was respected; 555 attempts, 553 completed turns and 38 commitments were observed. The task is Ready and its checkpoint is terminal. No contracts, direct dialogue, successful scouting or raids were achieved. The [final comparison report](../implementation/reports/local-model-comparison-20261009.md) separates quality findings from successful startup. Preserve this finished run; do not restart or extend it. The observation heartbeat is disabled after the final report.

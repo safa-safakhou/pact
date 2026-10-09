@@ -7330,6 +7330,48 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt"
+    },
+    {
+      "id": "PACT-141",
+      "title": "Repair social read acknowledgment and local-player conversation workflow",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-139",
+        "PACT-140"
+      ],
+      "sources": [
+        "social",
+        "runtime",
+        "rules"
+      ],
+      "covers": [
+        "S01",
+        "R07"
+      ],
+      "scope": [
+        "Acknowledge only delivered incoming Council-thread messages and verify pagination, ownership, idempotency and queue recovery.",
+        "Give authorized synthetic players fresh prioritized social work, correct incoming/outgoing acceptance, persistent conversation context and actionable denial recovery without overriding normal human boundaries.",
+        "Deploy verified fixes and perform a new short bounded local-model social verification; preserve the finished comparison and continuous identities/counters."
+      ],
+      "acceptance": [
+        "Thread delivery clears only its authenticated recipient incoming returned page and permits normal subsequent sending; other pairs and omitted rows remain unread.",
+        "Synthetic controller observes fresh social state and rejects wrong-recipient acceptance and repeated unsuccessful actions with useful guidance; relevant tests pass.",
+        "A short independently bounded verification reports actual introductions, messages, negotiation receipts/effects and remaining quality limits; no terminal experiment or existing budget is reset."
+      ],
+      "components": [
+        "kingdom council",
+        "local population controller"
+      ],
+      "evidence": [],
+      "assignee": "codex-social-repair",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
     }
   ],
   "source_sha256": {

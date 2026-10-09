@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
-import { CouncilReader, generatedEnvoy, SocialOverviewReader } from "@pact/kingdom";
+import { ActionLimitService, CouncilReader, generatedEnvoy, SocialOverviewReader, SocialService } from "@pact/kingdom";
+import { ResourceLedger } from "@pact/ledger";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -78,6 +79,64 @@ describe("owner-bound council", () => {
     expect((await reader.thread(a.accountId, c.kingdomId)).messages).toEqual([]);
     expect((await reader.thread(randomUUID(), b.kingdomId)).messages).toEqual([]);
     expect(JSON.stringify(first)).not.toContain("Private other pair");
+    const unread = async (recipient: string) =>
+      Number(
+        (
+          await pool.query(
+            "SELECT count(*)::int AS n FROM direct_messages WHERE recipient_kingdom_id=$1 AND read_game_time_ms IS NULL",
+            [recipient],
+          )
+        ).rows[0].n,
+      );
+    expect(await unread(b.kingdomId)).toBe(45); // sender reads never acknowledge the recipient's messages
+    const pair = [a.kingdomId, b.kingdomId].sort();
+    await pool.query(
+      "INSERT INTO social_contacts(product_scope,kingdom_a,kingdom_b,accepted_game_time_ms) VALUES('pact',$1,$2,0)",
+      pair,
+    );
+    const social = new SocialService("pact", new ResourceLedger("pact"), new ActionLimitService("pact"), {
+      now: () => now,
+    });
+    const send = async () => {
+      const client = await pool.connect();
+      try {
+        return await social.sendMessage(client, {
+          accountId: a.accountId,
+          recipientKingdomId: b.kingdomId,
+          body: "Next actual message",
+          agentOriginated: true,
+          operationKey: randomUUID(),
+          gameTimeMs: 1000,
+        });
+      } finally {
+        client.release();
+      }
+    };
+    await expect(send()).rejects.toMatchObject({ code: "MESSAGE_QUEUE_FULL" });
+    await reader.thread(c.accountId, a.kingdomId);
+    expect(await unread(b.kingdomId)).toBe(45);
+    const delivered = await reader.thread(b.accountId, a.kingdomId);
+    expect(await unread(b.kingdomId)).toBe(5); // the 41st lookahead and older rows are not delivered
+    expect(await unread(c.kingdomId)).toBe(1); // unrelated pair is untouched
+    const readTimes = (
+      await pool.query(
+        "SELECT read_game_time_ms FROM direct_messages WHERE recipient_kingdom_id=$1 AND read_game_time_ms IS NOT NULL ORDER BY id",
+        [b.kingdomId],
+      )
+    ).rows;
+    await reader.thread(b.accountId, a.kingdomId);
+    expect(
+      (
+        await pool.query(
+          "SELECT read_game_time_ms FROM direct_messages WHERE recipient_kingdom_id=$1 AND read_game_time_ms IS NOT NULL ORDER BY id",
+          [b.kingdomId],
+        )
+      ).rows,
+    ).toEqual(readTimes);
+    await reader.thread(b.accountId, a.kingdomId, delivered.next ?? undefined);
+    expect(await unread(b.kingdomId)).toBe(0);
+    await expect(send()).resolves.toBeTypeOf("string");
+    expect(await unread(b.kingdomId)).toBe(1);
   });
   it("exports, forgets and prunes the new identity/activity data", async () => {
     const a = await player();

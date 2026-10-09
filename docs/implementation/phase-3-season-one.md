@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**62 tickets · 45 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**63 tickets · 45 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1917,3 +1917,30 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/court-human-link-20261009.md
 - 21 focused tests passed; web build, repository typecheck, Biome, planning and whitespace checks passed.
 - Public Court lookup confirmed qwen_mv0r3xnz active/open. Gateway-only court-link-20261009-1 served new asset; production verify.sh passed. No founder membership action executed.
+
+<a id="pact-141"></a>
+## PACT-141 — Repair social read acknowledgment and local-player conversation workflow
+
+**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-139](phase-3-season-one.md#pact-139), [PACT-140](phase-3-season-one.md#pact-140)
+
+**Components:** kingdom council, local population controller.
+
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md) · **Release checks:** S01, R07
+
+**Implement / deliver**
+
+- Acknowledge only delivered incoming Council-thread messages and verify pagination, ownership, idempotency and queue recovery.
+- Give authorized synthetic players fresh prioritized social work, correct incoming/outgoing acceptance, persistent conversation context and actionable denial recovery without overriding normal human boundaries.
+- Deploy verified fixes and perform a new short bounded local-model social verification; preserve the finished comparison and continuous identities/counters.
+
+**Acceptance**
+
+- [ ] Thread delivery clears only its authenticated recipient incoming returned page and permits normal subsequent sending; other pairs and omitted rows remain unread.
+- [ ] Synthetic controller observes fresh social state and rejects wrong-recipient acceptance and repeated unsuccessful actions with useful guidance; relevant tests pass.
+- [ ] A short independently bounded verification reports actual introductions, messages, negotiation receipts/effects and remaining quality limits; no terminal experiment or existing budget is reset.
+
+**Assignee:** codex-social-repair

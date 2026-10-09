@@ -186,6 +186,14 @@ export class Mcp {
       } catch {}
       const e = Error(`MCP_TOOL_${name}_${detail?.error?.code ?? "RESULT_MISSING"}`);
       if (r.isError && detail?.error?.code) e.serverCode = detail.error.code;
+      if (r.isError && typeof detail?.error?.recovery === "string")
+        e.serverRecovery = detail.error.recovery.slice(0, 1200);
+      else if (r.isError) {
+        const recovery = r.content?.find(
+          (c) => c.type === "text" && c.text !== JSON.stringify(detail) && !c.text.startsWith("{"),
+        );
+        if (recovery) e.serverRecovery = recovery.text.slice(0, 1200);
+      }
       if (r.isError && ["CONTRACT_CAPACITY", "OFFER_CLOSED"].includes(detail?.error?.detail))
         e.serverDetail = detail.error.detail;
       throw e;

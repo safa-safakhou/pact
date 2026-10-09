@@ -15,9 +15,19 @@ test("MCP rule denial, persisted denial receipt, and absent receipt remain disti
     const c = new Mcp(`http://127.0.0.1:${server.address().port}`, "fake-token");
     result = {
       isError: true,
-      content: [{ type: "text", text: JSON.stringify({ error: { code: "CONTACT_REQUIRED" } }) }],
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify({
+            error: { code: "CONTACT_REQUIRED", recovery: "Accept the actual incoming request first." },
+          }),
+        },
+      ],
     };
-    await assert.rejects(c.call("pact_game_action_v1"), (e) => e.serverCode === "CONTACT_REQUIRED");
+    await assert.rejects(
+      c.call("pact_game_action_v1"),
+      (e) => e.serverCode === "CONTACT_REQUIRED" && e.serverRecovery === "Accept the actual incoming request first.",
+    );
     result = { isError: true, structuredContent: { commandId: "original-id", code: "FORBIDDEN" } };
     assert.deepEqual(await c.call("pact_game_action_v1"), result.structuredContent);
     result = { isError: true, structuredContent: { code: "RECEIPT_NOT_FOUND", receiptExists: false } };

@@ -16,6 +16,7 @@ import {
 } from "./full-game.mjs";
 import { LocalModel } from "./ollama.mjs";
 import { finishTurn, nextActor } from "./scheduler.mjs";
+import { collectSocialWork, rememberSocialOutcome, socialActionGuard } from "./social-work.mjs";
 import { atomicJson, RunStore } from "./state.mjs";
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -122,7 +123,7 @@ export class ContinuousClient extends PublicClient {
 export function runIsActive(state, now) {
   return (
     state.mode === "full-game-continuous" ||
-    (state.mode === "full-game-comparison" &&
+    (["full-game-comparison", "full-game-verification"].includes(state.mode) &&
       Number.isFinite(state.endsAt) &&
       now < state.endsAt &&
       state.requests < state.config.requestCap)
@@ -198,7 +199,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
     });
   try {
     if (
-      !["full-game-continuous", "full-game-comparison"].includes(state?.mode) ||
+      !["full-game-continuous", "full-game-comparison", "full-game-verification"].includes(state?.mode) ||
       !state.authorization ||
       ["stopped", "finished"].includes(state.status)
     )
@@ -241,6 +242,8 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
         if (guide.worldStatus !== "active") throw Error("WORLD_NOT_ACTIVE");
         // Full authorized owner view includes troops, training, garrison, raids and reports, not the old compact brief.
         const world = await mcp.call("pact_world_read_v1", {});
+        let social = collectSocialWork(actor, guide, await mcp.call("pact_play_view_v1", {}));
+        save(); // keep delivered incoming work durable before the model call
         const discoveryName = ["pact_court_read_v1", "pact_politics_read_v1", "pact_chronicle_read_v1"][
           actor.turns % 3
         ];
@@ -252,6 +255,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
           guide,
           rules,
           world,
+          social,
           discovery: { name: discoveryName, result: discovery },
           reads: actor.reads ?? [],
         };
@@ -270,6 +274,11 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
         for (const item of plan.actions) {
           if (!active()) break;
           try {
+            const guard = socialActionGuard(actor, item.action, social);
+            if (guard.code) {
+              outcomes.push({ action: item.action, code: guard.code, recovery: guard.recovery });
+              continue;
+            }
             const pending = await prepareFullCommand(actor, item.action, client);
             if (pending.role === "synthetic-owner") {
               actor.ownerDecisions++;
@@ -277,9 +286,18 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
               emit("owner_decision", { actor: actor.index, commandId: pending.commandId, action: pending.action });
             }
             const receipt = await dispatchFullCommand({ actor, pending, client, mcp, save, emit, active });
+            rememberSocialOutcome(actor, item.action, receipt, guard);
+            if (receipt.code === "COMMITTED" && /^game\.(contact|message|supply)\./.test(item.action.kind)) {
+              try {
+                social = collectSocialWork(actor, guide, await mcp.call("pact_play_view_v1", {}));
+              } catch (error) {
+                emit("social_refresh_failed", { actor: actor.index, code: errorCode(error) });
+              }
+            }
             outcomes.push({
               action: pending.action,
               code: receipt.code,
+              recovery: receipt.recovery,
               commandId: receipt.commandId,
               records: receipt.recordVersions,
               result: receipt.ownerResult,

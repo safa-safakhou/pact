@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { Pool } from "pg";
+import { acknowledgeMessageRead } from "./message-read-state.js";
 import type { SocialOverviewReader } from "./social-overview.js";
 
 export interface EnvoyCharacter {
@@ -121,13 +122,14 @@ export class CouncilReader {
 
   async thread(accountId: string, peerId: string, before?: { gameTimeMs: string; id: string }) {
     const rows = await this.pool.query<{
+      owner_kingdom_id: string;
       id: string;
       sender_kingdom_id: string;
       agent_originated: boolean;
       body: string;
       sent_game_time_ms: string;
     }>(
-      `SELECT m.id,m.sender_kingdom_id,m.agent_originated,m.body,m.sent_game_time_ms::text FROM kingdoms k
+      `SELECT k.id AS owner_kingdom_id,m.id,m.sender_kingdom_id,m.agent_originated,m.body,m.sent_game_time_ms::text FROM kingdoms k
        JOIN direct_messages m ON m.product_scope=k.product_scope AND (m.sender_kingdom_id=k.id OR m.recipient_kingdom_id=k.id)
        WHERE k.product_scope=$1 AND k.account_id=$2 AND k.status='ranked'
        AND (CASE WHEN m.sender_kingdom_id=k.id THEN m.recipient_kingdom_id ELSE m.sender_kingdom_id END)=$3
@@ -136,6 +138,14 @@ export class CouncilReader {
       [this.scope, accountId, peerId, before?.gameTimeMs ?? null, before?.id ?? null],
     );
     const page = rows.rows.slice(0, 40);
+    const ownerId = page[0]?.owner_kingdom_id;
+    if (ownerId)
+      await acknowledgeMessageRead(
+        this.pool,
+        this.scope,
+        ownerId,
+        page.filter((row) => row.sender_kingdom_id !== ownerId).map((row) => row.id),
+      );
     const oldest = page.at(-1);
     return {
       messages: page.reverse().map((r) => ({

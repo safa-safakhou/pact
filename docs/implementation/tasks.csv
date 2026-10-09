@@ -139,3 +139,4 @@ PACT-137,Repair local player reliability and verify negotiation lifecycle covera
 PACT-138,Release continuous full-game local population with synthetic owner decisions,3,done,implementation,Platform,M,PACT-053;PACT-137,R07;G01,phase-3-season-one.md#pact-138
 PACT-139,Compare five local models with five fresh players each for two hours,3,done,implementation,Platform,M,PACT-053;PACT-138,R07;G01,phase-3-season-one.md#pact-139
 PACT-140,Reveal human Court destinations from shared game links,3,done,implementation,Frontend,S,PACT-130;PACT-053,S01,phase-3-season-one.md#pact-140
+PACT-141,Repair social read acknowledgment and local-player conversation workflow,3,in_progress,implementation,Platform,M,PACT-053;PACT-139;PACT-140,S01;R07,phase-3-season-one.md#pact-141
