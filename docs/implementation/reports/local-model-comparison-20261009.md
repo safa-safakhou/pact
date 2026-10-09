@@ -4,6 +4,26 @@ PACT-139, founder-authorized downloads and five fresh accounts per recommended m
 
 ## Actual status at setup handoff
 
+### Live startup verified — 12:55 UTC / 14:55 Berlin
+
+All five downloads completed and all **25 distinct new kingdoms/accounts** are now playing in run **`model-comparison-mv0yortl-1a273d13`**. The persisted start is **12:48:51.147 UTC / 14:48:51.147 Berlin** and the unchanged stop is **14:48:51.147 UTC / 16:48:51.147 Berlin**. All twenty-five owners completed their first valid model turn by **12:53:30.165 UTC**, with no turn failure in the first pass. The startup status snapshot reported no pending command or currently failing owner. All five local weight digests and the five-by-five kingdom/model/role assignments are recorded in the [credential-free startup evidence](evidence/local-model-comparison-20261009-startup.json). A separate read-only VPS query at 12:55:07 UTC confirmed 25 existing kingdoms with 25 distinct account IDs from that manifest.
+
+First-pass results, **not a model ranking**:
+
+| Model | Valid first turns | Empty plans | Committed actions | Median inference, including load |
+| --- | ---: | ---: | --- | ---: |
+| Gemma 4 12B | 5 | 5 | None | 7.29 seconds |
+| Qwen 3.5 9B | 5 | 2 | Three builds, one Court join | 5.69 seconds |
+| Granite 4.2 8B | 5 | 0 | None | 14.85 seconds |
+| Ornith 1.5 9B | 5 | 0 | None | 6.17 seconds |
+| LFM2.5 8B | 5 | 1 | One build | 2.71 seconds |
+
+Proposed training/contact actions encountered ordinary stock denials; other signatures, contacts, scouting and disband proposals were rejected as `INVALID_COMMAND`. Those are unsuccessful game decisions despite valid model plans. Granite's first-pass median model-load time was 10.87 seconds, demonstrating why shared-GPU loading must be separated from generation performance. The Qwen Court join is an actual model-selected committed command, unlike the earlier operator adapter probes.
+
+Both Windows tasks remained Running. The original controller retained run `full-game-1791537512736-10b87b6c`, all fifty identities and its ongoing counters, with no currently failing owner in the startup evidence snapshot. Ollama at 12:54 UTC showed the original Qwen 4B and comparison LFM2.5 both GPU resident with 32K context; this snapshot does not establish every candidate's residency throughout the run.
+
+No implementation fix, restart, setting change or deadline extension was needed during this startup observation. PACT-139 remains In Progress while the actual two-hour comparison is observed. Final comparative-quality evidence is pending. Earlier setup-only statements below record their original observations and are superseded by this live startup for current status.
+
 At **11:38:10 UTC / 13:38:10 Berlin**, Windows task **`PACT Local Model Comparison 25 20261009`** was Running, with protected preparation state reporting Gemma download progress: 2,598,193,059 of 7,381,383,680 bytes for its main layer. This is a transfer observation, not completion of that model or all weights. Downloads, provisioning and live first-turn verification were **still pending** at that observation. No comparison kingdoms or game results are claimed by this setup report.
 
 Task startup was verified through `preparation.json`, not inferred from registration alone. The hidden native Windows launcher calls `comparison.mjs --prepare-and-run`, supplies the founder authorization marker and native state directory, prevents idle system sleep and records errors privately. It is a limited current-user task, with login trigger, five failure restarts at one-minute intervals, one instance and no OS execution limit. The application supplies the finite gameplay deadline. The machine, logged-in account, WSL checkout and Ollama must remain available.

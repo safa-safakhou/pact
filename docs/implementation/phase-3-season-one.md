@@ -1882,3 +1882,4 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/local-model-comparison-20261009.md
 - 58 Node harness tests and seven targeted native Windows tests passed; typecheck passed; three-file Biome check passed.
 - Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff.
+- docs/implementation/reports/evidence/local-model-comparison-20261009-startup.json — all five local digests pinned, 25 distinct new kingdoms, all 25 first model turns valid; started 12:48:51.147 UTC, original deadline 14:48:51.147 UTC; comparative observation ongoing.

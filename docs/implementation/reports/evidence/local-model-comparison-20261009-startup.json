@@ -1,0 +1,429 @@
+{
+  "observedAt": "2026-10-09T12:54:57.268Z",
+  "runId": "model-comparison-mv0yortl-1a273d13",
+  "status": "running",
+  "startedAt": "2026-10-09T12:48:51.147Z",
+  "deadline": "2026-10-09T14:48:51.147Z",
+  "requestCap": 1000,
+  "requestsAtSnapshot": 26,
+  "successfulOwners": 25,
+  "currentlyFailingOwners": 1,
+  "pendingCommands": 0,
+  "lastFirstTurnAt": "2026-10-09T12:53:30.165Z",
+  "manifest": {
+    "runId": "model-comparison-mv0yortl-1a273d13",
+    "startedAt": "2026-10-09T12:48:51.147Z",
+    "deadline": "2026-10-09T14:48:51.147Z",
+    "requestCap": 1000,
+    "models": [
+      {
+        "name": "gemma4:12b",
+        "digest": "6114515d63c17436a7c0417d82820ac65ad643e2806c5a3c89cb62846436ed0b",
+        "size": 8021618941,
+        "details": {
+          "parent_model": "imatrix-20260927-12b/model-q4_K_M.gguf",
+          "format": "gguf",
+          "family": "gemma4",
+          "families": [
+            "gemma4"
+          ],
+          "parameter_size": "11.9B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 262144,
+          "embedding_length": 3840
+        }
+      },
+      {
+        "name": "qwen3.5:9b",
+        "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+        "size": 6550825550,
+        "details": {
+          "parent_model": "model.gguf",
+          "format": "gguf",
+          "family": "qwen35",
+          "families": [
+            "qwen35"
+          ],
+          "parameter_size": "9.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 262144,
+          "embedding_length": 4096
+        }
+      },
+      {
+        "name": "granite4.2:8b",
+        "digest": "f586c02fdecdf151b656207c339aa003997345774a41768bac1fd6d2fb85913b",
+        "size": 5347929757,
+        "details": {
+          "parent_model": "/Users/runner/.ollama/models/blobs/sha256-16a9369d0805f80b7377d25d87f937a90c05dc04ad79173a52001e42c9aab311",
+          "format": "gguf",
+          "family": "granite",
+          "families": [
+            "granite"
+          ],
+          "parameter_size": "8.8B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 131072,
+          "embedding_length": 4096
+        }
+      },
+      {
+        "name": "ornith-1.5:9b",
+        "digest": "e5df7dcdd8a263994df62d610317e07be0d6af23f96fcbd8543273058fce575e",
+        "size": 6550813657,
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen35",
+          "families": [
+            "qwen35"
+          ],
+          "parameter_size": "9.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 262144,
+          "embedding_length": 4096
+        }
+      },
+      {
+        "name": "lfm2.5:8b",
+        "digest": "9cf756159fc2f3b9128c6a3f544ec90c5e9b8afdbb4179a57b8aea9de589cfb2",
+        "size": 5156075525,
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "lfm2moe",
+          "families": [
+            "lfm2moe"
+          ],
+          "parameter_size": "8.5B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 128000,
+          "embedding_length": 2048
+        }
+      }
+    ],
+    "accounts": [
+      {
+        "index": 0,
+        "model": "gemma4:12b",
+        "role": 0,
+        "kingdomId": "1db64f8b-465b-42cb-8cd2-39bc991f0f77",
+        "nickname": "Trial 1-1 mv0yortl"
+      },
+      {
+        "index": 1,
+        "model": "gemma4:12b",
+        "role": 1,
+        "kingdomId": "aeaf6514-0e39-49d0-bb19-bf3faf7638f8",
+        "nickname": "Trial 1-2 mv0yortl"
+      },
+      {
+        "index": 2,
+        "model": "gemma4:12b",
+        "role": 2,
+        "kingdomId": "6094d1b8-f1a7-4130-acf8-b1cef376379d",
+        "nickname": "Trial 1-3 mv0yortl"
+      },
+      {
+        "index": 3,
+        "model": "gemma4:12b",
+        "role": 3,
+        "kingdomId": "31b0427f-02c1-4e28-9da4-5f7403835d81",
+        "nickname": "Trial 1-4 mv0yortl"
+      },
+      {
+        "index": 4,
+        "model": "gemma4:12b",
+        "role": 4,
+        "kingdomId": "61204395-6fd8-4c52-8296-07778374d190",
+        "nickname": "Trial 1-5 mv0yortl"
+      },
+      {
+        "index": 5,
+        "model": "qwen3.5:9b",
+        "role": 0,
+        "kingdomId": "b26bb103-76ce-4e3e-9861-7bfb4d93e54b",
+        "nickname": "Trial 2-1 mv0yortl"
+      },
+      {
+        "index": 6,
+        "model": "qwen3.5:9b",
+        "role": 1,
+        "kingdomId": "6f294754-1c58-4b9e-8a40-6e545456c7e9",
+        "nickname": "Trial 2-2 mv0yortl"
+      },
+      {
+        "index": 7,
+        "model": "qwen3.5:9b",
+        "role": 2,
+        "kingdomId": "1919b1e0-ae4d-4473-90ea-c374749b2bea",
+        "nickname": "Trial 2-3 mv0yortl"
+      },
+      {
+        "index": 8,
+        "model": "qwen3.5:9b",
+        "role": 3,
+        "kingdomId": "9bcc1b47-d0f7-4048-bf9a-db768832e456",
+        "nickname": "Trial 2-4 mv0yortl"
+      },
+      {
+        "index": 9,
+        "model": "qwen3.5:9b",
+        "role": 4,
+        "kingdomId": "98803536-4c89-41f6-bb36-d1a15b6d7485",
+        "nickname": "Trial 2-5 mv0yortl"
+      },
+      {
+        "index": 10,
+        "model": "granite4.2:8b",
+        "role": 0,
+        "kingdomId": "4f6aecb8-4584-4a2c-b7e6-860e3ace050e",
+        "nickname": "Trial 3-1 mv0yortl"
+      },
+      {
+        "index": 11,
+        "model": "granite4.2:8b",
+        "role": 1,
+        "kingdomId": "3b0c82b0-06fd-4678-b06a-749586ede5a4",
+        "nickname": "Trial 3-2 mv0yortl"
+      },
+      {
+        "index": 12,
+        "model": "granite4.2:8b",
+        "role": 2,
+        "kingdomId": "c486c153-4929-4638-b236-2d43b22c8720",
+        "nickname": "Trial 3-3 mv0yortl"
+      },
+      {
+        "index": 13,
+        "model": "granite4.2:8b",
+        "role": 3,
+        "kingdomId": "5e55b6ec-177d-4417-a287-6d8cbe24c0ac",
+        "nickname": "Trial 3-4 mv0yortl"
+      },
+      {
+        "index": 14,
+        "model": "granite4.2:8b",
+        "role": 4,
+        "kingdomId": "9abc8bde-4a27-4263-8f5a-7220e978366b",
+        "nickname": "Trial 3-5 mv0yortl"
+      },
+      {
+        "index": 15,
+        "model": "ornith-1.5:9b",
+        "role": 0,
+        "kingdomId": "6bbec170-639f-4e88-8780-f05d5edf1740",
+        "nickname": "Trial 4-1 mv0yortl"
+      },
+      {
+        "index": 16,
+        "model": "ornith-1.5:9b",
+        "role": 1,
+        "kingdomId": "646ba485-c104-4d68-8dbb-108b6c7e164a",
+        "nickname": "Trial 4-2 mv0yortl"
+      },
+      {
+        "index": 17,
+        "model": "ornith-1.5:9b",
+        "role": 2,
+        "kingdomId": "baa30497-d4c4-4f22-9cf3-c98cf68370ab",
+        "nickname": "Trial 4-3 mv0yortl"
+      },
+      {
+        "index": 18,
+        "model": "ornith-1.5:9b",
+        "role": 3,
+        "kingdomId": "639b1c4a-0c72-466f-bd1b-4f1f8b46b3bf",
+        "nickname": "Trial 4-4 mv0yortl"
+      },
+      {
+        "index": 19,
+        "model": "ornith-1.5:9b",
+        "role": 4,
+        "kingdomId": "d2ede949-522d-4370-9f69-ce629d5e8774",
+        "nickname": "Trial 4-5 mv0yortl"
+      },
+      {
+        "index": 20,
+        "model": "lfm2.5:8b",
+        "role": 0,
+        "kingdomId": "75855458-8d2f-45ba-91ef-e366da3b309b",
+        "nickname": "Trial 5-1 mv0yortl"
+      },
+      {
+        "index": 21,
+        "model": "lfm2.5:8b",
+        "role": 1,
+        "kingdomId": "e9dc67c2-5239-46af-b756-9ff7297a32a7",
+        "nickname": "Trial 5-2 mv0yortl"
+      },
+      {
+        "index": 22,
+        "model": "lfm2.5:8b",
+        "role": 2,
+        "kingdomId": "3f9cf8a5-070b-4448-b313-b0010b5068dd",
+        "nickname": "Trial 5-3 mv0yortl"
+      },
+      {
+        "index": 23,
+        "model": "lfm2.5:8b",
+        "role": 3,
+        "kingdomId": "21e4e648-e789-42e6-8490-93aad5807c0b",
+        "nickname": "Trial 5-4 mv0yortl"
+      },
+      {
+        "index": 24,
+        "model": "lfm2.5:8b",
+        "role": 4,
+        "kingdomId": "692e77bc-e554-4bba-90cb-fb0705995fc5",
+        "nickname": "Trial 5-5 mv0yortl"
+      }
+    ],
+    "settings": {
+      "context": 32768,
+      "outputTokens": 2400,
+      "think": false,
+      "intervalSeconds": 300
+    }
+  },
+  "firstPass": [
+    {
+      "model": "gemma4:12b",
+      "owners": 5,
+      "firstValidPlans": 5,
+      "firstEmptyPlans": 5,
+      "firstOutcomes": [],
+      "firstInferenceMedianMs": 7287,
+      "firstLoadMedianMs": 5,
+      "firstTurnMedianMs": 7809
+    },
+    {
+      "model": "qwen3.5:9b",
+      "owners": 5,
+      "firstValidPlans": 5,
+      "firstEmptyPlans": 2,
+      "firstOutcomes": [
+        {
+          "kind": "game.building.queue",
+          "code": "COMMITTED",
+          "count": 3
+        },
+        {
+          "kind": "court.join",
+          "code": "COMMITTED",
+          "count": 1
+        },
+        {
+          "kind": "game.training.queue",
+          "code": "INSUFFICIENT_STOCK",
+          "count": 1
+        }
+      ],
+      "firstInferenceMedianMs": 5692,
+      "firstLoadMedianMs": 3,
+      "firstTurnMedianMs": 6231
+    },
+    {
+      "model": "granite4.2:8b",
+      "owners": 5,
+      "firstValidPlans": 5,
+      "firstEmptyPlans": 0,
+      "firstOutcomes": [
+        {
+          "kind": "game.supply.sign",
+          "code": "INVALID_COMMAND",
+          "count": 3
+        },
+        {
+          "kind": "game.contact.request",
+          "code": "INVALID_COMMAND",
+          "count": 1
+        },
+        {
+          "kind": "game.troop.disband",
+          "code": "INVALID_COMMAND",
+          "count": 1
+        },
+        {
+          "kind": "game.contact.request",
+          "code": "INSUFFICIENT_STOCK",
+          "count": 1
+        }
+      ],
+      "firstInferenceMedianMs": 14845,
+      "firstLoadMedianMs": 10865,
+      "firstTurnMedianMs": 15443
+    },
+    {
+      "model": "ornith-1.5:9b",
+      "owners": 5,
+      "firstValidPlans": 5,
+      "firstEmptyPlans": 0,
+      "firstOutcomes": [
+        {
+          "kind": "game.contact.request",
+          "code": "INVALID_COMMAND",
+          "count": 2
+        },
+        {
+          "kind": "game.contact.request",
+          "code": "INSUFFICIENT_STOCK",
+          "count": 2
+        },
+        {
+          "kind": "game.scout.start",
+          "code": "INVALID_COMMAND",
+          "count": 1
+        }
+      ],
+      "firstInferenceMedianMs": 6174,
+      "firstLoadMedianMs": 3,
+      "firstTurnMedianMs": 7507
+    },
+    {
+      "model": "lfm2.5:8b",
+      "owners": 5,
+      "firstValidPlans": 5,
+      "firstEmptyPlans": 1,
+      "firstOutcomes": [
+        {
+          "kind": "game.building.queue",
+          "code": "COMMITTED",
+          "count": 1
+        },
+        {
+          "kind": "game.supply.sign",
+          "code": "INVALID_COMMAND",
+          "count": 1
+        },
+        {
+          "kind": "game.training.queue",
+          "code": "INSUFFICIENT_STOCK",
+          "count": 1
+        },
+        {
+          "kind": "game.contact.request",
+          "code": "INSUFFICIENT_STOCK",
+          "count": 1
+        }
+      ],
+      "firstInferenceMedianMs": 2713,
+      "firstLoadMedianMs": 3,
+      "firstTurnMedianMs": 3309
+    }
+  ],
+  "originalContinuous": {
+    "runId": "full-game-1791537512736-10b87b6c",
+    "status": "running",
+    "updatedAt": "2026-10-09T12:55:02.370Z",
+    "requests": 2042,
+    "owners": 50,
+    "currentlyFailingOwners": 0
+  },
+  "note": "First pass only, not a model ranking. COMMITTED signatures do not establish contract activation. Current status independently sampled from append-only journal.",
+  "databaseIdentityCheck": {
+    "observedAt": "2026-10-09T12:55:07.682428+00:00",
+    "kingdoms": 25,
+    "distinctAccounts": 25
+  }
+}

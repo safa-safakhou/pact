@@ -2,7 +2,7 @@
 
 ## Current assignment
 
-- [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, founder-authorized five fresh accounts per model, automatic preparation and two-hour run; live startup/results still pending at setup observation.
+- [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, all five downloads and all 25 first turns verified; live 14:48–16:48 Berlin, two-hour comparative results pending.
 
 - [Local-model shortlist](local-model-shortlist-20261009.md) — founder-requested research: hardware fit, recent alternatives and bounded comparison recommendations; live model unchanged.
 
