@@ -6,6 +6,7 @@ import { GameNotificationProjector, gameNotificationCategories } from "@pact/kin
 import { WorldClockService } from "@pact/world";
 import nodemailer from "nodemailer";
 import type { PoolClient } from "pg";
+import { independentNotificationBatch } from "./batch.js";
 import { parseSecurityEmailPayload, renderSecurityEmail } from "./email.js";
 import { smtpGamePort, webPushPort } from "./game-delivery.js";
 
@@ -130,16 +131,30 @@ async function deliverBatch(): Promise<number> {
 async function run(): Promise<void> {
   console.log(JSON.stringify({ event: "notification.ready", adapter: "smtp" }));
   while (!stopping) {
-    let delivered = 0;
-    try {
-      await projector.project();
-      await notifications.projectInbox({ "approval.requested.v1": "approval" });
-      await projector.expiryNotices();
-      delivered += await notifications.deliverBatch(ports, workerId);
-      delivered += await deliverBatch();
-    } catch {
-      console.error(JSON.stringify({ event: "notification.batch_failed", code: "DELIVERY_FAILED" }));
-    }
+    const delivered = await independentNotificationBatch(
+      deliverBatch,
+      async () => {
+        await projector.project();
+        await notifications.projectInbox({ "approval.requested.v1": "approval" });
+        await projector.expiryNotices();
+        return notifications.deliverBatch(ports, workerId);
+      },
+      (phase, error) =>
+        console.error(
+          JSON.stringify({
+            event: "notification.batch_failed",
+            phase,
+            code:
+              error &&
+              typeof error === "object" &&
+              "code" in error &&
+              typeof error.code === "string" &&
+              /^[A-Z0-9_]+$/.test(error.code)
+                ? error.code
+                : "DELIVERY_FAILED",
+          }),
+        ),
+    );
     if (delivered === 0) await new Promise((resolve) => setTimeout(resolve, 2_000));
   }
 }
