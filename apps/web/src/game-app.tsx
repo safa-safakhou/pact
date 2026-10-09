@@ -225,6 +225,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
   const [guestPlayer, setGuestPlayer] = useState(false);
   const [passwordEntry, setPasswordEntry] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [councilOpen, setCouncilOpen] = useState(() => linkedGameTab(window.location.search) === null && !host);
   useEffect(() => {
     if (host) return;
     void Promise.all([
@@ -846,9 +847,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
   return (
     <ReportingContext.Provider value={{ request, canWrite }}>
       <main className={guestMode ? "game-shell friends-play" : "game-shell"} id="game-content" tabIndex={-1}>
-        <CouncilFrame request={request} />
-        <details className="kingdom-controls" open={linkedGameTab(window.location.search) !== null || undefined}>
-          <summary>Kingdom actions, introductions and agent permissions</summary>
+        <section className="kingdom-controls">
           <a className="skip-link" href="#game-areas">
             Skip to game areas
           </a>
@@ -919,12 +918,24 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
           {!csrf && <p role="status">Sign in again before taking an action in this browser tab.</p>}
           {connectionNotice}
           <nav className="game-nav" id="game-areas" tabIndex={-1} aria-label="Game areas">
+            {!host && (
+              <button
+                type="button"
+                aria-current={councilOpen ? "page" : undefined}
+                onClick={() => setCouncilOpen(true)}
+              >
+                Council
+              </button>
+            )}
             {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
               <button
                 type="button"
                 key={item}
-                aria-current={tab === item ? "page" : undefined}
-                onClick={() => setTab(item)}
+                aria-current={!councilOpen && tab === item ? "page" : undefined}
+                onClick={() => {
+                  setCouncilOpen(false);
+                  setTab(item);
+                }}
               >
                 {item}
               </button>
@@ -933,232 +944,238 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
               Account
             </button>
           </nav>
-          {tab === "Envoy" && (
-            <details className="game-card">
-              <summary>Reports and appeals</summary>
-              <ModerationPanel request={request} canWrite={canWrite} />
-            </details>
-          )}
-          {tab === "Envoy" && !host && (
-            <CodexConnection request={request} handle={view?.profile.handle} guest={guestPlayer} />
-          )}
-          {view && (
-            <FirstSession
-              compact
-              stage={{
-                stale: !canWrite || Boolean(refreshFailure),
-                approvalsAvailable: decisions?.kingdomId === view.profile.kingdomId,
-                approvals: decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : [],
-                failure:
-                  localFailure ?? (decisions?.kingdomId === view.profile.kingdomId ? decisions.failure : undefined),
-                ambition: view.ambition,
-                asOfGameTimeMs: view.asOfGameTimeMs,
-                worldStatus: view.worldStatus,
-                requests: social?.requests,
-                contactOutcome: social?.requestHistory?.find((r) =>
-                  ["accepted", "declined", "expired"].includes(r.status),
-                ),
-                build: (() => {
-                  const b = view.builders.find(
-                    (b) => b.instructionId && b.kind && ["waiting", "active"].includes(b.state ?? ""),
-                  );
-                  return b?.instructionId && b.kind
-                    ? { ...b, instructionId: b.instructionId, kind: b.kind, state: b.state ?? "waiting" }
-                    : undefined;
-                })(),
-                freeBuilders: view.builders.filter((b) => !b.instructionId).length,
-                choices: developmentChoices(view),
-                ownerSource: `${pactBaseUrl()}v1/world/kingdoms/${view.profile.kingdomId}`,
-                socialAvailable: social !== null,
-                farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
-                farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
-                contacts: social?.contacts.length ?? 0,
-                pendingRequests: social?.requests.length ?? 0,
-                pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
-                contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
-              }}
-              onArea={setTab}
-            />
-          )}
-          {view && tab === "Kingdom" && <BuilderStatus view={view} />}
-          {view && (
-            <details className="game-card">
-              <summary>Game moments and notifications</summary>
-              <OutcomeCards
-                key={view.profile.kingdomId}
-                owner={view.profile.kingdomId}
-                view={view}
-                stale={!csrf || connectionStatus !== "live" || Boolean(refreshFailure)}
-                offers={social?.supplyOffers}
-                requests={social?.requests}
-                approvals={decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : undefined}
-                audio={experienceAudio}
-                onNotice={setNotice}
-              />
-            </details>
-          )}
-
-          {notice && (
-            <p className="game-notice" role="status">
-              {notice}
-            </p>
-          )}
-          {refreshFailure && (
-            <p className="game-notice" role="status">
-              {refreshFailure}
-            </p>
-          )}
-          {pendingAction && (
-            <section
-              className="game-confirm"
-              aria-label="Confirm game action"
-              ref={confirmation}
-              tabIndex={-1}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") {
-                  setPendingAction(null);
-                  returnFocus.current?.focus();
-                }
-              }}
-            >
-              <div>
-                <strong>Confirm this action</strong>
-                <p>{pendingAction.summary}</p>
-              </div>
-              <button
-                type="button"
-                disabled={!canWrite}
-                onClick={() => {
-                  const action = pendingAction.action;
-                  setPendingAction(null);
-                  void act(action);
-                }}
-              >
-                Confirm
-              </button>
-              <button
-                type="button"
-                className="secondary"
-                onClick={() => {
-                  setPendingAction(null);
-                  returnFocus.current?.focus();
-                }}
-              >
-                Cancel
-              </button>
-            </section>
-          )}
-          {tab === "Kingdom" && view && (
-            <details className="game-card">
-              <summary>Private notes</summary>
-              <AmbitionChoice
-                value={view.ambition ?? ""}
-                disabled={!canWrite}
-                save={async (ambition) => {
-                  await request("/v1/kingdom/ambition", "PATCH", { ambition });
-                  await refresh();
-                }}
-              />
-            </details>
-          )}
-          {tab === "Kingdom" && view && (
-            <Kingdom
-              view={view}
-              busy={!canWrite}
-              act={act}
-              social={social}
-              kingdomId={kingdomId}
-              onPeople={() => setTab("People")}
-              queueSuggested={queueSuggested}
-            />
-          )}
-          {tab === "Envoy" && (
-            <Envoy
-              canWrite={canWrite}
-              inbox={inbox}
-              request={request}
-              onNotice={setNotice}
-              onRefresh={refresh}
-              apiOrigin={apiOrigin}
-              openAccount={() => setAccountOpen(true)}
-              onCsrfChange={(token) => {
-                sessionStorage.setItem("pact_csrf", token);
-                setCsrf(token);
-              }}
-            />
-          )}
-          {tab === "Envoy" && !host && <NotificationSettings request={request} canWrite={canWrite} />}
-          {tab === "Envoy" && (
-            <RunPanel
-              request={request}
-              contacts={social?.contacts ?? []}
-              canWrite={canWrite}
-              ambition={view?.ambition ?? ""}
-            />
-          )}
-          {tab === "People" && (
-            <People
-              friends={Boolean(guestMode)}
-              request={request}
-              client={client}
-              act={act}
-              busy={!canWrite}
-              view={view}
-              kingdomId={kingdomId}
-              social={social}
-              target={target}
-              setTarget={setTarget}
-              confirmAction={confirmAction}
-              hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
-              charges={view?.charges ?? []}
-            />
-          )}
-
-          {tab === "Kingdom" && (
-            <SeasonPanel request={request} kingdomId={kingdomId} worldStatus={view?.worldStatus ?? "unknown"} />
-          )}
-
-          {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
-          {tab === "Chronicle" && view && (
-            <Chronicle
-              view={view}
-              client={client}
-              inbox={inbox}
-              social={social}
-              busy={busy}
-              confirmAction={confirmAction}
-              onKingdom={() => setTab("Kingdom")}
-            />
-          )}
-          {tab === "People" && (
-            <details
-              className="game-card"
-              open={Boolean(
-                new URLSearchParams(window.location.search).get("court") ||
-                  new URLSearchParams(window.location.search).get("invite") ||
-                  new URLSearchParams(window.location.search).get("politics"),
+          {councilOpen ? (
+            <CouncilFrame request={request} />
+          ) : (
+            <>
+              {tab === "Envoy" && (
+                <details className="game-card">
+                  <summary>Reports and appeals</summary>
+                  <ModerationPanel request={request} canWrite={canWrite} />
+                </details>
               )}
-            >
-              <summary>Courts, allegiance and invitations</summary>
-              <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
-              <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
-              <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
-            </details>
+              {tab === "Envoy" && !host && (
+                <CodexConnection request={request} handle={view?.profile.handle} guest={guestPlayer} />
+              )}
+              {view && (
+                <FirstSession
+                  compact
+                  stage={{
+                    stale: !canWrite || Boolean(refreshFailure),
+                    approvalsAvailable: decisions?.kingdomId === view.profile.kingdomId,
+                    approvals: decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : [],
+                    failure:
+                      localFailure ?? (decisions?.kingdomId === view.profile.kingdomId ? decisions.failure : undefined),
+                    ambition: view.ambition,
+                    asOfGameTimeMs: view.asOfGameTimeMs,
+                    worldStatus: view.worldStatus,
+                    requests: social?.requests,
+                    contactOutcome: social?.requestHistory?.find((r) =>
+                      ["accepted", "declined", "expired"].includes(r.status),
+                    ),
+                    build: (() => {
+                      const b = view.builders.find(
+                        (b) => b.instructionId && b.kind && ["waiting", "active"].includes(b.state ?? ""),
+                      );
+                      return b?.instructionId && b.kind
+                        ? { ...b, instructionId: b.instructionId, kind: b.kind, state: b.state ?? "waiting" }
+                        : undefined;
+                    })(),
+                    freeBuilders: view.builders.filter((b) => !b.instructionId).length,
+                    choices: developmentChoices(view),
+                    ownerSource: `${pactBaseUrl()}v1/world/kingdoms/${view.profile.kingdomId}`,
+                    socialAvailable: social !== null,
+                    farmComplete: view.buildings.some((b) => b.kind === "farm" && b.level >= 2),
+                    farmPending: view.builders.some((b) => b.kind === "farm" && b.instructionId !== null),
+                    contacts: social?.contacts.length ?? 0,
+                    pendingRequests: social?.requests.length ?? 0,
+                    pendingOffers: social ? social.supplyOffers.length + social.garrisonOffers.length : 0,
+                    contracts: social ? social.supplyContracts.length + social.garrisonContracts.length : 0,
+                  }}
+                  onArea={setTab}
+                />
+              )}
+              {view && tab === "Kingdom" && <BuilderStatus view={view} />}
+              {view && (
+                <details className="game-card">
+                  <summary>Game moments and notifications</summary>
+                  <OutcomeCards
+                    key={view.profile.kingdomId}
+                    owner={view.profile.kingdomId}
+                    view={view}
+                    stale={!csrf || connectionStatus !== "live" || Boolean(refreshFailure)}
+                    offers={social?.supplyOffers}
+                    requests={social?.requests}
+                    approvals={decisions?.kingdomId === view.profile.kingdomId ? decisions.approvals : undefined}
+                    audio={experienceAudio}
+                    onNotice={setNotice}
+                  />
+                </details>
+              )}
+
+              {notice && (
+                <p className="game-notice" role="status">
+                  {notice}
+                </p>
+              )}
+              {refreshFailure && (
+                <p className="game-notice" role="status">
+                  {refreshFailure}
+                </p>
+              )}
+              {pendingAction && (
+                <section
+                  className="game-confirm"
+                  aria-label="Confirm game action"
+                  ref={confirmation}
+                  tabIndex={-1}
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") {
+                      setPendingAction(null);
+                      returnFocus.current?.focus();
+                    }
+                  }}
+                >
+                  <div>
+                    <strong>Confirm this action</strong>
+                    <p>{pendingAction.summary}</p>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={!canWrite}
+                    onClick={() => {
+                      const action = pendingAction.action;
+                      setPendingAction(null);
+                      void act(action);
+                    }}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    type="button"
+                    className="secondary"
+                    onClick={() => {
+                      setPendingAction(null);
+                      returnFocus.current?.focus();
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </section>
+              )}
+              {tab === "Kingdom" && view && (
+                <details className="game-card">
+                  <summary>Private notes</summary>
+                  <AmbitionChoice
+                    value={view.ambition ?? ""}
+                    disabled={!canWrite}
+                    save={async (ambition) => {
+                      await request("/v1/kingdom/ambition", "PATCH", { ambition });
+                      await refresh();
+                    }}
+                  />
+                </details>
+              )}
+              {tab === "Kingdom" && view && (
+                <Kingdom
+                  view={view}
+                  busy={!canWrite}
+                  act={act}
+                  social={social}
+                  kingdomId={kingdomId}
+                  onPeople={() => setTab("People")}
+                  queueSuggested={queueSuggested}
+                />
+              )}
+              {tab === "Envoy" && (
+                <Envoy
+                  canWrite={canWrite}
+                  inbox={inbox}
+                  request={request}
+                  onNotice={setNotice}
+                  onRefresh={refresh}
+                  apiOrigin={apiOrigin}
+                  openAccount={() => setAccountOpen(true)}
+                  onCsrfChange={(token) => {
+                    sessionStorage.setItem("pact_csrf", token);
+                    setCsrf(token);
+                  }}
+                />
+              )}
+              {tab === "Envoy" && !host && <NotificationSettings request={request} canWrite={canWrite} />}
+              {tab === "Envoy" && (
+                <RunPanel
+                  request={request}
+                  contacts={social?.contacts ?? []}
+                  canWrite={canWrite}
+                  ambition={view?.ambition ?? ""}
+                />
+              )}
+              {tab === "People" && (
+                <People
+                  friends={Boolean(guestMode)}
+                  request={request}
+                  client={client}
+                  act={act}
+                  busy={!canWrite}
+                  view={view}
+                  kingdomId={kingdomId}
+                  social={social}
+                  target={target}
+                  setTarget={setTarget}
+                  confirmAction={confirmAction}
+                  hallLevel={view?.buildings.find((item) => item.kind === "hall")?.level ?? 1}
+                  charges={view?.charges ?? []}
+                />
+              )}
+
+              {tab === "Kingdom" && (
+                <SeasonPanel request={request} kingdomId={kingdomId} worldStatus={view?.worldStatus ?? "unknown"} />
+              )}
+
+              {tab === "People" && <ChroniclePanel request={request} canWrite={canWrite} noticesOnly />}
+              {tab === "Chronicle" && view && (
+                <Chronicle
+                  view={view}
+                  client={client}
+                  inbox={inbox}
+                  social={social}
+                  busy={busy}
+                  confirmAction={confirmAction}
+                  onKingdom={() => setTab("Kingdom")}
+                />
+              )}
+              {tab === "People" && (
+                <details
+                  className="game-card"
+                  open={Boolean(
+                    new URLSearchParams(window.location.search).get("court") ||
+                      new URLSearchParams(window.location.search).get("invite") ||
+                      new URLSearchParams(window.location.search).get("politics"),
+                  )}
+                >
+                  <summary>Courts, allegiance and invitations</summary>
+                  <CourtPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
+                  <PoliticsPanel request={request} kingdomId={kingdomId} canWrite={canWrite} />
+                  <InvitationPanel request={request} authenticated canWrite={canWrite} kingdomId={kingdomId} />
+                </details>
+              )}
+              {tab === "Chronicle" && (
+                <details
+                  className="game-card"
+                  open={
+                    new URLSearchParams(window.location.search).has("post") ||
+                    new URLSearchParams(window.location.search).has("chronicle")
+                  }
+                >
+                  <summary>Public Chronicle and evidence publishing</summary>
+                  <ChroniclePanel request={request} canWrite={canWrite} />
+                  <EvidencePanel request={request} canWrite={canWrite} />
+                </details>
+              )}
+            </>
           )}
-          {tab === "Chronicle" && (
-            <details
-              className="game-card"
-              open={
-                new URLSearchParams(window.location.search).has("post") ||
-                new URLSearchParams(window.location.search).has("chronicle")
-              }
-            >
-              <summary>Public Chronicle and evidence publishing</summary>
-              <ChroniclePanel request={request} canWrite={canWrite} />
-              <EvidencePanel request={request} canWrite={canWrite} />
-            </details>
-          )}
-        </details>
+        </section>
       </main>
     </ReportingContext.Provider>
   );
