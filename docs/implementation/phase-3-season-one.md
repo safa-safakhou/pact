@@ -1848,3 +1848,4 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - New Windows task PACT Full Game 50 Continuous running without a lifetime deadline/request cap; rolling update retained run ID, all kingdoms and 75 requests, with no new context failures at the startup observation.
 - Planning render/check and staged whitespace passed; local implementation committed under founder standing instruction; deferred production scope and historical caps unchanged.
 - Final lease-reuse fix verified by four live invitation/message commits with one lease open; same run restarted at 173 attempts; release health shows 50 successful owners and no new turn failures after context fix.
+- docs/implementation/reports/full-game-health-20261009.md — 11:20 UTC follow-up: all 50 owners active, no new post-fix turn failure; 69 commitments, zero new contracts or model messages, repeated expiry/invalid-term behavior; model plus harness quality limitations recorded.

@@ -1,0 +1,411 @@
+{
+  "controllerSnapshot": {
+    "observedAt": "2026-10-09T11:20:47.225Z",
+    "runId": "full-game-1791537512736-10b87b6c",
+    "status": "running",
+    "requests": 1189,
+    "owners": 50,
+    "successfulOwners": 50,
+    "pending": 0,
+    "currentFailingOwners": 0,
+    "events": {
+      "controller_started": 3,
+      "model_result": 1171,
+      "turn_completed": 1171,
+      "receipt": 69,
+      "turn_failed": 16,
+      "owner_decision": 10
+    },
+    "validModelResults": 1171,
+    "emptyPlans": 1036,
+    "proposedActions": {
+      "game.building.queue": 54,
+      "game.training.queue": 1,
+      "game.supply.offer": 76,
+      "game.transfer": 1,
+      "game.scout.start": 6,
+      "game.message.send": 3,
+      "game.supply.sign": 15,
+      "game.contact.request": 1,
+      "game.building.cancel": 5
+    },
+    "committedActions": {
+      "game.building.queue": 26,
+      "game.supply.offer": 35,
+      "game.supply.sign": 3,
+      "game.building.cancel": 5
+    },
+    "outcomeCodes": {
+      "COMMITTED": 69,
+      "RUN_ALREADY_ACTIVE": 15,
+      "BUILDING_BUSY": 19,
+      "INVALID_COMMAND": 30,
+      "SLOT_BUSY": 3,
+      "MESSAGE_QUEUE_FULL": 1,
+      "ALREADY_CONTACT": 1,
+      "FORBIDDEN": 1,
+      "RATE_LIMITED": 11,
+      "EXPIRED": 12
+    },
+    "reads": {
+      "pact_world_read_v1": 1151,
+      "pact_agent_guide_v1": 72,
+      "pact_court_read_v1": 28,
+      "pact_player_find_v1": 157,
+      "pact_politics_read_v1": 22,
+      "pact_chronicle_read_v1": 23,
+      "pact_seal_read_v1": 5,
+      "pact_council_thread_v1": 11
+    },
+    "medianInferenceMs": 4563.028099999996,
+    "lastTurnFailure": "2026-10-09T09:26:37.804Z",
+    "lastLeaseDenial": "2026-10-09T09:36:25.216Z",
+    "ownersWithCommittedAction": 29,
+    "perOwner": [
+      {
+        "actor": 0,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 1,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 2,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 3,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 4,
+        "plans": 24,
+        "empty": 2,
+        "commits": 10
+      },
+      {
+        "actor": 5,
+        "plans": 23,
+        "empty": 21,
+        "commits": 1
+      },
+      {
+        "actor": 6,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 7,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 8,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 9,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 10,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 11,
+        "plans": 23,
+        "empty": 20,
+        "commits": 1
+      },
+      {
+        "actor": 12,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 13,
+        "plans": 24,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 14,
+        "plans": 24,
+        "empty": 2,
+        "commits": 17
+      },
+      {
+        "actor": 15,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 16,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 17,
+        "plans": 23,
+        "empty": 16,
+        "commits": 6
+      },
+      {
+        "actor": 18,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 19,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 20,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 21,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 22,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 23,
+        "plans": 23,
+        "empty": 21,
+        "commits": 1
+      },
+      {
+        "actor": 24,
+        "plans": 23,
+        "empty": 22,
+        "commits": 0
+      },
+      {
+        "actor": 25,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 26,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 27,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 28,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 29,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 30,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 31,
+        "plans": 24,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 32,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 33,
+        "plans": 24,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 34,
+        "plans": 24,
+        "empty": 24,
+        "commits": 0
+      },
+      {
+        "actor": 35,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 36,
+        "plans": 24,
+        "empty": 23,
+        "commits": 1
+      },
+      {
+        "actor": 37,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 38,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 39,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 40,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 41,
+        "plans": 23,
+        "empty": 18,
+        "commits": 1
+      },
+      {
+        "actor": 42,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 43,
+        "plans": 23,
+        "empty": 8,
+        "commits": 2
+      },
+      {
+        "actor": 44,
+        "plans": 23,
+        "empty": 6,
+        "commits": 0
+      },
+      {
+        "actor": 45,
+        "plans": 23,
+        "empty": 22,
+        "commits": 1
+      },
+      {
+        "actor": 46,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 47,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 48,
+        "plans": 23,
+        "empty": 23,
+        "commits": 0
+      },
+      {
+        "actor": 49,
+        "plans": 23,
+        "empty": 7,
+        "commits": 10
+      }
+    ]
+  },
+  "databaseSnapshot": {
+    "observedAt": "2026-10-09T11:21:21.228357+00:00",
+    "world": {
+      "status": "active",
+      "tick_sequence": 17415
+    },
+    "buildings": {
+      "canceled": 14,
+      "waiting": 27,
+      "completed": 242
+    },
+    "contacts": 263,
+    "contracts": {
+      "expired": 272
+    },
+    "installments": 32640,
+    "installmentFailures": 0,
+    "deliveries": [
+      {
+        "resource": "iron",
+        "due_units": "505200",
+        "delivered_units": "505200"
+      },
+      {
+        "resource": "grain",
+        "due_units": "492600",
+        "delivered_units": "492600"
+      },
+      {
+        "resource": "silver",
+        "due_units": "82200",
+        "delivered_units": "82200"
+      }
+    ],
+    "liveLeases": 0
+  },
+  "currentRunOfferStatuses": {
+    "expired": 34,
+    "open": 1
+  },
+  "newContractCountSinceStart": 0,
+  "cohortUnreadMessagesIncludingHistorical": 201,
+  "cohortPendingContactsIncludingHistorical": 3,
+  "note": "Point-in-time read-only audit. Recent database messages excluded from published evidence. Continuous-run totals exclude finite adapter probes. Journal and status are independently sampled while running."
+}
