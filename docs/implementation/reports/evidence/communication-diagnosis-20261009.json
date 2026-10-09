@@ -227,5 +227,10 @@
   },
   "readOnly": true,
   "verification": "Eight existing full-game adapter tests passed; no live acceptance/write probe was performed.",
-  "correction": "Start guide fetches pending requests every turn. Gemma tried approving its own outgoing request; ID was real, owner was wrong."
+  "correction": "Start guide fetches pending requests every turn. Gemma tried approving its own outgoing request; ID was real, owner was wrong.",
+  "threadReadDefect": {
+    "source": "packages/kingdom/src/council.ts:CouncilReader.thread",
+    "finding": "Returns authorized message page without acknowledgment; CouncilReader.read and ConversationReader acknowledge delivered incoming IDs.",
+    "scope": "Source-established inconsistency; no production write probe or fix performed."
+  }
 }
