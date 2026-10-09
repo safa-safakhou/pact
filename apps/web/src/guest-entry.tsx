@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { RestoreGuest } from "./account-access.js";
 import { pactBaseUrl } from "./client-location.js";
 
 const names = ["Professor Turnip", "Duke of Noodles", "Captain Goose", "Lady Circuit", "Sir Potato"];
-export function GuestEntry({ onJoined }: { onJoined: (csrf: string) => void }) {
+export function GuestEntry({ onJoined, onSignIn }: { onJoined: (csrf: string) => void; onSignIn?: () => void }) {
   const [nickname, setNickname] = useState(
     () =>
       localStorage.getItem("pact_guest_name") ?? names[Math.floor(Math.random() * names.length)] ?? "Professor Turnip",
@@ -17,6 +18,10 @@ export function GuestEntry({ onJoined }: { onJoined: (csrf: string) => void }) {
     setBusy(true);
     setError("");
     const entryKey = localStorage.getItem("pact_guest_entry") ?? crypto.randomUUID();
+    // Previously saved keys may only resume; never silently found a replacement kingdom.
+    const existingOnly =
+      localStorage.getItem("pact_guest_entry") === entryKey && localStorage.getItem("pact_guest_pending") !== entryKey;
+    if (!existingOnly) localStorage.setItem("pact_guest_pending", entryKey);
     localStorage.setItem("pact_guest_entry", entryKey);
     localStorage.setItem("pact_guest_name", nickname);
     try {
@@ -25,10 +30,11 @@ export function GuestEntry({ onJoined }: { onJoined: (csrf: string) => void }) {
           method: "POST",
           credentials: "include",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ entryKey, nickname }),
+          body: JSON.stringify({ entryKey, nickname, existingOnly }),
         });
         const result = await response.json();
         if (response.ok) {
+          localStorage.removeItem("pact_guest_pending");
           onJoined(String(result.csrfToken));
           return;
         }
@@ -37,7 +43,7 @@ export function GuestEntry({ onJoined }: { onJoined: (csrf: string) => void }) {
           throw Error(
             code === "WORLD_PAUSED"
               ? "The world is taking a breather. Try again shortly."
-              : "Could not enter your kingdom. Try again.",
+              : "Could not restore this kingdom. Sign in if you saved it with email, or check your recovery code.",
           );
         await new Promise((resolve) => setTimeout(resolve, 1200));
       }
@@ -80,6 +86,12 @@ export function GuestEntry({ onJoined }: { onJoined: (csrf: string) => void }) {
         </button>
       </form>
       <p className="quiet">This browser remembers your kingdom. Everyone with this link plays in the same world.</p>
+      {onSignIn && (
+        <button type="button" className="secondary" onClick={onSignIn}>
+          Sign in to an existing kingdom
+        </button>
+      )}
+      <RestoreGuest onJoined={onJoined} />
       {error && <p role="alert">{error}</p>}
     </main>
   );

@@ -72,6 +72,7 @@ export type OperatorRegister = z.infer<typeof OperatorRegisterSchema>;
 
 export interface PublicOperatorNotice {
   registrationEnabled: boolean;
+  emailDelivery: "captured_smtp" | "transactional";
   controller: Pick<OperatorRegister["controller"], "legalName" | "contactAddress" | "privacyEmail" | "supportEmail">;
   documents: OperatorRegister["documents"];
   processors: Array<
@@ -115,6 +116,7 @@ export class OperatorPreflight {
     if (!this.register) return undefined;
     return {
       registrationEnabled: this.registrationEnabled,
+      emailDelivery: this.register.transactionalEmail.mode,
       controller: {
         legalName: this.register.controller.legalName,
         contactAddress: this.register.controller.contactAddress,

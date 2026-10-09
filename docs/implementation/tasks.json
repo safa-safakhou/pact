@@ -7466,6 +7466,48 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt"
+    },
+    {
+      "id": "PACT-144",
+      "title": "Persist existing player access across browsers and devices and simplify game navigation",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-006",
+        "PACT-127",
+        "PACT-142"
+      ],
+      "sources": [
+        "social",
+        "runtime",
+        "rules"
+      ],
+      "covers": [
+        "S01",
+        "R07"
+      ],
+      "scope": [
+        "Founder-authorized same-browser session bootstrap, verified in-place guest conversion, guest recovery and account sign-in UI.",
+        "Split the crowded Kingdom advanced disclosure into focused sections and separate account settings; commit and release on the existing server."
+      ],
+      "acceptance": [
+        "Session bootstrap restores CSRF across tabs without changing ownership or expiry; origin and human-only boundaries hold.",
+        "Verified guest conversion preserves account/kingdom/grants, rejects invalid/conflicting/replayed tokens and disables old entry recovery; portable guest recovery never creates a replacement identity.",
+        "Focused navigation retains building/training/economy controls; account screens expose truthful captured-email behavior and recovery.",
+        "Relevant tests, build, types and deployed smoke/browser checks pass; release preserves existing continuous owners and state."
+      ],
+      "components": [
+        "local population controller"
+      ],
+      "evidence": [],
+      "assignee": "codex-auth-ui",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
     }
   ],
   "source_sha256": {

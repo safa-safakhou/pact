@@ -81,7 +81,11 @@ describe("report identity and follow-up", () => {
   });
 });
 
-function kingdom(level: number, queued = false): string {
+function kingdom(
+  level: number,
+  queued = false,
+  area: "Overview" | "Buildings" | "Army" | "Economy" = "Buildings",
+): string {
   const view: ComponentProps<typeof Kingdom>["view"] = {
     audience: "owner",
     profile: { kingdomId: "synthetic-kingdom", handle: "synthetic", displayName: "Synthetic" },
@@ -111,6 +115,7 @@ function kingdom(level: number, queued = false): string {
   };
   return renderToStaticMarkup(
     createElement(Kingdom, {
+      initialArea: area,
       view,
       busy: false,
       act: async () => undefined,
@@ -146,7 +151,7 @@ describe("construction guidance", () => {
 });
 
 it("does not claim all eight founding Home Guard survived a battle", () => {
-  const html = kingdom(2);
+  const html = kingdom(2, false, "Army");
   expect(html).toContain("Founding Home Guard defend only");
   expect(html).not.toContain("The eight founding Home Guard");
 });
@@ -407,4 +412,14 @@ describe("shared action charge guidance", () => {
   it("does not manufacture full pools when an older snapshot has no charge data", () => {
     expect(renderToStaticMarkup(createElement(ActionCharges, { charges: [] }))).toBe("");
   });
+});
+
+it("separates Kingdom controls into focused sections without an advanced catch-all", () => {
+  const overview = kingdom(2, false, "Overview");
+  expect(overview).toContain("Kingdom sections");
+  expect(overview).not.toContain("All buildings, resources and advanced actions");
+  expect(overview).not.toContain("Queue training");
+  expect(overview).not.toContain("Queue upgrade");
+  expect(kingdom(2, false, "Army")).toContain("Queue training");
+  expect(kingdom(2, false, "Economy")).toContain("Next-hour expected ending stock");
 });

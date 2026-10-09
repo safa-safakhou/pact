@@ -142,3 +142,4 @@ PACT-140,Reveal human Court destinations from shared game links,3,done,implement
 PACT-141,Repair social read acknowledgment and local-player conversation workflow,3,done,implementation,Platform,M,PACT-053;PACT-139;PACT-140,S01;R07,phase-3-season-one.md#pact-141
 PACT-142,Switch existing continuous fifty-player population to tested Qwen 9B,3,done,implementation,Platform,M,PACT-053;PACT-138;PACT-139;PACT-141,S01;R07,phase-3-season-one.md#pact-142
 PACT-143,Reduce continuous local-player machine load with staggered hourly pacing,3,done,implementation,Platform,M,PACT-053;PACT-138;PACT-142,S01;R07,phase-3-season-one.md#pact-143
+PACT-144,Persist existing player access across browsers and devices and simplify game navigation,3,in_progress,implementation,Platform,M,PACT-053;PACT-006;PACT-127;PACT-142,S01;R07,phase-3-season-one.md#pact-144

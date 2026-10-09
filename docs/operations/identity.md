@@ -1,5 +1,15 @@
 # Identity and onboarding operations
 
+## Browser and device recovery — PACT-144
+
+Clients bootstrap `GET /v1/auth/session` before enabling writes. The returned CSRF value is deterministic for that human session and does not invalidate tokens held by other tabs. Existing login/guest CSRF remains accepted for compatibility. Authentication tokens remain HttpOnly; idle/absolute limits and recent-human requirements are unchanged.
+
+Account is a separate web screen. Guest owners can privately save their existing entry key as a recovery code, then use **Restore a guest kingdom** on another browser/device. Recovery uses `existingOnly: true` and cannot create a replacement kingdom. This code is a bearer credential: keep it protected and never copy it into logs or public URLs. **Sign out on this device** clears browser recovery storage and revokes that session; save recovery first. **Sign out everywhere** additionally revokes external grants, as before.
+
+**Save with email and password** stages a password hash, address and accepted terms on an expiring verification token. Before verification the account remains a guest; afterward the same account is converted atomically, its guest key disabled, and its kingdom/history/grants retained. Used claims clear pending credentials; existing token retention and account-cascade deletion apply. Duplicate registered addresses are not merged. A new save request replaces the previous pending claim; codes expire after 24 hours. Verification does not reset the session's recent-authentication clock: converted owners must authenticate with their password for sensitive operations.
+
+The public legal notice exposes only the configured email delivery mode. On `captured_smtp`, the UI explicitly directs users to the operator for a code and offers guest recovery for immediate other-device access. Do not represent Mailpit capture as inbox delivery. Real outbound SMTP still requires separately configured, verified infrastructure. Keep the persistent PostgreSQL volume and identity pepper/encryption files across deployments.
+
 `@pact/identity` implements the canonical email/password account. Emails are trimmed, the domain is converted to ASCII, and comparison uses the normalized lowercase login identifier without removing plus tags or dots. Passwords are 15–128 Unicode code points and at most 1,024 UTF-8 bytes. Argon2id uses 64 MiB, three passes, parallelism one, a unique 16-byte salt, and a 32-byte tag.
 
 The production process requires three secrets/configurations beyond the database:

@@ -110,6 +110,83 @@ export class IdentityService {
     return { accountId: session.accountId, csrfToken };
   }
 
+  /** Stable session-bound CSRF bootstrap, including legacy password sessions. */
+  async sessionBootstrap(sessionToken: string) {
+    const session = await this.authenticate(sessionToken);
+    return {
+      accountId: session.accountId,
+      guest: await this.isGuest(session.accountId),
+      csrfToken: this.options.digester.digest(`session-csrf:${sessionToken}`),
+      idleExpiresAt: session.idleExpiresAt.toISOString(),
+      absoluteExpiresAt: session.absoluteExpiresAt.toISOString(),
+    };
+  }
+
+  async saveGuest(
+    sessionToken: string,
+    input: {
+      email: string;
+      password: string;
+      age18Declared: boolean;
+      acceptedTermsVersion: string;
+      requestId?: string;
+    },
+  ): Promise<{ accepted: true }> {
+    const session = await this.authenticate(sessionToken);
+    if (!(await this.isGuest(session.accountId))) throw new IdentityError("FORBIDDEN");
+    let email: string;
+    try {
+      email = normalizeEmail(input.email);
+      validatePassword(input.password);
+    } catch {
+      throw new IdentityError("INVALID_INPUT");
+    }
+    if (!input.age18Declared || input.acceptedTermsVersion !== this.options.currentTermsVersion)
+      throw new IdentityError("TERMS_REQUIRED");
+    if (await this.options.compromisedPasswords.isCompromised(input.password))
+      throw new IdentityError("PASSWORD_REJECTED");
+    const passwordHash = await hashPassword(input.password);
+    const now = this.options.clock.now();
+    await withTransaction(this.pool, async (client) => {
+      const account = await client.query(
+        "SELECT id FROM accounts WHERE id=$1 AND product_scope=$2 AND is_guest AND status='active' FOR UPDATE",
+        [session.accountId, this.options.productScope],
+      );
+      if (account.rowCount !== 1) throw new IdentityError("FORBIDDEN");
+      if (!(await this.consumeLimit(client, "guest_save", session.accountId, 3, 60 * 60_000, now, false))) return;
+      if (!(await this.consumeLimit(client, "verification_email", email, 3, 60 * 60_000, now, false))) return;
+      if (
+        (
+          await client.query("SELECT id FROM accounts WHERE product_scope=$1 AND email=$2", [
+            this.options.productScope,
+            email,
+          ])
+        ).rowCount
+      )
+        return;
+      await client.query("DELETE FROM email_verification_tokens WHERE account_id=$1 AND pending_email IS NOT NULL", [
+        session.accountId,
+      ]);
+      const token = this.options.digester.issue();
+      await client.query(
+        `INSERT INTO email_verification_tokens(product_scope,account_id,token_hash,expires_at,pending_email,pending_password_hash,pending_terms_version)
+        VALUES($1,$2,$3,$4,$5,$6,$7)`,
+        [
+          this.options.productScope,
+          session.accountId,
+          token.hash,
+          new Date(now.getTime() + days(1)),
+          email,
+          passwordHash,
+          input.acceptedTermsVersion,
+        ],
+      );
+      await this.securityEmail(client, session.accountId, "verify_email", token.raw, email);
+      await this.securityEvent(client, session.accountId, "guest.save_requested", input.requestId);
+    });
+    return { accepted: true };
+  }
+
   async signup(input: {
     email: string;
     password: string;
@@ -160,13 +237,47 @@ export class IdentityService {
     const now = this.options.clock.now();
     const tokenHash = this.options.digester.digest(rawToken);
     return withTransaction(this.pool, async (client) => {
-      const token = await client.query<{ id: string; account_id: string; expires_at: Date; used_at: Date | null }>(
-        `SELECT id, account_id, expires_at, used_at FROM email_verification_tokens
+      const owner = await client.query<{ account_id: string }>(
+        "SELECT account_id FROM email_verification_tokens WHERE product_scope=$1 AND token_hash=$2",
+        [this.options.productScope, tokenHash],
+      );
+      if (!owner.rows[0]) throw new IdentityError("INVALID_TOKEN");
+      await client.query("SELECT id FROM accounts WHERE id=$1 FOR UPDATE", [owner.rows[0].account_id]);
+      const token = await client.query<{
+        id: string;
+        account_id: string;
+        expires_at: Date;
+        used_at: Date | null;
+        pending_email: string | null;
+        pending_password_hash: string | null;
+        pending_terms_version: string | null;
+      }>(
+        `SELECT id, account_id, expires_at, used_at, pending_email, pending_password_hash, pending_terms_version FROM email_verification_tokens
          WHERE product_scope = $1 AND token_hash = $2 FOR UPDATE`,
         [this.options.productScope, tokenHash],
       );
       const row = token.rows[0];
       if (!row || row.used_at || row.expires_at <= now) throw new IdentityError("INVALID_TOKEN");
+      if (row.pending_email) {
+        try {
+          const changed = await client.query(
+            `UPDATE accounts SET is_guest=false,guest_entry_hash=NULL,email=$2,password_hash=$3,
+            email_verified_at=$4,terms_version=$5,terms_accepted_at=$4,age_18_declared_at=$4,password_changed_at=$4,updated_at=$4
+            WHERE id=$1 AND is_guest AND status='active' RETURNING id`,
+            [row.account_id, row.pending_email, row.pending_password_hash, now, row.pending_terms_version],
+          );
+          if (changed.rowCount !== 1) throw new IdentityError("INVALID_TOKEN");
+        } catch (error) {
+          if (error && typeof error === "object" && "code" in error && error.code === "23505")
+            throw new IdentityError("INVALID_TOKEN");
+          throw error;
+        }
+        await client.query(
+          "UPDATE email_verification_tokens SET pending_email=NULL,pending_password_hash=NULL,pending_terms_version=NULL WHERE id=$1",
+          [row.id],
+        );
+        await this.securityEvent(client, row.account_id, "guest.saved", requestId);
+      }
       await client.query("UPDATE email_verification_tokens SET used_at = $2 WHERE id = $1 AND used_at IS NULL", [
         row.id,
         now,
@@ -251,7 +362,10 @@ export class IdentityService {
       "SELECT csrf_token_hash FROM sessions WHERE id = $1",
       [session.sessionId],
     );
-    if (result.rows[0]?.csrf_token_hash !== this.options.digester.digest(csrfToken)) {
+    if (
+      result.rows[0]?.csrf_token_hash !== this.options.digester.digest(csrfToken) &&
+      csrfToken !== this.options.digester.digest(`session-csrf:${sessionToken}`)
+    ) {
       throw new IdentityError("FORBIDDEN");
     }
     return session;
@@ -357,6 +471,14 @@ export class IdentityService {
       await this.revokeAccess(client, token.account_id, now, "password_reset", requestId);
       await this.securityEmail(client, token.account_id, "password_changed");
     });
+  }
+
+  async signOutSession(sessionToken: string): Promise<void> {
+    const session = await this.authenticate(sessionToken);
+    await this.pool.query("UPDATE sessions SET revoked_at=$2 WHERE id=$1", [
+      session.sessionId,
+      this.options.clock.now(),
+    ]);
   }
 
   async signOutEverywhere(sessionToken: string, requestId?: string): Promise<void> {

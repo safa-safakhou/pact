@@ -2,6 +2,7 @@ import { PactClientError, type SandboxAction } from "@pact/client-sdk";
 import { wholeUnitText } from "@pact/domain/resource-facts";
 import type React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AccountAccess, PasswordRecovery } from "./account-access.js";
 import { type Ambition, AmbitionChoice } from "./ambition.js";
 import { ApprovalReview } from "./approval-review.js";
 import { ChroniclePanel } from "./chronicle-panel.js";
@@ -222,16 +223,29 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
   );
   const [guestMode, setGuestMode] = useState<boolean | null>(host ? false : null);
   const [guestPlayer, setGuestPlayer] = useState(false);
+  const [passwordEntry, setPasswordEntry] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   useEffect(() => {
     if (host) return;
-    void fetch(new URL("v1/play", apiOrigin), { credentials: "include" })
-      .then((r) => r.json())
-      .then((data) => {
-        setGuestMode(data.enabled === true);
-        setGuestPlayer(data.guest === true);
-        if (data.csrfToken) {
-          sessionStorage.setItem("pact_csrf", data.csrfToken);
-          setCsrf(data.csrfToken);
+    void Promise.all([
+      fetch(new URL("v1/play", apiOrigin), { credentials: "include" }).then((r) => r.json()),
+      fetch(new URL("v1/auth/session", apiOrigin), { credentials: "include" }).then(async (r) =>
+        r.ok ? r.json() : null,
+      ),
+    ])
+      .then(([play, session]) => {
+        setGuestMode(play.enabled === true);
+        setGuestPlayer(session?.guest === true);
+        if (session?.csrfToken) {
+          sessionStorage.setItem("pact_csrf", session.csrfToken);
+          setCsrf(session.csrfToken);
+        } else {
+          sessionStorage.removeItem("pact_csrf");
+          setCsrf("");
+        }
+        if (session && !session.guest) {
+          localStorage.removeItem("pact_guest_entry");
+          localStorage.removeItem("pact_guest_name");
         }
       })
       .catch(() => setGuestMode(false));
@@ -470,6 +484,9 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
       sessionStorage.setItem("pact_csrf", token);
       setCsrf(token);
       setPassword("");
+      setGuestPlayer(false);
+      localStorage.removeItem("pact_guest_entry");
+      localStorage.removeItem("pact_guest_name");
       setNotice("Signed in. Loading your kingdom…");
     } catch (error) {
       setNotice(`Sign-in failed: ${failure(error)}`);
@@ -611,9 +628,13 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
         {notice && <p role="alert">{notice}</p>}
       </main>
     );
-  if ((auth === "login" || auth === "draft") && guestMode && !host)
+  if (auth === "login" && guestMode && !host && !passwordEntry)
     return (
       <GuestEntry
+        onSignIn={() => {
+          setPasswordEntry(true);
+          setNotice("");
+        }}
         onJoined={(token) => {
           refreshGate.current.invalidate();
           refreshGate.current.resume();
@@ -648,7 +669,12 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
       <main className="game-shell auth-shell">
         <h1>PACT Alpha</h1>
         {connectionNotice}
-        <p>Sign in with a private test account. Manual play does not require a model provider.</p>
+        <p>Sign in to return to your kingdom. Manual play does not require a model provider.</p>
+        {guestMode && (
+          <button type="button" className="secondary" onClick={() => setPasswordEntry(false)}>
+            Back to guest entry
+          </button>
+        )}
         <InvitationPanel request={request} authenticated={false} canWrite={false} />
         {new URLSearchParams(window.location.search).has("post") && (
           <ChroniclePanel request={request} canWrite={false} />
@@ -691,6 +717,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
         </form>
         {notice && <p role="status">{notice}</p>}
         {refreshFailure && <p role="status">{refreshFailure}</p>}
+        <PasswordRecovery request={request} />
         <Registration request={request} onNotice={setNotice} />
       </main>
     );
@@ -740,6 +767,80 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
           canWrite={canWrite}
           onRefresh={refresh}
         />
+      </main>
+    );
+  if (accountOpen)
+    return (
+      <main className="game-shell account-shell">
+        <button type="button" className="secondary" onClick={() => setAccountOpen(false)}>
+          Back to game
+        </button>
+        <h1>Account</h1>
+        {connectionNotice}
+        <AccountAccess
+          guest={guestPlayer}
+          canWrite={canWrite}
+          request={request}
+          onChanged={() => {
+            setGuestPlayer(false);
+            void refresh();
+          }}
+        />
+        {!guestPlayer &&
+          (host ? (
+            <button type="button" onClick={host.openAccount}>
+              Open secure account settings
+            </button>
+          ) : (
+            <PrivacySettings
+              request={request}
+              onNotice={setNotice}
+              apiOrigin={apiOrigin}
+              onCsrfChange={(token) => {
+                sessionStorage.setItem("pact_csrf", token);
+                setCsrf(token);
+              }}
+            />
+          ))}
+        <article className="game-card">
+          <h2>Sessions</h2>
+          <button
+            disabled={!canWrite}
+            type="button"
+            onClick={() =>
+              void request("/v1/auth/logout", "POST")
+                .then(() => {
+                  localStorage.removeItem("pact_guest_entry");
+                  localStorage.removeItem("pact_guest_name");
+                  sessionStorage.removeItem("pact_csrf");
+                  window.location.reload();
+                })
+                .catch((e) => setNotice(failure(e)))
+            }
+          >
+            Sign out on this device
+          </button>
+          <p>For a guest, save a recovery code before signing out. Your kingdom remains in the world.</p>
+          <button
+            disabled={!canWrite}
+            className="secondary"
+            type="button"
+            onClick={() => {
+              if (window.confirm("Sign out all browser sessions and revoke your agent connections?"))
+                void request("/v1/auth/sign-out-everywhere", "POST")
+                  .then(() => {
+                    localStorage.removeItem("pact_guest_entry");
+                    localStorage.removeItem("pact_guest_name");
+                    sessionStorage.removeItem("pact_csrf");
+                    window.location.reload();
+                  })
+                  .catch((e) => setNotice(failure(e)));
+            }}
+          >
+            Sign out everywhere
+          </button>
+        </article>
+        {notice && <p role="status">{notice}</p>}
       </main>
     );
   return (
@@ -828,6 +929,9 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                 {item}
               </button>
             ))}
+            <button type="button" onClick={() => setAccountOpen(true)}>
+              Account
+            </button>
           </nav>
           {tab === "Envoy" && (
             <details className="game-card">
@@ -976,7 +1080,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
               onNotice={setNotice}
               onRefresh={refresh}
               apiOrigin={apiOrigin}
-              openAccount={host?.openAccount}
+              openAccount={() => setAccountOpen(true)}
               onCsrfChange={(token) => {
                 sessionStorage.setItem("pact_csrf", token);
                 setCsrf(token);
@@ -1231,6 +1335,7 @@ export function Kingdom({
   kingdomId,
   onPeople,
   queueSuggested,
+  initialArea = "Overview",
 }: {
   view: OwnerView;
   busy: boolean;
@@ -1238,8 +1343,10 @@ export function Kingdom({
   social: SocialOverview | null;
   kingdomId: string;
   onPeople: () => void;
+  initialArea?: "Overview" | "Buildings" | "Army" | "Economy";
   queueSuggested?: (building: string, level: number) => void;
 }): React.JSX.Element {
+  const [area, setArea] = useState(initialArea);
   const [building, setBuilding] = useState("farm");
   const currentLevel = view.buildings.find((item) => item.kind === building)?.level ?? 1;
   const level = Math.min(6, currentLevel + 1);
@@ -1254,7 +1361,21 @@ export function Kingdom({
   const [troopCount, setTroopCount] = useState(1);
   return (
     <section>
-      <KingdomScene facts={{ ...view, audience: "owner" }} />
+      <nav className="game-nav kingdom-nav" aria-label="Kingdom sections">
+        {(["Overview", "Buildings", "Army", "Economy"] as const).map((item) => (
+          <button
+            type="button"
+            key={item}
+            aria-current={area === item ? "page" : undefined}
+            onClick={() => setArea(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </nav>
+      <h2>{area}</h2>
+      {area === "Overview" && <KingdomScene facts={{ ...view, audience: "owner" }} />}
+      {area === "Overview" && <BuilderStatus view={view} />}
       <div className="resource-strip">
         {["grain", "iron", "silver"].map((kind) => (
           <div key={kind}>
@@ -1266,241 +1387,255 @@ export function Kingdom({
           </div>
         ))}
       </div>
-      {queueSuggested && <QuickBuilds view={view} disabled={busy} onBuild={queueSuggested} />}
-      <details className="game-card">
-        <summary>All buildings, resources and advanced actions</summary>
-        <ActionCharges charges={view.charges ?? []} />
-        <p>
-          Committed game time {new Date(view.asOfGameTimeMs).toLocaleString()}. Resource amounts below use whole game
-          units; the server decides costs and limits.
-        </p>
-        <div className="game-grid">
-          {["iron", "silver", "grain"].map((resource) => {
-            const balance = view.balances[resource];
-            return (
-              balance && (
-                <article className="game-card" key={resource}>
-                  <h3>{resource}</h3>
-                  <strong>{units(balance.ordinaryUnits)}</strong>
-                  <p>
-                    Founding allowance {units(balance.foundingAllowanceUnits)} · locked {units(balance.lockedUnits)}
-                  </p>
-                  <small>
-                    Gross {balance.facts?.rates.gross.label ?? `${units(balance.productionPerMinuteUnits)} / min`} ·
-                    upkeep {balance.facts?.rates.upkeep.label ?? "inspect troops"} · net{" "}
-                    {balance.facts?.rates.net.label ?? "unavailable"} · cap {units(balance.capacityUnits)} · version{" "}
-                    {balance.version}
-                  </small>
-                </article>
-              )
-            );
-          })}
-        </div>
-        <article className="game-card">
-          <h3>Next-hour expected ending stock</h3>
-          <p>This is ending stock, not the net increase. Gross production, upkeep and assumed deliveries differ.</p>
-          <ul>
-            {Object.entries(view.forecast.expected).map(([resource, amount]) => (
-              <li key={resource}>
-                {resource}: {units(amount.ordinaryUnits)} ordinary + {units(amount.foundingAllowanceUnits)} founding
-                allowance
-              </li>
-            ))}
-          </ul>
-          <details>
-            <summary>What this forecast assumes</summary>
-            <p>{view.forecast.assumption}</p>
-            <small>Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()} game time</small>
-          </details>
-        </article>
-        <div className="game-grid">
-          <article className="game-card">
-            <h3>Buildings</h3>
-            <ul>
-              {view.buildings.map((item) => (
-                <li key={item.kind}>
-                  {item.kind} {item.level}
-                </li>
-              ))}
-            </ul>
-            {view.builders.map((item) => (
-              <p key={item.slot}>
-                Slot {item.slot}: {item.kind ?? "free"} {item.state ?? ""}
-                {item.dueGameTimeMs !== null
-                  ? ` · ${remainingGameTime(item.dueGameTimeMs, view)}`
-                  : item.state === "waiting"
-                    ? " · waiting for level prerequisites, stock, authority, or a builder slot"
-                    : ""}
-              </p>
-            ))}
-            {(building === "hall" ||
-              view.builders.some((item) => item.kind === "hall" && item.state === "waiting")) && (
-              <p>Hall upgrades require Farm and Barracks at the target level and Storehouse one level below it.</p>
-            )}
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                void act({
-                  kind: "game.building.queue",
-                  building: building as "farm",
-                  targetLevel: level,
-                  slot: slot as 1 | 2,
-                });
-              }}
-            >
-              <label>
-                Building
-                <select value={building} onChange={(event) => setBuilding(event.target.value)}>
-                  {["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"].map((item) => (
-                    <option key={item}>{item}</option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Target level
-                <input type="number" value={level} readOnly />
-              </label>
-              <label>
-                Builder slot
-                <select value={slot} onChange={(event) => setSlot(Number(event.target.value))}>
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                </select>
-              </label>
-              <button type="submit" disabled={busy || maxLevel || alreadyQueued}>
-                {maxLevel ? "Maximum level reached" : alreadyQueued ? "Upgrade already queued" : "Queue upgrade"}
-              </button>
-              <p>
-                {maxLevel
-                  ? "Level VI is the development cap."
-                  : `Next upgrade: ${building} ${currentLevel} → ${level}. Missing stock or prerequisites can leave an instruction waiting; the server decides admission and costs.`}
-              </p>
-            </form>
-            {view.builders
-              .filter((item) => item.instructionId)
-              .map((item) => (
-                <button
-                  type="button"
-                  key={item.instructionId}
-                  className="secondary"
-                  disabled={busy}
-                  onClick={() => {
-                    if (item.instructionId)
-                      void act({ kind: "game.building.cancel", instructionId: item.instructionId });
-                  }}
-                >
-                  Cancel slot {item.slot}
-                </button>
-              ))}
-          </article>
-          <article className="game-card">
-            <h3>Troops</h3>
-            <ul>
-              {view.troops.map((item) => (
-                <li key={`${item.type}-${item.placement}-${item.homeGuard}`}>
-                  {item.count} {item.type} · {item.placement} ·{" "}
-                  {item.homeGuard ? "Home Guard (defense only)" : "ordinary"}
-                </li>
-              ))}
-            </ul>
+      {area === "Overview" && queueSuggested && <QuickBuilds view={view} disabled={busy} onBuild={queueSuggested} />}
+      <section aria-label={`${area} controls`}>
+        {area === "Economy" && (
+          <>
+            <ActionCharges charges={view.charges ?? []} />
             <p>
-              Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
+              Committed game time {new Date(view.asOfGameTimeMs).toLocaleString()}. Resource amounts below use whole
+              game units; the server decides costs and limits.
             </p>
-            <p>Founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
-            {view.training.length > 0 && (
-              <div>
-                <h4>Training in progress</h4>
-                {view.training.map((batch) => (
-                  <div className="game-list-item" key={batch.batchId}>
-                    <strong>
-                      {batch.completedCount} of {batch.requestedCount} {batch.type} ready
-                    </strong>
-                    <p>Next unit: {remainingGameTime(batch.nextUnitDueGameTimeMs, view)}</p>
-                    <small>One unit every {batch.unitMinutes} game minutes. The clock stops if the world pauses.</small>
-                    <button
-                      type="button"
-                      className="secondary"
-                      disabled={busy}
-                      onClick={() => void act({ kind: "game.training.cancel", batchId: batch.batchId })}
-                    >
-                      Cancel remaining training
-                    </button>
-                  </div>
+            <div className="game-grid">
+              {["iron", "silver", "grain"].map((resource) => {
+                const balance = view.balances[resource];
+                return (
+                  balance && (
+                    <article className="game-card" key={resource}>
+                      <h3>{resource}</h3>
+                      <strong>{units(balance.ordinaryUnits)}</strong>
+                      <p>
+                        Founding allowance {units(balance.foundingAllowanceUnits)} · locked {units(balance.lockedUnits)}
+                      </p>
+                      <small>
+                        Gross {balance.facts?.rates.gross.label ?? `${units(balance.productionPerMinuteUnits)} / min`} ·
+                        upkeep {balance.facts?.rates.upkeep.label ?? "inspect troops"} · net{" "}
+                        {balance.facts?.rates.net.label ?? "unavailable"} · cap {units(balance.capacityUnits)} · version{" "}
+                        {balance.version}
+                      </small>
+                    </article>
+                  )
+                );
+              })}
+            </div>
+            <article className="game-card">
+              <h3>Next-hour expected ending stock</h3>
+              <p>This is ending stock, not the net increase. Gross production, upkeep and assumed deliveries differ.</p>
+              <ul>
+                {Object.entries(view.forecast.expected).map(([resource, amount]) => (
+                  <li key={resource}>
+                    {resource}: {units(amount.ordinaryUnits)} ordinary + {units(amount.foundingAllowanceUnits)} founding
+                    allowance
+                  </li>
                 ))}
-              </div>
-            )}
-            <form
-              onSubmit={(event) => {
-                event.preventDefault();
-                void act({ kind: "game.training.queue", type: troopType as "spearman", count: troopCount });
-              }}
-            >
-              <label>
-                Type
-                <select value={troopType} onChange={(event) => setTroopType(event.target.value)}>
-                  {["spearman", "archer", "rider", "ram"].map((item) => (
-                    <option key={item}>{item}</option>
+              </ul>
+              <details>
+                <summary>What this forecast assumes</summary>
+                <p>{view.forecast.assumption}</p>
+                <small>Through {new Date(view.forecast.throughGameTimeMs).toLocaleString()} game time</small>
+              </details>
+            </article>
+          </>
+        )}
+        <div className="game-grid">
+          {area === "Buildings" && (
+            <article className="game-card">
+              <h3>Buildings</h3>
+              <ul>
+                {view.buildings.map((item) => (
+                  <li key={item.kind}>
+                    {item.kind} {item.level}
+                  </li>
+                ))}
+              </ul>
+              {view.builders.map((item) => (
+                <p key={item.slot}>
+                  Slot {item.slot}: {item.kind ?? "free"} {item.state ?? ""}
+                  {item.dueGameTimeMs !== null
+                    ? ` · ${remainingGameTime(item.dueGameTimeMs, view)}`
+                    : item.state === "waiting"
+                      ? " · waiting for level prerequisites, stock, authority, or a builder slot"
+                      : ""}
+                </p>
+              ))}
+              {(building === "hall" ||
+                view.builders.some((item) => item.kind === "hall" && item.state === "waiting")) && (
+                <p>Hall upgrades require Farm and Barracks at the target level and Storehouse one level below it.</p>
+              )}
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void act({
+                    kind: "game.building.queue",
+                    building: building as "farm",
+                    targetLevel: level,
+                    slot: slot as 1 | 2,
+                  });
+                }}
+              >
+                <label>
+                  Building
+                  <select value={building} onChange={(event) => setBuilding(event.target.value)}>
+                    {["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"].map((item) => (
+                      <option key={item}>{item}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Target level
+                  <input type="number" value={level} readOnly />
+                </label>
+                <label>
+                  Builder slot
+                  <select value={slot} onChange={(event) => setSlot(Number(event.target.value))}>
+                    <option value={1}>1</option>
+                    <option value={2}>2</option>
+                  </select>
+                </label>
+                <button type="submit" disabled={busy || maxLevel || alreadyQueued}>
+                  {maxLevel ? "Maximum level reached" : alreadyQueued ? "Upgrade already queued" : "Queue upgrade"}
+                </button>
+                <p>
+                  {maxLevel
+                    ? "Level VI is the development cap."
+                    : `Next upgrade: ${building} ${currentLevel} → ${level}. Missing stock or prerequisites can leave an instruction waiting; the server decides admission and costs.`}
+                </p>
+              </form>
+              {view.builders
+                .filter((item) => item.instructionId)
+                .map((item) => (
+                  <button
+                    type="button"
+                    key={item.instructionId}
+                    className="secondary"
+                    disabled={busy}
+                    onClick={() => {
+                      if (item.instructionId)
+                        void act({ kind: "game.building.cancel", instructionId: item.instructionId });
+                    }}
+                  >
+                    Cancel slot {item.slot}
+                  </button>
+                ))}
+            </article>
+          )}
+          {area === "Army" && (
+            <article className="game-card">
+              <h3>Troops</h3>
+              <ul>
+                {view.troops.map((item) => (
+                  <li key={`${item.type}-${item.placement}-${item.homeGuard}`}>
+                    {item.count} {item.type} · {item.placement} ·{" "}
+                    {item.homeGuard ? "Home Guard (defense only)" : "ordinary"}
+                  </li>
+                ))}
+              </ul>
+              <p>
+                Upkeep {units(view.upkeep.perMinuteUnits)} Grain/min{view.upkeep.hungry ? " · hungry" : ""}
+              </p>
+              <p>Founding Home Guard defend only. Train ordinary troops before scouting, lending, or raiding.</p>
+              {view.training.length > 0 && (
+                <div>
+                  <h4>Training in progress</h4>
+                  {view.training.map((batch) => (
+                    <div className="game-list-item" key={batch.batchId}>
+                      <strong>
+                        {batch.completedCount} of {batch.requestedCount} {batch.type} ready
+                      </strong>
+                      <p>Next unit: {remainingGameTime(batch.nextUnitDueGameTimeMs, view)}</p>
+                      <small>
+                        One unit every {batch.unitMinutes} game minutes. The clock stops if the world pauses.
+                      </small>
+                      <button
+                        type="button"
+                        className="secondary"
+                        disabled={busy}
+                        onClick={() => void act({ kind: "game.training.cancel", batchId: batch.batchId })}
+                      >
+                        Cancel remaining training
+                      </button>
+                    </div>
                   ))}
-                </select>
-              </label>
-              <label>
-                Count
-                <input
-                  type="number"
-                  min={1}
-                  max={40}
-                  value={troopCount}
-                  onChange={(event) => setTroopCount(Number(event.target.value))}
-                />
-              </label>
-              <button type="submit" disabled={busy || view.training.length > 0}>
-                {view.training.length > 0 ? "Training queue occupied" : "Queue training"}
-              </button>
-            </form>
-          </article>
+                </div>
+              )}
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void act({ kind: "game.training.queue", type: troopType as "spearman", count: troopCount });
+                }}
+              >
+                <label>
+                  Type
+                  <select value={troopType} onChange={(event) => setTroopType(event.target.value)}>
+                    {["spearman", "archer", "rider", "ram"].map((item) => (
+                      <option key={item}>{item}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Count
+                  <input
+                    type="number"
+                    min={1}
+                    max={40}
+                    value={troopCount}
+                    onChange={(event) => setTroopCount(Number(event.target.value))}
+                  />
+                </label>
+                <button type="submit" disabled={busy || view.training.length > 0}>
+                  {view.training.length > 0 ? "Training queue occupied" : "Queue training"}
+                </button>
+              </form>
+            </article>
+          )}
         </div>
         <div className="game-grid">
-          <article className="game-card">
-            <h3>Supply contracts</h3>
-            {social?.supplyContracts.filter((item) => item.status === "active").length ? (
-              social.supplyContracts
-                .filter((item) => item.status === "active")
-                .map((item) => (
-                  <div className="game-list-item" key={item.id}>
-                    <strong>Supply with {item.displayName}</strong>
-                    <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
-                    <small>{remainingGameTime(Number(item.endGameTimeMs), view ?? null)}</small>
-                  </div>
+          {area === "Overview" && (
+            <article className="game-card">
+              <h3>Supply contracts</h3>
+              {social?.supplyContracts.filter((item) => item.status === "active").length ? (
+                social.supplyContracts
+                  .filter((item) => item.status === "active")
+                  .map((item) => (
+                    <div className="game-list-item" key={item.id}>
+                      <strong>Supply with {item.displayName}</strong>
+                      <p>{supplyTerms(item.terms, item.kingdomA === kingdomId)}</p>
+                      <small>{remainingGameTime(Number(item.endGameTimeMs), view ?? null)}</small>
+                    </div>
+                  ))
+              ) : (
+                <p>No active supply contracts. Garrison contracts appear in People.</p>
+              )}
+              <button type="button" className="secondary" onClick={onPeople}>
+                See offers and all contracts
+              </button>
+            </article>
+          )}
+          {(area === "Army" || area === "Overview") && (
+            <article className="game-card">
+              <h3>Threats</h3>
+              {view.threats.length ? (
+                view.threats.map((item) => (
+                  <p key={item.id}>
+                    {item.kind} · {item.id}
+                  </p>
                 ))
-            ) : (
-              <p>No active supply contracts. Garrison contracts appear in People.</p>
-            )}
-            <button type="button" className="secondary" onClick={onPeople}>
-              See offers and all contracts
-            </button>
-          </article>
-          <article className="game-card">
-            <h3>Threats</h3>
-            {view.threats.length ? (
-              view.threats.map((item) => (
-                <p key={item.id}>
-                  {item.kind} · {item.id}
-                </p>
-              ))
-            ) : (
-              <p>No known incoming operations.</p>
-            )}
-          </article>
+              ) : (
+                <p>No known incoming operations.</p>
+              )}
+            </article>
+          )}
         </div>
-      </details>
-      {Object.values(view.consequences?.firstRetained ?? {}).some(Boolean) ? (
-        <details className="game-card">
-          <summary>Your Hall keepsakes</summary>
-          <HallKeepsakes owner={view.profile.kingdomId} view={view} />
-        </details>
-      ) : (
-        <p className="quiet">Your first completed build earns a little keepsake here.</p>
-      )}
+      </section>
+      {area === "Overview" &&
+        (Object.values(view.consequences?.firstRetained ?? {}).some(Boolean) ? (
+          <details className="game-card">
+            <summary>Your Hall keepsakes</summary>
+            <HallKeepsakes owner={view.profile.kingdomId} view={view} />
+          </details>
+        ) : (
+          <p className="quiet">Your first completed build earns a little keepsake here.</p>
+        ))}
     </section>
   );
 }
@@ -1511,8 +1646,6 @@ function Envoy({
   request,
   onNotice,
   onRefresh,
-  apiOrigin,
-  onCsrfChange,
   openAccount,
 }: {
   canWrite: boolean;
@@ -1634,32 +1767,11 @@ function Envoy({
           <p>No events yet.</p>
         )}
       </details>
-      <details className="game-card">
-        <summary>Account and privacy</summary>
-        <button
-          type="button"
-          disabled={!canWrite}
-          onClick={() => {
-            if (window.confirm("Revoke this account’s browser sessions and external connections?"))
-              void request("/v1/auth/sign-out-everywhere", "POST")
-                .then(() => {
-                  clearExperiencePreferences(localStorage);
-                  sessionStorage.removeItem("pact_csrf");
-                  window.location.reload();
-                })
-                .catch((error) => onNotice(failure(error)));
-          }}
-        >
-          Sign out everywhere
+      {openAccount && (
+        <button type="button" className="secondary" onClick={openAccount}>
+          Manage account
         </button>
-        {openAccount ? (
-          <button type="button" onClick={openAccount}>
-            Open secure account settings in PACT
-          </button>
-        ) : (
-          <PrivacySettings request={request} onNotice={onNotice} apiOrigin={apiOrigin} onCsrfChange={onCsrfChange} />
-        )}
-      </details>
+      )}
     </details>
   );
 }

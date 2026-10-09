@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Persistent player access and focused navigation](authentication-ui-20261010.md) — PACT-144, founder-authorized existing-account recovery and web simplification; release evidence recorded in the report.
+
 - [Low-pressure local players](continuous-low-pressure-20261009.md) — PACT-143, hourly staggered pacing, persisted cooling and immediate model unloading for the same fifty continuous owners.
 
 - [Daily token and Luna cost estimate](continuous-token-budget-20261009.md) — measured local token usage and current official API/credit rates; read-only projection, no paid model switch.

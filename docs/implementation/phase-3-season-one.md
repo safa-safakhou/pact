@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**65 tickets · 48 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**66 tickets · 48 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2015,3 +2015,30 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/continuous-low-pressure-20261009.md
 - docs/implementation/reports/evidence/continuous-low-pressure-20261009.json
 - Runner/client Node tests: 66 passed; native Windows low-pressure tests: 2 passed; Biome passed. Same 50 owners retained; resumed task Running; zero resident models during cooldown; GPU 39 C / 1 percent at 21:11 Berlin.
+
+<a id="pact-144"></a>
+## PACT-144 — Persist existing player access across browsers and devices and simplify game navigation
+
+**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-006](phase-0-connections.md#pact-006), [PACT-127](phase-3-season-one.md#pact-127), [PACT-142](phase-3-season-one.md#pact-142)
+
+**Components:** local population controller.
+
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md) · **Release checks:** S01, R07
+
+**Implement / deliver**
+
+- Founder-authorized same-browser session bootstrap, verified in-place guest conversion, guest recovery and account sign-in UI.
+- Split the crowded Kingdom advanced disclosure into focused sections and separate account settings; commit and release on the existing server.
+
+**Acceptance**
+
+- [ ] Session bootstrap restores CSRF across tabs without changing ownership or expiry; origin and human-only boundaries hold.
+- [ ] Verified guest conversion preserves account/kingdom/grants, rejects invalid/conflicting/replayed tokens and disables old entry recovery; portable guest recovery never creates a replacement identity.
+- [ ] Focused navigation retains building/training/economy controls; account screens expose truthful captured-email behavior and recovery.
+- [ ] Relevant tests, build, types and deployed smoke/browser checks pass; release preserves existing continuous owners and state.
+
+**Assignee:** codex-auth-ui

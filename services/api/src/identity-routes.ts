@@ -107,6 +107,27 @@ export function registerIdentityRoutes(
     }
     return safe(reply, () => identity.signup({ ...SignupSchema.parse(request.body), requestId: request.id }));
   });
+  server.get("/v1/auth/session", async (request, reply) =>
+    safe(reply, () => identity.sessionBootstrap(sessionToken(request))),
+  );
+  server.post("/v1/auth/guest/save", async (request, reply) => {
+    if (!operatorPreflight.registrationEnabled)
+      return reply.code(503).send({ error: { code: "REGISTRATION_UNAVAILABLE" } });
+    return safe(reply, async () => {
+      const context = writeContext(request);
+      await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      return identity.saveGuest(context.sessionToken, { ...SignupSchema.parse(request.body), requestId: request.id });
+    });
+  });
+  server.post("/v1/auth/logout", async (request, reply) =>
+    safe(reply, async () => {
+      const context = writeContext(request);
+      const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      await identity.signOutSession(context.sessionToken);
+      reply.header("set-cookie", "pact_session=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax");
+      return { signedOut: true, accountId: session.accountId };
+    }),
+  );
   server.post("/v1/auth/verify", async (request, reply) =>
     safe(reply, async () => {
       const verified = await identity.verifyEmail(TokenSchema.parse(request.body).token, request.id);
