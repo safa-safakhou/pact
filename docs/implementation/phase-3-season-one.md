@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**60 tickets · 43 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**61 tickets · 43 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1849,3 +1849,36 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Planning render/check and staged whitespace passed; local implementation committed under founder standing instruction; deferred production scope and historical caps unchanged.
 - Final lease-reuse fix verified by four live invitation/message commits with one lease open; same run restarted at 173 attempts; release health shows 50 successful owners and no new turn failures after context fix.
 - docs/implementation/reports/full-game-health-20261009.md — 11:20 UTC follow-up: all 50 owners active, no new post-fix turn failure; 69 commitments, zero new contracts or model messages, repeated expiry/invalid-term behavior; model plus harness quality limitations recorded.
+
+<a id="pact-139"></a>
+## PACT-139 — Compare five local models with five fresh players each for two hours
+
+**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** local_population · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-138](phase-3-season-one.md#pact-138)
+
+**Components:** operator population comparison, local inference, synthetic owner controller.
+
+**Specification:** [runtime](../pact/runtime.md), [architecture](../pact/architecture.md), [rules](../pact/rules.md) · **Release checks:** R07, G01
+
+**Implement / deliver**
+
+- Download the five shortlisted local models and provision 25 distinct normal guest kingdoms with five matched roles per model.
+- Run an independent two-hour full-game comparison with persisted deadline, bounded calls, exact-command recovery and normal synthetic-owner consent; preserve the existing 50-player continuous run.
+- Record model digests, per-model decisions, failures, timing and actual negotiation/mechanic effects; report limitations and observe completion.
+
+**Acceptance**
+
+- [ ] All five shortlisted weights are local and pinned; 25 unique new kingdoms exist, five assigned to each model with matched roles.
+- [ ] The comparison starts successfully with a fixed two-hour deadline, serial comparison worker, restart-safe state and deadline/cap tests, without resetting the original run.
+- [ ] Startup evidence and operational instructions are committed; two-hour results remain explicitly ongoing until the actual deadline observation.
+
+**Assignee:** codex-local-comparison
+
+**Evidence**
+
+- docs/implementation/reports/local-model-comparison-20261009.md
+- 58 Node harness tests and seven targeted native Windows tests passed; typecheck passed; three-file Biome check passed.
+- Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff.

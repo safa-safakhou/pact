@@ -1,5 +1,9 @@
 # Bounded local-model population
 
+## Five-model comparison — PACT-139
+
+The founder authorized five new kingdoms each for Gemma 4 12B, Qwen 3.5 9B, Granite 4.2 8B, Ornith 1.5 9B and LFM2.5 8B. Windows task `PACT Local Model Comparison 25 20261009` downloads missing weights, provisions 25 stable normal identities and runs `comparison.mjs` for a fixed two hours after provisioning, with 1,000 total attempts maximum. Protected native state is `C:/Users/ENDORFY/pact-model-comparison-25-20261009`. It shares the GPU with the existing continuous worker; minimum intervals can lengthen. Five matched roles and identical non-thinking inference settings are used. Read [setup, actual status and monitoring](../implementation/reports/local-model-comparison-20261009.md) before operating it. A Running download task does not mean models are already playing. Keep terminal/deadline state and do not replace identities or reset counters on retry.
+
 ## Current continuous full-game controller — PACT-138
 
 The founder explicitly requested **50 existing accounts indefinitely, all implemented gameplay**, on 9 October. The new Windows task **`PACT Full Game 50 Continuous`** runs `continuous-supervisor.mjs` over protected state **`C:/Users/ENDORFY/pact-full-game-50-continuous-20261009`**. It is independent of the earlier finished task and has no global inference deadline, request ceiling or owner-exception resource/count ceiling. Lifetime counters survive login, failures and operator restarts. Existing kingdoms, ordinary stock and game time are retained; no historical experiment is resumed or reset. [Release and startup evidence](../implementation/reports/full-game-local-20261009.md).

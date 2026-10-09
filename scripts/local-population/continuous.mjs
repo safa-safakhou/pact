@@ -119,6 +119,16 @@ export class ContinuousClient extends PublicClient {
   }
 }
 
+export function runIsActive(state, now) {
+  return (
+    state.mode === "full-game-continuous" ||
+    (state.mode === "full-game-comparison" &&
+      Number.isFinite(state.endsAt) &&
+      now < state.endsAt &&
+      state.requests < state.config.requestCap)
+  );
+}
+
 export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
   dir = readConfig({ PACT_LOCAL_STATE: dir }).dir;
   const store = new RunStore(dir);
@@ -130,7 +140,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
   process.on("SIGTERM", interrupt);
   let heartbeat;
   const state = store.read();
-  const active = () => !interrupted && !store.stopped();
+  const active = () => !interrupted && !store.stopped() && runIsActive(state, Date.now());
   const save = () => store.save(state);
   const emit = (type, data = {}) => {
     // Daily append-only segments retain receipts and decisions without unbounded in-memory history.
@@ -152,8 +162,8 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
       status: state.status,
       config: state.config,
       startedAt: new Date(state.startedAt).toISOString(),
-      deadline: null,
-      requestCap: null,
+      deadline: state.endsAt ? new Date(state.endsAt).toISOString() : null,
+      requestCap: state.config.requestCap ?? null,
       requests: state.requests,
       updatedAt: new Date().toISOString(),
       pid: process.pid,
@@ -163,6 +173,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
           index,
           kingdomId,
           nickname,
+          model,
           turns,
           successfulTurns,
           failedTurns,
@@ -174,6 +185,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
           index,
           kingdomId,
           nickname,
+          model,
           turns,
           successfulTurns,
           failedTurns,
@@ -185,10 +197,19 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
       ),
     });
   try {
-    if (state?.mode !== "full-game-continuous" || !state.authorization || state.status === "stopped")
+    if (
+      !["full-game-continuous", "full-game-comparison"].includes(state?.mode) ||
+      !state.authorization ||
+      ["stopped", "finished"].includes(state.status)
+    )
       throw Error("CONTINUOUS_STATE_INVALID");
-    const model = new LocalModel(state.config);
-    if ((await model.preflight()).digest !== state.weights.digest) throw Error("MODEL_DIGEST_CHANGED");
+    const models = new Map();
+    const candidates = state.mode === "full-game-comparison" ? state.models : [state.weights];
+    for (const weights of candidates) {
+      const model = new LocalModel({ ...state.config, model: weights.name });
+      if ((await model.preflight()).digest !== weights.digest) throw Error("MODEL_DIGEST_CHANGED");
+      models.set(weights.name, model);
+    }
     state.status = "running";
     save();
     status();
@@ -205,6 +226,8 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
       }
       const due = actor.nextDue,
         began = Date.now();
+      const model = models.get(actor.model ?? state.config.model);
+      if (!model) throw Error("ACTOR_MODEL_UNKNOWN");
       const client = new ContinuousClient(state.config.base, actor, save, active);
       let mcp;
       try {
@@ -236,8 +259,12 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
         if (!active()) throw Error("RUN_STOPPED");
         state.requests++;
         save();
-        const result = await model.invoke(prompt, fullPlanSchema(tools), Date.now() + state.config.timeoutMs);
-        emit("model_result", { actor: actor.index, ...result });
+        const result = await model.invoke(
+          prompt,
+          fullPlanSchema(tools),
+          Math.min(state.endsAt ?? Infinity, Date.now() + state.config.timeoutMs),
+        );
+        emit("model_result", { actor: actor.index, model: actor.model ?? state.config.model, ...result });
         const plan = parseFullPlan(result.output, tools);
         const outcomes = [];
         for (const item of plan.actions) {
@@ -306,7 +333,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
         status();
       }
     }
-    state.status = store.stopped() ? "stopped" : "interrupted";
+    state.status = store.stopped() ? "stopped" : !runIsActive(state, Date.now()) ? "finished" : "interrupted";
     save();
     status();
     emit("controller_exit", { status: state.status, requests: state.requests });

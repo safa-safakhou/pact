@@ -1,0 +1,31 @@
+{
+  "comparisonPreparation": {
+    "updatedAt": "2026-10-09T11:41:41.268Z",
+    "status": "downloading",
+    "model": "gemma4:12b",
+    "phase": "pulling bb722270d543",
+    "totalBytes": 7381383680,
+    "completedBytes": 3992363069,
+    "digest": "sha256:bb722270d54346adc198f213851dbe0207e87c3ecf2a0aff4d92262726215391"
+  },
+  "taskState": "Running",
+  "newKingdomsAtSnapshot": 0,
+  "comparisonGameplayStarted": false,
+  "monitorAutomationId": "pact-five-model-comparison-observation",
+  "originalContinuous": {
+    "runId": "full-game-1791537512736-10b87b6c",
+    "status": "running",
+    "updatedAt": "2026-10-09T11:41:41.572Z",
+    "requests": 1380,
+    "owners": 50,
+    "successfulOwners": 50,
+    "currentlyFailingOwners": 0
+  },
+  "tests": {
+    "nodePassed": 58,
+    "nativeWindowsPassed": 7,
+    "typecheck": "passed",
+    "biome": "passed"
+  },
+  "note": "Preparation only; pinned full manifests and actual live startup/completion remain pending."
+}

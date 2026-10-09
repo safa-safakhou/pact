@@ -7240,6 +7240,52 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-139",
+      "title": "Compare five local models with five fresh players each for two hours",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-138"
+      ],
+      "sources": [
+        "runtime",
+        "architecture",
+        "rules"
+      ],
+      "covers": [
+        "R07",
+        "G01"
+      ],
+      "scope": [
+        "Download the five shortlisted local models and provision 25 distinct normal guest kingdoms with five matched roles per model.",
+        "Run an independent two-hour full-game comparison with persisted deadline, bounded calls, exact-command recovery and normal synthetic-owner consent; preserve the existing 50-player continuous run.",
+        "Record model digests, per-model decisions, failures, timing and actual negotiation/mechanic effects; report limitations and observe completion."
+      ],
+      "acceptance": [
+        "All five shortlisted weights are local and pinned; 25 unique new kingdoms exist, five assigned to each model with matched roles.",
+        "The comparison starts successfully with a fixed two-hour deadline, serial comparison worker, restart-safe state and deadline/cap tests, without resetting the original run.",
+        "Startup evidence and operational instructions are committed; two-hour results remain explicitly ongoing until the actual deadline observation."
+      ],
+      "components": [
+        "operator population comparison",
+        "local inference",
+        "synthetic owner controller"
+      ],
+      "evidence": [
+        "docs/implementation/reports/local-model-comparison-20261009.md",
+        "58 Node harness tests and seven targeted native Windows tests passed; typecheck passed; three-file Biome check passed.",
+        "Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff."
+      ],
+      "assignee": "codex-local-comparison",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "local_population"
     }
   ],
   "source_sha256": {
@@ -7474,5 +7520,19 @@
     "ends_at": null,
     "model_request_cap": null,
     "completed_at": "2026-10-09"
+  },
+  "local_model_comparison": {
+    "execution": "in_progress",
+    "active_ids": [
+      "PACT-139"
+    ],
+    "authorization": "Founder requested all five recommendations downloaded and five new accounts per model for a couple hours, 9 October 2026.",
+    "duration_minutes": 120,
+    "tracking": "Local execution record; previously confirmed Linear free-issue-limit prevents new execution issues.",
+    "task_name": "PACT Local Model Comparison 25 20261009",
+    "state_directory": "C:/Users/ENDORFY/pact-model-comparison-25-20261009",
+    "observation_status": "pending_download_and_startup",
+    "implementation_status": "verified_setup",
+    "request_cap": 1000
   }
 }

@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, founder-authorized five fresh accounts per model, automatic preparation and two-hour run; live startup/results still pending at setup observation.
+
 - [Local-model shortlist](local-model-shortlist-20261009.md) — founder-requested research: hardware fit, recent alternatives and bounded comparison recommendations; live model unchanged.
 
 - [Continuous-run health and model assessment](full-game-health-20261009.md) — PACT-138 follow-up: controller healthy at the snapshot; weak autonomous gameplay, repeated denials and missing dialogue documented separately from adapter verification.
