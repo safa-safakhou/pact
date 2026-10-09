@@ -1,0 +1,272 @@
+{
+  "snapshot": {
+    "at": "2026-10-09T18:04:17.067Z",
+    "transition": {
+      "runId": "full-game-1791537512736-10b87b6c",
+      "at": "2026-10-09T17:31:40.460Z",
+      "from": "qwen3.5:4b",
+      "to": "qwen3.5:9b",
+      "previousDigest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+      "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+      "requests": 4213,
+      "authorization": "Founder requested switching the existing fifty accounts to the better tested model, 9 October 2026.",
+      "accounts": 50
+    },
+    "runId": "full-game-1791537512736-10b87b6c",
+    "status": "running",
+    "requests": 4398,
+    "configured9B": 50,
+    "sameOwners": true,
+    "intervalSeconds": 300,
+    "deadline": null,
+    "requestCap": null,
+    "plans": 184,
+    "models": [
+      "qwen3.5:9b"
+    ],
+    "emptyPlans": 11,
+    "completedTurns": 184,
+    "completedOwners": 50,
+    "outcomes": {
+      "game.message.send:COMMITTED": 366,
+      "game.supply.sign:INVALID_COMMAND": 4,
+      "game.supply.sign:COMMITTED": 6,
+      "game.message.send:RATE_LIMITED": 9,
+      "game.supply.counter:REPEATED_DENIED_ACTION": 3,
+      "game.message.send:MESSAGE_QUEUE_FULL": 5,
+      "game.supply.sign:REPEATED_DENIED_ACTION": 3,
+      "game.message.send:CONTACT_REQUIRED": 1,
+      "game.supply.offer:COMMITTED": 6,
+      "game.supply.offer:RATE_LIMITED": 4,
+      "game.message.send:DUPLICATE_MESSAGE": 6,
+      "game.supply.counter:INVALID_COMMAND": 1,
+      "game.supply.offer:INVALID_COMMAND": 2,
+      "game.message.send:TICK_PENDING": 2
+    },
+    "failedTurns": [],
+    "pending": 0,
+    "currentFailures": [],
+    "latencyMs": {
+      "p50": 9096.914800000144,
+      "p95": 11963.805500000002
+    }
+  },
+  "laterDetailedSnapshot": {
+    "at": "2026-10-09T18:04:57.124Z",
+    "completedTurns": 188,
+    "owners": 50,
+    "turnsPerOwner": {
+      "min": 3,
+      "max": 4
+    },
+    "revisitSeconds": {
+      "samples": 138,
+      "p50": 531.47,
+      "p95": 544.855
+    },
+    "messages": 372,
+    "authors": 47,
+    "exactRepeatedSamePeerMessages": 116,
+    "supplyReceipts": [
+      {
+        "at": "2026-10-09T17:33:29.480Z",
+        "actor": 20,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:6cb5d741-6714-476a-85e0-a4d30ea9bdba": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:35:39.506Z",
+        "actor": 32,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:6cb5d741-6714-476a-85e0-a4d30ea9bdba": 1,
+          "supply-contract:c37c77d4-28e4-470d-bb39-5df33d4baa07": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:39:02.650Z",
+        "actor": 2,
+        "kind": "game.supply.offer",
+        "records": {
+          "supply-offer:fb901fc3-b185-4ee0-967e-ed6f57c152ce": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:42:19.711Z",
+        "actor": 20,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:6cb5d741-6714-476a-85e0-a4d30ea9bdba": 1,
+          "supply-contract:c37c77d4-28e4-470d-bb39-5df33d4baa07": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:44:23.638Z",
+        "actor": 32,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:6cb5d741-6714-476a-85e0-a4d30ea9bdba": 1,
+          "supply-contract:c37c77d4-28e4-470d-bb39-5df33d4baa07": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:45:21.665Z",
+        "actor": 38,
+        "kind": "game.supply.offer",
+        "records": {
+          "supply-offer:09064357-04ea-4659-80a6-c3a0eec587d1": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:48:04.341Z",
+        "actor": 2,
+        "kind": "game.supply.offer",
+        "records": {
+          "supply-offer:499e871f-e808-487c-a650-6e99a969e392": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:48:04.528Z",
+        "actor": 2,
+        "kind": "game.supply.offer",
+        "records": {
+          "supply-offer:0aa55aef-24b6-4414-a7f5-0615f94f652a": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:51:36.776Z",
+        "actor": 22,
+        "kind": "game.supply.offer",
+        "records": {
+          "supply-offer:d37ce2ae-2853-4fa5-9988-6b0d23b76f9e": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:53:22.456Z",
+        "actor": 32,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:6cb5d741-6714-476a-85e0-a4d30ea9bdba": 1,
+          "supply-contract:c37c77d4-28e4-470d-bb39-5df33d4baa07": 1
+        }
+      },
+      {
+        "at": "2026-10-09T17:54:22.149Z",
+        "actor": 38,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:09064357-04ea-4659-80a6-c3a0eec587d1": 1
+        }
+      },
+      {
+        "at": "2026-10-09T18:00:19.955Z",
+        "actor": 22,
+        "kind": "game.supply.offer",
+        "records": {
+          "supply-offer:1d875ae1-3f74-4d43-80e2-4aff9dfd3e6d": 1
+        }
+      },
+      {
+        "at": "2026-10-09T18:04:40.751Z",
+        "actor": 48,
+        "kind": "game.supply.sign",
+        "records": {
+          "supply-offer:c85807a2-11b5-4733-8bbd-cc56bd08a0e4": 1,
+          "supply-contract:404e2220-da5b-4c14-b010-d4ea853d5ec3": 1
+        }
+      }
+    ],
+    "failedTurns": []
+  },
+  "databaseOffers": {
+    "observedAt": "2026-10-09T18:05:31.013966+00:00",
+    "offers": [
+      {
+        "id": "09064357-04ea-4659-80a6-c3a0eec587d1",
+        "version": 1,
+        "status": "expired"
+      },
+      {
+        "id": "0aa55aef-24b6-4414-a7f5-0615f94f652a",
+        "version": 1,
+        "status": "expired"
+      },
+      {
+        "id": "1d875ae1-3f74-4d43-80e2-4aff9dfd3e6d",
+        "version": 1,
+        "status": "open"
+      },
+      {
+        "id": "499e871f-e808-487c-a650-6e99a969e392",
+        "version": 1,
+        "status": "expired"
+      },
+      {
+        "id": "6cb5d741-6714-476a-85e0-a4d30ea9bdba",
+        "version": 1,
+        "status": "active"
+      },
+      {
+        "id": "c85807a2-11b5-4733-8bbd-cc56bd08a0e4",
+        "version": 1,
+        "status": "active"
+      },
+      {
+        "id": "d37ce2ae-2853-4fa5-9988-6b0d23b76f9e",
+        "version": 1,
+        "status": "open"
+      },
+      {
+        "id": "fb901fc3-b185-4ee0-967e-ed6f57c152ce",
+        "version": 1,
+        "status": "expired"
+      }
+    ],
+    "contracts": [
+      {
+        "id": "c37c77d4-28e4-470d-bb39-5df33d4baa07",
+        "offer_id": "6cb5d741-6714-476a-85e0-a4d30ea9bdba",
+        "status": "active",
+        "created_at": "2026-10-09T17:35:39.644124+00:00"
+      },
+      {
+        "id": "404e2220-da5b-4c14-b010-d4ea853d5ec3",
+        "offer_id": "c85807a2-11b5-4733-8bbd-cc56bd08a0e4",
+        "status": "expired",
+        "created_at": "2026-10-09T05:37:45.032822+00:00"
+      }
+    ],
+    "installments": 180,
+    "failures": 0
+  },
+  "newContractSettlement": {
+    "observedAt": "2026-10-09T18:06:04.833857+00:00",
+    "contract": "c37c77d4-28e4-470d-bb39-5df33d4baa07",
+    "installments": 62,
+    "failures": 0,
+    "deliveries": [
+      {
+        "resource": "grain",
+        "due_units": "1550",
+        "delivered_units": "1550"
+      },
+      {
+        "resource": "iron",
+        "due_units": "1550",
+        "delivered_units": "1550"
+      }
+    ]
+  },
+  "inheritedOfferCreatedAt": "2026-10-09T17:27:27.513Z",
+  "productionVerification": "passed",
+  "unreadSnapshot": {
+    "observedAt": "2026-10-09T18:04:27.575620Z",
+    "unreadMessages": 55,
+    "fullDirectionalQueues": 3,
+    "recipientsWithUnread": 25
+  },
+  "readOnly": true,
+  "runtimeUnchanged": true
+}

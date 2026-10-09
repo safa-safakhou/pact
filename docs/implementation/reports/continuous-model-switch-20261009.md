@@ -21,3 +21,21 @@ At **17:34:05.342 UTC**, the task and controller were Running, with **all fifty 
 Implementation commit: `9e5595c`. Normal private state and journal bodies remain protected; only public model metadata and aggregate receipt/latency evidence are published. No deferred production task is resumed. Known hosted Linear issue limits remain; the local PACT-142 ticket records this operational assignment.
 
 PACT-142 is complete for the authorized model switch and short live check. Continuing game observation remains open under the existing indefinite run; historical model-quality failures are not marked fixed by these startup receipts.
+
+## Follow-up — 20:04–20:06 Berlin
+
+The founder requested another check. This was read-only: no restart, model/settings change, new account, mandate change or experiment extension. Production verification passed; the Windows task and controller remained Running, and Qwen 9B remained fully GPU-resident at the reported 6.684 GB/32K context. The same fifty owners and indefinite bounds remain in place.
+
+At 18:04:17 UTC, the journal had 184 completed 9B turns and eleven empty plans, with zero failed turns/current failures/pending commands. All fifty had played. The subsequent detailed snapshot at **18:04:57 UTC** contained **188 completed turns, three or four per owner, and 372 committed messages from 47 owners**. Actual median/p95 owner revisit intervals were **531.470/544.855 seconds**: approximately **8 minutes 51 seconds / 9 minutes 5 seconds**. The configured five-minute interval remains a minimum, not achieved round throughput. Call median/p95 in the earlier snapshot was **9.097/11.964 seconds**.
+
+Communication volume is much stronger than before the social repair, but quality remains limited. **116 of 372 messages repeated an identical body from the same owner to the same peer** within this window, beyond that pair's first copy. This is an exact text metric, not a semantic quality score; a new incoming message can make a repeated confirmation admissible. The counts still show substantial repeated conversation. There were no successful counteroffers, and no construction, Court, training, scouting or raid commitments in the sampled post-switch outcomes. Models concentrated on messages and a few supply offers/signatures.
+
+At 18:04:17, ordinary admission outcomes included nine message rate denials, four offer rate denials, five queue-full denials, six local duplicate-message rejections, four invalid signatures and other invalid/repeated social attempts. These are **action refusals**, not crashed inference or failed controller turns. At 18:04:27 the original cohort had **55 unread messages and three full directional queues**, well below the earlier 201/22 backlog, but with remaining blocked pairs.
+
+### Actual trade effects, excluding duplicate signatures
+
+Six new offers were committed in the sampled window. The 18:05:31 database check found **four expired without activation and two still open**. No successful counter changed their terms. Repeated signature receipts do not represent new contracts.
+
+There was **one actual new contract after the switch**, `c37c77d4-28e4-470d-bb39-5df33d4baa07`, activated at **17:35:39.644 UTC**. Its offer was originally committed by the 4B worker at **17:27:27.513 UTC**; 9B completed the two signatures. This is progress on an inherited offer, not a new 9B-initiated negotiation. Offer-to-activation wall time was **8 minutes 12.131 seconds**. At 18:06:04 it remained active with **62 installments, zero failures**, and 1,550 marked Grain and 1,550 marked Iron delivered, matching due amounts. A separate returned contract ID belonged to an expired 05:37 UTC contract and was not credited as a new activation. The selected historical installment totals and 272 older expired contracts were likewise not attributed to the model switch.
+
+**Assessment:** infrastructure and all fifty owners are healthy; communication works and one inherited trade is delivering. The larger model is still spending much of its activity on repeated replies and uncompleted offers, without demonstrated substantive bargaining or broader gameplay. This observation does not establish that it is strategically better than 4B under matched conditions. [Sanitized follow-up evidence](evidence/continuous-model-followup-20261009-2004.json).
