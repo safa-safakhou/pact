@@ -2,22 +2,12 @@
 import assert from "node:assert/strict";
 import { randomBytes, randomUUID } from "node:crypto";
 import { createPool } from "@pact/db";
-import { AesGcmSecretBox, IdentityService, LocalCompromisedPasswordChecker, TokenDigester } from "@pact/identity";
+import { AesGcmSecretBox } from "@pact/identity";
 
 const origin = process.env.PACT_ORIGIN;
 assert(origin && process.env.DATABASE_URL && process.env.IDENTITY_ENCRYPTION_KEY && process.env.IDENTITY_TOKEN_PEPPER);
 const pool = createPool(process.env.DATABASE_URL);
 const box = new AesGcmSecretBox(Buffer.from(process.env.IDENTITY_ENCRYPTION_KEY, "base64url"));
-const identity = new IdentityService(pool, {
-  productScope: "pact",
-  currentTermsVersion: process.env.CURRENT_TERMS_VERSION,
-  allowedOrigins: new Set([origin]),
-  clock: { now: () => new Date() },
-  digester: new TokenDigester(Buffer.from(process.env.IDENTITY_TOKEN_PEPPER, "base64url")),
-  secretBox: box,
-  compromisedPasswords: new LocalCompromisedPasswordChecker([]),
-  guestPlayEnabled: true,
-});
 let cookie = "",
   accountId = "";
 async function call(path, { method = "GET", body, session = cookie, csrf } = {}) {
