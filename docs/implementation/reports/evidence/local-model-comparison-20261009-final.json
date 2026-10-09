@@ -784,7 +784,7 @@
   },
   "limitations": [
     "Shared GPU with continuing original 50 owners; no controlled hardware isolation or per-call GPU residency evidence.",
-    "Read requests run after actions and appear next turn; incoming social requests not automatically refreshed every turn.",
+    "Read requests run after actions and appear next turn; incoming request metadata is refreshed by the automatic start guide; incoming message content requires selected Council/conversation reads.",
     "Non-thinking 32K/2400 output-token configuration; conclusions apply to tested settings.",
     "Database snapshot after controller deadline; normal engine settlements continue.",
     "INVALID_COMMAND groups multiple business denials; malformed plan JSON and unsuccessful gameplay are distinct."

@@ -12,6 +12,8 @@
 
 ## Current completed work
 
+- [Communication diagnosis](communication-diagnosis-20261009.md) — PACT-139 follow-up: wrong-owner acceptance, neglected pending requests and unread-message queue pressure; corrects the earlier fresh-request explanation.
+
 - [Five-model comparison](local-model-comparison-20261009.md) — PACT-139, finished at the original 16:48 Berlin deadline; 555 attempts, 553 completed turns, 38 commitments and no contracts/dialogue/scouting/raids. Qwen 9B led actual development; all candidates have substantial gameplay-quality limitations.
 
 - [Court human-link visibility](court-human-link-20261009.md) — PACT-140, corrected the reported Court handle and deployed browser navigation that reveals Join Court; membership remains an explicit human action.

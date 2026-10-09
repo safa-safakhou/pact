@@ -35,7 +35,7 @@ The models proposed trade-related words and signatures without establishing the 
 - LFM repeated the placeholder-looking offer ID `0a1b2c3d-4e5f-6789-abcd-ef0123456789` for 22 signature proposals: twenty `INVALID_COMMAND` outcomes and two tick-pending outcomes.
 - Ornith wrote more specific outreach, including a short trade trial and a grain-buffer idea, but repeated pending contact requests instead of progressing to accepted contacts, messages or executable terms. Its final notes claimed completed scouting/building and an already accepted peer; the journal and database show no such Ornith effects. Rich prose therefore did not establish reliable communication.
 
-The initial contact cost caused stock denials, then some later requests succeeded as ordinary resources accumulated. Repeating `REQUEST_EXISTS` did not create another accepted edge or a dialogue. The controller reads world/rules/discovery every turn, but incoming social requests are not automatically fetched every turn; requested read results arrive on the following turn. Missing acceptance is thus a combined model/read-strategy finding, not proof that the game cannot accept requests. The run did not manufacture contacts or responses to guarantee a successful negotiation.
+The initial contact cost caused stock denials, then some later requests succeeded as ordinary resources accumulated. Repeating `REQUEST_EXISTS` did not create another accepted edge or a dialogue. Correction after the communication diagnosis: the automatic start guide refreshes contacts and pending requests, with IDs/directions, every turn. Actual incoming message content requires selected Council/conversation reads; those extra reads arrive next turn. Missing acceptance is a model/social-workflow finding, not proof that requests were unavailable or the game cannot accept them. The run did not manufacture contacts or responses to guarantee a successful negotiation.
 
 ### Court, military and denial coverage
 
@@ -45,7 +45,7 @@ There were **zero scout operations and zero cohort-led raids** in the database. 
 
 Repeated mistakes were substantial:
 
-- Gemma repeated one duplicate-unit scouting action fifteen times, another invalid selection six times, a blocked Mine III build eleven times and one invalid contact-answer request ten times.
+- Gemma repeated one duplicate-unit scouting action fifteen times, another invalid selection six times and a blocked Mine III build eleven times. Its trader tried accepting its own real outgoing request eleven times (ten invalid outcomes, one tick-pending), rather than the recipient accepting it.
 - Qwen repeated one unsuccessful scout request eight times and two busy construction requests twice each.
 - Granite had 89 `INVALID_COMMAND` and nineteen `REQUEST_EXISTS` outcomes. It repeatedly confused a Court, an offer and a kingdom, and repeated a fabricated disband target 22 times.
 - Ornith had 58 `REQUEST_EXISTS` outcomes, thirteen `INVALID_COMMAND` outcomes and eleven stock denials. A single identical trade-contact note hit `REQUEST_EXISTS` eleven times.
@@ -66,6 +66,8 @@ Repeated mistakes were substantial:
 These are separate percentiles of recorded call phases; they are not additive percentiles or pure token-generation benchmarks. Median input sizes ranged from 9,316 to 13,287 tokens. Granite's median load dominates its observed wall time. Other candidates also show substantial upper-tail loading, while warm calls have millisecond load times. The original fifty-owner worker shared the same GPU/Ollama throughout; independent worker calls can contend. No per-call GPU-residency/offload measurement was captured, so load timing demonstrates switching overhead but cannot quantify an isolated GPU contention penalty. All owners received roughly 22 turns; Gemma began a 23rd round, so raw attempt totals are unequal.
 
 Gemma had one recovered `LOCAL_HTTP_500` at 12:54:57 UTC and a generic transport/result error at 14:48:51.168 UTC as the fixed deadline arrived. The latter is consistent with the runner's inference timeout being bounded by the remaining run time, but the journal does not preserve a more specific exception. It is not evidence of an extra post-deadline retry. Other candidates had no failed turns. No operational recovery, settings change, candidate substitution or restart was necessary.
+
+See the subsequent [communication diagnosis](communication-diagnosis-20261009.md) for the request-direction trace, fresh-request correction and original-cohort unread backlog.
 
 ### Selection and limits
 

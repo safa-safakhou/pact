@@ -1,0 +1,231 @@
+{
+  "logs": {
+    "observedAt": "2026-10-09T15:32:33.581Z",
+    "comparison": {
+      "runId": "model-comparison-mv0yortl-1a273d13",
+      "status": "finished",
+      "updatedAt": "2026-10-09T14:48:51.209Z",
+      "requests": 555,
+      "validPlans": 553,
+      "messageProposals": 0,
+      "answerProposals": 11,
+      "requestProposals": 158,
+      "messageReceipts": [],
+      "answerOutcomes": [
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:11:18.012Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:16:46.562Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:22:05.078Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:27:29.632Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:32:52.542Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:38:17.945Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:43:40.924Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:49:07.881Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:54:30.781Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T13:59:55.322Z",
+          "code": "TICK_PENDING",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        },
+        {
+          "actor": 1,
+          "at": "2026-10-09T14:05:18.490Z",
+          "code": "INVALID_COMMAND",
+          "requestId": "43376dbc-b74e-47a4-b7c0-04916fc49bb7"
+        }
+      ],
+      "reads": {
+        "pact_world_read_v1": 142,
+        "pact_court_read_v1": 65,
+        "pact_play_view_v1": 87,
+        "pact_chronicle_read_v1": 16,
+        "pact_player_find_v1": 24,
+        "pact_envoy_report_v1": 2,
+        "pact_profile_v1": 40,
+        "pact_season_read_v1": 62,
+        "pact_inbox_read_v1": 6,
+        "pact_politics_read_v1": 11,
+        "pact_receipt_read_v1": 3,
+        "pact_notes_read_v1": 6,
+        "pact_agent_guide_v1": 2,
+        "pact_conversation_read_v1": 3
+      }
+    },
+    "continuous": {
+      "runId": "full-game-1791537512736-10b87b6c",
+      "status": "running",
+      "updatedAt": "2026-10-09T15:32:19.485Z",
+      "requests": 3255,
+      "validPlans": 3237,
+      "messageProposals": 3,
+      "answerProposals": 0,
+      "requestProposals": 1,
+      "messageReceipts": [],
+      "answerOutcomes": [],
+      "reads": {
+        "pact_world_read_v1": 3181,
+        "pact_agent_guide_v1": 148,
+        "pact_court_read_v1": 110,
+        "pact_player_find_v1": 357,
+        "pact_politics_read_v1": 132,
+        "pact_chronicle_read_v1": 39,
+        "pact_seal_read_v1": 13,
+        "pact_council_thread_v1": 53,
+        "pact_season_read_v1": 36
+      }
+    }
+  },
+  "requestOwnership": {
+    "requests": [
+      {
+        "id": "4161e0ce-176c-4fc0-861d-2a4e2cef9410",
+        "sender_model": "granite4.2:8b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "1db64f8b-465b-42cb-8cd2-39bc991f0f77",
+        "status": "pending"
+      },
+      {
+        "id": "ddaa779e-ea4b-4f1a-9fce-a24f7d4f772d",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": null,
+        "recipient_id": null,
+        "status": "pending"
+      },
+      {
+        "id": "d5d95619-2880-401e-81c5-0d14aec1b4eb",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "ornith-1.5:9b",
+        "recipient_id": "6bbec170-639f-4e88-8780-f05d5edf1740",
+        "status": "pending"
+      },
+      {
+        "id": "5bb9f526-d5a5-4b77-9399-839facdecaa7",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": null,
+        "recipient_id": null,
+        "status": "pending"
+      },
+      {
+        "id": "8ed2c16d-be2f-41b9-bcd7-3c610c54cedf",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "1db64f8b-465b-42cb-8cd2-39bc991f0f77",
+        "status": "pending"
+      },
+      {
+        "id": "f4ea4fe4-33df-4a2f-b09e-30923add62fb",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "ornith-1.5:9b",
+        "recipient_id": "6bbec170-639f-4e88-8780-f05d5edf1740",
+        "status": "pending"
+      },
+      {
+        "id": "17cfb039-19f2-428b-8fea-a255d103d297",
+        "sender_model": "lfm2.5:8b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "1db64f8b-465b-42cb-8cd2-39bc991f0f77",
+        "status": "pending"
+      },
+      {
+        "id": "43376dbc-b74e-47a4-b7c0-04916fc49bb7",
+        "sender_model": "gemma4:12b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "1db64f8b-465b-42cb-8cd2-39bc991f0f77",
+        "status": "pending"
+      },
+      {
+        "id": "654a1261-ecb9-4d70-b761-f17f39e0f853",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "aeaf6514-0e39-49d0-bb19-bf3faf7638f8",
+        "status": "pending"
+      },
+      {
+        "id": "66c6ab21-418d-4747-8eb3-644a28902916",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "6094d1b8-f1a7-4130-acf8-b1cef376379d",
+        "status": "pending"
+      },
+      {
+        "id": "b6a08d98-e765-48d9-b4ca-1213a2dd1e47",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "31b0427f-02c1-4e28-9da4-5f7403835d81",
+        "status": "pending"
+      },
+      {
+        "id": "9cd90f8a-34e2-4308-95c9-944d60043e58",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "gemma4:12b",
+        "recipient_id": "61204395-6fd8-4c52-8296-07778374d190",
+        "status": "pending"
+      },
+      {
+        "id": "cd32072a-399b-40a1-8c64-f49ad158ce17",
+        "sender_model": "ornith-1.5:9b",
+        "recipient_model": "ornith-1.5:9b",
+        "recipient_id": "d2ede949-522d-4370-9f69-ce629d5e8774",
+        "status": "pending"
+      }
+    ],
+    "continuous_messages_since_start": 2,
+    "continuous_answers_since_start": 0
+  },
+  "continuousBacklog": {
+    "observedAt": "2026-10-09T15:33:59.618903+00:00",
+    "contacts": 263,
+    "unread_messages": 201,
+    "recipients_with_unread": 35,
+    "full_pairs": 22,
+    "recipients_at_agent_cap": 0
+  },
+  "readOnly": true,
+  "verification": "Eight existing full-game adapter tests passed; no live acceptance/write probe was performed.",
+  "correction": "Start guide fetches pending requests every turn. Gemma tried approving its own outgoing request; ID was real, owner was wrong."
+}

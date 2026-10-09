@@ -1885,6 +1885,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff.
 - docs/implementation/reports/evidence/local-model-comparison-20261009-startup.json — all five local digests pinned, 25 distinct new kingdoms, all 25 first model turns valid; started 12:48:51.147 UTC, original deadline 14:48:51.147 UTC; comparative observation ongoing.
 - docs/implementation/reports/evidence/local-model-comparison-20261009-final.json — finished at 14:48:51.209 UTC against unchanged 14:48:51.147 UTC deadline; 555 attempts, 553 completed turns, 38 committed actions, zero pending commands. Scoped database snapshot confirms no contracts, messages, successful scouting or raids; two actual Court memberships and five trained ordinary troops.
+- docs/implementation/reports/communication-diagnosis-20261009.md — follow-up establishes fresh start-guide contact requests, wrong-owner acceptance loops and original-cohort unread message pressure; eight adapter tests passed; no runtime/rules change.
 
 <a id="pact-140"></a>
 ## PACT-140 — Reveal human Court destinations from shared game links
