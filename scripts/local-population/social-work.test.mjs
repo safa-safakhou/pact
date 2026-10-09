@@ -80,3 +80,29 @@ test("unchanged social denial is suppressed, while a new observed version permit
   assert.equal(socialActionGuard(actor, action, work).code, undefined);
   assert.equal(prioritySocialWork(work).offers[0].id, "offer");
 });
+
+test("a committed reply leaves omitted and newly arrived messages pending", () => {
+  const actor = { kingdomId: self };
+  const messages = Array.from({ length: 5 }, (_, i) => ({
+    id: `message-${i}`,
+    senderKingdomId: peer,
+    kingdomId: peer,
+    body: `Question ${i}`,
+  }));
+  let work = collectSocialWork(actor, {}, { interactions: { contacts: [{ kingdomId: peer }], messages } });
+  const deliveredMessageIds = prioritySocialWork(work).pendingMessages.map((m) => m.id);
+  work = collectSocialWork(
+    actor,
+    {},
+    {
+      interactions: { contacts: [{ kingdomId: peer }], messages: [...messages, { ...messages[0], id: "new" }] },
+    },
+  );
+  work.deliveredMessageIds = deliveredMessageIds;
+  const action = { kind: "game.message.send", recipientKingdomId: peer, body: "Reply to delivered questions" };
+  rememberSocialOutcome(actor, action, { code: "COMMITTED" }, socialActionGuard(actor, action, work));
+  assert.deepEqual(
+    actor.socialAgenda.filter((m) => !m.responded).map((m) => m.id),
+    ["message-3", "message-4", "new"],
+  );
+});

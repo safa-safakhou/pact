@@ -103,7 +103,15 @@ export function socialActionGuard(actor, action, work) {
       recovery:
         "This exact social action already failed without a relevant social-state change. Read the actual target/version and choose a corrected action; a fresh command ID does not fix it.",
     };
-  return { state };
+  return {
+    state,
+    replyToIds: work.pendingMessages
+      .filter((m) =>
+        (work.deliveredMessageIds ?? work.pendingMessages.slice(0, 3).map((entry) => entry.id)).includes(m.id),
+      )
+      .filter((m) => m.peerId === action.recipientKingdomId)
+      .map((m) => m.id),
+  };
 }
 
 export function rememberSocialOutcome(actor, action, result, guard) {
@@ -111,7 +119,7 @@ export function rememberSocialOutcome(actor, action, result, guard) {
     actor.lastSocialReplies ??= {};
     actor.lastSocialReplies[action.recipientKingdomId] = { body: action.body, commandId: result.commandId };
     for (const message of actor.socialAgenda ?? [])
-      if (message.peerId === action.recipientKingdomId) message.responded = true;
+      if (guard.replyToIds?.includes(message.id)) message.responded = true;
   }
   if (guard.state && result.code !== "COMMITTED" && /^game\.(contact|message|supply)\./.test(action.kind)) {
     actor.socialDenials ??= [];

@@ -243,6 +243,8 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
         // Full authorized owner view includes troops, training, garrison, raids and reports, not the old compact brief.
         const world = await mcp.call("pact_world_read_v1", {});
         let social = collectSocialWork(actor, guide, await mcp.call("pact_play_view_v1", {}));
+        const deliveredMessageIds = social.pendingMessages.slice(0, 3).map((message) => message.id);
+        social.deliveredMessageIds = deliveredMessageIds;
         save(); // keep delivered incoming work durable before the model call
         const discoveryName = ["pact_court_read_v1", "pact_politics_read_v1", "pact_chronicle_read_v1"][
           actor.turns % 3
@@ -290,6 +292,7 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
             if (receipt.code === "COMMITTED" && /^game\.(contact|message|supply)\./.test(item.action.kind)) {
               try {
                 social = collectSocialWork(actor, guide, await mcp.call("pact_play_view_v1", {}));
+                social.deliveredMessageIds = deliveredMessageIds;
               } catch (error) {
                 emit("social_refresh_failed", { actor: actor.index, code: errorCode(error) });
               }
