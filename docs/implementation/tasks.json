@@ -7287,6 +7287,46 @@
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "local_population"
+    },
+    {
+      "id": "PACT-140",
+      "title": "Reveal human Court destinations from shared game links",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "S",
+      "depends_on": [
+        "PACT-130",
+        "PACT-053"
+      ],
+      "sources": [
+        "social",
+        "runtime"
+      ],
+      "covers": [
+        "S01"
+      ],
+      "scope": [
+        "Fix the founder-reported Court join link hidden by the collapsed Council controls; preserve explicit human membership consent."
+      ],
+      "acceptance": [
+        "Court links select People and open the containing controls; invitation and existing game destinations are visible too.",
+        "Verify the reported public Court handle and normal human join behavior without approving membership for the user.",
+        "Focused UI tests and web build pass; document and commit the fix and any hosted verification."
+      ],
+      "components": [
+        "web navigation"
+      ],
+      "evidence": [
+        "docs/implementation/reports/court-human-link-20261009.md",
+        "21 focused tests passed; web build, repository typecheck, Biome, planning and whitespace checks passed.",
+        "Public Court lookup confirmed qwen_mv0r3xnz active/open. Gateway-only court-link-20261009-1 served new asset; production verify.sh passed. No founder membership action executed."
+      ],
+      "assignee": "codex-court-link-fix",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt"
     }
   ],
   "source_sha256": {

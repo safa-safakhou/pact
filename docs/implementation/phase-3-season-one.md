@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**61 tickets · 43 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**62 tickets · 44 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -1883,3 +1883,34 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - 58 Node harness tests and seven targeted native Windows tests passed; typecheck passed; three-file Biome check passed.
 - Windows task PACT Local Model Comparison 25 20261009 verified Running in download phase; thread heartbeat pact-five-model-comparison-observation created ACTIVE. No completed model downloads, new kingdoms or live comparison turns claimed at setup handoff.
 - docs/implementation/reports/evidence/local-model-comparison-20261009-startup.json — all five local digests pinned, 25 distinct new kingdoms, all 25 first model turns valid; started 12:48:51.147 UTC, original deadline 14:48:51.147 UTC; comparative observation ongoing.
+
+<a id="pact-140"></a>
+## PACT-140 — Reveal human Court destinations from shared game links
+
+**Status:** done · **Role:** Frontend · **Size:** S · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-130](phase-3-season-one.md#pact-130), [PACT-053](phase-1-rules.md#pact-053)
+
+**Components:** web navigation.
+
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md) · **Release checks:** S01
+
+**Implement / deliver**
+
+- Fix the founder-reported Court join link hidden by the collapsed Council controls; preserve explicit human membership consent.
+
+**Acceptance**
+
+- [x] Court links select People and open the containing controls; invitation and existing game destinations are visible too.
+- [x] Verify the reported public Court handle and normal human join behavior without approving membership for the user.
+- [x] Focused UI tests and web build pass; document and commit the fix and any hosted verification.
+
+**Assignee:** codex-court-link-fix
+
+**Evidence**
+
+- docs/implementation/reports/court-human-link-20261009.md
+- 21 focused tests passed; web build, repository typecheck, Biome, planning and whitespace checks passed.
+- Public Court lookup confirmed qwen_mv0r3xnz active/open. Gateway-only court-link-20261009-1 served new asset; production verify.sh passed. No founder membership action executed.

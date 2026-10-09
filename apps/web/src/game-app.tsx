@@ -16,6 +16,7 @@ import { clearExperiencePreferences, type ExperienceAudio } from "./experience-a
 import { ExperienceControls } from "./experience-controls.js";
 import { FirstSession } from "./first-session.js";
 import { FriendsLobby } from "./friends-lobby.js";
+import { linkedGameTab } from "./game-navigation.js";
 import { remainingGameTime } from "./game-time.js";
 import { GuestEntry } from "./guest-entry.js";
 import { HallKeepsakes } from "./hall-keepsakes.js";
@@ -236,22 +237,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
       .catch(() => setGuestMode(false));
   }, [host, apiOrigin]);
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
-  const [tab, setTab] = useState<Tab>(() =>
-    new URLSearchParams(window.location.search).has("seal") ||
-    new URLSearchParams(window.location.search).has("post") ||
-    new URLSearchParams(window.location.search).has("chronicle") ||
-    new URLSearchParams(window.location.search).has("sealSource")
-      ? "Chronicle"
-      : new URLSearchParams(window.location.search).get("council") === "introductions" ||
-          new URLSearchParams(window.location.search).has("court") ||
-          new URLSearchParams(window.location.search).has("politics")
-        ? "People"
-        : new URLSearchParams(window.location.search).has("approval") ||
-            new URLSearchParams(window.location.search).has("inbox") ||
-            new URLSearchParams(window.location.search).has("notifications")
-          ? "Envoy"
-          : "Kingdom",
-  );
+  const [tab, setTab] = useState<Tab>(() => linkedGameTab(window.location.search) ?? "Kingdom");
   useEffect(() => {
     host?.onTabChange(tab);
   }, [host, tab]);
@@ -760,10 +746,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
     <ReportingContext.Provider value={{ request, canWrite }}>
       <main className={guestMode ? "game-shell friends-play" : "game-shell"} id="game-content" tabIndex={-1}>
         <CouncilFrame request={request} />
-        <details
-          className="kingdom-controls"
-          open={new URLSearchParams(window.location.search).get("council") === "introductions" || undefined}
-        >
+        <details className="kingdom-controls" open={linkedGameTab(window.location.search) !== null || undefined}>
           <summary>Kingdom actions, introductions and agent permissions</summary>
           <a className="skip-link" href="#game-areas">
             Skip to game areas

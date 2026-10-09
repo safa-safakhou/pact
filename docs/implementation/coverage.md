@@ -33,7 +33,7 @@ Every criterion in the [design delivery checklist](../pact/delivery.md) is mappe
 
 | Criterion | Implementation / verification tickets | Closing gate |
 | --- | --- | --- |
-| S01 | [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-059](phase-2-social.md#pact-059), [PACT-061](phase-2-social.md#pact-061), [PACT-066](phase-2-social.md#pact-066) | [PACT-068](phase-2-social.md#pact-068) |
+| S01 | [PACT-054](phase-2-social.md#pact-054), [PACT-055](phase-2-social.md#pact-055), [PACT-056](phase-2-social.md#pact-056), [PACT-057](phase-2-social.md#pact-057), [PACT-059](phase-2-social.md#pact-059), [PACT-061](phase-2-social.md#pact-061), [PACT-066](phase-2-social.md#pact-066), [PACT-140](phase-3-season-one.md#pact-140) | [PACT-068](phase-2-social.md#pact-068) |
 | S02 | [PACT-058](phase-2-social.md#pact-058), [PACT-059](phase-2-social.md#pact-059), [PACT-066](phase-2-social.md#pact-066) | [PACT-068](phase-2-social.md#pact-068) |
 | S03 | [PACT-060](phase-2-social.md#pact-060), [PACT-090](phase-2-social.md#pact-090), [PACT-066](phase-2-social.md#pact-066) | [PACT-068](phase-2-social.md#pact-068) |
 | S04 | [PACT-066](phase-2-social.md#pact-066) | [PACT-068](phase-2-social.md#pact-068) |

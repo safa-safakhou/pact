@@ -14,6 +14,8 @@
 
 ## Current completed work
 
+- [Court human-link visibility](court-human-link-20261009.md) — PACT-140, corrected the reported Court handle and deployed browser navigation that reveals Join Court; membership remains an explicit human action.
+
 - [Local-player reliability and negotiation verification](local-reliability-20261009.md) — PACT-137, deployed expiry/recovery fixes, prerequisite cleanup, bounded live probes, 87 integration checks and Qwen replay; substantive bargaining and coverage gaps quantified.
 
 - [Final local Qwen population investigation](local-population-final-20261009.md) — PACT-135/136 observation complete at 08:00 Berlin: 2,969 requests, 4,164 commands, 272 settled contracts; three accounts stopped on truncation.
