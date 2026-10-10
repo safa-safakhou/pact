@@ -2344,7 +2344,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-154"></a>
 ## PACT-154 — Implement explicit persistent enrollment and bounded work scheduling
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2364,6 +2364,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Messages cannot start unconsented inference or renew model authority; enrollment/revocation/budget/deadline/crash tests preserve exact commands and ownership.
 - [ ] Simultaneous hosts serialize writes; overloaded/backlogged events coalesce without recursive inference loops or dropped durable work.
 - [ ] Windows/WSL/app offline states and Berlin/DST schedule times are explicit; hourly/60-second/unload profile survives restart unless separately authorized to change.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- Founder-authorized persistent enrollment engineering; dependencies PACT-149 and PACT-153 done. Existing stopped local task remains unchanged.
 
 <a id="pact-155"></a>
 ## PACT-155 — Certify local and Codex Luna Astra game runner routes

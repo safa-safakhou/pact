@@ -18,7 +18,9 @@ WireGuard `pact` is enabled on both hosts: old `10.77.0.1/30`, new `10.77.0.2/30
 
 ## Layout and operations
 
-Current release, 10 October: **`communication-society-20261010-2` / `6ba02c8`**. Communication v2, recovery/device controls, Conversations and retained agreement history are deployed; public verification passed and the active clock advanced through ticks 18826–18830. No observer consent or player restart was created by the migration. [Actual acceptance and dependency qualifications](../implementation/reports/conversations-20261010.md). Historical release descriptions below are provenance.
+Current release, 10 October: **`society-memory-20261010-1` / `c7333f8`**. Decision support and private strategy/relationship memory are now deployed after encrypted snapshot `03209be8`; canonical public verification passed, clock active at tick 18890 and new private-memory table empty. [Actual memory acceptance](../implementation/reports/private-memory-20261010.md). No player task or enrollment was started.
+
+Earlier release, 10 October: **`communication-society-20261010-2` / `6ba02c8`**. Communication v2, recovery/device controls, Conversations and retained agreement history are deployed; public verification passed and the active clock advanced through ticks 18826–18830. No observer consent or player restart was created by the migration. [Actual acceptance and dependency qualifications](../implementation/reports/conversations-20261010.md). Historical release descriptions below are provenance.
 
 - `/srv/pact/source`: source without Git metadata, local environments or dependencies.
 - `/srv/pact/config/production.env`: protected configuration, project `pact-production`, canonical new origin, `PACT_WEB_BASE_PATH=/`, `PACT_TELEGRAM_BASE_PATH=/telegram/`, `PACT_PUBLIC_EDGE=1`, and `PACT_COMPOSE_OVERRIDE_FILE=/srv/pact/source/infra/production/compose.pact-host.yaml`.

@@ -2,7 +2,7 @@
 
 ## Implementation checkpoint — 10 October 2026
 
-PACT-146–151 are implemented and locally verified; communication-first release `communication-society-20261010-2` is deployed from `6ba02c8`, with encrypted pre-migration backup, public verification and naturally advancing active game clock. Read `docs/implementation/reports/conversations-20261010.md` for exact acceptance/limitations. PACT-152/153 are committed and verified locally, awaiting their next rollout; PACT-154 is the next dependency-ready engineering under the founder's covering PACT-146–165 implementation request. Continue dependency-ready authorized engineering; external routes, bounded pilots and rare-finish activation still require actual enrollment/prerequisite evidence. The original 24 Later tasks, stopped fifty-owner task and terminal experiments remain preserved.
+PACT-146–153 are implemented and verified; release `society-memory-20261010-1` is deployed from `c7333f8`, with encrypted backup `03209be8`, canonical verification, active clock and zero private-memory entries. Read `docs/implementation/reports/private-memory-20261010.md` and the conversation report for exact acceptance/limitations. PACT-154 is assigned next under the founder's covering PACT-146–165 request. Continue ready authorized engineering; external routes, pilots and rare activation require their actual prerequisites. Preserve the original 24 Later tasks, stopped fifty-owner task and terminal experiments.
 
 ## Founder preference — 9 October 2026
 

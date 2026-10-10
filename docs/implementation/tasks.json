@@ -7985,7 +7985,7 @@
       "id": "PACT-154",
       "title": "Implement explicit persistent enrollment and bounded work scheduling",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8022,8 +8022,10 @@
         "local supervisor",
         "web"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Founder-authorized persistent enrollment engineering; dependencies PACT-149 and PACT-153 done. Existing stopped local task remains unchanged."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
