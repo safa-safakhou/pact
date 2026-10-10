@@ -117,13 +117,20 @@ export class NotificationService {
     input: { accountId: string; subjectId: string; eventId: string; category: string; occurredAt: Date },
   ): Promise<void> {
     const category = this.category(input.category);
-    await this.lockAccount(client, input.accountId);
+    // Internal event projection also serves guests. Keep their inbox transaction,
+    // but never create external deliveries until an active account is verified.
+    const account = await client.query<{ email_verified_at: Date | null }>(
+      "SELECT email_verified_at FROM accounts WHERE product_scope=$1 AND id=$2 AND status='active' FOR UPDATE",
+      [this.options.productScope, input.accountId],
+    );
+    if (!account.rowCount) return;
     const seen = await client.query(
       `INSERT INTO notification_seen_events(product_scope,account_id,event_id,processed_at)
       VALUES($1,$2,$3,$4) ON CONFLICT DO NOTHING RETURNING event_id`,
       [this.options.productScope, input.accountId, input.eventId, this.options.clock.now()],
     );
     if (!seen.rowCount) return;
+    if (!account.rows[0]?.email_verified_at) return;
     const preferences = await client.query<{ channel: NotificationChannel }>(
       `SELECT channel FROM notification_preferences WHERE product_scope=$1 AND account_id=$2 AND category=$3
        AND enabled AND updated_at <= $4`,

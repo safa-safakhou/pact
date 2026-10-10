@@ -59,6 +59,21 @@ function subscription(): BrowserSubscription {
     keys: { auth: Buffer.alloc(16, 7).toString("base64url"), p256dh: ecdh.getPublicKey().toString("base64url") },
   };
 }
+it("retains guest inbox events and advances projection without allowing external delivery or settings", async () => {
+  const id = randomUUID();
+  await pool.query(
+    "INSERT INTO accounts(id,product_scope,email,password_hash,is_guest,guest_entry_hash) VALUES($1,'pact',NULL,'guest-no-password',true,$2)",
+    [id, randomUUID()],
+  );
+  const eventId = await event(id);
+  expect((await inbox.list(id, undefined)).events).toHaveLength(1);
+  expect((await pool.query("SELECT event_id FROM notification_seen_events WHERE account_id=$1", [id])).rows).toEqual([
+    { event_id: eventId },
+  ]);
+  expect((await pool.query("SELECT id FROM notification_deliveries WHERE account_id=$1", [id])).rowCount).toBe(0);
+  await expect(service.subscribe(id, subscription(), "granted")).rejects.toMatchObject({ code: "FORBIDDEN" });
+  expect(await service.projectInbox({ "fixture.raid": "raid" })).toBe(0);
+});
 async function event(accountId: string, category = "raid", eventId = randomUUID()) {
   await withTransaction(pool, async (client) => {
     await inbox.publishForAccount(client, {
