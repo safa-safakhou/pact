@@ -8039,7 +8039,7 @@
       "id": "PACT-155",
       "title": "Certify local and Codex Luna Astra game runner routes",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8074,8 +8074,10 @@
         "local operations",
         "Codex integration"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Luna/Astra access and authenticated owner route on the intended machine; model aliases verified at execution time.",
         "Covering authorization for any live certification calls and their exact request/spend bounds."
@@ -8141,7 +8143,7 @@
       "id": "PACT-157",
       "title": "Evaluate decision quality communication freedom and service load offline",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8180,7 +8182,9 @@
         "local models"
       ],
       "evidence": [
-        "Offline engineering assigned after PACT-152/153/154; live inference benchmark remains separately bounded and unrun."
+        "docs/implementation/reports/agent-society-evaluation-20261010.md and docs/operations/agent-society-evaluation.md; offline engineering acceptance only, external real-model comparison remains unrun.",
+        "Frozen family/episode split, hidden trajectories, exact schema/exposure, five scorer checks; fake JSON/empty/denial/failure/text distinct from simulated outcomes and supplied usage.",
+        "344 full unit and 360 integration pass, optional provider skip; three 20/50/100 relationship full-body/history/memory/observer/retention fixtures, no model calls or production actors."
       ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [

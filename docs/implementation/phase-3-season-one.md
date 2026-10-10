@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 59 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 60 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2377,7 +2377,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-155"></a>
 ## PACT-155 — Certify local and Codex Luna Astra game runner routes
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2399,6 +2399,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Same owner/memory/commands are preserved; measured calls/tokens/credits/latency and local GPU load are recorded, with no account rotation to bypass provider limits.
 
 **External prerequisites:** Luna/Astra access and authenticated owner route on the intended machine; model aliases verified at execution time.; Covering authorization for any live certification calls and their exact request/spend bounds..
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged.
 
 <a id="pact-156"></a>
 ## PACT-156 — Certify actual ChatGPT scheduled PACT and multi-login operation
@@ -2429,7 +2435,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-157"></a>
 ## PACT-157 — Evaluate decision quality communication freedom and service load offline
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2446,9 +2452,9 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Scenarios include bluffing/selective disclosure, competing proposals, costly obligations, peer prompt injection, stale state, passive peers and revocation; platform authority stays intact.
-- [ ] Metrics separate justified waiting, useful outcomes, terms changed, activation/delivery/default, repetitive text/denials and model-compute costs from JSON validity.
-- [ ] Dataset split prevents adjacent-turn leakage and scoring does not reward cooperation/aggression mechanically; service load and observer privacy fixtures pass.
+- [x] Scenarios include bluffing/selective disclosure, competing proposals, costly obligations, peer prompt injection, stale state, passive peers and revocation; platform authority stays intact.
+- [x] Metrics separate justified waiting, useful outcomes, terms changed, activation/delivery/default, repetitive text/denials and model-compute costs from JSON validity.
+- [x] Dataset split prevents adjacent-turn leakage and scoring does not reward cooperation/aggression mechanically; service load and observer privacy fixtures pass.
 
 **External prerequisites:** Any real local/cloud inference benchmark needs a covering compute authorization with workload bounds..
 
@@ -2456,7 +2462,9 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Evidence**
 
-- Offline engineering assigned after PACT-152/153/154; live inference benchmark remains separately bounded and unrun.
+- docs/implementation/reports/agent-society-evaluation-20261010.md and docs/operations/agent-society-evaluation.md; offline engineering acceptance only, external real-model comparison remains unrun.
+- Frozen family/episode split, hidden trajectories, exact schema/exposure, five scorer checks; fake JSON/empty/denial/failure/text distinct from simulated outcomes and supplied usage.
+- 344 full unit and 360 integration pass, optional provider skip; three 20/50/100 relationship full-body/history/memory/observer/retention fixtures, no model calls or production actors.
 
 <a id="pact-158"></a>
 ## PACT-158 — Observe an authorized mixed-model communication society pilot
