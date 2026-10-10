@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { performance } from "node:perf_hooks";
 import { CourtCommandSchema } from "@pact/contracts";
 import {
   appendOutbox,
@@ -48,6 +49,233 @@ beforeEach(async () => {
     },
     release: async () => {},
     activate: async () => {},
+  });
+});
+
+describe("offline collection exploit and load acceptance", () => {
+  const emit = (values: Record<string, unknown>) =>
+    console.log(
+      `COLLECTION_OBSERVATION ${JSON.stringify({ case: "unknown", source: "synthetic_postgres_fixture", attempts: 0, rawMessages: 0, pieces: 0, instances: 0, setCompletions: 0, contractActivations: 0, changedDeliveringTerms: 0, positiveBilateralTicks: 0, repeatedGrants: 0, newGems: 0, quarantinedEvents: 0, modelCalls: 0, inputTokens: 0, outputTokens: 0, gpuGenerationMs: 0, p95ReadMs: null, ...values })}`,
+    );
+  it("raw message/approval and canceled-raid floods cannot duplicate pieces or grant currency/instances", async () => {
+    const a = await player(),
+      b = await player();
+    await contact(a, b);
+    for (let i = 0; i < 12; i++)
+      await withTransaction(pool, (c) =>
+        social.sendMessage(c, {
+          accountId: i % 2 ? a.accountId : b.accountId,
+          recipientKingdomId: i % 2 ? b.kingdomId : a.kingdomId,
+          body: `Synthetic repeated statement ${i}`,
+          agentOriginated: true,
+          gameTimeMs: 1000 + i,
+          operationKey: randomUUID(),
+        }),
+      );
+    for (let i = 0; i < 100; i++)
+      await event(i % 2 ? "approval.accepted.v1" : "agent.message.claimed.v1", {
+        accountId: a.accountId,
+        count: 100000,
+      });
+    const raidId = randomUUID();
+    await pool.query(
+      "INSERT INTO raids(id,product_scope,leader_kingdom_id,target_kingdom_id,rules_version,declared_game_time_ms,lock_game_time_ms,resolution_game_time_ms,status,loot_priority,declaration_terms) VALUES($1,'pact',$2,$3,'pact-s1-v1',0,60000,120000,'canceled',ARRAY['silver','iron','grain'],'{}')",
+      [raidId, a.kingdomId, b.kingdomId],
+    );
+    await event("raid.resolved.v1", { raidId });
+    await project();
+    expect(await owned(a)).toEqual([]);
+    const reader = new ConversationReader(pool, "pact");
+    for (let i = 0; i < 2; i++) {
+      await reader.read(a.accountId, b.kingdomId);
+      await reader.read(b.accountId, a.kingdomId);
+      await project();
+    }
+    const service = new CollectionStoriesService(pool, "pact"),
+      view = await service.read(a.accountId);
+    expect(await owned(a)).toEqual(["opened_channel"]);
+    expect(view.instances).toHaveLength(0);
+    expect(view.incidents).toHaveLength(1);
+    expect(
+      (await pool.query("SELECT count(*)::int AS n FROM cosmetic_wallet_entries WHERE account_id=$1", [a.accountId]))
+        .rows[0].n,
+    ).toBe(0);
+    emit({ case: "raw-flood-and-canceled-raid", attempts: 113, rawMessages: 12, pieces: 1 });
+  });
+  it("quarantines poisoned retained raid evidence and continues later valid season work", async () => {
+    const a = await player(),
+      b = await player(),
+      raidId = randomUUID();
+    await pool.query(
+      "INSERT INTO raids(id,product_scope,leader_kingdom_id,target_kingdom_id,rules_version,declared_game_time_ms,lock_game_time_ms,resolution_game_time_ms,status,loot_priority,declaration_terms,resolved_game_time_ms,participant_report) VALUES($1,'pact',$2,$3,'pact-s1-v1',0,60000,120000,'resolved',ARRAY['silver','iron','grain'],'{}',120000,'{}')",
+      [raidId, a.kingdomId, b.kingdomId],
+    );
+    await event("raid.resolved.v1", { raidId });
+    await pool.query(
+      "INSERT INTO cosmetic_entitlements(product_scope,account_id,item_id,source_achievement_id) VALUES('pact',$1,'banner.season.2','season:2:participation')",
+      [a.accountId],
+    );
+    await event("season.participation.awarded.v2", { accountId: a.accountId, seasonNumber: 2 });
+    expect((await withTransaction(pool, (c) => collections.processSafely(c, 120000))).failed).toBe(false);
+    expect((await read(a)).failedEvents).toBe(1);
+    expect(await owned(a)).toEqual(["through_season"]);
+    await project(120000);
+    expect((await read(a)).failedEvents).toBe(1);
+    emit({ case: "poisoned-evidence-isolation", attempts: 2, pieces: 1, quarantinedEvents: 1 });
+  });
+  it("makes receipt failure atomic and retains an explicit unavailable count after story sources expire", async () => {
+    const a = await player(),
+      eventId = randomUUID(),
+      service = new CollectionStoriesService(pool, "pact");
+    await withTransaction(pool, (c) =>
+      recordCollectionIncident(
+        c,
+        "pact",
+        a.accountId,
+        eventId,
+        "battle",
+        "battle",
+        null,
+        60000,
+        { ownOrdinaryLosses: 1 },
+        true,
+      ),
+    );
+    const v = await service.read(a.accountId);
+    await service.command(a.accountId, {
+      schemaVersion: "pact.collection-command.v2",
+      kind: "story",
+      commandId: randomUUID(),
+      storyId: randomUUID(),
+      expectedVersion: 0,
+      title: "Private synthetic interpretation",
+      annotation: "Current note",
+      incidentIds: [v.incidents[0].id],
+      deleted: false,
+    });
+    await pool.query(
+      "CREATE FUNCTION reject_collection_receipt() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'synthetic rollback'; END $$",
+    );
+    await pool.query(
+      "CREATE TRIGGER reject_fixture BEFORE INSERT ON collection_command_receipts FOR EACH ROW EXECUTE FUNCTION reject_collection_receipt()",
+    );
+    await expect(
+      service.command(a.accountId, {
+        schemaVersion: "pact.collection-command.v2",
+        kind: "display",
+        commandId: randomUUID(),
+        expectedVersion: 0,
+        display: {
+          slots: { hall: `campaign:${v.instances[0].id}`, banner: null, frame: null, stamp: null },
+          goals: [],
+          publicCard: { enabled: false, title: "", slots: [] },
+        },
+      }),
+    ).rejects.toThrow("synthetic rollback");
+    expect((await service.read(a.accountId)).displayVersion).toBe(0);
+    await pool.query("DROP TRIGGER reject_fixture ON collection_command_receipts");
+    await withTransaction(pool, (c) => service.retention.prune(c, new Date("2027-05-01")));
+    const after = await service.read(a.accountId);
+    expect(after.stories[0].unavailableIncidentCount).toBe(1);
+    expect(after.stories[0].incidentIds).toEqual([]);
+    expect(after.instances[0].incidentId).toBeNull();
+    emit({ case: "rollback-and-source-retention", attempts: 2, instances: 1 });
+  });
+  it("paginates 55 owned incidents/instances without duplicates and enforces one kingdom per account", async () => {
+    const a = await player(),
+      foreign = await player(),
+      service = new CollectionStoriesService(pool, "pact");
+    await expect(
+      pool.query(
+        `INSERT INTO kingdoms(id,product_scope,account_id,handle,display_name,portrait,activated_at,
+        activated_game_time_ms,activated_tick_sequence,first_tick_game_time_ms,activation_event_id)
+        SELECT $1,product_scope,account_id,$3,'Known same owner fixture',portrait,activated_at,
+        activated_game_time_ms,activated_tick_sequence,first_tick_game_time_ms,$1 FROM kingdoms WHERE account_id=$2`,
+        [randomUUID(), a.accountId, `same_${randomUUID().slice(0, 8)}`],
+      ),
+    ).rejects.toMatchObject({ code: "23505" });
+    await withTransaction(pool, async (c) => {
+      for (let i = 0; i < 55; i++)
+        await recordCollectionIncident(
+          c,
+          "pact",
+          a.accountId,
+          randomUUID(),
+          "load-fixture",
+          "battle",
+          null,
+          60000 + i,
+          { classification: "synthetic_fixture" },
+          true,
+        );
+    });
+    const latencies = [];
+    let cursor: string | null = null;
+    const incidents = new Set<string>(),
+      instances = new Set<string>();
+    do {
+      const start = performance.now(),
+        page = await service.read(a.accountId, cursor ? { beforeIncidentId: cursor } : {});
+      latencies.push(performance.now() - start);
+      for (const i of page.incidents) {
+        expect(incidents.has(i.id)).toBe(false);
+        incidents.add(i.id);
+      }
+      cursor = page.nextIncidentId;
+    } while (cursor);
+    do {
+      const page = await service.read(a.accountId, cursor ? { beforeInstanceId: cursor } : {});
+      for (const i of page.instances) {
+        expect(instances.has(i.id)).toBe(false);
+        instances.add(i.id);
+      }
+      cursor = page.nextInstanceId;
+    } while (cursor);
+    expect(incidents.size).toBe(55);
+    expect(instances.size).toBe(55);
+    expect((await service.read(foreign.accountId)).incidents).toEqual([]);
+    for (let i = 0; i < 10; i++) {
+      const start = performance.now();
+      await service.read(a.accountId);
+      latencies.push(performance.now() - start);
+    }
+    latencies.sort((a, b) => a - b);
+    emit({
+      case: "55-source-pagination-fixture",
+      attempts: 55,
+      instances: 55,
+      p95ReadMs: Number(latencies[Math.ceil(latencies.length * 0.95) - 1]?.toFixed(3)),
+    });
+  });
+  it("allows deletion at the active-card limit but cannot restore a fifty-first card", async () => {
+    const a = await player(),
+      service = new CollectionStoriesService(pool, "pact");
+    const existing = (
+      await pool.query(
+        "INSERT INTO collection_stories(product_scope,account_id,id,version,title,annotation) SELECT 'pact',$1,gen_random_uuid(),1,'Synthetic bounded card','' FROM generate_series(1,50) RETURNING id",
+        [a.accountId],
+      )
+    ).rows[0].id;
+    const deleted = randomUUID();
+    await pool.query(
+      "INSERT INTO collection_stories(product_scope,account_id,id,version,title,annotation,deleted) VALUES('pact',$1,$2,1,'','',true)",
+      [a.accountId, deleted],
+    );
+    const command = {
+      schemaVersion: "pact.collection-command.v2" as const,
+      kind: "story" as const,
+      commandId: randomUUID(),
+      storyId: deleted,
+      expectedVersion: 1,
+      title: "Restored",
+      annotation: "",
+      incidentIds: [],
+      deleted: false,
+    };
+    await expect(service.command(a.accountId, command)).rejects.toMatchObject({ code: "STORY_LIMIT" });
+    await service.command(a.accountId, { ...command, commandId: randomUUID(), storyId: existing, deleted: true });
+    await service.command(a.accountId, command);
+    expect((await service.read(a.accountId)).stories).toHaveLength(50);
   });
 });
 

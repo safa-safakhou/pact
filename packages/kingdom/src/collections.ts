@@ -7,6 +7,7 @@ import {
 } from "@pact/contracts";
 import { appendOutbox } from "@pact/db";
 import type { PoolClient } from "pg";
+import { z } from "zod";
 import { recordCollectionIncident } from "./collection-stories.js";
 
 const types = [
@@ -25,6 +26,16 @@ type Contract = {
   start_game_time_ms: string;
   terms: Record<string, unknown>;
 };
+const raidEvidenceSchema = z.object({
+  gameTimeMs: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+  targetKingdomId: z.uuid(),
+  eligibleUnits: z.array(z.object({ id: z.uuid(), ownerId: z.uuid(), side: z.enum(["attacker", "defender"]) })),
+  eligibleOrdinaryUnitIds: z.array(z.uuid()),
+  trace: z.object({
+    winner: z.enum(["attacker", "defender"]),
+    casualtyGroups: z.array(z.object({ ownerId: z.uuid(), lostUnitIds: z.array(z.uuid()) })),
+  }),
+});
 /** Trusted, transaction-bound cosmetic projection. No public event injection or model capability. */
 export class CollectionService {
   constructor(private readonly scope: string) {}
@@ -85,7 +96,7 @@ export class CollectionService {
         await c.query("ROLLBACK TO SAVEPOINT collection_event");
         await c.query("RELEASE SAVEPOINT collection_event");
         const code = String((error as { code?: string }).code ?? "");
-        if (!/^(22|23)[A-Z0-9]{3}$/.test(code)) throw error;
+        if (!/^(22|23)[A-Z0-9]{3}$/.test(code) && code !== "COLLECTION_SOURCE_INVALID") throw error;
         await c.query(
           "INSERT INTO collection_processed_events(product_scope,event_id,event_type,outbox_id,failure_code) VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING",
           [this.scope, e.event_id, e.type, e.id, code],
@@ -208,6 +219,8 @@ export class CollectionService {
       ])
     ).rows[0]?.participant_report;
     if (!r) return;
+    if (!raidEvidenceSchema.safeParse(r).success)
+      throw Object.assign(new Error("COLLECTION_SOURCE_INVALID"), { code: "COLLECTION_SOURCE_INVALID" });
     const ordinary = new Set(r.eligibleOrdinaryUnitIds ?? []),
       owners = new Set(r.eligibleUnits.filter((u) => ordinary.has(u.id)).map((u) => u.ownerId));
     for (const owner of new Set([...owners, r.targetKingdomId])) {
@@ -274,7 +287,7 @@ export class CollectionService {
     at: number,
   ) {
     const piece = collectionPieces.find((p) => p.id === id);
-    if (!piece || piece.earnedGems !== 0) throw Error("NEW_ACHIEVEMENT_NOT_COSMETIC_ONLY");
+    if (piece?.earnedGems !== 0) throw Error("NEW_ACHIEVEMENT_NOT_COSMETIC_ONLY");
     const inserted = await c.query(
       "INSERT INTO achievement_awards(product_scope,account_id,achievement_id,source_event_id,awarded_game_time_ms) VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING RETURNING achievement_id",
       [this.scope, account, id, e.event_id, at],

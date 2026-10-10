@@ -8203,7 +8203,7 @@
       "id": "PACT-158",
       "title": "Observe an authorized mixed-model communication society pilot",
       "phase": 3,
-      "status": "todo",
+      "status": "blocked",
       "kind": "gate",
       "owner_role": "Platform",
       "size": "L",
@@ -8243,12 +8243,12 @@
         "communication UI"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Explicit founder authorization for account provisioning, candidate count, actual routes, fixed duration/request/spend ceilings and observation access.",
         "All required live routes must pass; an unavailable route needs an explicit changed pilot design rather than silent substitution."
       ],
-      "block_reason": null,
+      "block_reason": "Required external/scheduled routes PACT-155/156 lack actual certification; exact mixed-model identities, fixed duration/compute/spend budgets and observation consents are not enrolled. The authorized three-call local certification is terminal and cannot be extended.",
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
       "implementation_authorization": "founder_20261010"
@@ -8257,7 +8257,7 @@
       "id": "PACT-159",
       "title": "Research measured prompt optimization or a local decision ranker",
       "phase": 3,
-      "status": "todo",
+      "status": "blocked",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8291,11 +8291,11 @@
         "local models"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Optional research activation and bounded compute/storage budget; no training experiment is currently authorized."
       ],
-      "block_reason": null,
+      "block_reason": "PACT-158 assessed pilot trajectories are unavailable and optional training/optimization compute budget is unassigned. Offline baseline is complete at PACT-157; no live policy optimization is started.",
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
       "implementation_authorization": "founder_20261010"
@@ -8515,7 +8515,7 @@
       "id": "PACT-164",
       "title": "Validate collection incentives privacy and exploit resistance offline",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -8554,7 +8554,9 @@
         "privacy verification",
         "human test design"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/collection-evaluation-20261010.md; full build/types/lint; 356 unit, 377 integration and final 18 collection checks; one optional provider skip; measured offline provenance and no new model run."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Real human feedback or a collection-enabled live comparison needs a covering test assignment and consenting participants."
@@ -8568,7 +8570,7 @@
       "id": "PACT-165",
       "title": "Evaluate optional earned rare campaign finishes with published odds",
       "phase": 3,
-      "status": "todo",
+      "status": "blocked",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -8606,12 +8608,14 @@
         "eligibility ledger",
         "UI odds"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/rare-finish-review-20261010.md; complete 10000-integer table/protection enumeration and exact expected-draw rational; no runtime RNG or issuance."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Separate approval of randomized-finish specification/settings and any bounded live observation; deterministic collection delivery does not activate this option."
       ],
-      "block_reason": null,
+      "block_reason": "Pure probability preparation verified. Random issuance needs reviewed eligibility/ledger activation and separately bounded human comprehension/issuance observation; neither is authorized by deterministic release.",
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
       "implementation_authorization": "founder_20261010"

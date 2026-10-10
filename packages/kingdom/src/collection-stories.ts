@@ -89,7 +89,7 @@ export class CollectionStoriesService {
         ).rows[0] ?? { version: 0, display: empty };
         const stories = (
           await c.query(
-            'SELECT id,version,title,annotation,incident_ids AS "incidentIds" FROM collection_stories WHERE product_scope=$1 AND account_id=$2 AND NOT deleted ORDER BY id',
+            'SELECT id,version,title,annotation,incident_ids AS "incidentIds",unavailable_incident_count AS "unavailableIncidentCount" FROM collection_stories WHERE product_scope=$1 AND account_id=$2 AND NOT deleted ORDER BY id',
             [this.scope, account],
           )
         ).rows;
@@ -172,18 +172,18 @@ export class CollectionStoriesService {
         );
       } else {
         const head = (
-          await c.query("SELECT version FROM collection_stories WHERE product_scope=$1 AND account_id=$2 AND id=$3", [
-            this.scope,
-            account,
-            command.storyId,
-          ])
+          await c.query(
+            "SELECT version,deleted FROM collection_stories WHERE product_scope=$1 AND account_id=$2 AND id=$3",
+            [this.scope, account, command.storyId],
+          )
         ).rows[0];
         if ((head?.version ?? 0) !== command.expectedVersion) throw new CollectionError("STALE_VERSION");
         if (
-          !head &&
+          !command.deleted &&
+          (!head || head.deleted) &&
           (
             await c.query(
-              "SELECT count(*)::int AS n FROM collection_stories WHERE product_scope=$1 AND account_id=$2",
+              "SELECT count(*)::int AS n FROM collection_stories WHERE product_scope=$1 AND account_id=$2 AND NOT deleted",
               [this.scope, account],
             )
           ).rows[0].n >= 50
@@ -202,7 +202,7 @@ export class CollectionStoriesService {
           throw new CollectionError("NOT_OWNED");
         version = command.expectedVersion + 1;
         await c.query(
-          "INSERT INTO collection_stories(product_scope,account_id,id,version,title,annotation,incident_ids,deleted) VALUES($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT(product_scope,account_id,id) DO UPDATE SET version=EXCLUDED.version,title=EXCLUDED.title,annotation=EXCLUDED.annotation,incident_ids=EXCLUDED.incident_ids,deleted=EXCLUDED.deleted",
+          "INSERT INTO collection_stories(product_scope,account_id,id,version,title,annotation,incident_ids,deleted) VALUES($1,$2,$3,$4,$5,$6,$7,$8) ON CONFLICT(product_scope,account_id,id) DO UPDATE SET version=EXCLUDED.version,title=EXCLUDED.title,annotation=EXCLUDED.annotation,incident_ids=EXCLUDED.incident_ids,deleted=EXCLUDED.deleted,unavailable_incident_count=0,updated_at=clock_timestamp()",
           [
             this.scope,
             account,
@@ -331,10 +331,17 @@ export class CollectionStoriesService {
     prune: async (c: PoolClient, now: Date) => {
       const before = new Date(now.getTime() - 180 * 86400000);
       await c.query(
-        "UPDATE collection_stories s SET incident_ids=ARRAY(SELECT id FROM unnest(s.incident_ids) id WHERE EXISTS(SELECT 1 FROM collection_incidents i WHERE i.product_scope=s.product_scope AND i.account_id=s.account_id AND i.id=id AND i.created_at>=$2)) WHERE s.product_scope=$1",
+        "UPDATE collection_stories s SET unavailable_incident_count=unavailable_incident_count+cardinality(incident_ids)-cardinality(ARRAY(SELECT ref FROM unnest(s.incident_ids) ref WHERE EXISTS(SELECT 1 FROM collection_incidents i WHERE i.product_scope=s.product_scope AND i.account_id=s.account_id AND i.id=ref AND i.created_at>=$2))),incident_ids=ARRAY(SELECT ref FROM unnest(s.incident_ids) ref WHERE EXISTS(SELECT 1 FROM collection_incidents i WHERE i.product_scope=s.product_scope AND i.account_id=s.account_id AND i.id=ref AND i.created_at>=$2)) WHERE s.product_scope=$1",
         [this.scope, before],
       );
       let count = 0;
+      count +=
+        (
+          await c.query("DELETE FROM collection_stories WHERE product_scope=$1 AND deleted AND updated_at<$2", [
+            this.scope,
+            before,
+          ])
+        ).rowCount ?? 0;
       for (const table of ["collection_incidents", "collection_command_receipts"])
         count +=
           (await c.query(`DELETE FROM ${table} WHERE product_scope=$1 AND created_at<$2`, [this.scope, before]))

@@ -2,6 +2,9 @@
 
 ## Current assignment
 
+- [Collection offline acceptance](collection-evaluation-20261010.md) — PACT-164, exploit/retention/load evidence and inactive human comparison design.
+- [Rare-finish review](rare-finish-review-20261010.md) — PACT-165 pure probability preparation; actual activation blocked.
+
 - [Hall of Stories UI](collection-ui-20261010.md) — PACT-163, real responsive synthetic browser, source navigation, private/public and device-conflict recovery.
 
 - [Private keepsakes and human display](collection-stories-20261010.md) — PACT-162, deterministic incidents/instances, exact owner commands, sanitized public appearance and original assets.

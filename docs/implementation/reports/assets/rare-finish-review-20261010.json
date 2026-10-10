@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "pact.rare-finish-review.v1",
+  "activation": "disabled",
+  "baseWeightsPer10000": [
+    7500,
+    2000,
+    400,
+    100
+  ],
+  "ordinaryMythicPercent": 1,
+  "protectedDrawNumber": 30,
+  "protectedNextMythicPercent": 100,
+  "expectedDrawsPerMythic": 26.02996266117196,
+  "longRunMythicPercent": 3.8417266018274665,
+  "expectedDrawsExact": {
+    "numerator": "260299626611719577269984907683285057747323737647323555652999",
+    "denominator": "10000000000000000000000000000000000000000000000000000000000"
+  },
+  "chanceReachProtectedDrawPercent": 74.71720943315961,
+  "qualification": "Pure candidate-table enumeration and probability arithmetic. No eligibility ledger, random issuance, battle changes, model calls or human comprehension evidence. Draws are not days: eligible event frequency remains unmeasured."
+}

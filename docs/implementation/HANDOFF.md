@@ -1,3 +1,7 @@
+# Collection acceptance checkpoint — 10 October 2026
+
+PACT-164 offline acceptance verified; PACT-165 pure probability preparation only, activation blocked. Collections prepared for release after verified commit. External route/scheduler/pilot/optimization gates remain unresolved; no new runs or population restart. Read reports/collection-evaluation-20261010.md and reports/rare-finish-review-20261010.md.
+
 # Collection UI checkpoint — 10 October 2026
 
 PACT-163 verified, PACT-164 assigned for offline exploit/incentive acceptance. 354 unit/373 integration passed (one optional provider skip). Live remains enrollment release until actual collection rollout. Fifty-player task stopped; no Ollama process, no inference budget extension.

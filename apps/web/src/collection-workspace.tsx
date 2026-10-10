@@ -25,7 +25,14 @@ type Incident = {
   };
   source: Source | null;
 };
-type Story = { id: string; version: number; title: string; annotation: string; incidentIds: string[] };
+type Story = {
+  id: string;
+  version: number;
+  title: string;
+  annotation: string;
+  incidentIds: string[];
+  unavailableIncidentCount?: number;
+};
 export type CollectionView = {
   pieces: ((typeof collectionPieces)[number] & { owned: boolean; earnedGameTimeMs: string | null; source: unknown })[];
   sets: ((typeof collectionSets)[number] & { ownedPieces: number; trophyOwned: boolean })[];
@@ -648,6 +655,11 @@ export function CollectionWorkspace({
                   <article className="col-story" key={story.id}>
                     <h4>{story.title || "Untitled story"}</h4>
                     <p>{story.annotation}</p>
+                    {(story.unavailableIncidentCount ?? 0) > 0 && (
+                      <p>
+                        {story.unavailableIncidentCount} earlier incident references are unavailable after retention.
+                      </p>
+                    )}
                     <button
                       type="button"
                       disabled={!write}

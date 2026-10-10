@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 64 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 65 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2481,7 +2481,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-158"></a>
 ## PACT-158 — Observe an authorized mixed-model communication society pilot
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** gate
+**Status:** blocked · **Role:** Platform · **Size:** L · **Type:** gate
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2505,10 +2505,14 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **External prerequisites:** Explicit founder authorization for account provisioning, candidate count, actual routes, fixed duration/request/spend ceilings and observation access.; All required live routes must pass; an unavailable route needs an explicit changed pilot design rather than silent substitution..
 
+**Assignee:** codex-agent-society
+
+**Block reason:** Required external/scheduled routes PACT-155/156 lack actual certification; exact mixed-model identities, fixed duration/compute/spend budgets and observation consents are not enrolled. The authorized three-call local certification is terminal and cannot be extended.
+
 <a id="pact-159"></a>
 ## PACT-159 — Research measured prompt optimization or a local decision ranker
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** blocked · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2530,6 +2534,10 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] No self-modifying live policy/authority deployment; selected artifact needs separate implementation/release authorization and rollback evidence.
 
 **External prerequisites:** Optional research activation and bounded compute/storage budget; no training experiment is currently authorized..
+
+**Assignee:** codex-agent-society
+
+**Block reason:** PACT-158 assessed pilot trajectories are unavailable and optional training/optimization compute budget is unassigned. Offline baseline is complete at PACT-157; no live policy optimization is started.
 
 <a id="pact-160"></a>
 ## PACT-160 — Specify collection catalog achievement extensions and reward eligibility
@@ -2659,7 +2667,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-164"></a>
 ## PACT-164 — Validate collection incentives privacy and exploit resistance offline
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2676,19 +2684,23 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Raw-message/approval/declaration/retry floods and known same-owner synthetic fixtures mint no repeated/scarce grants or resource benefits; unknown-alt limits remain explicit.
-- [ ] Progress/entitlements/source links preserve migration, worker restart, poisoned-event isolation, rollback and observer consent; build/type/behavior checks pass.
-- [ ] Collection completion, meaningful exchange/negotiation outcomes, repetitive actions, unique outcomes, human comprehension/enjoyment and compute/GPU cost are reported separately; cosmetic progress alone never establishes intelligent play.
-- [ ] Any human test/live collection-enabled arm has explicit identities/consent/duration/compute bounds and records useful refusal/failure; no additional run is currently authorized.
+- [x] Raw-message/approval/declaration/retry floods and known same-owner synthetic fixtures mint no repeated/scarce grants or resource benefits; unknown-alt limits remain explicit.
+- [x] Progress/entitlements/source links preserve migration, worker restart, poisoned-event isolation, rollback and observer consent; build/type/behavior checks pass.
+- [x] Collection completion, meaningful exchange/negotiation outcomes, repetitive actions, unique outcomes, human comprehension/enjoyment and compute/GPU cost are reported separately; cosmetic progress alone never establishes intelligent play.
+- [x] Any human test/live collection-enabled arm has explicit identities/consent/duration/compute bounds and records useful refusal/failure; no additional run is currently authorized.
 
 **External prerequisites:** Real human feedback or a collection-enabled live comparison needs a covering test assignment and consenting participants..
 
 **Assignee:** codex-agent-society
 
+**Evidence**
+
+- docs/implementation/reports/collection-evaluation-20261010.md; full build/types/lint; 356 unit, 377 integration and final 18 collection checks; one optional provider skip; measured offline provenance and no new model run.
+
 <a id="pact-165"></a>
 ## PACT-165 — Evaluate optional earned rare campaign finishes with published odds
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** blocked · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2711,3 +2723,11 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Human comprehension, exploit/issuance rate and long-wait impact are measured under a separate reviewed activation; negative results leave deterministic collections available.
 
 **External prerequisites:** Separate approval of randomized-finish specification/settings and any bounded live observation; deterministic collection delivery does not activate this option..
+
+**Assignee:** codex-agent-society
+
+**Block reason:** Pure probability preparation verified. Random issuance needs reviewed eligibility/ledger activation and separately bounded human comprehension/issuance observation; neither is authorized by deterministic release.
+
+**Evidence**
+
+- docs/implementation/reports/rare-finish-review-20261010.md; complete 10000-integer table/protection enumeration and exact expected-draw rational; no runtime RNG or issuance.
