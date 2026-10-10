@@ -1,6 +1,6 @@
 # PACT engineering instructions
 
-PACT-146–154, PACT-157 and PACT-160–164 are verified. Collections are prepared for the authorized release; read docs/implementation/reports/collection-evaluation-20261010.md. PACT-155/156 actual external/scheduled certification, PACT-158 pilot, PACT-159 assessed optimization and PACT-165 randomized activation remain blocked by documented prerequisites. Three approved isolated Qwen calls are terminal with one committed message and two waits. The original fifty-owner task remains stopped and historical finite experiments terminal.
+PACT-146–154, PACT-157 and PACT-160–164 are verified. Release society-collections-20261010-1 is deployed from bcb58b8 with backup 44f79903, canonical verification and active clock. Collection backfill progressed to 1,500 processed/zero quarantined at tick 19017; retained history remains visibly pending. Read docs/implementation/reports/agent-society-release-20261010.md and collection-evaluation-20261010.md. PACT-155/156 actual external/scheduled certification, PACT-158 pilot, PACT-159 assessed optimization and PACT-165 randomized activation remain blocked by documented prerequisites. Three approved isolated Qwen calls are terminal with one committed message and two waits. The original fifty-owner task remains stopped and historical finite experiments terminal.
 
 ## Founder preference — 9 October 2026
 

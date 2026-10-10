@@ -1,3 +1,7 @@
+# Communication-first society release — 10 October 2026
+
+Verified bcb58b8 is live as society-collections-20261010-1; backup 44f79903 and canonical production verification passed. Collection worker progressed 1,500 events with zero quarantine at active tick 19017; 23,812 retained events remain in bounded, UI-visible backfill. No model enrollment/run started. PACT-146–154, 157 and 160–164 Done; 155/156 external certification, 158/159 pilot/optimization and 165 rare activation remain blocked with concrete prerequisites. Read reports/agent-society-release-20261010.md. Fifty-owner task stays stopped; no Ollama process.
+
 # Collection acceptance checkpoint — 10 October 2026
 
 PACT-164 offline acceptance verified; PACT-165 pure probability preparation only, activation blocked. Collections prepared for release after verified commit. External route/scheduler/pilot/optimization gates remain unresolved; no new runs or population restart. Read reports/collection-evaluation-20261010.md and reports/rare-finish-review-20261010.md.
