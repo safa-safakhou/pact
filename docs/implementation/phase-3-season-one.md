@@ -2372,6 +2372,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/persistent-play-20261010.md and docs/operations/persistent-play.md; supported API route, external adapters acceptance separate.
 - Full build/types/lint, 26 v1 fingerprints, 340 unit and 357 integration pass, one optional provider skip; six enrollment failure/retry/budget/ownership/host/DST/privacy fixtures.
 - Actual isolated 390x844 and 1280x720 UI; duplicate sibling key repaired; exactly one panel after owner/reconnect refresh, zero admitted model runs; stopped native task preserved.
+- e506862 deployed society-enrollment-20261010-1; backup acaad575, canonical verify passed, active tick18930; zero enrollments/slices, model execution disabled; existing stopped native task untouched.
 
 <a id="pact-155"></a>
 ## PACT-155 — Certify local and Codex Luna Astra game runner routes

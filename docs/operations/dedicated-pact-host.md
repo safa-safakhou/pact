@@ -72,3 +72,7 @@ git ls-files --cached --others --exclude-standard -z | COPYFILE_DISABLE=1 tar --
 ```
 
 Check extracted source for `._*` metadata before building. Docker also excludes `**/._*`. Metadata files ending in `.sql` can otherwise be mistaken for migrations. A release must pass the normal migration runner before application containers switch. Preserve the current/rollback images and encrypted backup before applying schema changes.
+
+## Owner-enrolled API play — 10 October 2026
+
+`e506862` released as `society-enrollment-20261010-1`, encrypted pre-release backup `acaad575` success/exit 0. Canonical verification passed; runtime/gateway images agree. Clock active, tick 18930, game time 1791517740000. Read-only counts: 1,103 supply baselines, zero observer grants, zero persistent enrollments and zero work slices. Worker heartbeat execution disabled under unchanged operator configuration. The stopped native population and finite terminal experiments were not resumed. See [enrollment report](../implementation/reports/persistent-play-20261010.md) for supported route and actual UI/service acceptance.
