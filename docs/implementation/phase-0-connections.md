@@ -642,7 +642,8 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - docs/implementation/reports/oauth-authority.md
 - npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build
 - tests/integration/authority.test.ts
-- reports/agent-permission-maintenance-20261010.md: founder-authorized existing-player settings utility; exact cohort/version/digest and transactional rollback tests, package build/types/lint and 62 relevant integrations pass. No agent/public operator control route. Server application pending at implementation commit.
+- reports/agent-permission-maintenance-20261010.md: founder-authorized existing-player settings utility; exact cohort/version/digest and transactional rollback tests, package build/types/lint and 62 relevant integrations pass. No agent/public operator control route.
+- aed2e38 / permission-maintenance-20261010-1 one-shot operator image: encrypted backup passed; all 219 eligible kingdoms granted, 181 versions incremented / 38 mandates created, exact profile/delegation and 219 audit version transitions verified. Standard public verification passed; app release chatgpt-link-20261010-1 unchanged. Hardcoded human-only gameplay remains separate.
 
 <a id="pact-020"></a>
 ## PACT-020 — Implement exact-command human approvals
