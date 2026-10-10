@@ -8,7 +8,10 @@ function fixture() {
   const server = Fastify(),
     read = vi.fn(async () => ({ world: {} })),
     customize = vi.fn(async () => ({ version: 2 })),
-    thread = vi.fn(async () => ({ messages: [] }));
+    thread = vi.fn(async () => ({ messages: [] })),
+    agreements = vi.fn(async () => ({ offers: [], next: null })),
+    versions = vi.fn(async () => ({ versions: [] })),
+    observed = vi.fn(async () => null);
   const identity = {
     authenticate: vi.fn(async (token: string) => {
       if (token !== "owner-session") throw new IdentityError("FORBIDDEN");
@@ -23,13 +26,56 @@ function fixture() {
   registerCouncilRoutes(
     server,
     identity as unknown as IdentityService,
-    { customize, thread } as unknown as CouncilReader,
+    {
+      customize,
+      thread,
+      history: { agreements, versions, observed, consents: async () => [], observations: async () => ({ pairs: [] }) },
+    } as unknown as CouncilReader,
     read,
   );
-  return { server, identity, read, customize, thread };
+  return { server, identity, read, customize, thread, agreements, versions, observed };
 }
 const character = { name: "Aster", seed: "A river traveller", color: "#123456", variation: 2 };
 describe("Council human HTTP boundary", () => {
+  it("authenticates history/observation reads, rejects supplied ownership and returns a precise revoked-consent refusal", async () => {
+    const f = fixture(),
+      kingdomId = "00000000-0000-4000-8000-000000000001";
+    try {
+      for (const path of ["agreements", "versions", "consents", "observations", "observe"])
+        expect((await f.server.inject({ method: "GET", url: `/v1/game/conversations/${path}` })).statusCode).toBe(403);
+      const headers = { cookie: "pact_session=owner-session" };
+      expect(
+        (
+          await f.server.inject({
+            method: "GET",
+            url: `/v1/game/conversations/agreements?kingdomId=${kingdomId}`,
+            headers,
+          })
+        ).statusCode,
+      ).toBe(200);
+      expect(f.agreements).toHaveBeenCalledWith("authenticated-owner", kingdomId, undefined);
+      expect(
+        (
+          await f.server.inject({
+            method: "GET",
+            url: `/v1/game/conversations/agreements?kingdomId=${kingdomId}&accountId=another`,
+            headers,
+          })
+        ).statusCode,
+      ).toBe(400);
+      expect(
+        (
+          await f.server.inject({
+            method: "GET",
+            url: `/v1/game/conversations/observe?leftKingdomId=${kingdomId}&rightKingdomId=00000000-0000-4000-8000-000000000002`,
+            headers,
+          })
+        ).json(),
+      ).toEqual({ error: { code: "OBSERVATION_NOT_CONSENTED" } });
+    } finally {
+      await f.server.close();
+    }
+  });
   it("rejects anonymous and bearer-only reads and does not record human presence", async () => {
     const f = fixture();
     try {

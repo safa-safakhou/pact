@@ -11,7 +11,7 @@ import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readMandateContext, readReserveFloor } from "@pact/authority";
 import {
   AgentGuideQuerySchema,
-  ApprovalProposalSchema,
+  ApprovalProposalV2Schema as ApprovalProposalSchema,
   ApprovalStatusQuerySchema,
   ChronicleReadQuerySchema,
   ConversationReadQuerySchema,
@@ -21,7 +21,7 @@ import {
   PoliticsReadQuerySchema,
   ProductScopeSchema,
   pactAgentGuideTool,
-  pactApprovalProposalTool,
+  pactApprovalProposalV2Tool as pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactChronicleReadTool,
   pactConversationReadTool,

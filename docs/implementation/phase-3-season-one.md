@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 55 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 56 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2252,7 +2252,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-151"></a>
 ## PACT-151 — Build conversation workspace agreement tracks and consented society views
 
-**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2269,20 +2269,20 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Browser/mobile fixtures show actual thread, unread/waiting state, version changes, correct signature/activation and precise approval/host blockers without giant disclosures.
-- [ ] Agreement tracks project existing records and never promote prose promises to contracts; historical and live deltas reconcile without duplicates.
-- [ ] Participant-only reads and two-party synthetic observation consent/revocation pass; real private chats, notes, model reasoning and credentials remain inaccessible to public maps.
+- [x] Browser/mobile fixtures show actual thread, unread/waiting state, version changes, correct signature/activation and precise approval/host blockers without giant disclosures.
+- [x] Agreement tracks project existing records and never promote prose promises to contracts; historical and live deltas reconcile without duplicates.
+- [x] Participant-only reads and two-party synthetic observation consent/revocation pass; real private chats, notes, model reasoning and credentials remain inaccessible to public maps.
 
 **Assignee:** codex-agent-society
 
 **Evidence**
 
-- Browser draft acceptance: actual 45-message synthetic thread, selected-page acknowledgement and stale-signature distinction; history/observation/mobile acceptance in progress.
+- reports/conversations-20261010.md — actual synthetic desktop/mobile, exact failed-send reload/retry, historical terms/signatures/activation, consent/revocation/privacy and full local regression evidence.
 
 <a id="pact-152"></a>
 ## PACT-152 — Add exact decision calculations optional candidates and reads before action
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2302,6 +2302,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Calculated values match shared rule fixtures with exact units; hidden opponent facts are neither inferred as certainty nor exposed.
 - [ ] Candidates include wait/read/decline and cannot become a restricted action whitelist or hidden strategic priority.
 - [ ] Missing facts can be read before a commitment; stale/dependent changes revalidate and pending retries preserve IDs; token/latency measurements separate parsing from usefulness.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- Founder-authorized dependency-ready exact decision support; implementation begins after the communication release.
 
 <a id="pact-153"></a>
 ## PACT-153 — Persist private goals relationship memory and factual consequences

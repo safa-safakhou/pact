@@ -1,3 +1,15 @@
+# Current handoff — communication-first implementation, 10 October 2026
+
+The founder authorized PACT-146–165 implementation, communication/UI first, verified local commits and server release. PACT-146–151 are complete with qualified evidence in the [report index](reports/README.md); PACT-152 is the next assigned work. This supersedes historical planning-only/no-commit notes below. Local tracking is the execution record while Linear issue creation is rejected at its free limit; no external Done state is claimed.
+
+The current communication release and actual deployment checks are recorded in [Conversations acceptance](reports/conversations-20261010.md). Do not infer a deployment from a local build. The original 24 Later tasks remain deferred. Preserve the stopped fifty-owner Windows task, its identities/counters/pending commands and PACT-143 hourly/sixty-second/unload pacing. Both finite experiments remain terminal. No new live population, enrollment, schedule or model budget is established by a UI release.
+
+Recovery keeps private guest codes, human sessions, provider credentials and OAuth grants separate. Captured email is not mailbox delivery; physical-device/full-browser restart acceptance remains explicit. New optional runner routes/pilots/rare finishes require their actual prerequisites. Continue all ready authorized engineering in dependency order; do not certify blocked external acceptance.
+
+Historical handoffs below preserve provenance and are not current work-selection instructions.
+
+---
+
 > Completed 4 October backend experiment: 10 Luna envoys + 90 scripted players, exactly 200 model requests, 2,321 committed commands and 131 contracts. Deadline respected; runner/model worker stopped and heartbeat paused; final report and evidence in [population playtest](reports/population-playtest-20261004.md). API/inference bug fixes remain deployed as `population-fixes-20261005-2`; rules worker unchanged. Explanation quality and pacing remain findings, not production certification. Deferred roadmap untouched; Linear remains at its free issue limit.
 
 # Current handoff — friends playtest complete, 4 October 2026

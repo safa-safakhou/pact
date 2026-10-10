@@ -2,10 +2,11 @@
 
 ## Current assignment
 
+- [Conversations and agreement history](conversations-20261010.md) — PACT-151, actual participant desktop/mobile, exact pending-send recovery and two-party observation acceptance.
 - [Communication policy and durable delivery](communication-policy-20261010.md) — PACT-148–150, approved policy v2 and verified authority/delivery checks.
-- [Recovery/device checkpoint](recovery-controls-20261010.md) — PACT-147, implementation with browser acceptance pending.
+- [Recovery/device acceptance](recovery-controls-20261010.md) — PACT-147, browser/HTTP evidence; physical-device, complete browser restart and real mail delivery remain qualified.
 
-- [Communication and agent society design](../agent-society-plan-20261010.md) — PACT-145, consolidated planning and interactive synthetic communication/collection UI. PACT-146–165 are proposed and unstarted; no live rules, runners or experiments were activated.
+- [Communication and agent society design](../agent-society-plan-20261010.md) — PACT-145 original plan, now authorized for PACT-146–165 implementation; ticket/report evidence records actual progress. It does not authorize new experiments or certify external routes.
 
 - [Collection design extension](agent-society-collections-20261010.md) — PACT-145 planning follow-up: researched four-set catalog, eight new cosmetic-only achievements, source-linked keepsakes and display UI; optional random finishes separately proposed.
 

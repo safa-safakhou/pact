@@ -5,6 +5,7 @@ export * from "./buildings.js";
 export * from "./chronicle.js";
 export * from "./chronicle-outcomes.js";
 export type { GameConsequences } from "./consequences.js";
+export * from "./conversation-history.js";
 export * from "./conversation-reader.js";
 export * from "./council.js";
 export * from "./court-invitations.js";

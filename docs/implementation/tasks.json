@@ -7835,7 +7835,7 @@
       "id": "PACT-151",
       "title": "Build conversation workspace agreement tracks and consented society views",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -7873,7 +7873,7 @@
         "projections"
       ],
       "evidence": [
-        "Browser draft acceptance: actual 45-message synthetic thread, selected-page acknowledgement and stale-signature distinction; history/observation/mobile acceptance in progress."
+        "reports/conversations-20261010.md \u2014 actual synthetic desktop/mobile, exact failed-send reload/retry, historical terms/signatures/activation, consent/revocation/privacy and full local regression evidence."
       ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],
@@ -7886,7 +7886,7 @@
       "id": "PACT-152",
       "title": "Add exact decision calculations optional candidates and reads before action",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7920,8 +7920,10 @@
         "local controller",
         "model adapters"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Founder-authorized dependency-ready exact decision support; implementation begins after the communication release."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
@@ -8586,7 +8588,7 @@
     "../pact/access.md": "da1ab2428d6eabfd21e6a5934edc9108c1ad4e0fc6d96fe6ec41da1a780dd2b5",
     "../pact/runtime.md": "f81e7ea0ec40c95c3c5f769400de307f37c1151bcf83df1b40cb699a0cde0865",
     "../pact/rules.md": "41487c02ccebfcfef2c52101590021ad138abff0c7dcae7974bcfb5704047d31",
-    "../pact/social.md": "c76862406560480853bfa1bc7b330e26df3f0e40df1b4271e82c2ee2591910c8",
+    "../pact/social.md": "edd33c2efbd3929c663ccb7b1b86f68aeb86af260d3421bf2f3db2059d3cc677",
     "../pact/privacy.md": "f196d63676d0d2f335f480395987d5cf69edc8ccc555228d901b47ad9f0a7086",
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",

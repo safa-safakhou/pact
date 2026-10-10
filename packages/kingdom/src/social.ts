@@ -97,6 +97,35 @@ export class SocialService {
     await this.consumeEnvelope(client, await this.ownerKingdom(client, accountId));
   }
 
+  async configureObservation(
+    client: PoolClient,
+    accountId: string,
+    input: { peerKingdomId: string; observerKingdomId: string; enabled: boolean; expectedVersion: number },
+    gameTimeMs: number,
+  ) {
+    const owner = await this.ownerKingdom(client, accountId);
+    if (new Set([owner, input.peerKingdomId, input.observerKingdomId]).size !== 3)
+      throw new SocialError("SELF_CONTACT");
+    const parties = await client.query(
+      "SELECT id FROM kingdoms WHERE product_scope=$1 AND status='ranked' AND id=ANY($2::uuid[]) ORDER BY id FOR UPDATE",
+      [this.productScope, [owner, input.peerKingdomId, input.observerKingdomId]],
+    );
+    if (parties.rowCount !== 3) throw new SocialError("KINGDOM_NOT_FOUND");
+    const old = (
+      await client.query<{ version: number }>(
+        "SELECT version FROM conversation_observation_consents WHERE product_scope=$1 AND kingdom_id=$2 AND peer_kingdom_id=$3 AND observer_kingdom_id=$4 FOR UPDATE",
+        [this.productScope, owner, input.peerKingdomId, input.observerKingdomId],
+      )
+    ).rows[0];
+    if ((old?.version ?? 0) !== input.expectedVersion) throw new SocialError("OPERATION_CONFLICT");
+    const version = input.expectedVersion + 1;
+    await client.query(
+      "INSERT INTO conversation_observation_consents(product_scope,kingdom_id,peer_kingdom_id,observer_kingdom_id,enabled,version,changed_game_time_ms) VALUES($1,$2,$3,$4,$5,$6,$7) ON CONFLICT(product_scope,kingdom_id,peer_kingdom_id,observer_kingdom_id) DO UPDATE SET enabled=EXCLUDED.enabled,version=EXCLUDED.version,changed_game_time_ms=EXCLUDED.changed_game_time_ms",
+      [this.productScope, owner, input.peerKingdomId, input.observerKingdomId, input.enabled, version, gameTimeMs],
+    );
+    return { version, enabled: input.enabled };
+  }
+
   readonly retention = {
     name: "socialDelegation",
     forgetAccount: async (client: PoolClient, accountId: string) => {
@@ -115,17 +144,28 @@ export class SocialService {
         ids,
       ]);
       await client.query(
+        "DELETE FROM conversation_observation_consents WHERE product_scope=$1 AND (kingdom_id=ANY($2::uuid[]) OR peer_kingdom_id=ANY($2::uuid[]) OR observer_kingdom_id=ANY($2::uuid[]))",
+        [this.productScope, ids],
+      );
+      await client.query(
         "UPDATE social_delegations SET allowed_kingdom_ids=ARRAY(SELECT x FROM unnest(allowed_kingdom_ids) x WHERE NOT x=ANY($2::uuid[])) WHERE product_scope=$1 AND allowed_kingdom_ids && $2::uuid[]",
         [this.productScope, ids],
       );
     },
-    exportAccount: async (client: PoolClient, accountId: string) =>
-      (
+    exportAccount: async (client: PoolClient, accountId: string) => ({
+      delegation: (
         await client.query(
           "SELECT d.mode,d.allowed_kingdom_ids,d.version,d.enrolled_game_time_ms FROM social_delegations d JOIN kingdoms k ON k.id=d.kingdom_id AND k.product_scope=d.product_scope WHERE d.product_scope=$1 AND k.account_id=$2",
           [this.productScope, accountId],
         )
       ).rows,
+      observationConsents: (
+        await client.query(
+          "SELECT c.* FROM conversation_observation_consents c JOIN kingdoms k ON k.product_scope=c.product_scope AND k.id=c.kingdom_id WHERE c.product_scope=$1 AND k.account_id=$2",
+          [this.productScope, accountId],
+        )
+      ).rows,
+    }),
     prune: async () => 0,
   };
 

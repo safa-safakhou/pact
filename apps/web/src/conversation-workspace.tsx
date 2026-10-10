@@ -1,5 +1,7 @@
 import type { PactClient, SandboxAction } from "@pact/client-sdk";
+import { type AgreementHistoryItem, EngineAgreementHistory } from "@pact/ui-features";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ConversationOutbox, definiteMessageRefusal } from "./conversation-outbox.js";
 import { startVisiblePolling } from "./visible-polling.js";
 import "./conversation-workspace.css";
 
@@ -202,12 +204,44 @@ export function ConversationWorkspace({
     [draft, setDraft] = useState(""),
     [busy, setBusy] = useState(false),
     [showPolicy, setShowPolicy] = useState(false);
+  const [showObservations, setShowObservations] = useState(false);
+  const [historyItems, setHistoryItems] = useState<AgreementHistoryItem[]>([]),
+    [historyNext, setHistoryNext] = useState<ThreadPage["next"]>(null),
+    [confirmedRejection, setConfirmedRejection] = useState("");
   const pending = useRef<ReturnType<typeof client.prepareCommand> | null>(null),
-    generation = useRef(0);
+    generation = useRef(0),
+    historyInitialized = useRef(false);
+  const outbox = useRef<ConversationOutbox | null>(null),
+    restoredOwner = useRef(""),
+    contactPages = useRef(1);
   const refresh = useCallback(async () => {
-    const result = await request("/v1/game/social");
-    setData(result as unknown as ConversationData);
+    const pages = await Promise.all(
+      Array.from({ length: contactPages.current }, (_, i) =>
+        request(`/v1/game/social${i ? `?contactOffset=${i * 50}` : ""}`),
+      ),
+    );
+    const first = pages[0] as unknown as ConversationData;
+    if (first) {
+      const contacts = pages.flatMap((p) => (p as unknown as ConversationData).contacts);
+      setData({
+        ...first,
+        contacts: [...new Map(contacts.map((c) => [c.kingdomId, c])).values()],
+        contactsNextOffset: (pages.at(-1) as unknown as ConversationData).contactsNextOffset ?? null,
+      });
+    }
   }, [request]);
+  useEffect(() => {
+    if (!data || restoredOwner.current === data.kingdomId) return;
+    restoredOwner.current = data.kingdomId;
+    outbox.current = new ConversationOutbox(sessionStorage);
+    const command = outbox.current.restore(data.kingdomId);
+    if (command?.action.kind === "game.message.send") {
+      pending.current = command;
+      setSelected(command.action.recipientKingdomId);
+      setDraft(command.action.body);
+      setNotice("An earlier delivery is unconfirmed. Check its receipt or retry the exact original message.");
+    }
+  }, [data]);
   useEffect(() => {
     const stop = startVisiblePolling(
       () => refresh().catch(() => setNotice("Conversation summary unavailable. Your draft is retained.")),
@@ -228,11 +262,41 @@ export function ConversationWorkspace({
         (a, b) => Number(a.sentGameTimeMs) - Number(b.sentGameTimeMs) || a.id.localeCompare(b.id),
       ),
     }));
+    const history = await request(`/v1/game/conversations/agreements?kingdomId=${selected}`);
+    if (current !== generation.current) return;
+    setHistoryItems((old) => [
+      ...old.filter((x) => !(history.offers as AgreementHistoryItem[]).some((n) => n.id === x.id)),
+      ...(history.offers as AgreementHistoryItem[]).map((n) => {
+        const previous = old.find((x) => x.id === n.id);
+        if (!previous) return n;
+        return {
+          ...n,
+          versions: [
+            ...n.versions,
+            ...previous.versions.filter((v) => !n.versions.some((x) => x.version === v.version)),
+          ],
+          signatures: [
+            ...n.signatures,
+            ...previous.signatures.filter(
+              (s) => !n.signatures.some((x) => x.version === s.version && x.kingdomId === s.kingdomId),
+            ),
+          ],
+          versionsNextBefore: previous.versionsNextBefore,
+        };
+      }),
+    ]);
+    if (!historyInitialized.current) {
+      historyInitialized.current = true;
+      setHistoryNext(history.next as ThreadPage["next"]);
+    }
     await refresh();
   }, [selected, request, refresh]);
   useEffect(() => {
     ++generation.current;
     setPage({ messages: [], next: null });
+    setHistoryItems([]);
+    setHistoryNext(null);
+    historyInitialized.current = false;
     if (!selected) return;
     return startVisiblePolling(
       () => readLatest().catch(() => setNotice("Thread unavailable. Your draft is retained.")),
@@ -270,20 +334,30 @@ export function ConversationWorkspace({
     pending.current ??= client.prepareCommand({ kind: "game.message.send", recipientKingdomId: selected, body: draft });
     const command = pending.current;
     try {
+      if (!outbox.current) throw Error("OUTBOX_UNAVAILABLE");
+      outbox.current.save(data.kingdomId, command);
       const receipt = await client.submitCommand(command);
       if (["COMMITTED", "ALREADY_COMMITTED"].includes(receipt.code)) {
+        outbox.current.confirmed(data.kingdomId);
         pending.current = null;
         setDraft("");
         setNotice("Message delivered.");
         await readLatest();
-      } else setNotice(`Not delivered: ${receipt.code}. The original command is retained.`);
-    } catch {
+      } else {
+        setNotice(`Not delivered: ${receipt.code}. The original command is retained.`);
+        if (!["RATE_LIMITED", "APPROVAL_REQUIRED"].includes(receipt.code)) setConfirmedRejection(receipt.code);
+      }
+    } catch (error) {
       const receipt = await client.reconcileReceipt(command.commandId).catch(() => null);
       if (receipt && ["COMMITTED", "ALREADY_COMMITTED"].includes(receipt.code)) {
+        outbox.current?.confirmed(data.kingdomId);
         pending.current = null;
         setDraft("");
         setNotice("Delivery confirmed from the original receipt.");
         await readLatest();
+      } else if (definiteMessageRefusal(error)) {
+        setConfirmedRejection(error instanceof Error ? error.message : "Refused");
+        setNotice("The server refused this delivery. You may edit a new message after acknowledging the refusal.");
       } else setNotice(`Delivery unconfirmed. Retry preserves command ${command.commandId}.`);
     } finally {
       setBusy(false);
@@ -312,6 +386,9 @@ export function ConversationWorkspace({
         <button type="button" onClick={() => setShowPolicy(!showPolicy)}>
           Social delegation
         </button>
+        <button type="button" onClick={() => setShowObservations(!showObservations)}>
+          Consented observations
+        </button>
         <button type="button" onClick={() => void refresh().catch(() => setNotice("Refresh unavailable."))}>
           Refresh
         </button>
@@ -321,6 +398,7 @@ export function ConversationWorkspace({
         preferences still apply.
       </p>
       {showPolicy && data && <SocialDelegation data={data} request={request} onSaved={refresh} canWrite={canWrite} />}
+      {showObservations && <ObservedExchanges request={request} />}
       {notice && (
         <p role="status" className="cw-notice">
           {notice}
@@ -373,6 +451,7 @@ export function ConversationWorkspace({
               onClick={() =>
                 void request(`/v1/game/social?contactOffset=${data.contactsNextOffset}`)
                   .then((r) => {
+                    ++contactPages.current;
                     const next = r as unknown as ConversationData;
                     setData((old) =>
                       old
@@ -527,6 +606,7 @@ export function ConversationWorkspace({
                           .then(async (receipt) => {
                             if (receipt && ["COMMITTED", "ALREADY_COMMITTED"].includes(receipt.code)) {
                               pending.current = null;
+                              if (data) outbox.current?.confirmed(data.kingdomId);
                               setDraft("");
                               setNotice("Original delivery confirmed.");
                               await readLatest();
@@ -540,6 +620,22 @@ export function ConversationWorkspace({
                       }}
                     >
                       Check original receipt
+                    </button>
+                  )}
+                  {confirmedRejection && (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => {
+                        if (data) outbox.current?.confirmed(data.kingdomId);
+                        pending.current = null;
+                        setConfirmedRejection("");
+                        setNotice(
+                          `The server rejected the original message: ${confirmedRejection}. You can now edit a new message.`,
+                        );
+                      }}
+                    >
+                      Edit after confirmed rejection
                     </button>
                   )}
                 </form>
@@ -571,12 +667,336 @@ export function ConversationWorkspace({
                   )
                 }
               />
+              <EngineAgreementHistory
+                items={historyItems}
+                ownerId={data.kingdomId}
+                onMoreVersions={(o) => {
+                  const current = generation.current;
+                  void request(
+                    `/v1/game/conversations/versions?kingdomId=${selected}&offerId=${o.id}&beforeVersion=${o.versionsNextBefore}`,
+                  )
+                    .then((r) => {
+                      if (current !== generation.current) return;
+                      setHistoryItems((old) =>
+                        old.map((x) =>
+                          x.id === o.id
+                            ? {
+                                ...x,
+                                versions: [
+                                  ...x.versions,
+                                  ...(r.versions as AgreementHistoryItem["versions"]).filter(
+                                    (v) => !x.versions.some((a) => a.version === v.version),
+                                  ),
+                                ],
+                                signatures: [
+                                  ...x.signatures,
+                                  ...(r.signatures as AgreementHistoryItem["signatures"]).filter(
+                                    (s) =>
+                                      !x.signatures.some((a) => a.version === s.version && a.kingdomId === s.kingdomId),
+                                  ),
+                                ],
+                                versionsNextBefore: r.nextBefore as number | null,
+                              }
+                            : x,
+                        ),
+                      );
+                    })
+                    .catch(() => setNotice("Earlier offer versions unavailable. Retry loading them."));
+                }}
+              />
+              {historyNext && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const current = generation.current,
+                      cursor = historyNext;
+                    void request(
+                      `/v1/game/conversations/agreements?kingdomId=${selected}&beforeGameTimeMs=${cursor.gameTimeMs}&beforeId=${cursor.id}`,
+                    )
+                      .then((r) => {
+                        if (current !== generation.current) return;
+                        setHistoryItems((old) => [
+                          ...old,
+                          ...(r.offers as AgreementHistoryItem[]).filter((o) => !old.some((x) => x.id === o.id)),
+                        ]);
+                        setHistoryNext(r.next as ThreadPage["next"]);
+                      })
+                      .catch(() => setNotice("Earlier negotiations unavailable. Retry loading them."));
+                  }}
+                >
+                  Earlier negotiations
+                </button>
+              )}
+              <ObservationConsent key={selected} peerId={selected} request={request} canWrite={canWrite} />
             </>
           ) : (
             <p>Choose a relationship to inspect its obligations.</p>
           )}
         </aside>
       </div>
+    </section>
+  );
+}
+
+type ObservationConsentRecord = {
+  observerKingdomId: string;
+  handle: string;
+  displayName: string;
+  enabled: boolean;
+  peerEnabled: boolean;
+  version: number;
+};
+function ObservationConsent({ peerId, request, canWrite }: { peerId: string; request: Request; canWrite: boolean }) {
+  const [consents, setConsents] = useState<ObservationConsentRecord[]>([]),
+    [observer, setObserver] = useState(""),
+    [observerName, setObserverName] = useState(""),
+    [observerSearch, setObserverSearch] = useState(""),
+    [observerMatches, setObserverMatches] = useState<Party[]>([]),
+    [notice, setNotice] = useState(""),
+    [busy, setBusy] = useState(false);
+  const pending = useRef<{ commandId: string; action: Record<string, unknown> } | null>(null);
+  const load = useCallback(async () => {
+    const r = await request(`/v1/game/conversations/consents?kingdomId=${peerId}`);
+    setConsents(r.consents as ObservationConsentRecord[]);
+  }, [request, peerId]);
+  useEffect(() => {
+    void load().catch(() => setNotice("Observation settings unavailable."));
+  }, [load]);
+  async function save(id: string, enabled: boolean) {
+    if (!canWrite || busy) return;
+    setBusy(true);
+    pending.current ??= {
+      commandId: crypto.randomUUID(),
+      action: {
+        kind: "conversation.observation",
+        peerKingdomId: peerId,
+        observerKingdomId: id,
+        enabled,
+        expectedVersion: consents.find((c) => c.observerKingdomId === id)?.version ?? 0,
+      },
+    };
+    try {
+      const r = await request("/v1/social/commands", "POST", {
+        schemaVersion: "pact.social-command.v2",
+        ...pending.current,
+      });
+      const receipt = r.receipt as { code: string };
+      if (["COMMITTED", "ALREADY_COMMITTED"].includes(receipt.code)) {
+        pending.current = null;
+        setNotice("Your observation consent was saved. The other participant must independently consent.");
+        await load();
+      } else {
+        pending.current = null;
+        setNotice(
+          `The server rejected this change: ${receipt.code}. Refresh its current state before another decision.`,
+        );
+        await load();
+      }
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        ["INVALID_COMMAND", "FORBIDDEN", "INVALID_INPUT", "OPERATION_CONFLICT"].includes(error.message)
+      ) {
+        pending.current = null;
+        setNotice(`Change rejected: ${error.message}. Review refreshed consent before a new decision.`);
+        await load();
+      } else setNotice("Change unconfirmed. Retry preserves the exact observer, setting and command ID.");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <details className="cw-agreement">
+      <summary>Named observation consent</summary>
+      <p>
+        Private by default. A named observer can read retained and future messages only while both participants consent.
+        Revocation stops future reads; content already read cannot be recalled. Private notes, reasoning, credentials
+        and stocks are never included.
+      </p>
+      {consents.map((c) => (
+        <div key={c.observerKingdomId}>
+          <p>
+            {c.displayName} · @{c.handle}: you {c.enabled ? "consent" : "do not consent"}, peer{" "}
+            {c.peerEnabled ? "consents" : "has not consented"}. Blocks take precedence.
+          </p>
+          <button
+            type="button"
+            disabled={!canWrite || busy || pending.current !== null}
+            onClick={() => void save(c.observerKingdomId, !c.enabled)}
+          >
+            {c.enabled ? "Revoke your consent" : "Enable your consent"}
+          </button>
+        </div>
+      ))}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void request(`/v1/game/council?search=${encodeURIComponent(observerSearch)}`)
+            .then((r) =>
+              setObserverMatches((r.players as { players: Party[] }).players.filter((p) => p.kingdomId !== peerId)),
+            )
+            .catch(() => setNotice("Public player search unavailable."));
+        }}
+      >
+        <label>
+          Find a named observer
+          <input
+            placeholder="Name or @handle"
+            maxLength={80}
+            value={observerSearch}
+            disabled={pending.current !== null}
+            onChange={(e) => setObserverSearch(e.target.value)}
+          />
+        </label>
+        <button type="submit" disabled={!canWrite || busy || pending.current !== null}>
+          Find observer
+        </button>
+      </form>
+      {observerMatches.map((p) => (
+        <button
+          type="button"
+          key={p.kingdomId}
+          disabled={pending.current !== null}
+          onClick={() => {
+            setObserver(p.kingdomId);
+            setObserverName(`${p.displayName} (@${p.handle})`);
+          }}
+        >
+          Choose {p.displayName} · @{p.handle}
+        </button>
+      ))}
+      {observer && <p>Selected observer: {observerName}</p>}
+      <button
+        type="button"
+        disabled={!observer || !canWrite || busy || pending.current !== null}
+        onClick={() => void save(observer, true)}
+      >
+        Consent to the selected observer reading this exchange
+      </button>
+      {pending.current && (
+        <button type="button" disabled={busy} onClick={() => void save("", false)}>
+          Retry original consent change
+        </button>
+      )}
+      {notice && <p role="status">{notice}</p>}
+    </details>
+  );
+}
+type ObservedPair = {
+  leftKingdomId: string;
+  leftName: string;
+  leftHandle: string;
+  rightKingdomId: string;
+  rightName: string;
+  rightHandle: string;
+};
+function ObservedExchanges({ request }: { request: Request }) {
+  const [pairs, setPairs] = useState<ObservedPair[]>([]),
+    [nextOffset, setNextOffset] = useState<number | null>(null),
+    [selected, setSelected] = useState<ObservedPair | null>(null),
+    [messages, setMessages] = useState<(Message & { agentOriginated: boolean })[]>([]),
+    [next, setNext] = useState<ThreadPage["next"]>(null),
+    [notice, setNotice] = useState("");
+  const selectedRef = useRef<ObservedPair | null>(null);
+  const hasObservedPage = useRef(false);
+  const load = useCallback(
+    async (offset = 0) => {
+      const r = await request(`/v1/game/conversations/observations?offset=${offset}`);
+      setPairs((old) => (offset ? [...old, ...(r.pairs as ObservedPair[])] : (r.pairs as ObservedPair[])));
+      setNextOffset(r.nextOffset as number | null);
+    },
+    [request],
+  );
+  useEffect(() => {
+    void load().catch(() => setNotice("Consented observations unavailable."));
+  }, [load]);
+  const read = useCallback(
+    async function read(pair: ObservedPair, cursor?: ThreadPage["next"]) {
+      try {
+        const r = await request(
+          `/v1/game/conversations/observe?leftKingdomId=${pair.leftKingdomId}&rightKingdomId=${pair.rightKingdomId}${cursor ? `&beforeGameTimeMs=${cursor.gameTimeMs}&beforeId=${cursor.id}` : ""}`,
+        );
+        if (selectedRef.current !== pair) return;
+        setMessages((old) =>
+          [
+            ...old.filter((m) => !(r.messages as Message[]).some((n) => n.id === m.id)),
+            ...(r.messages as (Message & { agentOriginated: boolean })[]),
+          ].sort((a, b) => Number(a.sentGameTimeMs) - Number(b.sentGameTimeMs) || a.id.localeCompare(b.id)),
+        );
+        if (cursor || !hasObservedPage.current) setNext(r.next as ThreadPage["next"]);
+        hasObservedPage.current = true;
+        setNotice("");
+      } catch {
+        if (selectedRef.current === pair) {
+          setMessages([]);
+          setNext(null);
+          setNotice("Observation unavailable or revoked. Both participants must currently consent.");
+        }
+        void load();
+      }
+    },
+    [request, load],
+  );
+  useEffect(
+    () => (selected ? startVisiblePolling(() => read(selected), document, globalThis, 30000) : undefined),
+    [selected, read],
+  );
+  return (
+    <section className="cw-delegation" aria-label="Consented observations">
+      <h2>Consented exchanges</h2>
+      <p>
+        Only pairs that independently consented to your kingdom are listed. Reading here never acknowledges either
+        participant's inbox. Revocation prevents subsequent reads.
+      </p>
+      {pairs.map((p) => (
+        <button
+          type="button"
+          key={`${p.leftKingdomId}:${p.rightKingdomId}`}
+          onClick={() => {
+            selectedRef.current = p;
+            hasObservedPage.current = false;
+            setSelected(p);
+            setMessages([]);
+            setNext(null);
+            void read(p);
+          }}
+        >
+          {p.leftName} ↔ {p.rightName}
+        </button>
+      ))}
+      {!pairs.length && <p>No mutually consented exchanges.</p>}
+      {nextOffset !== null && (
+        <button
+          type="button"
+          onClick={() => void load(nextOffset).catch(() => setNotice("More consented pairs unavailable."))}
+        >
+          More consented pairs
+        </button>
+      )}
+      {selected && (
+        <div>
+          <h3>
+            {selected.leftName} ↔ {selected.rightName}
+          </h3>
+          {next && (
+            <button type="button" onClick={() => void read(selected, next)}>
+              Earlier observed messages
+            </button>
+          )}
+          <div className="cw-timeline">
+            {messages.map((m) => (
+              <article className="cw-message" key={m.id}>
+                <small>
+                  {m.senderKingdomId === selected.leftKingdomId ? selected.leftName : selected.rightName} ·{" "}
+                  {m.agentOriginated ? "agent" : "human"} statement · {time(m.sentGameTimeMs)}
+                </small>
+                <p>{m.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+      {notice && <p role="status">{notice}</p>}
     </section>
   );
 }
@@ -616,12 +1036,22 @@ function SocialDelegation({
           action: pending.current.action,
         })
           .then((r) => {
-            if ((r.receipt as { code: string })?.code !== "COMMITTED") throw new Error("Not committed");
+            if (!["COMMITTED", "ALREADY_COMMITTED"].includes((r.receipt as { code: string })?.code))
+              throw new Error("Not committed");
             pending.current = null;
             setNotice("Social delegation saved.");
             return onSaved();
           })
-          .catch(() => setNotice("Change unconfirmed. Retry retains the original settings and command ID."))
+          .catch(async (error) => {
+            if (
+              error instanceof Error &&
+              ["INVALID_COMMAND", "FORBIDDEN", "INVALID_INPUT", "OPERATION_CONFLICT"].includes(error.message)
+            ) {
+              pending.current = null;
+              setNotice(`Change rejected: ${error.message}. Reload current delegation before another decision.`);
+              await onSaved();
+            } else setNotice("Change unconfirmed. Retry retains the original settings and command ID.");
+          })
           .finally(() => setBusy(false));
       }}
     >

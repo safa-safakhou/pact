@@ -46,6 +46,14 @@ export class SocialCommandHandler implements SocialCommandPort {
     }
     const action = command.action;
     switch (action.kind) {
+      case "conversation.observation": {
+        if (!this.social) throw new DispatcherError("INVALID_COMMAND");
+        const result = await this.social.configureObservation(client, principal.accountId, action, gameTimeMs);
+        return {
+          recordVersions: { [`observation:${action.peerKingdomId}:${action.observerKingdomId}`]: result.version },
+          result,
+        };
+      }
       case "contact.delegation": {
         if (!this.social) throw new DispatcherError("INVALID_COMMAND");
         const result = await this.social.configureDelegation(client, principal.accountId, action, gameTimeMs);

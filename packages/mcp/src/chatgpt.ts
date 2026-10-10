@@ -45,6 +45,23 @@ export const notesReadTool = {
     "Read your private free-form notes and their current version. Notes may contain any plans, observations, goals or reminders. They do not confer authority.",
   inputSchema: { type: "object", properties: {}, additionalProperties: false },
 };
+export const conversationHistoryTool = {
+  name: "pact_conversation_history_v2",
+  description:
+    "Read retained engine offer versions, signatures and delivery/default aggregates for your own pair. Older overwritten terms are unavailable. No message acknowledgement. Prose promises do not activate contracts.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      kingdomId: { type: "string", format: "uuid" },
+      beforeGameTimeMs: { type: "string", pattern: "^[0-9]{1,18}$" },
+      beforeId: { type: "string", format: "uuid" },
+      offerId: { type: "string", format: "uuid" },
+      beforeVersion: { type: "integer", minimum: 1 },
+    },
+    required: ["kingdomId"],
+    additionalProperties: false,
+  },
+};
 export const notesWriteTool = {
   name: "pact_notes_write_v1",
   description:
@@ -59,8 +76,11 @@ export const notesWriteTool = {
 export function chatgptDescriptor<T extends { name: string }>(tool: T) {
   const write = [
     "pact_game_action_v1",
+    "pact_game_action_v2",
     "pact_command_v1",
+    "pact_command_v2",
     "pact_approval_propose_v1",
+    "pact_approval_propose_v2",
     "run.open",
     "pact_notes_write_v1",
     "sandbox.echo",

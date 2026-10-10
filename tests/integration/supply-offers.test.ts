@@ -4,6 +4,7 @@ import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTra
 import { wholeResources } from "@pact/domain";
 import {
   ActionLimitService,
+  ConversationHistoryReader,
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
@@ -100,6 +101,37 @@ const terms = (override: Partial<SupplyTerms> = {}): SupplyTerms => ({
 });
 
 describe("versioned supply offers and activation", () => {
+  it("pages retained history without duplicate versions and derives expiry before maintenance", async () => {
+    const a = await kingdom(),
+      b = await kingdom();
+    const reader = new ConversationHistoryReader(pool, "pact");
+    const id = randomUUID();
+    // Synthetic projection fixture: never presented as 31 actual negotiated counters.
+    await pool.query(
+      `INSERT INTO supply_offers(id,product_scope,kingdom_a,kingdom_b,version,terms,status,expires_game_time_ms,created_game_time_ms,updated_game_time_ms) VALUES($1,'pact',$2,$3,31,$4,'open',1000,0,31)`,
+      [id, a.kingdomId, b.kingdomId, terms()],
+    );
+    await pool.query(
+      `INSERT INTO supply_offer_versions(product_scope,offer_id,version,terms,expires_game_time_ms,observed_game_time_ms,proposed_by) SELECT 'pact',$1,v,$2,1000,v,$3 FROM generate_series(1,31) v`,
+      [id, terms(), a.kingdomId],
+    );
+    const first = (await reader.agreements(a.accountId, b.kingdomId)).offers[0];
+    expect(first.versions).toHaveLength(20);
+    expect(first.versionsNextBefore).toBe(12);
+    const next = await reader.versions(a.accountId, b.kingdomId, id, 12);
+    expect(next.versions).toHaveLength(11);
+    expect(next.nextBefore).toBeNull();
+    expect(new Set([...first.versions, ...next.versions].map((v) => v.version)).size).toBe(31);
+    const foreign = await kingdom();
+    expect((await reader.versions(foreign.accountId, b.kingdomId, id, 32)).versions).toEqual([]);
+    await pool.query(
+      `INSERT INTO world_clocks(product_scope,rules_id,status,committed_game_time_ms,next_tick_due_at,last_heartbeat_at) VALUES('pact','pact-s1-v1','paused',60000,now(),now())`,
+    );
+    expect((await reader.agreements(a.accountId, b.kingdomId)).offers[0].status).toBe("expired");
+    expect((await pool.query("SELECT status FROM supply_offers WHERE id=$1", [id])).rows[0].status).toBe("open");
+    await pool.query("DELETE FROM world_clocks WHERE product_scope='pact'");
+    await pool.query("DELETE FROM supply_offers WHERE id=$1", [id]);
+  });
   it("invalidates old signatures on counter and atomically locks bonds on activation", async () => {
     const a = await kingdom();
     const b = await kingdom();
@@ -198,6 +230,31 @@ describe("versioned supply offers and activation", () => {
       { state: "active" },
       { state: "released" },
     ]);
+    const history = new ConversationHistoryReader(pool, "pact");
+    const view = await history.agreements(a.accountId, b.kingdomId);
+    expect(view.markedUnitsPerWhole).toBe("600");
+    expect(view.offers[0]).toMatchObject({
+      id: offerId,
+      version: 2,
+      status: "active",
+      contract: { id: second.contractId, status: "active" },
+      versions: [
+        { version: 2, proposedBy: b.kingdomId, historicalBaseline: false, terms: { noticeHours: 0 } },
+        { version: 1, proposedBy: a.kingdomId, terms: { noticeHours: 1 } },
+      ],
+    });
+    expect(view.offers[0]?.signatures).toHaveLength(3);
+    expect(JSON.stringify(view)).not.toContain("authority_ref");
+    expect((await history.agreements(randomUUID(), b.kingdomId)).offers).toEqual([]);
+    expect((await history.versions(a.accountId, b.kingdomId, offerId, 2)).versions).toMatchObject([
+      { version: 1, terms: { noticeHours: 1 } },
+    ]);
+    expect((await history.versions(a.accountId, randomUUID(), offerId, 2)).versions).toEqual([]);
+    expect(await withTransaction(pool, (c) => history.retention.exportAccount(c, a.accountId))).toHaveLength(2);
+    expect(await withTransaction(pool, (c) => history.retention.exportAccount(c, randomUUID()))).toEqual([]);
+    await withTransaction(pool, (c) => history.retention.forgetAccount(c, a.accountId));
+    expect((await history.agreements(b.accountId, a.kingdomId)).offers[0]?.versions[1]?.proposedBy).toBeNull();
+    expect((await history.agreements(b.accountId, a.kingdomId)).offers[0]?.contract?.status).toBe("active");
   });
 
   it("rejects invalid terms and half-funded bonds without a partial contract", async () => {

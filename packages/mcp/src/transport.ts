@@ -47,6 +47,7 @@ import {
 import type { Pool } from "pg";
 import {
   chatgptDescriptor,
+  conversationHistoryTool,
   councilThreadTool,
   LEGACY_PLAY_RESOURCE,
   notesReadTool,
@@ -101,6 +102,10 @@ export interface McpTransportOptions {
   };
   readonly councilThreads?: {
     read(accountId: string, peerId: string, before?: { gameTimeMs: string; id: string }): Promise<unknown>;
+  };
+  readonly conversationHistory?: {
+    agreements(accountId: string, peerId: string, before?: { gameTimeMs: string; id: string }): Promise<unknown>;
+    versions(accountId: string, peerId: string, offerId: string, beforeVersion: number): Promise<unknown>;
   };
   readonly notes?: {
     read(accountId: string): Promise<unknown>;
@@ -316,6 +321,9 @@ export class McpTransport {
               ...(this.options.playView && principal.agentScopes?.includes("world:read")
                 ? [playTool, ...(this.options.councilThreads ? [councilThreadTool] : [])]
                 : []),
+              ...(this.options.conversationHistory && principal.agentScopes?.includes("world:read")
+                ? [conversationHistoryTool]
+                : []),
               ...(this.options.notes && principal.agentScopes?.includes("world:read") ? [notesReadTool] : []),
               ...(this.options.notes && principal.agentScopes?.includes("game:act") ? [notesWriteTool] : []),
               ...(this.options.profile && principal.agentScopes?.includes("world:read") ? [pactProfileTool] : []),
@@ -345,7 +353,7 @@ export class McpTransport {
                 : []),
               ...(this.options.runLeases && principal.agentScopes?.includes("game:act") ? [RUN_OPEN_TOOL] : []),
               ...(this.options.approvalProposals && principal.agentScopes?.includes("game:act")
-                ? [pactApprovalProposalTool]
+                ? [pactApprovalProposalV2Tool, pactApprovalProposalTool]
                 : []),
               ...(principal.agentScopes?.includes("game:act") ? [pactGameActionV2Tool, pactGameActionTool] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
@@ -703,6 +711,55 @@ export class McpTransport {
         content: [{ type: "text", text: JSON.stringify(page) }],
         structuredContent: page as Record<string, unknown>,
       };
+    }
+    if (name === conversationHistoryTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.conversationHistory)
+        throw new McpError("FORBIDDEN", 403);
+      const peer = args?.kingdomId,
+        before = args?.beforeGameTimeMs,
+        beforeId = args?.beforeId,
+        offerId = args?.offerId,
+        beforeVersion = args?.beforeVersion;
+      const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (
+        typeof peer !== "string" ||
+        !uuid.test(peer) ||
+        Boolean(before) !== Boolean(beforeId) ||
+        Boolean(offerId) !== Boolean(beforeVersion) ||
+        Object.keys(args ?? {}).some(
+          (k) => !["kingdomId", "beforeGameTimeMs", "beforeId", "offerId", "beforeVersion"].includes(k),
+        )
+      )
+        throw new McpError("INVALID_REQUEST");
+      if (
+        before !== undefined &&
+        (typeof before !== "string" ||
+          !/^\d{1,18}$/.test(before) ||
+          typeof beforeId !== "string" ||
+          !uuid.test(beforeId))
+      )
+        throw new McpError("INVALID_REQUEST");
+      if (
+        offerId !== undefined &&
+        (typeof offerId !== "string" ||
+          !uuid.test(offerId) ||
+          typeof beforeVersion !== "number" ||
+          !Number.isSafeInteger(beforeVersion) ||
+          beforeVersion < 1 ||
+          before !== undefined)
+      )
+        throw new McpError("INVALID_REQUEST");
+      const result =
+        typeof offerId === "string" && typeof beforeVersion === "number"
+          ? await this.options.conversationHistory.versions(principal.accountId, peer, offerId, beforeVersion)
+          : await this.options.conversationHistory.agreements(
+              principal.accountId,
+              peer,
+              typeof before === "string" && typeof beforeId === "string"
+                ? { id: beforeId, gameTimeMs: before }
+                : undefined,
+            );
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactConversationReadTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.conversations)

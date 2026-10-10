@@ -232,6 +232,10 @@ export class SupplyService {
         input.gameTimeMs,
       ],
     );
+    await client.query(
+      "INSERT INTO supply_offer_versions(product_scope,offer_id,version,terms,expires_game_time_ms,observed_game_time_ms,proposed_by) VALUES($1,$2,1,$3,$4,$5,$6)",
+      [this.productScope, input.offerId, input.terms, offer.expires_game_time_ms, input.gameTimeMs, party],
+    );
     await this.emit(client, "supply.offer.created.v1", { offerId: input.offerId, version: 1 });
     return { id: input.offerId, version: 1 };
   }
@@ -274,6 +278,18 @@ export class SupplyService {
       `UPDATE supply_offers SET version = version + 1, terms = $2::jsonb,
          expires_game_time_ms = $3, updated_game_time_ms = $4 WHERE id = $1`,
       [offer.id, JSON.stringify(input.terms), input.gameTimeMs + minutes * 60_000, input.gameTimeMs],
+    );
+    await client.query(
+      "INSERT INTO supply_offer_versions(product_scope,offer_id,version,terms,expires_game_time_ms,observed_game_time_ms,proposed_by) VALUES($1,$2,$3,$4,$5,$6,$7)",
+      [
+        this.productScope,
+        offer.id,
+        offer.version + 1,
+        input.terms,
+        input.gameTimeMs + minutes * 60_000,
+        input.gameTimeMs,
+        party,
+      ],
     );
     await this.emit(client, "supply.offer.countered.v1", { offerId: offer.id, version: offer.version + 1 });
     return offer.version + 1;

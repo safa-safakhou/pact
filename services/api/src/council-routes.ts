@@ -70,6 +70,92 @@ export function registerCouncilRoutes(
       );
     }),
   );
+  server.get("/v1/game/conversations/agreements", async (request, reply) =>
+    safe(reply, async () => {
+      reply.header("cache-control", "no-store");
+      const session = await identity.authenticate(sessionToken(request));
+      const query = z
+        .object({
+          kingdomId: z.uuid(),
+          beforeGameTimeMs: z
+            .string()
+            .regex(/^\d{1,18}$/)
+            .optional(),
+          beforeId: z.uuid().optional(),
+        })
+        .strict()
+        .parse(request.query);
+      if (Boolean(query.beforeId) !== Boolean(query.beforeGameTimeMs))
+        return reply.code(400).send({ error: { code: "INVALID_INPUT" } });
+      return council.history.agreements(
+        session.accountId,
+        query.kingdomId,
+        query.beforeId && query.beforeGameTimeMs
+          ? { id: query.beforeId, gameTimeMs: query.beforeGameTimeMs }
+          : undefined,
+      );
+    }),
+  );
+  server.get("/v1/game/conversations/versions", async (request, reply) =>
+    safe(reply, async () => {
+      reply.header("cache-control", "no-store");
+      const session = await identity.authenticate(sessionToken(request));
+      const query = z
+        .object({ kingdomId: z.uuid(), offerId: z.uuid(), beforeVersion: z.coerce.number().int().positive() })
+        .strict()
+        .parse(request.query);
+      return council.history.versions(session.accountId, query.kingdomId, query.offerId, query.beforeVersion);
+    }),
+  );
+  server.get("/v1/game/conversations/consents", async (request, reply) =>
+    safe(reply, async () => {
+      reply.header("cache-control", "no-store");
+      const session = await identity.authenticate(sessionToken(request));
+      const query = z.object({ kingdomId: z.uuid() }).strict().parse(request.query);
+      return { consents: await council.history.consents(session.accountId, query.kingdomId) };
+    }),
+  );
+  server.get("/v1/game/conversations/observations", async (request, reply) =>
+    safe(reply, async () => {
+      reply.header("cache-control", "no-store");
+      const session = await identity.authenticate(sessionToken(request));
+      const query = z
+        .object({ offset: z.coerce.number().int().min(0).max(10000).default(0) })
+        .strict()
+        .parse(request.query);
+      return council.history.observations(session.accountId, query.offset);
+    }),
+  );
+  server.get("/v1/game/conversations/observe", async (request, reply) =>
+    safe(reply, async () => {
+      reply.header("cache-control", "no-store");
+      const session = await identity.authenticate(sessionToken(request));
+      const query = z
+        .object({
+          leftKingdomId: z.uuid(),
+          rightKingdomId: z.uuid(),
+          beforeGameTimeMs: z
+            .string()
+            .regex(/^\d{1,18}$/)
+            .optional(),
+          beforeId: z.uuid().optional(),
+        })
+        .strict()
+        .parse(request.query);
+      if (Boolean(query.beforeId) !== Boolean(query.beforeGameTimeMs))
+        return reply.code(400).send({ error: { code: "INVALID_INPUT" } });
+      return (
+        (await council.history.observed(
+          session.accountId,
+          query.leftKingdomId,
+          query.rightKingdomId,
+          query.beforeId && query.beforeGameTimeMs
+            ? { id: query.beforeId, gameTimeMs: query.beforeGameTimeMs }
+            : undefined,
+        )) ?? reply.code(403).send({ error: { code: "OBSERVATION_NOT_CONSENTED" } })
+      );
+    }),
+  );
   server.put("/v1/game/council/character", async (request, reply) =>
     safe(reply, async () => {
       reply.header("cache-control", "no-store");

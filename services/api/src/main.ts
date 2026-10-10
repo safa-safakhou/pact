@@ -309,6 +309,10 @@ const mcp = new McpTransport({
     read: (accountId, query) => readCouncil(accountId, query ?? { search: "", offset: 0 }),
   },
   councilThreads: { read: (accountId, peerId, before) => council.thread(accountId, peerId, before) },
+  conversationHistory: {
+    agreements: (accountId, peerId, before) => council.history.agreements(accountId, peerId, before),
+    versions: (accountId, peerId, offerId, before) => council.history.versions(accountId, peerId, offerId, before),
+  },
   agentGuide: new AgentGuideReader(worldViews, socialOverview, authority),
   seasons: {
     read: (query, accountId) =>
@@ -425,6 +429,7 @@ const privacy = new PrivacyService(pool, {
     notifications.retention,
     moderation.retention,
     social.retention,
+    council.history.retention,
     botRetention("pact"),
     {
       name: "kingdomExperience",

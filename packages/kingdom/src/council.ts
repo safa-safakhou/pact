@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import type { Pool } from "pg";
+import { ConversationHistoryReader } from "./conversation-history.js";
 import { acknowledgeMessageRead } from "./message-read-state.js";
 import type { SocialOverviewReader } from "./social-overview.js";
 
@@ -26,13 +27,16 @@ export function generatedEnvoy(id: string): EnvoyCharacter {
 }
 /** The owner participates in every returned exchange. No model call or inferred reply/approval. */
 export class CouncilReader {
+  readonly history: ConversationHistoryReader;
   constructor(
     private readonly pool: Pool,
     private readonly scope: string,
     private readonly social: SocialOverviewReader,
     private readonly activity: (accountIds: string[]) => Promise<Record<string, CouncilActivity>>,
     private readonly now: () => Date = () => new Date(),
-  ) {}
+  ) {
+    this.history = new ConversationHistoryReader(pool, scope);
+  }
 
   async read(accountId: string, publicIds: string[] = [], observeHuman = false) {
     const interactions = await this.social.read(accountId, { acknowledgeDeliveredMessages: false });

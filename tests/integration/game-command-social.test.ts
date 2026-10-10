@@ -9,7 +9,12 @@ import {
 } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readMandateContext } from "@pact/authority";
-import { type CommandEnvelope, ProductScopeSchema, pactApprovalProposalTool } from "@pact/contracts";
+import {
+  type CommandEnvelope,
+  ProductScopeSchema,
+  pactApprovalProposalTool,
+  pactApprovalProposalV2Tool,
+} from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -298,7 +303,7 @@ describe("shared gameplay command admission", () => {
       providerRouter: new ProviderRouter([
         new DeterministicFakeProvider({
           scenario: "success",
-          toolName: pactApprovalProposalTool.name,
+          toolName: pactApprovalProposalV2Tool.name,
           toolArguments: {
             commandId: modelCommandId,
             action: {
