@@ -8039,7 +8039,7 @@
       "id": "PACT-155",
       "title": "Certify local and Codex Luna Astra game runner routes",
       "phase": 3,
-      "status": "in_progress",
+      "status": "blocked",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8075,14 +8075,15 @@
         "Codex integration"
       ],
       "evidence": [
-        "Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged."
+        "Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged.",
+        "docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun."
       ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Luna/Astra access and authenticated owner route on the intended machine; model aliases verified at execution time.",
         "Covering authorization for any live certification calls and their exact request/spend bounds."
       ],
-      "block_reason": null,
+      "block_reason": "Prepared decision/game ports and host matrix; actual bounded model/host certification requires owner-approved workload and eligible local/Luna/Astra/ChatGPT route. No new model experiment or schedule activated.",
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
       "implementation_authorization": "founder_20261010"
@@ -8091,7 +8092,7 @@
       "id": "PACT-156",
       "title": "Certify actual ChatGPT scheduled PACT and multi-login operation",
       "phase": 3,
-      "status": "todo",
+      "status": "blocked",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8128,13 +8129,15 @@
         "MCP",
         "scheduler operations"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Actual owner-authorized accounts, eligible scheduling/model access and each account-specific PACT connection.",
         "Covering authorization for creation of tasks/accounts and bounded live acceptance calls; no PACT app-event trigger is assumed."
       ],
-      "block_reason": null,
+      "block_reason": "Prepared decision/game ports and host matrix; actual bounded model/host certification requires owner-approved workload and eligible local/Luna/Astra/ChatGPT route. No new model experiment or schedule activated.",
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
       "implementation_authorization": "founder_20261010"
@@ -8300,7 +8303,7 @@
       "id": "PACT-160",
       "title": "Specify collection catalog achievement extensions and reward eligibility",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -8337,7 +8340,7 @@
         "art inventory"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Covering implementation assignment and final reviewed collection/rules/asset choices; planning alone activates none."
       ],

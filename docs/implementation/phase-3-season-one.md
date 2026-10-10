@@ -2377,7 +2377,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-155"></a>
 ## PACT-155 — Certify local and Codex Luna Astra game runner routes
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** blocked · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2402,14 +2402,17 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Assignee:** codex-agent-society
 
+**Block reason:** Prepared decision/game ports and host matrix; actual bounded model/host certification requires owner-approved workload and eligible local/Luna/Astra/ChatGPT route. No new model experiment or schedule activated.
+
 **Evidence**
 
 - Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged.
+- docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun.
 
 <a id="pact-156"></a>
 ## PACT-156 — Certify actual ChatGPT scheduled PACT and multi-login operation
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** blocked · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2431,6 +2434,14 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Task stop/reconnect/offline/timezone/budget behavior is measured; manual alternative stays available without silently substituting a model/host.
 
 **External prerequisites:** Actual owner-authorized accounts, eligible scheduling/model access and each account-specific PACT connection.; Covering authorization for creation of tasks/accounts and bounded live acceptance calls; no PACT app-event trigger is assumed..
+
+**Assignee:** codex-agent-society
+
+**Block reason:** Prepared decision/game ports and host matrix; actual bounded model/host certification requires owner-approved workload and eligible local/Luna/Astra/ChatGPT route. No new model experiment or schedule activated.
+
+**Evidence**
+
+- docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun.
 
 <a id="pact-157"></a>
 ## PACT-157 — Evaluate decision quality communication freedom and service load offline
@@ -2522,7 +2533,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-160"></a>
 ## PACT-160 — Specify collection catalog achievement extensions and reward eligibility
 
-**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2544,6 +2555,8 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Exact positive-delivery, counteroffer, Court-interval, battle and season predicates are testable; missing history and collusion limits are documented; random finishes remain separately gated.
 
 **External prerequisites:** Covering implementation assignment and final reviewed collection/rules/asset choices; planning alone activates none..
+
+**Assignee:** codex-agent-society
 
 <a id="pact-161"></a>
 ## PACT-161 — Extend trusted achievement events and collection progress projections

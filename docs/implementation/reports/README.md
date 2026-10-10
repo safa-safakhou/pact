@@ -113,3 +113,5 @@ For long-running verification or pilot tickets, link the actual observation reco
 - [ChatGPT human approval usability repair, 7 October](chatgpt-approval-20261007.md): automatic exact-action review, expiry and explicit decisions.
 
 [PACT-146 communication diagnostics](communication-diagnostics-20261010.md).
+
+- [PACT-155/156 external runner preparation](external-runner-preparation-20261010.md): fake bounded-port acceptance; actual model/scheduled-host certification blocked.
