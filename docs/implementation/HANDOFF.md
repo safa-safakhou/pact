@@ -1,3 +1,7 @@
+# Collection progress checkpoint — 10 October 2026
+
+PACT-161 is verified and committed; PACT-162 is assigned next. The live release still contains 146–154 only until the collection UI release is actually verified. Preserve the stopped fifty-owner task and all terminal budgets. Continue authorized engineering, with actual external route/pilot/rare acceptance blocked separately.
+
 # Current handoff — communication-first implementation, 10 October 2026
 
 PACT-160 catalog/specification correction is verified; PACT-161 trusted achievement/progress implementation is assigned. Three approved isolated Qwen calls ended terminal with one committed message and two waits; read the bounded local observation report, including its counteroffer coverage gap. PACT-155/156 actual external/scheduled acceptance remains blocked. Original fifty-owner task remains stopped and both historical finite experiments terminal.

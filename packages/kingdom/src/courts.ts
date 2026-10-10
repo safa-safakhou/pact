@@ -80,6 +80,7 @@ export class CourtService {
     await client.query("DELETE FROM court_requests WHERE court_id=$1 AND kingdom_id=$2", [courtId, actor]);
     await client.query("UPDATE courts SET version=version+1 WHERE id=$1", [courtId]);
     await this.audit(client, courtId, actor, "court.join", {});
+    await recordCourtCollectionInterval(client, this.scope, courtId, gameTime);
   }
   async execute(client: PoolClient, accountId: string, command: CourtCommand, gameTime: number) {
     const actor = await this.actor(client, accountId);
@@ -316,6 +317,7 @@ export class CourtService {
         ...("description" in details ? { description: undefined, title: undefined } : {}),
       });
     }
+    await recordCourtCollectionInterval(client, this.scope, id, gameTime);
     const result = await client.query<{ version: number }>("SELECT version FROM courts WHERE id=$1", [id]);
     return { recordVersions: { [`court:${id}`]: result.rows[0]?.version ?? 1 }, result: { courtId: id } };
   }
@@ -412,3 +414,5 @@ export class CourtService {
     }
   }
 }
+
+import { recordCourtCollectionInterval } from "./collection-evidence.js";

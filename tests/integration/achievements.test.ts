@@ -8,7 +8,7 @@ import {
   withTransaction,
 } from "@pact/db";
 import { wholeResources } from "@pact/domain";
-import { AchievementService } from "@pact/kingdom";
+import { AchievementService, CollectionService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -57,7 +57,11 @@ async function event(type: string, payload: Record<string, unknown>, id = random
   return id;
 }
 async function processEvents() {
-  return withTransaction(pool, (client) => awards.processPending(client));
+  return withTransaction(pool, async (client) => {
+    const count = await awards.processPending(client);
+    await new CollectionService("pact").processPending(client, 604800000);
+    return count;
+  });
 }
 async function read(accountId: string) {
   return withTransaction(pool, (client) => awards.read(client, accountId));
@@ -162,6 +166,9 @@ describe("earned cosmetic achievements", () => {
     await event("raid.resolved.v1", { raidId, gameTimeMs: 120_000 });
     expect(await processEvents()).toBe(1);
     expect((await read(visitor.accountId)).achievements).toContain("answered_the_call");
+    expect((await read(visitor.accountId)).achievements).toContain("took_the_field");
+    expect((await read(attacker.accountId)).achievements).toContain("took_the_field");
+    expect((await read(defender.accountId)).achievements).not.toContain("took_the_field");
     expect((await read(defender.accountId)).achievements).not.toContain("came_back");
     await trainingBatch(visitor);
     await event("training.unit.completed.v1", {
@@ -205,7 +212,8 @@ describe("earned cosmetic achievements", () => {
     });
     await processEvents();
     const future = await read(visitor.accountId);
-    expect(future.achievements).toContain("own_your_words");
+    // The real signing-worker route is covered in seals.test; a claimed valid flag cannot award it.
+    expect(future.achievements).not.toContain("own_your_words");
     expect(future.achievements).toContain("winter_stores");
     expect((await read(defender.accountId)).achievements).not.toContain("winter_stores");
   });

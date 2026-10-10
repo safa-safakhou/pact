@@ -8357,7 +8357,7 @@
       "id": "PACT-161",
       "title": "Extend trusted achievement events and collection progress projections",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "L",
@@ -8396,7 +8396,9 @@
         "read projections",
         "migrations"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/collection-progress-20261010.md; full package build/types/lint; 351 unit; full integration 370 passed/one optional provider skipped; thirteen targeted checks; no deployed UI or new run inferred."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
@@ -8408,7 +8410,7 @@
       "id": "PACT-162",
       "title": "Create deterministic story keepsakes and account-bound display equipment",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8448,7 +8450,7 @@
         "privacy"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",

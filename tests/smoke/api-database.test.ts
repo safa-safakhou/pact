@@ -92,6 +92,7 @@ describe("API/database smoke", () => {
       { name: "0059_conversation_history.sql" },
       { name: "0060_private_memory.sql" },
       { name: "0061_persistent_enrollment.sql" },
+      { name: "0062_collections.sql" },
     ]);
     await server.close();
   });

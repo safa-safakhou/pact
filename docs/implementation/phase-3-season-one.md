@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 61 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 62 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2566,7 +2566,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-161"></a>
 ## PACT-161 — Extend trusted achievement events and collection progress projections
 
-**Status:** in_progress · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2583,17 +2583,21 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Replayed/reordered events, concurrent consumers and rollback never duplicate progress, entitlements or original Gem grants; no public/model reward injector exists.
-- [ ] Fixtures cover both acknowledged messages, changed signed economic terms followed by positive bilateral settlement, distinct counterpart/resource keys, renewed contracts, sustained Court membership, resolved ordinary-troop combat and actual season participation.
-- [ ] Historical entitlements backfill exactly; missing versions/intervals/settlements stay unavailable; ownership/retention/export and source anonymization pass without retaining private transcripts.
-- [ ] Bounded projection failures/lag do not stop world settlement; build/type/migration/integration checks and module documentation pass.
+- [x] Replayed/reordered events, concurrent consumers and rollback never duplicate progress, entitlements or original Gem grants; no public/model reward injector exists.
+- [x] Fixtures cover both acknowledged messages, changed signed economic terms followed by positive bilateral settlement, distinct counterpart/resource keys, renewed contracts, sustained Court membership, resolved ordinary-troop combat and actual season participation.
+- [x] Historical entitlements backfill exactly; missing versions/intervals/settlements stay unavailable; ownership/retention/export and source anonymization pass without retaining private transcripts.
+- [x] Bounded projection failures/lag do not stop world settlement; build/type/migration/integration checks and module documentation pass.
 
 **Assignee:** codex-agent-society
+
+**Evidence**
+
+- docs/implementation/reports/collection-progress-20261010.md; full package build/types/lint; 351 unit; full integration 370 passed/one optional provider skipped; thirteen targeted checks; no deployed UI or new run inferred.
 
 <a id="pact-162"></a>
 ## PACT-162 — Create deterministic story keepsakes and account-bound display equipment
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2614,6 +2618,8 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Human preview versus committed equipment is distinct; same-account device/model recovery, concurrent save and rollback preserve ownership/equipment.
 - [ ] Public cards contain no peer identities, message text, resource terms or source-access capability; participant links reauthorize and degrade truthfully after retention/consent changes.
 - [ ] Deterministic catalog and twenty bounded original assets work without an inference call, shop, random finish, payment adapter or new collection currency.
+
+**Assignee:** codex-agent-society
 
 <a id="pact-163"></a>
 ## PACT-163 — Build Hall of Stories and communication-linked collection UI

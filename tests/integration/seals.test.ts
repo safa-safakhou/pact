@@ -6,6 +6,7 @@ import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTra
 import { canonicalJson, sha256, verifyPayload } from "@pact/evidence";
 import { IdentityError, type IdentityService } from "@pact/identity";
 import {
+  AchievementService,
   ActionLimitService,
   CourtService,
   GameReportReader,
@@ -138,6 +139,14 @@ describe("source-backed human publication and public evidence", () => {
     await expect(new SealSigner(pool, "pact", Buffer.alloc(32, 3), clock).signNext()).rejects.toThrow();
     expect(await seals.read(pending.id, a.accountId)).toMatchObject({ status: "pending" });
     await Promise.all([signer.signNext(), signer.signNext()]);
+    const achievements = new AchievementService("pact");
+    await withTransaction(pool, (c) => achievements.processPending(c));
+    expect((await withTransaction(pool, (c) => achievements.read(c, a.accountId))).achievements).toContain(
+      "own_your_words",
+    );
+    expect((await withTransaction(pool, (c) => achievements.read(c, b.accountId))).achievements).not.toContain(
+      "own_your_words",
+    );
     const view = await seals.read(pending.id, c.accountId);
     expect(view).toMatchObject({
       status: "published",

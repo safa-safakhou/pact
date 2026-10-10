@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+import { appendOutbox } from "@pact/db";
 import type { PoolClient } from "pg";
 import { GAME_DAY_MS, SeasonService, seasonPosition } from "./seasons.js";
 
@@ -152,8 +154,22 @@ export class SeasonHonorsService {
           "INSERT INTO season_honor_results(product_scope,season_number,kingdom_id,result) VALUES($1,$2,$3,$4::jsonb) ON CONFLICT DO NOTHING",
           [this.scope, season, result.kingdomId, JSON.stringify(result)],
         );
-        if (result.eligible)
+        if (result.eligible) {
           await this.cosmetic(c, result.kingdomId, `banner.season.${season}`, `season:${season}:participation`);
+          const owner = (
+            await c.query<{ account_id: string }>(
+              "SELECT account_id FROM kingdoms WHERE product_scope=$1 AND id=$2 AND status='ranked'",
+              [this.scope, result.kingdomId],
+            )
+          ).rows[0];
+          if (owner)
+            await appendOutbox(c, {
+              productScope: this.scope,
+              eventId: randomUUID(),
+              type: "season.participation.awarded.v2",
+              payload: { accountId: owner.account_id, seasonNumber: season },
+            });
+        }
       }
       await c.query("INSERT INTO season_honor_runs(product_scope,season_number) VALUES($1,$2) ON CONFLICT DO NOTHING", [
         this.scope,

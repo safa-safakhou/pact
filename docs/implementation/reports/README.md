@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Trusted collection outcomes](collection-progress-20261010.md) — PACT-161, exact predicates, migration, private progress and bounded failure isolation.
+
 - [Offline society evaluation and communication load](agent-society-evaluation-20261010.md) — PACT-157, deterministic scorer, held-out family boundaries and isolated 20/50/100 relationship acceptance; no actual model intelligence certification.
 
 - [Owner-enrolled bounded API play](persistent-play-20261010.md) — PACT-154, exact human consent, durable allocation/event scheduling, truthful host status and actual responsive UI checks; external routes remain separate.

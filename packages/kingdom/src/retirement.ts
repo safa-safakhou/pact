@@ -4,6 +4,7 @@ import type { ResourceLedger } from "@pact/ledger";
 import type { WorldClockService } from "@pact/world";
 import type { PoolClient } from "pg";
 import type { BuildingEngine } from "./buildings.js";
+import { recordCourtCollectionInterval } from "./collection-evidence.js";
 import type { GarrisonService } from "./garrison.js";
 import type { SupplyService } from "./supply.js";
 import type { SupplySettlementService } from "./supply-settlement.js";
@@ -103,6 +104,11 @@ export class KingdomRetirementService {
        WHERE product_scope = $1 AND id = $2 AND status = 'ranked'`,
       [this.productScope, kingdom.id],
     );
+    const courts = await client.query<{ court_id: string }>(
+      "SELECT court_id FROM court_memberships WHERE kingdom_id=$1 ORDER BY court_id",
+      [kingdom.id],
+    );
+    for (const r of courts.rows) await recordCourtCollectionInterval(client, this.productScope, r.court_id, gameTimeMs);
     if (changed.rowCount)
       await appendOutbox(client, {
         productScope: this.productScope,

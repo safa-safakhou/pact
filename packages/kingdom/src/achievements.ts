@@ -1,8 +1,11 @@
 import { randomUUID } from "node:crypto";
+import type { CollectionAchievementId } from "@pact/contracts";
 import { appendOutbox } from "@pact/db";
+import { verifyPayload } from "@pact/evidence";
 import type { PoolClient } from "pg";
+import { SEAL_DOMAIN } from "./seals.js";
 
-export type AchievementId =
+type LegacyAchievementId =
   | "first_stone"
   | "first_pact"
   | "kept_the_table"
@@ -12,7 +15,8 @@ export type AchievementId =
   | "own_your_words"
   | "winter_stores";
 
-const ornament: Record<AchievementId, string> = {
+export type AchievementId = CollectionAchievementId;
+const ornament: Record<LegacyAchievementId, string> = {
   first_stone: "ornament.stone_marker",
   first_pact: "ornament.crossed_ribbon",
   kept_the_table: "ornament.table",
@@ -178,15 +182,26 @@ export class AchievementService {
         break;
       }
       case "seal.published.v1": {
-        // Future publication module emits this only after signature/claim validation; fixtures use the same trusted event shape.
-        if (data.valid === true)
-          await this.awardKingdom(
-            client,
-            stringField(data, "kingdomId"),
-            "own_your_words",
-            event.event_id,
-            timeField(data, "gameTimeMs"),
-          );
+        // Match the actual signing-worker event; a claimed `valid` flag is not publication evidence.
+        if (typeof data.sealId !== "string") break;
+        const seal = (
+          await client.query<{
+            creator_kingdom_id: string;
+            signed_payload: Record<string, unknown>;
+            signature: string;
+            public_jwk: import("node:crypto").JsonWebKey;
+            at: string;
+          }>(
+            `SELECT s.creator_kingdom_id,s.signed_payload,s.signature,k.public_jwk,COALESCE(w.committed_game_time_ms,0)::text AS at FROM evidence_seals s JOIN seal_signing_keys k ON k.kid=s.kid AND k.product_scope=s.product_scope LEFT JOIN world_clocks w ON w.product_scope=s.product_scope WHERE s.product_scope=$1 AND s.id=$2 AND s.status='published' AND NOT k.compromised`,
+            [this.productScope, data.sealId],
+          )
+        ).rows[0];
+        if (
+          seal &&
+          seal.creator_kingdom_id &&
+          verifyPayload(SEAL_DOMAIN, seal.signed_payload, seal.signature, seal.public_jwk)
+        )
+          await this.awardKingdom(client, seal.creator_kingdom_id, "own_your_words", event.event_id, Number(seal.at));
         break;
       }
       case "season.low_harvest_week.completed.v1": {
@@ -258,7 +273,7 @@ export class AchievementService {
   private async awardKingdom(
     client: PoolClient,
     kingdomId: string,
-    id: AchievementId,
+    id: LegacyAchievementId,
     eventId: string,
     at: number,
   ): Promise<void> {
@@ -280,7 +295,7 @@ export class AchievementService {
   private async award(
     client: PoolClient,
     accountId: string,
-    id: AchievementId,
+    id: LegacyAchievementId,
     eventId: string,
     at: number,
   ): Promise<void> {

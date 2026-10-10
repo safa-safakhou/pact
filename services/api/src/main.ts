@@ -30,6 +30,7 @@ import {
   BuildingEngine,
   ChronicleOutcomeReader,
   ChronicleService,
+  CollectionService,
   ConstructionExposureAdapter,
   ConversationReader,
   CouncilReader,
@@ -439,6 +440,7 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    new CollectionService("pact").retention,
     persistentPlay.retention,
     privateMemory.retention,
     externalActivity.retention,

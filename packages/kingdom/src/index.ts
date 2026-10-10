@@ -4,6 +4,8 @@ export * from "./building-rules.js";
 export * from "./buildings.js";
 export * from "./chronicle.js";
 export * from "./chronicle-outcomes.js";
+export * from "./collection-evidence.js";
+export * from "./collections.js";
 export type { GameConsequences } from "./consequences.js";
 export * from "./conversation-history.js";
 export * from "./conversation-reader.js";

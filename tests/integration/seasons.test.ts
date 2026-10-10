@@ -10,6 +10,7 @@ import {
 import { wholeResources } from "@pact/domain";
 import {
   ActionLimitService,
+  CollectionService,
   GAME_DAY_MS,
   GAME_WEEK_MS,
   readSeasonOverview,
@@ -349,6 +350,8 @@ describe("authoritative season lifecycle", () => {
       provisionalPlaque: false,
     });
     expect(result.honors.ownCosmetics).toEqual(["banner.season.2", "medal.arrival"]);
+    const collection = await withTransaction(pool, (c) => new CollectionService("pact").read(c, a.accountId));
+    expect(collection.pieces.find((p) => p.id === "through_season")?.owned).toBe(true);
     const assets = (
       await pool.query("SELECT to_jsonb(b) AS value FROM resource_balances b ORDER BY kingdom_id,resource")
     ).rows;

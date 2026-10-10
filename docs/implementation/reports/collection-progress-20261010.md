@@ -1,0 +1,11 @@
+# PACT-161 — trusted collection outcomes
+
+Implemented the eight additional cosmetic-only predicates, four set trophies, private provenance/progress, migration and retention. Sources are actual participant acknowledgments, retained versioned offers and final signatures, positive credited bilateral installments, completed/repeated agreements, transaction-maintained Court intervals, resolved ordinary-troop combat and actual season participation. No new game currency, quotas, strength or inference is awarded.
+
+Migration acceptance preserves existing entitlements, backfills only retained acknowledged messages/season entitlements, and starts Court proof at deployment. Missing original versions, final signatures, partial/overflow installments and absent history do not qualify. Consumers are replay/concurrency/rollback safe and do not skip earlier IDs committed after later events. Quarantine and bounded savepoints keep cosmetic failures from rolling back world settlement; projection reads expose pending/failed counts.
+
+Fixed an existing Own Your Words producer mismatch: actual Seal signing emitted `sealId`, while the achievement consumer expected a claimed validity flag. The consumer now verifies the published signed Seal/key; the real signing-worker integration proves the original 25-Gem achievement once. Claimed validity alone awards nothing.
+
+Verification: full package build, typecheck/lint/contracts/boundaries; 351 unit checks previously passed. Thirteen targeted collection/season integration checks pass, including actual handlers, natural completion, Court join/leave, migration, rollback, commit reordering, quarantine and export/forget/pruning. Full integration: **370 passed, one optional real-provider check skipped**, 57 files, 64.79 seconds. The Season Honors view intentionally retains its season-only projection; the collection view independently verifies the season piece. No hosted CI, new population run, independent human enjoyment or deployment is inferred from these checks.
+
+See [operations](../../operations/collections.md). Next: PACT-162 private incidents/equipment/assets, then PACT-163 responsive collection UI. External runner/scheduler acceptance remains blocked as documented; the three-call local certification is terminal and is not repeated.

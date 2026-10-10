@@ -3,6 +3,7 @@ import {
   AchievementService,
   ActionLimitService,
   BuildingEngine,
+  CollectionService,
   ConstructionExposureAdapter,
   FortuneService,
   GarrisonService,
@@ -50,6 +51,7 @@ export function createRulesRuntime(
   const upkeep = new UpkeepService(productScope, ledger, new GarrisonUpkeepExposureAdapter(productScope, exposure));
   const limits = new ActionLimitService(productScope);
   const achievements = new AchievementService(productScope);
+  const collections = new CollectionService(productScope);
   const scouting = new ScoutService(productScope, ledger, troops, limits, exposure);
   const raids = new RaidService(
     productScope,
@@ -110,6 +112,7 @@ export function createRulesRuntime(
       await honors.processActivity(client, context.gameTimeMs);
       await honors.arrivals(client);
       await achievements.processPending(client);
+      await collections.processSafely(client, context.gameTimeMs);
     },
   };
   const world = new WorldClockService(pool, productScope, handlers);
