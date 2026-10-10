@@ -635,13 +635,14 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [x] Agents cannot mutate their mandate or obtain human-only permissions by changing payload text.
 - [x] Two sandbox requests sharing an allowance cannot both spend it; raising authority requires recent human authentication and increments its version.
 
-**Assignee:** cursor-agent
+**Assignee:** codex-founder-permission-maintenance
 
 **Evidence**
 
 - docs/implementation/reports/oauth-authority.md
 - npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build
 - tests/integration/authority.test.ts
+- reports/agent-permission-maintenance-20261010.md: founder-authorized existing-player settings utility; exact cohort/version/digest and transactional rollback tests, package build/types/lint and 62 relevant integrations pass. No agent/public operator control route. Server application pending at implementation commit.
 
 <a id="pact-020"></a>
 ## PACT-020 — Implement exact-command human approvals

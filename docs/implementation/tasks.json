@@ -803,9 +803,10 @@
       "evidence": [
         "docs/implementation/reports/oauth-authority.md",
         "npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build",
-        "tests/integration/authority.test.ts"
+        "tests/integration/authority.test.ts",
+        "reports/agent-permission-maintenance-20261010.md: founder-authorized existing-player settings utility; exact cohort/version/digest and transactional rollback tests, package build/types/lint and 62 relevant integrations pass. No agent/public operator control route. Server application pending at implementation commit."
       ],
-      "assignee": "cursor-agent",
+      "assignee": "codex-founder-permission-maintenance",
       "blocked_by_external": [],
       "block_reason": null
     },

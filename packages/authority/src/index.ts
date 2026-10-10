@@ -1,5 +1,6 @@
 export * from "./exposure.js";
 export * from "./human-permits.js";
+export { applyReviewedMandate } from "./reviewed-maintenance.js";
 export {
   AuthorityError,
   AuthorityService,

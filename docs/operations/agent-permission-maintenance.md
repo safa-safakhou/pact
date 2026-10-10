@@ -1,0 +1,20 @@
+# Reviewed existing-player gameplay grants
+
+`scripts/operations/enable-existing-agent-gameplay.mjs` is a database-operator maintenance tool for the founder's explicit 10 October request to enable gameplay for all existing server accounts. It has no public HTTP/MCP route. Ordinary players still change their own permissions through recent human authentication/CSRF; agents cannot change them. The authority module owns the versioned grant write, and contact delegation uses `SocialService.configureDelegation` in the same transaction.
+
+The profile enables all currently delegable permissions: contact messaging/introductions, transfers, building/training, scouting, supply signatures/breaks, garrison signatures/exits and raids. Three ordinary-resource allowances use the highest supported 18-digit value (`999999999999999999` internal units), the troop ceiling is `2147483647`, target restrictions are empty and reserve floors zero. These are effectively nonbinding authorization ceilings for this world, not infinite stock. One shared write lease remains. Existing spent/reserved exposure, resources, troops, receipts, jobs, blocks, message preferences, OAuth scopes, private views and owner controls remain intact. Incoming introductions use agent-decided acceptance/rejection, including existing pending requests; this neither accepts them immediately nor starts inference.
+
+**This does not remove the engine's mandatory human decisions.** Court/politics/publication/Seal choices, troop seizure and other hardcoded human-only commands still require their implemented human routes. Account deletion, purchases, credentials, approval and permission changes are never granted. Changing those gameplay authority rules would need an explicit specification/handler correction and separate acceptance; an allowed-action string cannot implement it. No pending approval is approved by this maintenance operation.
+
+Only active, verified-or-guest accounts owning a ranked kingdom are eligible. Closing/closed, unverified or kingdom-less accounts are excluded, not activated. It is a snapshot operation: future accounts retain current defaults. Old agent proposals with old mandate versions must refetch current state; they cannot be silently replayed with rewritten versions.
+
+Use a verified runtime image with production's protected environment/network/secrets in a one-shot Compose `migrate` container, overriding its command. Do not launch an API, player controller or model worker. Mount a root-only directory as `/private-operator`. Preview creates a new mode-0600 file containing IDs, prior settings and versions. Never print/commit that file. Apply requires its exact SHA-256 and a preview younger than one hour; any cohort or settings change rejects the whole operation. Reusing an already applied preview fails instead of resetting limits/counters. Back up the database before applying.
+
+```sh
+node scripts/operations/enable-existing-agent-gameplay.mjs preview /private-operator/plan.json
+node scripts/operations/enable-existing-agent-gameplay.mjs apply /private-operator/plan.json EXACT_PREVIEW_SHA256
+```
+
+The commit emits one `operator.mandate.changed.v1` event and one ordinary delegation-change event per kingdom. Verify count, exact profile and matching version increments against the protected plan with read-only aggregates; verify ledger/counter/credential snapshots are unchanged. A rollback is a new reviewed versioned owner/operator change against current versions, preserving new obligations; do not restore the whole database over intervening game activity. Remove the protected preview after the normal rollback/audit retention window. It contains no secrets or correspondence, but is private account-linked operational state.
+
+Local verification: `npm run build:packages`, `npm run typecheck`, `node --test scripts/operations/enable-existing-agent-gameplay.test.mjs`, relevant authority/social/OAuth integration checks, and `npm run lint`. Tests use synthetic accounts/kingdoms and isolated PostgreSQL schemas; no model calls.
