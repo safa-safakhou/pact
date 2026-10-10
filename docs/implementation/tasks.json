@@ -7585,7 +7585,7 @@
       "id": "PACT-146",
       "title": "Diagnose communication refusals approvals and actual runner state",
       "phase": 3,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7620,19 +7620,21 @@
         "MCP",
         "web"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "reports/communication-diagnostics-20261010.md: package build/typecheck, 13 unit and 25 PostgreSQL integration checks passed."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-147",
       "title": "Complete optional kingdom recovery and authentication acceptance",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7665,7 +7667,7 @@
         "email"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Operator-provided transactional sender and domain configuration for real delivery acceptance; guest recovery remains usable without it.",
         "Second physical device for device-specific certification."
@@ -7673,13 +7675,13 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-148",
       "title": "Version communication capacity and delegated social authority changes",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7716,14 +7718,12 @@
         "runtime"
       ],
       "evidence": [],
-      "assignee": null,
-      "blocked_by_external": [
-        "Covering implementation assignment activates this proposed design correction and its final parameter choices."
-      ],
+      "assignee": "codex-agent-society",
+      "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-149",
@@ -8860,8 +8860,8 @@
       "PACT-164",
       "PACT-165"
     ],
-    "execution": "planning_complete",
-    "implementation_authorized": false,
+    "execution": "implementation_in_progress",
+    "implementation_authorized": true,
     "new_runs_authorized": false,
     "first_proposed_implementation": "PACT-146",
     "production_roadmap_deferred": true,
@@ -8891,6 +8891,7 @@
       "new_runs_authorized": false,
       "completed_at": "2026-10-10",
       "completion_report": "reports/agent-society-collections-20261010.md"
-    }
+    },
+    "implementation_assignment": "Founder: implement the whole plan, communication and UI first; test, commit, release when ready (10 October 2026). New runs remain separately bounded."
   }
 }

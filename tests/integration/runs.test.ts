@@ -74,6 +74,24 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("reports an expired or missing lease without claiming an active model host", async () => {
+    const accountId = await verifiedAccount(`execution-${randomUUID()}@example.test`),
+      service = runs();
+    const started = await service.start({
+      accountId,
+      objective: "Diagnostics",
+      provider: "fixture",
+      model: fakeProviderModel.id,
+    });
+    expect((await service.get(started.runId, accountId)).execution).toMatchObject({
+      state: "queued",
+      hostStatus: "unverified",
+    });
+    await pool.query("UPDATE write_leases SET released_at=$2 WHERE run_id=$1", [started.runId, clockNow]);
+    expect((await service.list(accountId)).runs[0]?.execution?.state).toBe("lease_missing");
+    await pool.query("UPDATE envoy_runs SET deadline_at=$2 WHERE run_id=$1", [started.runId, clockNow]);
+    expect((await service.get(started.runId, accountId)).execution?.state).toBe("expired");
+  });
   it("lists and reads truthful owner-only offline negotiation reports without any provider call", async () => {
     const email = `report-${randomUUID()}@example.test`;
     const accountId = await verifiedAccount(email),

@@ -261,7 +261,7 @@ const dispatcher = new CommandDispatcher({
     await externalActivity.record(client, {
       accountId: principal.accountId,
       sessionId: principal.sessionId,
-      summary: { ...receipt, disposition: proposed ? "proposed" : "committed" },
+      summary: { ...receipt, actionKind: command.action.kind, disposition: proposed ? "proposed" : "committed" },
     });
   },
   social: new SocialCommandHandler(invitations, courts, politics, seals, chronicle),

@@ -65,6 +65,11 @@ export class ExternalAgentActivity {
       .slice(0, 20);
     const summary = {
       code: data.code,
+      ...Object.fromEntries(
+        ["toolName", "actionKind", "reason", "detail"].flatMap((key) =>
+          typeof data[key] === "string" && /^[A-Za-z][A-Za-z0-9_.-]{0,80}$/.test(data[key]) ? [[key, data[key]]] : [],
+        ),
+      ),
       ...(commandId ? { commandId } : {}),
       ...(typeof data.approvalId === "string" && uuid.test(data.approvalId) ? { approvalId: data.approvalId } : {}),
       ...(data.disposition === "proposed" ? { disposition: "proposed" } : {}),

@@ -16,12 +16,17 @@ type Run = {
   usedTokens: number;
   maxTokens: number;
   lastErrorCode: string | null;
+  execution?: { state: string; checkedAt: string; leaseExpiresAt: string | null; hostStatus: string };
 };
 type Entry = {
   id: string;
   category: string;
   callId: string;
   code: string;
+  actionKind?: string;
+  toolName?: string;
+  detail?: string;
+  reason?: string;
   commandId?: string;
   approvalId?: string;
   currentFacts?: { record?: string; label: string; status: string; nextStep: string; reviewPath?: string }[];
@@ -139,6 +144,8 @@ function ActivityEntry({ entry: e, report }: { entry: Entry; report: Report }) {
       <details>
         <summary>Receipt and record references</summary>
         <p>Original result code: {e.code}</p>
+        {(e.actionKind || e.toolName) && <p>Action: {e.actionKind ?? e.toolName}</p>}
+        {(e.detail || e.reason) && <p>Cause: {e.detail ?? e.reason}</p>}
         {e.commandId && (
           <p>
             <a href={`${pactBaseUrl()}v1/receipts/${e.commandId}`} target="_blank" rel="noreferrer">
@@ -452,6 +459,12 @@ export function RunPanel({
               {r.maxTokens} tokens
             </p>
             {r.lastErrorCode && <p>Failure: {r.lastErrorCode}</p>}
+            {r.execution && (
+              <p>
+                Execution: {r.execution.state.replaceAll("_", " ")} · checked {r.execution.checkedAt}. Model host
+                activity is unverified.
+              </p>
+            )}
             <button type="button" disabled={busy} onClick={() => void readReport(r.runId)}>
               Read recorded result
             </button>

@@ -144,9 +144,9 @@ PACT-142,Switch existing continuous fifty-player population to tested Qwen 9B,3,
 PACT-143,Reduce continuous local-player machine load with staggered hourly pacing,3,done,implementation,Platform,M,PACT-053;PACT-138;PACT-142,S01;R07,phase-3-season-one.md#pact-143
 PACT-144,Persist existing player access across browsers and devices and simplify game navigation,3,done,implementation,Platform,L,PACT-053;PACT-006;PACT-127;PACT-142,A01;S01,phase-3-season-one.md#pact-144
 PACT-145,Consolidate communication-first agent society design and plan,3,done,planning,Platform,S,PACT-053;PACT-144;PACT-141,S01;A01;R07,phase-3-season-one.md#pact-145
-PACT-146,Diagnose communication refusals approvals and actual runner state,3,todo,implementation,Platform,M,PACT-053;PACT-145;PACT-141,S01;A08,phase-3-season-one.md#pact-146
-PACT-147,Complete optional kingdom recovery and authentication acceptance,3,todo,implementation,Platform,M,PACT-053;PACT-145;PACT-144,A01;A08,phase-3-season-one.md#pact-147
-PACT-148,Version communication capacity and delegated social authority changes,3,todo,implementation,Platform,L,PACT-053;PACT-145;PACT-146,S01;S02;A05,phase-3-season-one.md#pact-148
+PACT-146,Diagnose communication refusals approvals and actual runner state,3,done,implementation,Platform,M,PACT-053;PACT-145;PACT-141,S01;A08,phase-3-season-one.md#pact-146
+PACT-147,Complete optional kingdom recovery and authentication acceptance,3,in_progress,implementation,Platform,M,PACT-053;PACT-145;PACT-144,A01;A08,phase-3-season-one.md#pact-147
+PACT-148,Version communication capacity and delegated social authority changes,3,in_progress,implementation,Platform,L,PACT-053;PACT-145;PACT-146,S01;S02;A05,phase-3-season-one.md#pact-148
 PACT-149,Implement delegated introductions and durable conversation delivery,3,todo,implementation,Platform,L,PACT-053;PACT-148;PACT-146,S01;S02;A05,phase-3-season-one.md#pact-149
 PACT-150,Expose neutral environmental context and agent strategic freedom,3,todo,implementation,Platform,M,PACT-053;PACT-148;PACT-146,S01;R07;A05,phase-3-season-one.md#pact-150
 PACT-151,Build conversation workspace agreement tracks and consented society views,3,todo,implementation,Frontend,L,PACT-053;PACT-147;PACT-149;PACT-150,S01;S02;A08,phase-3-season-one.md#pact-151

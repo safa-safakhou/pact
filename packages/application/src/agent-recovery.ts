@@ -1,5 +1,9 @@
 /** Recovery is advice, never a grant or a claim that a game effect succeeded. */
 export function agentRecovery(code: string, detail?: string): string {
+  if (detail === "NOT_CONTACT")
+    return "No message was sent: this player is not an accepted contact. Read contact requests and current contact status before sending.";
+  if (detail === "BLOCKED")
+    return "Direct communication is unavailable under the current participant preferences. No message was sent; approval cannot override those preferences.";
   if (detail === "CONTRACT_CAPACITY")
     return "The contract was not activated: one party has reached the normal incoming/outgoing contract limit. Wait for a contract to end, then re-read the still-open offer and exact version. Approval cannot increase capacity.";
   if (detail === "OFFER_CLOSED" || code === "EXPIRED")

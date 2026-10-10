@@ -143,6 +143,33 @@ export class ApprovalService {
     }
     const hash = hashCommand(command);
     const now = this.options.clock.now();
+    // Serialize equivalent proposals per owner. Preserve the first exact command ID;
+    // never replace an uncertain command with the later caller's generated ID.
+    await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [
+      `approval:${this.options.productScope}:${input.accountId}`,
+    ]);
+    const sameId = (
+      await client.query<ApprovalRow>("SELECT * FROM approval_requests WHERE product_scope=$1 AND command_id=$2", [
+        this.options.productScope,
+        command.commandId,
+      ])
+    ).rows[0];
+    if (sameId) {
+      if (sameId.account_id !== input.accountId) throw new ApprovalError("FORBIDDEN");
+      if (sameId.canonical_command_hash !== hash) throw new ApprovalError("INVALID_TERMS");
+      return this.toView(this.maybeExpire(sameId));
+    }
+    await client.query(
+      "UPDATE approval_requests SET status='expired',resolved_at=$3 WHERE product_scope=$1 AND account_id=$2 AND status='pending' AND expires_at<=$3",
+      [this.options.productScope, input.accountId, now],
+    );
+    const equivalent = (
+      await client.query<ApprovalRow>(
+        "SELECT * FROM approval_requests WHERE product_scope=$1 AND account_id=$2 AND status='pending' AND expires_at>$3 AND action=$4::jsonb ORDER BY created_at,approval_id LIMIT 1",
+        [this.options.productScope, input.accountId, now, JSON.stringify(command.action)],
+      )
+    ).rows[0];
+    if (equivalent) return this.toView(equivalent);
     const expiresAt = new Date(now.getTime() + 15 * 60_000);
     const inserted = await client.query<ApprovalRow>(
       `INSERT INTO approval_requests(

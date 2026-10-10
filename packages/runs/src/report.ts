@@ -3,6 +3,10 @@ export type ReportEntry = {
   category: "committed" | "proposed" | "failed" | "waiting" | "approval_needed";
   callId: string;
   code: string;
+  toolName?: string;
+  actionKind?: string;
+  reason?: string;
+  detail?: string;
   commandId?: string;
   approvalId?: string;
   records: { record: string; version: number }[];
@@ -61,6 +65,11 @@ export function factualRunReport(
       category,
       callId: row.call_id,
       code,
+      ...Object.fromEntries(
+        ["toolName", "actionKind", "reason", "detail"].flatMap((key) =>
+          typeof data[key] === "string" && /^[A-Za-z][A-Za-z0-9_.-]{0,80}$/.test(data[key]) ? [[key, data[key]]] : [],
+        ),
+      ),
       records,
       ...(safeId(data.commandId) ? { commandId: data.commandId } : {}),
       ...(safeId(data.approvalId) ? { approvalId: data.approvalId } : {}),

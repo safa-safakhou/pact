@@ -38,3 +38,30 @@ it("orders bigint IDs numerically and preserves original metadata when current r
   );
   expect((await reader.read(randomUUID())).entries).toEqual([]);
 });
+it("stores only safe diagnostic names and never arguments or prose", async () => {
+  const accountId = randomUUID();
+  await pool.query(
+    "INSERT INTO accounts(id,product_scope,email,password_hash,terms_version) VALUES($1,'pact',$2,'fixture-only','terms-v1')",
+    [accountId, `${accountId}@example.test`],
+  );
+  const reader = new ExternalAgentActivity(pool, "pact", { now: () => new Date() });
+  await reader.record(pool, {
+    accountId,
+    sessionId: randomUUID(),
+    summary: {
+      code: "FORBIDDEN",
+      toolName: "pact_game_action_v1",
+      actionKind: "game.message.send",
+      detail: "NOT_CONTACT",
+      body: "Private prose",
+      arguments: { token: "secret" },
+    },
+  });
+  const result = await reader.read(accountId);
+  expect(result.entries[0]).toMatchObject({
+    actionKind: "game.message.send",
+    toolName: "pact_game_action_v1",
+    detail: "NOT_CONTACT",
+  });
+  expect(JSON.stringify(result)).not.toMatch(/Private prose|secret|arguments/);
+});

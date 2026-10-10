@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 50 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 51 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2096,7 +2096,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-146"></a>
 ## PACT-146 — Diagnose communication refusals approvals and actual runner state
 
-**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2113,14 +2113,20 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Synthetic fixtures distinguish message quota, queue, missing contact, moderation, missing/competing lease, authority and stale-version failures.
-- [ ] Expired requests are never presented as actionable pending approvals; uncertain committed commands retain their original IDs.
-- [ ] Reconnect/run conflicts and silent accepted-contact cases are reproducible; external model identity is not falsely certified.
+- [x] Synthetic fixtures distinguish message quota, queue, missing contact, moderation, missing/competing lease, authority and stale-version failures.
+- [x] Expired requests are never presented as actionable pending approvals; uncertain committed commands retain their original IDs.
+- [x] Reconnect/run conflicts and silent accepted-contact cases are reproducible; external model identity is not falsely certified.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- reports/communication-diagnostics-20261010.md: package build/typecheck, 13 unit and 25 PostgreSQL integration checks passed.
 
 <a id="pact-147"></a>
 ## PACT-147 — Complete optional kingdom recovery and authentication acceptance
 
-**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2143,10 +2149,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **External prerequisites:** Operator-provided transactional sender and domain configuration for real delivery acceptance; guest recovery remains usable without it.; Second physical device for device-specific certification..
 
+**Assignee:** codex-agent-society
+
 <a id="pact-148"></a>
 ## PACT-148 — Version communication capacity and delegated social authority changes
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2167,7 +2175,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Existing IDs, unread state, receipts and contracts survive migration/rollback; source hashes change only after affected ticket review.
 - [ ] Transport/load fixtures calibrate published retry/backpressure behavior for 20/50/100 relationships without silent drops or paid strength/presence advantages.
 
-**External prerequisites:** Covering implementation assignment activates this proposed design correction and its final parameter choices..
+**Assignee:** codex-agent-society
 
 <a id="pact-149"></a>
 ## PACT-149 — Implement delegated introductions and durable conversation delivery

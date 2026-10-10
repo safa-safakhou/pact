@@ -55,6 +55,12 @@ export interface RunView {
   readonly reservedTokens: number;
   readonly lastErrorCode: string | null;
   readonly ambiguousCrash: boolean;
+  readonly execution?: {
+    checkedAt: string;
+    leaseExpiresAt: string | null;
+    state: string;
+    hostStatus: "unverified";
+  };
 }
 
 export interface RunLimits {
@@ -125,7 +131,11 @@ export class RunService {
       "SELECT * FROM envoy_runs WHERE product_scope=$1 AND account_id=$2 ORDER BY updated_at DESC,run_id DESC LIMIT 20",
       [this.options.productScope, accountId],
     );
-    return { runs: result.rows.map(toView) };
+    return {
+      runs: await Promise.all(
+        result.rows.map(async (row) => ({ ...toView(row), execution: await this.execution(row) })),
+      ),
+    };
   }
   async report(runId: string, accountId: string) {
     const run = await this.get(runId, accountId);
@@ -454,7 +464,33 @@ export class RunService {
     const row = result.rows[0];
     if (!row) throw new RunError("NOT_FOUND");
     if (accountId && row.account_id !== accountId) throw new RunError("FORBIDDEN");
-    return toView(row);
+    return { ...toView(row), execution: await this.execution(row) };
+  }
+
+  /** A recorded run state is not evidence that a model host is working now. */
+  private async execution(row: RunRow) {
+    const now = this.options.clock.now();
+    const lease = (
+      await this.pool.query<{ expires_at: Date }>(
+        "SELECT expires_at FROM write_leases WHERE product_scope=$1 AND run_id=$2 AND released_at IS NULL AND expires_at>$3",
+        [this.options.productScope, row.run_id, now],
+      )
+    ).rows[0];
+    return {
+      checkedAt: now.toISOString(),
+      leaseExpiresAt: lease?.expires_at.toISOString() ?? null,
+      state:
+        row.status !== "running"
+          ? row.status
+          : row.deadline_at <= now
+            ? "expired"
+            : !lease
+              ? "lease_missing"
+              : row.in_flight_request_id
+                ? "request_in_flight"
+                : "queued",
+      hostStatus: "unverified" as const,
+    };
   }
 
   /** A redelivered durable job must never repeat an unresolved provider request. */

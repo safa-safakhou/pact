@@ -730,6 +730,50 @@ describe("PACT-017 MCP transport", () => {
 });
 
 describe("PACT-020 approvals", () => {
+  it("deduplicates concurrent equivalent requests and preserves the first exact command and deadline", async () => {
+    const { accountId } = await verifiedAccount(`dedup-${randomUUID()}@example.test`);
+    const command = {
+      schemaVersion: SCHEMA_VERSION,
+      commandId: randomUUID(),
+      actor: {
+        principalId: accountId,
+        productScope,
+        audience: "agent" as const,
+        subject: { type: "account" as const, id: accountId },
+      },
+      action: { kind: "sandbox.echo" as const, message: "Equivalent request" },
+      submittedAt: "2026-09-20T20:00:00.000Z",
+    };
+    const first = await approvals.createRequest({ accountId, command, effectsSummary: "Echo" });
+    const duplicates = await Promise.all(
+      Array.from({ length: 3 }, () =>
+        approvals.createRequest({
+          accountId,
+          command: { ...command, commandId: randomUUID() },
+          effectsSummary: "Echo",
+        }),
+      ),
+    );
+    expect(
+      duplicates.every(
+        (v) =>
+          v.approvalId === first.approvalId &&
+          v.commandId === first.commandId &&
+          v.expiresAt.getTime() === first.expiresAt.getTime(),
+      ),
+    ).toBe(true);
+    expect((await approvals.pendingForAccount(accountId)).approvals).toHaveLength(1);
+    await pool.query("UPDATE approval_requests SET expires_at='2026-09-20T19:00:00Z' WHERE approval_id=$1", [
+      first.approvalId,
+    ]);
+    const next = await approvals.createRequest({
+      accountId,
+      command: { ...command, commandId: randomUUID() },
+      effectsSummary: "Echo",
+    });
+    expect(next.approvalId).not.toBe(first.approvalId);
+    expect((await approvals.review(first.approvalId, accountId)).status).toBe("expired");
+  });
   it("lists only this human's live approvals with a ten-record bound and no command admission", async () => {
     const owner = await verifiedAccount(`pending-owner-${randomUUID()}@example.com`);
     const other = await verifiedAccount(`pending-other-${randomUUID()}@example.com`);
@@ -745,7 +789,7 @@ describe("PACT-020 approvals", () => {
             audience: "human",
             subject: { type: "account", id: accountId },
           },
-          action: { kind: "sandbox.echo", message: "synthetic pending fixture" },
+          action: { kind: "sandbox.echo", message: `synthetic pending fixture ${randomUUID()}` },
           submittedAt: "2026-09-20T20:00:00.000Z",
         },
         effectsSummary: "Read-only fixture",

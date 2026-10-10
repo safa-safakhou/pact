@@ -355,7 +355,7 @@ export class McpTransport {
           const result = await this.callTool({ ...principal, agentOrigin: "external" }, body.params ?? {}, sessionId);
           const summary = result.structuredContent;
           if (sessionId && summary && typeof summary === "object" && "code" in summary && summary.code !== "COMMITTED")
-            await this.observe(principal.accountId, sessionId, summary as Record<string, unknown>);
+            await this.observe(principal.accountId, sessionId, { ...summary, ...this.safeActionMetadata(body.params) });
           return { response: this.result(body.id, result), ...(sessionId ? { sessionId } : {}) };
         } catch (error) {
           if (
@@ -365,7 +365,12 @@ export class McpTransport {
             typeof error.code === "string" &&
             /^[A-Z][A-Z0-9_]{0,63}$/.test(error.code)
           )
-            await this.observe(principal.accountId, sessionId, { code: error.code });
+            await this.observe(principal.accountId, sessionId, {
+              code: error.code,
+              ...this.safeActionMetadata(body.params),
+              ...("reason" in error ? { reason: error.reason } : {}),
+              ...("detail" in error ? { detail: error.detail } : {}),
+            });
           throw error;
         }
       default:
@@ -383,6 +388,19 @@ export class McpTransport {
   async openStream(principal: AuthenticatedPrincipal, sessionId: string): Promise<{ protocolVersion: string }> {
     const row = await this.requireSession(principal, sessionId);
     return { protocolVersion: row.protocol_version };
+  }
+
+  private safeActionMetadata(params: McpJsonRpcRequest["params"]): Record<string, unknown> {
+    const name = params?.name;
+    const action =
+      params?.arguments && typeof params.arguments === "object"
+        ? (params.arguments as Record<string, unknown>).action
+        : undefined;
+    const kind = action && typeof action === "object" && "kind" in action ? action.kind : undefined;
+    return {
+      ...(typeof name === "string" && /^[a-z][a-z0-9_.-]{0,80}$/.test(name) ? { toolName: name } : {}),
+      ...(typeof kind === "string" && /^game\.[a-z.-]{1,60}$/.test(kind) ? { actionKind: kind } : {}),
+    };
   }
 
   private async observe(accountId: string, sessionId: string, summary: Record<string, unknown>): Promise<void> {

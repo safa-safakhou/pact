@@ -518,6 +518,8 @@ export class GameCommandHandler {
           throw new DispatcherError(error.code);
         throw new DispatcherError(
           error.code === "BLOCKED" || error.code === "NOT_CONTACT" ? "FORBIDDEN" : "INVALID_COMMAND",
+          undefined,
+          error.code === "BLOCKED" || error.code === "NOT_CONTACT" ? error.code : undefined,
         );
       }
       if (error instanceof TroopError)

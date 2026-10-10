@@ -101,3 +101,5 @@ For long-running verification or pilot tickets, link the actual observation reco
 - [ChatGPT kingdom journal — PACT-131, 7 October 2026](chatgpt-journal-20261007.md)
 
 - [ChatGPT human approval usability repair, 7 October](chatgpt-approval-20261007.md): automatic exact-action review, expiry and explicit decisions.
+
+[PACT-146 communication diagnostics](communication-diagnostics-20261010.md).
