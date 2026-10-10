@@ -1,9 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { type AuthenticatedPrincipal, type CommandDispatcher, describeApprovalEffects } from "@pact/application";
 import {
+  AcceptedCommandEnvelopeSchema,
   ApprovalProposalSchema,
+  ApprovalProposalV2Schema,
   type CommandEnvelope,
-  CommandEnvelopeSchema,
   type CommandReceipt,
   ProductScopeSchema,
   SCHEMA_VERSION,
@@ -90,11 +91,12 @@ export class ApprovalService {
     ) {
       throw new ApprovalError("FORBIDDEN");
     }
-    const parsed = ApprovalProposalSchema.safeParse(rawProposal);
+    const parsed = ApprovalProposalSchema.or(ApprovalProposalV2Schema).safeParse(rawProposal);
     if (!parsed.success) throw new ApprovalError("INVALID_TERMS");
     const { commandId, action } = parsed.data;
     const command: CommandEnvelope = {
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion:
+        action.kind === "game.contact.request" && action.note.length > 1000 ? "pact.command.v2" : SCHEMA_VERSION,
       commandId,
       actor: {
         principalId: principal.accountId,
@@ -132,7 +134,7 @@ export class ApprovalService {
       mandateVersion?: number;
     },
   ): Promise<ApprovalView> {
-    const command = CommandEnvelopeSchema.parse(input.command);
+    const command = AcceptedCommandEnvelopeSchema.parse(input.command);
     if (
       command.actor.principalId !== input.accountId ||
       command.actor.productScope !== this.options.productScope ||
@@ -410,6 +412,6 @@ export class ApprovalService {
 function hashCommand(command: CommandEnvelope): string {
   // JSONB reorders object keys. Parse into the versioned schema's key order
   // before hashing both a submitted proposal and the stored approval action.
-  const parsed = CommandEnvelopeSchema.parse(command);
+  const parsed = AcceptedCommandEnvelopeSchema.parse(command);
   return hashExactCommand(parsed.commandId, parsed.action);
 }

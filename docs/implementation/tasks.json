@@ -7634,7 +7634,7 @@
       "id": "PACT-147",
       "title": "Complete optional kingdom recovery and authentication acceptance",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7666,7 +7666,10 @@
         "web",
         "email"
       ],
-      "evidence": [],
+      "evidence": [
+        "reports/recovery-controls-20261010.md: actual reload/fresh-tab acceptance and independent HTTP session/recovery controls; physical-device/full-process and real sender limitations explicitly retained.",
+        "Verified full build/typecheck/lint; 326 unit, 343 integration passed, one optional integration skip."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Operator-provided transactional sender and domain configuration for real delivery acceptance; guest recovery remains usable without it.",
@@ -7681,7 +7684,7 @@
       "id": "PACT-148",
       "title": "Version communication capacity and delegated social authority changes",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7717,7 +7720,10 @@
         "authority",
         "runtime"
       ],
-      "evidence": [],
+      "evidence": [
+        "reports/communication-policy-20261010.md: versioned communication policy, exact-command compatibility, delegation, full-body delivery and neutral environment.",
+        "Verified full build/typecheck/lint; all 26 published v1 schema hashes unchanged; 326 unit, 343 integration (one optional skip), 53 local-controller tests passed."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
@@ -7729,7 +7735,7 @@
       "id": "PACT-149",
       "title": "Implement delegated introductions and durable conversation delivery",
       "phase": 3,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7764,19 +7770,22 @@
         "inbox",
         "MCP"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "reports/communication-policy-20261010.md: versioned communication policy, exact-command compatibility, delegation, full-body delivery and neutral environment.",
+        "Verified full build/typecheck/lint; all 26 published v1 schema hashes unchanged; 326 unit, 343 integration (one optional skip), 53 local-controller tests passed."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-150",
       "title": "Expose neutral environmental context and agent strategic freedom",
       "phase": 3,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -7811,19 +7820,22 @@
         "local controller",
         "inference"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "reports/communication-policy-20261010.md: versioned communication policy, exact-command compatibility, delegation, full-body delivery and neutral environment.",
+        "Verified full build/typecheck/lint; all 26 published v1 schema hashes unchanged; 326 unit, 343 integration (one optional skip), 53 local-controller tests passed."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-151",
       "title": "Build conversation workspace agreement tracks and consented society views",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -7860,13 +7872,15 @@
         "MCP app",
         "projections"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Browser draft acceptance: actual 45-message synthetic thread, selected-page acknowledgement and stale-signature distinction; history/observation/mobile acceptance in progress."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-152",
@@ -7912,7 +7926,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-153",
@@ -7959,7 +7973,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-154",
@@ -8008,7 +8022,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-155",
@@ -8058,7 +8072,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-156",
@@ -8110,7 +8124,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-157",
@@ -8162,7 +8176,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-158",
@@ -8216,7 +8230,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-159",
@@ -8263,7 +8277,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-160",
@@ -8313,7 +8327,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-161",
@@ -8363,7 +8377,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-162",
@@ -8413,7 +8427,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-163",
@@ -8462,7 +8476,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-164",
@@ -8514,7 +8528,7 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     },
     {
       "id": "PACT-165",
@@ -8565,14 +8579,14 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
-      "implementation_authorization": "proposed_not_started"
+      "implementation_authorization": "founder_20261010"
     }
   ],
   "source_sha256": {
     "../pact/access.md": "da1ab2428d6eabfd21e6a5934edc9108c1ad4e0fc6d96fe6ec41da1a780dd2b5",
-    "../pact/runtime.md": "192e1a5c67ec7a0b24cc3c2816dbd246521aff87be04c8e3729640a6a05bc17d",
-    "../pact/rules.md": "75b4b1407ec493e8967a87594cb611ff9e0a4786b13d36c1648a2e7aba4b7962",
-    "../pact/social.md": "dd339116d2995e37dc3521d5408bb9460e342c00707c88748b2d5e3fa87af67f",
+    "../pact/runtime.md": "f81e7ea0ec40c95c3c5f769400de307f37c1151bcf83df1b40cb699a0cde0865",
+    "../pact/rules.md": "41487c02ccebfcfef2c52101590021ad138abff0c7dcae7974bcfb5704047d31",
+    "../pact/social.md": "c76862406560480853bfa1bc7b330e26df3f0e40df1b4271e82c2ee2591910c8",
     "../pact/privacy.md": "f196d63676d0d2f335f480395987d5cf69edc8ccc555228d901b47ad9f0a7086",
     "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
@@ -8893,5 +8907,144 @@
       "completion_report": "reports/agent-society-collections-20261010.md"
     },
     "implementation_assignment": "Founder: implement the whole plan, communication and UI first; test, commit, release when ready (10 October 2026). New runs remain separately bounded."
+  },
+  "communication_policy_review": {
+    "version": "pact-communication-v2",
+    "assignment": "Founder 10 October 2026 full plan implementation",
+    "affected_ids": [
+      "PACT-001",
+      "PACT-082",
+      "PACT-002",
+      "PACT-003",
+      "PACT-004",
+      "PACT-005",
+      "PACT-007",
+      "PACT-008",
+      "PACT-010",
+      "PACT-011",
+      "PACT-012",
+      "PACT-013",
+      "PACT-014",
+      "PACT-015",
+      "PACT-017",
+      "PACT-018",
+      "PACT-019",
+      "PACT-020",
+      "PACT-021",
+      "PACT-022",
+      "PACT-023",
+      "PACT-083",
+      "PACT-028",
+      "PACT-029",
+      "PACT-030",
+      "PACT-031",
+      "PACT-032",
+      "PACT-033",
+      "PACT-034",
+      "PACT-035",
+      "PACT-036",
+      "PACT-037",
+      "PACT-038",
+      "PACT-039",
+      "PACT-040",
+      "PACT-041",
+      "PACT-042",
+      "PACT-043",
+      "PACT-044",
+      "PACT-045",
+      "PACT-046",
+      "PACT-047",
+      "PACT-048",
+      "PACT-049",
+      "PACT-050",
+      "PACT-051",
+      "PACT-052",
+      "PACT-096",
+      "PACT-054",
+      "PACT-055",
+      "PACT-056",
+      "PACT-057",
+      "PACT-058",
+      "PACT-059",
+      "PACT-060",
+      "PACT-061",
+      "PACT-062",
+      "PACT-063",
+      "PACT-064",
+      "PACT-087",
+      "PACT-089",
+      "PACT-090",
+      "PACT-066",
+      "PACT-069",
+      "PACT-070",
+      "PACT-072",
+      "PACT-074",
+      "PACT-077",
+      "PACT-078",
+      "PACT-099",
+      "PACT-100",
+      "PACT-102",
+      "PACT-103",
+      "PACT-104",
+      "PACT-105",
+      "PACT-106",
+      "PACT-108",
+      "PACT-109",
+      "PACT-110",
+      "PACT-111",
+      "PACT-112",
+      "PACT-113",
+      "PACT-114",
+      "PACT-115",
+      "PACT-116",
+      "PACT-117",
+      "PACT-118",
+      "PACT-119",
+      "PACT-120",
+      "PACT-121",
+      "PACT-122",
+      "PACT-123",
+      "PACT-124",
+      "PACT-125",
+      "PACT-126",
+      "PACT-127",
+      "PACT-128",
+      "PACT-129",
+      "PACT-130",
+      "PACT-131",
+      "PACT-132",
+      "PACT-133",
+      "PACT-134",
+      "PACT-135",
+      "PACT-136",
+      "PACT-137",
+      "PACT-138",
+      "PACT-139",
+      "PACT-140",
+      "PACT-141",
+      "PACT-142",
+      "PACT-143",
+      "PACT-145",
+      "PACT-146",
+      "PACT-148",
+      "PACT-149",
+      "PACT-150",
+      "PACT-151",
+      "PACT-152",
+      "PACT-153",
+      "PACT-154",
+      "PACT-155",
+      "PACT-156",
+      "PACT-157",
+      "PACT-158",
+      "PACT-159",
+      "PACT-160",
+      "PACT-161",
+      "PACT-162",
+      "PACT-163",
+      "PACT-164",
+      "PACT-165"
+    ],
+    "review": "Historical economy/military/channel acceptance remains historical; current communication fixtures replace daily text/introduction/unsigned-proposal scarcity only. Original 24 Later tickets remain deferred, with their original scope preserved. Shared grants, leases, participant privacy and exact signatures unchanged. Runtime persistent enrollment has not yet been activated."
   }
 }

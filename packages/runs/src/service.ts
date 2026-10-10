@@ -629,7 +629,7 @@ export class RunService {
                 !expected.delete(item.callId) ||
                 Buffer.byteLength(item.callId, "utf8") > 256 ||
                 Buffer.byteLength(item.content, "utf8") === 0 ||
-                Buffer.byteLength(item.content, "utf8") > 4096,
+                Buffer.byteLength(item.content, "utf8") > 65536,
             )
           )
             throw new AmbiguousProviderCrash();

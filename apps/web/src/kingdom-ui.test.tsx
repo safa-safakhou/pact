@@ -184,10 +184,10 @@ function people(accepted: boolean): string {
 }
 
 describe("fresh contact guidance", () => {
-  it("explains cold-contact cost and does not offer premature messages or transfers", () => {
+  it("explains free introductions and does not offer premature messages or transfers", () => {
     const html = people(false);
-    expect(html).toContain("2 ordinary Silver, not founding allowance");
-    expect(html).toContain("Messages and direct transfers need an accepted contact");
+    expect(html).toContain("Introductions are free");
+    expect(html).toContain("transfers need an accepted contact");
     expect(html).toContain('disabled="">Send message');
     expect(html).toContain('disabled="">Transfer');
     expect(html).toContain('disabled="">Start scout');

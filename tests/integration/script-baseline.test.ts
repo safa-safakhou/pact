@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { pactRunCommandTool } from "@pact/application";
+import { pactRunCommandV2Tool as pactRunCommandTool } from "@pact/application";
 import { AuthorityService } from "@pact/authority";
 import { type GameAction, ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
@@ -352,7 +352,7 @@ async function scenario(mode: "script" | "fake-provider" | "local-model") {
     expect(initial?.audience).toBe("owner");
     if (initial?.audience !== "owner") throw new Error("Missing initial owner");
     expect(initial.balances.grain.ordinaryUnits).toBe("13200");
-    expect(initial.balances.silver.ordinaryUnits).toBe("4800");
+    expect(initial.balances.silver.ordinaryUnits).toBe("6000");
     if (initialPartner?.audience !== "owner") throw new Error("Missing partner owner fixture");
     const balances = (view: typeof initial) =>
       Object.fromEntries(

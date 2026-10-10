@@ -42,9 +42,9 @@ export class ConversationReader {
     accountId: string,
     counterpartyKingdomId: string,
     limit = 5,
-    maxBytes = 3_600,
+    maxBytes = 36_000,
   ): Promise<ConversationPage | null> {
-    const pageByteLimit = Math.min(3_600, Math.max(1_000, maxBytes));
+    const pageByteLimit = Math.min(100_000, Math.max(1_000, maxBytes));
     const owner = await this.pool.query<{ id: string }>(
       "SELECT id FROM kingdoms WHERE product_scope = $1 AND account_id = $2 AND status = 'ranked'",
       [this.productScope, accountId],
@@ -78,7 +78,7 @@ export class ConversationReader {
     // Bound the serialized page before acknowledging it, including JSON escaping.
     const messages = [...page.messages];
     for (const [index, row] of rows.rows.entries()) {
-      if (Buffer.byteLength(row.body, "utf8") > 512) continue;
+      if (Buffer.byteLength(row.body, "utf8") > 16_384) continue;
       const previous = messages[index];
       if (!previous) continue;
       messages[index] = {

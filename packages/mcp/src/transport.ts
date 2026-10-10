@@ -2,8 +2,10 @@ import { randomUUID } from "node:crypto";
 import { type AuthenticatedPrincipal, agentRecovery, type CommandDispatcher } from "@pact/application";
 import {
   AgentGameActionSchema,
+  AgentGameActionV2Schema,
   AgentGuideQuerySchema,
   ApprovalProposalSchema,
+  ApprovalProposalV2Schema,
   ApprovalStatusQuerySchema,
   type ChronicleReadQuery,
   ChronicleReadQuerySchema,
@@ -17,12 +19,14 @@ import {
   ProductScopeSchema,
   pactAgentGuideTool,
   pactApprovalProposalTool,
+  pactApprovalProposalV2Tool,
   pactApprovalStatusTool,
   pactChronicleReadTool,
   pactConversationReadTool,
   pactCourtReadTool,
   pactEnvoyReportTool,
   pactGameActionTool,
+  pactGameActionV2Tool,
   pactInboxReadTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
@@ -343,7 +347,7 @@ export class McpTransport {
               ...(this.options.approvalProposals && principal.agentScopes?.includes("game:act")
                 ? [pactApprovalProposalTool]
                 : []),
-              ...(principal.agentScopes?.includes("game:act") ? [pactGameActionTool] : []),
+              ...(principal.agentScopes?.includes("game:act") ? [pactGameActionV2Tool, pactGameActionTool] : []),
               ...(principal.agentScopes?.includes("game:act") ? SANDBOX_TOOLS : []),
             ].map(chatgptDescriptor),
           }),
@@ -748,10 +752,12 @@ export class McpTransport {
         structuredContent: result as Record<string, unknown>,
       };
     }
-    if (name === pactApprovalProposalTool.name) {
+    if (name === pactApprovalProposalTool.name || name === pactApprovalProposalV2Tool.name) {
       if (!principal.agentScopes?.includes("game:act") || !this.options.approvalProposals || !sessionId)
         throw new McpError("FORBIDDEN", 403);
-      const parsed = ApprovalProposalSchema.safeParse(args);
+      const parsed = (
+        name === pactApprovalProposalV2Tool.name ? ApprovalProposalV2Schema : ApprovalProposalSchema
+      ).safeParse(args);
       if (!parsed.success) throw new McpError("INVALID_REQUEST");
       const approval = await this.options.approvalProposals.proposeAgent({ ...principal, sessionId }, parsed.data);
       const result = {
@@ -764,11 +770,13 @@ export class McpTransport {
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (!principal.agentScopes?.includes("game:act")) throw new McpError("FORBIDDEN", 403);
-    if (name === pactGameActionTool.name) {
-      const parsed = AgentGameActionSchema.safeParse(args);
+    if (name === pactGameActionTool.name || name === pactGameActionV2Tool.name) {
+      const parsed = (name === pactGameActionV2Tool.name ? AgentGameActionV2Schema : AgentGameActionSchema).safeParse(
+        args,
+      );
       if (!parsed.success) throw new McpError("INVALID_REQUEST");
       const command = {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: name === pactGameActionV2Tool.name ? "pact.command.v2" : SCHEMA_VERSION,
         commandId: parsed.data.commandId,
         actor: {
           principalId: principal.accountId,

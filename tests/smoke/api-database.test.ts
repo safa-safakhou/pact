@@ -86,6 +86,9 @@ describe("API/database smoke", () => {
       { name: "0053_mcp_grant_sessions.sql" },
       { name: "0054_council_characters.sql" },
       { name: "0055_guest_account_recovery.sql" },
+      { name: "0056_communication_capacity.sql" },
+      { name: "0057_revoked_guest_keys.sql" },
+      { name: "0058_conversation_tool_capacity.sql" },
     ]);
     await server.close();
   });

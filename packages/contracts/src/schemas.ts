@@ -279,6 +279,40 @@ export const CommandEnvelopeSchema = z
 /** A provider's game tool is a strict subset of the shared command envelope. */
 export const GameCommandEnvelopeSchema = CommandEnvelopeSchema.extend({ action: GameActionSchema });
 
+/** Additive v2 wire commands; v1 JSON schemas remain frozen. Same authoritative handlers/receipts. */
+export const GameActionV2Schema = z.discriminatedUnion(
+  "kind",
+  GameActionSchema.options.map((option) =>
+    option.shape.kind.value === "game.message.send"
+      ? option.extend({ body: z.string().min(1).max(8192) })
+      : option.shape.kind.value === "game.contact.request"
+        ? option.extend({ note: z.string().min(1).max(8192) })
+        : option,
+  ) as typeof GameActionSchema.options,
+);
+export const ApprovalProposalV2Schema = ApprovalProposalSchema.extend({
+  action: z.discriminatedUnion(
+    "kind",
+    ApprovalProposalSchema.shape.action.options.map((option) =>
+      option.shape.kind.value === "game.contact.request"
+        ? option.extend({ note: z.string().min(1).max(8192) })
+        : option,
+    ) as typeof ApprovalProposalSchema.shape.action.options,
+  ),
+});
+export const AgentGameActionV2Schema = AgentGameActionSchema.extend({ action: GameActionV2Schema });
+export const CommandEnvelopeV2Schema = CommandEnvelopeSchema.extend({
+  schemaVersion: z.literal("pact.command.v2"),
+  action: z.union([SandboxActionSchema, GameActionV2Schema]),
+});
+export const GameCommandEnvelopeV2Schema = CommandEnvelopeV2Schema.extend({ action: GameActionV2Schema });
+export const AcceptedCommandEnvelopeSchema = z.union([CommandEnvelopeSchema, CommandEnvelopeV2Schema]);
+/** Execution retains the exact submitted wire version; receipts remain the published v1 shape. */
+export function parseAcceptedCommand(input: unknown): CommandEnvelope {
+  const command = AcceptedCommandEnvelopeSchema.parse(input);
+  return command;
+}
+
 export const ReceiptCodeSchema = z.enum([
   "COMMITTED",
   "ALREADY_COMMITTED",
@@ -463,7 +497,7 @@ export type ConversationReadQuery = z.infer<typeof ConversationReadQuerySchema>;
 export type ActorContext = z.infer<typeof ActorContextSchema>;
 export type ProductScope = z.infer<typeof ProductScopeSchema>;
 export type SubjectRef = z.infer<typeof SubjectRefSchema>;
-export type CommandEnvelope = z.infer<typeof CommandEnvelopeSchema>;
+export type CommandEnvelope = z.infer<typeof CommandEnvelopeSchema> | z.infer<typeof CommandEnvelopeV2Schema>;
 export type CommandReceipt = z.infer<typeof CommandReceiptSchema>;
 export type EventEnvelope = z.infer<typeof EventEnvelopeSchema>;
 export type EventCursor = z.infer<typeof EventCursorSchema>;
@@ -475,17 +509,18 @@ export type ClientCompatibilityEntry = z.infer<typeof ClientCompatibilityEntrySc
 export type ClientCompatibilityDocument = z.infer<typeof ClientCompatibilityDocumentSchema>;
 
 export function validateCommandForWeb(input: unknown): CommandEnvelope {
-  return CommandEnvelopeSchema.parse(input);
+  return parseAcceptedCommand(input);
 }
 
 export function validateCommandForMcp(input: unknown): CommandEnvelope {
-  return CommandEnvelopeSchema.parse(input);
+  return parseAcceptedCommand(input);
 }
 
 export function validateProviderToolCommand(input: unknown): CommandEnvelope {
-  return CommandEnvelopeSchema.parse(input);
+  return parseAcceptedCommand(input);
 }
 
 export function validateProviderGameCommand(input: unknown): CommandEnvelope & { action: GameAction } {
-  return GameCommandEnvelopeSchema.parse(input);
+  const command = GameCommandEnvelopeSchema.or(GameCommandEnvelopeV2Schema).parse(input);
+  return command;
 }

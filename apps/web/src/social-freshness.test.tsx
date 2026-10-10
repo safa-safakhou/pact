@@ -19,7 +19,7 @@ describe("source-backed social expectations", () => {
     const r = { id: "fixture", status: "pending", handle: "real", expiresGameTimeMs: "600000" };
     expect(contactState(r, 0)).toContain("Response time unknown");
     expect(contactState(r, 600000)).toContain("Recorded pending; deadline passed");
-    expect(contactState({ ...r, status: "accepted" }, 0)).toContain("recipient human recorded acceptance");
+    expect(contactState({ ...r, status: "accepted" }, 0)).toContain("recipient recorded acceptance");
     expect(contactState({ ...r, status: "declined" }, 0)).toContain("respect");
     expect(contactState({ ...r, status: "expired" }, 0)).toContain("no acceptance");
   });
@@ -34,7 +34,7 @@ describe("source-backed social expectations", () => {
         gameTimeMs={0}
       />,
     );
-    expect(html).toContain("waiting for the recipient human");
+    expect(html).toContain("delegated agent");
     expect(html).not.toContain("online");
   });
 });

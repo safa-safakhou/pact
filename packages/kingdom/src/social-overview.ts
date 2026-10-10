@@ -1,3 +1,4 @@
+import { communicationPolicy } from "@pact/domain";
 import type { Pool } from "pg";
 import { acknowledgeMessageRead } from "./message-read-state.js";
 import { type SupplyTerms, supplyPerspective } from "./supply-terms.js";
@@ -10,11 +11,14 @@ export interface SocialParty {
 
 export interface SocialOverview {
   kingdomId: string;
-  contacts: (SocialParty & { acceptedGameTimeMs: string })[];
+  communicationPolicy?: typeof communicationPolicy;
+  delegation?: { mode: string; allowedKingdomIds: string[]; version: number };
+  contacts: (SocialParty & { acceptedGameTimeMs: string; unreadCount: number })[];
+  contactsNextOffset: number | null;
   requests: (SocialParty & {
     id: string;
     direction: "incoming" | "outgoing";
-    humanAcceptance?: "your_owner" | "counterparty_owner";
+    decisionAuthority?: "owner" | "delegated_agent" | "counterparty_policy_unknown";
     note: string;
     expiresGameTimeMs: string;
   })[];
@@ -25,6 +29,7 @@ export interface SocialOverview {
     authorKind: "agent" | "human";
     body: string;
     sentGameTimeMs: string;
+    readGameTimeMs: string | null;
   })[];
   supplyOffers: (SocialParty & {
     id: string;
@@ -71,7 +76,7 @@ export interface SocialOverview {
 }
 
 type PartyRow = { kingdom_id: string; handle: string; display_name: string };
-type ContactRow = PartyRow & { accepted_game_time_ms: string };
+type ContactRow = PartyRow & { accepted_game_time_ms: string; unread_count: number };
 type RequestRow = PartyRow & {
   id: string;
   sender_kingdom_id: string;
@@ -81,6 +86,7 @@ type RequestRow = PartyRow & {
 type MessageRow = PartyRow & {
   id: string;
   sender_kingdom_id: string;
+  read_game_time_ms: string | null;
   agent_originated: boolean;
   body: string;
   sent_game_time_ms: string;
@@ -137,7 +143,7 @@ export class SocialOverviewReader {
 
   async read(
     accountId: string,
-    options: { acknowledgeDeliveredMessages?: boolean } = {},
+    options: { acknowledgeDeliveredMessages?: boolean; contactOffset?: number } = {},
   ): Promise<SocialOverview | null> {
     const owner = await this.pool.query<{ id: string }>(
       "SELECT id FROM kingdoms WHERE product_scope = $1 AND account_id = $2 AND status = 'ranked'",
@@ -158,13 +164,14 @@ export class SocialOverviewReader {
     ] = await Promise.all([
       this.pool.query<ContactRow>(
         `SELECT peer.id AS kingdom_id, peer.handle, peer.display_name,
-             c.accepted_game_time_ms::text
+             c.accepted_game_time_ms::text,
+             (SELECT count(*)::int FROM direct_messages m WHERE m.product_scope=c.product_scope AND m.sender_kingdom_id=peer.id AND m.recipient_kingdom_id=$2 AND m.read_game_time_ms IS NULL) AS unread_count
            FROM social_contacts c
            JOIN kingdoms peer ON peer.product_scope = c.product_scope
              AND peer.id = CASE WHEN c.kingdom_a = $2 THEN c.kingdom_b ELSE c.kingdom_a END
            WHERE c.product_scope = $1 AND (c.kingdom_a = $2 OR c.kingdom_b = $2)
-           ORDER BY c.accepted_game_time_ms DESC LIMIT 50`,
-        args,
+           ORDER BY c.accepted_game_time_ms DESC,peer.id LIMIT 51 OFFSET $3`,
+        [...args, Math.max(0, Math.min(10000, options.contactOffset ?? 0))],
       ),
       this.pool.query<RequestRow>(
         `SELECT r.id, r.sender_kingdom_id, r.note, r.expires_game_time_ms::text,
@@ -173,13 +180,13 @@ export class SocialOverviewReader {
            JOIN kingdoms peer ON peer.product_scope = r.product_scope
              AND peer.id = CASE WHEN r.sender_kingdom_id = $2 THEN r.recipient_kingdom_id
                ELSE r.sender_kingdom_id END
-           WHERE r.product_scope = $1 AND r.status = 'pending'
+           WHERE r.product_scope = $1 AND r.status = 'pending' AND r.expires_game_time_ms > COALESCE((SELECT committed_game_time_ms FROM world_clocks WHERE product_scope=$1),0)
              AND (r.sender_kingdom_id = $2 OR r.recipient_kingdom_id = $2)
            ORDER BY r.created_game_time_ms DESC LIMIT 50`,
         args,
       ),
       this.pool.query<MessageRow>(
-        `SELECT m.id, m.sender_kingdom_id, m.agent_originated, m.body, m.sent_game_time_ms::text,
+        `SELECT m.id, m.sender_kingdom_id, m.agent_originated, m.body, m.sent_game_time_ms::text, m.read_game_time_ms::text,
              peer.id AS kingdom_id, peer.handle, peer.display_name
            FROM direct_messages m
            JOIN kingdoms peer ON peer.product_scope = m.product_scope
@@ -197,7 +204,7 @@ export class SocialOverviewReader {
            FROM supply_offers o
            JOIN kingdoms peer ON peer.product_scope = o.product_scope
              AND peer.id = CASE WHEN o.kingdom_a = $2 THEN o.kingdom_b ELSE o.kingdom_a END
-           WHERE o.product_scope = $1 AND o.status = 'open'
+           WHERE o.product_scope = $1 AND o.status = 'open' AND o.expires_game_time_ms > COALESCE((SELECT committed_game_time_ms FROM world_clocks WHERE product_scope=$1),0)
              AND (o.kingdom_a = $2 OR o.kingdom_b = $2)
            ORDER BY o.updated_game_time_ms DESC LIMIT 50`,
         args,
@@ -222,7 +229,7 @@ export class SocialOverviewReader {
            JOIN kingdoms peer ON peer.product_scope = o.product_scope
              AND peer.id = CASE WHEN o.lender_kingdom_id = $2 THEN o.host_kingdom_id
                ELSE o.lender_kingdom_id END
-           WHERE o.product_scope = $1 AND o.status = 'open'
+           WHERE o.product_scope = $1 AND o.status = 'open' AND o.expires_game_time_ms > COALESCE((SELECT committed_game_time_ms FROM world_clocks WHERE product_scope=$1),0)
              AND (o.lender_kingdom_id = $2 OR o.host_kingdom_id = $2)
            ORDER BY o.created_game_time_ms DESC LIMIT 50`,
         args,
@@ -253,20 +260,43 @@ export class SocialOverviewReader {
         kingdomId,
         messages.rows.filter((row) => row.sender_kingdom_id !== kingdomId).map((row) => row.id),
       );
+    const delegation = (
+      await this.pool.query<{ mode: string; allowed_kingdom_ids: string[]; version: number }>(
+        "SELECT mode,allowed_kingdom_ids,version FROM social_delegations WHERE product_scope=$1 AND kingdom_id=$2",
+        args,
+      )
+    ).rows[0];
     return {
       kingdomId,
+      communicationPolicy,
+      delegation: {
+        mode: delegation?.mode ?? "manual",
+        allowedKingdomIds: delegation?.allowed_kingdom_ids ?? [],
+        version: delegation?.version ?? 0,
+      },
       requestHistory: requestHistory.rows.map((row) => ({
         ...party(row),
         id: row.id,
         status: row.status,
         expiresGameTimeMs: row.expires_game_time_ms,
       })),
-      contacts: contacts.rows.map((row) => ({ ...party(row), acceptedGameTimeMs: row.accepted_game_time_ms })),
+      contactsNextOffset: contacts.rows.length > 50 ? (options.contactOffset ?? 0) + 50 : null,
+      contacts: contacts.rows.slice(0, 50).map((row) => ({
+        ...party(row),
+        acceptedGameTimeMs: row.accepted_game_time_ms,
+        unreadCount: row.unread_count,
+      })),
       requests: requests.rows.map((row) => ({
         ...party(row),
         id: row.id,
         direction: row.sender_kingdom_id === kingdomId ? "outgoing" : "incoming",
-        humanAcceptance: row.sender_kingdom_id === kingdomId ? "counterparty_owner" : "your_owner",
+        decisionAuthority:
+          row.sender_kingdom_id === kingdomId
+            ? "counterparty_policy_unknown"
+            : delegation?.mode === "agent_decides" ||
+                (delegation?.mode === "allowlist" && delegation.allowed_kingdom_ids.includes(row.kingdom_id))
+              ? "delegated_agent"
+              : "owner",
         note: row.note,
         expiresGameTimeMs: row.expires_game_time_ms,
       })),
@@ -277,6 +307,7 @@ export class SocialOverviewReader {
         authorKind: row.agent_originated ? "agent" : "human",
         body: row.body,
         sentGameTimeMs: row.sent_game_time_ms,
+        readGameTimeMs: row.read_game_time_ms,
       })),
       supplyOffers: supplyOffers.rows.map((row) => ({
         ...party(row),

@@ -110,6 +110,23 @@ export function registerIdentityRoutes(
   server.get("/v1/auth/session", async (request, reply) =>
     safe(reply, () => identity.sessionBootstrap(sessionToken(request))),
   );
+  server.post("/v1/auth/guest/recovery/replace", async (request, reply) =>
+    safe(reply, async () => {
+      const context = writeContext(request);
+      await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      const input = z.object({ currentCode: z.uuid(), newCode: z.uuid() }).strict().parse(request.body);
+      return identity.rotateGuestRecovery(context.sessionToken, input.currentCode, input.newCode);
+    }),
+  );
+  server.post("/v1/auth/sessions/revoke", async (request, reply) =>
+    safe(reply, async () => {
+      const context = writeContext(request);
+      await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      const input = z.object({ sessionId: z.uuid() }).strict().parse(request.body);
+      await identity.revokeSession(context.sessionToken, input.sessionId);
+      return { revoked: true };
+    }),
+  );
   server.post("/v1/auth/guest/save", async (request, reply) => {
     if (!operatorPreflight.registrationEnabled)
       return reply.code(503).send({ error: { code: "REGISTRATION_UNAVAILABLE" } });

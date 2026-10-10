@@ -22,4 +22,19 @@ export const SocialCommandSchema = z
     ]),
   })
   .strict();
-export type SocialCommand = z.infer<typeof SocialCommandSchema>;
+export const SocialCommandV2Schema = z
+  .object({
+    schemaVersion: z.literal("pact.social-command.v2"),
+    commandId: z.uuid(),
+    action: z
+      .object({
+        kind: z.literal("contact.delegation"),
+        mode: z.enum(["manual", "allowlist", "agent_decides"]),
+        allowedKingdomIds: z.array(z.uuid()).max(1000),
+        expectedVersion: z.number().int().nonnegative(),
+      })
+      .strict(),
+  })
+  .strict();
+export const AcceptedSocialCommandSchema = z.union([SocialCommandSchema, SocialCommandV2Schema]);
+export type SocialCommand = z.infer<typeof AcceptedSocialCommandSchema>;

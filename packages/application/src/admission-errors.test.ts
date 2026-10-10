@@ -53,6 +53,28 @@ function command() {
     submittedAt: new Date().toISOString(),
   } as const;
 }
+it.each(["40001", "40P01"])(
+  "returns truthful retry information for exhausted transaction conflict %s",
+  async (code) => {
+    const d = new CommandDispatcher({
+      pool: { query: async () => ({ rows: [] }) } as unknown as Pool,
+      productScope: "pact",
+      clock: { now: () => new Date() },
+      game: {
+        admit: async () => {
+          throw Object.assign(new Error("fixture"), { code });
+        },
+        execute: vi.fn(),
+      },
+    });
+    await expect(d.dispatch(principal, command())).rejects.toMatchObject({
+      code: "RATE_LIMITED",
+      detail: "TRANSACTION_BUSY",
+      retryAfterMs: 100,
+    });
+    expect(agentRecovery("RATE_LIMITED", "TRANSACTION_BUSY")).toContain("same command and ID");
+  },
+);
 it.each(["game", "social"] as const)(
   "distinguishes tick admission waits from paused worlds for %s writes",
   async (surface) => {

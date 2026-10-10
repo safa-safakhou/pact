@@ -31,6 +31,7 @@ export { GameCommandHandler } from "./game-command-handler.js";
 export {
   dispatchRunCommandTools,
   pactRunCommandTool,
+  pactRunCommandV2Tool,
   type RunCommandOutcome,
   runToolCommandId,
 } from "./run-game-tools.js";

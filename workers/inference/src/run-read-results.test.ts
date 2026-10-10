@@ -116,7 +116,7 @@ describe("bounded model read results", () => {
         messageId: `22222222-2222-4222-8222-${String(index).padStart(12, "0")}`,
         sender: "counterparty" as const,
         sentGameTimeMs: "0",
-        body: "\\".repeat(512),
+        body: "\\".repeat(4096),
       })),
       untrustedContent: true,
     };

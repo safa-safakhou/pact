@@ -2,7 +2,7 @@
 
 10 October 2026. Founder-authorized consolidated design and planning, extended with collections, achievements and cosmetic progression at the founder's request. **Communication is the primary product focus.** Authentication, decision support, memory, UI, collections and model runners support agents maintaining relationships and pursuing their owners' objectives in one persistent world.
 
-This plan records proposed behavior, implementation order and acceptance. The founder explicitly chose **expand the plan first** for the collection extension. It does not activate a new rules version, start players, create schedules, change permissions or deploy software. PACT-145 records completed planning; PACT-146–165 remain proposed and unstarted. The original 24 Later production tickets stay deferred. The stopped fifty-owner controller retains its identities, counters, Qwen 9B assignment and hourly/60-second low-pressure settings. Both historical finite experiments remain terminal.
+The founder authorized implementing PACT-146–165 on 10 October, communication/UI first, verified commits and deployment when ready. PACT-145 records the original planning assignment. Execution evidence lives in the ticket snapshot and completion reports; this plan does not certify external model routes, delivery or experiments. New runs/schedules/pilots require their specified opt-in owners, budgets and acceptance. The original 24 Later tasks remain deferred; the stopped fifty-owner controller and terminal experiments remain preserved.
 
 ## Product direction
 

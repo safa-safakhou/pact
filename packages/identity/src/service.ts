@@ -70,6 +70,18 @@ export class IdentityService {
     const now = this.options.clock.now();
     return withTransaction(this.pool, async (client) => {
       const hash = this.options.digester.digest(`guest:${entryKey}`);
+      await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [
+        `guest-key:${this.options.productScope}:${hash}`,
+      ]);
+      if (
+        (
+          await client.query("SELECT 1 FROM revoked_guest_keys WHERE product_scope=$1 AND key_hash=$2", [
+            this.options.productScope,
+            hash,
+          ])
+        ).rowCount
+      )
+        throw new IdentityError("FORBIDDEN");
       const row = (
         await client.query<{ id: string; status: string }>(
           existingOnly
@@ -96,6 +108,66 @@ export class IdentityService {
       [this.options.productScope, accountId],
     );
     return result.rowCount === 1;
+  }
+
+  /** Retrying the same privately persisted replacement intent is safe after a lost response. */
+  async rotateGuestRecovery(
+    sessionToken: string,
+    currentCode: string,
+    recoveryCode: string,
+  ): Promise<{ recoveryCode: string }> {
+    const session = await this.authenticate(sessionToken);
+    if (
+      !this.guestPlayEnabled ||
+      !/^[0-9a-f-]{36}$/i.test(currentCode) ||
+      !/^[0-9a-f-]{36}$/i.test(recoveryCode) ||
+      currentCode === recoveryCode
+    )
+      throw new IdentityError("FORBIDDEN");
+    return withTransaction(this.pool, async (client) => {
+      const hash = this.options.digester.digest(`guest:${currentCode}`);
+      const replacementHash = this.options.digester.digest(`guest:${recoveryCode}`);
+      await client.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [
+        `guest-key:${this.options.productScope}:${hash}`,
+      ]);
+      const owner = await client.query<{ guest_entry_hash: string }>(
+        "SELECT guest_entry_hash FROM accounts WHERE product_scope=$1 AND id=$2 AND is_guest AND status='active' FOR UPDATE",
+        [this.options.productScope, session.accountId],
+      );
+      if (!owner.rowCount) throw new IdentityError("FORBIDDEN");
+      if (owner.rows[0]?.guest_entry_hash === replacementHash) {
+        const original = await client.query(
+          "SELECT 1 FROM revoked_guest_keys WHERE product_scope=$1 AND key_hash=$2 AND account_id=$3",
+          [this.options.productScope, hash, session.accountId],
+        );
+        if (original.rowCount) return { recoveryCode };
+      }
+      if (owner.rows[0]?.guest_entry_hash !== hash) throw new IdentityError("FORBIDDEN");
+      await client.query("INSERT INTO revoked_guest_keys(product_scope,key_hash,account_id) VALUES($1,$2,$3)", [
+        this.options.productScope,
+        hash,
+        session.accountId,
+      ]);
+      await client.query("UPDATE accounts SET guest_entry_hash=$3 WHERE product_scope=$1 AND id=$2", [
+        this.options.productScope,
+        session.accountId,
+        replacementHash,
+      ]);
+      await client.query("UPDATE sessions SET authenticated_at=$2 WHERE id=$1 AND revoked_at IS NULL", [
+        session.sessionId,
+        this.options.clock.now(),
+      ]);
+      await this.securityEvent(client, session.accountId, "guest.recovery_replaced");
+      return { recoveryCode };
+    });
+  }
+
+  async revokeSession(sessionToken: string, targetSessionId: string): Promise<void> {
+    const session = await this.authenticate(sessionToken);
+    await this.pool.query(
+      "UPDATE sessions SET revoked_at=$4 WHERE product_scope=$1 AND account_id=$2 AND id=$3 AND revoked_at IS NULL",
+      [this.options.productScope, session.accountId, targetSessionId, this.options.clock.now()],
+    );
   }
 
   /** Same-browser bootstrap: a deterministic per-session CSRF value survives tab/restart. */
@@ -606,7 +678,7 @@ export class IdentityService {
   }
 
   async connectionInventory(sessionToken: string): Promise<{
-    sessions: Array<{ id: string; label: string | null; lastSeenAt: Date; absoluteExpiresAt: Date }>;
+    sessions: Array<{ id: string; label: string | null; lastSeenAt: Date; absoluteExpiresAt: Date; current: boolean }>;
     grants: Array<{ id: string; clientId: string; scopes: string[]; expiresAt: Date; refreshExpiresAt: Date | null }>;
   }> {
     const session = await this.authenticate(sessionToken);
@@ -614,7 +686,7 @@ export class IdentityService {
     const [sessions, grants] = await Promise.all([
       this.pool.query<{ id: string; label: string | null; last_seen_at: Date; expires_at: Date }>(
         `SELECT id, label, last_seen_at, expires_at FROM sessions
-         WHERE product_scope = $1 AND account_id = $2 AND revoked_at IS NULL AND expires_at > $3
+         WHERE product_scope = $1 AND account_id = $2 AND revoked_at IS NULL AND expires_at > $3 AND idle_expires_at > $3
          ORDER BY last_seen_at DESC`,
         [this.options.productScope, session.accountId, this.options.clock.now()],
       ),
@@ -631,6 +703,7 @@ export class IdentityService {
         label: row.label,
         lastSeenAt: row.last_seen_at,
         absoluteExpiresAt: row.expires_at,
+        current: row.id === session.sessionId,
       })),
       grants: grants.rows
         .filter(

@@ -65,15 +65,19 @@ export const pactCourtReadTool = {
 
 import {
   AgentGameActionSchema,
+  AgentGameActionV2Schema,
   AgentGuideQuerySchema,
   AgentWorldReadQuerySchema,
   ApprovalProposalSchema,
+  ApprovalProposalV2Schema,
   ApprovalStatusQuerySchema,
   CommandEnvelopeSchema,
+  CommandEnvelopeV2Schema,
   CommandReceiptSchema,
   ConversationReadQuerySchema,
   EventEnvelopeSchema,
   GameCommandEnvelopeSchema,
+  GameCommandEnvelopeV2Schema,
   InboxReadQuerySchema,
   PlayerFindQuerySchema,
   ReceiptReadQuerySchema,
@@ -81,7 +85,7 @@ import {
   ToolCallSchema,
   WorldViewQuerySchema,
 } from "./schemas.js";
-import { SocialCommandSchema } from "./social-schemas.js";
+import { SocialCommandSchema, SocialCommandV2Schema } from "./social-schemas.js";
 
 export const commandJsonSchema = z.toJSONSchema(CommandEnvelopeSchema, { target: "draft-7" });
 export const socialCommandJsonSchema = z.toJSONSchema(SocialCommandSchema, { target: "draft-7" });
@@ -201,3 +205,24 @@ export const mcpCommandTool = {
   description: "Submit one versioned PACT command. Identity is derived from the authenticated connection.",
   inputSchema: commandJsonSchema,
 } as const;
+
+export const agentGameActionV2JsonSchema = z.toJSONSchema(AgentGameActionV2Schema, { target: "draft-7" });
+export const commandV2JsonSchema = z.toJSONSchema(CommandEnvelopeV2Schema, { target: "draft-7" });
+export const socialCommandV2JsonSchema = z.toJSONSchema(SocialCommandV2Schema, { target: "draft-7" });
+export const pactGameActionV2Tool = {
+  ...pactGameActionTool,
+  name: "pact_game_action_v2",
+  description:
+    pactGameActionTool.description +
+    " Communication v2 accepts 4,096 Unicode code points; service admission and recipient byte capacity return retry information.",
+  inputSchema: agentGameActionV2JsonSchema,
+};
+
+export const gameCommandV2JsonSchema = z.toJSONSchema(GameCommandEnvelopeV2Schema, { target: "draft-7" });
+
+export const approvalProposalV2JsonSchema = z.toJSONSchema(ApprovalProposalV2Schema, { target: "draft-7" });
+export const pactApprovalProposalV2Tool = {
+  ...pactApprovalProposalTool,
+  name: "pact_approval_propose_v2",
+  inputSchema: approvalProposalV2JsonSchema,
+};

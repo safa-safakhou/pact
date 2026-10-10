@@ -112,11 +112,11 @@ describe("owner-bound council", () => {
         client.release();
       }
     };
-    await expect(send()).rejects.toMatchObject({ code: "MESSAGE_QUEUE_FULL" });
+    await expect(send()).resolves.toBeTypeOf("string");
     await reader.thread(c.accountId, a.kingdomId);
-    expect(await unread(b.kingdomId)).toBe(45);
+    expect(await unread(b.kingdomId)).toBe(46);
     const delivered = await reader.thread(b.accountId, a.kingdomId);
-    expect(await unread(b.kingdomId)).toBe(5); // the 41st lookahead and older rows are not delivered
+    expect(await unread(b.kingdomId)).toBe(6); // lookahead and older rows are not delivered
     expect(await unread(c.kingdomId)).toBe(1); // unrelated pair is untouched
     const readTimes = (
       await pool.query(
@@ -137,6 +137,45 @@ describe("owner-bound council", () => {
     expect(await unread(b.kingdomId)).toBe(0);
     await expect(send()).resolves.toBeTypeOf("string");
     expect(await unread(b.kingdomId)).toBe(1);
+  });
+  it("bounds full Unicode pages and acknowledges only delivered bodies", async () => {
+    const a = await player(),
+      b = await player();
+    for (let i = 0; i < 12; i++)
+      await pool.query(
+        "INSERT INTO direct_messages(id,product_scope,sender_kingdom_id,recipient_kingdom_id,body,agent_originated,operation_key,sent_game_time_ms) VALUES($1::uuid,'pact',$2,$3,$4,true,$1::uuid::text,$5)",
+        [randomUUID(), a.kingdomId, b.kingdomId, "🦆".repeat(4096), i],
+      );
+    await reader.read(b.accountId, [a.kingdomId], true);
+    expect(
+      (
+        await pool.query(
+          "SELECT count(*)::int AS n FROM direct_messages WHERE recipient_kingdom_id=$1 AND read_game_time_ms IS NULL",
+          [b.kingdomId],
+        )
+      ).rows[0].n,
+    ).toBe(12);
+    let cursor: { gameTimeMs: string; id: string } | undefined;
+    const seen = new Set<string>();
+    do {
+      const page = await reader.thread(b.accountId, a.kingdomId, cursor);
+      expect(Buffer.byteLength(JSON.stringify(page))).toBeLessThanOrEqual(64000);
+      for (const message of page.messages) {
+        expect(message.body).toBe("🦆".repeat(4096));
+        expect(seen.has(message.id)).toBe(false);
+        seen.add(message.id);
+      }
+      expect(
+        (
+          await pool.query(
+            "SELECT count(*)::int AS n FROM direct_messages WHERE recipient_kingdom_id=$1 AND read_game_time_ms IS NULL",
+            [b.kingdomId],
+          )
+        ).rows[0].n,
+      ).toBe(12 - seen.size);
+      cursor = page.next ?? undefined;
+    } while (cursor);
+    expect(seen.size).toBe(12);
   });
   it("exports, forgets and prunes the new identity/activity data", async () => {
     const a = await player();

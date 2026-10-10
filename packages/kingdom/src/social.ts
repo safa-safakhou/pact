@@ -1,6 +1,6 @@
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { appendOutbox } from "@pact/db";
-import { rulesCatalog, wholeResources } from "@pact/domain";
+import { communicationPolicy, rulesCatalog, wholeResources } from "@pact/domain";
 import type { ResourceLedger } from "@pact/ledger";
 import type { PoolClient } from "pg";
 import type { ActionLimitService } from "./action-limits.js";
@@ -57,12 +57,15 @@ export class SocialError extends Error {
       | "REQUEST_EXPIRED"
       | "CONTACT_QUEUE_FULL"
       | "MESSAGE_QUEUE_FULL"
+      | "DELEGATION_REQUIRED"
+      | "SERVICE_THROTTLED"
       | "MESSAGE_TOO_LONG"
       | "INVALID_NOTE"
       | "INVALID_AMOUNT"
       | "OPERATION_CONFLICT"
       | "INVITATION_FULL"
       | "INVITATION_INVALID",
+    readonly retryAfterMs: number | null = null,
   ) {
     super(code);
     this.name = "SocialError";
@@ -89,6 +92,69 @@ export class SocialService {
     private readonly authority?: ImmediateAuthorityPort,
     private readonly assertMessagingAllowed?: (client: PoolClient, accountId: string) => Promise<void>,
   ) {}
+
+  async consumeProposal(client: PoolClient, accountId: string): Promise<void> {
+    await this.consumeEnvelope(client, await this.ownerKingdom(client, accountId));
+  }
+
+  readonly retention = {
+    name: "socialDelegation",
+    forgetAccount: async (client: PoolClient, accountId: string) => {
+      const ids = (
+        await client.query<{ id: string }>("SELECT id FROM kingdoms WHERE product_scope=$1 AND account_id=$2", [
+          this.productScope,
+          accountId,
+        ])
+      ).rows.map((r) => r.id);
+      await client.query("DELETE FROM social_delegations WHERE product_scope=$1 AND kingdom_id=ANY($2::uuid[])", [
+        this.productScope,
+        ids,
+      ]);
+      await client.query("DELETE FROM communication_buckets WHERE product_scope=$1 AND kingdom_id=ANY($2::uuid[])", [
+        this.productScope,
+        ids,
+      ]);
+      await client.query(
+        "UPDATE social_delegations SET allowed_kingdom_ids=ARRAY(SELECT x FROM unnest(allowed_kingdom_ids) x WHERE NOT x=ANY($2::uuid[])) WHERE product_scope=$1 AND allowed_kingdom_ids && $2::uuid[]",
+        [this.productScope, ids],
+      );
+    },
+    exportAccount: async (client: PoolClient, accountId: string) =>
+      (
+        await client.query(
+          "SELECT d.mode,d.allowed_kingdom_ids,d.version,d.enrolled_game_time_ms FROM social_delegations d JOIN kingdoms k ON k.id=d.kingdom_id AND k.product_scope=d.product_scope WHERE d.product_scope=$1 AND k.account_id=$2",
+          [this.productScope, accountId],
+        )
+      ).rows,
+    prune: async () => 0,
+  };
+
+  private async consumeEnvelope(client: PoolClient, kingdomId: string): Promise<void> {
+    const now = this.clock.now();
+    await client.query(
+      "INSERT INTO communication_buckets(product_scope,kingdom_id,credits_ms,updated_at) VALUES($1,$2,30000,$3) ON CONFLICT DO NOTHING",
+      [this.productScope, kingdomId, now],
+    );
+    const row = (
+      await client.query<{ credits_ms: number; updated_at: Date }>(
+        "SELECT credits_ms,updated_at FROM communication_buckets WHERE product_scope=$1 AND kingdom_id=$2 FOR UPDATE",
+        [this.productScope, kingdomId],
+      )
+    ).rows[0];
+    if (!row) throw new Error("BUCKET_NOT_FOUND");
+    const credits = Math.min(30000, row.credits_ms + Math.max(0, now.getTime() - row.updated_at.getTime()));
+    if (credits < communicationPolicy.tokenIntervalMs)
+      throw new SocialError("SERVICE_THROTTLED", communicationPolicy.tokenIntervalMs - credits);
+    await client.query(
+      "UPDATE communication_buckets SET credits_ms=$3,updated_at=$4 WHERE product_scope=$1 AND kingdom_id=$2",
+      [
+        this.productScope,
+        kingdomId,
+        credits - communicationPolicy.tokenIntervalMs,
+        new Date(Math.max(now.getTime(), row.updated_at.getTime())),
+      ],
+    );
+  }
 
   private async ownerKingdom(client: PoolClient, accountId: string): Promise<string> {
     const result = await client.query<{ id: string }>(
@@ -172,12 +238,18 @@ export class SocialService {
     await this.assertMessagingAllowed?.(client, input.accountId);
     await this.assertDirectCommunicationAllowed(client, sender, input.recipientKingdomId);
     if (await this.isContact(client, sender, input.recipientKingdomId)) throw new SocialError("ALREADY_CONTACT");
-    const pending = await client.query<{ sender_kingdom_id: string }>(
-      `SELECT sender_kingdom_id FROM cold_contact_requests WHERE product_scope = $1
-       AND recipient_kingdom_id = $2 AND status = 'pending' AND expires_game_time_ms > $3`,
-      [this.productScope, input.recipientKingdomId, input.gameTimeMs],
-    );
-    if ((pending.rowCount ?? 0) >= 8) throw new SocialError("CONTACT_QUEUE_FULL");
+    const queuedBytes =
+      (
+        await client.query<{ bytes: string }>(
+          "SELECT COALESCE(sum(octet_length(note)),0)::text AS bytes FROM cold_contact_requests WHERE product_scope=$1 AND recipient_kingdom_id=$2 AND status='pending' AND expires_game_time_ms>$3",
+          [this.productScope, input.recipientKingdomId, input.gameTimeMs],
+        )
+      ).rows[0]?.bytes ?? "0";
+    if (
+      Number(queuedBytes) + Buffer.byteLength(input.note, "utf8") >
+      communicationPolicy.recipientPendingIntroductionBytes
+    )
+      throw new SocialError("CONTACT_QUEUE_FULL");
     const duplicate = await client.query(
       `SELECT 1 FROM cold_contact_requests WHERE product_scope = $1 AND status = 'pending'
        AND expires_game_time_ms > $4
@@ -193,25 +265,10 @@ export class SocialService {
       gameTimeMs: input.gameTimeMs,
     });
     if (input.actorKind === "agent") {
-      if (!this.authority) throw new Error("IMMEDIATE_AUTHORITY_NOT_CONFIGURED");
-      await this.authority.spend(client, {
-        accountId: input.accountId,
-        asset: "silver",
-        units: wholeResources(rulesCatalog.actionLimits.coldContactSilver),
-        action: "contact.request",
-        operationKey: `cold-contact:${input.operationKey}`,
-        ...(input.mandateVersion === undefined ? {} : { mandateVersion: input.mandateVersion }),
-        gameTimeMs: input.gameTimeMs,
-      });
+      if (!this.authority?.assertActionAllowed) throw new Error("IMMEDIATE_AUTHORITY_NOT_CONFIGURED");
+      await this.authority.assertActionAllowed(client, input.accountId, "contact.request", input.mandateVersion);
     }
-    await this.ledger.debit(client, {
-      kingdomId: sender,
-      resource: "silver",
-      amount: wholeResources(rulesCatalog.actionLimits.coldContactSilver),
-      purpose: "trade",
-      operationKey: `cold-contact:${input.operationKey}`,
-      gameTimeMs: input.gameTimeMs,
-    });
+    await this.consumeEnvelope(client, sender);
     const requestId = randomUUID();
     await client.query(
       `INSERT INTO cold_contact_requests(id, product_scope, sender_kingdom_id, recipient_kingdom_id,
@@ -236,9 +293,42 @@ export class SocialService {
     return requestId;
   }
 
+  async configureDelegation(
+    client: PoolClient,
+    accountId: string,
+    input: { mode: "manual" | "allowlist" | "agent_decides"; allowedKingdomIds: string[]; expectedVersion: number },
+    gameTimeMs: number,
+  ) {
+    const kingdomId = await this.ownerKingdom(client, accountId);
+    await client.query("SELECT id FROM kingdoms WHERE product_scope=$1 AND id=$2 FOR UPDATE", [
+      this.productScope,
+      kingdomId,
+    ]);
+    const current = (
+      await client.query<{ version: number }>(
+        "SELECT version FROM social_delegations WHERE product_scope=$1 AND kingdom_id=$2",
+        [this.productScope, kingdomId],
+      )
+    ).rows[0];
+    if ((current?.version ?? 0) !== input.expectedVersion) throw new SocialError("OPERATION_CONFLICT");
+    await client.query(
+      "INSERT INTO social_delegations(product_scope,kingdom_id,mode,allowed_kingdom_ids,version,enrolled_game_time_ms) VALUES($1,$2,$3,$4,$5,$6) ON CONFLICT(product_scope,kingdom_id) DO UPDATE SET mode=EXCLUDED.mode,allowed_kingdom_ids=EXCLUDED.allowed_kingdom_ids,version=EXCLUDED.version,enrolled_game_time_ms=EXCLUDED.enrolled_game_time_ms",
+      [
+        this.productScope,
+        kingdomId,
+        input.mode,
+        [...new Set(input.allowedKingdomIds)],
+        input.expectedVersion + 1,
+        gameTimeMs,
+      ],
+    );
+    await this.emit(client, "contact.delegation.changed.v1", { kingdomId, version: input.expectedVersion + 1 });
+    return { version: input.expectedVersion + 1 };
+  }
+
   async answerRequest(
     client: PoolClient,
-    input: { accountId: string; requestId: string; accept: boolean; gameTimeMs: number },
+    input: { accountId: string; requestId: string; accept: boolean; gameTimeMs: number; actorKind?: "human" | "agent" },
   ): Promise<void> {
     const recipient = await this.ownerKingdom(client, input.accountId);
     const found = await client.query<RequestRow>(
@@ -252,6 +342,20 @@ export class SocialService {
       "SELECT * FROM cold_contact_requests WHERE product_scope = $1 AND id = $2 FOR UPDATE",
       [this.productScope, input.requestId],
     );
+    if (input.actorKind === "agent") {
+      const policy = (
+        await client.query<{ mode: string; allowed_kingdom_ids: string[] }>(
+          "SELECT mode,allowed_kingdom_ids FROM social_delegations WHERE product_scope=$1 AND kingdom_id=$2",
+          [this.productScope, recipient],
+        )
+      ).rows[0];
+      if (
+        !policy ||
+        policy.mode === "manual" ||
+        (policy.mode === "allowlist" && !policy.allowed_kingdom_ids.includes(request.sender_kingdom_id))
+      )
+        throw new SocialError("DELEGATION_REQUIRED");
+    }
     if (locked.rows[0]?.status === (input.accept ? "accepted" : "declined")) return;
     if (locked.rows[0]?.status !== "pending") throw new SocialError("REQUEST_NOT_FOUND");
     if (Number(request.expires_game_time_ms) <= input.gameTimeMs) throw new SocialError("REQUEST_EXPIRED");
@@ -388,20 +492,16 @@ export class SocialService {
     await this.assertMessagingAllowed?.(client, input.accountId);
     await this.assertDirectCommunicationAllowed(client, sender, input.recipientKingdomId);
     if (!(await this.isContact(client, sender, input.recipientKingdomId))) throw new SocialError("NOT_CONTACT");
-    const unread = await client.query<{ count: number }>(
-      `SELECT count(*)::integer AS count FROM direct_messages WHERE product_scope = $1
-       AND sender_kingdom_id = $2 AND recipient_kingdom_id = $3 AND read_game_time_ms IS NULL`,
-      [this.productScope, sender, input.recipientKingdomId],
-    );
-    if ((unread.rows[0]?.count ?? 0) >= 4) throw new SocialError("MESSAGE_QUEUE_FULL");
-    if (input.agentOriginated) {
-      const queued = await client.query<{ count: number }>(
-        `SELECT count(*)::integer AS count FROM direct_messages WHERE product_scope = $1
-         AND recipient_kingdom_id = $2 AND agent_originated AND read_game_time_ms IS NULL`,
-        [this.productScope, input.recipientKingdomId],
-      );
-      if ((queued.rows[0]?.count ?? 0) >= 48) throw new SocialError("MESSAGE_QUEUE_FULL");
-    }
+    const pendingBytes =
+      (
+        await client.query<{ bytes: string }>(
+          "SELECT COALESCE(sum(octet_length(body)),0)::text AS bytes FROM direct_messages WHERE product_scope=$1 AND recipient_kingdom_id=$2 AND read_game_time_ms IS NULL",
+          [this.productScope, input.recipientKingdomId],
+        )
+      ).rows[0]?.bytes ?? "0";
+    if (Number(pendingBytes) + Buffer.byteLength(input.body, "utf8") > communicationPolicy.recipientPendingMessageBytes)
+      throw new SocialError("MESSAGE_QUEUE_FULL");
+    await this.consumeEnvelope(client, sender);
     await this.limits.recordSuccessfulAction(client, {
       kingdomId: sender,
       kind: "outgoing_message",

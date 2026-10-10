@@ -9,6 +9,7 @@ import type { SupplyBond, SupplyResource } from "./supply-terms.js";
 import type { VisitingUpkeepAuthorityPort } from "./upkeep.js";
 
 export interface ImmediateAuthorityPort {
+  assertActionAllowed?(client: PoolClient, accountId: string, action: string, mandateVersion?: number): Promise<void>;
   spend(
     client: PoolClient,
     input: {
@@ -25,6 +26,10 @@ export interface ImmediateAuthorityPort {
 
 export class ImmediateExposureAdapter implements ImmediateAuthorityPort {
   constructor(private readonly exposure: ExposureService) {}
+
+  assertActionAllowed(client: PoolClient, accountId: string, action: string, mandateVersion?: number): Promise<void> {
+    return this.exposure.assertActionAllowed(client, accountId, action, mandateVersion);
+  }
 
   spend(
     client: PoolClient,

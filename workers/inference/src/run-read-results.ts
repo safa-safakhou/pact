@@ -143,7 +143,7 @@ export function boundedCommandReceiptResult(receipt: RunCommandOutcome): string 
 
 export function boundedConversationResult(page: ConversationPage): string {
   const complete = JSON.stringify(page);
-  if (Buffer.byteLength(complete, "utf8") <= maxBytes) return complete;
+  if (Buffer.byteLength(complete, "utf8") <= 36_000) return complete;
   return JSON.stringify({
     counterpartyKingdomId: page.counterpartyKingdomId,
     messageIds: page.messages.map((message) => message.messageId),

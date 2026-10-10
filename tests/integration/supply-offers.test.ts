@@ -497,7 +497,7 @@ describe("versioned supply offers and activation", () => {
     ).rejects.toMatchObject({ code: "OFFER_EXPIRED" });
     expect(
       await withTransaction(pool, (client) => limits.rollingStatus(client, a.kingdomId, "offer_action", 360_000)),
-    ).toMatchObject({ used: 1 });
+    ).toMatchObject({ used: 0 });
   });
 
   it("converts agent supply reservations to bond and installment spend, then releases the remainder", async () => {

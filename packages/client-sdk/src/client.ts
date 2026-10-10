@@ -97,7 +97,7 @@ export class PactClient<A extends ClientAudience> {
 
   prepareCommand(action: SandboxAction, expectedVersion?: number): PreparedCommand {
     const command: PreparedCommand = {
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: action.kind.startsWith("game.") ? "pact.command.v2" : SCHEMA_VERSION,
       commandId: this.options.commandIds.create(),
       // This non-owning sentinel satisfies the shared wire schema. The server always replaces it from credentials.
       actor: {

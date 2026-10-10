@@ -1,5 +1,12 @@
 import type { ChronicleCommand, CourtCommand, PoliticsCommand, SealCommand, SocialCommand } from "@pact/contracts";
-import type { ChronicleService, CourtService, InvitationService, PoliticsService, SealService } from "@pact/kingdom";
+import type {
+  ChronicleService,
+  CourtService,
+  InvitationService,
+  PoliticsService,
+  SealService,
+  SocialService,
+} from "@pact/kingdom";
 import type { PoolClient } from "pg";
 import type { SocialCommandPort } from "./dispatcher.js";
 import { type AuthenticatedPrincipal, DispatcherError } from "./types.js";
@@ -12,6 +19,7 @@ export class SocialCommandHandler implements SocialCommandPort {
     private readonly politics?: PoliticsService,
     private readonly seals?: SealService,
     private readonly chronicle?: ChronicleService,
+    private readonly social?: SocialService,
   ) {}
   async execute(
     client: PoolClient,
@@ -38,6 +46,11 @@ export class SocialCommandHandler implements SocialCommandPort {
     }
     const action = command.action;
     switch (action.kind) {
+      case "contact.delegation": {
+        if (!this.social) throw new DispatcherError("INVALID_COMMAND");
+        const result = await this.social.configureDelegation(client, principal.accountId, action, gameTimeMs);
+        return { recordVersions: { [`social-delegation:${principal.accountId}`]: result.version }, result };
+      }
       case "invitation.issue": {
         const result = await this.invitations.issue(
           client,

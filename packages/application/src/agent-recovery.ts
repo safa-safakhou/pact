@@ -1,5 +1,11 @@
 /** Recovery is advice, never a grant or a claim that a game effect succeeded. */
 export function agentRecovery(code: string, detail?: string): string {
+  if (detail === "TRANSACTION_BUSY")
+    return "Concurrent writes exhausted the bounded transaction retries. No new receipt was established. Check the original receipt, then retry the same command and ID after retryAfterMs; do not create replacement commands.";
+  if (detail === "DELEGATION_REQUIRED")
+    return "Contact decisions are manual for this owner or this sender is outside the owner allow-list. The owner may change social delegation in PACT; an agent cannot grant itself this permission.";
+  if (detail === "SERVICE_THROTTLED")
+    return "The service sender bucket is temporarily full. No envelope was delivered or charged. Wait the returned retryAfterMs, then retry the original exact command ID; this is not a daily gameplay quota.";
   if (detail === "NOT_CONTACT")
     return "No message was sent: this player is not an accepted contact. Read contact requests and current contact status before sending.";
   if (detail === "BLOCKED")
@@ -13,15 +19,15 @@ export function agentRecovery(code: string, detail?: string): string {
   if (code === "TICK_PENDING")
     return "The next world tick is due; this command was not committed. This is a temporary admission wait, not a paused world. Wait briefly, re-read current state, and retry the same command ID and exact action if it is still intended.";
   if (code === "MESSAGE_QUEUE_FULL")
-    return "This message was not sent. The recipient has unread messages at the per-thread or total queue limit. Wait for the recipient to read them; repeating or rewriting the message cannot bypass the limit.";
+    return "This message was not sent. The recipient has reached the published pending-byte storage capacity. Wait for the recipient to read them; repeating or rewriting the message cannot bypass the limit.";
   if (code === "CONTACT_QUEUE_FULL")
-    return "The recipient already has eight pending contact requests. This request was not sent or charged. Wait for their owner to answer requests, or approach a different known player; changing the note or requesting approval cannot bypass the inbox limit.";
+    return "The recipient has reached the published pending-introduction byte capacity. This request was not sent or charged. Wait for their owner to answer requests, or approach a different known player; changing the note or requesting approval cannot bypass the inbox limit.";
   if (code === "REQUEST_EXISTS")
-    return "A contact request between these players is already pending. Read current incoming and outgoing requests. The recipient human must accept the existing request; do not send another or treat it as accepted.";
+    return "A contact request between these players is already pending. Read current requests and delegation. The recipient's owner or delegated agent decides; do not send another or treat it as accepted.";
   if (code === "ALREADY_CONTACT")
     return "These players are already contacts. Read the current contact list and message the existing contact instead of requesting contact again.";
   if (code === "INSUFFICIENT_STOCK")
-    return "No successful move is established. Read current stock and development costs: founding allowances only cover their eligible uses; cold contacts and trade need ordinary stock. Wait for game production or choose an affordable move. Approval cannot create resources.";
+    return "No successful move is established. Read current stock and costs: founding allowances only cover their eligible uses; transfers and trade need ordinary stock. Approval cannot create resources.";
   if (["INVALID_REQUEST", "INVALID_INPUT", "INVALID_COMMAND", "MALFORMED_TOOL_CALL"].includes(code))
     return "Read this tool's input schema and the relevant pact_agent_guide_v1 lesson. Correct the arguments; no successful move is established by this denial.";
   if (["RUN_ALREADY_ACTIVE", "LEASE_HELD", "IN_FLIGHT"].includes(code))

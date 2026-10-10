@@ -35,7 +35,7 @@ export class CouncilReader {
   ) {}
 
   async read(accountId: string, publicIds: string[] = [], observeHuman = false) {
-    const interactions = await this.social.read(accountId, { acknowledgeDeliveredMessages: true });
+    const interactions = await this.social.read(accountId, { acknowledgeDeliveredMessages: false });
     if (!interactions) return null;
     if (observeHuman)
       await this.pool.query(
@@ -137,7 +137,15 @@ export class CouncilReader {
        ORDER BY m.sent_game_time_ms DESC,m.id DESC LIMIT 41`,
       [this.scope, accountId, peerId, before?.gameTimeMs ?? null, before?.id ?? null],
     );
-    const page = rows.rows.slice(0, 40);
+    // Full text is delivered or left unread. Bound serialized bytes, including escaping.
+    const page: typeof rows.rows = [];
+    let bytes = 256;
+    for (const row of rows.rows.slice(0, 40)) {
+      const size = Buffer.byteLength(JSON.stringify(row), "utf8") + 256;
+      if (bytes + size > 64000) break;
+      page.push(row);
+      bytes += size;
+    }
     const ownerId = page[0]?.owner_kingdom_id;
     if (ownerId)
       await acknowledgeMessageRead(
@@ -155,7 +163,7 @@ export class CouncilReader {
         body: r.body,
         sentGameTimeMs: r.sent_game_time_ms,
       })),
-      next: rows.rows.length > 40 && oldest ? { gameTimeMs: oldest.sent_game_time_ms, id: oldest.id } : null,
+      next: rows.rows.length > page.length && oldest ? { gameTimeMs: oldest.sent_game_time_ms, id: oldest.id } : null,
       untrustedContent: true,
     };
   }

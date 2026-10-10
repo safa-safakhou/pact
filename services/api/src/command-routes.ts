@@ -49,6 +49,8 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
         schemaVersion: "pact.command.v1",
         commandId: "00000000-0000-4000-8000-000000000000",
         code: error.code,
+        ...(error.detail ? { detail: error.detail } : {}),
+        ...(error.retryAfterMs ? { retryAfterMs: error.retryAfterMs } : {}),
         committedEventIds: [],
         recordVersions: {},
         charged: [],

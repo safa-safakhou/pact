@@ -5,7 +5,7 @@ import {
   DispatcherError,
   dispatchRunCommandTools,
   GameCommandHandler,
-  pactRunCommandTool,
+  pactRunCommandV2Tool,
 } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { ExactHumanPermitService, ExposureService, readMandateContext, readReserveFloor } from "@pact/authority";
@@ -181,7 +181,7 @@ export async function createInferenceGameRuntime(
       if (!(await conversations.assertSelectable(accountId, contextIds))) throw new RunError("FORBIDDEN");
     },
     tools: [
-      pactRunCommandTool,
+      pactRunCommandV2Tool,
       { ...pactAgentGuideTool, parseArguments: (input: unknown) => AgentGuideQuerySchema.parse(input) },
       { ...pactPlayerFindTool, parseArguments: (input: unknown) => PlayerFindQuerySchema.parse(input) },
       inboxReadTool,

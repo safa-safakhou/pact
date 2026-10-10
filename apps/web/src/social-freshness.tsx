@@ -28,8 +28,8 @@ export function contactState(request: OutgoingContact, gameTimeMs: number | unde
   if (request.status === "pending")
     return Number.isFinite(deadline) && gameTimeMs !== undefined && deadline <= gameTimeMs
       ? "Recorded pending; deadline passed, refresh for the actual outcome. Response time unknown."
-      : "Pending: waiting for the recipient human. Response time unknown.";
-  if (request.status === "accepted") return "Accepted: the recipient human recorded acceptance.";
+      : "Pending: waiting for the recipient's owner or delegated agent. Response time unknown.";
+  if (request.status === "accepted") return "Accepted: the recipient recorded acceptance.";
   if (request.status === "declined") return "Declined: respect the recipient's decision.";
   if (request.status === "expired") return "Expired: no acceptance was recorded.";
   return `Recorded ${request.status}; inspect the source before acting.`;
@@ -59,8 +59,8 @@ export function OutgoingContactHistory({
         <p>No outgoing requests in the retained view. You can read public notices, leave and return later.</p>
       )}
       <p>
-        Public introductions and existing invitation links avoid the cold-contact Silver fee. Contact fees and human
-        acceptance stay unchanged; no automatic retry.
+        Introductions are free. The recipient's social delegation determines who can decide. A recorded request does not
+        prove acceptance or create a contract.
       </p>
     </article>
   );

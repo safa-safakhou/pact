@@ -9,7 +9,7 @@ import { ChroniclePanel } from "./chronicle-panel.js";
 import { pactBaseUrl } from "./client-location.js";
 import { CodexConnection } from "./codex-connection.js";
 import { Consequences, type ConsequenceView } from "./consequences.js";
-import { CouncilFrame } from "./council-frame.js";
+import { ConversationWorkspace } from "./conversation-workspace.js";
 import { CourtPanel } from "./court-panel.js";
 import { developmentChoices } from "./development-choices.js";
 import { EvidencePanel } from "./evidence-panel.js";
@@ -34,6 +34,7 @@ import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
 import { RunPanel } from "./run-panel.js";
 import { SeasonPanel } from "./season-panel.js";
+import { SessionDevices } from "./session-devices.js";
 import { OutgoingContactHistory } from "./social-freshness.js";
 import { confirmTelegramLink, readTelegramBootstrap } from "./telegram-link.js";
 import { readWebResponse } from "./web-response.js";
@@ -246,6 +247,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
         }
         if (session && !session.guest) {
           localStorage.removeItem("pact_guest_entry");
+          localStorage.removeItem("pact_guest_pending_rotation");
           localStorage.removeItem("pact_guest_name");
         }
       })
@@ -787,6 +789,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
             void refresh();
           }}
         />
+        <SessionDevices request={request} />
         {!guestPlayer &&
           (host ? (
             <button type="button" onClick={host.openAccount}>
@@ -924,10 +927,10 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                 aria-current={councilOpen ? "page" : undefined}
                 onClick={() => setCouncilOpen(true)}
               >
-                Council
+                Conversations
               </button>
             )}
-            {(["Kingdom", "Envoy", "People", "Chronicle"] as const).map((item) => (
+            {(["Kingdom", "People", "Chronicle", "Envoy"] as const).map((item) => (
               <button
                 type="button"
                 key={item}
@@ -937,7 +940,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                   setTab(item);
                 }}
               >
-                {item}
+                {item === "People" ? "Society" : item}
               </button>
             ))}
             <button type="button" onClick={() => setAccountOpen(true)}>
@@ -945,7 +948,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
             </button>
           </nav>
           {councilOpen ? (
-            <CouncilFrame request={request} />
+            <ConversationWorkspace request={request} client={client} canWrite={canWrite} onReview={confirmAction} />
           ) : (
             <>
               {tab === "Envoy" && (
@@ -1939,7 +1942,6 @@ export function People({
   const [message, setMessage] = useState("");
   const [resource, setResource] = useState<"iron" | "silver" | "grain">("grain");
   const [amount, setAmount] = useState(1);
-  const contactSilverReady = BigInt(view?.balances.silver?.ordinaryUnits ?? "0") >= 1200n;
   const selected = social?.contacts.find((item) => item.kingdomId === target);
   const messages = social?.messages.filter((item) => item.kingdomId === target).reverse() ?? [];
   return (
@@ -2130,22 +2132,18 @@ export function People({
         <article className="game-card">
           <h3 id="contact-composer">Contact and message</h3>
           <p>
-            A cold contact request costs 2 ordinary Silver, not founding allowance. Messages and direct transfers need
-            an accepted contact.
+            Introductions are free. The recipient's social delegation determines acceptance. Messages and direct
+            transfers need an accepted contact.
           </p>
-          {!selected && !contactSilverReady && (
-            <p role="status">
-              Your market is earning the 2 Silver needed to introduce yourself. A fresh kingdom earns this in 12 game
-              minutes; build while it works.
-            </p>
-          )}
           <label>
             Text
-            <textarea maxLength={1000} value={message} onChange={(event) => setMessage(event.target.value)} />
+            <textarea value={message} onChange={(event) => setMessage(event.target.value)} />
           </label>
           <button
             type="button"
-            disabled={busy || !contactSilverReady || !target || !message || target === kingdomId || Boolean(selected)}
+            disabled={
+              busy || !target || !message || [...message].length > 4096 || target === kingdomId || Boolean(selected)
+            }
             onClick={() => {
               void act({ kind: "game.contact.request", recipientKingdomId: target, note: message });
             }}
@@ -2155,7 +2153,7 @@ export function People({
           <button
             type="button"
             className="secondary"
-            disabled={busy || !selected || !message}
+            disabled={busy || !selected || !message || [...message].length > 4096}
             onClick={() => {
               void act({ kind: "game.message.send", recipientKingdomId: target, body: message });
             }}

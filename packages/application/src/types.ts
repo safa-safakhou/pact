@@ -36,7 +36,15 @@ export class DispatcherError extends Error {
   constructor(
     readonly code: DispatcherFailureCode,
     readonly reason?: "WRITE_LEASE_REQUIRED",
-    readonly detail?: "CONTRACT_CAPACITY" | "OFFER_CLOSED" | "NOT_CONTACT" | "BLOCKED",
+    readonly detail?:
+      | "CONTRACT_CAPACITY"
+      | "OFFER_CLOSED"
+      | "NOT_CONTACT"
+      | "BLOCKED"
+      | "SERVICE_THROTTLED"
+      | "TRANSACTION_BUSY"
+      | "DELEGATION_REQUIRED",
+    readonly retryAfterMs?: number,
   ) {
     super(code);
     this.name = "DispatcherError";

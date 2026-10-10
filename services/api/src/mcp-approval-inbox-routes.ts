@@ -146,6 +146,9 @@ export function registerMcpRoutes(
                       code,
                       ...(missingLease ? { reason: "WRITE_LEASE_REQUIRED" } : {}),
                       ...(error instanceof DispatcherError && error.detail ? { detail: error.detail } : {}),
+                      ...(error instanceof DispatcherError && error.retryAfterMs
+                        ? { retryAfterMs: error.retryAfterMs }
+                        : {}),
                     },
                     recovery: missingLease
                       ? "Call run.open with empty arguments to open or renew this connection’s 15-minute write lease, then retry the same intended command. This denial does not establish a missing kingdom permission. Do not ask the human to expand authority unless a separate mandate denial requires it."

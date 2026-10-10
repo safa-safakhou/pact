@@ -30,6 +30,7 @@ export function RestoreGuest({ onJoined }: { onJoined: (csrf: string) => void })
               throw Error("Could not restore this kingdom. Check the code, or sign in if you saved it with an email.");
             localStorage.setItem("pact_guest_entry", entryKey);
             localStorage.removeItem("pact_guest_pending");
+            localStorage.removeItem("pact_guest_pending_rotation");
             setCode("");
             onJoined(String(result.csrfToken));
           } catch (e) {
@@ -99,6 +100,34 @@ export function AccountAccess({
             </p>
             <button type="button" onClick={() => setShowCode(!showCode)}>
               {showCode ? "Hide recovery code" : "Show recovery code"}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() =>
+                void submit(async () => {
+                  const currentCode = localStorage.getItem("pact_guest_entry");
+                  if (!currentCode)
+                    throw new Error("Restore using your current private recovery code before replacing it.");
+                  const saved = localStorage.getItem("pact_guest_pending_rotation");
+                  const intent = saved
+                    ? (JSON.parse(saved) as { currentCode: string; newCode: string })
+                    : { currentCode, newCode: crypto.randomUUID() };
+                  if (intent.currentCode !== currentCode)
+                    throw new Error(
+                      "The saved replacement belongs to a different recovery code. Restore this kingdom before retrying.",
+                    );
+                  localStorage.setItem("pact_guest_pending_rotation", JSON.stringify(intent));
+                  const result = await request("/v1/auth/guest/recovery/replace", "POST", intent);
+                  if (typeof result.recoveryCode !== "string")
+                    throw new Error("Replacement was not confirmed. Restore your kingdom before trying again.");
+                  localStorage.setItem("pact_guest_entry", result.recoveryCode);
+                  localStorage.removeItem("pact_guest_pending_rotation");
+                  setShowCode(true);
+                }, "Recovery code replaced. Save the new code; the previous code no longer works.")
+              }
+            >
+              Replace recovery code
             </button>
             {showCode && (
               <label>
@@ -180,6 +209,7 @@ export function AccountAccess({
                 void submit(async () => {
                   await request("/v1/auth/verify", "POST", { token });
                   localStorage.removeItem("pact_guest_entry");
+                  localStorage.removeItem("pact_guest_pending_rotation");
                   localStorage.removeItem("pact_guest_name");
                   form.reset();
                   onChanged();

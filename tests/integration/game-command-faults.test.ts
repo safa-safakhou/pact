@@ -637,7 +637,6 @@ function expectedBalances(before: BalanceRow[], kind: GameAction["kind"], a: Own
   }
   switch (kind) {
     case "game.contact.request":
-      delta(a, "silver", -2);
       break;
     case "game.transfer":
       delta(a, "iron", -3);
@@ -900,7 +899,7 @@ describe("seeded connected gameplay tapes", () => {
         const request = await perform(
           sender,
           { kind: "game.contact.request", recipientKingdomId: recipient.kingdomId, note: "Seeded connected tape" },
-          () => model.delta(sender, "silver", -1200n),
+          () => undefined,
         );
         await perform(recipient, {
           kind: "game.contact.answer",

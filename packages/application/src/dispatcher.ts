@@ -1,9 +1,10 @@
 import { createHash, randomUUID } from "node:crypto";
 import {
+  AcceptedCommandEnvelopeSchema,
+  AcceptedSocialCommandSchema,
   type ChronicleCommand,
   ChronicleCommandSchema,
   type CommandEnvelope,
-  CommandEnvelopeSchema,
   type CommandReceipt,
   type CourtCommand,
   CourtCommandSchema,
@@ -15,7 +16,6 @@ import {
   type SealCommand,
   SealCommandSchema,
   type SocialCommand,
-  SocialCommandSchema,
 } from "@pact/contracts";
 import { appendOutbox, withTransaction } from "@pact/db";
 import type { Clock } from "@pact/platform";
@@ -116,7 +116,7 @@ export class CommandDispatcher {
     this.assertPrincipal(principal);
     if (principal.audience !== "human" || !this.options.social || !this.options.game)
       throw new DispatcherError("FORBIDDEN");
-    const parsed = SocialCommandSchema.or(CourtCommandSchema)
+    const parsed = AcceptedSocialCommandSchema.or(CourtCommandSchema)
       .or(PoliticsCommandSchema)
       .or(SealCommandSchema)
       .or(ChronicleCommandSchema)
@@ -323,12 +323,18 @@ export class CommandDispatcher {
       // A concurrent retry can race the first commit under SERIALIZABLE and surface a unique
       // action-event/receipt key before this transaction's snapshot can see that receipt.
       // Only recover if the exact command is now durably committed; never mask another error.
-      if (typeof error === "object" && error !== null && "code" in error && error.code === "23505") {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        ["23505", "40001", "40P01"].includes(String(error.code))
+      ) {
         const committed = await this.options.pool.query<ReceiptRow>(
           "SELECT canonical_payload_hash, receipt, account_id FROM command_receipts WHERE product_scope = $1 AND command_id = $2",
           [this.options.productScope, command.commandId],
         );
         if (committed.rows[0]) return this.replayed(principal, command.commandId, payloadHash, committed.rows[0]);
+        if (error.code !== "23505") throw new DispatcherError("RATE_LIMITED", undefined, "TRANSACTION_BUSY", 100);
       }
       throw error;
     }
@@ -375,7 +381,7 @@ export class CommandDispatcher {
   }
 
   private parseCommand(rawCommand: unknown): CommandEnvelope {
-    const parsed = CommandEnvelopeSchema.safeParse(rawCommand);
+    const parsed = AcceptedCommandEnvelopeSchema.safeParse(rawCommand);
     if (!parsed.success) {
       throw new DispatcherError("INVALID_COMMAND");
     }

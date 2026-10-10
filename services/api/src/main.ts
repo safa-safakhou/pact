@@ -264,7 +264,7 @@ const dispatcher = new CommandDispatcher({
       summary: { ...receipt, actionKind: command.action.kind, disposition: proposed ? "proposed" : "committed" },
     });
   },
-  social: new SocialCommandHandler(invitations, courts, politics, seals, chronicle),
+  social: new SocialCommandHandler(invitations, courts, politics, seals, chronicle, social),
   game: {
     admit: async (operation) => world.admitCommand((client, snapshot) => operation(client, snapshot.gameTimeMs)),
     execute: (client, principal, command, gameTimeMs) => gameCommands.execute(client, principal, command, gameTimeMs),
@@ -424,6 +424,7 @@ const privacy = new PrivacyService(pool, {
     council.retention,
     notifications.retention,
     moderation.retention,
+    social.retention,
     botRetention("pact"),
     {
       name: "kingdomExperience",

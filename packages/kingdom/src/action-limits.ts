@@ -27,7 +27,7 @@ export interface ChargeStatus {
 
 export interface RollingStatus {
   used: number;
-  limit: number;
+  limit: number | null;
   retryAtGameTimeMs: number | null;
   alreadyCommitted?: boolean;
 }
@@ -47,7 +47,7 @@ const chargeIntervalMs: Record<ChargeKind, number> = {
   scout: rulesCatalog.actionLimits.scoutRegenerationHours * 3_600_000,
 };
 
-const rollingPolicies: Record<RollingActionKind, { limit: number; windowMs: number }> = {
+const rollingPolicies: Record<RollingActionKind, { limit: number | null; windowMs: number }> = {
   outgoing_message: { limit: rulesCatalog.actionLimits.outgoingMessagesPerDay, windowMs: 86_400_000 },
   offer_action: { limit: rulesCatalog.actionLimits.offerActionsPerDay, windowMs: 86_400_000 },
   cold_contact: { limit: rulesCatalog.actionLimits.coldContactsPerDay, windowMs: 86_400_000 },
@@ -249,7 +249,8 @@ export class ActionLimitService {
     return {
       used,
       limit: policy.limit,
-      retryAtGameTimeMs: used >= policy.limit && oldest !== null ? oldest + policy.windowMs : null,
+      retryAtGameTimeMs:
+        policy.limit !== null && used >= policy.limit && oldest !== null ? oldest + policy.windowMs : null,
     };
   }
 
@@ -270,7 +271,7 @@ export class ActionLimitService {
     if (existing.rowCount) {
       return { used, limit: policy.limit, retryAtGameTimeMs: null, alreadyCommitted: true };
     }
-    if (used >= policy.limit)
+    if (policy.limit !== null && used >= policy.limit)
       throw new ActionLimitError("RATE_LIMITED", oldest === null ? null : oldest + policy.windowMs);
     await client.query(
       `INSERT INTO kingdom_action_events(product_scope, kingdom_id, kind, operation_key, game_time_ms)

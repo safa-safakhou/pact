@@ -4,7 +4,7 @@ import {
   CommandDispatcher,
   dispatchRunCommandTools,
   GameCommandHandler,
-  pactRunCommandTool,
+  pactRunCommandV2Tool as pactRunCommandTool,
   runToolCommandId,
 } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
@@ -258,7 +258,7 @@ describe("shared gameplay command admission", () => {
       if (toolName === "pact_agent_guide_v1" && "topic" in args && args.topic === "start") {
         expect(result).toMatchObject({ state: "active", surface: "in_app" });
         expect(JSON.stringify(result.next)).toContain("pact_chronicle_read_v1");
-        expect(JSON.stringify(result.next)).toContain("pact_command_v1");
+        expect(JSON.stringify(result.next)).toContain("pact_command_v2");
         expect(JSON.stringify(result.next)).not.toContain("Open run.open");
         expect(Buffer.byteLength(row?.summary ?? "", "utf8")).toBeLessThanOrEqual(3_600);
       } else if (toolName === "pact_agent_guide_v1" && "topic" in args && args.topic === "military") {
@@ -576,7 +576,7 @@ describe("shared gameplay command admission", () => {
           modelOwner.kingdomId,
         ])
       ).rows,
-    ).toEqual([{ ordinary_units: "4800" }]);
+    ).toEqual([{ ordinary_units: "6000" }]);
     expect(
       (
         await pool.query(
@@ -1244,7 +1244,7 @@ describe("shared gameplay command admission", () => {
       providerRouter: new ProviderRouter([
         {
           provider: "fixture",
-          listModels: async () => [fakeProviderModel],
+          listModels: async () => [{ ...fakeProviderModel, contextWindowTokens: 65536 }],
           invoke: async (request) => {
             calls += 1;
             if (calls === 1)
@@ -1289,10 +1289,13 @@ describe("shared gameplay command admission", () => {
     expect(result.rows.some((row) => row.summary === JSON.stringify({ code: "NOT_FOUND" }))).toBe(true);
     expect(summary).toContain(hostile);
     expect(summary).toContain('"untrustedContent":true');
-    expect(summary).toContain('"bodyOmitted":true');
-    expect(summary).not.toContain("x".repeat(600));
+    expect(summary).toContain("x".repeat(600));
+    expect(Buffer.byteLength(summary, "utf8")).toBeLessThanOrEqual(36000);
     expect(Buffer.byteLength(summary, "utf8")).toBeLessThanOrEqual(3_600);
-    expect((await runtime.runs.executeModelCall(started.runId)).status).toBe("finished");
+    expect(await runtime.runs.executeModelCall(started.runId)).toMatchObject({
+      status: "finished",
+      lastErrorCode: null,
+    });
     expect(secondRequestMessages[0]?.role).toBe("system");
     expect(secondRequestMessages[0]?.content).not.toContain(hostile);
     expect(secondRequestMessages.some((message) => message.role === "user" && message.content.includes(hostile))).toBe(
@@ -3513,7 +3516,7 @@ describe("shared gameplay command admission", () => {
       charged: unknown[];
       recordVersions: Record<string, number>;
     };
-    expect(modelReceipt).toMatchObject({ code: "COMMITTED", charged: [{ asset: "silver", units: "1200" }] });
+    expect(modelReceipt).toMatchObject({ code: "COMMITTED", charged: [] });
     expect(Object.keys(modelReceipt.recordVersions)).toHaveLength(1);
 
     const mcp = new McpTransport({
@@ -3554,7 +3557,7 @@ describe("shared gameplay command admission", () => {
     const mcpResult = await call(secondCommand, 3);
     const mcpReceipt = (mcpResult.response.result as { structuredContent: { code: string; charged: unknown[] } })
       .structuredContent;
-    expect(mcpReceipt).toMatchObject({ code: "COMMITTED", charged: [{ asset: "silver", units: "1200" }] });
+    expect(mcpReceipt).toMatchObject({ code: "COMMITTED", charged: [] });
     expect(
       ((await call(secondCommand, 7)).response.result as { structuredContent: unknown }).structuredContent,
     ).toEqual(mcpReceipt);
@@ -3562,22 +3565,21 @@ describe("shared gameplay command admission", () => {
     await expect(call(command(third.accountId, requested(third.kingdomId, 1)), 4)).rejects.toMatchObject({
       code: "STALE_VERSION",
     });
-    await expect(call(command(third.accountId, requested(third.kingdomId, 2)), 5)).rejects.toMatchObject({
-      code: "FORBIDDEN",
-    });
+    // Free introductions do not spend a resource budget; action/mandate version still apply.
+    await expect(call(command(third.accountId, requested(third.kingdomId, 2)), 5)).resolves.toBeDefined();
     const modelRequestId = Object.keys(modelReceipt.recordVersions)[0]?.slice("contact-request:".length);
     if (!modelRequestId) throw new Error("Missing committed contact request");
     await expect(
       call(command(second.accountId, { kind: "game.contact.answer", requestId: modelRequestId, accept: true }), 6),
     ).rejects.toMatchObject({
-      code: "FORBIDDEN",
+      code: "INVALID_COMMAND",
     });
     const contacts = await pool.query<{ sender_kingdom_id: string; recipient_kingdom_id: string }>(
       "SELECT sender_kingdom_id, recipient_kingdom_id FROM cold_contact_requests WHERE sender_kingdom_id = $1 ORDER BY recipient_kingdom_id",
       [owner.kingdomId],
     );
     expect(contacts.rows).toEqual(
-      [first.kingdomId, second.kingdomId]
+      [first.kingdomId, second.kingdomId, third.kingdomId]
         .sort()
         .map((recipient_kingdom_id) => ({ sender_kingdom_id: owner.kingdomId, recipient_kingdom_id })),
     );
@@ -3585,17 +3587,17 @@ describe("shared gameplay command admission", () => {
       "SELECT units FROM authority_spends WHERE account_id = $1 AND asset = 'silver' ORDER BY operation_key",
       [owner.accountId],
     );
-    expect(spends.rows).toEqual([{ units: "1200" }, { units: "1200" }]);
+    expect(spends.rows).toEqual([]);
     const balance = await pool.query<{ ordinary_units: string }>(
       "SELECT ordinary_units FROM resource_balances WHERE kingdom_id = $1 AND resource = 'silver'",
       [owner.kingdomId],
     );
-    expect(balance.rows).toEqual([{ ordinary_units: "3600" }]);
+    expect(balance.rows).toEqual([{ ordinary_units: "6000" }]);
     const actions = await pool.query<{ count: number }>(
       "SELECT count(*)::int AS count FROM kingdom_action_events WHERE kingdom_id = $1 AND kind = 'cold_contact'",
       [owner.kingdomId],
     );
-    expect(actions.rows).toEqual([{ count: 2 }]);
+    expect(actions.rows).toEqual([{ count: 3 }]);
   });
 
   it("denies every human-only game action through model and MCP despite forged human envelopes", async () => {
@@ -3603,7 +3605,6 @@ describe("shared gameplay command admission", () => {
     const forged = await kingdom();
     const recordId = randomUUID();
     const humanOnlyActions: CommandEnvelope["action"][] = [
-      { kind: "game.contact.answer", requestId: recordId, accept: true },
       { kind: "game.training.cancel", batchId: recordId },
       { kind: "game.troop.disband", troopId: recordId },
       { kind: "game.building.cancel", instructionId: recordId },

@@ -69,6 +69,12 @@ export class GameCommandHandler {
     const accountId = principal.accountId;
     const operationKey = command.commandId;
     try {
+      if (
+        ["game.supply.offer", "game.supply.counter", "game.garrison.offer", "game.garrison.counter"].includes(
+          action.kind,
+        )
+      )
+        await this.social.consumeProposal(client, accountId);
       switch (action.kind) {
         case "game.contact.request": {
           const id = await this.social.requestContact(client, {
@@ -82,17 +88,15 @@ export class GameCommandHandler {
           });
           return {
             recordVersions: { [`contact-request:${id}`]: 1 },
-            charged: [
-              { asset: "silver", units: wholeResources(rulesCatalog.actionLimits.coldContactSilver).toString() },
-            ],
+            charged: [],
           };
         }
         case "game.contact.answer": {
-          if (principal.audience !== "human") throw new DispatcherError("FORBIDDEN");
           await this.social.answerRequest(client, {
             accountId,
             requestId: action.requestId,
             accept: action.accept,
+            actorKind: principal.audience === "agent" ? "agent" : "human",
             gameTimeMs,
           });
           return { recordVersions: { [`contact-request:${action.requestId}`]: 1 }, charged: [] };
@@ -509,6 +513,10 @@ export class GameCommandHandler {
       if (error instanceof ExposureError)
         throw new DispatcherError(error.code === "STALE_MANDATE" ? "STALE_VERSION" : "FORBIDDEN");
       if (error instanceof SocialError) {
+        if (error.code === "DELEGATION_REQUIRED")
+          throw new DispatcherError("FORBIDDEN", undefined, "DELEGATION_REQUIRED");
+        if (error.code === "SERVICE_THROTTLED")
+          throw new DispatcherError("RATE_LIMITED", undefined, "SERVICE_THROTTLED", error.retryAfterMs ?? undefined);
         if (
           error.code === "MESSAGE_QUEUE_FULL" ||
           error.code === "CONTACT_QUEUE_FULL" ||

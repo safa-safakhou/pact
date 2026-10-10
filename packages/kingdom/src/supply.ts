@@ -217,12 +217,7 @@ export class SupplyService {
       expires_game_time_ms: String(input.gameTimeMs + minutes * 60_000),
     };
     await this.validateRates(client, offer);
-    await this.limits.recordSuccessfulAction(client, {
-      kingdomId: party,
-      kind: "offer_action",
-      operationKey: input.operationKey,
-      gameTimeMs: input.gameTimeMs,
-    });
+    // Unsigned terms do not consume the commitment/signature quota.
     await client.query(
       `INSERT INTO supply_offers(id, product_scope, kingdom_a, kingdom_b, version, terms, status,
          expires_game_time_ms, created_game_time_ms, updated_game_time_ms)
@@ -273,12 +268,7 @@ export class SupplyService {
       throw new SupplyError("OFFER_EXPIRED");
     const proposed = { ...offer, terms: input.terms };
     await this.validateRates(client, proposed);
-    await this.limits.recordSuccessfulAction(client, {
-      kingdomId: party,
-      kind: "offer_action",
-      operationKey: input.operationKey,
-      gameTimeMs: input.gameTimeMs,
-    });
+    // Unsigned terms do not consume the commitment/signature quota.
     await this.releaseSignatures(client, offer.id, offer.version, input.gameTimeMs);
     await client.query(
       `UPDATE supply_offers SET version = version + 1, terms = $2::jsonb,

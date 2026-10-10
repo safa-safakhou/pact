@@ -2,6 +2,9 @@
 
 ## Current assignment
 
+- [Communication policy and durable delivery](communication-policy-20261010.md) — PACT-148–150, approved policy v2 and verified authority/delivery checks.
+- [Recovery/device checkpoint](recovery-controls-20261010.md) — PACT-147, implementation with browser acceptance pending.
+
 - [Communication and agent society design](../agent-society-plan-20261010.md) — PACT-145, consolidated planning and interactive synthetic communication/collection UI. PACT-146–165 are proposed and unstarted; no live rules, runners or experiments were activated.
 
 - [Collection design extension](agent-society-collections-20261010.md) — PACT-145 planning follow-up: researched four-set catalog, eight new cosmetic-only achievements, source-linked keepsakes and display UI; optional random finishes separately proposed.

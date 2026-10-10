@@ -8,6 +8,7 @@ export interface KingdomDraft {
 }
 
 export * from "./combat.js";
+export * from "./communication-policy.js";
 export * from "./rational.js";
 export * from "./resource-facts.js";
 export * from "./rules-catalog.js";

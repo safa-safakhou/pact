@@ -115,9 +115,9 @@ export class PublicClient {
     await client.init();
     return client;
   }
-  async humanCommand(action, commandId = randomUUID()) {
+  async humanCommand(action, commandId = randomUUID(), schemaVersion = "pact.command.v1") {
     return this.http("/v1/commands", {
-      schemaVersion: "pact.command.v1",
+      schemaVersion,
       commandId,
       actor: {
         principalId: "server-derived",

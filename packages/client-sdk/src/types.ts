@@ -37,7 +37,9 @@ export interface PactClientOptions<A extends ClientAudience> {
 }
 
 export type SandboxAction = CommandEnvelope["action"];
-export type PreparedCommand = Readonly<CommandEnvelope>;
+export type PreparedCommand = Readonly<
+  Omit<CommandEnvelope, "schemaVersion"> & { schemaVersion: "pact.command.v1" | "pact.command.v2" }
+>;
 
 export interface InboxEventProjection {
   readonly sequence: string;

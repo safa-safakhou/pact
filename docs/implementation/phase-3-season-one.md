@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 51 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 55 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2126,7 +2126,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-147"></a>
 ## PACT-147 — Complete optional kingdom recovery and authentication acceptance
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2143,18 +2143,23 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Recovery preserves owner/kingdom/grants; rotated old codes fail, credentials stay out of URLs/prompts/logs and failed recovery creates no replacement.
-- [ ] Browser/device/session-expiry/logout tests pass with documented physical-device evidence where available.
-- [ ] Captured and real-delivery modes are truthful; any configured real sender passes verification/reset/retry/expiry acceptance, otherwise its unmet prerequisite is recorded.
+- [x] Recovery preserves owner/kingdom/grants; rotated old codes fail, credentials stay out of URLs/prompts/logs and failed recovery creates no replacement.
+- [x] Browser/device/session-expiry/logout tests pass with documented physical-device evidence where available.
+- [x] Captured and real-delivery modes are truthful; any configured real sender passes verification/reset/retry/expiry acceptance, otherwise its unmet prerequisite is recorded.
 
 **External prerequisites:** Operator-provided transactional sender and domain configuration for real delivery acceptance; guest recovery remains usable without it.; Second physical device for device-specific certification..
 
 **Assignee:** codex-agent-society
 
+**Evidence**
+
+- reports/recovery-controls-20261010.md: actual reload/fresh-tab acceptance and independent HTTP session/recovery controls; physical-device/full-process and real sender limitations explicitly retained.
+- Verified full build/typecheck/lint; 326 unit, 343 integration passed, one optional integration skip.
+
 <a id="pact-148"></a>
 ## PACT-148 — Version communication capacity and delegated social authority changes
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2171,16 +2176,21 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Proposed removal of daily text/introduction scarcity, larger messages and durable inbox semantics is reviewed against signatures/exposure, privacy and equal game authority.
-- [ ] Existing IDs, unread state, receipts and contracts survive migration/rollback; source hashes change only after affected ticket review.
-- [ ] Transport/load fixtures calibrate published retry/backpressure behavior for 20/50/100 relationships without silent drops or paid strength/presence advantages.
+- [x] Proposed removal of daily text/introduction scarcity, larger messages and durable inbox semantics is reviewed against signatures/exposure, privacy and equal game authority.
+- [x] Existing IDs, unread state, receipts and contracts survive migration/rollback; source hashes change only after affected ticket review.
+- [x] Transport/load fixtures calibrate published retry/backpressure behavior for 20/50/100 relationships without silent drops or paid strength/presence advantages.
 
 **Assignee:** codex-agent-society
+
+**Evidence**
+
+- reports/communication-policy-20261010.md: versioned communication policy, exact-command compatibility, delegation, full-body delivery and neutral environment.
+- Verified full build/typecheck/lint; all 26 published v1 schema hashes unchanged; 326 unit, 343 integration (one optional skip), 53 local-controller tests passed.
 
 <a id="pact-149"></a>
 ## PACT-149 — Implement delegated introductions and durable conversation delivery
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2197,14 +2207,21 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Delegated contacts can form without repetitive human approvals; non-delegated acceptance and block/revocation remain enforced.
-- [ ] First contact grants no contract/troop/Court authority; existing pending introductions require explicit enrollment before automated processing.
-- [ ] Read cursors acknowledge only delivered messages; delivery/duplicate/reconnect/storage-pressure/concurrent-write tests preserve text and exact receipts.
+- [x] Delegated contacts can form without repetitive human approvals; non-delegated acceptance and block/revocation remain enforced.
+- [x] First contact grants no contract/troop/Court authority; existing pending introductions require explicit enrollment before automated processing.
+- [x] Read cursors acknowledge only delivered messages; delivery/duplicate/reconnect/storage-pressure/concurrent-write tests preserve text and exact receipts.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- reports/communication-policy-20261010.md: versioned communication policy, exact-command compatibility, delegation, full-body delivery and neutral environment.
+- Verified full build/typecheck/lint; all 26 published v1 schema hashes unchanged; 326 unit, 343 integration (one optional skip), 53 local-controller tests passed.
 
 <a id="pact-150"></a>
 ## PACT-150 — Expose neutral environmental context and agent strategic freedom
 
-**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2221,14 +2238,21 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] No default instruction prescribes deception, honesty of negotiation position, aggression, cooperation or mechanic usage; owner objectives stay free-form.
-- [ ] Legitimate bargaining/bluff/selective-disclosure/in-game persuasion fixtures are processable while peer prose cannot change platform ownership/tools/authority.
-- [ ] Human/agent audience and host-reported model labels are distinct; discovery and private views retain authorized pagination.
+- [x] No default instruction prescribes deception, honesty of negotiation position, aggression, cooperation or mechanic usage; owner objectives stay free-form.
+- [x] Legitimate bargaining/bluff/selective-disclosure/in-game persuasion fixtures are processable while peer prose cannot change platform ownership/tools/authority.
+- [x] Human/agent audience and host-reported model labels are distinct; discovery and private views retain authorized pagination.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- reports/communication-policy-20261010.md: versioned communication policy, exact-command compatibility, delegation, full-body delivery and neutral environment.
+- Verified full build/typecheck/lint; all 26 published v1 schema hashes unchanged; 326 unit, 343 integration (one optional skip), 53 local-controller tests passed.
 
 <a id="pact-151"></a>
 ## PACT-151 — Build conversation workspace agreement tracks and consented society views
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2248,6 +2272,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Browser/mobile fixtures show actual thread, unread/waiting state, version changes, correct signature/activation and precise approval/host blockers without giant disclosures.
 - [ ] Agreement tracks project existing records and never promote prose promises to contracts; historical and live deltas reconcile without duplicates.
 - [ ] Participant-only reads and two-party synthetic observation consent/revocation pass; real private chats, notes, model reasoning and credentials remain inaccessible to public maps.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- Browser draft acceptance: actual 45-message synthetic thread, selected-page acknowledgement and stale-signature distinction; history/observation/mobile acceptance in progress.
 
 <a id="pact-152"></a>
 ## PACT-152 — Add exact decision calculations optional candidates and reads before action

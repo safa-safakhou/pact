@@ -91,42 +91,182 @@ async function connect(
 }
 
 describe("contacts, messages, and transfers", () => {
-  it("rejects a full cold-request queue before charging a ninth sender", async () => {
-    const recipient = await kingdom();
-    for (let n = 0; n < 8; n += 1) {
-      const sender = await kingdom();
-      await credit(sender.kingdomId, "silver", 2);
-      await withTransaction(pool, (client) =>
-        social.requestContact(client, {
-          accountId: sender.accountId,
-          recipientKingdomId: recipient.kingdomId,
-          note: `Hello ${n}`,
-          operationKey: randomUUID(),
-          gameTimeMs: 60_000,
+  it("requires owner delegation, checks allow-list and revocation, and grants no contract authority", async () => {
+    const sender = await kingdom(),
+      recipient = await kingdom();
+    const requestId = await withTransaction(pool, (c) =>
+      social.requestContact(c, {
+        accountId: sender.accountId,
+        recipientKingdomId: recipient.kingdomId,
+        note: "We can negotiate",
+        operationKey: randomUUID(),
+        gameTimeMs: 60000,
+      }),
+    );
+    const answer = () =>
+      withTransaction(pool, (c) =>
+        social.answerRequest(c, {
+          accountId: recipient.accountId,
+          requestId,
+          accept: true,
+          gameTimeMs: 120000,
+          actorKind: "agent",
         }),
       );
-    }
-    const ninth = await kingdom();
-    await credit(ninth.kingdomId, "silver", 2);
-    await expect(
-      withTransaction(pool, (client) =>
-        social.requestContact(client, {
-          accountId: ninth.accountId,
-          recipientKingdomId: recipient.kingdomId,
-          note: "Queue full",
-          operationKey: "ninth",
-          gameTimeMs: 60_000,
-        }),
+    await expect(answer()).rejects.toMatchObject({ code: "DELEGATION_REQUIRED" });
+    await withTransaction(pool, (c) =>
+      social.configureDelegation(
+        c,
+        recipient.accountId,
+        { mode: "allowlist", allowedKingdomIds: [], expectedVersion: 0 },
+        120000,
       ),
-    ).rejects.toMatchObject({ code: "CONTACT_QUEUE_FULL" });
-    const balance = await withTransaction(pool, (client) => ledger.readBalance(client, ninth.kingdomId, "silver"));
-    expect(balance.ordinary).toBe(wholeResources(2));
+    );
+    await expect(answer()).rejects.toMatchObject({ code: "DELEGATION_REQUIRED" });
+    await withTransaction(pool, (c) =>
+      social.configureDelegation(
+        c,
+        recipient.accountId,
+        { mode: "agent_decides", allowedKingdomIds: [], expectedVersion: 1 },
+        120000,
+      ),
+    );
+    await answer();
+    await answer();
     expect(
-      await withTransaction(pool, (client) => limits.rollingStatus(client, ninth.kingdomId, "cold_contact", 60_000)),
-    ).toMatchObject({ used: 0 });
+      (await pool.query("SELECT count(*)::int n FROM kingdom_mandates WHERE account_id=$1", [recipient.accountId]))
+        .rows[0].n,
+    ).toBe(0);
+    await withTransaction(pool, (c) =>
+      social.configureDelegation(
+        c,
+        recipient.accountId,
+        { mode: "manual", allowedKingdomIds: [], expectedVersion: 2 },
+        120000,
+      ),
+    );
+    await expect(answer()).rejects.toMatchObject({ code: "DELEGATION_REQUIRED" });
+    await expect(
+      withTransaction(pool, (c) =>
+        social.configureDelegation(
+          c,
+          recipient.accountId,
+          { mode: "agent_decides", allowedKingdomIds: [], expectedVersion: 2 },
+          120000,
+        ),
+      ),
+    ).rejects.toMatchObject({ code: "OPERATION_CONFLICT" });
+  });
+  it("returns service retry time without charging or dropping text; retries preserve IDs", async () => {
+    const sender = await kingdom(),
+      recipient = await kingdom();
+    await connect(sender, recipient);
+    const send = (n: number, body = "x") =>
+      withTransaction(pool, (c) =>
+        social.sendMessage(c, {
+          accountId: sender.accountId,
+          recipientKingdomId: recipient.kingdomId,
+          body,
+          agentOriginated: true,
+          operationKey: `burst-${n}`,
+          gameTimeMs: 180000 + n,
+        }),
+      );
+    for (let n = 0; n < 9; n++) await send(n);
+    await expect(send(9)).rejects.toMatchObject({ code: "SERVICE_THROTTLED", retryAfterMs: 3000 });
+    expect(
+      (await pool.query("SELECT count(*)::int n FROM direct_messages WHERE sender_kingdom_id=$1", [sender.kingdomId]))
+        .rows[0].n,
+    ).toBe(9);
+    now = new Date(now.getTime() + 3000);
+    const id = await send(9, "😀".repeat(4096));
+    expect(await send(9, "😀".repeat(4096))).toBe(id);
+    await expect(send(10, "😀".repeat(4097))).rejects.toMatchObject({ code: "MESSAGE_TOO_LONG" });
+    const reader = new ConversationReader(pool, "pact");
+    expect((await reader.read(recipient.accountId, sender.kingdomId, 1))?.messages[0]?.body).toBe("😀".repeat(4096));
   });
 
-  it("bounds unread text, keeps notifications out of message quota, and blocks both directions", async () => {
+  it("allows more than eight free introductions and supports 20/50/100 relationships", async () => {
+    const owner = await kingdom();
+    for (let n = 0; n < 100; n++) {
+      now = new Date(now.getTime() + 3000);
+      const peer = await kingdom();
+      await connect(owner, peer);
+      if ([19, 49, 99].includes(n))
+        expect(
+          (
+            await pool.query("SELECT count(*)::int n FROM social_contacts WHERE kingdom_a=$1 OR kingdom_b=$1", [
+              owner.kingdomId,
+            ])
+          ).rows[0].n,
+        ).toBe(n + 1);
+    }
+    expect((await withTransaction(pool, (c) => ledger.readBalance(c, owner.kingdomId, "silver"))).ordinary).toBe(0n);
+    expect(
+      await withTransaction(pool, (c) => limits.rollingStatus(c, owner.kingdomId, "cold_contact", 60000)),
+    ).toMatchObject({ used: 100, limit: null });
+    const overview = new SocialOverviewReader(pool, "pact");
+    const first = await overview.read(owner.accountId);
+    const second = await overview.read(owner.accountId, { contactOffset: first?.contactsNextOffset ?? 0 });
+    expect(first?.contacts).toHaveLength(50);
+    expect(second?.contacts).toHaveLength(50);
+    expect(new Set([...(first?.contacts ?? []), ...(second?.contacts ?? [])].map((c) => c.kingdomId)).size).toBe(100);
+    expect(second?.contactsNextOffset).toBeNull();
+  });
+
+  it("uses byte backpressure without losing text and makes concurrent sender bursts atomic", async () => {
+    const a = await kingdom(),
+      b = await kingdom();
+    await connect(a, b);
+    await pool.query(
+      "INSERT INTO direct_messages(id,product_scope,sender_kingdom_id,recipient_kingdom_id,body,agent_originated,operation_key,sent_game_time_ms) SELECT gen_random_uuid(),'pact',$1,$2,$3,true,'capacity-'||n::text,n FROM generate_series(1,1024) n",
+      [a.kingdomId, b.kingdomId, "🦆".repeat(4096)],
+    );
+    const attempt = (key: string) =>
+      withTransaction(pool, (c) =>
+        social.sendMessage(c, {
+          accountId: a.accountId,
+          recipientKingdomId: b.kingdomId,
+          body: "One new statement",
+          agentOriginated: true,
+          operationKey: key,
+          gameTimeMs: 180000,
+        }),
+      );
+    await expect(attempt("capacity-retry")).rejects.toMatchObject({ code: "MESSAGE_QUEUE_FULL" });
+    expect(
+      (await pool.query("SELECT count(*)::int n FROM direct_messages WHERE sender_kingdom_id=$1", [a.kingdomId]))
+        .rows[0].n,
+    ).toBe(1024);
+    const page = await new ConversationReader(pool, "pact").read(b.accountId, a.kingdomId);
+    expect(page?.messages.filter((m) => m.body !== null).length).toBeGreaterThan(0);
+    const retryExact = async (key: string): Promise<string> => {
+      for (let n = 0; ; n++)
+        try {
+          return await attempt(key);
+        } catch (error) {
+          if (
+            n >= 10 ||
+            !error ||
+            typeof error !== "object" ||
+            !("code" in error) ||
+            !["40001", "40P01"].includes(String(error.code))
+          )
+            throw error;
+        }
+    };
+    const results = await Promise.allSettled(Array.from({ length: 20 }, (_, n) => retryExact(`concurrent-${n}`)));
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(9);
+    for (const result of results)
+      if (result.status === "rejected")
+        expect(result.reason).toMatchObject({ code: "SERVICE_THROTTLED", retryAfterMs: 3000 });
+    expect(
+      (await pool.query("SELECT count(*)::int n FROM direct_messages WHERE sender_kingdom_id=$1", [a.kingdomId]))
+        .rows[0].n,
+    ).toBe(1033);
+  });
+
+  it("delivers a fifth unread message without a daily quota and blocks both directions", async () => {
     const sender = await kingdom();
     const recipient = await kingdom();
     await credit(sender.kingdomId, "silver", 2);
@@ -143,42 +283,22 @@ describe("contacts, messages, and transfers", () => {
         }),
       );
     }
-    await expect(
-      withTransaction(pool, (client) =>
-        social.sendMessage(client, {
-          accountId: sender.accountId,
-          recipientKingdomId: recipient.kingdomId,
-          body: "Fifth",
-          agentOriginated: true,
-          operationKey: "fifth",
-          gameTimeMs: 190_000,
-        }),
-      ),
-    ).rejects.toMatchObject({ code: "MESSAGE_QUEUE_FULL" });
+    const fifthInput = {
+      accountId: sender.accountId,
+      recipientKingdomId: recipient.kingdomId,
+      body: "Fifth",
+      agentOriginated: true,
+      operationKey: "fifth",
+      gameTimeMs: 190000,
+    };
+    const fifth = await withTransaction(pool, (c) => social.sendMessage(c, fifthInput));
+    expect(await withTransaction(pool, (c) => social.sendMessage(c, fifthInput))).toBe(fifth);
     expect(
-      await withTransaction(pool, (client) =>
-        limits.rollingStatus(client, sender.kingdomId, "outgoing_message", 190_000),
-      ),
-    ).toMatchObject({ used: 4 });
-    expect(
-      await withTransaction(pool, (client) => social.markRead(client, recipient.accountId, sender.kingdomId, 200_000)),
-    ).toBe(4);
-    const replay = await withTransaction(pool, (client) =>
-      social.sendMessage(client, {
-        accountId: sender.accountId,
-        recipientKingdomId: recipient.kingdomId,
-        body: "Message 0",
-        agentOriginated: true,
-        operationKey: "message-0",
-        gameTimeMs: 210_000,
-      }),
+      await withTransaction(pool, (c) => limits.rollingStatus(c, sender.kingdomId, "outgoing_message", 190000)),
+    ).toMatchObject({ used: 5, limit: null });
+    expect(await withTransaction(pool, (c) => social.markRead(c, recipient.accountId, sender.kingdomId, 200000))).toBe(
+      5,
     );
-    expect(replay).toBeTruthy();
-    expect(
-      await withTransaction(pool, (client) =>
-        limits.rollingStatus(client, sender.kingdomId, "outgoing_message", 210_000),
-      ),
-    ).toMatchObject({ used: 4 });
     await withTransaction(pool, (client) =>
       social.setBlock(client, recipient.accountId, sender.kingdomId, true, 220_000),
     );
@@ -273,7 +393,7 @@ describe("contacts, messages, and transfers", () => {
       social.sendMessage(client, {
         accountId: sender.accountId,
         recipientKingdomId: recipient.kingdomId,
-        body: "🦆".repeat(140),
+        body: "🦆".repeat(4096),
         agentOriginated: true,
         operationKey: randomUUID(),
         gameTimeMs: 500000,
@@ -281,7 +401,7 @@ describe("contacts, messages, and transfers", () => {
     );
     ids.push(omitted);
     expect(
-      (await reader.read(recipient.accountId, sender.kingdomId, 5))?.messages.find((m) => m.messageId === omitted)
+      (await reader.read(recipient.accountId, sender.kingdomId, 5, 1000))?.messages.find((m) => m.messageId === omitted)
         ?.bodyOmitted,
     ).toBe(true);
     expect(await unread()).toBe(1); // omitted bytes were not read by the agent
@@ -298,7 +418,7 @@ describe("contacts, messages, and transfers", () => {
           }),
         ),
       );
-    const bounded = await reader.read(recipient.accountId, sender.kingdomId, 5);
+    const bounded = await reader.read(recipient.accountId, sender.kingdomId, 5, 3600);
     expect(Buffer.byteLength(JSON.stringify(bounded), "utf8")).toBeLessThanOrEqual(3600);
     expect(await unread()).toBe(2); // the escaped body omitted by the total page budget stays unread too
     const excerpt = await reader.read(recipient.accountId, sender.kingdomId, 3, 1_000);
@@ -464,6 +584,6 @@ describe("contacts, messages, and transfers", () => {
     ).toBe(String(wholeResources(3)));
     expect(
       (await withTransaction(pool, (client) => ledger.readBalance(client, sender.kingdomId, "silver"))).ordinary,
-    ).toBe(0n);
+    ).toBe(wholeResources(2));
   });
 });

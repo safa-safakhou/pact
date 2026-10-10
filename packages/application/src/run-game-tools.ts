@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import {
   type CommandReceipt,
   gameCommandJsonSchema,
+  gameCommandV2JsonSchema,
   type ProductScope,
   SCHEMA_VERSION,
   validateProviderGameCommand,
@@ -24,6 +25,12 @@ export const pactRunCommandTool = {
   inputSchema: gameCommandJsonSchema,
   parseArguments: validateProviderGameCommand,
 } as const;
+
+export const pactRunCommandV2Tool = {
+  ...pactRunCommandTool,
+  name: "pact_command_v2",
+  inputSchema: gameCommandV2JsonSchema,
+};
 
 export interface RunCommandToolCall {
   readonly id: string;
@@ -64,14 +71,19 @@ export async function dispatchRunCommandTools(
   };
   const receipts: RunCommandOutcome[] = [];
   for (const call of input.calls) {
-    if (call.name !== pactRunCommandTool.name || !call.id) throw new DispatcherError("INVALID_COMMAND");
+    if (![pactRunCommandTool.name, pactRunCommandV2Tool.name].includes(call.name) || !call.id)
+      throw new DispatcherError("INVALID_COMMAND");
     const parsed = validateProviderGameCommand(call.arguments);
     const commandId = runToolCommandId(input.run.runId, input.requestId, call.id);
     try {
       receipts.push(
         await dispatcher.dispatch(
           principal,
-          { ...parsed, commandId },
+          {
+            ...parsed,
+            commandId,
+            schemaVersion: call.name === pactRunCommandV2Tool.name ? "pact.command.v2" : SCHEMA_VERSION,
+          },
           {
             requestId: input.requestId,
             commandId,
@@ -86,7 +98,7 @@ export async function dispatchRunCommandTools(
         commandId,
         code: error.code,
         receiptExists: false,
-        recovery: agentRecovery(error.code),
+        recovery: agentRecovery(error.code, error.detail),
         committedEventIds: [],
         recordVersions: {},
         charged: [],

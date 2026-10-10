@@ -313,3 +313,68 @@ it("fails closed on expired, replaced and conflicting guest claims, without crea
   await expect(identity.verifyEmail(expired)).rejects.toMatchObject({ code: "INVALID_TOKEN" });
   expect(await identity.isGuest(c.accountId)).toBe(true);
 });
+
+it("replaces recovery codes atomically and retries lost responses without founding new kingdoms", async () => {
+  const a = await join(),
+    b = await join(),
+    newCode = randomUUID();
+  const headers = { origin, cookie: a.cookie, "x-csrf-token": a.csrfToken };
+  const replace = (currentCode = a.entryKey, replacement = newCode) =>
+    server.inject({
+      method: "POST",
+      url: "/v1/auth/guest/recovery/replace",
+      headers,
+      payload: { currentCode, newCode: replacement },
+    });
+  const before = (await pool.query("SELECT count(*)::int AS n FROM accounts")).rows[0].n;
+  expect((await replace(b.entryKey)).statusCode).toBe(403);
+  const first = await replace();
+  expect(first.statusCode, first.body).toBe(200);
+  expect(first.json()).toEqual({ recoveryCode: newCode });
+  expect((await replace()).json()).toEqual(first.json());
+  expect((await replace(a.entryKey, randomUUID())).statusCode).toBe(403);
+  for (const existingOnly of [true, false]) {
+    const old = await server.inject({
+      method: "POST",
+      url: "/v1/play/join",
+      headers: { origin },
+      payload: { entryKey: a.entryKey, existingOnly },
+    });
+    expect(old.statusCode).toBe(403);
+  }
+  expect((await join(newCode)).kingdomId).toBe(a.kingdomId);
+  expect((await pool.query("SELECT count(*)::int AS n FROM accounts")).rows[0].n).toBe(before);
+  const noCsrf = await server.inject({
+    method: "POST",
+    url: "/v1/auth/guest/recovery/replace",
+    headers: { origin, cookie: a.cookie },
+    payload: { currentCode: newCode, newCode: randomUUID() },
+  });
+  expect(noCsrf.statusCode).toBe(403);
+});
+
+it("lists current devices and revokes only the authenticated owner's selected session", async () => {
+  const a = await join(),
+    otherDevice = await join(a.entryKey),
+    stranger = await join();
+  const token = (cookie: string) => decodeURIComponent(cookie.split("=")[1] ?? "");
+  const current = await identity.authenticate(token(a.cookie));
+  const other = await identity.authenticate(token(otherDevice.cookie));
+  const foreign = await identity.authenticate(token(stranger.cookie));
+  const inventory = await identity.connectionInventory(token(a.cookie));
+  expect(inventory.sessions.some((s) => s.id === current.sessionId && s.current)).toBe(true);
+  const revoke = (sessionId: string) =>
+    server.inject({
+      method: "POST",
+      url: "/v1/auth/sessions/revoke",
+      headers: { origin, cookie: a.cookie, "x-csrf-token": a.csrfToken },
+      payload: { sessionId },
+    });
+  expect((await revoke(foreign.sessionId)).statusCode).toBe(200);
+  await expect(identity.authenticate(token(stranger.cookie))).resolves.toBeDefined();
+  expect((await revoke(other.sessionId)).statusCode).toBe(200);
+  await expect(identity.authenticate(token(otherDevice.cookie))).rejects.toThrow();
+  await expect(identity.authenticate(token(a.cookie))).resolves.toBeDefined();
+  expect((await revoke(current.sessionId)).statusCode).toBe(200);
+  await expect(identity.authenticate(token(a.cookie))).rejects.toThrow();
+});
