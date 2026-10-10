@@ -1,6 +1,6 @@
 # Execution contract
 
-**Version 1.3 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
+**Version 1.4 · 10 October 2026 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
 
 [Architecture](architecture.md) owns reusable package boundaries and channel adapters. Web, native apps, Telegram, and MCP use these same application services; native human sessions and validated Telegram run requests do not create additional Envoy allowances.
 
@@ -9,12 +9,12 @@
 | Component | Responsibility |
 | --- | --- |
 | Human | Uses any authenticated PACT client to set goals and limits; approves exceptions; owns account, purchases, and publication |
-| PACT app inference worker | Calls the player's selected provider during an explicitly started, bounded run |
+| PACT app inference worker | Calls the player's selected provider during an explicitly started bounded run or a bounded slice admitted under human persistent enrollment |
 | External chatbot | Supplies its own inference and decides when to invoke authorized MCP tools |
 | Rules service | Validates and commits actions, production, upkeep, contracts, and combat; never reasons or negotiates |
 | Scheduler and notification worker | Settles predetermined game work and records/delivers events; never starts an LLM call |
 
-PACT runs player-key inference in its own application. This replaces the historical external-assistant-only design. It does not provide a continuously thinking Envoy. An inbox item, new raid, cron tick, or unsolicited delivery webhook cannot authorize a new inference run. A verified, explicit human Start run confirmation delivered through the Telegram adapter is an authorized start request, subject to the same one-use and allowance checks as web/native.
+PACT runs player-key inference in its own application. This replaces the historical external-assistant-only design. Ordinary runs remain bounded and human-started. An inbox item, new raid, cron tick, or unsolicited delivery webhook cannot authorize inference by itself. The separately confirmed persistent enrollment below can authorize bounded future slices. A verified, explicit human Start run confirmation delivered through the Telegram adapter is an authorized start request, subject to the same one-use and allowance checks as web/native.
 
 ## Run lifecycle
 
@@ -34,11 +34,11 @@ stateDiagram-v2
     Waiting --> Finished: Original deadline passes
 ```
 
-Waiting releases the worker; it does not poll a model. A new inbox message produces a notification, not automatic inference. A person resumes the run or begins another. Resume preserves the original deadline and consumed allowances. **Approve** executes only the exact approved command; **Approve and resume** additionally requests resumed model work while allowance remains. Neither action extends the deadline.
+Waiting releases the worker; it does not poll a model. Without persistent enrollment, a new inbox message produces a notification, not automatic inference. A person resumes the run or begins another. An enrollment never replaces a waiting or failed run automatically. Resume preserves the original deadline and consumed allowances. **Approve** executes only the exact approved command; **Approve and resume** additionally requests resumed model work while allowance remains. Neither action extends the deadline.
 
 Closing the browser does not cancel a PACT run already requested: the server finishes within its original bounds. A queued build, training batch, signed agreement, scouting order, defense, or raid also continues according to the rulebook. Closing an external chatbot may stop that host's inference immediately; PACT cannot extend its subscription session. Committed game commands survive both cases. Stop/revoke prevents new command admission; work already committed has normal game consequences.
 
-For MCP, `run.open` obtains a 15-minute write lease under the user's previously granted mandate. PACT does not invoke the host or control its inference lifetime. Host-scheduled agents and scripts, if a user runs them externally, are treated as external clients under the same limits; PACT cannot truthfully certify that every authenticated tool call came from a person reopening a chat. PACT itself provides no scheduled inference or paid presence feature. External host usage is shown as **Usage managed by your chatbot**, never as measured API spend.
+For MCP, `run.open` obtains a 15-minute write lease under the user's previously granted mandate. PACT does not invoke the host or control its inference lifetime. Host-scheduled agents and scripts, if a user runs them externally, are treated as external clients under the same limits; PACT cannot truthfully certify that every authenticated tool call came from a person reopening a chat. Owner-enrolled API slices below are the supported PACT scheduling route; external local/Codex/consumer scheduling requires its separate route acceptance. PACT provides no paid presence feature. External host usage is shown as **Usage managed by your chatbot**, never as measured API spend.
 
 Only one write lease exists per kingdom across PACT, MCP, and scripts. Read-only clients may coexist. A second client gets `RUN_ALREADY_ACTIVE`; the human can stop/take over in PACT. Expiry, explicit stop, or revocation releases the lease. Authentication alone does not create it. Renewal never raises authority or replenishes rolling gameplay allowances.
 
@@ -128,3 +128,13 @@ Retain ordinary operational backups for 35 days. Verify restore, outbox replay, 
 ## Communication correction — 10 October 2026
 
 Social capacity now follows policy `pact-communication-v2` in [rules](rules.md#10-action-limits). Human-only authority changes and exact economic exceptions remain unchanged. Optional owner social delegation permits an agent holding its normal exclusive lease to accept/reject incoming introductions under the current manual/allowlist/agent-decides setting. This does not start inference, renew a run or lift any call/token/deadline budget. Default context describes facts and available mechanisms; it imposes no reply priority, cooperation, aggression or negotiation honesty. Requests, signatures and private sources remain precisely distinguished from prose promises.
+
+## Persistent enrollment correction — 10 October 2026
+
+PACT-154 implements the founder-authorized API route for opt-in future bounded turns. Only the authenticated human, through an allowed-Origin/CSRF-protected command, can enroll or revoke it. MCP can read its state; the model cannot create, expand or renew consent. Enrollment records an exact objective, stored API credential reference, provider/model, fixed UTC deadline (at most thirty days), periodic or event mode, minimum hourly owner interval, lifetime call/token allocation ceilings and per-slice limits within the ordinary run ceilings. There is no edit, renewal or automatic replacement-account operation. New consent requires stopping an existing active/decision-needed enrollment.
+
+Only the inference worker admits a slice, atomically reserving its entire call/token capacity, durable event cursor, original run and kingdom write lease. Unused allocations are not refunded or replenished. Report provider-recorded usage separately; these reservations cannot guarantee a currency bill. Shared API admissions retain a persisted sixty-second cooling interval. Existing native local hourly/sixty-second-after-completion/unload settings remain a separate profile and are not silently changed by this route.
+
+Server-authored durable non-run inbox event sequences coalesce into pending work under already-granted consent. The initial objective queues one slice; events during a slice remain pending for a later slice. Run notifications cannot recursively queue more inference. The scheduling cursor is not a message acknowledgement and does not delete inbox content. Notification and rules workers do not invoke a model. Event mode waits when no new work exists; periodic mode rechecks at the owner's interval. Waiting, failed, lost-lease or overdue linked work needs an owner decision. Expired consent stops linked work; restart never resets the original deadline, allocation, sequence or exact run identity. Already committed actions retain normal consequences.
+
+Status distinguishes recent worker heartbeat from execution enabled, actual running lease, queued work, cooling, missing host, decision needed, exhausted allocation and stopped/deadline-passed state. Reads and reconnect/refresh do not start inference. UTC instants and elapsed intervals persist across Berlin daylight-saving changes; UI shows Berlin with its offset and accepts unambiguous UTC deadlines. Browser closure does not stop an already-enrolled API worker. Windows/WSL/app shutdown disables an external local host; it is not running just because a checkpoint says so. Those adapters and Luna/Astra/ChatGPT consumer schedules require PACT-155/156 acceptance before advertising support. Migration creates empty enrollment tables and does not enroll or restart the stopped fifty-owner population or terminal experiments.

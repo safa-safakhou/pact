@@ -456,22 +456,22 @@ export class RunService {
     else await withTransaction(this.pool, operation);
   }
 
-  async get(runId: string, accountId?: string): Promise<RunView> {
-    const result = await this.pool.query<RunRow>(`SELECT * FROM envoy_runs WHERE run_id = $1 AND product_scope = $2`, [
-      runId,
-      this.options.productScope,
-    ]);
+  async get(runId: string, accountId?: string, transactionClient?: PoolClient): Promise<RunView> {
+    const result = await (transactionClient ?? this.pool).query<RunRow>(
+      `SELECT * FROM envoy_runs WHERE run_id = $1 AND product_scope = $2`,
+      [runId, this.options.productScope],
+    );
     const row = result.rows[0];
     if (!row) throw new RunError("NOT_FOUND");
     if (accountId && row.account_id !== accountId) throw new RunError("FORBIDDEN");
-    return { ...toView(row), execution: await this.execution(row) };
+    return { ...toView(row), execution: await this.execution(row, transactionClient) };
   }
 
   /** A recorded run state is not evidence that a model host is working now. */
-  private async execution(row: RunRow) {
+  private async execution(row: RunRow, transactionClient?: PoolClient) {
     const now = this.options.clock.now();
     const lease = (
-      await this.pool.query<{ expires_at: Date }>(
+      await (transactionClient ?? this.pool).query<{ expires_at: Date }>(
         "SELECT expires_at FROM write_leases WHERE product_scope=$1 AND run_id=$2 AND released_at IS NULL AND expires_at>$3",
         [this.options.productScope, row.run_id, now],
       )

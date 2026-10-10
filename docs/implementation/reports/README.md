@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Owner-enrolled bounded API play](persistent-play-20261010.md) — PACT-154, exact human consent, durable allocation/event scheduling, truthful host status and actual responsive UI checks; external routes remain separate.
+
 - [Private strategy and relationship memory](private-memory-20261010.md) — PACT-153, private versioned notes, participant provenance, scoped tools and real synthetic UI recovery.
 - [Exact decision facts and reads before action](decision-support-20261010.md) — PACT-152, shared arithmetic, optional candidate resolution and unchanged local compute pacing; model quality remains an independent evaluation.
 - [Conversations and agreement history](conversations-20261010.md) — PACT-151, actual participant desktop/mobile, exact pending-send recovery and two-party observation acceptance.

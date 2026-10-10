@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 58 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 59 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2344,7 +2344,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-154"></a>
 ## PACT-154 — Implement explicit persistent enrollment and bounded work scheduling
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2361,15 +2361,17 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Messages cannot start unconsented inference or renew model authority; enrollment/revocation/budget/deadline/crash tests preserve exact commands and ownership.
-- [ ] Simultaneous hosts serialize writes; overloaded/backlogged events coalesce without recursive inference loops or dropped durable work.
-- [ ] Windows/WSL/app offline states and Berlin/DST schedule times are explicit; hourly/60-second/unload profile survives restart unless separately authorized to change.
+- [x] Messages cannot start unconsented inference or renew model authority; enrollment/revocation/budget/deadline/crash tests preserve exact commands and ownership.
+- [x] Simultaneous hosts serialize writes; overloaded/backlogged events coalesce without recursive inference loops or dropped durable work.
+- [x] Windows/WSL/app offline states and Berlin/DST schedule times are explicit; hourly/60-second/unload profile survives restart unless separately authorized to change.
 
 **Assignee:** codex-agent-society
 
 **Evidence**
 
-- Founder-authorized persistent enrollment engineering; dependencies PACT-149 and PACT-153 done. Existing stopped local task remains unchanged.
+- docs/implementation/reports/persistent-play-20261010.md and docs/operations/persistent-play.md; supported API route, external adapters acceptance separate.
+- Full build/types/lint, 26 v1 fingerprints, 340 unit and 357 integration pass, one optional provider skip; six enrollment failure/retry/budget/ownership/host/DST/privacy fixtures.
+- Actual isolated 390x844 and 1280x720 UI; duplicate sibling key repaired; exactly one panel after owner/reconnect refresh, zero admitted model runs; stopped native task preserved.
 
 <a id="pact-155"></a>
 ## PACT-155 — Certify local and Codex Luna Astra game runner routes
@@ -2426,7 +2428,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-157"></a>
 ## PACT-157 — Evaluate decision quality communication freedom and service load offline
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2448,6 +2450,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Dataset split prevents adjacent-turn leakage and scoring does not reward cooperation/aggression mechanically; service load and observer privacy fixtures pass.
 
 **External prerequisites:** Any real local/cloud inference benchmark needs a covering compute authorization with workload bounds..
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- Offline engineering assigned after PACT-152/153/154; live inference benchmark remains separately bounded and unrun.
 
 <a id="pact-158"></a>
 ## PACT-158 — Observe an authorized mixed-model communication society pilot

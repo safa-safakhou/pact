@@ -1,6 +1,8 @@
 import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
+import { storedCredentialRouteAvailable } from "@pact/credential-vault";
 import { acquireJob, completeJob, createPool, failJob } from "@pact/db";
+import { PersistentPlayService } from "@pact/runs";
 import { createInferenceCredentialResolver, createVaultBoundCredentialUse } from "./credential-access.js";
 import { createInferenceGameRuntime } from "./game-runtime.js";
 import { createInferenceProviderRouter } from "./provider-runtime.js";
@@ -46,7 +48,22 @@ if (!databaseUrl) {
 
   console.log("PACT inference worker ready; processing bounded envoy.run.tick jobs.");
 
+  const persistentPlay = new PersistentPlayService(pool, "pact", {
+    clock,
+    runs,
+    routeAvailable: (client, accountId, id, provider) =>
+      storedCredentialRouteAvailable(client, "pact", accountId, id, provider),
+  });
+  let lastEnrollmentCheck = 0;
   const tick = async (): Promise<void> => {
+    if (clock.now().getTime() - lastEnrollmentCheck >= 30000) {
+      lastEnrollmentCheck = clock.now().getTime();
+      try {
+        await persistentPlay.dispatch(liveProvidersEnabled);
+      } catch (error) {
+        console.error("enrollment maintenance failed", error instanceof Error ? error.name : "unknown");
+      }
+    }
     const job = await acquireJob(pool, workerId, 30_000);
     if (!job) return;
     try {

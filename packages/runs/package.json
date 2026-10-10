@@ -17,6 +17,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@pact/contracts": "0.1.0",
     "@pact/identity": "0.1.0",
     "@pact/db": "0.1.0",
     "@pact/inbox": "0.1.0",

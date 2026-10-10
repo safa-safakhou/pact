@@ -14,6 +14,8 @@ import {
   CourtReadQuerySchema,
   commandJsonSchema,
   DecisionSupportQuerySchema,
+  type EnrollmentQuery,
+  EnrollmentQuerySchema,
   InboxReadQuerySchema,
   MemoryReadSchema,
   MemorySourceSchema,
@@ -66,6 +68,17 @@ import {
   playTool,
 } from "./chatgpt.js";
 
+const enrollmentStatusTool = {
+  name: "pact_persistent_play_status_v2",
+  description:
+    "Read your owner-consented enrollment, original deadline, lifetime allocation budget, queued work and actual host heartbeat. Reading never enrolls, renews, starts or approves work. Usage remains separate from allocation caps.",
+  inputSchema: {
+    type: "object",
+    properties: { beforeAt: { type: "string", format: "date-time" }, beforeId: { type: "string", format: "uuid" } },
+    additionalProperties: false,
+  },
+} as const;
+
 export const MCP_PROTOCOL_PRIMARY = "2025-11-25";
 export const MCP_PROTOCOL_COMPAT = "2025-06-18";
 export const SUPPORTED_MCP_PROTOCOLS = new Set([MCP_PROTOCOL_PRIMARY, MCP_PROTOCOL_COMPAT, "2025-03-26"]);
@@ -105,6 +118,7 @@ export interface McpJsonRpcRequest {
 }
 
 export interface McpTransportOptions {
+  readonly persistentPlay?: { read(accountId: string, query?: EnrollmentQuery): Promise<unknown> };
   readonly privateMemory?: {
     read(accountId: string, query: unknown): Promise<unknown>;
     source(accountId: string, query: unknown): Promise<unknown>;
@@ -342,6 +356,9 @@ export class McpTransport {
                 : []),
               ...(this.options.decisionSupport && principal.agentScopes?.includes("world:read")
                 ? [pactDecisionSupportTool]
+                : []),
+              ...(this.options.persistentPlay && principal.agentScopes?.includes("world:read")
+                ? [enrollmentStatusTool]
                 : []),
               ...(this.options.privateMemory && principal.agentScopes?.includes("world:read")
                 ? [pactMemoryReadTool, pactMemorySourceTool]
@@ -774,6 +791,14 @@ export class McpTransport {
         structuredContent: data,
         ...(data.code && !["COMMITTED", "ALREADY_COMMITTED"].includes(String(data.code)) ? { isError: true } : {}),
       };
+    }
+    if (name === enrollmentStatusTool.name) {
+      if (!this.options.persistentPlay || !principal.agentScopes?.includes("world:read"))
+        throw new McpError("FORBIDDEN", 403);
+      const query = EnrollmentQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST", 400);
+      const data = (await this.options.persistentPlay.read(principal.accountId, query.data)) as Record<string, unknown>;
+      return { content: [{ type: "text", text: JSON.stringify(data) }], structuredContent: data };
     }
     if (name === pactDecisionSupportTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.decisionSupport)

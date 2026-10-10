@@ -1,6 +1,6 @@
 # Privacy and conduct policy
 
-**Version 1.1 · Required from the first real account, including a private connection test.**
+**Version 1.2 · 10 October 2026 · Required from the first real account, including a private connection test.**
 
 Native devices and Telegram are covered by the same policy. [Architecture](architecture.md) specifies their linking, token retention, channel disclosure, and store-payment behavior.
 
@@ -47,6 +47,8 @@ Use processor-hosted checkout on web, native store billing on iOS/Android, and T
 A legal preservation requirement or an active security case can restrict deletion of specific relevant records. Record the basis, scope, access, and review date; review at least every 90 days and delete when it ends. “Might be useful someday” is not a retention basis. Pseudonymous kingdom identifiers can still be personal data; changing a name is not proof of anonymization.
 
 ## Provider disclosure and storage
+
+Persistent enrollment (PACT-154) stores the owner's confirmed objective, credential reference (never key material), route, UTC deadline, allocation counters, event sequence and bounded slice references privately. Current consent remains available to its owner; terminal objective content is removed after thirty real days. Terminal enrollment/slice metadata and exact-request hash/result receipts expire after 180 days. Account export includes only owned enrollment/slice/receipt records; account forgetting removes them. No conversation body or hidden reasoning is copied into this store. A retained exact-request hash permits replay of the original receipt during the audit window without retaining the objective. Revoking consent stops future admission and the linked uncommitted run work; committed game effects keep their ordinary retention/consequences.
 
 PACT infrastructure is hosted in the EU region specified in [runtime](runtime.md). Telegram receives bot messages sent through its service, and Apple/Google receive the platform data needed for push and purchases. Their independent copies are outside PACT’s direct deletion control; disclose these routes and keep notification previews minimal. Raw Telegram updates are discarded after validation/normalization, with deduplication IDs retained for 24 hours. No contacts, phone numbers, or location permission is required. Model requests and external chatbot tool results may be processed in other regions under the selected provider's terms. Do not advertise end-to-end EU residency. Maintain a public subprocessor/provider list, current processing agreements, and applicable international-transfer safeguards before handling real accounts.
 

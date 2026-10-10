@@ -28,6 +28,7 @@ import { ModerationPanel, ReportControl, ReportingContext } from "./moderation-p
 import { NotificationSettings } from "./notification-settings.js";
 import { OutcomeCards } from "./outcome-cards.js";
 import { createWebPactClient } from "./pact-client.js";
+import { PersistentPlay } from "./persistent-play.js";
 import { PoliticsPanel } from "./politics-panel.js";
 import { PrivateMemory } from "./private-memory.js";
 import { BuilderStatus, QuickBuilds } from "./quick-builds.js";
@@ -1107,6 +1108,14 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                 />
               )}
               {tab === "Envoy" && !host && <NotificationSettings request={request} canWrite={canWrite} />}
+              {tab === "Envoy" && !host && view && (
+                <PersistentPlay
+                  key={`enrollment:${view.profile.kingdomId}`}
+                  ownerId={view.profile.kingdomId}
+                  request={request}
+                  canWrite={canWrite}
+                />
+              )}
               {tab === "Envoy" && (
                 <RunPanel
                   request={request}

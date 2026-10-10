@@ -11,7 +11,11 @@ import {
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
 import { AuthorityService, ExactHumanPermitService, ExposureService, readReserveFloor } from "@pact/authority";
 import { ProductScopeSchema } from "@pact/contracts";
-import { CredentialVaultService, RsaOaepPublicKeyWrapper } from "@pact/credential-vault";
+import {
+  CredentialVaultService,
+  RsaOaepPublicKeyWrapper,
+  storedCredentialRouteAvailable,
+} from "@pact/credential-vault";
 import { createPool, withTransaction } from "@pact/db";
 import {
   AesGcmSecretBox,
@@ -63,7 +67,7 @@ import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { OpenRouterAuthService } from "@pact/openrouter";
 import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
-import { ExternalAgentActivity, RunError, RunService } from "@pact/runs";
+import { ExternalAgentActivity, PersistentPlayService, RunError, RunService } from "@pact/runs";
 import { botRetention, TelegramBotService, TelegramError, TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
 import { AgentGuideReader } from "./agent-guide.js";
@@ -296,7 +300,14 @@ const approvals = new ApprovalService(pool, {
   inbox,
 });
 const privateMemory = new PrivateMemoryService(pool, "pact", { read: (client) => world.read(client), now: clock.now });
+const persistentPlay = new PersistentPlayService(pool, "pact", {
+  clock,
+  runs,
+  routeAvailable: (client, accountId, id, provider) =>
+    storedCredentialRouteAvailable(client, "pact", accountId, id, provider),
+});
 const mcp = new McpTransport({
+  persistentPlay,
   privateMemory,
   pool,
   productScope: "pact",
@@ -428,6 +439,7 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    persistentPlay.retention,
     privateMemory.retention,
     externalActivity.retention,
     council.retention,
@@ -634,6 +646,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   worldViews,
   decisionSupport: new DecisionSupportReader(worldViews, socialOverview),
   privateMemory,
+  persistentPlay,
   socialOverview,
   council,
   readCouncil,

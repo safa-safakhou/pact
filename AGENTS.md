@@ -2,7 +2,7 @@
 
 ## Implementation checkpoint — 10 October 2026
 
-PACT-146–153 are implemented and verified; release `society-memory-20261010-1` is deployed from `c7333f8`, with encrypted backup `03209be8`, canonical verification, active clock and zero private-memory entries. Read `docs/implementation/reports/private-memory-20261010.md` and the conversation report for exact acceptance/limitations. PACT-154 is assigned next under the founder's covering PACT-146–165 request. Continue ready authorized engineering; external routes, pilots and rare activation require their actual prerequisites. Preserve the original 24 Later tasks, stopped fifty-owner task and terminal experiments.
+PACT-146–153 are implemented and verified; release `society-memory-20261010-1` is deployed from `c7333f8`, with encrypted backup `03209be8`, canonical verification, active clock and zero private-memory entries. Read `docs/implementation/reports/private-memory-20261010.md` and the conversation report for exact acceptance/limitations. PACT-154 is verified and committed next for release; PACT-157 offline evaluation is assigned under the covering PACT-146–165 request. Read its enrollment report for actual route/host limits. Continue ready authorized engineering; external routes, pilots and rare activation require their actual prerequisites. Preserve the original 24 Later tasks, stopped fifty-owner task and terminal experiments.
 
 ## Founder preference — 9 October 2026
 
