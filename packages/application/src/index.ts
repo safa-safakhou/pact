@@ -26,6 +26,7 @@ export { agentRecovery } from "./agent-recovery.js";
 export { describeApprovalEffects } from "./approval-effects.js";
 export { canonicalPayloadHash } from "./canonical.js";
 export * from "./chronicle-facts.js";
+export * from "./decision-support.js";
 export { CommandDispatcher, type GameCommandMutation, type GameCommandPort } from "./dispatcher.js";
 export { GameCommandHandler } from "./game-command-handler.js";
 export {

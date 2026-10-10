@@ -13,6 +13,7 @@ import {
   ConversationReadQuerySchema,
   CourtReadQuerySchema,
   commandJsonSchema,
+  DecisionSupportQuerySchema,
   InboxReadQuerySchema,
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
@@ -24,6 +25,7 @@ import {
   pactChronicleReadTool,
   pactConversationReadTool,
   pactCourtReadTool,
+  pactDecisionSupportTool,
   pactEnvoyReportTool,
   pactGameActionTool,
   pactGameActionV2Tool,
@@ -97,6 +99,9 @@ export interface McpJsonRpcRequest {
 }
 
 export interface McpTransportOptions {
+  readonly decisionSupport?: {
+    read(accountId: string, candidateId?: string, proposalOffset?: number): Promise<unknown | null>;
+  };
   readonly playView?: {
     read(accountId: string, query?: { search: string; offset: number }): Promise<Record<string, unknown>>;
   };
@@ -323,6 +328,9 @@ export class McpTransport {
                 : []),
               ...(this.options.conversationHistory && principal.agentScopes?.includes("world:read")
                 ? [conversationHistoryTool]
+                : []),
+              ...(this.options.decisionSupport && principal.agentScopes?.includes("world:read")
+                ? [pactDecisionSupportTool]
                 : []),
               ...(this.options.notes && principal.agentScopes?.includes("world:read") ? [notesReadTool] : []),
               ...(this.options.notes && principal.agentScopes?.includes("game:act") ? [notesWriteTool] : []),
@@ -710,6 +718,22 @@ export class McpTransport {
       return {
         content: [{ type: "text", text: JSON.stringify(page) }],
         structuredContent: page as Record<string, unknown>,
+      };
+    }
+    if (name === pactDecisionSupportTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.decisionSupport)
+        throw new McpError("FORBIDDEN", 403);
+      const query = DecisionSupportQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST", 400);
+      const result = await this.options.decisionSupport.read(
+        principal.accountId,
+        query.data.candidateId,
+        query.data.proposalOffset,
+      );
+      const data = result ?? { code: "NOT_FOUND" };
+      return {
+        content: [{ type: "text", text: JSON.stringify(data) }],
+        structuredContent: data as Record<string, unknown>,
       };
     }
     if (name === conversationHistoryTool.name) {

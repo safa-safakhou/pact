@@ -18,6 +18,19 @@ export interface SupplyTerms {
   noticeHours: 0 | 1 | 6;
 }
 
+/** Worst-case authority reservation, not a promise of future peer delivery. */
+export function supplyExposure(
+  flow: SupplyFlow | null,
+  bond: SupplyBond | null,
+  durationHours: number,
+): Partial<Record<SupplyResource, bigint>> {
+  if (!Number.isSafeInteger(durationHours) || durationHours < 1) throw new Error("INVALID_SUPPLY_DURATION");
+  const values: Partial<Record<SupplyResource, bigint>> = {};
+  if (flow) values[flow.resource] = wholeResources(flow.wholePerHour) * BigInt(durationHours);
+  if (bond) values[bond.resource] = (values[bond.resource] ?? 0n) + wholeResources(bond.wholeAmount);
+  return values;
+}
+
 /** Exact display direction for an already-authorized party; no commitments or arithmetic. */
 export function supplyPerspective(terms: SupplyTerms, ownerIsA: boolean) {
   return { youSend: ownerIsA ? terms.aToB : terms.bToA, youReceive: ownerIsA ? terms.bToA : terms.aToB };

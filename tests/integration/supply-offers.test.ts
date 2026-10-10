@@ -174,6 +174,13 @@ describe("versioned supply offers and activation", () => {
         }),
       ),
     ).toBe(2);
+    await expect(
+      withTransaction(pool, (client) => supply.withdrawOffer(client, a.accountId, offerId, 180_000, 1)),
+    ).rejects.toMatchObject({ code: "STALE_VERSION" });
+    expect((await pool.query("SELECT status,version FROM supply_offers WHERE id=$1", [offerId])).rows[0]).toEqual({
+      status: "open",
+      version: 2,
+    });
     expect((await pool.query("SELECT state FROM test_authority")).rows).toEqual([{ state: "released" }]);
     await expect(
       withTransaction(pool, (client) =>

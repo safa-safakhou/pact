@@ -1,5 +1,6 @@
 export * from "./chronicle-schemas.js";
 export * from "./court-schemas.js";
+export * from "./decision-schemas.js";
 export * from "./json-schema.js";
 export * from "./politics-schemas.js";
 export * from "./run-report-schemas.js";

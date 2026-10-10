@@ -7886,7 +7886,7 @@
       "id": "PACT-152",
       "title": "Add exact decision calculations optional candidates and reads before action",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7921,7 +7921,7 @@
         "model adapters"
       ],
       "evidence": [
-        "Founder-authorized dependency-ready exact decision support; implementation begins after the communication release."
+        "reports/decision-support-20261010.md \u2014 shared exact quotes/exposure, optional current candidate resolution, owner-derived MCP/HTTP/in-app reads, stale withdrawal rejection and read-before-decision/pacing regression."
       ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],
@@ -7934,7 +7934,7 @@
       "id": "PACT-153",
       "title": "Persist private goals relationship memory and factual consequences",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7969,8 +7969,10 @@
         "memory retrieval",
         "privacy"
       ],
-      "evidence": [],
-      "assignee": null,
+      "evidence": [
+        "Founder-authorized private memory engineering; dependency-ready after PACT-152."
+      ],
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",

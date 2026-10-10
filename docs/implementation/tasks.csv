@@ -150,8 +150,8 @@ PACT-148,Version communication capacity and delegated social authority changes,3
 PACT-149,Implement delegated introductions and durable conversation delivery,3,done,implementation,Platform,L,PACT-053;PACT-148;PACT-146,S01;S02;A05,phase-3-season-one.md#pact-149
 PACT-150,Expose neutral environmental context and agent strategic freedom,3,done,implementation,Platform,M,PACT-053;PACT-148;PACT-146,S01;R07;A05,phase-3-season-one.md#pact-150
 PACT-151,Build conversation workspace agreement tracks and consented society views,3,done,implementation,Frontend,L,PACT-053;PACT-147;PACT-149;PACT-150,S01;S02;A08,phase-3-season-one.md#pact-151
-PACT-152,Add exact decision calculations optional candidates and reads before action,3,in_progress,implementation,Platform,L,PACT-053;PACT-150,R01;R07;S01,phase-3-season-one.md#pact-152
-PACT-153,Persist private goals relationship memory and factual consequences,3,todo,implementation,Platform,L,PACT-053;PACT-149;PACT-152,S01;S02;A08,phase-3-season-one.md#pact-153
+PACT-152,Add exact decision calculations optional candidates and reads before action,3,done,implementation,Platform,L,PACT-053;PACT-150,R01;R07;S01,phase-3-season-one.md#pact-152
+PACT-153,Persist private goals relationship memory and factual consequences,3,in_progress,implementation,Platform,L,PACT-053;PACT-149;PACT-152,S01;S02;A08,phase-3-season-one.md#pact-153
 PACT-154,Implement explicit persistent enrollment and bounded work scheduling,3,todo,implementation,Platform,L,PACT-053;PACT-149;PACT-153,A05;A06;A08;S01,phase-3-season-one.md#pact-154
 PACT-155,Certify local and Codex Luna Astra game runner routes,3,todo,implementation,Platform,L,PACT-053;PACT-154;PACT-157,A03;A04;A06;R07,phase-3-season-one.md#pact-155
 PACT-156,Certify actual ChatGPT scheduled PACT and multi-login operation,3,todo,implementation,Platform,L,PACT-053;PACT-151;PACT-154;PACT-157,A04;A06;A08;S01,phase-3-season-one.md#pact-156

@@ -1,0 +1,13 @@
+# Exact optional decision support
+
+`GET /v1/game/decision-support` and MCP/in-app `pact_decision_support_v2` read only the authenticated owner's observations. They start no inference and acknowledge no messages. The response labels rule ID, committed tick/game time, exact marked units (600 per whole resource), conditional forecasts and unknown peer/combat facts.
+
+Construction costs and founding-grant allocation reuse shared domain rules. Training quotes/unlocks are shared with the troop engine, and use ordinary resources. Supply exposure is the same helper used to reserve signature authority; incoming promises are conditional. Upkeep, regeneration and forecasts reuse existing owner projections. Known troop/wall definitions and effects are available; no hidden enemy stock, private plan or predicted victory is invented.
+
+The unranked candidate menu is optional: builder/training examples, wait/read, and withdrawal of an observed proposal. All other authorized direct actions remain available. Proposal conveniences page twelve from the latest fifty observed proposals using `proposalOffset`; `proposalCoverage` explicitly warns when deeper records may exist. Use participant history for deeper offers. A summary's absence never proves an empty society.
+
+Pass an observed `candidateId` (and its `proposalOffset`) to resolve a current blueprint. IDs bind relevant observed state, including balance versions and offer terms/signatures. A changed snapshot returns `CANDIDATE_STALE`; it never silently chooses another action. A blueprint is not a receipt or authority grant. Submit the chosen exact action through the shared handler, which rechecks current resources, mandate, stock, versions and leases. New v2 withdrawal blueprints bind `expectedVersion`; old v1/v2 pending commands without that optional field remain valid under their original semantics. Retry any submitted command under its original ID/payload.
+
+The full-game local controller performs a plan's requested reads first and persists results. It withholds accompanying actions until a subsequent model decision based on those results; it does not add calls to the current one-call turn. Empty/no-read action plans continue normally. Hourly eligibility, sixty-second cooling and immediate model unload remain unchanged. This code change does not restart any stopped/terminal runner or replace its checkpoint/configuration.
+
+These conveniences establish exact arithmetic and observability, not intelligent bargaining or a trained decision model. Evaluate actual usefulness, justified waiting, repeated denials, deliveries/defaults and model usage separately. [Acceptance](../implementation/reports/decision-support-20261010.md).

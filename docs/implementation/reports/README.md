@@ -2,6 +2,7 @@
 
 ## Current assignment
 
+- [Exact decision facts and reads before action](decision-support-20261010.md) — PACT-152, shared arithmetic, optional candidate resolution and unchanged local compute pacing; model quality remains an independent evaluation.
 - [Conversations and agreement history](conversations-20261010.md) — PACT-151, actual participant desktop/mobile, exact pending-send recovery and two-party observation acceptance.
 - [Communication policy and durable delivery](communication-policy-20261010.md) — PACT-148–150, approved policy v2 and verified authority/delivery checks.
 - [Recovery/device acceptance](recovery-controls-20261010.md) — PACT-147, browser/HTTP evidence; physical-device, complete browser restart and real mail delivery remain qualified.

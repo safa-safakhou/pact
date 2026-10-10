@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { CommandDispatcher } from "@pact/application";
+import { type CommandDispatcher, DecisionSupportReader } from "@pact/application";
 import { ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
@@ -95,6 +95,56 @@ describe("authorized world views", () => {
       missingBuildings: [],
     });
     expect(await views.read(outsider.accountId, owner.kingdomId)).not.toHaveProperty("builders");
+    const decisions = new DecisionSupportReader(views);
+    const support = await decisions.read(owner.accountId);
+    expect(support).toHaveProperty("kingdomId", owner.kingdomId);
+    if (!support || !("candidates" in support)) throw Error("fixture");
+    expect(
+      support.candidates.find((c) => c.action?.kind === "game.building.queue" && c.action.building === "hall")?.checks
+        .buildingAlreadyQueued,
+    ).toBe(true);
+    const principal = {
+      accountId: owner.accountId,
+      productScope: ProductScopeSchema.parse(scope),
+      audience: "agent" as const,
+      agentScopes: ["world:read" as const],
+    };
+    const transport = new McpTransport({
+      pool,
+      productScope: scope,
+      dispatcher: {} as CommandDispatcher,
+      origin: "https://pact.example",
+      clock: { now: () => new Date() },
+      decisionSupport: decisions,
+    });
+    const initialized = await transport.handlePost(principal, {
+      method: "initialize",
+      id: 1,
+      params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+    });
+    const read = async (args: unknown, caller = principal) =>
+      transport.handlePost(
+        caller,
+        { method: "tools/call", id: 2, params: { name: "pact_decision_support_v2", arguments: args } },
+        initialized.sessionId,
+      );
+    const result = await read({});
+    expect((result.response.result as { structuredContent: unknown }).structuredContent).toHaveProperty(
+      "kingdomId",
+      owner.kingdomId,
+    );
+    await expect(read({ accountId: outsider.accountId })).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(read({}, { ...principal, agentScopes: [] })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const choiceId = support.candidates.find((c) => c.kind === "wait")?.id;
+    expect((await read({ candidateId: choiceId })).response.result).toHaveProperty(
+      "structuredContent.candidate.kind",
+      "wait",
+    );
+    await pool.query("UPDATE resource_balances SET version=version+1 WHERE kingdom_id=$1", [owner.kingdomId]);
+    expect((await read({ candidateId: choiceId })).response.result).toHaveProperty(
+      "structuredContent.code",
+      "CANDIDATE_STALE",
+    );
   });
   it("keeps earliest retained milestones beyond latest pages and never reconstructs purged history", async () => {
     const owner = await kingdom(),

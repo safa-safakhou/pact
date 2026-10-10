@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { appendOutbox } from "@pact/db";
-import { rulesCatalog, wholeResources } from "@pact/domain";
+import { rulesCatalog, trainingQuote, trainingRequiredHall, wholeResources } from "@pact/domain";
 import type { ResourceLedger } from "@pact/ledger";
 import { type TickContext, timedJobDeadline } from "@pact/world";
 import type { PoolClient } from "pg";
@@ -114,13 +114,6 @@ function isTroopKind(kind: string): kind is TroopKind {
   return Object.hasOwn(rulesCatalog.units, kind);
 }
 
-function requiredHall(kind: TroopKind): number {
-  if (kind === "archer") return rulesCatalog.hallUnlocks.archers;
-  if (kind === "rider") return rulesCatalog.hallUnlocks.riders;
-  if (kind === "ram") return rulesCatalog.hallUnlocks.rams;
-  return 1;
-}
-
 export class TroopService {
   constructor(
     private readonly productScope: string,
@@ -162,7 +155,7 @@ export class TroopService {
     );
     if (existing.rowCount) throw new TroopError("QUEUE_BUSY");
     const hall = await this.buildingLevel(client, input.kingdomId, "hall");
-    if (hall < requiredHall(input.type)) throw new TroopError("HALL_LOCKED");
+    if (hall < trainingRequiredHall(input.type)) throw new TroopError("HALL_LOCKED");
     const capacity = await this.capacity(client, input.kingdomId, "owned");
     const owned = await client.query<{ count: number }>(
       "SELECT count(*)::integer AS count FROM kingdom_troops WHERE product_scope = $1 AND owner_kingdom_id = $2",
@@ -170,11 +163,12 @@ export class TroopService {
     );
     if ((owned.rows[0]?.count ?? 0) + input.count > capacity) throw new TroopError("CAPACITY_EXCEEDED");
     const definition = rulesCatalog.units[input.type];
+    const quote = trainingQuote(input.type, input.count);
     if (input.actorKind === "agent") {
       if (!this.authority) throw new Error("IMMEDIATE_AUTHORITY_NOT_CONFIGURED");
       for (const [asset, units] of [
-        ["iron", wholeResources(definition.iron * input.count)],
-        ["silver", wholeResources(definition.silver * input.count)],
+        ["iron", quote.iron],
+        ["silver", quote.silver],
       ] as const) {
         if (units > 0n)
           await this.authority.spend(client, {
@@ -192,7 +186,7 @@ export class TroopService {
       kingdomId: input.kingdomId,
       resource: "iron",
       kind: "training",
-      amount: wholeResources(definition.iron * input.count),
+      amount: quote.iron,
       operationKey: input.batchId,
       gameTimeMs: input.gameTimeMs,
     });
@@ -200,7 +194,7 @@ export class TroopService {
       kingdomId: input.kingdomId,
       resource: "silver",
       kind: "training",
-      amount: wholeResources(definition.silver * input.count),
+      amount: quote.silver,
       operationKey: input.batchId,
       gameTimeMs: input.gameTimeMs,
     });

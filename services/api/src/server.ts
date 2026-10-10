@@ -67,6 +67,7 @@ export interface ApiModules {
   onboarding: OnboardingService;
   kingdom?: KingdomService;
   worldViews?: WorldViewService;
+  decisionSupport?: DecisionSupportReader;
   socialOverview?: SocialOverviewReader;
   council?: import("@pact/kingdom").CouncilReader;
   readCouncil?: (
@@ -202,6 +203,8 @@ export function buildServer(
     if (modules.chronicle && modules.gameTime)
       registerChronicleRoutes(server, modules.identity, modules.chronicle, modules.gameTime);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.decisionSupport)
+      registerDecisionRoutes(server, modules.identity, modules.decisionSupport, modules.oauth);
     if (modules.council && modules.readCouncil)
       registerCouncilRoutes(server, modules.identity, modules.council, modules.readCouncil);
     if (modules.socialOverview) registerSocialOverviewRoutes(server, modules.identity, modules.socialOverview);
@@ -235,3 +238,6 @@ export function buildServer(
   }
   return server;
 }
+
+import type { DecisionSupportReader } from "@pact/application";
+import { registerDecisionRoutes } from "./decision-routes.js";

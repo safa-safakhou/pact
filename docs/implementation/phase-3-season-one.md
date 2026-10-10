@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 56 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 57 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2282,7 +2282,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-152"></a>
 ## PACT-152 — Add exact decision calculations optional candidates and reads before action
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2299,20 +2299,20 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Calculated values match shared rule fixtures with exact units; hidden opponent facts are neither inferred as certainty nor exposed.
-- [ ] Candidates include wait/read/decline and cannot become a restricted action whitelist or hidden strategic priority.
-- [ ] Missing facts can be read before a commitment; stale/dependent changes revalidate and pending retries preserve IDs; token/latency measurements separate parsing from usefulness.
+- [x] Calculated values match shared rule fixtures with exact units; hidden opponent facts are neither inferred as certainty nor exposed.
+- [x] Candidates include wait/read/decline and cannot become a restricted action whitelist or hidden strategic priority.
+- [x] Missing facts can be read before a commitment; stale/dependent changes revalidate and pending retries preserve IDs; token/latency measurements separate parsing from usefulness.
 
 **Assignee:** codex-agent-society
 
 **Evidence**
 
-- Founder-authorized dependency-ready exact decision support; implementation begins after the communication release.
+- reports/decision-support-20261010.md — shared exact quotes/exposure, optional current candidate resolution, owner-derived MCP/HTTP/in-app reads, stale withdrawal rejection and read-before-decision/pacing regression.
 
 <a id="pact-153"></a>
 ## PACT-153 — Persist private goals relationship memory and factual consequences
 
-**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2332,6 +2332,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Knowledge carries provenance/visibility/observation time; claims and generated assessments never become engine facts.
 - [ ] The agent can revise its private strategy instructions without changing permissions; no hidden reasoning or unauthorized peer plans are stored.
 - [ ] Long conversations and changed strategy survive restart/model changes; forgetting/export and correction fixtures preserve factual receipts and retention rules.
+
+**Assignee:** codex-agent-society
+
+**Evidence**
+
+- Founder-authorized private memory engineering; dependency-ready after PACT-152.
 
 <a id="pact-154"></a>
 ## PACT-154 — Implement explicit persistent enrollment and bounded work scheduling

@@ -301,6 +301,7 @@ const mcp = new McpTransport({
   origin: environment.PACT_ORIGIN,
   clock,
   worldViews,
+  decisionSupport: new DecisionSupportReader(worldViews, socialOverview),
   notes: {
     read: (accountId) => kingdom.readNotes(accountId),
     write: (accountId, text, version) => kingdom.writeNotes(accountId, text, version),
@@ -627,6 +628,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   onboarding,
   kingdom,
   worldViews,
+  decisionSupport: new DecisionSupportReader(worldViews, socialOverview),
   socialOverview,
   council,
   readCouncil,
@@ -688,3 +690,5 @@ process.once("SIGTERM", () => {
 });
 
 await server.listen({ host: environment.HOST, port: environment.PORT });
+
+import { DecisionSupportReader } from "@pact/application";

@@ -13,6 +13,7 @@ import {
   parseFullPlan,
   prepareFullCommand,
   recoverFullCommand,
+  resolveReadPlan,
 } from "./full-game.mjs";
 import { LocalModel } from "./ollama.mjs";
 import { coolAfterTurn, finishTurn, nextContinuousActor } from "./scheduler.mjs";
@@ -271,7 +272,17 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
           Math.min(state.endsAt ?? Infinity, Date.now() + state.config.timeoutMs),
         );
         emit("model_result", { actor: actor.index, model: actor.model ?? state.config.model, ...result });
-        const plan = parseFullPlan(result.output, tools);
+        const requestedPlan = parseFullPlan(result.output, tools);
+        const decision = await resolveReadPlan(requestedPlan, (name, args) => mcp.call(name, args), active);
+        actor.reads = decision.results;
+        save(); // persist newly observed facts before any later decision or command
+        const plan = decision.plan;
+        if (decision.waitingForDecision)
+          emit("reads_awaiting_decision", {
+            actor: actor.index,
+            requestedReads: decision.results.length,
+            deferredActions: requestedPlan.actions.length,
+          });
         const outcomes = [];
         for (const item of plan.actions) {
           if (!active()) break;
@@ -315,16 +326,6 @@ export async function runContinuous(dir, { turnLimit = Infinity } = {}) {
             if (actor.pending) throw error;
           }
         }
-        const reads = [];
-        for (const read of plan.reads) {
-          if (!active()) break;
-          try {
-            reads.push({ ...read, result: await mcp.call(read.name, read.args) });
-          } catch (error) {
-            reads.push({ ...read, error: errorCode(error) });
-          }
-        }
-        actor.reads = reads;
         actor.memory = { intent: plan.intent, nextCheck: plan.nextCheck, outcomes, records: actor.recordIds };
         actor.successfulTurns++;
         actor.failures = 0;

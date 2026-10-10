@@ -292,7 +292,15 @@ export class GameCommandHandler {
         }
         case "game.supply.withdraw": {
           if (!this.supply) throw new DispatcherError("INVALID_COMMAND");
-          await this.supply.withdrawOffer(client, accountId, action.offerId, gameTimeMs);
+          await this.supply.withdrawOffer(
+            client,
+            accountId,
+            action.offerId,
+            gameTimeMs,
+            "expectedVersion" in action && typeof action.expectedVersion === "number"
+              ? action.expectedVersion
+              : undefined,
+          );
           return { recordVersions: { [`supply-offer:${action.offerId}`]: 0 }, charged: [] };
         }
         case "game.supply.notice": {

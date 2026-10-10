@@ -2,6 +2,7 @@ import {
   AgentGuideReader,
   ChronicleFactReader,
   CommandDispatcher,
+  DecisionSupportReader,
   DispatcherError,
   dispatchRunCommandTools,
   GameCommandHandler,
@@ -16,6 +17,7 @@ import {
   ChronicleReadQuerySchema,
   ConversationReadQuerySchema,
   CourtReadQuerySchema,
+  DecisionSupportQuerySchema,
   InboxReadQuerySchema,
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
@@ -26,6 +28,7 @@ import {
   pactChronicleReadTool,
   pactConversationReadTool,
   pactCourtReadTool,
+  pactDecisionSupportTool,
   pactInboxReadTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
@@ -187,6 +190,7 @@ export async function createInferenceGameRuntime(
       inboxReadTool,
       conversationReadTool,
       worldReadTool,
+      { ...pactDecisionSupportTool, parseArguments: (input: unknown) => DecisionSupportQuerySchema.parse(input) },
       { ...pactSeasonReadTool, parseArguments: (input: unknown) => SeasonReadQuerySchema.parse(input) },
       reportReadTool,
       receiptReadTool,
@@ -316,6 +320,16 @@ export async function createInferenceGameRuntime(
               expiresAt: approval.expiresAt.toISOString(),
             }),
           });
+          continue;
+        }
+        if (call.name === pactDecisionSupportTool.name) {
+          const query = DecisionSupportQuerySchema.parse(call.arguments);
+          const result = await new DecisionSupportReader(views, new SocialOverviewReader(pool, productScope)).read(
+            input.run.accountId,
+            query.candidateId,
+            query.proposalOffset,
+          );
+          results.push({ callId: call.id, content: JSON.stringify(result ?? { code: "NOT_FOUND" }) });
           continue;
         }
         if (call.name === worldReadTool.name) {

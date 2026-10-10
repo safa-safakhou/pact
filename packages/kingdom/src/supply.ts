@@ -5,7 +5,13 @@ import type { ResourceLedger } from "@pact/ledger";
 import type { PoolClient } from "pg";
 import type { ActionLimitService } from "./action-limits.js";
 import type { SocialService } from "./social.js";
-import { type SupplyBond, type SupplyFlow, type SupplyTerms, validateSupplyTerms } from "./supply-terms.js";
+import {
+  type SupplyBond,
+  type SupplyFlow,
+  type SupplyTerms,
+  supplyExposure,
+  validateSupplyTerms,
+} from "./supply-terms.js";
 
 interface OfferRow {
   id: string;
@@ -90,17 +96,6 @@ function flowFor(offer: OfferRow, party: string): SupplyFlow | null {
 
 function bondFor(offer: OfferRow, party: string): SupplyBond | null {
   return party === offer.kingdom_a ? offer.terms.aBond : offer.terms.bBond;
-}
-
-function exposure(
-  flow: SupplyFlow | null,
-  bond: SupplyBond | null,
-  durationHours: number,
-): Partial<Record<"iron" | "silver" | "grain", bigint>> {
-  const values: Partial<Record<"iron" | "silver" | "grain", bigint>> = {};
-  if (flow) values[flow.resource] = wholeResources(flow.wholePerHour) * BigInt(durationHours);
-  if (bond) values[bond.resource] = (values[bond.resource] ?? 0n) + wholeResources(bond.wholeAmount);
-  return values;
 }
 
 function termsKey(value: SupplyTerms): string {
@@ -361,7 +356,7 @@ export class SupplyService {
             kingdomId: party,
             offerId: offer.id,
             version: offer.version,
-            exposure: exposure(flowFor(offer, party), bondFor(offer, party), offer.terms.durationHours),
+            exposure: supplyExposure(flowFor(offer, party), bondFor(offer, party), offer.terms.durationHours),
             gameTimeMs: input.gameTimeMs,
             ...(input.permitId ? { permitId: input.permitId } : {}),
           })
@@ -474,7 +469,13 @@ export class SupplyService {
     return id;
   }
 
-  async withdrawOffer(client: PoolClient, accountId: string, offerId: string, gameTimeMs: number): Promise<void> {
+  async withdrawOffer(
+    client: PoolClient,
+    accountId: string,
+    offerId: string,
+    gameTimeMs: number,
+    expectedVersion?: number,
+  ): Promise<void> {
     const party = await this.ownerKingdom(client, accountId);
     const preview = await client.query<OfferRow>("SELECT * FROM supply_offers WHERE product_scope = $1 AND id = $2", [
       this.productScope,
@@ -484,6 +485,7 @@ export class SupplyService {
     if (party !== preview.rows[0].kingdom_a && party !== preview.rows[0].kingdom_b) throw new SupplyError("NOT_PARTY");
     await this.lockPair(client, preview.rows[0].kingdom_a, preview.rows[0].kingdom_b, true);
     const offer = await this.offer(client, offerId);
+    if (expectedVersion !== undefined && offer.version !== expectedVersion) throw new SupplyError("STALE_VERSION");
     if (offer.status === "withdrawn") return;
     if (offer.status !== "open") throw new SupplyError("OFFER_CLOSED");
     await this.releaseSignatures(client, offer.id, offer.version, gameTimeMs);

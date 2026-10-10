@@ -287,7 +287,9 @@ export const GameActionV2Schema = z.discriminatedUnion(
       ? option.extend({ body: z.string().min(1).max(8192) })
       : option.shape.kind.value === "game.contact.request"
         ? option.extend({ note: z.string().min(1).max(8192) })
-        : option,
+        : option.shape.kind.value === "game.supply.withdraw"
+          ? option.extend({ expectedVersion: z.number().int().positive().optional() })
+          : option,
   ) as typeof GameActionSchema.options,
 );
 export const ApprovalProposalV2Schema = ApprovalProposalSchema.extend({
