@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**66 tickets · 48 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**66 tickets · 49 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2019,15 +2019,15 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-144"></a>
 ## PACT-144 — Persist existing player access across browsers and devices and simplify game navigation
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
 **Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-006](phase-0-connections.md#pact-006), [PACT-127](phase-3-season-one.md#pact-127), [PACT-142](phase-3-season-one.md#pact-142)
 
-**Components:** local population controller.
+**Components:** identity, web, notifications.
 
-**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md) · **Release checks:** S01, R07
+**Specification:** [access](../pact/access.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** A01, S01
 
 **Implement / deliver**
 
@@ -2036,9 +2036,17 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Session bootstrap restores CSRF across tabs without changing ownership or expiry; origin and human-only boundaries hold.
-- [ ] Verified guest conversion preserves account/kingdom/grants, rejects invalid/conflicting/replayed tokens and disables old entry recovery; portable guest recovery never creates a replacement identity.
-- [ ] Focused navigation retains building/training/economy controls; account screens expose truthful captured-email behavior and recovery.
-- [ ] Relevant tests, build, types and deployed smoke/browser checks pass; release preserves existing continuous owners and state.
+- [x] Session bootstrap restores CSRF across tabs without changing ownership or expiry; origin and human-only boundaries hold.
+- [x] Verified guest conversion preserves account/kingdom/grants, rejects invalid/conflicting/replayed tokens and disables old entry recovery; portable guest recovery never creates a replacement identity.
+- [x] Focused navigation retains building/training/economy controls; account screens expose truthful captured-email behavior and recovery.
+- [x] Relevant tests, build, types and deployed smoke/browser checks pass; release preserves existing continuous owners and state.
 
 **Assignee:** codex-auth-ui
+
+**Evidence**
+
+- docs/implementation/reports/authentication-ui-20261010.md
+- docs/implementation/reports/evidence/authentication-ui-20261010.json
+- Final source 8cb3f2d released as authentication-ui-20261010-3; production verify and synthetic HTTP/browser recovery checks passed.
+- 320 unit and 334 integration passed; one optional skipped; build, package/web build, typecheck and lint passed.
+- Linear creation rejected at workspace free issue limit (request a4819a0c4960b708); repository record is completion evidence.

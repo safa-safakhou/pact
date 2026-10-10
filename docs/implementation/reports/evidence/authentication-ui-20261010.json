@@ -1,0 +1,79 @@
+{
+  "ticket": "PACT-144",
+  "release": "authentication-ui-20261010-3",
+  "source_commit": "8cb3f2d",
+  "url": "https://pact.tinyagenttools.com/",
+  "backup": {
+    "snapshot": "cb9ca526",
+    "observed_at": "2026-10-09T23:51:43Z",
+    "gib": 4.362
+  },
+  "hosted": {
+    "observedAt": "2026-10-10T00:06:30.996Z",
+    "accountId": "2d77ea0c-7ab8-4992-8251-da8d6840009b",
+    "kingdomId": "854e0242-064a-43b0-95f6-87e5a4301ed1",
+    "sameOwner": true,
+    "guestRecovery": true,
+    "stableTabCsrf": true,
+    "verifiedConversion": true,
+    "replayDenied": true,
+    "oldRecoveryDenied": true,
+    "secondDeviceLogin": true,
+    "sessionOnlyLogout": true,
+    "capturedEmail": true,
+    "emailDelivery": "captured_smtp",
+    "modelCalls": 0,
+    "gameCommands": 0
+  },
+  "continuous_state": {
+    "sameRun": true,
+    "sameOwners": true,
+    "accounts": 50,
+    "requestsBefore": 4801,
+    "requestsAfter": 4801,
+    "model": "qwen3.5:9b",
+    "intervalSeconds": 3600,
+    "minimumTurnGapSeconds": 60,
+    "taskBefore": "Ready",
+    "taskAfter": "Ready"
+  },
+  "verification": {
+    "unit_passed": 320,
+    "integration_passed": 334,
+    "integration_optional_skipped": 1,
+    "build": "passed",
+    "package_build": "passed",
+    "web_build": "passed",
+    "typecheck": "passed",
+    "lint": "passed",
+    "production_verify": "passed",
+    "migration": "0055_guest_account_recovery.sql"
+  },
+  "browser": {
+    "synthetic_handle": "guirecovery_2847a775",
+    "private_guest_restore_same_owner": true,
+    "fresh_tab_session_and_write_controls": true,
+    "reload_same_owner": true,
+    "visible_navigation": true,
+    "army_and_building_controls": true,
+    "account_captured_email_notice": true,
+    "commitments_made": 0,
+    "physical_second_device_tested": false,
+    "full_browser_process_restart_tested": false
+  },
+  "cleanup": {
+    "api_fixture_sessions_and_grants_revoked": true,
+    "browser_fixture_signed_out": true,
+    "browser_tabs_closed": true
+  },
+  "limitations": [
+    "Email is captured SMTP; operator supplies verification/reset codes. Real outbound delivery is not configured or certified.",
+    "Cross-device acceptance used independent HTTP cookie sessions and portable guest recovery; no physical second device was tested.",
+    "The separate continuous Windows task was already Ready with last result 0xC000013A before deployment; it was not restarted."
+  ],
+  "tracking": {
+    "linear_issue_creation": "rejected_workspace_free_issue_limit",
+    "request_id": "a4819a0c4960b708",
+    "local_execution_record": true
+  }
+}

@@ -7471,10 +7471,10 @@
       "id": "PACT-144",
       "title": "Persist existing player access across browsers and devices and simplify game navigation",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
-      "size": "M",
+      "size": "L",
       "depends_on": [
         "PACT-053",
         "PACT-006",
@@ -7482,13 +7482,13 @@
         "PACT-142"
       ],
       "sources": [
-        "social",
-        "runtime",
-        "rules"
+        "access",
+        "privacy",
+        "experience"
       ],
       "covers": [
-        "S01",
-        "R07"
+        "A01",
+        "S01"
       ],
       "scope": [
         "Founder-authorized same-browser session bootstrap, verified in-place guest conversion, guest recovery and account sign-in UI.",
@@ -7501,9 +7501,17 @@
         "Relevant tests, build, types and deployed smoke/browser checks pass; release preserves existing continuous owners and state."
       ],
       "components": [
-        "local population controller"
+        "identity",
+        "web",
+        "notifications"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/authentication-ui-20261010.md",
+        "docs/implementation/reports/evidence/authentication-ui-20261010.json",
+        "Final source 8cb3f2d released as authentication-ui-20261010-3; production verify and synthetic HTTP/browser recovery checks passed.",
+        "320 unit and 334 integration passed; one optional skipped; build, package/web build, typecheck and lint passed.",
+        "Linear creation rejected at workspace free issue limit (request a4819a0c4960b708); repository record is completion evidence."
+      ],
       "assignee": "codex-auth-ui",
       "blocked_by_external": [],
       "block_reason": null,
@@ -7765,5 +7773,15 @@
     "stop_reason": "DEADLINE",
     "finished_at": "2026-10-09T14:48:51.209Z",
     "final_report": "reports/local-model-comparison-20261009.md"
+  },
+  "authentication_ui": {
+    "execution": "completed",
+    "active_ids": [
+      "PACT-144"
+    ],
+    "completed_at": "2026-10-10",
+    "release": "authentication-ui-20261010-3",
+    "completion_report": "reports/authentication-ui-20261010.md",
+    "tracking": "Linear issue creation rejected at workspace free issue limit; repository is the execution record."
   }
 }
