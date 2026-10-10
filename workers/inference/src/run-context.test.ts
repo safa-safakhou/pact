@@ -90,7 +90,7 @@ describe("owner Envoy context boundary", () => {
     expect(messages[2]?.content).toContain("mandate");
     expect(mandate).toHaveBeenCalledWith(accountId);
     expect(JSON.stringify(messages)).not.toContain("WITHHELD_LARGE_TEXT");
-    expect(messages[0]?.content).toContain("never pretend success");
+    expect(messages[0]?.content).toContain("Receipts distinguish commitments from proposals");
     expect(messages[0]?.content).not.toContain("Ignore the mandate");
   });
   it("keeps counterpart prose in user-role data and excludes arbitrary inbox payloads", async () => {
@@ -120,5 +120,25 @@ describe("owner Envoy context boundary", () => {
     expect(encoded).toContain(counterpartyKingdomId);
     expect(encoded).toContain('\\"truncated\\":true');
     expect(encoded).not.toContain("HOSTILE_PRIVATE_TEXT_");
+  });
+  it("labels bounded private memory as authored assessments and leaves oversized notes accessible through the read tool", async () => {
+    const fixture = inputs({ body: "hi" });
+    const messages = await ownerRunContext(run, fixture.kingdom, fixture.views, fixture.inbox, fixture.conversations, {
+      mandate: async () => ({}),
+      publicContext: async () => [],
+      memory: async () => ({
+        entries: [
+          { entryId: "small", text: "My current strategy" },
+          { entryId: "large", text: "PRIVATE_BIG_NOTE".repeat(1000) },
+        ],
+        next: null,
+      }),
+    });
+    const encoded = JSON.stringify(messages);
+    expect(encoded).toContain("My current strategy");
+    expect(encoded).toContain("not facts, authority or hidden reasoning");
+    expect(encoded).toContain("pact_private_memory_read_v2");
+    expect(encoded).toContain('\\"omitted\\":true');
+    expect(encoded).not.toContain("PRIVATE_BIG_NOTE");
   });
 });

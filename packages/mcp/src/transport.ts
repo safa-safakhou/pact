@@ -15,6 +15,9 @@ import {
   commandJsonSchema,
   DecisionSupportQuerySchema,
   InboxReadQuerySchema,
+  MemoryReadSchema,
+  MemorySourceSchema,
+  MemoryWriteSchema,
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
@@ -30,6 +33,9 @@ import {
   pactGameActionTool,
   pactGameActionV2Tool,
   pactInboxReadTool,
+  pactMemoryReadTool,
+  pactMemorySourceTool,
+  pactMemoryWriteTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
   pactProfileTool,
@@ -99,6 +105,11 @@ export interface McpJsonRpcRequest {
 }
 
 export interface McpTransportOptions {
+  readonly privateMemory?: {
+    read(accountId: string, query: unknown): Promise<unknown>;
+    source(accountId: string, query: unknown): Promise<unknown>;
+    write(accountId: string, author: "agent", command: unknown): Promise<unknown>;
+  };
   readonly decisionSupport?: {
     read(accountId: string, candidateId?: string, proposalOffset?: number): Promise<unknown | null>;
   };
@@ -331,6 +342,12 @@ export class McpTransport {
                 : []),
               ...(this.options.decisionSupport && principal.agentScopes?.includes("world:read")
                 ? [pactDecisionSupportTool]
+                : []),
+              ...(this.options.privateMemory && principal.agentScopes?.includes("world:read")
+                ? [pactMemoryReadTool, pactMemorySourceTool]
+                : []),
+              ...(this.options.privateMemory && principal.agentScopes?.includes("game:act")
+                ? [pactMemoryWriteTool]
                 : []),
               ...(this.options.notes && principal.agentScopes?.includes("world:read") ? [notesReadTool] : []),
               ...(this.options.notes && principal.agentScopes?.includes("game:act") ? [notesWriteTool] : []),
@@ -718,6 +735,44 @@ export class McpTransport {
       return {
         content: [{ type: "text", text: JSON.stringify(page) }],
         structuredContent: page as Record<string, unknown>,
+      };
+    }
+    if (name === pactMemoryReadTool.name || name === pactMemoryWriteTool.name || name === pactMemorySourceTool.name) {
+      const write = name === pactMemoryWriteTool.name;
+      if (!this.options.privateMemory || !principal.agentScopes?.includes(write ? "game:act" : "world:read"))
+        throw new McpError("FORBIDDEN", 403);
+      const parsed = (
+        write ? MemoryWriteSchema : name === pactMemorySourceTool.name ? MemorySourceSchema : MemoryReadSchema
+      ).safeParse(args);
+      if (!parsed.success) throw new McpError("INVALID_REQUEST", 400);
+      let data: Record<string, unknown>;
+      try {
+        const result = write
+          ? await this.options.privateMemory.write(principal.accountId, "agent", parsed.data)
+          : name === pactMemorySourceTool.name
+            ? await this.options.privateMemory.source(principal.accountId, parsed.data)
+            : await this.options.privateMemory.read(principal.accountId, parsed.data);
+        data = { ...((result as Record<string, unknown>) ?? { code: "SOURCE_UNAVAILABLE" }), untrustedContent: true };
+      } catch (error) {
+        const code = error && typeof error === "object" && "code" in error ? error.code : undefined;
+        if (
+          typeof code !== "string" ||
+          ![
+            "FORBIDDEN",
+            "SOURCE_UNAVAILABLE",
+            "STALE_VERSION",
+            "OPERATION_CONFLICT",
+            "PRIVATE_MEMORY_FULL",
+            "NOTE_TOO_LARGE",
+          ].includes(code)
+        )
+          throw error;
+        data = { code };
+      }
+      return {
+        content: [{ type: "text", text: JSON.stringify(data) }],
+        structuredContent: data,
+        ...(data.code && !["COMMITTED", "ALREADY_COMMITTED"].includes(String(data.code)) ? { isError: true } : {}),
       };
     }
     if (name === pactDecisionSupportTool.name) {

@@ -83,6 +83,7 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
     "pact_approval_propose_v2",
     "run.open",
     "pact_notes_write_v1",
+    "pact_private_memory_write_v2",
     "sandbox.echo",
     "sandbox.counter.increment",
     "sandbox.draft.write",
@@ -95,7 +96,7 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
     annotations: {
       readOnlyHint: !write,
       destructiveHint: write,
-      idempotentHint: !write || tool.name === "pact_notes_write_v1",
+      idempotentHint: !write || tool.name === "pact_notes_write_v1" || tool.name === "pact_private_memory_write_v2",
       openWorldHint: true,
     },
     securitySchemes,

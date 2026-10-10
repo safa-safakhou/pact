@@ -19,6 +19,8 @@ import {
   CourtReadQuerySchema,
   DecisionSupportQuerySchema,
   InboxReadQuerySchema,
+  MemoryReadSchema,
+  MemoryWriteSchema,
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
@@ -30,6 +32,9 @@ import {
   pactCourtReadTool,
   pactDecisionSupportTool,
   pactInboxReadTool,
+  pactMemoryReadTool,
+  pactMemorySourceTool,
+  pactMemoryWriteTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
   pactReceiptReadTool,
@@ -60,6 +65,8 @@ import {
   KingdomService,
   ModerationError,
   PoliticsService,
+  PrivateMemoryError,
+  PrivateMemoryService,
   RaidRandomnessService,
   RaidService,
   readSeasonOverview,
@@ -166,6 +173,10 @@ export async function createInferenceGameRuntime(
     ...pactApprovalProposalTool,
     parseArguments: (input: unknown) => ApprovalProposalSchema.parse(input),
   };
+  const privateMemory = new PrivateMemoryService(pool, productScope, {
+    read: (client) => world.read(client),
+    now: clock.now,
+  });
   const runs = new RunService(pool, {
     productScope,
     clock,
@@ -174,6 +185,7 @@ export async function createInferenceGameRuntime(
     messagesForRun: (run) =>
       ownerRunContext(run, kingdom, views, inbox, conversations, {
         mandate: (accountId) => withTransaction(pool, (c) => readMandateContext(c, productScope, accountId)),
+        memory: (accountId) => privateMemory.read(accountId),
         publicContext: async (accountId) =>
           (await chronicle.read({ type: "notice", offset: 0 }, (await world.read()).gameTimeMs, accountId)).posts.slice(
             0,
@@ -185,6 +197,8 @@ export async function createInferenceGameRuntime(
     },
     tools: [
       pactRunCommandV2Tool,
+      { ...pactMemoryReadTool, parseArguments: (input: unknown) => MemoryReadSchema.parse(input) },
+      { ...pactMemoryWriteTool, parseArguments: (input: unknown) => MemoryWriteSchema.parse(input) },
       { ...pactAgentGuideTool, parseArguments: (input: unknown) => AgentGuideQuerySchema.parse(input) },
       { ...pactPlayerFindTool, parseArguments: (input: unknown) => PlayerFindQuerySchema.parse(input) },
       inboxReadTool,
@@ -320,6 +334,28 @@ export async function createInferenceGameRuntime(
               expiresAt: approval.expiresAt.toISOString(),
             }),
           });
+          continue;
+        }
+        if (
+          call.name === pactMemoryReadTool.name ||
+          call.name === pactMemoryWriteTool.name ||
+          call.name === pactMemorySourceTool.name
+        ) {
+          let result: unknown;
+          try {
+            result =
+              call.name === pactMemoryWriteTool.name
+                ? await privateMemory.write(input.run.accountId, "agent", call.arguments, (client) =>
+                    runs.assertAgentWriteLease(client, input.run.accountId, input.run.runId),
+                  )
+                : call.name === pactMemorySourceTool.name
+                  ? await privateMemory.source(input.run.accountId, call.arguments)
+                  : await privateMemory.read(input.run.accountId, call.arguments);
+          } catch (error) {
+            if (!(error instanceof PrivateMemoryError) && !(error instanceof RunError)) throw error;
+            result = { code: error.code };
+          }
+          results.push({ callId: call.id, content: JSON.stringify(result ?? { code: "SOURCE_UNAVAILABLE" }) });
           continue;
         }
         if (call.name === pactDecisionSupportTool.name) {

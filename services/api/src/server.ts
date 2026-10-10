@@ -63,6 +63,7 @@ function safeLogger(logger: boolean | object): false | Record<string, unknown> {
 }
 
 export interface ApiModules {
+  privateMemory?: import("@pact/kingdom").PrivateMemoryService;
   identity: IdentityService;
   onboarding: OnboardingService;
   kingdom?: KingdomService;
@@ -203,6 +204,7 @@ export function buildServer(
     if (modules.chronicle && modules.gameTime)
       registerChronicleRoutes(server, modules.identity, modules.chronicle, modules.gameTime);
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.privateMemory) registerMemoryRoutes(server, modules.identity, modules.privateMemory, modules.oauth);
     if (modules.decisionSupport)
       registerDecisionRoutes(server, modules.identity, modules.decisionSupport, modules.oauth);
     if (modules.council && modules.readCouncil)
@@ -241,3 +243,4 @@ export function buildServer(
 
 import type { DecisionSupportReader } from "@pact/application";
 import { registerDecisionRoutes } from "./decision-routes.js";
+import { registerMemoryRoutes } from "./memory-routes.js";

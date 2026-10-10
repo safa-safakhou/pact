@@ -41,6 +41,7 @@ import {
   ModerationService,
   OwnerRecordStates,
   PoliticsService,
+  PrivateMemoryService,
   RaidRandomnessService,
   RaidService,
   readSeasonOverview,
@@ -294,7 +295,9 @@ const approvals = new ApprovalService(pool, {
   assertAgentWriteLease: (client, accountId, holderId) => runs.assertAgentWriteLease(client, accountId, holderId),
   inbox,
 });
+const privateMemory = new PrivateMemoryService(pool, "pact", { read: (client) => world.read(client), now: clock.now });
 const mcp = new McpTransport({
+  privateMemory,
   pool,
   productScope: "pact",
   dispatcher,
@@ -425,6 +428,7 @@ const privacy = new PrivacyService(pool, {
   clock,
   retirement,
   ownedData: [
+    privateMemory.retention,
     externalActivity.retention,
     council.retention,
     notifications.retention,
@@ -629,6 +633,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   kingdom,
   worldViews,
   decisionSupport: new DecisionSupportReader(worldViews, socialOverview),
+  privateMemory,
   socialOverview,
   council,
   readCouncil,

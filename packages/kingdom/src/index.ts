@@ -20,6 +20,7 @@ export * from "./moderation-retention.js";
 export * from "./notifications.js";
 export * from "./owner-record-states.js";
 export * from "./politics.js";
+export * from "./private-memory.js";
 export * from "./raid-randomness.js";
 export * from "./raids.js";
 export * from "./report-reader.js";

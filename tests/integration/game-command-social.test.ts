@@ -33,6 +33,7 @@ import {
   GarrisonService,
   ImmediateExposureAdapter,
   KingdomService,
+  PrivateMemoryService,
   RaidRandomnessService,
   RaidService,
   ScoutService,
@@ -1491,7 +1492,8 @@ describe("shared gameplay command admission", () => {
       model: fakeProviderModel.id,
       limits: { maxCalls: 1 },
     });
-    expect(await runtime.runs.executeModelCall(run.runId)).toMatchObject({ status: "finished" });
+    const completed = await runtime.runs.executeModelCall(run.runId);
+    expect({ status: completed.status, code: completed.lastErrorCode }).toEqual({ status: "finished", code: null });
     const snapshot = providerMessages.find((message) => message.content.includes("pact.owner_snapshot.v1"));
     expect(snapshot?.role).toBe("user");
     expect(snapshot?.content).toContain(owner.kingdomId);
@@ -1511,6 +1513,62 @@ describe("shared gameplay command admission", () => {
     expect(providerMessages[0]?.content).not.toContain(hostile);
   });
 
+  it("saves private strategy through a running fake-model lease and denies a stopped run's late write", async () => {
+    const owner = await kingdom(),
+      clock = { now: () => new Date() },
+      memory = new PrivateMemoryService(pool, "pact", { ...clock, read: (client) => world.read(client) });
+    for (const stopBeforeReturn of [false, true]) {
+      const entryId = randomUUID(),
+        commandId = randomUUID();
+      let runId = "";
+      const runtime = await createInferenceGameRuntime({
+        pool,
+        productScope: "pact",
+        clock,
+        termsVersion: "terms-v1",
+        providerRouter: new ProviderRouter([
+          {
+            provider: "memory-fixture",
+            listModels: async () => [fakeProviderModel],
+            invoke: async () => {
+              if (stopBeforeReturn) await runtime.runs.stop(owner.accountId, runId);
+              return {
+                stopReason: "tool_calls" as const,
+                usage: { inputTokens: 30, outputTokens: 5 },
+                toolCalls: [
+                  {
+                    id: "private-note",
+                    name: "pact_private_memory_write_v2",
+                    arguments: {
+                      schemaVersion: "pact.memory-command.v2",
+                      commandId,
+                      entryId,
+                      expectedVersion: 0,
+                      kind: "strategy",
+                      topic: "reasoned choice",
+                      text: "Compare retained terms before choosing.",
+                      sources: [],
+                    },
+                  },
+                ],
+              };
+            },
+          },
+        ]),
+      });
+      const run = await runtime.runs.start({
+        accountId: owner.accountId,
+        objective: "Review current facts",
+        provider: "memory-fixture",
+        model: fakeProviderModel.id,
+        limits: { maxCalls: 1 },
+      });
+      runId = run.runId;
+      const result = await runtime.runs.executeModelCall(runId);
+      expect(result.status).toBe(stopBeforeReturn ? "stopped" : "finished");
+      expect((await memory.read(owner.accountId, { entryId })).entries).toHaveLength(stopBeforeReturn ? 0 : 1);
+    }
+  });
   it("reads the same bounded owner inbox through model and MCP without cross-account payloads", async () => {
     const owner = await kingdom();
     const other = await kingdom();

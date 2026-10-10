@@ -66,7 +66,7 @@ describe("factual result brief", () => {
       currentDecision: "Farm II: active",
       nextStep: "Wait on game clock.",
     });
-    expect(resultSummary(input).authority).toContain("agent may supply.sign");
-    expect(resultSummary(input).authority).toContain("require the human");
+    expect(resultSummary(input).authority).toContain("Signatures use current game authority");
+    expect(resultSummary(input).authority).toContain("communication delegation");
   });
 });

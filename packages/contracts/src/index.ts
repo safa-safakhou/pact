@@ -2,6 +2,7 @@ export * from "./chronicle-schemas.js";
 export * from "./court-schemas.js";
 export * from "./decision-schemas.js";
 export * from "./json-schema.js";
+export * from "./memory-schemas.js";
 export * from "./politics-schemas.js";
 export * from "./run-report-schemas.js";
 export * from "./schemas.js";

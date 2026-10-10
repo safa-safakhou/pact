@@ -29,6 +29,7 @@ import { NotificationSettings } from "./notification-settings.js";
 import { OutcomeCards } from "./outcome-cards.js";
 import { createWebPactClient } from "./pact-client.js";
 import { PoliticsPanel } from "./politics-panel.js";
+import { PrivateMemory } from "./private-memory.js";
 import { BuilderStatus, QuickBuilds } from "./quick-builds.js";
 import { RefreshGate } from "./refresh-gate.js";
 import { type ReportKind, type ReportRead, ReportReader } from "./report-reader.js";
@@ -1112,6 +1113,15 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                   contacts={social?.contacts ?? []}
                   canWrite={canWrite}
                   ambition={view?.ambition ?? ""}
+                />
+              )}
+              {tab === "Envoy" && view && (
+                <PrivateMemory
+                  key={view.profile.kingdomId}
+                  ownerId={view.profile.kingdomId}
+                  request={request}
+                  canWrite={canWrite}
+                  contacts={social?.contacts ?? []}
                 />
               )}
               {tab === "People" && (

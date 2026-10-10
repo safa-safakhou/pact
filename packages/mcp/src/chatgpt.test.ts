@@ -3,7 +3,12 @@ import { chatgptDescriptor, playHtml } from "./chatgpt.js";
 
 describe("versioned host tool annotations and conversation app", () => {
   it("classifies all admitted v2 writes as game:act and history as read-only", () => {
-    for (const name of ["pact_game_action_v2", "pact_command_v2", "pact_approval_propose_v2"]) {
+    for (const name of [
+      "pact_game_action_v2",
+      "pact_command_v2",
+      "pact_approval_propose_v2",
+      "pact_private_memory_write_v2",
+    ]) {
       const descriptor = chatgptDescriptor({ name });
       expect(descriptor.annotations.readOnlyHint).toBe(false);
       expect(descriptor.securitySchemes[0]?.scopes).toEqual(["game:act"]);

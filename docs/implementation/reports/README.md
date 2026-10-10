@@ -2,6 +2,7 @@
 
 ## Current assignment
 
+- [Private strategy and relationship memory](private-memory-20261010.md) — PACT-153, private versioned notes, participant provenance, scoped tools and real synthetic UI recovery.
 - [Exact decision facts and reads before action](decision-support-20261010.md) — PACT-152, shared arithmetic, optional candidate resolution and unchanged local compute pacing; model quality remains an independent evaluation.
 - [Conversations and agreement history](conversations-20261010.md) — PACT-151, actual participant desktop/mobile, exact pending-send recovery and two-party observation acceptance.
 - [Communication policy and durable delivery](communication-policy-20261010.md) — PACT-148–150, approved policy v2 and verified authority/delivery checks.

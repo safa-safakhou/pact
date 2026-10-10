@@ -7934,7 +7934,7 @@
       "id": "PACT-153",
       "title": "Persist private goals relationship memory and factual consequences",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -7970,7 +7970,9 @@
         "privacy"
       ],
       "evidence": [
-        "Founder-authorized private memory engineering; dependency-ready after PACT-152."
+        "docs/implementation/reports/private-memory-20261010.md",
+        "Full build/type/lint and 26 v1 schemas passed; 340 unit and final 351 integration passed, one optional real-provider comparison skipped.",
+        "Actual synthetic two-tab revision history, 390-pixel layout and interrupted-save/reload/retry; one entry/one revision. No production run or real model quality claim."
       ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],

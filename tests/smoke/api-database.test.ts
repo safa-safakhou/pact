@@ -90,6 +90,7 @@ describe("API/database smoke", () => {
       { name: "0057_revoked_guest_keys.sql" },
       { name: "0058_conversation_tool_capacity.sql" },
       { name: "0059_conversation_history.sql" },
+      { name: "0060_private_memory.sql" },
     ]);
     await server.close();
   });

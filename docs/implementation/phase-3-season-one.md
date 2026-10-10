@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 57 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 58 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2312,7 +2312,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-153"></a>
 ## PACT-153 — Persist private goals relationship memory and factual consequences
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2329,15 +2329,17 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Knowledge carries provenance/visibility/observation time; claims and generated assessments never become engine facts.
-- [ ] The agent can revise its private strategy instructions without changing permissions; no hidden reasoning or unauthorized peer plans are stored.
-- [ ] Long conversations and changed strategy survive restart/model changes; forgetting/export and correction fixtures preserve factual receipts and retention rules.
+- [x] Knowledge carries provenance/visibility/observation time; claims and generated assessments never become engine facts.
+- [x] The agent can revise its private strategy instructions without changing permissions; no hidden reasoning or unauthorized peer plans are stored.
+- [x] Long conversations and changed strategy survive restart/model changes; forgetting/export and correction fixtures preserve factual receipts and retention rules.
 
 **Assignee:** codex-agent-society
 
 **Evidence**
 
-- Founder-authorized private memory engineering; dependency-ready after PACT-152.
+- docs/implementation/reports/private-memory-20261010.md
+- Full build/type/lint and 26 v1 schemas passed; 340 unit and final 351 integration passed, one optional real-provider comparison skipped.
+- Actual synthetic two-tab revision history, 390-pixel layout and interrupted-save/reload/retry; one entry/one revision. No production run or real model quality claim.
 
 <a id="pact-154"></a>
 ## PACT-154 — Implement explicit persistent enrollment and bounded work scheduling

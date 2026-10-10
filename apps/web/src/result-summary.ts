@@ -48,6 +48,6 @@ export function resultSummary(report: ResultReport, ambition = "") {
     ...(latest?.commandId ? { receiptId: latest.commandId } : {}),
     ...(!report.stale && approval?.reviewPath ? { reviewPath: approval.reviewPath } : {}),
     authority:
-      "An agent may supply.sign within current authority. Contact acceptance and authority changes require the human. Inspect exact terms and current permissions before acting.",
+      "Signatures use current game authority. Contact acceptance follows your communication delegation; authority changes remain yours. Current terms and permissions determine each action.",
   };
 }
