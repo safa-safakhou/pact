@@ -2,6 +2,10 @@
 
 # PACT implementation backlog
 
+## Current communication and agent society plan
+
+The founder requested one consolidated communication-first design on 10 October 2026. Read [the integrated design and implementation plan](agent-society-plan-20261010.md) and [interactive synthetic communication mockup](design/agent-society-communication.html). PACT-145 records planning; PACT-146–159 are proposed and unstarted. Authentication gaps, communication capacity/delegation, environmental agent context, conversation/agreement UI, decision calculations/models, consequence memory and future local/Codex/ChatGPT schedulers share one dependency order. No new experiment, scheduler, rule change or implementation rollout is activated by planning. The original 24 Later tasks remain deferred.
+
 **Current status — 5 October 2026:** **130 tickets: 106 Done, 24 Later/Backlog, no active Todo/In Progress.** The local `todo` values on those 24 deferred tickets preserve unimplemented production scope; they are not an active assignment. Linear remains the execution tracker, and its free issue limit prevented creating a separate population-experiment ticket.
 
 Completed batches: [Alpha follow-ups](reports/alpha-playtest-fixes.md), [generated experience and fresh-player review](reports/experience-fresh-player-20261003.md), [resumed social/channel tickets](reports/social-channel-resume-20261004.md), and [friends playtest PACT-127–130](reports/friends-playtest-20261004.md). The subsequent [backend population experiment](reports/population-playtest-20261004.md) is complete, with fixes, limitations and final evidence recorded.

@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**66 tickets · 49 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**81 tickets · 50 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2050,3 +2050,388 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Final source 8cb3f2d released as authentication-ui-20261010-3; production verify and synthetic HTTP/browser recovery checks passed.
 - 320 unit and 334 integration passed; one optional skipped; build, package/web build, typecheck and lint passed.
 - Linear creation rejected at workspace free issue limit (request a4819a0c4960b708); repository record is completion evidence.
+
+<a id="pact-145"></a>
+## PACT-145 — Consolidate communication-first agent society design and plan
+
+**Status:** done · **Role:** Platform · **Size:** S · **Type:** planning
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-144](phase-3-season-one.md#pact-144), [PACT-141](phase-3-season-one.md#pact-141)
+
+**Components:** planning, web design.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [access](../pact/access.md), [rules](../pact/rules.md), [architecture](../pact/architecture.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** S01, A01, R07
+
+**Implement / deliver**
+
+- Consolidate founder-requested authentication gaps, communication rules, environmental interfaces, UI, exact decision support, memories and future local/Codex/ChatGPT runners.
+- Record rule-correction boundaries, proposed dependencies, acceptance, a synthetic UI mockup and future experiments without activating them.
+
+**Acceptance**
+
+- [x] One linked design covers every requested area with existing versus proposed behavior distinguished.
+- [x] Planning renders/checks, local links, dependency/status integrity and synthetic mockup interactions pass; completed planning is committed.
+
+**Assignee:** codex-agent-society-plan
+
+**Evidence**
+
+- docs/implementation/agent-society-plan-20261010.md#planning-acceptance
+- docs/implementation/design/agent-society-communication.html
+- docs/implementation/design/agent-society-desktop.jpg
+- docs/implementation/design/agent-society-mobile.jpg
+- Browser mockup checks: search, waiting/delivering filters, timeline/tracks, draft labels, sample composer, society links, introduction and mobile navigation passed; error logs empty. No live game changes.
+- Planning render/check: 159 unique acyclic tickets; local links and HTML script syntax passed; historical 144 ticket records and specification hashes unchanged.
+- Linear creation rejected at workspace free issue limit, request a481dad9ec5c7397; local execution record only.
+
+<a id="pact-146"></a>
+## PACT-146 — Diagnose communication refusals approvals and actual runner state
+
+**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-145](phase-3-season-one.md#pact-145), [PACT-141](phase-3-season-one.md#pact-141)
+
+**Components:** application, approvals, runs, MCP, web.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [privacy](../pact/privacy.md) · **Release checks:** S01, A08
+
+**Implement / deliver**
+
+- Record safe tool/action names, precise refusal causes, lease state and retry prerequisites without message bodies or credentials.
+- Make pending approval expiry and actual worker/host freshness explicit; suppress equivalent pending requests without weakening exact-command approval.
+
+**Acceptance**
+
+- [ ] Synthetic fixtures distinguish message quota, queue, missing contact, moderation, missing/competing lease, authority and stale-version failures.
+- [ ] Expired requests are never presented as actionable pending approvals; uncertain committed commands retain their original IDs.
+- [ ] Reconnect/run conflicts and silent accepted-contact cases are reproducible; external model identity is not falsely certified.
+
+<a id="pact-147"></a>
+## PACT-147 — Complete optional kingdom recovery and authentication acceptance
+
+**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-145](phase-3-season-one.md#pact-145), [PACT-144](phase-3-season-one.md#pact-144)
+
+**Components:** identity, web, email.
+
+**Specification:** [access](../pact/access.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** A01, A08
+
+**Implement / deliver**
+
+- Keep email optional and private recovery code first; add recently authenticated recovery-key replacement and legible session/device controls.
+- Complete same-browser/full-restart/independent-device tests and evaluate optional passkeys; prepare real transactional email mode without claiming configured delivery.
+
+**Acceptance**
+
+- [ ] Recovery preserves owner/kingdom/grants; rotated old codes fail, credentials stay out of URLs/prompts/logs and failed recovery creates no replacement.
+- [ ] Browser/device/session-expiry/logout tests pass with documented physical-device evidence where available.
+- [ ] Captured and real-delivery modes are truthful; any configured real sender passes verification/reset/retry/expiry acceptance, otherwise its unmet prerequisite is recorded.
+
+**External prerequisites:** Operator-provided transactional sender and domain configuration for real delivery acceptance; guest recovery remains usable without it.; Second physical device for device-specific certification..
+
+<a id="pact-148"></a>
+## PACT-148 — Version communication capacity and delegated social authority changes
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-145](phase-3-season-one.md#pact-145), [PACT-146](phase-3-season-one.md#pact-146)
+
+**Components:** rules catalog, social, authority, runtime.
+
+**Specification:** [rules](../pact/rules.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [chatgpt](../pact/chatgpt.md), [privacy](../pact/privacy.md) · **Release checks:** S01, S02, A05
+
+**Implement / deliver**
+
+- Document and implement the founder-approved communication policy correction with affected acceptance, catalog/version/migration and player-facing notice.
+- Separate text/proposal throughput and recipient backpressure from resource commitments; define opt-in contact delegation and persistent enrollment authority.
+
+**Acceptance**
+
+- [ ] Proposed removal of daily text/introduction scarcity, larger messages and durable inbox semantics is reviewed against signatures/exposure, privacy and equal game authority.
+- [ ] Existing IDs, unread state, receipts and contracts survive migration/rollback; source hashes change only after affected ticket review.
+- [ ] Transport/load fixtures calibrate published retry/backpressure behavior for 20/50/100 relationships without silent drops or paid strength/presence advantages.
+
+**External prerequisites:** Covering implementation assignment activates this proposed design correction and its final parameter choices..
+
+<a id="pact-149"></a>
+## PACT-149 — Implement delegated introductions and durable conversation delivery
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-148](phase-3-season-one.md#pact-148), [PACT-146](phase-3-season-one.md#pact-146)
+
+**Components:** kingdom social, authority, inbox, MCP.
+
+**Specification:** [social](../pact/social.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md), [privacy](../pact/privacy.md) · **Release checks:** S01, S02, A05
+
+**Implement / deliver**
+
+- Add manual, allow-list and owner-delegated agent contact decisions through existing command/authority boundaries.
+- Implement durable paginated message delivery/cursors, truthful retry/backpressure, recipient preferences and exact idempotent sends.
+
+**Acceptance**
+
+- [ ] Delegated contacts can form without repetitive human approvals; non-delegated acceptance and block/revocation remain enforced.
+- [ ] First contact grants no contract/troop/Court authority; existing pending introductions require explicit enrollment before automated processing.
+- [ ] Read cursors acknowledge only delivered messages; delivery/duplicate/reconnect/storage-pressure/concurrent-write tests preserve text and exact receipts.
+
+<a id="pact-150"></a>
+## PACT-150 — Expose neutral environmental context and agent strategic freedom
+
+**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-148](phase-3-season-one.md#pact-148), [PACT-146](phase-3-season-one.md#pact-146)
+
+**Components:** application agent guide, contracts, local controller, inference.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [rules](../pact/rules.md) · **Release checks:** S01, R07, A05
+
+**Implement / deliver**
+
+- Audit guides, tool descriptions, default notes, prompts, local controllers and recovery hints; remove imposed roles or reply/cooperation/aggression priorities.
+- Expose actual discovery, rights, current limits and attributed statements/records without certifying unknown counterpart facts.
+
+**Acceptance**
+
+- [ ] No default instruction prescribes deception, honesty of negotiation position, aggression, cooperation or mechanic usage; owner objectives stay free-form.
+- [ ] Legitimate bargaining/bluff/selective-disclosure/in-game persuasion fixtures are processable while peer prose cannot change platform ownership/tools/authority.
+- [ ] Human/agent audience and host-reported model labels are distinct; discovery and private views retain authorized pagination.
+
+<a id="pact-151"></a>
+## PACT-151 — Build conversation workspace agreement tracks and consented society views
+
+**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-147](phase-3-season-one.md#pact-147), [PACT-149](phase-3-season-one.md#pact-149), [PACT-150](phase-3-season-one.md#pact-150)
+
+**Components:** web, shared UI, MCP app, projections.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [experience](../pact/experience.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md) · **Release checks:** S01, S02, A08
+
+**Implement / deliver**
+
+- Replace overlapping Council communication presentation with searchable Conversations, per-peer timeline and agreement/consequence panel; route mobile views independently.
+- Link structured offers/counters/signatures/activation/delivery/default with deep links and optional visibility-respecting society map.
+
+**Acceptance**
+
+- [ ] Browser/mobile fixtures show actual thread, unread/waiting state, version changes, correct signature/activation and precise approval/host blockers without giant disclosures.
+- [ ] Agreement tracks project existing records and never promote prose promises to contracts; historical and live deltas reconcile without duplicates.
+- [ ] Participant-only reads and two-party synthetic observation consent/revocation pass; real private chats, notes, model reasoning and credentials remain inaccessible to public maps.
+
+<a id="pact-152"></a>
+## PACT-152 — Add exact decision calculations optional candidates and reads before action
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-150](phase-3-season-one.md#pact-150)
+
+**Components:** domain rules, application, local controller, model adapters.
+
+**Specification:** [rules](../pact/rules.md), [runtime](../pact/runtime.md), [chatgpt](../pact/chatgpt.md), [architecture](../pact/architecture.md) · **Release checks:** R01, R07, S01
+
+**Implement / deliver**
+
+- Reuse pure shared rules for costs, exposure, prerequisites, upkeep, rates and known operation effects; label forecast assumptions and freshness.
+- Add optional candidate-ID selection and bounded observe/read/decide/validate loops while preserving direct authorized action access.
+
+**Acceptance**
+
+- [ ] Calculated values match shared rule fixtures with exact units; hidden opponent facts are neither inferred as certainty nor exposed.
+- [ ] Candidates include wait/read/decline and cannot become a restricted action whitelist or hidden strategic priority.
+- [ ] Missing facts can be read before a commitment; stale/dependent changes revalidate and pending retries preserve IDs; token/latency measurements separate parsing from usefulness.
+
+<a id="pact-153"></a>
+## PACT-153 — Persist private goals relationship memory and factual consequences
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-149](phase-3-season-one.md#pact-149), [PACT-152](phase-3-season-one.md#pact-152)
+
+**Components:** projections, notes, memory retrieval, privacy.
+
+**Specification:** [chatgpt](../pact/chatgpt.md), [privacy](../pact/privacy.md), [social](../pact/social.md), [runtime](../pact/runtime.md) · **Release checks:** S01, S02, A08
+
+**Implement / deliver**
+
+- Retain attributed statements, proposals, signatures, deliveries/defaults, operations and revisable assessments linked to authorized source records.
+- Add private objective/milestone/question memory with relationship-aware retrieval, export/deletion and recovery across model/host changes.
+
+**Acceptance**
+
+- [ ] Knowledge carries provenance/visibility/observation time; claims and generated assessments never become engine facts.
+- [ ] The agent can revise its private strategy instructions without changing permissions; no hidden reasoning or unauthorized peer plans are stored.
+- [ ] Long conversations and changed strategy survive restart/model changes; forgetting/export and correction fixtures preserve factual receipts and retention rules.
+
+<a id="pact-154"></a>
+## PACT-154 — Implement explicit persistent enrollment and bounded work scheduling
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-149](phase-3-season-one.md#pact-149), [PACT-153](phase-3-season-one.md#pact-153)
+
+**Components:** runs, queue, MCP, local supervisor, web.
+
+**Specification:** [runtime](../pact/runtime.md), [chatgpt](../pact/chatgpt.md), [architecture](../pact/architecture.md), [privacy](../pact/privacy.md) · **Release checks:** A05, A06, A08, S01
+
+**Implement / deliver**
+
+- Add owner-revocable persistent enrollment separate from model-controlled runs; coalesce eligible events into bounded slices under one kingdom lease.
+- Expose actual heartbeat, pending work, budget/cooling/host state and stop/reconnect; preserve low-pressure local profile and terminal experiments.
+
+**Acceptance**
+
+- [ ] Messages cannot start unconsented inference or renew model authority; enrollment/revocation/budget/deadline/crash tests preserve exact commands and ownership.
+- [ ] Simultaneous hosts serialize writes; overloaded/backlogged events coalesce without recursive inference loops or dropped durable work.
+- [ ] Windows/WSL/app offline states and Berlin/DST schedule times are explicit; hourly/60-second/unload profile survives restart unless separately authorized to change.
+
+<a id="pact-155"></a>
+## PACT-155 — Certify local and Codex Luna Astra game runner routes
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-154](phase-3-season-one.md#pact-154), [PACT-157](phase-3-season-one.md#pact-157)
+
+**Components:** runner adapters, local operations, Codex integration.
+
+**Specification:** [access](../pact/access.md), [runtime](../pact/runtime.md), [chatgpt](../pact/chatgpt.md), [architecture](../pact/architecture.md) · **Release checks:** A03, A04, A06, R07
+
+**Implement / deliver**
+
+- Use owner-bound isolated game workspaces/adapters for existing Ollama and scripted Codex CLI with Luna/Astra; keep credentials and model auth local.
+- Prepare scheduler/compute accounting/host recovery and same-environment comparison without provisioning a new pilot.
+
+**Acceptance**
+
+- [ ] Actual available selected models perform a bounded synthetic authorized read/decision/write with real receipts; structured JSON alone is insufficient.
+- [ ] Codex unattended route, auth renewal, rate exhaustion, scoped permissions and stop behavior pass without exposing broad shell access to peer messages.
+- [ ] Same owner/memory/commands are preserved; measured calls/tokens/credits/latency and local GPU load are recorded, with no account rotation to bypass provider limits.
+
+**External prerequisites:** Luna/Astra access and authenticated owner route on the intended machine; model aliases verified at execution time.; Covering authorization for any live certification calls and their exact request/spend bounds..
+
+<a id="pact-156"></a>
+## PACT-156 — Certify actual ChatGPT scheduled PACT and multi-login operation
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-151](phase-3-season-one.md#pact-151), [PACT-154](phase-3-season-one.md#pact-154), [PACT-157](phase-3-season-one.md#pact-157)
+
+**Components:** personal plugin, OAuth, MCP, scheduler operations.
+
+**Specification:** [access](../pact/access.md), [runtime](../pact/runtime.md), [chatgpt](../pact/chatgpt.md), [architecture](../pact/architecture.md) · **Release checks:** A04, A06, A08, S01
+
+**Implement / deliver**
+
+- Prepare one owner-bound task/connection per authorized account through actual supported ChatGPT/desktop scheduling surfaces.
+- Test scheduled MCP access, renewed bounded leases, delegation and independent login/usage state rather than assuming scheduler support proves gameplay.
+
+**Acceptance**
+
+- [ ] A real scheduled invocation reads and commits through PACT without unexpected authentication/approval; unsupported host/model/tool routes are labelled unsupported.
+- [ ] Distinct legitimate logins/kingdoms cannot cross credentials/memory, overlap writers or bypass plan limits; availability and billing remain route-specific.
+- [ ] Task stop/reconnect/offline/timezone/budget behavior is measured; manual alternative stays available without silently substituting a model/host.
+
+**External prerequisites:** Actual owner-authorized accounts, eligible scheduling/model access and each account-specific PACT connection.; Covering authorization for creation of tasks/accounts and bounded live acceptance calls; no PACT app-event trigger is assumed..
+
+<a id="pact-157"></a>
+## PACT-157 — Evaluate decision quality communication freedom and service load offline
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-146](phase-3-season-one.md#pact-146), [PACT-152](phase-3-season-one.md#pact-152), [PACT-153](phase-3-season-one.md#pact-153)
+
+**Components:** evaluation harness, load fixtures, rules, local models.
+
+**Specification:** [delivery](../pact/delivery.md), [rules](../pact/rules.md), [runtime](../pact/runtime.md), [chatgpt](../pact/chatgpt.md), [privacy](../pact/privacy.md) · **Release checks:** R07, S01, S02, A08
+
+**Implement / deliver**
+
+- Compare calculated/current/candidate/model policies on held-out scenarios with controlled information and explicit owner goals.
+- Exercise 20/50/100 relationship delivery/retention/pagination and bargaining/deception/host-failure cases without starting production players.
+
+**Acceptance**
+
+- [ ] Scenarios include bluffing/selective disclosure, competing proposals, costly obligations, peer prompt injection, stale state, passive peers and revocation; platform authority stays intact.
+- [ ] Metrics separate justified waiting, useful outcomes, terms changed, activation/delivery/default, repetitive text/denials and model-compute costs from JSON validity.
+- [ ] Dataset split prevents adjacent-turn leakage and scoring does not reward cooperation/aggression mechanically; service load and observer privacy fixtures pass.
+
+**External prerequisites:** Any real local/cloud inference benchmark needs a covering compute authorization with workload bounds..
+
+<a id="pact-158"></a>
+## PACT-158 — Observe an authorized mixed-model communication society pilot
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** gate
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-151](phase-3-season-one.md#pact-151), [PACT-155](phase-3-season-one.md#pact-155), [PACT-156](phase-3-season-one.md#pact-156), [PACT-157](phase-3-season-one.md#pact-157)
+
+**Components:** pilot harness, operations, communication UI.
+
+**Specification:** [delivery](../pact/delivery.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** S01, S02, R07, A08
+
+**Implement / deliver**
+
+- Prepare proposed two-local/two-Luna/one-Astra-or-ChatGPT cohort, exact identities/settings/start/end/budgets and observer-consent manifest.
+- After explicit run authorization collect actual multi-party exchanges, negotiation funnel and game effects, preserving historical terminal runs.
+
+**Acceptance**
+
+- [ ] Ranked-account eligibility and synthetic observation consent are resolved; exact owner identities/settings/counters/permissions stay auditable and secrets private.
+- [ ] Infrastructure stop/auth/budget/thermal checks and actual conversations/agreements/outcomes are reported separately; failures are not replaced or hidden.
+- [ ] Short samples do not certify long-term society or strategic superiority; scripted coverage is separate from model-chosen emergent behavior; completion report and verified changes are committed.
+
+**External prerequisites:** Explicit founder authorization for account provisioning, candidate count, actual routes, fixed duration/request/spend ceilings and observation access.; All required live routes must pass; an unavailable route needs an explicit changed pilot design rather than silent substitution..
+
+<a id="pact-159"></a>
+## PACT-159 — Research measured prompt optimization or a local decision ranker
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-158](phase-3-season-one.md#pact-158)
+
+**Components:** offline research, evaluation, local models.
+
+**Specification:** [delivery](../pact/delivery.md), [runtime](../pact/runtime.md), [rules](../pact/rules.md), [chatgpt](../pact/chatgpt.md), [privacy](../pact/privacy.md) · **Release checks:** R07, S01
+
+**Implement / deliver**
+
+- Optionally evaluate GEPA-style prompt optimization or a small ranking model on assessed pilot/offline trajectories.
+- Compare held-out usefulness and cost against simpler calculated/small-model baselines; keep generated strategy parameters separate from authority.
+
+**Acceptance**
+
+- [ ] Historical repeated/failed play is not automatically labelled expert training data; provenance, privacy and scenario splits are documented.
+- [ ] Improvement is measured against owner outcomes and cost, not self-grading or forced mechanic coverage; inconclusive results remain valid.
+- [ ] No self-modifying live policy/authority deployment; selected artifact needs separate implementation/release authorization and rollback evidence.
+
+**External prerequisites:** Optional research activation and bounded compute/storage budget; no training experiment is currently authorized..

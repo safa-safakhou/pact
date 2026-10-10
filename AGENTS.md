@@ -4,6 +4,12 @@
 
 Always commit completed, verified changes before handing work back. This is standing authorization for local commits; push, deployment and new experiments still require covering authorization. Preserve unrelated work and never commit credentials or private runtime state.
 
+## Current design assignment — 10 October 2026
+
+PACT-145 consolidates the founder's communication-first agent society design at `docs/implementation/agent-society-plan-20261010.md`, with a synthetic communication UI mockup. PACT-146–159 are proposed, unstarted work covering diagnostics, remaining optional authentication, communication-policy revision/delegation, environmental agent context, conversation/agreement UI, exact decision support, memory, opt-in execution and local/Codex Luna/Astra/ChatGPT scheduler acceptance. This is planning authorization only; no new runs, schedules, implementation activation, permission/rules changes or deployment. The first proposed implementation is PACT-146 under a covering assignment. The original 24 Later tasks remain deferred. Current product specifications/hashes stay unchanged until an explicit correction is implemented.
+
+PACT-144 authentication/navigation released as `authentication-ui-20261010-3`; read `docs/implementation/reports/authentication-ui-20261010.md` for captured-email and actual device-test limitations. The fifty-owner Windows task was already stopped at the 10 October checks, despite a stale running checkpoint label. Preserve its original identities/counters/pending commands and PACT-143 hourly/60-second/unload settings; this design assignment does not restart it. Both finite historical experiments remain terminal.
+
 ## Current assignment — continuous full-game local players, 9 October 2026
 
 PACT-143: the founder requested immediate machine-load reduction. The same fifty-owner Qwen 9B run now has hourly minimum owner turns, staggered scheduling, a persisted sixty-second cooling gap and immediate model unloading. Read `docs/implementation/reports/continuous-low-pressure-20261009.md`. Keep this low-pressure pacing until a covering founder request changes it; preserve identities/counters/pending commands and the existing indefinite authorization.

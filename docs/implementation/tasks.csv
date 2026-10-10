@@ -143,3 +143,18 @@ PACT-141,Repair social read acknowledgment and local-player conversation workflo
 PACT-142,Switch existing continuous fifty-player population to tested Qwen 9B,3,done,implementation,Platform,M,PACT-053;PACT-138;PACT-139;PACT-141,S01;R07,phase-3-season-one.md#pact-142
 PACT-143,Reduce continuous local-player machine load with staggered hourly pacing,3,done,implementation,Platform,M,PACT-053;PACT-138;PACT-142,S01;R07,phase-3-season-one.md#pact-143
 PACT-144,Persist existing player access across browsers and devices and simplify game navigation,3,done,implementation,Platform,L,PACT-053;PACT-006;PACT-127;PACT-142,A01;S01,phase-3-season-one.md#pact-144
+PACT-145,Consolidate communication-first agent society design and plan,3,done,planning,Platform,S,PACT-053;PACT-144;PACT-141,S01;A01;R07,phase-3-season-one.md#pact-145
+PACT-146,Diagnose communication refusals approvals and actual runner state,3,todo,implementation,Platform,M,PACT-053;PACT-145;PACT-141,S01;A08,phase-3-season-one.md#pact-146
+PACT-147,Complete optional kingdom recovery and authentication acceptance,3,todo,implementation,Platform,M,PACT-053;PACT-145;PACT-144,A01;A08,phase-3-season-one.md#pact-147
+PACT-148,Version communication capacity and delegated social authority changes,3,todo,implementation,Platform,L,PACT-053;PACT-145;PACT-146,S01;S02;A05,phase-3-season-one.md#pact-148
+PACT-149,Implement delegated introductions and durable conversation delivery,3,todo,implementation,Platform,L,PACT-053;PACT-148;PACT-146,S01;S02;A05,phase-3-season-one.md#pact-149
+PACT-150,Expose neutral environmental context and agent strategic freedom,3,todo,implementation,Platform,M,PACT-053;PACT-148;PACT-146,S01;R07;A05,phase-3-season-one.md#pact-150
+PACT-151,Build conversation workspace agreement tracks and consented society views,3,todo,implementation,Frontend,L,PACT-053;PACT-147;PACT-149;PACT-150,S01;S02;A08,phase-3-season-one.md#pact-151
+PACT-152,Add exact decision calculations optional candidates and reads before action,3,todo,implementation,Platform,L,PACT-053;PACT-150,R01;R07;S01,phase-3-season-one.md#pact-152
+PACT-153,Persist private goals relationship memory and factual consequences,3,todo,implementation,Platform,L,PACT-053;PACT-149;PACT-152,S01;S02;A08,phase-3-season-one.md#pact-153
+PACT-154,Implement explicit persistent enrollment and bounded work scheduling,3,todo,implementation,Platform,L,PACT-053;PACT-149;PACT-153,A05;A06;A08;S01,phase-3-season-one.md#pact-154
+PACT-155,Certify local and Codex Luna Astra game runner routes,3,todo,implementation,Platform,L,PACT-053;PACT-154;PACT-157,A03;A04;A06;R07,phase-3-season-one.md#pact-155
+PACT-156,Certify actual ChatGPT scheduled PACT and multi-login operation,3,todo,implementation,Platform,L,PACT-053;PACT-151;PACT-154;PACT-157,A04;A06;A08;S01,phase-3-season-one.md#pact-156
+PACT-157,Evaluate decision quality communication freedom and service load offline,3,todo,implementation,Platform,L,PACT-053;PACT-146;PACT-152;PACT-153,R07;S01;S02;A08,phase-3-season-one.md#pact-157
+PACT-158,Observe an authorized mixed-model communication society pilot,3,todo,gate,Platform,L,PACT-053;PACT-151;PACT-155;PACT-156;PACT-157,S01;S02;R07;A08,phase-3-season-one.md#pact-158
+PACT-159,Research measured prompt optimization or a local decision ranker,3,todo,implementation,Platform,L,PACT-053;PACT-158,R07;S01,phase-3-season-one.md#pact-159

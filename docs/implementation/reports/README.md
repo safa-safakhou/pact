@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Communication and agent society design](../agent-society-plan-20261010.md) — PACT-145, consolidated planning and interactive synthetic communication UI. PACT-146–159 are proposed and unstarted; no live rules, runners or experiments were activated.
+
 - [Persistent player access and focused navigation](authentication-ui-20261010.md) — PACT-144, founder-authorized existing-account recovery and web simplification; release evidence recorded in the report.
 
 - [Low-pressure local players](continuous-low-pressure-20261009.md) — PACT-143, hourly staggered pacing, persisted cooling and immediate model unloading for the same fifty continuous owners.
