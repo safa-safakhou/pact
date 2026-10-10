@@ -7538,7 +7538,8 @@
         "rules",
         "architecture",
         "privacy",
-        "experience"
+        "experience",
+        "product"
       ],
       "covers": [
         "S01",
@@ -7547,7 +7548,8 @@
       ],
       "scope": [
         "Consolidate founder-requested authentication gaps, communication rules, environmental interfaces, UI, exact decision support, memories and future local/Codex/ChatGPT runners.",
-        "Record rule-correction boundaries, proposed dependencies, acceptance, a synthetic UI mockup and future experiments without activating them."
+        "Record rule-correction boundaries, proposed dependencies, acceptance, a synthetic UI mockup and future experiments without activating them.",
+        "Extend the same plan with researched four-set collections, eight new achievements, story keepsakes, cosmetic display/privacy, optional rare finishes and a synthetic collection UI; founder chose planning first."
       ],
       "acceptance": [
         "One linked design covers every requested area with existing versus proposed behavior distinguished.",
@@ -7564,7 +7566,13 @@
         "docs/implementation/design/agent-society-mobile.jpg",
         "Browser mockup checks: search, waiting/delivering filters, timeline/tracks, draft labels, sample composer, society links, introduction and mobile navigation passed; error logs empty. No live game changes.",
         "Planning render/check: 159 unique acyclic tickets; local links and HTML script syntax passed; historical 144 ticket records and specification hashes unchanged.",
-        "Linear creation rejected at workspace free issue limit, request a481dad9ec5c7397; local execution record only."
+        "Linear creation rejected at workspace free issue limit, request a481dad9ec5c7397; local execution record only.",
+        "docs/implementation/reports/agent-society-collections-20261010.md",
+        "docs/implementation/design/agent-society-collection-desktop.jpg",
+        "docs/implementation/design/agent-society-collection-mobile.jpg",
+        "10 Oct collection extension: founder chose planning first; researched four sets/sixteen pieces/eight new cosmetic-only achievements/four trophies, source-linked keepsakes, display/privacy and optional rare finishes in the same plan.",
+        "Browser collection checks at 1360x920 and 390x844 passed entry, filters/empty/locked states, pin, local equipment/card preview, source conversation/active agreement, defeat/recovery and mobile back; errors empty, screenshots inspected.",
+        "Planning render/check passed: 165 unique acyclic tickets, 37 criteria, historical 144 records and source hashes/run metadata preserved; 20 proposals todo/unassigned. Local links/DOM/catalog IDs, Node script syntax and diff whitespace passed; protected rarity mean 26.0300 draws / 3.8417% checked arithmetically, no live random implementation."
       ],
       "assignee": "codex-agent-society-plan",
       "blocked_by_external": [],
@@ -8186,7 +8194,8 @@
       ],
       "scope": [
         "Prepare proposed two-local/two-Luna/one-Astra-or-ChatGPT cohort, exact identities/settings/start/end/budgets and observer-consent manifest.",
-        "After explicit run authorization collect actual multi-party exchanges, negotiation funnel and game effects, preserving historical terminal runs."
+        "After explicit run authorization collect actual multi-party exchanges, negotiation funnel and game effects, preserving historical terminal runs.",
+        "A collection-enabled observation arm is optional and separately bounded; it requires PACT-164 acceptance and reviewed pinned-goal settings. The communication-only pilot need not wait for collections."
       ],
       "acceptance": [
         "Ranked-account eligibility and synthetic observation consent are resolved; exact owner identities/settings/counters/permissions stay auditable and secrets private.",
@@ -8250,6 +8259,308 @@
       "assignee": null,
       "blocked_by_external": [
         "Optional research activation and bounded compute/storage budget; no training experiment is currently authorized."
+      ],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "plan": "agent-society-plan-20261010.md",
+      "implementation_authorization": "proposed_not_started"
+    },
+    {
+      "id": "PACT-160",
+      "title": "Specify collection catalog achievement extensions and reward eligibility",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-145",
+        "PACT-047"
+      ],
+      "sources": [
+        "product",
+        "rules",
+        "social",
+        "privacy",
+        "experience"
+      ],
+      "covers": [
+        "L02",
+        "L03",
+        "A08"
+      ],
+      "scope": [
+        "Record explicit versioned corrections for four collections, eight new cosmetic-only achievements, private keepsakes, display slots, source visibility and bounded original art.",
+        "Preserve the original eight triggers, entitlements and once-only 25-Gem awards; separately review optional rare-finish odds/protection and synthetic-cohort eligibility."
+      ],
+      "acceptance": [
+        "Current versus proposed mechanics and affected source snapshots/tasks are reconciled through an explicit specification correction, never silently changed by the plan.",
+        "No reward for raw communication/approval/inference counts, permission expansion or paid model use; new achievements/set trophies confer no Gems, power, quotas or presence.",
+        "Exact positive-delivery, counteroffer, Court-interval, battle and season predicates are testable; missing history and collusion limits are documented; random finishes remain separately gated."
+      ],
+      "components": [
+        "rules catalog",
+        "product design",
+        "privacy",
+        "art inventory"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Covering implementation assignment and final reviewed collection/rules/asset choices; planning alone activates none."
+      ],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "plan": "agent-society-plan-20261010.md",
+      "implementation_authorization": "proposed_not_started"
+    },
+    {
+      "id": "PACT-161",
+      "title": "Extend trusted achievement events and collection progress projections",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-160",
+        "PACT-149"
+      ],
+      "sources": [
+        "rules",
+        "product",
+        "privacy",
+        "architecture",
+        "social"
+      ],
+      "covers": [
+        "R01",
+        "L02",
+        "A08"
+      ],
+      "scope": [
+        "Extend existing transaction-bound achievement/entitlement projection for eight new conditions and set completion, with authorized progress/source reads.",
+        "Version catalog and provenance migration, preserve old grants, add projection watermarks and prove producer/consumer/read wiring through actual shared handlers."
+      ],
+      "acceptance": [
+        "Replayed/reordered events, concurrent consumers and rollback never duplicate progress, entitlements or original Gem grants; no public/model reward injector exists.",
+        "Fixtures cover both acknowledged messages, changed signed economic terms followed by positive bilateral settlement, distinct counterpart/resource keys, renewed contracts, sustained Court membership, resolved ordinary-troop combat and actual season participation.",
+        "Historical entitlements backfill exactly; missing versions/intervals/settlements stay unavailable; ownership/retention/export and source anonymization pass without retaining private transcripts.",
+        "Bounded projection failures/lag do not stop world settlement; build/type/migration/integration checks and module documentation pass."
+      ],
+      "components": [
+        "achievements",
+        "outbox",
+        "catalog",
+        "read projections",
+        "migrations"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "plan": "agent-society-plan-20261010.md",
+      "implementation_authorization": "proposed_not_started"
+    },
+    {
+      "id": "PACT-162",
+      "title": "Create deterministic story keepsakes and account-bound display equipment",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-161"
+      ],
+      "sources": [
+        "product",
+        "rules",
+        "social",
+        "privacy",
+        "experience",
+        "architecture"
+      ],
+      "covers": [
+        "L02",
+        "L03",
+        "A08"
+      ],
+      "scope": [
+        "Add private source-linked campaign/story instances distinct from permanent item-template entitlements; resolved defeat and recovery remain factual.",
+        "Implement four cosmetic display slots, compact sanitized card projection and bounded original assets using existing shared authenticated commands."
+      ],
+      "acceptance": [
+        "Each resolved participant incident is recorded once; canceled attacks/unsigned offers mint nothing, and cosmetics alter no stocks, combat dice/results, Fortune, authority or action allowances.",
+        "Human preview versus committed equipment is distinct; same-account device/model recovery, concurrent save and rollback preserve ownership/equipment.",
+        "Public cards contain no peer identities, message text, resource terms or source-access capability; participant links reauthorize and degrade truthfully after retention/consent changes.",
+        "Deterministic catalog and twenty bounded original assets work without an inference call, shop, random finish, payment adapter or new collection currency."
+      ],
+      "components": [
+        "keepsakes",
+        "equipment",
+        "shared commands",
+        "cosmetic assets",
+        "privacy"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "plan": "agent-society-plan-20261010.md",
+      "implementation_authorization": "proposed_not_started"
+    },
+    {
+      "id": "PACT-163",
+      "title": "Build Hall of Stories and communication-linked collection UI",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Frontend",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-151",
+        "PACT-162"
+      ],
+      "sources": [
+        "product",
+        "experience",
+        "social",
+        "privacy",
+        "architecture"
+      ],
+      "covers": [
+        "L02",
+        "S02",
+        "A08"
+      ],
+      "scope": [
+        "Add Kingdom Collection routes for sets, keepsakes and display; link conversation/contract discoveries to their factual incident.",
+        "Provide optional pinned goals, exact locked-piece requirements, source/privacy explanations and grouped human-return discoveries without new primary-menu clutter."
+      ],
+      "acceptance": [
+        "Desktop/mobile/keyboard/reduced-motion flows support browse/filter/item/detail/back/display; current, missing and lagging history are distinguishable without an Advanced drawer.",
+        "Owned pieces auto-unlock without claim clicks; goals are optional, no streak/FOMO timers or approval/message farming; defeat costs precede cosmetic reveals.",
+        "Cross-device saves and stale conflicts are truthful; owner/private/public/observer routes cannot leak source content or unfinished goals; any deliberately displayed experiment label remains truthful.",
+        "Conversation and collection share one factual event/projection; a displayed piece neither publishes a Seal nor expands authority or source permissions."
+      ],
+      "components": [
+        "web",
+        "shared UI",
+        "conversation timeline",
+        "collection workspace"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "plan": "agent-society-plan-20261010.md",
+      "implementation_authorization": "proposed_not_started"
+    },
+    {
+      "id": "PACT-164",
+      "title": "Validate collection incentives privacy and exploit resistance offline",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-157",
+        "PACT-163"
+      ],
+      "sources": [
+        "delivery",
+        "product",
+        "rules",
+        "privacy",
+        "social"
+      ],
+      "covers": [
+        "L02",
+        "L03",
+        "R07",
+        "A08"
+      ],
+      "scope": [
+        "Add deterministic outcome/provenance, farming, deletion, cross-device and load cases to the communication evaluation harness.",
+        "Define a later separately authorized human/cohort comparison of collection engagement and strategic side effects; do not start a pilot or select agent goals automatically."
+      ],
+      "acceptance": [
+        "Raw-message/approval/declaration/retry floods and known same-owner synthetic fixtures mint no repeated/scarce grants or resource benefits; unknown-alt limits remain explicit.",
+        "Progress/entitlements/source links preserve migration, worker restart, poisoned-event isolation, rollback and observer consent; build/type/behavior checks pass.",
+        "Collection completion, meaningful exchange/negotiation outcomes, repetitive actions, unique outcomes, human comprehension/enjoyment and compute/GPU cost are reported separately; cosmetic progress alone never establishes intelligent play.",
+        "Any human test/live collection-enabled arm has explicit identities/consent/duration/compute bounds and records useful refusal/failure; no additional run is currently authorized."
+      ],
+      "components": [
+        "offline evaluation",
+        "load fixtures",
+        "privacy verification",
+        "human test design"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Real human feedback or a collection-enabled live comparison needs a covering test assignment and consenting participants."
+      ],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "plan": "agent-society-plan-20261010.md",
+      "implementation_authorization": "proposed_not_started"
+    },
+    {
+      "id": "PACT-165",
+      "title": "Evaluate optional earned rare campaign finishes with published odds",
+      "phase": 3,
+      "status": "todo",
+      "kind": "implementation",
+      "owner_role": "Rules",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-160",
+        "PACT-164"
+      ],
+      "sources": [
+        "rules",
+        "product",
+        "social",
+        "privacy",
+        "experience"
+      ],
+      "covers": [
+        "R01",
+        "L02",
+        "L03"
+      ],
+      "scope": [
+        "Separately evaluate the proposed earned-only rare-finish branch, integer distribution, eligibility allocation and persistent protection before any implementation activation.",
+        "If specifically assigned, implement audited post-resolution cosmetic draws independent of combat randomness with truthful base/next/long-run odds and no paid reroll."
+      ],
+      "acceptance": [
+        "The 7500/2000/400/100 review table sums to 10000; thirtieth-draw protection changes overall Mythic frequency and UI discloses the protected 100% draw rather than advertising a flat 1%.",
+        "Account/source/version keys, game-week/opponent eligibility, event ordering, retries, rollback, recovery and seasons cannot reroll or reset protection; no requirement to cause casualties, win or complete random sets.",
+        "Cosmetic RNG changes no battle result, resources, quotas or agent schedule; synthetic experiments are excluded unless explicitly enrolled; public metadata exposes no hidden opponents/army state.",
+        "Human comprehension, exploit/issuance rate and long-wait impact are measured under a separate reviewed activation; negative results leave deterministic collections available."
+      ],
+      "components": [
+        "optional cosmetic RNG",
+        "rarity analysis",
+        "eligibility ledger",
+        "UI odds"
+      ],
+      "evidence": [],
+      "assignee": null,
+      "blocked_by_external": [
+        "Separate approval of randomized-finish specification/settings and any bounded live observation; deterministic collection delivery does not activate this option."
       ],
       "block_reason": null,
       "delivery_track": "chatgpt",
@@ -8541,7 +8852,13 @@
       "PACT-156",
       "PACT-157",
       "PACT-158",
-      "PACT-159"
+      "PACT-159",
+      "PACT-160",
+      "PACT-161",
+      "PACT-162",
+      "PACT-163",
+      "PACT-164",
+      "PACT-165"
     ],
     "execution": "planning_complete",
     "implementation_authorized": false,
@@ -8549,6 +8866,31 @@
     "first_proposed_implementation": "PACT-146",
     "production_roadmap_deferred": true,
     "tracking": "Linear create rejected at workspace free issue limit, request a481dad9ec5c7397; repository is the local record.",
-    "completed_at": "2026-10-10"
+    "completed_at": "2026-10-10",
+    "collection_extension": {
+      "authorized_at": "2026-10-10",
+      "scope_choice": "Expand the plan first",
+      "proposed_ids": [
+        "PACT-160",
+        "PACT-161",
+        "PACT-162",
+        "PACT-163",
+        "PACT-164",
+        "PACT-165"
+      ],
+      "execution": "planning_complete",
+      "implementation_authorized": false,
+      "deterministic_catalog": {
+        "sets": 4,
+        "pieces": 16,
+        "existing_achievements": 8,
+        "new_achievements": 8,
+        "set_trophies": 4
+      },
+      "random_finishes": "optional_proposed_not_started",
+      "new_runs_authorized": false,
+      "completed_at": "2026-10-10",
+      "completion_report": "reports/agent-society-collections-20261010.md"
+    }
   }
 }

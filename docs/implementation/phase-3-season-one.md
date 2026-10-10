@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**81 tickets · 50 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 50 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2062,12 +2062,13 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** planning, web design.
 
-**Specification:** [chatgpt](../pact/chatgpt.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [access](../pact/access.md), [rules](../pact/rules.md), [architecture](../pact/architecture.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** S01, A01, R07
+**Specification:** [chatgpt](../pact/chatgpt.md), [runtime](../pact/runtime.md), [social](../pact/social.md), [access](../pact/access.md), [rules](../pact/rules.md), [architecture](../pact/architecture.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md), [product](../pact/product.md) · **Release checks:** S01, A01, R07
 
 **Implement / deliver**
 
 - Consolidate founder-requested authentication gaps, communication rules, environmental interfaces, UI, exact decision support, memories and future local/Codex/ChatGPT runners.
 - Record rule-correction boundaries, proposed dependencies, acceptance, a synthetic UI mockup and future experiments without activating them.
+- Extend the same plan with researched four-set collections, eight new achievements, story keepsakes, cosmetic display/privacy, optional rare finishes and a synthetic collection UI; founder chose planning first.
 
 **Acceptance**
 
@@ -2085,6 +2086,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Browser mockup checks: search, waiting/delivering filters, timeline/tracks, draft labels, sample composer, society links, introduction and mobile navigation passed; error logs empty. No live game changes.
 - Planning render/check: 159 unique acyclic tickets; local links and HTML script syntax passed; historical 144 ticket records and specification hashes unchanged.
 - Linear creation rejected at workspace free issue limit, request a481dad9ec5c7397; local execution record only.
+- docs/implementation/reports/agent-society-collections-20261010.md
+- docs/implementation/design/agent-society-collection-desktop.jpg
+- docs/implementation/design/agent-society-collection-mobile.jpg
+- 10 Oct collection extension: founder chose planning first; researched four sets/sixteen pieces/eight new cosmetic-only achievements/four trophies, source-linked keepsakes, display/privacy and optional rare finishes in the same plan.
+- Browser collection checks at 1360x920 and 390x844 passed entry, filters/empty/locked states, pin, local equipment/card preview, source conversation/active agreement, defeat/recovery and mobile back; errors empty, screenshots inspected.
+- Planning render/check passed: 165 unique acyclic tickets, 37 criteria, historical 144 records and source hashes/run metadata preserved; 20 proposals todo/unassigned. Local links/DOM/catalog IDs, Node script syntax and diff whitespace passed; protected rarity mean 26.0300 draws / 3.8417% checked arithmetically, no live random implementation.
 
 <a id="pact-146"></a>
 ## PACT-146 — Diagnose communication refusals approvals and actual runner state
@@ -2401,6 +2408,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - Prepare proposed two-local/two-Luna/one-Astra-or-ChatGPT cohort, exact identities/settings/start/end/budgets and observer-consent manifest.
 - After explicit run authorization collect actual multi-party exchanges, negotiation funnel and game effects, preserving historical terminal runs.
+- A collection-enabled observation arm is optional and separately bounded; it requires PACT-164 acceptance and reviewed pinned-goal settings. The communication-only pilot need not wait for collections.
 
 **Acceptance**
 
@@ -2435,3 +2443,158 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] No self-modifying live policy/authority deployment; selected artifact needs separate implementation/release authorization and rollback evidence.
 
 **External prerequisites:** Optional research activation and bounded compute/storage budget; no training experiment is currently authorized..
+
+<a id="pact-160"></a>
+## PACT-160 — Specify collection catalog achievement extensions and reward eligibility
+
+**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-145](phase-3-season-one.md#pact-145), [PACT-047](phase-1-rules.md#pact-047)
+
+**Components:** rules catalog, product design, privacy, art inventory.
+
+**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** L02, L03, A08
+
+**Implement / deliver**
+
+- Record explicit versioned corrections for four collections, eight new cosmetic-only achievements, private keepsakes, display slots, source visibility and bounded original art.
+- Preserve the original eight triggers, entitlements and once-only 25-Gem awards; separately review optional rare-finish odds/protection and synthetic-cohort eligibility.
+
+**Acceptance**
+
+- [ ] Current versus proposed mechanics and affected source snapshots/tasks are reconciled through an explicit specification correction, never silently changed by the plan.
+- [ ] No reward for raw communication/approval/inference counts, permission expansion or paid model use; new achievements/set trophies confer no Gems, power, quotas or presence.
+- [ ] Exact positive-delivery, counteroffer, Court-interval, battle and season predicates are testable; missing history and collusion limits are documented; random finishes remain separately gated.
+
+**External prerequisites:** Covering implementation assignment and final reviewed collection/rules/asset choices; planning alone activates none..
+
+<a id="pact-161"></a>
+## PACT-161 — Extend trusted achievement events and collection progress projections
+
+**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-160](phase-3-season-one.md#pact-160), [PACT-149](phase-3-season-one.md#pact-149)
+
+**Components:** achievements, outbox, catalog, read projections, migrations.
+
+**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [social](../pact/social.md) · **Release checks:** R01, L02, A08
+
+**Implement / deliver**
+
+- Extend existing transaction-bound achievement/entitlement projection for eight new conditions and set completion, with authorized progress/source reads.
+- Version catalog and provenance migration, preserve old grants, add projection watermarks and prove producer/consumer/read wiring through actual shared handlers.
+
+**Acceptance**
+
+- [ ] Replayed/reordered events, concurrent consumers and rollback never duplicate progress, entitlements or original Gem grants; no public/model reward injector exists.
+- [ ] Fixtures cover both acknowledged messages, changed signed economic terms followed by positive bilateral settlement, distinct counterpart/resource keys, renewed contracts, sustained Court membership, resolved ordinary-troop combat and actual season participation.
+- [ ] Historical entitlements backfill exactly; missing versions/intervals/settlements stay unavailable; ownership/retention/export and source anonymization pass without retaining private transcripts.
+- [ ] Bounded projection failures/lag do not stop world settlement; build/type/migration/integration checks and module documentation pass.
+
+<a id="pact-162"></a>
+## PACT-162 — Create deterministic story keepsakes and account-bound display equipment
+
+**Status:** todo · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-161](phase-3-season-one.md#pact-161)
+
+**Components:** keepsakes, equipment, shared commands, cosmetic assets, privacy.
+
+**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md), [architecture](../pact/architecture.md) · **Release checks:** L02, L03, A08
+
+**Implement / deliver**
+
+- Add private source-linked campaign/story instances distinct from permanent item-template entitlements; resolved defeat and recovery remain factual.
+- Implement four cosmetic display slots, compact sanitized card projection and bounded original assets using existing shared authenticated commands.
+
+**Acceptance**
+
+- [ ] Each resolved participant incident is recorded once; canceled attacks/unsigned offers mint nothing, and cosmetics alter no stocks, combat dice/results, Fortune, authority or action allowances.
+- [ ] Human preview versus committed equipment is distinct; same-account device/model recovery, concurrent save and rollback preserve ownership/equipment.
+- [ ] Public cards contain no peer identities, message text, resource terms or source-access capability; participant links reauthorize and degrade truthfully after retention/consent changes.
+- [ ] Deterministic catalog and twenty bounded original assets work without an inference call, shop, random finish, payment adapter or new collection currency.
+
+<a id="pact-163"></a>
+## PACT-163 — Build Hall of Stories and communication-linked collection UI
+
+**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-151](phase-3-season-one.md#pact-151), [PACT-162](phase-3-season-one.md#pact-162)
+
+**Components:** web, shared UI, conversation timeline, collection workspace.
+
+**Specification:** [product](../pact/product.md), [experience](../pact/experience.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md) · **Release checks:** L02, S02, A08
+
+**Implement / deliver**
+
+- Add Kingdom Collection routes for sets, keepsakes and display; link conversation/contract discoveries to their factual incident.
+- Provide optional pinned goals, exact locked-piece requirements, source/privacy explanations and grouped human-return discoveries without new primary-menu clutter.
+
+**Acceptance**
+
+- [ ] Desktop/mobile/keyboard/reduced-motion flows support browse/filter/item/detail/back/display; current, missing and lagging history are distinguishable without an Advanced drawer.
+- [ ] Owned pieces auto-unlock without claim clicks; goals are optional, no streak/FOMO timers or approval/message farming; defeat costs precede cosmetic reveals.
+- [ ] Cross-device saves and stale conflicts are truthful; owner/private/public/observer routes cannot leak source content or unfinished goals; any deliberately displayed experiment label remains truthful.
+- [ ] Conversation and collection share one factual event/projection; a displayed piece neither publishes a Seal nor expands authority or source permissions.
+
+<a id="pact-164"></a>
+## PACT-164 — Validate collection incentives privacy and exploit resistance offline
+
+**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-157](phase-3-season-one.md#pact-157), [PACT-163](phase-3-season-one.md#pact-163)
+
+**Components:** offline evaluation, load fixtures, privacy verification, human test design.
+
+**Specification:** [delivery](../pact/delivery.md), [product](../pact/product.md), [rules](../pact/rules.md), [privacy](../pact/privacy.md), [social](../pact/social.md) · **Release checks:** L02, L03, R07, A08
+
+**Implement / deliver**
+
+- Add deterministic outcome/provenance, farming, deletion, cross-device and load cases to the communication evaluation harness.
+- Define a later separately authorized human/cohort comparison of collection engagement and strategic side effects; do not start a pilot or select agent goals automatically.
+
+**Acceptance**
+
+- [ ] Raw-message/approval/declaration/retry floods and known same-owner synthetic fixtures mint no repeated/scarce grants or resource benefits; unknown-alt limits remain explicit.
+- [ ] Progress/entitlements/source links preserve migration, worker restart, poisoned-event isolation, rollback and observer consent; build/type/behavior checks pass.
+- [ ] Collection completion, meaningful exchange/negotiation outcomes, repetitive actions, unique outcomes, human comprehension/enjoyment and compute/GPU cost are reported separately; cosmetic progress alone never establishes intelligent play.
+- [ ] Any human test/live collection-enabled arm has explicit identities/consent/duration/compute bounds and records useful refusal/failure; no additional run is currently authorized.
+
+**External prerequisites:** Real human feedback or a collection-enabled live comparison needs a covering test assignment and consenting participants..
+
+<a id="pact-165"></a>
+## PACT-165 — Evaluate optional earned rare campaign finishes with published odds
+
+**Status:** todo · **Role:** Rules · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-160](phase-3-season-one.md#pact-160), [PACT-164](phase-3-season-one.md#pact-164)
+
+**Components:** optional cosmetic RNG, rarity analysis, eligibility ledger, UI odds.
+
+**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** R01, L02, L03
+
+**Implement / deliver**
+
+- Separately evaluate the proposed earned-only rare-finish branch, integer distribution, eligibility allocation and persistent protection before any implementation activation.
+- If specifically assigned, implement audited post-resolution cosmetic draws independent of combat randomness with truthful base/next/long-run odds and no paid reroll.
+
+**Acceptance**
+
+- [ ] The 7500/2000/400/100 review table sums to 10000; thirtieth-draw protection changes overall Mythic frequency and UI discloses the protected 100% draw rather than advertising a flat 1%.
+- [ ] Account/source/version keys, game-week/opponent eligibility, event ordering, retries, rollback, recovery and seasons cannot reroll or reset protection; no requirement to cause casualties, win or complete random sets.
+- [ ] Cosmetic RNG changes no battle result, resources, quotas or agent schedule; synthetic experiments are excluded unless explicitly enrolled; public metadata exposes no hidden opponents/army state.
+- [ ] Human comprehension, exploit/issuance rate and long-wait impact are measured under a separate reviewed activation; negative results leave deterministic collections available.
+
+**External prerequisites:** Separate approval of randomized-finish specification/settings and any bounded live observation; deterministic collection delivery does not activate this option..

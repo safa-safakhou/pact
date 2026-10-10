@@ -2,7 +2,9 @@
 
 ## Current assignment
 
-- [Communication and agent society design](../agent-society-plan-20261010.md) — PACT-145, consolidated planning and interactive synthetic communication UI. PACT-146–159 are proposed and unstarted; no live rules, runners or experiments were activated.
+- [Communication and agent society design](../agent-society-plan-20261010.md) — PACT-145, consolidated planning and interactive synthetic communication/collection UI. PACT-146–165 are proposed and unstarted; no live rules, runners or experiments were activated.
+
+- [Collection design extension](agent-society-collections-20261010.md) — PACT-145 planning follow-up: researched four-set catalog, eight new cosmetic-only achievements, source-linked keepsakes and display UI; optional random finishes separately proposed.
 
 - [Persistent player access and focused navigation](authentication-ui-20261010.md) — PACT-144, founder-authorized existing-account recovery and web simplification; release evidence recorded in the report.
 
