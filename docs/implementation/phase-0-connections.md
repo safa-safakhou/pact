@@ -548,6 +548,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - tests/integration/oauth.test.ts
 - docs/implementation/reports/chatgpt-account-link-repair-20261010.md
 - 10 October ChatGPT legacy-resource correction: build, typecheck, lint, 356 unit and 379 integration passes (one optional provider skip); exact resource/PKCE/refresh and canonical consent redirect regressions passed. Actual human host reconnect remains separate.
+- Released chatgpt-link-20261010-1 / bfe8a64 after successful encrypted backup and standard public deployment verification; four old/current host/resource combinations reach canonical account entry, exact redirect parameters retained, foreign resources 400, canonical metadata. No human consent or provider inference performed.
 
 <a id="pact-017"></a>
 ## PACT-017 — Implement the remote MCP transport and tool registry

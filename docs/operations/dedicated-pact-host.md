@@ -20,6 +20,8 @@ WireGuard `pact` is enabled on both hosts: old `10.77.0.1/30`, new `10.77.0.2/30
 
 ## Layout and operations
 
+Current release, 10 October: **`chatgpt-link-20261010-1` / `bfe8a64`**. Exact old MCP resource compatibility and canonical consent redirects repair cached ChatGPT account linking. Backup, full local regressions, standard deployment verification and public legacy/current route checks passed. Human ChatGPT reconnection remains to be retried by the founder. [Actual account-link verification](../implementation/reports/chatgpt-account-link-repair-20261010.md).
+
 Previous release, 10 October: **`society-collections-20261010-1` / `bcb58b8`**. Communication, decision support, private memory and deterministic collections deployed with canonical public verification and progressing historical backfill. [Actual society release acceptance](../implementation/reports/agent-society-release-20261010.md). No player task or enrollment was started.
 
 Earlier release, 10 October: **`society-memory-20261010-1` / `c7333f8`**. Decision support and private strategy/relationship memory deployed after encrypted snapshot `03209be8`; canonical public verification passed, clock active at tick 18890 and new private-memory table empty. [Actual memory acceptance](../implementation/reports/private-memory-20261010.md).

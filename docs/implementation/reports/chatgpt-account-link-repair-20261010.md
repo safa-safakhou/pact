@@ -1,6 +1,6 @@
 # PACT-016 — ChatGPT account-link migration repair
 
-The founder reported `INVALID_REQUEST` while adding another account in ChatGPT's plugin section. The supplied link used the owned legacy `/pact/oauth/authorize` endpoint and `https://tinyagenttools.com/pact/mcp` resource. Public requests with synthetic state/PKCE reproduced HTTP 400 for that resource at both old and current authorization endpoints; switching only the resource to the current `/mcp` returned HTTP 200 consent. The registered client, exact ChatGPT callback, scopes and `ui_locales` were accepted. No real supplied state/challenge, human credentials or private transcripts are recorded here.
+The founder reported `INVALID_REQUEST` while adding another account in ChatGPT's plugin section. The supplied link used the owned legacy `/pact/oauth/authorize` endpoint and `https://tinyagenttools.com/pact/mcp` resource. Public requests with synthetic state/PKCE reproduced HTTP 400 for that resource at both old and current authorization endpoints; switching only the resource to the current `/mcp` returned HTTP 200 account-entry HTML. The registered client, exact ChatGPT callback, scopes and `ui_locales` were accepted. No real supplied state/challenge, human credentials or private transcripts are recorded here.
 
 ## Correction
 
@@ -18,6 +18,19 @@ The four OAuth integration tests cover configured/disabled aliases, foreign and 
 
 ## Release evidence
 
-Pre-release encrypted backup completed with `Result=success` and `ExecMainStatus=0`. Release `chatgpt-link-20261010-1` deployment and public verification are pending at this implementation commit. Record actual results after deployment; synthetic public consent checks do not prove a completed human ChatGPT callback/token exchange.
+Pre-release encrypted backup completed with `Result=success` and `ExecMainStatus=0`. Release **`chatgpt-link-20261010-1`** deployed verified implementation commit **`bfe8a64`**. Runtime and gateway image ledger agrees; standard migration/privacy replay and `verify.sh` passed against the actual protected production environment and canonical public origin. Source archive SHA-256 matched before deployment. An initial extraction attempted before transfer completion failed; full transfer, checksum and gzip validation completed before the successful deployment. The old running service remained healthy during image building. Existing build advisories and dependency audit findings remain; this patch does not change dependencies.
+
+Public route proof used only synthetic state/PKCE and the already registered reported client/callback, with no cookie, consent, account creation or token exchange:
+
+| Authorization host | MCP resource | Actual result |
+| --- | --- | --- |
+| Old `/pact` | Old `/pact/mcp` | 302 to canonical `/oauth/authorize`, then 200 Enter PACT |
+| Old `/pact` | Canonical `/mcp` | 302 to canonical `/oauth/authorize`, then 200 Enter PACT |
+| Canonical | Old `/pact/mcp` | 200 Enter PACT |
+| Canonical | Canonical `/mcp` | 200 Enter PACT |
+
+Both old-host redirects preserved resource, state, client, exact callback, PKCE challenge/method, scopes and response type. OAuth responses carry only `no-store` cache directives (API/gateway duplicate the directive). Foreign resources returned 400 `INVALID_REQUEST` at both hosts; both metadata routes retained the canonical issuer and authorization endpoint. The anonymous production page is **account entry**, not evidence of human consent; the isolated route fixture separately verified consent rendering and code/refresh operations. The founder must start a fresh Add account flow to verify their actual ChatGPT callback/token exchange. An existing read-only `pact_play_view_v1` call succeeded during diagnosis; no separate widget failure was established by the clarification.
+
+Post-release body-free checks found the clock active at tick 19176, historical collection backfill complete (25,312 processed, zero pending/quarantined), zero enrollments/slices and zero new human display saves. Owner collection reads remain 403 anonymously and absent public cards 404. Native fifty-owner task state was Ready with no Ollama process. No new external/scheduled-route certification is claimed.
 
 The original fifty-owner task remains stopped; no schedules, model calls, enrollments, identities or experimental budgets are changed. Finite historical experiments remain terminal. The original 24 Later tasks remain deferred.
