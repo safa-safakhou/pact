@@ -8076,7 +8076,8 @@
       ],
       "evidence": [
         "Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged.",
-        "docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun."
+        "docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun.",
+        "docs/implementation/reports/local-runner-certification-20261010.md; founder-approved three pinned Qwen calls: 1528/98 tokens, one real isolated message receipt, two waits. Counteroffer fixture coverage gap explicit; full external acceptance remains blocked."
       ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [
@@ -8303,7 +8304,7 @@
       "id": "PACT-160",
       "title": "Specify collection catalog achievement extensions and reward eligibility",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "M",
@@ -8317,7 +8318,8 @@
         "rules",
         "social",
         "privacy",
-        "experience"
+        "experience",
+        "collections"
       ],
       "covers": [
         "L02",
@@ -8339,7 +8341,9 @@
         "privacy",
         "art inventory"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/collection-catalog-20261010.md; collection specification/catalog v1 and affected source review; four sets/16 pieces/4 trophies, original 200-Gem maximum retained, no new reward currency or random activation."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Covering implementation assignment and final reviewed collection/rules/asset choices; planning alone activates none."
@@ -8353,7 +8357,7 @@
       "id": "PACT-161",
       "title": "Extend trusted achievement events and collection progress projections",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Rules",
       "size": "L",
@@ -8367,7 +8371,8 @@
         "product",
         "privacy",
         "architecture",
-        "social"
+        "social",
+        "collections"
       ],
       "covers": [
         "R01",
@@ -8392,7 +8397,7 @@
         "migrations"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
@@ -8417,7 +8422,8 @@
         "social",
         "privacy",
         "experience",
-        "architecture"
+        "architecture",
+        "collections"
       ],
       "covers": [
         "L02",
@@ -8467,7 +8473,8 @@
         "experience",
         "social",
         "privacy",
-        "architecture"
+        "architecture",
+        "collections"
       ],
       "covers": [
         "L02",
@@ -8516,7 +8523,8 @@
         "product",
         "rules",
         "privacy",
-        "social"
+        "social",
+        "collections"
       ],
       "covers": [
         "L02",
@@ -8568,7 +8576,8 @@
         "product",
         "social",
         "privacy",
-        "experience"
+        "experience",
+        "collections"
       ],
       "covers": [
         "R01",
@@ -8605,15 +8614,16 @@
   "source_sha256": {
     "../pact/access.md": "da1ab2428d6eabfd21e6a5934edc9108c1ad4e0fc6d96fe6ec41da1a780dd2b5",
     "../pact/runtime.md": "d0554e82d856f81e7f666800e96a3d5faf77e311e3d222a908d3dfcfc447ab30",
-    "../pact/rules.md": "41487c02ccebfcfef2c52101590021ad138abff0c7dcae7974bcfb5704047d31",
-    "../pact/social.md": "edd33c2efbd3929c663ccb7b1b86f68aeb86af260d3421bf2f3db2059d3cc677",
-    "../pact/privacy.md": "0565d6f10d9acb5472bf033b502023c6aef8f7d7bb165676bcca097d5003568c",
-    "../pact/product.md": "eadc89056528356085eb1827e0ecaa530dd2799ac0141c9c5cfa6958a6f0edf2",
+    "../pact/rules.md": "7aba92c427a11e8a9c90b0e3cbee84e55261f3d7b7690d10519bc87c1e605f99",
+    "../pact/social.md": "3798ecde03dec944dce6602e0c8548b2a5b045cc5d6b5db6867a7d4787f20027",
+    "../pact/privacy.md": "4d5f3ad106bbda3d7a9572c3f1746b53100b0fa3bcd0527abc1d3ba1be932b0e",
+    "../pact/product.md": "1acd07ea575e418c4e24e79b9d4ee9acb71e903060cae511a3961b8c70f0bb06",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
     "../pact/architecture.md": "db54aef6a324dc1a407c5c9fdabbbdad5188c62b52db108a927e0548528638a0",
     "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9",
-    "../pact/experience.md": "cac7b2eafe414046dba481a00949b66bebae07d2b2df59dbb91d35fef5b2794d",
-    "../pact/chatgpt.md": "ee31da0fd9d0cf8ad6091954faa4eeea101b1dfde000d8815673117a7b262efc"
+    "../pact/experience.md": "5c4f38ee89933b3da181cfe6994e8f0dafb421d8d9f006ccd20ac7476d08699a",
+    "../pact/chatgpt.md": "ee31da0fd9d0cf8ad6091954faa4eeea101b1dfde000d8815673117a7b262efc",
+    "../pact/collections.md": "c0472530b5b1b74f53a180a3886826c67b785246d60c5a01dadcaaa189ebca77"
   },
   "task_status_values": [
     "todo",
@@ -9212,6 +9222,19 @@
         "PACT-164",
         "PACT-165"
       ]
+    },
+    {
+      "date": "2026-10-10",
+      "ticket": "PACT-160",
+      "sources": [
+        "collections",
+        "experience",
+        "privacy",
+        "product",
+        "rules",
+        "social"
+      ],
+      "report": "reports/collection-catalog-source-review-20261010.md"
     }
   ]
 }

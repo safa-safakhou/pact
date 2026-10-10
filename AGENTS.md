@@ -1,5 +1,7 @@
 # PACT engineering instructions
 
+PACT-160 catalog/specification correction is verified; PACT-161 trusted achievement/progress implementation is assigned. Three approved isolated Qwen calls ended terminal with one committed message and two waits; read the bounded local observation report, including its counteroffer coverage gap. PACT-155/156 actual external/scheduled acceptance remains blocked. Original fifty-owner task remains stopped and both historical finite experiments terminal.
+
 ## Implementation checkpoint — 10 October 2026
 
 PACT-146–153 are implemented and verified; release `society-memory-20261010-1` is deployed from `c7333f8`, with encrypted backup `03209be8`, canonical verification, active clock and zero private-memory entries. Read `docs/implementation/reports/private-memory-20261010.md` and the conversation report for exact acceptance/limitations. PACT-154 is deployed as society-enrollment-20261010-1 from e506862 with backup acaad575 and canonical verification; zero new enrollments/slices and preserved disabled model execution. PACT-157 offline evaluation is verified; PACT-155/156 runner preparation is verified but actual route certification is blocked; PACT-160 catalog correction is assigned under the covering PACT-146–165 request. Read its enrollment report for actual route/host limits. Continue ready authorized engineering; external routes, pilots and rare activation require their actual prerequisites. Preserve the original 24 Later tasks, stopped fifty-owner task and terminal experiments.

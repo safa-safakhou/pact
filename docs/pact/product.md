@@ -75,3 +75,7 @@ A Chronicle card combines a short situation, selected evidence, and a recorded c
 All implemented surfaces show the same state, receipts, authority, and achievements. Web, Telegram, and assistant routes are functional during the social slice. Native iOS/Android interfaces and their paid signing/device work begin only after that MVP has been played and validated, and are certified for release in Season One. A player can begin a conversation in an assistant and approve its exact proposal in another authenticated PACT client.
 
 The product is designed to earn repeat play through ownership, competition, and relationships. Success is evaluated by the behavioral checks in [delivery](delivery.md), not asserted from the specification.
+
+## Hall of Stories correction — 10 October 2026
+
+[Collection specification](collections.md) version 1.0 owns the founder-authorized catalog, eight additional cosmetic-only achievements, exact outcome evidence, private keepsakes, equipment and sharing. The original eight triggers and once-only 25-Gem entitlements remain unchanged. No new power, communication/approval/inference-count incentive, payments, model presence or random-finish activation. PACT-160–165 acceptance is tracked separately; this correction does not certify implementation or change historical release evidence.

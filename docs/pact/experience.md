@@ -54,3 +54,7 @@ Final review uses one fresh test account, <=30 active minutes over two visits at
 Reviewed product's Feel/presentation, Alpha private scope, architecture channel boundaries and runtime no unsolicited inference. Only the Alpha scope exclusion conflicts with the newly authorized presentation batch; this explicit addendum resolves that conflict while retaining its historical version/hash. Original owning documents are unchanged. The specification index now links this narrow extension.
 
 PACT-109–126 gain this source and their frozen limits remain as reviewed. PACT-071/072's full production asset/channel packs and 074's commerce remain Later; no closure, reassignment or acceptance rewrite. All other 108 records and original nine specification hashes are preserved. Current module/API/privacy rules still apply to any new ambition field. No structural platform redesign or provider model migration is required.
+
+## Hall of Stories correction — 10 October 2026
+
+[Collection specification](collections.md) version 1.0 owns the founder-authorized catalog, eight additional cosmetic-only achievements, exact outcome evidence, private keepsakes, equipment and sharing. The original eight triggers and once-only 25-Gem entitlements remain unchanged. No new power, communication/approval/inference-count incentive, payments, model presence or random-finish activation. PACT-160–165 acceptance is tracked separately; this correction does not certify implementation or change historical release evidence.

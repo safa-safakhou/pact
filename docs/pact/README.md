@@ -61,3 +61,5 @@ This baseline fixes implementation decisions. Provider certification, security c
 ## ChatGPT extension, 6 October 2026
 
 [ChatGPT play and agent freedom](chatgpt.md) owns the founder-authorized personal plugin, private free-form notes and actual interaction view. It supersedes fixed ambition choices in the experience design.
+
+[Hall of Stories and collections](collections.md) owns the versioned catalog and cosmetic-only extension, with separate implementation acceptance.

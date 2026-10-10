@@ -392,3 +392,7 @@ Court membership, Articles, allegiance, handle changes, blocks, invitations, and
 Account deletion and enforced retirement obey [privacy](privacy.md). Already-declared operations settle without accepting new commitments. Retained event history is bounded by that policy; “persistent kingdom” does not mean permanent storage of private conversations or deleted personal identity.
 
 Rule-version changes apply only at announced boundaries. A declared raid pins its combat version through resolution. Existing supply/garrison contracts keep their signed quantities, duration, notice, and bonds. Emergency suspension can freeze operations but cannot silently rewrite terms. [Delivery](delivery.md) contains the required numerical, abuse, and replay checks for this ruleset.
+
+## Hall of Stories correction — 10 October 2026
+
+[Collection specification](collections.md) version 1.0 owns the founder-authorized catalog, eight additional cosmetic-only achievements, exact outcome evidence, private keepsakes, equipment and sharing. The original eight triggers and once-only 25-Gem entitlements remain unchanged. No new power, communication/approval/inference-count incentive, payments, model presence or random-finish activation. PACT-160–165 acceptance is tracked separately; this correction does not certify implementation or change historical release evidence.

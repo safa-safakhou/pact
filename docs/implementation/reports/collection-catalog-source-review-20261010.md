@@ -1,0 +1,132 @@
+# PACT-160 collection source review — 10 October 2026
+
+Explicit collections 1.0 correction reviewed every linked product/rules/social/privacy/experience ticket before updating snapshots. Historical predicates/rewards/status remain; new behavior belongs only to PACT-160–165. Original Later tickets remain deferred. No new experiment/paid/scheduled execution or rare activation.
+
+| Ticket | Status | Review |
+| --- | --- | --- |
+| PACT-003 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-004 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-005 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-006 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-008 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-009 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-022 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-023 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-084 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-085 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-024 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-025 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-028 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-029 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-030 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-031 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-032 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-033 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-034 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-035 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-036 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-037 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-038 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-039 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-040 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-041 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-042 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-043 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-044 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-045 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-046 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-047 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-048 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-049 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-050 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-051 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-054 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-055 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-056 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-057 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-058 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-059 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-060 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-061 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-062 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-063 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-064 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-065 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-087 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-088 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-089 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-090 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-091 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-067 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-069 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-070 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-071 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-072 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-073 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-074 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-075 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-076 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-077 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-093 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-094 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-078 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-095 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-099 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-098 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-081 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-101 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-103 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-104 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-105 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-106 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-107 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-108 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-109 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-110 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-111 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-112 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-113 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-114 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-115 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-116 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-117 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-118 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-119 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-120 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-121 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-122 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-123 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-124 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-125 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-126 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-133 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-134 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-135 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-136 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-137 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-138 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-139 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-140 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-141 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-142 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-143 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-144 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-145 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-146 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-147 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-148 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-149 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-150 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-151 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-152 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-153 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-154 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-157 | done | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-158 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-159 | todo | Dated acceptance unchanged; future collection scope owned by 160–165, no retrospective certification. |
+| PACT-160 | in_progress | Collection extension requires exact producer/provenance/privacy/asset acceptance; no automatic Done. |
+| PACT-161 | todo | Collection extension requires exact producer/provenance/privacy/asset acceptance; no automatic Done. |
+| PACT-162 | todo | Collection extension requires exact producer/provenance/privacy/asset acceptance; no automatic Done. |
+| PACT-163 | todo | Collection extension requires exact producer/provenance/privacy/asset acceptance; no automatic Done. |
+| PACT-164 | todo | Collection extension requires exact producer/provenance/privacy/asset acceptance; no automatic Done. |
+| PACT-165 | todo | Collection extension requires exact producer/provenance/privacy/asset acceptance; no automatic Done. |

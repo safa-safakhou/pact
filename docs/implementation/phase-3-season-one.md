@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 60 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 61 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2408,6 +2408,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - Runner preparation assigned after PACT-154/157. Actual local/Codex model route and live bounded certification are not claimed. Existing stopped population/terminal experiments remain unchanged.
 - docs/implementation/reports/external-runner-preparation-20261010.md; four fake runner fixtures and types pass. Actual route/host acceptance remains unrun.
+- docs/implementation/reports/local-runner-certification-20261010.md; founder-approved three pinned Qwen calls: 1528/98 tokens, one real isolated message receipt, two waits. Counteroffer fixture coverage gap explicit; full external acceptance remains blocked.
 
 <a id="pact-156"></a>
 ## PACT-156 — Certify actual ChatGPT scheduled PACT and multi-login operation
@@ -2533,7 +2534,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-160"></a>
 ## PACT-160 — Specify collection catalog achievement extensions and reward eligibility
 
-**Status:** in_progress · **Role:** Rules · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Rules · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2541,7 +2542,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** rules catalog, product design, privacy, art inventory.
 
-**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** L02, L03, A08
+**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md), [collections](../pact/collections.md) · **Release checks:** L02, L03, A08
 
 **Implement / deliver**
 
@@ -2550,18 +2551,22 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Current versus proposed mechanics and affected source snapshots/tasks are reconciled through an explicit specification correction, never silently changed by the plan.
-- [ ] No reward for raw communication/approval/inference counts, permission expansion or paid model use; new achievements/set trophies confer no Gems, power, quotas or presence.
-- [ ] Exact positive-delivery, counteroffer, Court-interval, battle and season predicates are testable; missing history and collusion limits are documented; random finishes remain separately gated.
+- [x] Current versus proposed mechanics and affected source snapshots/tasks are reconciled through an explicit specification correction, never silently changed by the plan.
+- [x] No reward for raw communication/approval/inference counts, permission expansion or paid model use; new achievements/set trophies confer no Gems, power, quotas or presence.
+- [x] Exact positive-delivery, counteroffer, Court-interval, battle and season predicates are testable; missing history and collusion limits are documented; random finishes remain separately gated.
 
 **External prerequisites:** Covering implementation assignment and final reviewed collection/rules/asset choices; planning alone activates none..
 
 **Assignee:** codex-agent-society
 
+**Evidence**
+
+- docs/implementation/reports/collection-catalog-20261010.md; collection specification/catalog v1 and affected source review; four sets/16 pieces/4 trophies, original 200-Gem maximum retained, no new reward currency or random activation.
+
 <a id="pact-161"></a>
 ## PACT-161 — Extend trusted achievement events and collection progress projections
 
-**Status:** todo · **Role:** Rules · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Rules · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2569,7 +2574,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** achievements, outbox, catalog, read projections, migrations.
 
-**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [social](../pact/social.md) · **Release checks:** R01, L02, A08
+**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [social](../pact/social.md), [collections](../pact/collections.md) · **Release checks:** R01, L02, A08
 
 **Implement / deliver**
 
@@ -2583,6 +2588,8 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Historical entitlements backfill exactly; missing versions/intervals/settlements stay unavailable; ownership/retention/export and source anonymization pass without retaining private transcripts.
 - [ ] Bounded projection failures/lag do not stop world settlement; build/type/migration/integration checks and module documentation pass.
 
+**Assignee:** codex-agent-society
+
 <a id="pact-162"></a>
 ## PACT-162 — Create deterministic story keepsakes and account-bound display equipment
 
@@ -2594,7 +2601,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** keepsakes, equipment, shared commands, cosmetic assets, privacy.
 
-**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md), [architecture](../pact/architecture.md) · **Release checks:** L02, L03, A08
+**Specification:** [product](../pact/product.md), [rules](../pact/rules.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md), [architecture](../pact/architecture.md), [collections](../pact/collections.md) · **Release checks:** L02, L03, A08
 
 **Implement / deliver**
 
@@ -2619,7 +2626,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** web, shared UI, conversation timeline, collection workspace.
 
-**Specification:** [product](../pact/product.md), [experience](../pact/experience.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md) · **Release checks:** L02, S02, A08
+**Specification:** [product](../pact/product.md), [experience](../pact/experience.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [architecture](../pact/architecture.md), [collections](../pact/collections.md) · **Release checks:** L02, S02, A08
 
 **Implement / deliver**
 
@@ -2644,7 +2651,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** offline evaluation, load fixtures, privacy verification, human test design.
 
-**Specification:** [delivery](../pact/delivery.md), [product](../pact/product.md), [rules](../pact/rules.md), [privacy](../pact/privacy.md), [social](../pact/social.md) · **Release checks:** L02, L03, R07, A08
+**Specification:** [delivery](../pact/delivery.md), [product](../pact/product.md), [rules](../pact/rules.md), [privacy](../pact/privacy.md), [social](../pact/social.md), [collections](../pact/collections.md) · **Release checks:** L02, L03, R07, A08
 
 **Implement / deliver**
 
@@ -2671,7 +2678,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Components:** optional cosmetic RNG, rarity analysis, eligibility ledger, UI odds.
 
-**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md) · **Release checks:** R01, L02, L03
+**Specification:** [rules](../pact/rules.md), [product](../pact/product.md), [social](../pact/social.md), [privacy](../pact/privacy.md), [experience](../pact/experience.md), [collections](../pact/collections.md) · **Release checks:** R01, L02, L03
 
 **Implement / deliver**
 
