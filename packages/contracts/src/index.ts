@@ -1,5 +1,6 @@
 export * from "./chronicle-schemas.js";
 export * from "./collection-catalog.js";
+export * from "./collection-display.js";
 export * from "./court-schemas.js";
 export * from "./decision-schemas.js";
 export * from "./enrollment-schemas.js";

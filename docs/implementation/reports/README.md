@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Private keepsakes and human display](collection-stories-20261010.md) — PACT-162, deterministic incidents/instances, exact owner commands, sanitized public appearance and original assets.
+
 - [Trusted collection outcomes](collection-progress-20261010.md) — PACT-161, exact predicates, migration, private progress and bounded failure isolation.
 
 - [Offline society evaluation and communication load](agent-society-evaluation-20261010.md) — PACT-157, deterministic scorer, held-out family boundaries and isolated 20/50/100 relationship acceptance; no actual model intelligence certification.

@@ -1,3 +1,7 @@
+# Private collection checkpoint — 10 October 2026
+
+PACT-162 verified; PACT-163 responsive UI is assigned. Actual live deployment remains society-enrollment-20261010-1 until release verification. No new runner/population or random finish activation.
+
 # Collection progress checkpoint — 10 October 2026
 
 PACT-161 is verified and committed; PACT-162 is assigned next. The live release still contains 146–154 only until the collection UI release is actually verified. Preserve the stopped fifty-owner task and all terminal budgets. Continue authorized engineering, with actual external route/pilot/rare acceptance blocked separately.

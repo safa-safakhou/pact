@@ -13,8 +13,10 @@ import { wholeResources } from "@pact/domain";
 import {
   ActionLimitService,
   CollectionService,
+  CollectionStoriesService,
   ConversationReader,
   CourtService,
+  recordCollectionIncident,
   SocialOverviewReader,
   SocialService,
   SupplyService,
@@ -46,6 +48,149 @@ beforeEach(async () => {
     },
     release: async () => {},
     activate: async () => {},
+  });
+});
+
+describe("private collection equipment and story commands", () => {
+  const display = {
+    slots: { hall: "ornament.margin_notes", banner: null, frame: null, stamp: null },
+    goals: ["terms_changed"],
+    publicCard: { enabled: false, title: "", slots: [] },
+  };
+  const command = (expectedVersion = 0) => ({
+    schemaVersion: "pact.collection-command.v2",
+    kind: "display",
+    commandId: randomUUID(),
+    expectedVersion,
+    display,
+  });
+  it("serializes devices, replays exact receipts and never equips foreign or incompatible items", async () => {
+    const a = await player(),
+      b = await player();
+    await agreement(a, b);
+    await project();
+    const service = new CollectionStoriesService(pool, "pact"),
+      save = command();
+    const balances = (
+      await pool.query("SELECT to_jsonb(b) AS value FROM resource_balances b ORDER BY kingdom_id,resource")
+    ).rows;
+    expect((await service.command(a.accountId, save)).code).toBe("COMMITTED");
+    expect((await new CollectionStoriesService(pool, "pact").command(a.accountId, save)).code).toBe(
+      "ALREADY_COMMITTED",
+    );
+    await expect(service.command(a.accountId, { ...save, display: { ...display, goals: [] } })).rejects.toMatchObject({
+      code: "OPERATION_CONFLICT",
+    });
+    const results = await Promise.allSettled([
+      service.command(a.accountId, command(1)),
+      service.command(a.accountId, command(1)),
+    ]);
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    expect((await service.read(a.accountId)).displayVersion).toBe(2);
+    await expect(
+      service.command(a.accountId, {
+        ...command(2),
+        display: { ...display, slots: { ...display.slots, hall: "ornament.not_owned" } },
+      }),
+    ).rejects.toMatchObject({ code: "NOT_OWNED" });
+    await expect(
+      service.command(a.accountId, {
+        ...command(2),
+        display: { ...display, slots: { ...display.slots, banner: "ornament.margin_notes" } },
+      }),
+    ).rejects.toMatchObject({ code: "INCOMPATIBLE_SLOT" });
+    expect(
+      (await pool.query("SELECT to_jsonb(b) AS value FROM resource_balances b ORDER BY kingdom_id,resource")).rows,
+    ).toEqual(balances);
+    expect((await service.read(a.accountId)).displayVersion).toBe(2);
+  });
+  it("creates private interpretation cards only from owned incidents and explicitly sanitized public displays", async () => {
+    const a = await player(),
+      b = await player(),
+      foreign = await player();
+    await agreement(a, b);
+    await project();
+    const service = new CollectionStoriesService(pool, "pact");
+    const view = await service.read(a.accountId),
+      incident = view.incidents[0];
+    expect(incident).toBeTruthy();
+    const story = {
+      schemaVersion: "pact.collection-command.v2",
+      kind: "story",
+      commandId: randomUUID(),
+      storyId: randomUUID(),
+      expectedVersion: 0,
+      title: "My interpretation",
+      annotation: "Private synthetic observation",
+      incidentIds: [incident.id],
+      deleted: false,
+    };
+    await expect(service.command(foreign.accountId, story)).rejects.toMatchObject({ code: "NOT_OWNED" });
+    await service.command(a.accountId, story);
+    expect((await service.read(foreign.accountId)).stories).toEqual([]);
+    const handle = (await pool.query("SELECT handle FROM kingdoms WHERE id=$1", [a.kingdomId])).rows[0].handle;
+    expect(await service.publicCard(handle)).toBeNull();
+    await service.command(a.accountId, {
+      ...command(),
+      display: { ...display, publicCard: { enabled: true, title: "Chosen public title", slots: ["hall"] } },
+    });
+    const card = await service.publicCard(handle);
+    expect(card).toEqual({
+      title: "Chosen public title",
+      items: [{ slot: "hall", itemId: "ornament.margin_notes" }],
+      meaning: expect.any(String),
+    });
+    expect(JSON.stringify(card)).not.toMatch(/Private synthetic|incident|peer|account|contract|goal|source/);
+    await service.command(a.accountId, { ...story, commandId: randomUUID(), expectedVersion: 1, deleted: true });
+    expect((await service.read(a.accountId)).stories).toEqual([]);
+  });
+  it("keeps deterministic instances through source deletion and prunes/forgets private metadata", async () => {
+    const a = await player(),
+      service = new CollectionStoriesService(pool, "pact"),
+      event = randomUUID();
+    await withTransaction(pool, async (c) => {
+      await recordCollectionIncident(
+        c,
+        "pact",
+        a.accountId,
+        event,
+        "battle",
+        "battle",
+        null,
+        60000,
+        { ownOrdinaryLosses: 1 },
+        true,
+      );
+      await recordCollectionIncident(
+        c,
+        "pact",
+        a.accountId,
+        event,
+        "battle",
+        "battle",
+        null,
+        60000,
+        { ownOrdinaryLosses: 999 },
+        true,
+      );
+    });
+    const view = await service.read(a.accountId);
+    expect(view.instances).toHaveLength(1);
+    expect(view.incidents[0].facts.ownOrdinaryLosses).toBe(1);
+    await service.command(a.accountId, {
+      ...command(),
+      display: { ...display, slots: { ...display.slots, hall: `campaign:${view.instances[0].id}` } },
+    });
+    await withTransaction(pool, (c) => service.retention.prune(c, new Date("2027-05-01")));
+    const after = await service.read(a.accountId);
+    expect(after.incidents).toEqual([]);
+    expect(after.instances[0].incidentId).toBeNull();
+    expect(after.instances[0].pattern).toBe(view.instances[0].pattern);
+    expect(
+      JSON.stringify(await withTransaction(pool, (c) => service.retention.exportAccount(c, a.accountId))),
+    ).not.toContain("Retained synthetic body");
+    await withTransaction(pool, (c) => service.retention.forgetAccount(c, a.accountId));
+    expect((await service.read(a.accountId)).instances).toEqual([]);
   });
 });
 afterEach(async () => {

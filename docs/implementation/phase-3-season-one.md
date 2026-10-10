@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 62 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 63 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2597,7 +2597,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-162"></a>
 ## PACT-162 — Create deterministic story keepsakes and account-bound display equipment
 
-**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2614,17 +2614,21 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Each resolved participant incident is recorded once; canceled attacks/unsigned offers mint nothing, and cosmetics alter no stocks, combat dice/results, Fortune, authority or action allowances.
-- [ ] Human preview versus committed equipment is distinct; same-account device/model recovery, concurrent save and rollback preserve ownership/equipment.
-- [ ] Public cards contain no peer identities, message text, resource terms or source-access capability; participant links reauthorize and degrade truthfully after retention/consent changes.
-- [ ] Deterministic catalog and twenty bounded original assets work without an inference call, shop, random finish, payment adapter or new collection currency.
+- [x] Each resolved participant incident is recorded once; canceled attacks/unsigned offers mint nothing, and cosmetics alter no stocks, combat dice/results, Fortune, authority or action allowances.
+- [x] Human preview versus committed equipment is distinct; same-account device/model recovery, concurrent save and rollback preserve ownership/equipment.
+- [x] Public cards contain no peer identities, message text, resource terms or source-access capability; participant links reauthorize and degrade truthfully after retention/consent changes.
+- [x] Deterministic catalog and twenty bounded original assets work without an inference call, shop, random finish, payment adapter or new collection currency.
 
 **Assignee:** codex-agent-society
+
+**Evidence**
+
+- docs/implementation/reports/collection-stories-20261010.md; full build/types/lint, 24 PostgreSQL targeted checks and route authorization unit check; twenty original local SVGs; no new inference/run/random activation.
 
 <a id="pact-163"></a>
 ## PACT-163 — Build Hall of Stories and communication-linked collection UI
 
-**Status:** todo · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2645,6 +2649,8 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Owned pieces auto-unlock without claim clicks; goals are optional, no streak/FOMO timers or approval/message farming; defeat costs precede cosmetic reveals.
 - [ ] Cross-device saves and stale conflicts are truthful; owner/private/public/observer routes cannot leak source content or unfinished goals; any deliberately displayed experiment label remains truthful.
 - [ ] Conversation and collection share one factual event/projection; a displayed piece neither publishes a Seal nor expands authority or source permissions.
+
+**Assignee:** codex-agent-society
 
 <a id="pact-164"></a>
 ## PACT-164 — Validate collection incentives privacy and exploit resistance offline

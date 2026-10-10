@@ -31,6 +31,7 @@ import {
   ChronicleOutcomeReader,
   ChronicleService,
   CollectionService,
+  CollectionStoriesService,
   ConstructionExposureAdapter,
   ConversationReader,
   CouncilReader,
@@ -441,6 +442,7 @@ const privacy = new PrivacyService(pool, {
   retirement,
   ownedData: [
     new CollectionService("pact").retention,
+    new CollectionStoriesService(pool, "pact").retention,
     persistentPlay.retention,
     privateMemory.retention,
     externalActivity.retention,
@@ -648,6 +650,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   worldViews,
   decisionSupport: new DecisionSupportReader(worldViews, socialOverview),
   privateMemory,
+  collections: new CollectionStoriesService(pool, "pact"),
   persistentPlay,
   socialOverview,
   council,

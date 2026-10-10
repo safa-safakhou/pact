@@ -4,6 +4,8 @@ import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTra
 import { wholeResources } from "@pact/domain";
 import {
   ActionLimitService,
+  CollectionService,
+  CollectionStoriesService,
   GarrisonService,
   RaidRandomnessService,
   RaidService,
@@ -198,6 +200,13 @@ describe("raid lifecycle", () => {
     expect(overlap.rows[0]?.count).toBe(24);
     expect(await withTransaction(pool, (client) => raids.resolveDue(client, 1_319_999))).toBe(0);
     expect(await withTransaction(pool, (client) => raids.resolveDue(client, 1_320_000))).toBe(2);
+    await withTransaction(pool, (c) => new CollectionService("pact").processPending(c, 1320000));
+    const ownerStories = new CollectionStoriesService(pool, "pact");
+    const snapshots = await Promise.all([ownerStories.read(first.accountId), ownerStories.read(target.accountId)]);
+    expect(snapshots.every((s) => s.incidents.some((i) => i.kind === "battle"))).toBe(true);
+    expect(snapshots[0].instances).toHaveLength(1);
+    expect(snapshots[1].instances).toHaveLength(0);
+    expect((await ownerStories.read(stranger.accountId)).incidents).toEqual([]);
     const firstReport = await withTransaction(pool, (client) =>
       raids.readParticipantReport(client, target.accountId, firstRaid.raidId),
     );

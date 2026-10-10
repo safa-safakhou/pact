@@ -8410,7 +8410,7 @@
       "id": "PACT-162",
       "title": "Create deterministic story keepsakes and account-bound display equipment",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8449,7 +8449,9 @@
         "cosmetic assets",
         "privacy"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/collection-stories-20261010.md; full build/types/lint, 24 PostgreSQL targeted checks and route authorization unit check; twenty original local SVGs; no new inference/run/random activation."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
@@ -8461,7 +8463,7 @@
       "id": "PACT-163",
       "title": "Build Hall of Stories and communication-linked collection UI",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -8500,7 +8502,7 @@
         "collection workspace"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",

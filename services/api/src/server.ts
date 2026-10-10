@@ -63,6 +63,7 @@ function safeLogger(logger: boolean | object): false | Record<string, unknown> {
 }
 
 export interface ApiModules {
+  collections?: import("@pact/kingdom").CollectionStoriesService;
   persistentPlay?: import("@pact/runs").PersistentPlayService;
   privateMemory?: import("@pact/kingdom").PrivateMemoryService;
   identity: IdentityService;
@@ -207,6 +208,7 @@ export function buildServer(
     if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
     if (modules.persistentPlay) registerEnrollmentRoutes(server, modules.identity, modules.persistentPlay);
     if (modules.privateMemory) registerMemoryRoutes(server, modules.identity, modules.privateMemory, modules.oauth);
+    if (modules.collections) registerCollectionRoutes(server, modules.identity, modules.collections);
     if (modules.decisionSupport)
       registerDecisionRoutes(server, modules.identity, modules.decisionSupport, modules.oauth);
     if (modules.council && modules.readCouncil)
@@ -244,6 +246,7 @@ export function buildServer(
 }
 
 import type { DecisionSupportReader } from "@pact/application";
+import { registerCollectionRoutes } from "./collection-routes.js";
 import { registerDecisionRoutes } from "./decision-routes.js";
 import { registerEnrollmentRoutes } from "./enrollment-routes.js";
 import { registerMemoryRoutes } from "./memory-routes.js";

@@ -7,6 +7,7 @@ import {
 } from "@pact/contracts";
 import { appendOutbox } from "@pact/db";
 import type { PoolClient } from "pg";
+import { recordCollectionIncident } from "./collection-stories.js";
 
 const types = [
   "message.acknowledged.v2",
@@ -196,8 +197,10 @@ export class CollectionService {
       await c.query<{
         participant_report: {
           gameTimeMs: number;
-          eligibleUnits: { id: string; ownerId: string }[];
+          targetKingdomId: string;
+          eligibleUnits: { id: string; ownerId: string; side: string }[];
           eligibleOrdinaryUnitIds?: string[];
+          trace: { winner: string; casualtyGroups: { ownerId: string; lostUnitIds: string[] }[] };
         };
       }>("SELECT participant_report FROM raids WHERE product_scope=$1 AND id=$2 AND status='resolved'", [
         this.scope,
@@ -207,6 +210,33 @@ export class CollectionService {
     if (!r) return;
     const ordinary = new Set(r.eligibleOrdinaryUnitIds ?? []),
       owners = new Set(r.eligibleUnits.filter((u) => ordinary.has(u.id)).map((u) => u.ownerId));
+    for (const owner of new Set([...owners, r.targetKingdomId])) {
+      const account = await this.account(c, owner);
+      if (!account) continue;
+      const own = r.eligibleUnits.filter((u) => u.ownerId === owner && ordinary.has(u.id));
+      const losses =
+        r.trace.casualtyGroups.find((g) => g.ownerId === owner)?.lostUnitIds.filter((id) => ordinary.has(id)).length ??
+        0;
+      await recordCollectionIncident(
+        c,
+        this.scope,
+        account,
+        e.event_id,
+        "battle",
+        "battle",
+        String(e.payload.raidId),
+        r.gameTimeMs,
+        {
+          classification: "engine_record",
+          winner: r.trace.winner,
+          ownSide: own[0]?.side ?? "defender",
+          ownOrdinaryUnits: own.length,
+          ownOrdinaryLosses: losses,
+          replacements: "Not automatic or free; inspect ordinary stock and training.",
+        },
+        owners.has(owner),
+      );
+    }
     for (const owner of owners)
       await this.awardKingdom(c, owner, "took_the_field", e, "battle", String(e.payload.raidId), null, r.gameTimeMs);
   }
@@ -250,6 +280,12 @@ export class CollectionService {
       [this.scope, account, id, e.event_id, at],
     );
     if (!inserted.rowCount) return;
+    if (kind !== "battle")
+      await recordCollectionIncident(c, this.scope, account, e.event_id, id, kind, source, at, {
+        classification: "engine_record",
+        achievementId: id,
+        itemId: piece.item,
+      });
     await c.query(
       "INSERT INTO cosmetic_entitlements(product_scope,account_id,item_id,source_achievement_id) VALUES($1,$2,$3,$4) ON CONFLICT DO NOTHING",
       [this.scope, account, piece.item, id],
