@@ -8,6 +8,7 @@ import { ApprovalReview } from "./approval-review.js";
 import { ChroniclePanel } from "./chronicle-panel.js";
 import { pactBaseUrl } from "./client-location.js";
 import { CodexConnection } from "./codex-connection.js";
+import { CollectionWorkspace, PublicCollectionCard } from "./collection-workspace.js";
 import { Consequences, type ConsequenceView } from "./consequences.js";
 import { ConversationWorkspace } from "./conversation-workspace.js";
 import { CourtPanel } from "./court-panel.js";
@@ -257,6 +258,9 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
   }, [host, apiOrigin]);
   const [auth, setAuth] = useState<"checking" | "login" | "draft" | "ready">("checking");
   const [tab, setTab] = useState<Tab>(() => linkedGameTab(window.location.search) ?? "Kingdom");
+  const [kingdomArea, setKingdomArea] = useState<"Overview" | "Buildings" | "Army" | "Economy" | "Collection">(() =>
+    new URLSearchParams(location.search).has("collection") ? "Collection" : "Overview",
+  );
   useEffect(() => {
     host?.onTabChange(tab);
   }, [host, tab]);
@@ -633,6 +637,13 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
         {notice && <p role="alert">{notice}</p>}
       </main>
     );
+  if (new URLSearchParams(window.location.search).has("display"))
+    return (
+      <PublicCollectionCard
+        handle={new URLSearchParams(window.location.search).get("display") ?? ""}
+        request={request}
+      />
+    );
   if (auth === "login" && guestMode && !host && !passwordEntry)
     return (
       <GuestEntry
@@ -962,7 +973,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
               {tab === "Envoy" && !host && (
                 <CodexConnection request={request} handle={view?.profile.handle} guest={guestPlayer} />
               )}
-              {view && (
+              {view && !(tab === "Kingdom" && kingdomArea === "Collection") && (
                 <FirstSession
                   compact
                   stage={{
@@ -1000,8 +1011,8 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                   onArea={setTab}
                 />
               )}
-              {view && tab === "Kingdom" && <BuilderStatus view={view} />}
-              {view && (
+              {view && tab === "Kingdom" && kingdomArea !== "Collection" && <BuilderStatus view={view} />}
+              {view && !(tab === "Kingdom" && kingdomArea === "Collection") && (
                 <details className="game-card">
                   <summary>Game moments and notifications</summary>
                   <OutcomeCards
@@ -1068,7 +1079,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                   </button>
                 </section>
               )}
-              {tab === "Kingdom" && view && (
+              {tab === "Kingdom" && view && kingdomArea !== "Collection" && (
                 <details className="game-card">
                   <summary>Private notes</summary>
                   <AmbitionChoice
@@ -1090,6 +1101,17 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                   kingdomId={kingdomId}
                   onPeople={() => setTab("People")}
                   queueSuggested={queueSuggested}
+                  initialArea={kingdomArea}
+                  onAreaChange={setKingdomArea}
+                  collection={
+                    <CollectionWorkspace
+                      key={kingdomId}
+                      ownerId={kingdomId}
+                      handle={view.profile.handle}
+                      request={request}
+                      canWrite={canWrite}
+                    />
+                  }
                 />
               )}
               {tab === "Envoy" && (
@@ -1151,7 +1173,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                 />
               )}
 
-              {tab === "Kingdom" && (
+              {tab === "Kingdom" && kingdomArea !== "Collection" && (
                 <SeasonPanel request={request} kingdomId={kingdomId} worldStatus={view?.worldStatus ?? "unknown"} />
               )}
 
@@ -1375,6 +1397,8 @@ export function Kingdom({
   onPeople,
   queueSuggested,
   initialArea = "Overview",
+  collection,
+  onAreaChange,
 }: {
   view: OwnerView;
   busy: boolean;
@@ -1382,10 +1406,16 @@ export function Kingdom({
   social: SocialOverview | null;
   kingdomId: string;
   onPeople: () => void;
-  initialArea?: "Overview" | "Buildings" | "Army" | "Economy";
+  initialArea?: "Overview" | "Buildings" | "Army" | "Economy" | "Collection";
+  collection?: React.ReactNode;
+  onAreaChange?: (area: "Overview" | "Buildings" | "Army" | "Economy" | "Collection") => void;
   queueSuggested?: (building: string, level: number) => void;
 }): React.JSX.Element {
-  const [area, setArea] = useState(initialArea);
+  const [area, setArea] = useState<typeof initialArea>(() =>
+    new URLSearchParams(typeof location === "undefined" ? "" : location.search).has("collection")
+      ? "Collection"
+      : initialArea,
+  );
   const [building, setBuilding] = useState("farm");
   const currentLevel = view.buildings.find((item) => item.kind === building)?.level ?? 1;
   const level = Math.min(6, currentLevel + 1);
@@ -1401,31 +1431,41 @@ export function Kingdom({
   return (
     <section>
       <nav className="game-nav kingdom-nav" aria-label="Kingdom sections">
-        {(["Overview", "Buildings", "Army", "Economy"] as const).map((item) => (
+        {(["Overview", "Buildings", "Army", "Economy", "Collection"] as const).map((item) => (
           <button
             type="button"
             key={item}
             aria-current={area === item ? "page" : undefined}
-            onClick={() => setArea(item)}
+            onClick={() => {
+              setArea(item);
+              onAreaChange?.(item);
+              const url = new URL(location.href);
+              if (item === "Collection") url.searchParams.set("collection", "sets");
+              else url.searchParams.delete("collection");
+              history.replaceState(null, "", url);
+            }}
           >
             {item}
           </button>
         ))}
       </nav>
-      <h2>{area}</h2>
+      {area !== "Collection" && <h2>{area}</h2>}
+      {area === "Collection" && collection}
       {area === "Overview" && <KingdomScene facts={{ ...view, audience: "owner" }} />}
       {area === "Overview" && <BuilderStatus view={view} />}
-      <div className="resource-strip">
-        {["grain", "iron", "silver"].map((kind) => (
-          <div key={kind}>
-            <strong>{kind}</strong>
-            <span>
-              {units(view.balances[kind]?.ordinaryUnits ?? "0")}{" "}
-              <small>+ {units(view.balances[kind]?.foundingAllowanceUnits ?? "0")} starter stock</small>
-            </span>
-          </div>
-        ))}
-      </div>
+      {area !== "Collection" && (
+        <div className="resource-strip">
+          {["grain", "iron", "silver"].map((kind) => (
+            <div key={kind}>
+              <strong>{kind}</strong>
+              <span>
+                {units(view.balances[kind]?.ordinaryUnits ?? "0")}{" "}
+                <small>+ {units(view.balances[kind]?.foundingAllowanceUnits ?? "0")} starter stock</small>
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
       {area === "Overview" && queueSuggested && <QuickBuilds view={view} disabled={busy} onBuild={queueSuggested} />}
       <section aria-label={`${area} controls`}>
         {area === "Economy" && (
@@ -2803,6 +2843,19 @@ function Chronicle({
       setReport,
     );
   };
+  useEffect(() => {
+    const query = new URLSearchParams(location.search),
+      kind = query.get("report"),
+      id = query.get("recordId");
+    if (kind !== "raid_participant" || !id) return;
+    setReportKind(kind);
+    setReportId(id);
+    void reader.current.read(
+      { kind, id },
+      (selectedKind, selectedId) => client.readReport(selectedKind, selectedId),
+      setReport,
+    );
+  }, [client]);
   return (
     <section>
       <h2>Chronicle</h2>

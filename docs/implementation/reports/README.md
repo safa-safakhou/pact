@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Hall of Stories UI](collection-ui-20261010.md) — PACT-163, real responsive synthetic browser, source navigation, private/public and device-conflict recovery.
+
 - [Private keepsakes and human display](collection-stories-20261010.md) — PACT-162, deterministic incidents/instances, exact owner commands, sanitized public appearance and original assets.
 
 - [Trusted collection outcomes](collection-progress-20261010.md) — PACT-161, exact predicates, migration, private progress and bounded failure isolation.

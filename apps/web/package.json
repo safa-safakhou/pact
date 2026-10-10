@@ -8,6 +8,7 @@
     "dev": "vite"
   },
   "dependencies": {
+    "@pact/contracts": "0.1.0",
     "@pact/client-sdk": "0.1.0",
     "@pact/ui-features": "0.1.0",
     "react": "19.3.0",

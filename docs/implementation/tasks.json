@@ -8463,7 +8463,7 @@
       "id": "PACT-163",
       "title": "Build Hall of Stories and communication-linked collection UI",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Frontend",
       "size": "L",
@@ -8501,7 +8501,9 @@
         "conversation timeline",
         "collection workspace"
       ],
-      "evidence": [],
+      "evidence": [
+        "docs/implementation/reports/collection-ui-20261010.md; full build/types/lint, 354 unit/373 integration plus optional provider skip; actual desktop/mobile synthetic owner save/source/recovery/public card and screenshots; no model run."
+      ],
       "assignee": "codex-agent-society",
       "blocked_by_external": [],
       "block_reason": null,
@@ -8513,7 +8515,7 @@
       "id": "PACT-164",
       "title": "Validate collection incentives privacy and exploit resistance offline",
       "phase": 3,
-      "status": "todo",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -8553,7 +8555,7 @@
         "human test design"
       ],
       "evidence": [],
-      "assignee": null,
+      "assignee": "codex-agent-society",
       "blocked_by_external": [
         "Real human feedback or a collection-enabled live comparison needs a covering test assignment and consenting participants."
       ],

@@ -1,3 +1,7 @@
+# Collection UI checkpoint — 10 October 2026
+
+PACT-163 verified, PACT-164 assigned for offline exploit/incentive acceptance. 354 unit/373 integration passed (one optional provider skip). Live remains enrollment release until actual collection rollout. Fifty-player task stopped; no Ollama process, no inference budget extension.
+
 # Private collection checkpoint — 10 October 2026
 
 PACT-162 verified; PACT-163 responsive UI is assigned. Actual live deployment remains society-enrollment-20261010-1 until release verification. No new runner/population or random finish activation.

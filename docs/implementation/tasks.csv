@@ -161,6 +161,6 @@ PACT-159,Research measured prompt optimization or a local decision ranker,3,todo
 PACT-160,Specify collection catalog achievement extensions and reward eligibility,3,done,implementation,Rules,M,PACT-053;PACT-145;PACT-047,L02;L03;A08,phase-3-season-one.md#pact-160
 PACT-161,Extend trusted achievement events and collection progress projections,3,done,implementation,Rules,L,PACT-053;PACT-160;PACT-149,R01;L02;A08,phase-3-season-one.md#pact-161
 PACT-162,Create deterministic story keepsakes and account-bound display equipment,3,done,implementation,Platform,L,PACT-053;PACT-161,L02;L03;A08,phase-3-season-one.md#pact-162
-PACT-163,Build Hall of Stories and communication-linked collection UI,3,in_progress,implementation,Frontend,L,PACT-053;PACT-151;PACT-162,L02;S02;A08,phase-3-season-one.md#pact-163
-PACT-164,Validate collection incentives privacy and exploit resistance offline,3,todo,implementation,Platform,M,PACT-053;PACT-157;PACT-163,L02;L03;R07;A08,phase-3-season-one.md#pact-164
+PACT-163,Build Hall of Stories and communication-linked collection UI,3,done,implementation,Frontend,L,PACT-053;PACT-151;PACT-162,L02;S02;A08,phase-3-season-one.md#pact-163
+PACT-164,Validate collection incentives privacy and exploit resistance offline,3,in_progress,implementation,Platform,M,PACT-053;PACT-157;PACT-163,L02;L03;R07;A08,phase-3-season-one.md#pact-164
 PACT-165,Evaluate optional earned rare campaign finishes with published odds,3,todo,implementation,Rules,M,PACT-053;PACT-160;PACT-164,R01;L02;L03,phase-3-season-one.md#pact-165

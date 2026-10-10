@@ -27,8 +27,9 @@ export function registerCollectionRoutes(
       .string()
       .min(1)
       .max(80)
-      .parse((request.params as { handle: string }).handle);
-    const card = await collections.publicCard(handle);
+      .safeParse((request.params as { handle: string }).handle);
+    if (!handle.success) return reply.code(400).send({ error: { code: "INVALID_INPUT" } });
+    const card = await collections.publicCard(handle.data);
     return card ?? reply.code(404).send({ error: { code: "DISPLAY_UNAVAILABLE" } });
   });
   server.route({
@@ -38,7 +39,7 @@ export function registerCollectionRoutes(
       reply.header("cache-control", "no-store");
       try {
         if (request.method === "GET")
-          return collections.read(
+          return await collections.read(
             (await identity.authenticate(token(request))).accountId,
             CollectionQuerySchema.parse(request.query),
           );
@@ -46,7 +47,7 @@ export function registerCollectionRoutes(
           origin = request.headers.origin;
         if (typeof csrf !== "string" || typeof origin !== "string") throw new IdentityError("FORBIDDEN");
         const owner = await identity.authorizeCookieWrite(token(request), csrf, origin);
-        return collections.command(owner.accountId, CollectionCommandSchema.parse(request.body));
+        return await collections.command(owner.accountId, CollectionCommandSchema.parse(request.body));
       } catch (error) {
         if (error instanceof IdentityError || (error instanceof CollectionError && error.code === "FORBIDDEN"))
           return reply.code(403).send({ error: { code: "FORBIDDEN" } });

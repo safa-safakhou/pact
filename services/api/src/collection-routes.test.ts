@@ -1,12 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { IdentityError, type IdentityService } from "@pact/identity";
-import type { CollectionStoriesService } from "@pact/kingdom";
+import { CollectionError, type CollectionStoriesService } from "@pact/kingdom";
 import Fastify from "fastify";
 import { expect, it } from "vitest";
 import { registerCollectionRoutes } from "./collection-routes.js";
 
 it("keeps collection reads/writes human scoped and requires origin/CSRF for exact commands", async () => {
   const calls: unknown[] = [];
+  let stale = false;
   const app = Fastify();
   const identity = {
     authenticate: async () => ({ accountId: "owner" }),
@@ -21,6 +22,7 @@ it("keeps collection reads/writes human scoped and requires origin/CSRF for exac
       return { pieces: [] };
     },
     command: async (id: string) => {
+      if (stale) throw new CollectionError("STALE_VERSION");
       calls.push(id);
       return { code: "COMMITTED" };
     },
@@ -74,6 +76,15 @@ it("keeps collection reads/writes human scoped and requires origin/CSRF for exac
     ).toBe(200);
     expect((await app.inject({ url: "/v1/collections/public/someone" })).statusCode).toBe(404);
     expect(calls).toEqual(["owner", "owner"]);
+    stale = true;
+    const conflict = await app.inject({
+      url: "/v1/collections",
+      method: "POST",
+      headers: { cookie: "pact_session=mine", origin: "https://pact.test", "x-csrf-token": "valid" },
+      payload,
+    });
+    expect(conflict.statusCode).toBe(409);
+    expect(conflict.json().error.code).toBe("STALE_VERSION");
   } finally {
     await app.close();
   }

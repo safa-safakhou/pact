@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**87 tickets · 63 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**87 tickets · 64 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2628,7 +2628,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-163"></a>
 ## PACT-163 — Build Hall of Stories and communication-linked collection UI
 
-**Status:** in_progress · **Role:** Frontend · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Frontend · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2645,17 +2645,21 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Desktop/mobile/keyboard/reduced-motion flows support browse/filter/item/detail/back/display; current, missing and lagging history are distinguishable without an Advanced drawer.
-- [ ] Owned pieces auto-unlock without claim clicks; goals are optional, no streak/FOMO timers or approval/message farming; defeat costs precede cosmetic reveals.
-- [ ] Cross-device saves and stale conflicts are truthful; owner/private/public/observer routes cannot leak source content or unfinished goals; any deliberately displayed experiment label remains truthful.
-- [ ] Conversation and collection share one factual event/projection; a displayed piece neither publishes a Seal nor expands authority or source permissions.
+- [x] Desktop/mobile/keyboard/reduced-motion flows support browse/filter/item/detail/back/display; current, missing and lagging history are distinguishable without an Advanced drawer.
+- [x] Owned pieces auto-unlock without claim clicks; goals are optional, no streak/FOMO timers or approval/message farming; defeat costs precede cosmetic reveals.
+- [x] Cross-device saves and stale conflicts are truthful; owner/private/public/observer routes cannot leak source content or unfinished goals; any deliberately displayed experiment label remains truthful.
+- [x] Conversation and collection share one factual event/projection; a displayed piece neither publishes a Seal nor expands authority or source permissions.
 
 **Assignee:** codex-agent-society
+
+**Evidence**
+
+- docs/implementation/reports/collection-ui-20261010.md; full build/types/lint, 354 unit/373 integration plus optional provider skip; actual desktop/mobile synthetic owner save/source/recovery/public card and screenshots; no model run.
 
 <a id="pact-164"></a>
 ## PACT-164 — Validate collection incentives privacy and exploit resistance offline
 
-**Status:** todo · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2678,6 +2682,8 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [ ] Any human test/live collection-enabled arm has explicit identities/consent/duration/compute bounds and records useful refusal/failure; no additional run is currently authorized.
 
 **External prerequisites:** Real human feedback or a collection-enabled live comparison needs a covering test assignment and consenting participants..
+
+**Assignee:** codex-agent-society
 
 <a id="pact-165"></a>
 ## PACT-165 — Evaluate optional earned rare campaign finishes with published odds
