@@ -539,13 +539,15 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [x] Wrong audience/scope, refresh replay, revoked access, redirect mismatch, and private-network metadata requests fail.
 - [x] Consent names the client and draft/kingdom; OAuth tokens cannot read provider keys or authorize human-only operations.
 
-**Assignee:** cursor-agent
+**Assignee:** codex-chatgpt-link-repair
 
 **Evidence**
 
 - docs/implementation/reports/oauth-authority.md
 - npm run lint; npm run typecheck; npm test (18); npm run test:integration (18); npm run build
 - tests/integration/oauth.test.ts
+- docs/implementation/reports/chatgpt-account-link-repair-20261010.md
+- 10 October ChatGPT legacy-resource correction: build, typecheck, lint, 356 unit and 379 integration passes (one optional provider skip); exact resource/PKCE/refresh and canonical consent redirect regressions passed. Actual human host reconnect remains separate.
 
 <a id="pact-017"></a>
 ## PACT-017 — Implement the remote MCP transport and tool registry

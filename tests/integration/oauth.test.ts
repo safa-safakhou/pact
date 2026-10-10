@@ -8,8 +8,10 @@ import {
   TokenDigester,
 } from "@pact/identity";
 import { assertSafeMetadataUrl, OAuthError, OAuthService, verifyPkceS256 } from "@pact/oauth";
+import Fastify from "fastify";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { registerOAuthRoutes } from "../../services/api/src/oauth-authority-routes.js";
 
 const connectionString = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 const password = "A long test password 123!";
@@ -73,6 +75,137 @@ async function verifiedAccount(email: string): Promise<string> {
 }
 
 describe("PACT OAuth", () => {
+  it("retains exactly configured migration resources, binds code/refresh to their original resource and redirects old consent to the owning origin", async () => {
+    const legacyResource = "https://legacy.example/pact/mcp";
+    const compatible = new OAuthService(pool, {
+      productScope: "pact",
+      issuer,
+      mcpResource,
+      mcpResourceAliases: [legacyResource],
+      humanResource: `${issuer}/native`,
+      clock: { now: () => new Date("2026-09-20T18:00:00Z") },
+    });
+    const client = await compatible.registerDynamic({
+      displayName: "Synthetic ChatGPT migration",
+      audience: "mcp",
+      redirectUris: ["https://chatgpt.com/connector_platform_oauth_redirect"],
+    });
+    const accountId = await verifiedAccount(`migration-${randomUUID()}@example.test`),
+      challenge = pkce();
+    const input = {
+      clientId: client.clientId,
+      redirectUri: client.redirectUris[0] ?? "",
+      resource: legacyResource,
+      scopes: "game:act world:read",
+      subjectLabel: "Synthetic existing account",
+      expectedAudience: "mcp" as const,
+    };
+    await expect(oauth.describeAuthorization(input)).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    for (const resource of [legacyResource + "/", "https://foreign.example/mcp", `${issuer}/native`])
+      await expect(compatible.describeAuthorization({ ...input, resource })).rejects.toMatchObject({
+        code: "INVALID_REQUEST",
+      });
+    await expect(
+      compatible.describeAuthorization({ ...input, redirectUri: input.redirectUri + "?changed=1" }),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+    await expect(compatible.describeAuthorization({ ...input, scopes: "account:delete" })).rejects.toMatchObject({
+      code: "INVALID_SCOPE",
+    });
+    const app = Fastify();
+    registerOAuthRoutes(app, compatible, identity);
+    try {
+      const q = new URLSearchParams({
+        client_id: input.clientId,
+        redirect_uri: input.redirectUri,
+        resource: legacyResource,
+        scope: input.scopes,
+        response_type: "code",
+        code_challenge: challenge.challenge,
+        code_challenge_method: "S256",
+        state: "synthetic_request_state_no_real_credentials",
+        ui_locales: "en-GB",
+      });
+      const old = await app.inject({
+        method: "GET",
+        url: `/oauth/authorize?${q}`,
+        headers: { host: "legacy.example" },
+      });
+      expect(old.statusCode).toBe(302);
+      expect(old.headers["cache-control"]).toBe("no-store");
+      const location = new URL(String(old.headers.location));
+      expect(location.origin).toBe(issuer);
+      expect(location.pathname).toBe("/oauth/authorize");
+      for (const key of ["resource", "state", "client_id", "redirect_uri", "code_challenge", "scope"])
+        expect(location.searchParams.get(key)).toBe(q.get(key));
+      const canonicalQuery = new URLSearchParams(q);
+      canonicalQuery.set("resource", mcpResource);
+      const oldWithCurrentResource = await app.inject({
+        method: "GET",
+        url: `/oauth/authorize?${canonicalQuery}`,
+        headers: { host: "legacy.example" },
+      });
+      expect(oldWithCurrentResource.statusCode).toBe(302);
+      expect(new URL(String(oldWithCurrentResource.headers.location)).searchParams.get("resource")).toBe(mcpResource);
+      expect(
+        (await app.inject({ method: "GET", url: `/oauth/authorize?${q}`, headers: { host: "unconfigured.example" } }))
+          .headers.location,
+      ).toBeUndefined();
+      const current = await app.inject({
+        method: "GET",
+        url: location.pathname + location.search,
+        headers: { host: "pact.example" },
+      });
+      expect(current.statusCode).toBe(200);
+      expect(current.body).toContain("Authorize PACT connection");
+      expect(current.body).toContain(legacyResource);
+      expect(
+        (await app.inject({ method: "GET", url: `/oauth/authorize?${q}`, headers: { host: "pact.example" } }))
+          .statusCode,
+      ).toBe(200);
+    } finally {
+      await app.close();
+    }
+    const auth = await compatible.beginAuthorization({
+      ...input,
+      accountId,
+      codeChallenge: challenge.challenge,
+      codeChallengeMethod: "S256",
+    });
+    const exchange = {
+      clientId: client.clientId,
+      code: auth.code,
+      redirectUri: input.redirectUri,
+      codeVerifier: challenge.verifier,
+    };
+    await expect(compatible.exchangeAuthorizationCode({ ...exchange, resource: mcpResource })).rejects.toMatchObject({
+      code: "INVALID_GRANT",
+    });
+    await expect(
+      compatible.exchangeAuthorizationCode({ ...exchange, resource: legacyResource, codeVerifier: pkce().verifier }),
+    ).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    const tokens = await compatible.exchangeAuthorizationCode({ ...exchange, resource: legacyResource });
+    const grant = await compatible.introspectAccessToken(tokens.accessToken);
+    expect(grant).toMatchObject({ accountId, audience: "mcp", scopes: ["game:act", "world:read"] });
+    expect((await pool.query("SELECT resource FROM oauth_grants WHERE id=$1", [grant?.grantId])).rows[0].resource).toBe(
+      legacyResource,
+    );
+    await expect(compatible.exchangeAuthorizationCode({ ...exchange, resource: legacyResource })).rejects.toMatchObject(
+      { code: "INVALID_GRANT" },
+    );
+    await expect(
+      compatible.refresh({ clientId: client.clientId, refreshToken: tokens.refreshToken, resource: mcpResource }),
+    ).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    const refreshed = await compatible.refresh({
+      clientId: client.clientId,
+      refreshToken: tokens.refreshToken,
+      resource: legacyResource,
+    });
+    expect(await compatible.introspectAccessToken(refreshed.accessToken)).toMatchObject({ accountId });
+    await expect(
+      compatible.refresh({ clientId: client.clientId, refreshToken: tokens.refreshToken, resource: legacyResource }),
+    ).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    expect(await compatible.introspectAccessToken(refreshed.accessToken)).toBeNull();
+  });
   it("keeps expired-access connections visible only while an owned unused refresh remains valid", async () => {
     const email = `inventory-${randomUUID()}@example.test`,
       accountId = await verifiedAccount(email),

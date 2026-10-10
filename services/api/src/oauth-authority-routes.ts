@@ -118,6 +118,14 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
         subjectLabel: query.subject_label,
         expectedAudience: query.audience,
       });
+      const issuer = String(oauth.authorizationServerMetadata().issuer);
+      if (query.audience === "mcp" && oauth.isMcpResourceAliasHost(request.headers.host ?? "")) {
+        // Old cached ChatGPT links must consent where the current owning-human cookie lives.
+        // The configured issuer is the only destination; resource/state/PKCE/callback stay exact.
+        const target = new URL(`${issuer}/oauth/authorize`);
+        for (const [key, value] of Object.entries(query)) target.searchParams.set(key, value);
+        return reply.redirect(target.href);
+      }
       const encoded = JSON.stringify(query).replaceAll("<", "\\u003c");
       const issuerEncoded = JSON.stringify(oauth.authorizationServerMetadata().issuer).replaceAll("<", "\\u003c");
       const clientName = escapeHtml(consent.clientName);

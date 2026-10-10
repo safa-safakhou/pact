@@ -65,6 +65,8 @@ export class OAuthService {
       productScope: string;
       issuer: string;
       mcpResource: string;
+      /** Explicit addresses of this same protected application retained during a host migration. */
+      mcpResourceAliases?: readonly string[];
       humanResource: string;
       clock: OAuthClock;
       metadataFetch?: typeof fetchClientMetadata;
@@ -109,6 +111,18 @@ export class OAuthService {
       scopes_supported: ["world:read", "messages:write", "game:act"],
       bearer_methods_supported: ["header"],
     };
+  }
+
+  isMcpResourceAlias(resource: string): boolean {
+    return resource !== this.options.mcpResource && (this.options.mcpResourceAliases?.includes(resource) ?? false);
+  }
+
+  isMcpResourceAliasHost(host: string): boolean {
+    return (
+      this.options.mcpResourceAliases?.some(
+        (resource) => new URL(resource).host.toLowerCase() === host.toLowerCase(),
+      ) ?? false
+    );
   }
 
   async registerPreregisteredClient(input: {
@@ -239,7 +253,8 @@ export class OAuthService {
     if (client.audience !== input.expectedAudience) throw new OAuthError("UNAUTHORIZED_CLIENT");
     assertExactRedirect(client.redirect_uris, input.redirectUri);
     const expectedResource = client.audience === "mcp" ? this.options.mcpResource : this.options.humanResource;
-    if (input.resource !== expectedResource) throw new OAuthError("INVALID_REQUEST");
+    if (input.resource !== expectedResource && !(client.audience === "mcp" && this.isMcpResourceAlias(input.resource)))
+      throw new OAuthError("INVALID_REQUEST");
     return {
       clientId: client.client_id,
       clientName: client.display_name,

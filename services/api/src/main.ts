@@ -281,6 +281,9 @@ const oauth = new OAuthService(pool, {
   productScope: "pact",
   issuer: publicBaseUrl,
   mcpResource: `${publicBaseUrl}/mcp`,
+  // The owned old edge still proxies this same application, accounts and OAuth registry.
+  mcpResourceAliases:
+    publicBaseUrl === "https://pact.tinyagenttools.com" ? ["https://tinyagenttools.com/pact/mcp"] : [],
   humanResource: `${publicBaseUrl}/native`,
   clock,
 });
