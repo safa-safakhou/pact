@@ -16,8 +16,8 @@ The private React console separates society conversations, agent profiles, turn 
 | --- | --- |
 | Node 24 type checking and Biome | Passed; CSS specificity warnings remain, no errors |
 | Unit checks | 16 passed: strategy/budget/schema/vault and model/HTTP/MCP boundaries |
-| PostgreSQL integration checks | 37 passed: atomic claims/budgets, pause/resume, terminal deadlines, crashed reservations, identity/refresh/OAuth failure, exact-command recovery, synthetic-owner restrictions, private operator access, encrypted consented history and 85-message paging |
-| Total tests | 53 passed using fake model/game providers and isolated local PostgreSQL |
+| PostgreSQL integration checks | 41 passed: atomic claims/budgets, pause/resume, terminal deadlines, crashed reservations, complete mocked enrollment/recovery, identity/refresh/OAuth failure, exact-command recovery, synthetic-owner restrictions, private operator access, encrypted consented history and 85-message paging |
+| Total tests | 57 passed using fake model/game providers and isolated local PostgreSQL |
 | Production build | Passed |
 | Dependency audit | Zero vulnerabilities in full and production-only audits |
 | Docker packaging | Image built; own migration and console/worker smoke test succeeded, non-root/read-only with 256 MiB each |
@@ -25,7 +25,7 @@ The private React console separates society conversations, agent profiles, turn 
 | Browser | Login, seven-draft creation, all five strategies, conversation/agreement views, terms history, keyboard dialog dismissal and disabled live controls verified |
 | Responsive check | 390px viewport, 375px document width after correcting header overflow; temporary viewport override reset |
 
-Independent repository commits: `8905381` initial implementation, `830c253` recovery/dashboard verification and `213fbdf` scheduler preservation/operations documentation. The subsequent acceptance-record commit updates final test counts. The sibling repository owns its README, `docs/operations.md`, `docs/implementation-20261011.md` and `docs/verification/communication-dashboard.png`; no private grants/runtime state were committed. Local commits are not remote CI evidence or a push.
+Independent repository commits: `8905381` initial implementation, `830c253` recovery/dashboard verification, `213fbdf` scheduler preservation/operations documentation, `14a4538` acceptance record and `aef0fa7` full mocked enrollment/recovery verification. The last checks corrected optional reserve parsing and retained the synthetic owner binding on same-account OAuth reconnect; fresh setup verifies account and kingdom. The sibling repository owns its README, `docs/operations.md`, `docs/implementation-20261011.md` and `docs/verification/communication-dashboard.png`; no private grants/runtime state were committed. Local commits are not remote CI evidence or a push.
 
 ## Launch boundary and next step
 
