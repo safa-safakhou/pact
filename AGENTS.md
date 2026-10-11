@@ -1,5 +1,7 @@
 # PACT engineering instructions
 
+PACT-166 browser account management is verified and released as browser-accounts-20261011-2 from 3e017c7. `/accounts` remembers independently authenticated browser sessions, switches kingdoms and supplies the MCP OAuth chooser without rebinding existing grants. Read docs/implementation/reports/browser-account-management-20261011.md for three-account synthetic browser/HTTP evidence, canonical release checks and the local callback browser block. No real ChatGPT multi-account installation or physical device certification is claimed. No population, schedule, mandate or paid inference settings changed. Linear issue creation remains blocked by its free limit; PACT-166 is recorded locally.
+
 PACT-146–154, PACT-157 and PACT-160–164 are verified. Release society-collections-20261010-1 is deployed from bcb58b8 with backup 44f79903, canonical verification and active clock. Collection backfill progressed to 1,500 processed/zero quarantined at tick 19017; retained history remains visibly pending. Read docs/implementation/reports/agent-society-release-20261010.md and collection-evaluation-20261010.md. PACT-155/156 actual external/scheduled certification, PACT-158 pilot, PACT-159 assessed optimization and PACT-165 randomized activation remain blocked by documented prerequisites. Three approved isolated Qwen calls are terminal with one committed message and two waits. The original fifty-owner task remains stopped and historical finite experiments terminal.
 
 ## Founder preference — 9 October 2026

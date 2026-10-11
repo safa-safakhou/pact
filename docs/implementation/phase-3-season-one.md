@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**88 tickets · 65 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**88 tickets · 66 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2735,7 +2735,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-166"></a>
 ## PACT-166 — Remember browser accounts and choose the kingdom during agent linking
 
-**Status:** in_progress · **Role:** Platform · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2752,13 +2752,14 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Only independently authenticated, active, unexpired human sessions are selectable; passwords and human session tokens never enter URLs/JavaScript storage/API reads; switching retains original authentication and expiry. Standard OAuth authorization-code callbacks remain unchanged.
-- [ ] Cross-account, cross-origin, stale CSRF, revoked/expired/closed session and forget/global-sign-out failure paths preserve ownership and grants.
-- [ ] Three synthetic browser accounts can be added/switched without logout; OAuth grants bind to the explicitly selected account and existing grants stay unchanged.
-- [ ] Relevant build/type/lint/regression, browser and deployed checks pass with actual evidence and limitations.
+- [x] Only independently authenticated, active, unexpired human sessions are selectable; passwords and human session tokens never enter URLs/JavaScript storage/API reads; switching retains original authentication and expiry. Standard OAuth authorization-code callbacks remain unchanged.
+- [x] Cross-account, cross-origin, stale CSRF, revoked/expired/closed session and forget/global-sign-out failure paths preserve ownership and grants.
+- [x] Three synthetic browser accounts can be added/switched without logout; OAuth grants bind to the explicitly selected account and existing grants stay unchanged.
+- [x] Relevant build/type/lint/regression, browser and deployed checks pass with actual evidence and limitations.
 
 **Assignee:** codex-browser-accounts
 
 **Evidence**
 
 - reports/browser-account-management-20261011.md — 357 unit checks and 384 PostgreSQL integration checks pass (one existing skipped); build/type/lint and three-account synthetic browser switching verified; local callback browser block documented.
+- reports/browser-account-management-20261011.md — browser-accounts-20261011-2 from 3e017c7; source archive integrity, backup, canonical verification, public chooser/empty anonymous roster/validated ChatGPT consent and final page corrections verified. Actual host callback/device limitations remain explicit; no remote Linear issue exists due free issue limit.

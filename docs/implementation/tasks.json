@@ -8630,7 +8630,7 @@
       "id": "PACT-166",
       "title": "Remember browser accounts and choose the kingdom during agent linking",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "M",
@@ -8663,7 +8663,8 @@
         "OAuth"
       ],
       "evidence": [
-        "reports/browser-account-management-20261011.md \u2014 357 unit checks and 384 PostgreSQL integration checks pass (one existing skipped); build/type/lint and three-account synthetic browser switching verified; local callback browser block documented."
+        "reports/browser-account-management-20261011.md \u2014 357 unit checks and 384 PostgreSQL integration checks pass (one existing skipped); build/type/lint and three-account synthetic browser switching verified; local callback browser block documented.",
+        "reports/browser-account-management-20261011.md \u2014 browser-accounts-20261011-2 from 3e017c7; source archive integrity, backup, canonical verification, public chooser/empty anonymous roster/validated ChatGPT consent and final page corrections verified. Actual host callback/device limitations remain explicit; no remote Linear issue exists due free issue limit."
       ],
       "assignee": "codex-browser-accounts",
       "blocked_by_external": [],
