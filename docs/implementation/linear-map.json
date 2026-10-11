@@ -1086,8 +1086,8 @@
     "report": "reports/mcp-lease-renewal-20261011.md"
   },
   "mcp_metadata_20261011_sync": {
-    "checked_at": "2026-10-11T11:30:52.883561+00:00",
-    "scope": "PACT-021 / MNI-81 metadata correction; original Done restored after local verification and actual host permission/lease evidence; deployment pending",
+    "checked_at": "2026-10-11T11:38:02.620973+00:00",
+    "scope": "PACT-021 / MNI-81 metadata correction; original Done restored after local verification, actual host permission/lease evidence and verified hosted release mcp-metadata-20261011-1 from 3c5c405; final evidence appended",
     "status": "Done",
     "report": "reports/mcp-lease-metadata-20261011.md"
   }
