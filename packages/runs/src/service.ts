@@ -289,6 +289,7 @@ export class RunService {
         holderKind: "mcp",
         holderId: input.holderId,
         expiresAt,
+        allowSameHolder: true,
       });
       return { leaseId: lease.leaseId, expiresAt };
     });
@@ -773,17 +774,18 @@ export class RunService {
     const now = this.options.clock.now();
     const existing = await client.query<{
       lease_id: string;
+      holder_kind: string;
       holder_id: string;
       expires_at: Date;
       released_at: Date | null;
     }>(
-      `SELECT lease_id, holder_id, expires_at, released_at FROM write_leases
+      `SELECT lease_id, holder_kind, holder_id, expires_at, released_at FROM write_leases
         WHERE product_scope = $1 AND subject_id = $2 FOR UPDATE`,
       [this.options.productScope, input.subjectId],
     );
     const current = existing.rows[0];
     if (current && !current.released_at && current.expires_at > now) {
-      if (input.allowSameHolder && current.holder_id === input.holderId) {
+      if (input.allowSameHolder && current.holder_kind === input.holderKind && current.holder_id === input.holderId) {
         await client.query(`UPDATE write_leases SET expires_at = $3 WHERE product_scope = $1 AND subject_id = $2`, [
           this.options.productScope,
           input.subjectId,

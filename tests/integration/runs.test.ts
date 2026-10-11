@@ -74,6 +74,42 @@ function runs(provider = new DeterministicFakeProvider({ scenario: "success" }))
 }
 
 describe("PACT-021 bounded runs and write leases", () => {
+  it("renews only the same MCP holder, preserves competing holders and reacquires after expiry", async () => {
+    const accountId = await verifiedAccount(`renew-${randomUUID()}@example.test`);
+    const service = runs();
+    const before = clockNow;
+    const first = await service.openMcpLease({ accountId, holderId: "connection-one" });
+    clockNow = new Date(before.getTime() + 60_000);
+    try {
+      const renewed = await service.openMcpLease({ accountId, holderId: "connection-one" });
+      expect(renewed.leaseId).toBe(first.leaseId);
+      expect(renewed.expiresAt.getTime()).toBe(clockNow.getTime() + 15 * 60_000);
+      await expect(service.openMcpLease({ accountId, holderId: "connection-two" })).rejects.toMatchObject({
+        code: "RUN_ALREADY_ACTIVE",
+      });
+      await service.releaseMcpLease({ accountId, holderId: "connection-two" });
+      const held = await pool.query("SELECT expires_at,released_at FROM write_leases WHERE subject_id=$1", [accountId]);
+      expect(held.rows[0]).toMatchObject({ expires_at: renewed.expiresAt, released_at: null });
+      await pool.query("UPDATE write_leases SET holder_kind='script' WHERE subject_id=$1", [accountId]);
+      await expect(service.openMcpLease({ accountId, holderId: "connection-one" })).rejects.toMatchObject({
+        code: "RUN_ALREADY_ACTIVE",
+      });
+      clockNow = new Date(renewed.expiresAt.getTime());
+      const next = await service.openMcpLease({ accountId, holderId: "connection-two" });
+      expect(next.leaseId).not.toBe(first.leaseId);
+      expect((await pool.query("SELECT 1 FROM envoy_runs WHERE account_id=$1", [accountId])).rowCount).toBe(0);
+      expect(
+        (
+          await pool.query(
+            "SELECT 1 FROM durable_jobs WHERE type='envoy.run.tick' AND payload->>'runId' IN (SELECT run_id::text FROM envoy_runs WHERE account_id=$1)",
+            [accountId],
+          )
+        ).rowCount,
+      ).toBe(0);
+    } finally {
+      clockNow = before;
+    }
+  });
   it("reports an expired or missing lease without claiming an active model host", async () => {
     const accountId = await verifiedAccount(`execution-${randomUUID()}@example.test`),
       service = runs();

@@ -464,13 +464,12 @@ describe("PACT-017 MCP transport", () => {
       init.sessionId,
     );
     expect(JSON.stringify(lease.response)).toContain("leaseId");
-    await expect(
-      mcp.handlePost(
-        principal,
-        { method: "tools/call", id: 9, params: { name: "run.open", arguments: {} } },
-        init.sessionId,
-      ),
-    ).rejects.toMatchObject({ code: "RUN_ALREADY_ACTIVE" });
+    const renewed = await mcp.handlePost(
+      principal,
+      { method: "tools/call", id: 9, params: { name: "run.open", arguments: {} } },
+      init.sessionId,
+    );
+    expect(renewed.response).toMatchObject({ result: lease.response.result });
 
     const called = await mcp.handlePost(
       principal,

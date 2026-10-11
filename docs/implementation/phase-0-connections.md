@@ -699,7 +699,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - [x] A fake-provider run stops at each limit, preserves allowance on resume, and cannot be extended by repeated callbacks.
 - [x] Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop.
 
-**Assignee:** cursor-agent
+**Assignee:** codex-mcp-renewal
 
 **Evidence**
 
@@ -707,6 +707,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - npm run lint; npm run typecheck; npm test (27); npm run test:integration (runs + suite); npm run build:packages; api/inference builds
 - tests/integration/runs.test.ts
 - 25 Sep 2026: bounded-run regression correction rejects starts above the Version 1 15-minute, 20-call, and 40,000-token ceilings, and invalid conversation/message or numeric limits, before creating a run, lease, or inference job. Exact maxima remain valid. Local Node 24 build/typecheck/lint, 115 unit and 160 PostgreSQL integration tests pass. See docs/api/runs.md and docs/implementation/reports/runs-openai.md. PACT-021 remains Done; no live provider or VPS deployment claimed.
+- docs/implementation/reports/mcp-lease-renewal-20261011.md — same-connection run.open regression reproduced live; explicit renewal repaired with cross-holder isolation; 26 targeted PostgreSQL checks and package build/types/lint pass; deployment pending.
 
 <a id="pact-022"></a>
 ## PACT-022 — Implement the durable inbox and live event delivery

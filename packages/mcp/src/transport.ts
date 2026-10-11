@@ -274,7 +274,8 @@ const SANDBOX_TOOLS = [
 
 const RUN_OPEN_TOOL = {
   name: "run.open",
-  description: "Open one bounded write lease for this authenticated MCP session; this does not start model inference.",
+  description:
+    "Open or renew this authenticated MCP connection's 15-minute write lease. Repeated calls on the same connection succeed; another active holder blocks it temporarily. This does not start model inference.",
   inputSchema: { type: "object", properties: {}, additionalProperties: false },
 } as const;
 

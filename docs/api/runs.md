@@ -6,6 +6,8 @@ PACT-099 is deployed in `alpha-20261001-1` / `88c273f`. The inference worker exp
 
 `@pact/runs` owns exclusive kingdom/subject write leases and the Envoy run lifecycle: start, wait, resume, stop, takeover, and MCP lease acquisition without inference.
 
+`run.open` explicitly opens or renews the authenticated MCP connection's fifteen-minute lease. A live renewal keeps the same lease ID and acquired timestamp, and replaces expiry with the current clock plus fifteen minutes. Holder kind and holder ID must both match. Different connections, scripts and PACT runs remain mutually exclusive; a collision returns `RUN_ALREADY_ACTIVE` without modifying the existing lease. Expired/released leases can be acquired anew. Calls do not create an Envoy run, replenish allowances, start inference or enable a consumer-host schedule.
+
 ## External activity (PACT-099)
 
 `GET /v1/runs/external-activity` is a human-session owner-only, `no-store` read of the latest 50 external results. `pact_envoy_report_v1` without a run ID returns owner in-app runs plus `external` activity. Envoy displays the same factual categories, command/record/approval IDs and actual UTC timestamps. A committed instruction is not its completed consequence; proposed offers/signatures are not active contracts.
