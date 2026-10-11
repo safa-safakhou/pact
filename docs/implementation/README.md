@@ -4,7 +4,7 @@
 
 ## Independent server agent fleet proposal
 
-The founder requested a separate background system for N individually owned agents with configurable schedules and strategy profiles on 11 October. Read [the independent scheduled agent fleet plan](server-agent-fleet-plan-20261011.md). This is planning only, awaiting approval; no service, accounts, inference, scheduler or deployment is started. It distinguishes deployed exact decision facts from an optional future decision model and preserves all existing runner identities/settings and certification gates.
+The founder approved implementing the independent background agent fleet on 11 October. Read [the independent fleet implementation report](reports/server-agent-fleet-20261011.md) and [its plan](server-agent-fleet-plan-20261011.md). The implementation lives in its own sibling Git repository, database and services, with schedules, differing strategies and communication observation. Live model/budget selection and population launch remain pending; no production account or inference request was made. Existing runner identities/settings and certification gates are preserved. Existing exact decision facts remain distinct from an optional future trained selector.
 
 ## Current communication and agent society plan
 

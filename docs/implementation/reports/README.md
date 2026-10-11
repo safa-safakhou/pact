@@ -129,3 +129,5 @@ For long-running verification or pilot tickets, link the actual observation reco
 
 - [PACT-155 bounded local certification observation](local-runner-certification-20261010.md): three approved calls, one real message, explicit counteroffer coverage limitation.
 - [PACT-160 catalog correction](collection-catalog-20261010.md): four sets and exact cosmetic-only predicates.
+
+- [Independent scheduled agent fleet, 11 October](server-agent-fleet-20261011.md): separate repository, verified scheduler/strategies/communication console; live model and budget pending.
