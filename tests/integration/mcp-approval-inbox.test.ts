@@ -458,6 +458,17 @@ describe("PACT-017 MCP transport", () => {
     const listed = await mcp.handlePost(principal, { method: "tools/list", id: 2 }, init.sessionId);
     expect(JSON.stringify(listed.response)).toContain("sandbox.echo");
     expect(JSON.stringify(listed.response)).toContain("run.open");
+    expect(listed.response).toMatchObject({
+      result: {
+        tools: expect.arrayContaining([
+          expect.objectContaining({
+            name: "run.open",
+            annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+            securitySchemes: [{ type: "oauth2", scopes: ["game:act"] }],
+          }),
+        ]),
+      },
+    });
     const lease = await mcp.handlePost(
       principal,
       { method: "tools/call", id: 8, params: { name: "run.open", arguments: {} } },
@@ -484,6 +495,7 @@ describe("PACT-017 MCP transport", () => {
 
     const readOnly = { accountId, productScope, audience: "agent" as const, agentScopes: ["world:read" as const] };
     const readOnlyTools = await mcp.handlePost(readOnly, { method: "tools/list", id: 4 }, init.sessionId);
+    expect(JSON.stringify(readOnlyTools.response)).not.toContain('"name":"run.open"');
     expect(JSON.stringify(readOnlyTools.response)).toContain("pact_world_read_v1");
     expect(JSON.stringify(readOnlyTools.response)).toContain("pact_report_read_v1");
     expect(JSON.stringify(readOnlyTools.response)).toContain("pact_season_read_v1");

@@ -1,0 +1,25 @@
+# PACT-021 — lease metadata and host permissions, 11 October 2026
+
+The founder supplied another MNIM_TEST update: construction returned `WRITE_LEASE_REQUIRED`, and the assistant said OpenAI safety checks blocked lease opening. The founder could not distinguish an actual host error from the assistant's explanation. The exact host denial is unavailable; its internal reason cannot be established from this prose alone.
+
+Protected read-only inspection at 11:25 UTC confirmed the account is active, permits construction and has one session slot. Its old MCP lease expired at 10:53:53.491Z. A construction command reached PACT at 10:58:42.921Z and was correctly rejected for missing lease. The latest recorded rejected lease open was the earlier 10:31:52.397Z renewal defect, fixed in the preceding release. Successful lease opens do not create denial activity records; absence of a new denial is not proof a host request was never attempted. No credentials, private correspondence or command payloads were collected.
+
+## Findings and correction
+
+Plugin Management confirmed PACT_test1 inherited ChatGPT's **Allow low-risk actions** default. The founder explicitly selected **Allow all actions for PACT_test1**. The update succeeded and a second readback confirmed **Allow all actions**; the global default remains **Allow low-risk actions**. This changes host prompting, not a kingdom mandate, OAuth scope, resource allowance or human-only boundary.
+
+The MCP descriptor also incorrectly labeled `run.open` destructive and open-world. It reserves or renews one account-bound, expiring session under an existing `game:act` grant, performing no gameplay commitment, resource expenditure, inference or authority expansion. Only its `destructiveHint` and `openWorldHint` change to false. `readOnlyHint` stays false, `game:act` stays required, and `idempotentHint` stays false because explicit renewal changes expiry. Gameplay commands retain their existing labels. The description states the actual effects. These are truthful metadata corrections, not a safety bypass or a read-only label for writes.
+
+[Official OpenAI tool guidance](https://developers.openai.com/plugins/build/mcp-server) assigns destructive labels to irreversible or hard-to-reverse outcomes, allows a bounded private account to be closed-world, and explains that annotations inform host safeguards without replacing authorization. The incoming connector still advertised pre-renewal wording, demonstrating a stale tool snapshot on this surface. Refresh discovered tools after release and retry in a fresh conversation; browser data refresh alone does not update descriptors.
+
+## Actual host evidence
+
+After the founder-selected permission change, one actual authenticated `run.open` through PACT_test1 on the verified affected account succeeded and returned expiry **2026-10-11T11:43:46.893Z**. This happened before deploying the metadata correction, while that connector still advertised old metadata. It demonstrates the current connected route can open a lease with the selected permission. It does not conclusively establish the earlier refusal's cause or certify the separate hourly scheduler. No construction, resource expenditure, provider inference or new population was performed. The diagnostic lease expires normally; another OAuth grant remains a separate holder and must respect it.
+
+## Verification and release
+
+`npm run build:packages`, `npm run typecheck` and `npm run lint` pass. Two descriptor unit checks pass. Twenty-six targeted PostgreSQL checks pass across runs, MCP approval/inbox and process-death fixtures. Transport discovery returns the corrected labels and still excludes lease opening for read-only grants; renewal, competing holders, scoped commands, approvals, reconnect/grant isolation and bounded budgets remain covered. Planning/whitespace checks pass. Local test PostgreSQL is stopped afterwards to reduce workstation load.
+
+Hosted release evidence is pending at this source revision.
+
+The hourly ChatGPT automation was not resumed, and complete scheduled gameplay is not certified. The host must select the correct account and explicitly open/renew its live lease before committing. Different-holder collisions are temporary, not mandate denials. Host safeguards remain separate. No deferred certification or terminal experiment was restarted.

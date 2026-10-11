@@ -275,7 +275,7 @@ const SANDBOX_TOOLS = [
 const RUN_OPEN_TOOL = {
   name: "run.open",
   description:
-    "Open or renew this authenticated MCP connection's 15-minute write lease. Repeated calls on the same connection succeed; another active holder blocks it temporarily. This does not start model inference.",
+    "Open or renew this authenticated MCP connection's 15-minute gameplay write lease. Repeated calls on the same connection succeed; another active holder blocks it temporarily. This reserves one expiring session within existing permissions. It spends no game resources, executes no game action, changes no permissions and starts no model inference.",
   inputSchema: { type: "object", properties: {}, additionalProperties: false },
 } as const;
 

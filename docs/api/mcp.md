@@ -1,5 +1,7 @@
 # MCP transport
 
+`run.open` is an account-bound state-changing tool (`readOnlyHint: false`, scope `game:act`) with non-destructive, closed-world annotations. It reserves or renews one expiring session; it performs no game action, resource expenditure, inference or authority expansion. Renewal changes expiry, so its idempotence hint remains false. General game-write labels are unchanged. Host prompting policy is separate from these annotations and PACT authorization; an inherited low-risk-only policy does not guarantee autonomous writes. See [lease metadata and host permission evidence](../implementation/reports/mcp-lease-metadata-20261011.md).
+
 Tickets: PACT-017, PACT-049; PACT-099 in progress.
 
 `POST /mcp` and `GET /mcp` are the single Streamable HTTP surface. Clients authenticate with an MCP-audience Bearer access token from `@pact/oauth`. Origin must match `PACT_ORIGIN`. Supported protocol versions are `2025-11-25` and `2025-06-18`; unknown versions fail with `UNSUPPORTED_PROTOCOL`.

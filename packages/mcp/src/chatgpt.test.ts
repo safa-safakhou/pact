@@ -2,6 +2,19 @@ import { describe, expect, it } from "vitest";
 import { chatgptDescriptor, playHtml } from "./chatgpt.js";
 
 describe("versioned host tool annotations and conversation app", () => {
+  it("describes lease reservation as a private non-destructive write without changing gameplay labels", () => {
+    expect(chatgptDescriptor({ name: "run.open" })).toMatchObject({
+      annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },
+      securitySchemes: [{ type: "oauth2", scopes: ["game:act"] }],
+      _meta: { securitySchemes: [{ type: "oauth2", scopes: ["game:act"] }] },
+    });
+    for (const name of ["pact_command_v1", "pact_game_action_v1", "pact_game_action_v2"])
+      expect(chatgptDescriptor({ name }).annotations).toMatchObject({
+        readOnlyHint: false,
+        destructiveHint: true,
+        openWorldHint: true,
+      });
+  });
   it("classifies all admitted v2 writes as game:act and history as read-only", () => {
     for (const name of [
       "pact_game_action_v2",

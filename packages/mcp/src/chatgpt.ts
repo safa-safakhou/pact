@@ -88,6 +88,8 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
     "sandbox.counter.increment",
     "sandbox.draft.write",
   ].includes(tool.name);
+  // Reserving this connection's expiring lease is a state change, not an irreversible game action.
+  const privateLease = tool.name === "run.open";
   const scopes = [write || tool.name.startsWith("sandbox.") ? "game:act" : "world:read"];
   const securitySchemes = [{ type: "oauth2", scopes }];
   const meta = "_meta" in tool && typeof tool._meta === "object" ? tool._meta : {};
@@ -95,9 +97,9 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
     ...tool,
     annotations: {
       readOnlyHint: !write,
-      destructiveHint: write,
+      destructiveHint: write && !privateLease,
       idempotentHint: !write || tool.name === "pact_notes_write_v1" || tool.name === "pact_private_memory_write_v2",
-      openWorldHint: true,
+      openWorldHint: !privateLease,
     },
     securitySchemes,
     _meta: { ...meta, securitySchemes },
