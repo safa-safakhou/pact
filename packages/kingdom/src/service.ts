@@ -151,6 +151,17 @@ export class KingdomService {
     return result.rows[0] ? fromRow(result.rows[0]) : null;
   }
 
+  async accountDisplay(accountId: string): Promise<{ displayName: string; handle: string } | null> {
+    return (
+      (
+        await this.pool.query<{ displayName: string; handle: string }>(
+          `SELECT display_name AS "displayName",handle FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'`,
+          [this.options.productScope, accountId],
+        )
+      ).rows[0] ?? null
+    );
+  }
+
   async activate(accountId: string): Promise<KingdomActivation> {
     const already = await this.getByAccount(accountId);
     if (already) return already;

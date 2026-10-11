@@ -8625,10 +8625,55 @@
       "delivery_track": "chatgpt",
       "plan": "agent-society-plan-20261010.md",
       "implementation_authorization": "founder_20261010"
+    },
+    {
+      "id": "PACT-166",
+      "title": "Remember browser accounts and choose the kingdom during agent linking",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-144",
+        "PACT-147"
+      ],
+      "sources": [
+        "access",
+        "chatgpt"
+      ],
+      "covers": [
+        "A01",
+        "A08"
+      ],
+      "scope": [
+        "Founder-authorized browser saved-account roster, add existing guest/password account without logout, explicit active-account selection and forget controls.",
+        "Use the same chooser during MCP OAuth consent, preserve grants and authority, verify and release when ready."
+      ],
+      "acceptance": [
+        "Only independently authenticated, active, unexpired human sessions are selectable; passwords and human session tokens never enter URLs/JavaScript storage/API reads; switching retains original authentication and expiry. Standard OAuth authorization-code callbacks remain unchanged.",
+        "Cross-account, cross-origin, stale CSRF, revoked/expired/closed session and forget/global-sign-out failure paths preserve ownership and grants.",
+        "Three synthetic browser accounts can be added/switched without logout; OAuth grants bind to the explicitly selected account and existing grants stay unchanged.",
+        "Relevant build/type/lint/regression, browser and deployed checks pass with actual evidence and limitations."
+      ],
+      "components": [
+        "identity",
+        "web",
+        "OAuth"
+      ],
+      "evidence": [
+        "reports/browser-account-management-20261011.md \u2014 357 unit checks and 384 PostgreSQL integration checks pass (one existing skipped); build/type/lint and three-account synthetic browser switching verified; local callback browser block documented."
+      ],
+      "assignee": "codex-browser-accounts",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "implementation_authorization": "founder_20261011_browser_account_management"
     }
   ],
   "source_sha256": {
-    "../pact/access.md": "da1ab2428d6eabfd21e6a5934edc9108c1ad4e0fc6d96fe6ec41da1a780dd2b5",
+    "../pact/access.md": "f84f389f02bbbe2d4335ccdad7febd986114f272677768f6991fa3e34d124636",
     "../pact/runtime.md": "d0554e82d856f81e7f666800e96a3d5faf77e311e3d222a908d3dfcfc447ab30",
     "../pact/rules.md": "7aba92c427a11e8a9c90b0e3cbee84e55261f3d7b7690d10519bc87c1e605f99",
     "../pact/social.md": "3798ecde03dec944dce6602e0c8548b2a5b045cc5d6b5db6867a7d4787f20027",
@@ -9251,6 +9296,57 @@
         "social"
       ],
       "report": "reports/collection-catalog-source-review-20261010.md"
+    },
+    {
+      "date": "2026-10-11",
+      "ticket": "PACT-166",
+      "sources": [
+        "access"
+      ],
+      "affected_tickets": [
+        "PACT-002",
+        "PACT-003",
+        "PACT-006",
+        "PACT-007",
+        "PACT-008",
+        "PACT-009",
+        "PACT-010",
+        "PACT-011",
+        "PACT-012",
+        "PACT-013",
+        "PACT-014",
+        "PACT-015",
+        "PACT-016",
+        "PACT-017",
+        "PACT-020",
+        "PACT-023",
+        "PACT-083",
+        "PACT-084",
+        "PACT-085",
+        "PACT-024",
+        "PACT-025",
+        "PACT-086",
+        "PACT-026",
+        "PACT-031",
+        "PACT-049",
+        "PACT-055",
+        "PACT-061",
+        "PACT-091",
+        "PACT-073",
+        "PACT-079",
+        "PACT-098",
+        "PACT-100",
+        "PACT-101",
+        "PACT-102",
+        "PACT-103",
+        "PACT-108",
+        "PACT-144",
+        "PACT-145",
+        "PACT-147",
+        "PACT-155",
+        "PACT-156"
+      ],
+      "report": "reports/browser-account-management-20261011.md"
     }
   ]
 }

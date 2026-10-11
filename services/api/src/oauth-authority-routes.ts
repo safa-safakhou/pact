@@ -5,6 +5,7 @@ import type { OAuthService } from "@pact/oauth";
 import { OAuthError } from "@pact/oauth";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { browserAccountsPage } from "./browser-accounts-page.js";
 
 function cookieValue(request: FastifyRequest, name: string): string | undefined {
   const header = request.headers.cookie;
@@ -137,6 +138,11 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
         )
         .header("referrer-policy", "no-referrer")
         .type("text/html; charset=utf-8");
+      if (query.audience === "mcp")
+        return browserAccountsPage(
+          { clientName: consent.clientName, scopes: consent.scopes, query, issuer },
+          identity.guestPlayEnabled,
+        );
       const guestCookie = request.headers.cookie?.split(";").find((part) => part.trim().startsWith("pact_session="));
       const guestToken = guestCookie ? decodeURIComponent(guestCookie.trim().slice("pact_session=".length)) : "";
       const guest = identity.guestPlayEnabled ? await identity.guestSession(guestToken).catch(() => null) : null;
@@ -148,10 +154,6 @@ document.getElementById('connect').onclick=async()=>{
 const button=document.getElementById('connect'),status=document.getElementById('status');button.disabled=true;status.textContent='Connecting...';
 try{if(document.getElementById('enable-play').checked){const m=await fetch('../v1/mandate');if(!m.ok)throw Error('Cannot read current permissions');const mandate=await m.json();const granted=await fetch('../v1/mandate',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':csrf},body:JSON.stringify({allowedActions:['world.read','inbox.read','message.send.contact','contact.request','transfer','training.queue','building.queue','scout.start','supply.sign','supply.break','garrison.sign','garrison.break','raid.commit'],resourceLimits:{iron:'300000',silver:'300000',grain:'300000'},reserveFloors:{grain:'12000'},troopLimit:40,sessionLimit:1,expectedVersion:mandate.version})});if(!granted.ok)throw Error('Gameplay permissions were not updated. Review them in PACT.')}const r=await fetch('authorize',{method:'POST',headers:{'content-type':'application/json','x-csrf-token':csrf},body:JSON.stringify(q)});const result=await r.json();if(!r.ok)throw Error(result.error?.code||'Connection failed');const target=new URL(q.redirect_uri);target.searchParams.set("code",result.code);target.searchParams.set("state",q.state);target.searchParams.set("iss",${issuerEncoded});window.location.assign(target.toString());}
 catch(e){status.textContent=String(e);button.disabled=false}};
-</script></html>`;
-      if (identity.guestPlayEnabled && query.audience === "mcp")
-        return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Enter PACT</title><style>body{font:18px system-ui;max-width:32rem;margin:3rem auto;padding:1rem;background:#102326;color:#eee}input,button{font:inherit;padding:.8rem;box-sizing:border-box;width:100%;margin:.5rem 0}button{background:#d9c38d;border:0;border-radius:8px}a{color:#d9c38d}p{line-height:1.6}</style><h1>Enter PACT</h1><p>Create a kingdom with a nickname. No email or model API key is needed. After entry, you will review ${clientName}'s connection permissions.</p><p>Already have a kingdom? <a href="../" target="_blank" rel="noopener">Open PACT</a> in this browser to resume it, then reload this page. Guest kingdoms belong to this browser session; do not clear its saved entry key.</p><form id="join"><label>Nickname<input name="nickname" maxlength="40" required autocomplete="nickname"></label><button>Enter my kingdom</button></form><p id="status" role="status"></p><script>
-document.getElementById('join').onsubmit=async(e)=>{e.preventDefault();const b=e.currentTarget.querySelector('button');b.disabled=true;const status=document.getElementById('status');status.textContent='Opening your kingdom…';try{let key=localStorage.getItem('pact_guest_entry');if(!key){key=crypto.randomUUID();localStorage.setItem('pact_guest_entry',key)}const r=await fetch('../v1/play/join',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({entryKey:key,nickname:new FormData(e.currentTarget).get('nickname')}),signal:AbortSignal.timeout(30000)});if(!r.ok)throw Error('Kingdom entry failed. Try again.');location.reload()}catch(e){status.textContent=e.message;b.disabled=false}};
 </script></html>`;
       return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize PACT connection</title><style>body{font:16px system-ui;max-width:28rem;margin:3rem auto;padding:1rem}label{display:block;margin:.8rem 0}input,button{box-sizing:border-box;width:100%;padding:.7rem}#error{color:#a00}</style><h1>Connect ${clientName} to PACT</h1><p>This client requests: ${scopes}. It can act only within your kingdom mandate. It cannot approve its own exceptions or change that mandate.</p><form id="login"><label>Email<input name="email" type="email" required autocomplete="email"></label><label>Password<input name="password" type="password" required autocomplete="current-password"></label><button>Sign in and authorize</button></form><p id="status" role="status"></p><p id="error" role="alert"></p><script>
 const q=${encoded};
@@ -230,8 +232,11 @@ document.getElementById('login').addEventListener('submit',async(e)=>{
           resource: z.string().min(1),
           subject_label: z.string().min(1).max(200),
           audience: z.enum(["human", "mcp"]),
+          selected_account_id: z.uuid().optional(),
         })
         .parse(request.body);
+      if (body.selected_account_id && body.selected_account_id !== session.accountId)
+        throw new IdentityError("FORBIDDEN");
       const result = await oauth.beginAuthorization({
         clientId: body.client_id,
         redirectUri: body.redirect_uri,

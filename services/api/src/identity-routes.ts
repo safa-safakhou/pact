@@ -5,6 +5,15 @@ import type { OnboardingService } from "@pact/onboarding";
 import { OnboardingError } from "@pact/onboarding";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
+import {
+  browserAccountList,
+  browserCookies,
+  forgetBrowserAccount,
+  pruneBrowserAccounts,
+  rememberBrowserAccount,
+  savedAccountToken,
+} from "./browser-accounts.js";
+import { browserAccountsPage } from "./browser-accounts-page.js";
 import type { OperatorPreflight } from "./operator-preflight.js";
 
 const SignupSchema = z.object({
@@ -49,15 +58,6 @@ function writeContext(request: FastifyRequest): { sessionToken: string; csrfToke
   const origin = request.headers.origin;
   if (typeof csrf !== "string" || typeof origin !== "string") throw new IdentityError("FORBIDDEN");
   return { sessionToken: sessionToken(request), csrfToken: csrf, origin };
-}
-
-function setSession(reply: FastifyReply, tokens: { sessionToken: string; absoluteExpiresAt: Date }): void {
-  const maxAge = Math.max(0, Math.floor((tokens.absoluteExpiresAt.getTime() - Date.now()) / 1000));
-  reply.header(
-    "set-cookie",
-    `pact_session=${encodeURIComponent(tokens.sessionToken)}; Path=/; Max-Age=${maxAge}; Secure; HttpOnly; SameSite=Lax`,
-  );
-  reply.header("cache-control", "no-store");
 }
 
 async function safe<T>(reply: FastifyReply, operation: () => Promise<T>): Promise<T | FastifyReply> {
@@ -110,6 +110,63 @@ export function registerIdentityRoutes(
   server.get("/v1/auth/session", async (request, reply) =>
     safe(reply, () => identity.sessionBootstrap(sessionToken(request))),
   );
+  server.get("/accounts", async (_request, reply) => {
+    reply
+      .header("cache-control", "no-store")
+      .header("referrer-policy", "no-referrer")
+      .header(
+        "content-security-policy",
+        "default-src 'none'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
+      )
+      .type("text/html; charset=utf-8");
+    return browserAccountsPage(undefined, identity.guestPlayEnabled);
+  });
+  server.get("/v1/auth/accounts", async (request, reply) =>
+    safe(reply, async () => {
+      const token = browserCookies(request).get("pact_session");
+      const session = token ? await identity.authenticate(token, false).catch(() => null) : null;
+      if (session && token && (await identity.browserAccountActive(session.accountId)))
+        rememberBrowserAccount(request, reply, { ...session, sessionToken: token }, false);
+      const list = await browserAccountList(request, identity, kingdom);
+      pruneBrowserAccounts(
+        request,
+        reply,
+        list.accounts.map((account) => account.accountId),
+      );
+      return list;
+    }),
+  );
+  server.post("/v1/auth/accounts/recovery-check", async (request, reply) =>
+    safe(reply, async () => {
+      const c = writeContext(request);
+      const session = await identity.authorizeCookieWrite(c.sessionToken, c.csrfToken, c.origin);
+      const input = z.object({ code: z.uuid() }).strict().parse(request.body);
+      return { matches: await identity.matchesGuestRecovery(session.accountId, input.code) };
+    }),
+  );
+  for (const operation of ["switch", "forget"] as const) {
+    server.post(`/v1/auth/accounts/${operation}`, async (request, reply) =>
+      safe(reply, async () => {
+        const input = z.object({ accountId: z.uuid() }).strict().parse(request.body);
+        const token = savedAccountToken(request, input.accountId);
+        const csrf = request.headers["x-csrf-token"],
+          origin = request.headers.origin;
+        if (typeof csrf !== "string" || typeof origin !== "string") throw new IdentityError("FORBIDDEN");
+        const session = await identity.authorizeCookieWrite(token, csrf, origin);
+        if (session.accountId !== input.accountId || !(await identity.browserAccountActive(session.accountId)))
+          throw new IdentityError("FORBIDDEN");
+        if (operation === "switch") {
+          rememberBrowserAccount(request, reply, { ...session, sessionToken: token });
+          return identity.sessionBootstrap(token);
+        }
+        const current = browserCookies(request).get("pact_session");
+        const active = current ? await identity.authenticate(current, false).catch(() => null) : null;
+        await identity.signOutSession(token);
+        forgetBrowserAccount(reply, input.accountId, active?.accountId === input.accountId);
+        return { forgotten: true };
+      }),
+    );
+  }
   server.post("/v1/auth/guest/recovery/replace", async (request, reply) =>
     safe(reply, async () => {
       const context = writeContext(request);
@@ -141,7 +198,7 @@ export function registerIdentityRoutes(
       const context = writeContext(request);
       const session = await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
       await identity.signOutSession(context.sessionToken);
-      reply.header("set-cookie", "pact_session=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax");
+      forgetBrowserAccount(reply, session.accountId, true);
       return { signedOut: true, accountId: session.accountId };
     }),
   );
@@ -154,6 +211,7 @@ export function registerIdentityRoutes(
   );
   server.post("/v1/auth/login", async (request, reply) =>
     safe(reply, async () => {
+      if (typeof request.headers.origin === "string") identity.assertBrowserOrigin(request.headers.origin);
       const input = LoginSchema.parse(request.body);
       const tokens = await identity.login({
         email: input.email,
@@ -163,7 +221,7 @@ export function registerIdentityRoutes(
         ...(input.label ? { label: input.label } : {}),
         ...(input.mfaCode ? { mfaCode: input.mfaCode } : {}),
       });
-      setSession(reply, tokens);
+      rememberBrowserAccount(request, reply, tokens);
       return { authenticated: true, csrfToken: tokens.csrfToken, idleExpiresAt: tokens.idleExpiresAt.toISOString() };
     }),
   );
@@ -190,7 +248,7 @@ export function registerIdentityRoutes(
         requestId: request.id,
         ...(input.mfaCode ? { mfaCode: input.mfaCode } : {}),
       });
-      setSession(reply, tokens);
+      rememberBrowserAccount(request, reply, tokens);
       return { authenticated: true, csrfToken: tokens.csrfToken };
     }),
   );
@@ -198,8 +256,9 @@ export function registerIdentityRoutes(
     safe(reply, async () => {
       const context = writeContext(request);
       await identity.authorizeCookieWrite(context.sessionToken, context.csrfToken, context.origin);
+      const current = await identity.authenticate(context.sessionToken);
       await identity.signOutEverywhere(context.sessionToken, request.id);
-      reply.header("set-cookie", "pact_session=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax");
+      forgetBrowserAccount(reply, current.accountId, true);
       return { revoked: true };
     }),
   );

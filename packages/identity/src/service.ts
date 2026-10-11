@@ -110,6 +110,36 @@ export class IdentityService {
     return result.rowCount === 1;
   }
 
+  async browserAccountActive(accountId: string): Promise<boolean> {
+    return (
+      (
+        await this.pool.query("SELECT 1 FROM accounts WHERE product_scope=$1 AND id=$2 AND status='active'", [
+          this.options.productScope,
+          accountId,
+        ])
+      ).rowCount === 1
+    );
+  }
+
+  browserSessionCsrf(sessionToken: string): string {
+    return this.options.digester.digest(`session-csrf:${sessionToken}`);
+  }
+
+  assertBrowserOrigin(origin: string): void {
+    if (!this.options.allowedOrigins.has(origin)) throw new IdentityError("FORBIDDEN");
+  }
+
+  async matchesGuestRecovery(accountId: string, code: string): Promise<boolean> {
+    return (
+      (
+        await this.pool.query(
+          "SELECT 1 FROM accounts WHERE product_scope=$1 AND id=$2 AND status='active' AND is_guest AND guest_entry_hash=$3",
+          [this.options.productScope, accountId, this.options.digester.digest(`guest:${code}`)],
+        )
+      ).rowCount === 1
+    );
+  }
+
   /** Retrying the same privately persisted replacement intent is safe after a lost response. */
   async rotateGuestRecovery(
     sessionToken: string,

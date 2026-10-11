@@ -1,6 +1,6 @@
 # Account and connection specification
 
-**Version 1.2 · Owner of identity, model credentials, MCP authorization, and onboarding.**
+**Version 1.3 · 11 October 2026 · Owner of identity, model credentials, MCP authorization, and onboarding.**
 
 [Channels and reusable architecture](architecture.md) adds native human sessions, explicitly linked Telegram identities, and additional assistant certification routes. Email/password remains the canonical PACT account; a linked channel is not a new kingdom.
 
@@ -14,6 +14,12 @@
 | MCP authorization | An external client may read or act for the specified kingdom within its scopes and mandate | The player's model keys, password, or permission to change authority |
 
 Disconnecting a model does not delete a kingdom. Revoking one chatbot does not revoke another. Deleting the account revokes every session, channel link, MCP grant, and model connection. Neither connecting a provider nor installing a chatbot connector founds a kingdom automatically.
+
+## Multiple accounts in one browser — founder extension, 11 October 2026
+
+A browser may remember up to ten independently authenticated human accounts and select its active kingdom without signing the others out. Add each existing account by password/MFA or its private guest recovery code; a nickname is not proof of ownership. Browser memory uses host-bound Secure/HttpOnly/SameSite cookies for existing sessions, never passwords or human session tokens in JavaScript storage, URLs or MCP. Existing sessions keep their original authenticated time and seven-idle/30-absolute expiry; listing saved accounts does not refresh inactive sessions. Switching requires that saved session's valid CSRF and an allowed Origin and changes the browser's active account, not account ownership. Other open game tabs refresh; stale controls cannot write under the new account's CSRF. Expired, revoked, closed and unproven accounts are unavailable.
+
+The account chooser names the selected kingdom during MCP OAuth linking, supports adding another existing account without a logout, and requires explicit final connection consent. The issued grant is bound to the selected authenticated account. Switching later never rebinds existing MCP grants, starts inference, merges kingdoms, shares quotas, changes mandates, or approves another account's exception. Forget removes this browser's saved login and revokes only that session; global sign-out/reset/closure retain their existing per-account behavior. Browser account memory is device-local; on another device, authenticate each desired account once using its existing credentials.
 
 ## Email/password account
 

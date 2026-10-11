@@ -228,7 +228,7 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
   const [guestMode, setGuestMode] = useState<boolean | null>(host ? false : null);
   const [guestPlayer, setGuestPlayer] = useState(false);
   const [passwordEntry, setPasswordEntry] = useState(false);
-  const [accountOpen, setAccountOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(() => new URLSearchParams(window.location.search).has("account"));
   const [councilOpen, setCouncilOpen] = useState(() => linkedGameTab(window.location.search) === null && !host);
   useEffect(() => {
     if (host) return;
@@ -443,6 +443,20 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
   useEffect(() => {
     if (pendingAction) confirmation.current?.focus();
   }, [pendingAction]);
+
+  useEffect(() => {
+    if (host) return;
+    const changed = (event: StorageEvent) => {
+      if (event.key === "pact_account_changed") {
+        refreshGate.current.pause();
+        connection.invalidate();
+        sessionStorage.removeItem("pact_csrf");
+        window.location.reload();
+      }
+    };
+    window.addEventListener("storage", changed);
+    return () => window.removeEventListener("storage", changed);
+  }, [host, connection]);
 
   useEffect(() => {
     if (guestMode !== null) void refresh();
@@ -792,6 +806,11 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
           Back to game
         </button>
         <h1>Account</h1>
+        {!host && (
+          <p>
+            <a href={new URL("accounts", apiOrigin).href}>Manage accounts and switch kingdoms</a>
+          </p>
+        )}
         {connectionNotice}
         <AccountAccess
           guest={guestPlayer}
@@ -893,34 +912,11 @@ export function GameApp({ host }: { host?: GameHost } = {}): React.JSX.Element {
                 type="button"
                 className="secondary"
                 disabled={busy}
-                onClick={() => {
-                  if (
-                    guestPlayer &&
-                    !window.confirm("Start a new kingdom in this browser? Your current guest will be left behind.")
-                  )
-                    return;
-                  if (guestPlayer) {
-                    localStorage.removeItem("pact_guest_entry");
-                    localStorage.removeItem("pact_guest_name");
-                  }
-                  clearExperiencePreferences(localStorage);
-                  refreshGate.current.pause();
-                  setNotice("");
-                  setRefreshFailure("");
-                  setTarget("");
-                  setSocial(null);
-                  setView(null);
-                  setDecisions(null);
-                  setLocalFailure(null);
-                  setPendingAction(null);
-                  setInbox([]);
-                  setKingdomId("");
-                  setDraft(null);
-                  setAuth("login");
-                  setLastRefreshed(null);
-                }}
+                onClick={() =>
+                  host ? host.onAuthenticationRequired() : window.location.assign(new URL("accounts", apiOrigin).href)
+                }
               >
-                {guestPlayer ? "New guest" : "Switch test player"}
+                Switch kingdom
               </button>
             </div>
           </header>

@@ -156,7 +156,7 @@ describe("PACT OAuth", () => {
         headers: { host: "pact.example" },
       });
       expect(current.statusCode).toBe(200);
-      expect(current.body).toContain("Authorize PACT connection");
+      expect(current.body).toContain("Connect your kingdom");
       expect(current.body).toContain(legacyResource);
       expect(
         (await app.inject({ method: "GET", url: `/oauth/authorize?${q}`, headers: { host: "pact.example" } }))

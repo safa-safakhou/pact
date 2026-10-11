@@ -3,6 +3,7 @@ import type { KingdomService } from "@pact/kingdom";
 import type { OnboardingService } from "@pact/onboarding";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import { z } from "zod";
+import { rememberBrowserAccount } from "./browser-accounts.js";
 
 function cookie(request: FastifyRequest): string {
   const part = request.headers.cookie?.split(";").find((p) => p.trim().startsWith("pact_session="));
@@ -59,10 +60,7 @@ export function registerGuestRoutes(
         const tokens = await identity.joinGuest(input.data.entryKey, input.data.existingOnly);
         const guest = await identity.guestSession(tokens.sessionToken);
         // Set the cookie before founding; ordinary world-tick retries resume the same account.
-        reply.header(
-          "set-cookie",
-          `pact_session=${encodeURIComponent(tokens.sessionToken)}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`,
-        );
+        rememberBrowserAccount(request, reply, tokens);
         let current = await kingdom.getByAccount(tokens.accountId);
         if (!current && input.data.existingOnly)
           return reply.code(409).send({ error: { code: "EXISTING_KINGDOM_REQUIRED" } });

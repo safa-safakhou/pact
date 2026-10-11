@@ -86,6 +86,9 @@ export function GuestEntry({ onJoined, onSignIn }: { onJoined: (csrf: string) =>
         </button>
       </form>
       <p className="quiet">This browser remembers your kingdom. Everyone with this link plays in the same world.</p>
+      <p>
+        <a href={`${pactBaseUrl()}accounts`}>Choose a saved kingdom or add another account</a>
+      </p>
       {onSignIn && (
         <button type="button" className="secondary" onClick={onSignIn}>
           Sign in to an existing kingdom

@@ -1,9 +1,10 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
 import { AesGcmSecretBox, IdentityService, LocalCompromisedPasswordChecker, TokenDigester } from "@pact/identity";
 import { KingdomService, WorldViewService } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
+import { OAuthService } from "@pact/oauth";
 import { OnboardingService } from "@pact/onboarding";
 import { WorldClockService } from "@pact/world";
 import Fastify from "fastify";
@@ -11,9 +12,11 @@ import type { Pool } from "pg";
 import { afterAll, beforeAll, expect, it } from "vitest";
 import { registerGuestRoutes } from "../../services/api/src/guest-routes.js";
 import { registerIdentityRoutes } from "../../services/api/src/identity-routes.js";
+import { registerOAuthRoutes } from "../../services/api/src/oauth-authority-routes.js";
 import { OperatorPreflight } from "../../services/api/src/operator-preflight.js";
 
 let admin: Pool, pool: Pool, schema: string, identity: IdentityService, kingdom: KingdomService;
+let oauth: OAuthService;
 const server = Fastify({ genReqId: () => randomUUID() }),
   origin = "https://pact.example";
 beforeAll(async () => {
@@ -48,7 +51,16 @@ beforeAll(async () => {
   );
   register.documents.termsVersion = "terms-v1";
   registerIdentityRoutes(server, identity, onboarding, OperatorPreflight.parse(register, "terms-v1"), kingdom);
+  oauth = new OAuthService(pool, {
+    productScope: "pact",
+    issuer: origin,
+    mcpResource: `${origin}/mcp`,
+    humanResource: `${origin}/native`,
+    clock: { now: () => new Date() },
+  });
+  registerOAuthRoutes(server, oauth, identity);
 });
+
 afterAll(async () => {
   await server.close();
   await pool?.end();
@@ -377,4 +389,187 @@ it("lists current devices and revokes only the authenticated owner's selected se
   await expect(identity.authenticate(token(a.cookie))).resolves.toBeDefined();
   expect((await revoke(current.sessionId)).statusCode).toBe(200);
   await expect(identity.authenticate(token(a.cookie))).rejects.toThrow();
+});
+
+function browser() {
+  const cookies = new Map<string, string>();
+  return {
+    cookies,
+    async request(url: string, payload?: Record<string, unknown>, csrf?: string, requestOrigin = origin) {
+      const r = await server.inject({
+        method: payload ? "POST" : "GET",
+        url,
+        headers: {
+          origin: requestOrigin,
+          cookie: [...cookies].map(([k, v]) => `${k}=${v}`).join("; "),
+          ...(csrf ? { "x-csrf-token": csrf } : {}),
+        },
+        ...(payload ? { payload } : {}),
+      });
+      const set = r.headers["set-cookie"];
+      for (const value of Array.isArray(set) ? set : set ? [String(set)] : []) {
+        const pair = value.split(";")[0] ?? "",
+          at = pair.indexOf("=");
+        if (value.includes("Max-Age=0")) cookies.delete(pair.slice(0, at));
+        else cookies.set(pair.slice(0, at), pair.slice(at + 1));
+      }
+      return r;
+    },
+  };
+}
+it("remembers three independently proved kingdoms, switches without new sessions, and forgets only this browser login", async () => {
+  const client = browser();
+  const owners: { accountId: string; entryKey: ReturnType<typeof randomUUID> }[] = [];
+  for (const nickname of ["Synthetic Amber", "Synthetic Birch", "Synthetic Cedar"]) {
+    const entryKey = randomUUID();
+    const r = await client.request("/v1/play/join", { entryKey, nickname });
+    expect(r.statusCode).toBe(200);
+    owners.push({ ...r.json(), entryKey });
+    for (const c of r.headers["set-cookie"] as string[]) expect(c).toContain("HttpOnly; SameSite=Lax");
+  }
+  const list = await client.request("/v1/auth/accounts");
+  expect(list.headers["cache-control"]).toBe("no-store");
+  const rows = list.json().accounts;
+  expect(rows).toHaveLength(3);
+  expect(rows.map((a: { displayName: string }) => a.displayName)).toEqual(
+    expect.arrayContaining(["Synthetic Amber", "Synthetic Birch", "Synthetic Cedar"]),
+  );
+  expect(rows.filter((a: { current: boolean }) => a.current)).toHaveLength(1);
+  expect(list.body).not.toContain("sessionToken");
+  expect(list.body).not.toContain("recoveryCode");
+  const firstOwner = owners[0];
+  const secondOwner = owners[1];
+  if (!firstOwner || !secondOwner) throw Error("Missing synthetic owner fixture");
+  const token = decodeURIComponent(client.cookies.get(`__Host-pact_saved_${firstOwner.accountId}`) ?? "");
+  const before = await identity.authenticate(token, false);
+  const idleBefore = (await pool.query("SELECT idle_expires_at FROM sessions WHERE id=$1", [before.sessionId])).rows[0];
+  await client.request("/v1/auth/accounts");
+  const idleAfter = (await pool.query("SELECT idle_expires_at FROM sessions WHERE id=$1", [before.sessionId])).rows[0];
+  expect(idleAfter).toEqual(idleBefore);
+  const a = rows.find((r: { accountId: string }) => r.accountId === firstOwner.accountId);
+  expect((await client.request("/v1/auth/accounts/switch", { accountId: a.accountId }, a.csrfToken)).statusCode).toBe(
+    200,
+  );
+  const after = await identity.authenticate(decodeURIComponent(client.cookies.get("pact_session") ?? ""), false);
+  expect(after.sessionId).toBe(before.sessionId);
+  expect(after.authenticatedAt).toEqual(before.authenticatedAt);
+  expect(after.absoluteExpiresAt).toEqual(before.absoluteExpiresAt);
+  expect(
+    (await client.request("/v1/auth/accounts/recovery-check", { code: firstOwner.entryKey }, a.csrfToken)).json(),
+  ).toEqual({ matches: true });
+  expect(
+    (await client.request("/v1/auth/accounts/recovery-check", { code: secondOwner.entryKey }, a.csrfToken)).json(),
+  ).toEqual({ matches: false });
+  const secondDevice = await join(secondOwner.entryKey);
+  const b = rows.find((r: { accountId: string }) => r.accountId === secondOwner.accountId);
+  expect((await client.request("/v1/auth/accounts/forget", { accountId: b.accountId }, b.csrfToken)).statusCode).toBe(
+    200,
+  );
+  expect((await client.request("/v1/auth/accounts")).json().accounts).toHaveLength(2);
+  expect((await server.inject({ url: "/v1/play", headers: { cookie: secondDevice.cookie } })).json().guest).toBe(true);
+  expect((await client.request("/v1/auth/session")).json().accountId).toBe(a.accountId);
+});
+
+it("rejects forged account cookies, foreign or stale CSRF, cross-origin switching and unavailable sessions", async () => {
+  const client = browser(),
+    a = await join(),
+    b = await join();
+  await client.request("/v1/play/join", { entryKey: a.entryKey, existingOnly: true });
+  await client.request("/v1/play/join", { entryKey: b.entryKey, existingOnly: true });
+  const rows = (await client.request("/v1/auth/accounts")).json().accounts;
+  const first = rows.find((r: { accountId: string }) => r.accountId === a.accountId),
+    second = rows.find((r: { accountId: string }) => r.accountId === b.accountId);
+  expect(
+    (await client.request("/v1/auth/accounts/switch", { accountId: first.accountId }, second.csrfToken)).statusCode,
+  ).toBe(403);
+  expect(
+    (
+      await client.request(
+        "/v1/auth/accounts/switch",
+        { accountId: first.accountId },
+        first.csrfToken,
+        "https://foreign.example",
+      )
+    ).statusCode,
+  ).toBe(403);
+  expect(
+    (await client.request("/v1/auth/accounts/switch", { accountId: randomUUID() }, first.csrfToken)).statusCode,
+  ).toBe(403);
+  const genuine = client.cookies.get(`__Host-pact_saved_${a.accountId}`) ?? "";
+  client.cookies.set(`__Host-pact_saved_${a.accountId}`, client.cookies.get(`__Host-pact_saved_${b.accountId}`) ?? "");
+  expect(
+    (await client.request("/v1/auth/accounts/switch", { accountId: a.accountId }, second.csrfToken)).statusCode,
+  ).toBe(403);
+  client.cookies.set(`__Host-pact_saved_${a.accountId}`, genuine);
+  expect(
+    (await client.request("/v1/auth/accounts/switch", { accountId: first.accountId }, first.csrfToken)).statusCode,
+  ).toBe(200);
+  expect((await client.request("/v1/auth/logout", {}, second.csrfToken)).statusCode).toBe(403);
+  await pool.query("UPDATE sessions SET idle_expires_at=now()-interval '1 second' WHERE account_id=$1", [b.accountId]);
+  expect((await client.request("/v1/auth/accounts")).json().accounts).toHaveLength(1);
+  expect(
+    (await client.request("/v1/auth/accounts/switch", { accountId: second.accountId }, second.csrfToken)).statusCode,
+  ).toBe(403);
+  await pool.query("UPDATE accounts SET status='closing' WHERE id=$1", [a.accountId]);
+  expect((await client.request("/v1/auth/accounts")).json().accounts).toEqual([]);
+  expect(
+    (await client.request("/v1/auth/accounts/switch", { accountId: first.accountId }, first.csrfToken)).statusCode,
+  ).toBe(403);
+});
+
+it("binds new OAuth grants to the selected account and keeps old grants across switching and local forgetting", async () => {
+  const client = browser();
+  await client.request("/v1/play/join", { entryKey: randomUUID(), nickname: "Synthetic Connect A" });
+  await client.request("/v1/play/join", { entryKey: randomUUID(), nickname: "Synthetic Connect B" });
+  const rows = (await client.request("/v1/auth/accounts")).json().accounts;
+  const a = rows.find((r: { current: boolean }) => !r.current),
+    b = rows.find((r: { current: boolean }) => r.current);
+  const app = await oauth.registerDynamic({
+    displayName: "Synthetic chooser",
+    audience: "mcp",
+    redirectUris: ["https://client.example/callback"],
+  });
+  const verifier = randomUUID().replaceAll("-", "") + randomUUID().replaceAll("-", "");
+  const q = {
+    client_id: app.clientId,
+    redirect_uri: "https://client.example/callback",
+    scope: "world:read game:act",
+    code_challenge: createHash("sha256").update(verifier).digest("base64url"),
+    code_challenge_method: "S256",
+    resource: `${origin}/mcp`,
+    audience: "mcp",
+    subject_label: "Selected synthetic kingdom",
+  };
+  expect(
+    (await client.request("/oauth/authorize", { ...q, selected_account_id: a.accountId }, b.csrfToken)).statusCode,
+  ).toBe(403);
+  await client.request("/v1/auth/accounts/switch", { accountId: a.accountId }, a.csrfToken);
+  const authorized = await client.request("/oauth/authorize", { ...q, selected_account_id: a.accountId }, a.csrfToken);
+  expect(authorized.statusCode, authorized.body).toBe(200);
+  const tokens = await oauth.exchangeAuthorizationCode({
+    clientId: app.clientId,
+    redirectUri: q.redirect_uri,
+    code: authorized.json().code,
+    codeVerifier: verifier,
+    resource: q.resource,
+  });
+  expect((await oauth.introspectAccessToken(tokens.accessToken))?.accountId).toBe(a.accountId);
+  await client.request("/v1/auth/accounts/switch", { accountId: b.accountId }, b.csrfToken);
+  await client.request("/v1/auth/accounts/forget", { accountId: a.accountId }, a.csrfToken);
+  expect((await oauth.introspectAccessToken(tokens.accessToken))?.accountId).toBe(a.accountId);
+  expect((await client.request("/v1/auth/session")).json().accountId).toBe(b.accountId);
+});
+
+it("prunes a globally revoked saved account while preserving other owners on the same browser", async () => {
+  const client = browser();
+  await client.request("/v1/play/join", { entryKey: randomUUID(), nickname: "Synthetic Revoke A" });
+  await client.request("/v1/play/join", { entryKey: randomUUID(), nickname: "Synthetic Revoke B" });
+  const rows = (await client.request("/v1/auth/accounts")).json().accounts;
+  const a = rows.find((r: { current: boolean }) => !r.current),
+    b = rows.find((r: { current: boolean }) => r.current);
+  await identity.signOutEverywhere(decodeURIComponent(client.cookies.get(`__Host-pact_saved_${a.accountId}`) ?? ""));
+  const list = (await client.request("/v1/auth/accounts")).json();
+  expect(list.accounts.map((r: { accountId: string }) => r.accountId)).toEqual([b.accountId]);
+  expect(client.cookies.has(`__Host-pact_saved_${a.accountId}`)).toBe(false);
+  expect((await client.request("/v1/auth/session")).json().accountId).toBe(b.accountId);
 });

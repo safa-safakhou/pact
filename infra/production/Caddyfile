@@ -29,6 +29,10 @@
     header Cache-Control "no-store"
     reverse_proxy api:3000
   }
+  handle /accounts {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
   handle /v1/* {
     header Cache-Control "no-store"
     reverse_proxy api:3000

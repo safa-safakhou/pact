@@ -6,6 +6,14 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    ...(process.env.PACT_API_PROXY ? { proxy: { "/v1": process.env.PACT_API_PROXY } } : {}),
+    ...(process.env.PACT_API_PROXY
+      ? {
+          proxy: {
+            "/v1": process.env.PACT_API_PROXY,
+            "/accounts": process.env.PACT_API_PROXY,
+            "/oauth": process.env.PACT_API_PROXY,
+          },
+        }
+      : {}),
   },
 });
