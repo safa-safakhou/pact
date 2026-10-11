@@ -2,6 +2,10 @@
 
 # PACT implementation backlog
 
+## Independent server agent fleet proposal
+
+The founder requested a separate background system for N individually owned agents with configurable schedules and strategy profiles on 11 October. Read [the independent scheduled agent fleet plan](server-agent-fleet-plan-20261011.md). This is planning only, awaiting approval; no service, accounts, inference, scheduler or deployment is started. It distinguishes deployed exact decision facts from an optional future decision model and preserves all existing runner identities/settings and certification gates.
+
 ## Current communication and agent society plan
 
 The founder requested one consolidated communication-first design on 10 October 2026, then explicitly chose expanding that plan with collections before implementation. Read [the integrated design and implementation plan](agent-society-plan-20261010.md) and [interactive synthetic communication/collection mockup](design/agent-society-communication.html). PACT-145 records planning; the founder has now authorized PACT-146–165 implementation, communication and UI first, tested commits and release when ready. PACT-146–154 are verified; the current handoff and completion reports own actual release boundaries and remaining acceptance. New experiments and paid/scheduled execution still require their concrete acceptance prerequisites. Authentication gaps, communication capacity/delegation, environmental agent context, conversation/agreement UI, decision calculations/models, consequence memory, future local/Codex/ChatGPT schedulers and cosmetic collections share one dependency order. The collection design includes four sets, eight new achievements, private story/campaign keepsakes, display equipment, optional rare finishes and incentive/privacy checks. Planning itself activated no rollout. The subsequent implementation assignment covers versioned communication corrections and deployment after verification; it does not start a new experiment or scheduler. The original 24 Later tasks remain deferred.
