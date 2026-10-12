@@ -2,6 +2,10 @@
 
 # PACT implementation backlog
 
+## Fleet agent investigation plan
+
+The [13 October investigation plan](fleet-agent-investigation-plan-20261013.md) analyzes the separate 50-account Luna cohort observed on 12 October at 22:16 Berlin. It distinguishes reproduced Fleet context defects, PACT capability and recovery restrictions, and hypotheses about communication incentives. It defines an ordered investigation, engine audit, controlled experiments and acceptance criteria. Findings are a dated baseline; fixes and experiments remain proposed. Historical launch and migration notes below describe earlier checkpoints.
+
 ## Independent server agent fleet proposal
 
 The founder approved implementing the independent background agent fleet on 11 October. Read [the independent fleet implementation report](reports/server-agent-fleet-20261011.md) and [its plan](server-agent-fleet-plan-20261011.md). The implementation lives in its own sibling Git repository, database and services, with schedules, differing strategies and communication observation. Live model/budget selection and population launch remain pending; no production account or inference request was made. Existing runner identities/settings and certification gates are preserved. Existing exact decision facts remain distinct from an optional future trained selector.
