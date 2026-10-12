@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fleet P1 deployment and same-owner resumption](fleet-p1-deployment-20261013.md) — canonical release, networkless full-row restore verification, audited cancellation review retaining allocation and live fifty-agent scheduling.
+
 - [Fleet P1 controller fixes](fleet-p1-controller-20261013.md) — local fresh-read delivery, PostgreSQL memory, actual permissions and construction recovery; 217 tests, unchanged production hashes, deployment pending.
 
 - [Communication-first society release](agent-society-release-20261010.md) — deployed bcb58b8, backup/clock/backfill/public verification, complete scoped status and remaining actual acceptance gates.

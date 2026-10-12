@@ -1,5 +1,7 @@
 # Fleet P1 implementation — 13 October 2026
 
+Subsequent checkpoint: the founder explicitly approved [deployment and same-owner resumption](fleet-p1-deployment-20261013.md). Both releases are live; accounts/counters/schedule are preserved and the cancelled execution was reviewed with its full allocation and historical unknown marker retained. The implementation and pending-rollout notes below record the earlier checkpoint.
+
 Founder assignment: implement fresh reads, memory retention, permissions and recovery from the [investigation plan](../fleet-agent-investigation-plan-20261013.md), preserving existing agents, accounts and counters. Assignee: Codex. Status: verified local implementation; no deployment or population restart. This assignment has no invented Linear ID and does not activate deferred roadmap tickets.
 
 ## Implementation boundary

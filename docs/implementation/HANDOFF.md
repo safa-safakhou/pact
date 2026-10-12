@@ -1,3 +1,7 @@
+# Fleet P1 deployed and resumed — 13 October 2026
+
+Founder explicitly authorized deployment and same-fleet recovery. PACT `fleet-p1-20261013-1` / b40ee5d and Fleet `3407e5a` are live. The same fifty Luna medium agents resumed on their original fifteen-minute schedule after an audited review of the cancelled execution. Its full 40,000 allocation and historical unknown marker remain; exact usage was unavailable and no action was replayed. Networkless backup restoration verified every Fleet row before recovery; bindings, original counters/settings and historical groups are preserved. Actual resumed turns report usage, commit gameplay and expose fresh-read/recovery events. Read [deployment and acceptance](reports/fleet-p1-deployment-20261013.md). Future uncertainty, P2 experiments and old deferred work remain separately gated.
+
 # Fleet P1 implementation — 13 October 2026
 
 Founder assigned fresh reads, memory retention, permissions and construction recovery. Fleet `3407e5a` and PACT's owned prerequisite projection are locally implemented and verified: 217 relevant tests pass, complete production agent/turn/ledger/cohort hashes match. The same fifty-owner Luna group remains paused with one unresolved Codex execution; no accounts, counters, pending commands, owner permissions or schedules changed. Not deployed. Read [the P1 completion report](reports/fleet-p1-controller-20261013.md) and the sibling Fleet report for exact checks and the pending two-repository rollout proposal. P2 experiments and historical deferred work remain unstarted.
