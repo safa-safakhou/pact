@@ -2,6 +2,8 @@
 
 **Prepared:** 13 October 2026. **Status:** proposed investigation.
 
+**Subsequent implementation checkpoint:** the founder assigned the P1 fresh-read, memory-retention, permission and construction-recovery fixes. They are locally implemented and verified in Fleet `3407e5a` plus PACT's owned prerequisite projection; [217 passing tests and unchanged production state](reports/fleet-p1-controller-20261013.md). Deployment and unknown-usage recovery remain pending; no permission expansion or experiment occurred. The evidence and proposed later stages below retain their original planning scope.
+
 Covers PACT and the independent sibling `fleet` repository. The behavioral baseline is the 50-account Luna cohort observed on 12 October 2026 at 22:16 Berlin. Implementation, live experiments and changes to authority or game rules remain proposed.
 
 ## Assessment and evidence boundaries

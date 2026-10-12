@@ -4,7 +4,7 @@
 
 ## Fleet agent investigation plan
 
-The [13 October investigation plan](fleet-agent-investigation-plan-20261013.md) analyzes the separate 50-account Luna cohort observed on 12 October at 22:16 Berlin. It distinguishes reproduced Fleet context defects, PACT capability and recovery restrictions, and hypotheses about communication incentives. It defines an ordered investigation, engine audit, controlled experiments and acceptance criteria. Findings are a dated baseline; fixes and experiments remain proposed. Historical launch and migration notes below describe earlier checkpoints.
+The [13 October investigation plan](fleet-agent-investigation-plan-20261013.md) analyzes the separate 50-account Luna cohort observed on 12 October at 22:16 Berlin. It distinguishes reproduced Fleet context defects, PACT capability and recovery restrictions, and hypotheses about communication incentives. The founder subsequently assigned the P1 fresh-read, memory, permission and construction-recovery fixes: [local implementation and verification](reports/fleet-p1-controller-20261013.md) are complete, with deployment pending and production state preserved. Experiments and P2 work remain proposed. Historical launch and migration notes below describe earlier checkpoints.
 
 ## Independent server agent fleet proposal
 

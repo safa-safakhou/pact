@@ -97,6 +97,12 @@ export interface OwnerKingdomView {
     }
   >;
   buildings: { kind: string; level: number }[];
+  nextUpgradeChecks?: {
+    kind: string;
+    targetLevel: number;
+    prerequisiteCheck: string;
+    missingBuildings: { kind: string; level: number }[];
+  }[];
   builders: {
     slot: number;
     instructionId: string | null;
@@ -324,6 +330,24 @@ export class WorldViewService {
       )
     ).rows;
     const levels = Object.fromEntries(buildings.map((b) => [b.kind, b.level])) as unknown as BuildingLevels;
+    // Owned projection only: explain the existing pure rule check, without granting
+    // authority or changing queue admission. An agent cannot cancel these queues.
+    const missingBuildings = (kind: BuildingKind, target: number) => {
+      const check = checkUpgrade(levels, kind, target);
+      if (check === "hall_prerequisite")
+        return [
+          { kind: "farm", level: target },
+          { kind: "barracks", level: target },
+          { kind: "storehouse", level: target - 1 },
+        ].filter((b) => levels[b.kind as BuildingKind] < b.level);
+      return check === "hall_limit" ? [{ kind: "hall", level: target - 1 }] : [];
+    };
+    const nextUpgradeChecks = buildings.map(({ kind, level }) => ({
+      kind,
+      targetLevel: level + 1,
+      prerequisiteCheck: checkUpgrade(levels, kind, level + 1),
+      missingBuildings: missingBuildings(kind, level + 1),
+    }));
     const builders = (
       await client.query<{
         slot: number;
@@ -350,12 +374,8 @@ export class WorldViewService {
           ? checkUpgrade(levels, row.kind as BuildingKind, row.target_level)
           : null,
       missingBuildings:
-        row.kind === "hall" && row.target_level && row.state === "waiting"
-          ? [
-              { kind: "farm", level: row.target_level },
-              { kind: "barracks", level: row.target_level },
-              { kind: "storehouse", level: row.target_level - 1 },
-            ].filter((b) => levels[b.kind as BuildingKind] < b.level)
+        row.kind && row.target_level && row.state === "waiting"
+          ? missingBuildings(row.kind as BuildingKind, row.target_level)
           : [],
       dueGameTimeMs: row.due_game_time_ms === null ? null : Number(row.due_game_time_ms),
       remainingGameMinutes:
@@ -566,6 +586,7 @@ export class WorldViewService {
         ]),
       ) as OwnerKingdomView["balances"],
       buildings,
+      nextUpgradeChecks,
       builders,
       troops,
       training,
