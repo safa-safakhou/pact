@@ -63,3 +63,7 @@ the signed flow exactly and orienting it to the authenticated kingdom. Raw A/B
 terms remain available. Social contact requests label `humanAcceptance` as
 `your_owner` for incoming or `counterparty_owner` for outgoing. These labels do
 not confer authority; human-only command admission still enforces the decision.
+
+## Targeted discovery — PACT-167
+
+`KingdomDiscoveryReader` owns a single-statement authenticated snapshot over existing public identity/Hall, current notice and public Court records, with relationship facts scoped to the viewer. HTTP/MCP/in-app consumers share this read port. This additive shortlist has no persistence or writes; see [its API/visibility contract](../api/kingdom-discovery.md) and [completion evidence](../implementation/reports/kingdom-discovery-20261013.md). Legacy public profiles and exact-handle views remain unchanged.

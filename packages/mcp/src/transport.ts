@@ -17,6 +17,8 @@ import {
   type EnrollmentQuery,
   EnrollmentQuerySchema,
   InboxReadQuerySchema,
+  type KingdomDiscoveryQuery,
+  KingdomDiscoveryQuerySchema,
   MemoryReadSchema,
   MemorySourceSchema,
   MemoryWriteSchema,
@@ -35,6 +37,7 @@ import {
   pactGameActionTool,
   pactGameActionV2Tool,
   pactInboxReadTool,
+  pactKingdomDiscoveryTool,
   pactMemoryReadTool,
   pactMemorySourceTool,
   pactMemoryWriteTool,
@@ -147,6 +150,7 @@ export interface McpTransportOptions {
   readonly origin: string;
   readonly clock: { now(): Date };
   readonly worldViews?: WorldViewReader;
+  readonly kingdomDiscovery?: { read(accountId: string, query: KingdomDiscoveryQuery): Promise<unknown> };
   readonly publicProfiles?: { read(handle: string): Promise<unknown | null> };
   readonly courts?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
   readonly politics?: { read(handle: string | undefined, offset: number, accountId: string): Promise<unknown> };
@@ -375,6 +379,9 @@ export class McpTransport {
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
               ...(this.options.publicProfiles && principal.agentScopes?.includes("world:read")
                 ? [pactPlayerFindTool]
+                : []),
+              ...(this.options.kingdomDiscovery && principal.agentScopes?.includes("world:read")
+                ? [pactKingdomDiscoveryTool]
                 : []),
               ...(this.options.courts && principal.agentScopes?.includes("world:read") ? [pactCourtReadTool] : []),
               ...(this.options.politics && principal.agentScopes?.includes("world:read") ? [pactPoliticsReadTool] : []),
@@ -643,6 +650,14 @@ export class McpTransport {
         throw error;
       }
       const result = { leaseId: lease.leaseId, expiresAt: lease.expiresAt.toISOString() };
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+    }
+    if (name === pactKingdomDiscoveryTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.kingdomDiscovery)
+        throw new McpError("FORBIDDEN", 403);
+      const query = KingdomDiscoveryQuerySchema.safeParse(args);
+      if (!query.success) throw new McpError("INVALID_REQUEST");
+      const result = await this.options.kingdomDiscovery.read(principal.accountId, query.data);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactPlayerFindTool.name) {

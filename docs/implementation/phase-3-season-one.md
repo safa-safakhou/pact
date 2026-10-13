@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**88 tickets · 66 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**89 tickets · 67 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2763,3 +2763,37 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - reports/browser-account-management-20261011.md — 357 unit checks and 384 PostgreSQL integration checks pass (one existing skipped); build/type/lint and three-account synthetic browser switching verified; local callback browser block documented.
 - reports/browser-account-management-20261011.md — browser-accounts-20261011-2 from 3e017c7; source archive integrity, backup, canonical verification, public chooser/empty anonymous roster/validated ChatGPT consent and final page corrections verified. Actual host callback/device limitations remain explicit; no remote Linear issue exists due free issue limit.
+
+<a id="pact-167"></a>
+## PACT-167 — Add targeted kingdom discovery and varied relationship shortlists
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-054](phase-2-social.md#pact-054), [PACT-149](phase-3-season-one.md#pact-149), [PACT-150](phase-3-season-one.md#pact-150)
+
+**Components:** contracts, kingdom discovery, MCP, API, inference, Fleet adapter.
+
+**Specification:** [social](../pact/social.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** S01, A05
+
+**Implement / deliver**
+
+- Add an authenticated bounded kingdom-discovery tool with name/handle relevance, public Hall filters, viewer-owned contact/request filters, exclusions and reproducible varied shortlists.
+- Expose the same read through HTTP, MCP and in-app inference; Fleet prefers it with compatibility fallback. Existing accounts, permissions, ledgers and schedules remain intact.
+- Founder selected both trade and relationship discovery, starting with trade: search current public resource notices/keywords and active/shared Court membership, retaining source versions and untrusted-claim labels. Dedicated autonomous advertising remains a later explicit posting/authority design.
+
+**Acceptance**
+
+- [x] Authorized surfaces return equivalent bounded results and derive ownership only from authenticated credentials; forged identity/product/offset fields are rejected.
+- [x] Shortlists exclude self, blocked pairs, inactive accounts, unranked/moderated identities and other products; public identity/Hall plus viewer-owned relationship facts never leak private counterpart stocks, troops, messages or presence.
+- [x] Search relevance, filters, rotation, exclusions and expired introductions pass meaningful isolated database tests; legacy tools remain compatible.
+- [x] Relevant build/type/lint/contracts/boundaries and regression checks pass; implementation/API documentation and verified local commits record rollout and strategic limitations.
+
+**Assignee:** codex-kingdom-discovery
+
+**Evidence**
+
+- reports/kingdom-discovery-20261013.md — additive HTTP/MCP/in-app discovery, targeted resource notices/Courts, public/owned visibility and no gameplay writes verified with ten isolated PostgreSQL cases.
+- reports/kingdom-discovery-20261013.md — 359 unit and 394 integration checks pass (one pre-existing optional skip); full build/type/lint/boundary/build-order and 26 unchanged published v1 schemas pass. Existing Expo/Metro audit findings recorded; no deployed/live-strategy certification claimed.
+- Sibling fleet/docs/discovery-20261013.md — compatible focused discovery and up-front schema; 59 Linux unit + 108 integration checks pass; original cohorts/accounts/counters/schedules remain intact. Linear creation rejected at free issue limit a49d97079f53b0e4.

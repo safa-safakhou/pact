@@ -1,7 +1,7 @@
-import { PlayerFindQuerySchema, WorldViewQuerySchema } from "@pact/contracts";
+import { KingdomDiscoveryQuerySchema, PlayerFindQuerySchema, WorldViewQuerySchema } from "@pact/contracts";
 import type { IdentityService } from "@pact/identity";
 import { IdentityError } from "@pact/identity";
-import type { WorldViewService } from "@pact/kingdom";
+import type { KingdomDiscoveryReader, WorldViewService } from "@pact/kingdom";
 import type { OAuthService } from "@pact/oauth";
 import type { FastifyInstance } from "fastify";
 import { authenticatedWorldViewer } from "./world-read-auth.js";
@@ -12,7 +12,22 @@ export function registerWorldViewRoutes(
   identity: IdentityService,
   worldViews: WorldViewService,
   oauth?: OAuthService,
+  discovery?: KingdomDiscoveryReader,
 ): void {
+  if (discovery)
+    server.post("/v2/kingdoms/discover", async (request, reply) => {
+      reply.header("cache-control", "no-store");
+      let accountId: string;
+      try {
+        accountId = await authenticatedWorldViewer(request, identity, oauth);
+      } catch (error) {
+        if (error instanceof IdentityError) return reply.code(403).send({ error: { code: "FORBIDDEN" } });
+        throw error;
+      }
+      const parsed = KingdomDiscoveryQuerySchema.safeParse(request.body ?? {});
+      if (!parsed.success) return reply.code(400).send({ error: { code: "INVALID_INPUT" } });
+      return discovery.read(accountId, parsed.data);
+    });
   server.get<{ Params: { handle: string } }>("/v1/people/:handle", async (request, reply) => {
     reply.header("cache-control", "no-store");
     const parsed = PlayerFindQuerySchema.safeParse(request.params);

@@ -69,6 +69,7 @@ export interface ApiModules {
   identity: IdentityService;
   onboarding: OnboardingService;
   kingdom?: KingdomService;
+  kingdomDiscovery?: import("@pact/kingdom").KingdomDiscoveryReader;
   worldViews?: WorldViewService;
   decisionSupport?: DecisionSupportReader;
   socialOverview?: SocialOverviewReader;
@@ -205,7 +206,8 @@ export function buildServer(
     if (modules.seasons) registerSeasonRoutes(server, pool, modules.identity, modules.seasons, modules.oauth);
     if (modules.chronicle && modules.gameTime)
       registerChronicleRoutes(server, modules.identity, modules.chronicle, modules.gameTime);
-    if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.worldViews)
+      registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth, modules.kingdomDiscovery);
     if (modules.persistentPlay) registerEnrollmentRoutes(server, modules.identity, modules.persistentPlay);
     if (modules.privateMemory) registerMemoryRoutes(server, modules.identity, modules.privateMemory, modules.oauth);
     if (modules.collections) registerCollectionRoutes(server, modules.identity, modules.collections);

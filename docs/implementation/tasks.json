@@ -8673,13 +8673,65 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "implementation_authorization": "founder_20261011_browser_account_management"
+    },
+    {
+      "id": "PACT-167",
+      "title": "Add targeted kingdom discovery and varied relationship shortlists",
+      "phase": 3,
+      "status": "done",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "M",
+      "depends_on": [
+        "PACT-053",
+        "PACT-054",
+        "PACT-149",
+        "PACT-150"
+      ],
+      "sources": [
+        "social",
+        "chatgpt"
+      ],
+      "covers": [
+        "S01",
+        "A05"
+      ],
+      "scope": [
+        "Add an authenticated bounded kingdom-discovery tool with name/handle relevance, public Hall filters, viewer-owned contact/request filters, exclusions and reproducible varied shortlists.",
+        "Expose the same read through HTTP, MCP and in-app inference; Fleet prefers it with compatibility fallback. Existing accounts, permissions, ledgers and schedules remain intact.",
+        "Founder selected both trade and relationship discovery, starting with trade: search current public resource notices/keywords and active/shared Court membership, retaining source versions and untrusted-claim labels. Dedicated autonomous advertising remains a later explicit posting/authority design."
+      ],
+      "acceptance": [
+        "Authorized surfaces return equivalent bounded results and derive ownership only from authenticated credentials; forged identity/product/offset fields are rejected.",
+        "Shortlists exclude self, blocked pairs, inactive accounts, unranked/moderated identities and other products; public identity/Hall plus viewer-owned relationship facts never leak private counterpart stocks, troops, messages or presence.",
+        "Search relevance, filters, rotation, exclusions and expired introductions pass meaningful isolated database tests; legacy tools remain compatible.",
+        "Relevant build/type/lint/contracts/boundaries and regression checks pass; implementation/API documentation and verified local commits record rollout and strategic limitations."
+      ],
+      "components": [
+        "contracts",
+        "kingdom discovery",
+        "MCP",
+        "API",
+        "inference",
+        "Fleet adapter"
+      ],
+      "evidence": [
+        "reports/kingdom-discovery-20261013.md \u2014 additive HTTP/MCP/in-app discovery, targeted resource notices/Courts, public/owned visibility and no gameplay writes verified with ten isolated PostgreSQL cases.",
+        "reports/kingdom-discovery-20261013.md \u2014 359 unit and 394 integration checks pass (one pre-existing optional skip); full build/type/lint/boundary/build-order and 26 unchanged published v1 schemas pass. Existing Expo/Metro audit findings recorded; no deployed/live-strategy certification claimed.",
+        "Sibling fleet/docs/discovery-20261013.md \u2014 compatible focused discovery and up-front schema; 59 Linux unit + 108 integration checks pass; original cohorts/accounts/counters/schedules remain intact. Linear creation rejected at free issue limit a49d97079f53b0e4."
+      ],
+      "assignee": "codex-kingdom-discovery",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "implementation_authorization": "founder_20261013_kingdom_discovery"
     }
   ],
   "source_sha256": {
     "../pact/access.md": "f84f389f02bbbe2d4335ccdad7febd986114f272677768f6991fa3e34d124636",
     "../pact/runtime.md": "d0554e82d856f81e7f666800e96a3d5faf77e311e3d222a908d3dfcfc447ab30",
     "../pact/rules.md": "7aba92c427a11e8a9c90b0e3cbee84e55261f3d7b7690d10519bc87c1e605f99",
-    "../pact/social.md": "3798ecde03dec944dce6602e0c8548b2a5b045cc5d6b5db6867a7d4787f20027",
+    "../pact/social.md": "593e5a7c7de44a08cbd1752c24084eed519c55da9711225ee874e389eadbe93a",
     "../pact/privacy.md": "4d5f3ad106bbda3d7a9572c3f1746b53100b0fa3bcd0527abc1d3ba1be932b0e",
     "../pact/product.md": "1acd07ea575e418c4e24e79b9d4ee9acb71e903060cae511a3961b8c70f0bb06",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
@@ -9350,6 +9402,59 @@
         "PACT-156"
       ],
       "report": "reports/browser-account-management-20261011.md"
+    },
+    {
+      "date": "2026-10-13",
+      "ticket": "PACT-167",
+      "sources": [
+        "social"
+      ],
+      "affected_tickets": [
+        "PACT-008",
+        "PACT-036",
+        "PACT-041",
+        "PACT-042",
+        "PACT-044",
+        "PACT-054",
+        "PACT-055",
+        "PACT-056",
+        "PACT-057",
+        "PACT-058",
+        "PACT-059",
+        "PACT-061",
+        "PACT-063",
+        "PACT-064",
+        "PACT-099",
+        "PACT-140",
+        "PACT-141",
+        "PACT-142",
+        "PACT-143",
+        "PACT-145",
+        "PACT-146",
+        "PACT-148",
+        "PACT-149",
+        "PACT-150",
+        "PACT-151",
+        "PACT-153",
+        "PACT-158",
+        "PACT-160",
+        "PACT-161",
+        "PACT-162",
+        "PACT-163",
+        "PACT-164",
+        "PACT-165",
+        "PACT-167"
+      ],
+      "report": "reports/kingdom-discovery-20261013.md",
+      "review": "Additive discovery visibility/selection correction; prior economy, contact, block, command and observer authority criteria retained. Legacy projections unchanged; new acceptance belongs to PACT-167."
     }
-  ]
+  ],
+  "kingdom_discovery": {
+    "date": "2026-10-13",
+    "ticket": "PACT-167",
+    "authorization": "founder_requested_better_agent_discovery",
+    "status": "verified_local_not_deployed",
+    "tracker": "Local record; Linear creation rejected at free issue limit a49d97079f53b0e4.",
+    "report": "reports/kingdom-discovery-20261013.md"
+  }
 }

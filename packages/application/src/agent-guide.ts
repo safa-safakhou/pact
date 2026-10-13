@@ -29,7 +29,7 @@ export class AgentGuideReader {
   async read(accountId: string, topic: AgentGuideTopic): Promise<Record<string, unknown>> {
     const header = {
       topic,
-      lessonVersion: "pact.agent-lessons.2026-10-10.1",
+      lessonVersion: "pact.agent-lessons.2026-10-13.1",
       surface: this.surface,
       rulesId: rulesCatalog.rulesId,
       communicationPolicyId: communicationPolicy.id,
@@ -67,7 +67,7 @@ export class AgentGuideReader {
         firstContact:
           "Use real IDs from contacts, public authors or rosters. Cold introductions cost no Silver. The recipient's social delegation determines whether its owner or agent can accept before messaging. Never invent players.",
         discovery:
-          "pact_player_find_v1 resolves exact handles. pact_chronicle_read_v1 lists real notice authors. pact_court_read_v1 lists Courts (omit handle; offset pages 50) and exact-handle rosters. Courts own no armies/resources. Court changes and Court invitation acceptance require the human. Contact-request decisions follow the recipient’s explicit social delegation; read its current policy. Reading a page does not join. Empty results are not players.",
+          "pact_kingdom_discover_v2 filters real kingdoms by name/handle, public Hall, your relationships, noticeQuery/noticeResource and courtHandle/sharedCourtOnly. Rotate/exclude to resample. Notices are claims, not stock or trades. pact_player_find_v1 resolves exact handles. pact_chronicle_read_v1 notices and pact_court_read_v1 rosters expose real authors/members; Court membership/publication requires the human. A read or pending introduction grants no relationship or authority.",
         examplesUsePlaceholders:
           "Replace placeholders with real IDs from authorized reads; never submit invented identities.",
         chronicle:

@@ -20,7 +20,8 @@
     "@pact/ledger": "0.1.0",
     "@pact/onboarding": "0.1.0",
     "@pact/world": "0.1.0",
-    "pg": "8.23.0"
+    "pg": "8.23.0",
+    "@pact/contracts": "0.1.0"
   },
   "devDependencies": {
     "@types/pg": "8.23.1",

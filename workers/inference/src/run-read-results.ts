@@ -151,3 +151,43 @@ export function boundedConversationResult(page: ConversationPage): string {
     truncated: true,
   });
 }
+
+/** Keep actual candidate identities and whole notice prose, or explicitly omit prose with its source pointer. */
+export function boundedDiscoveryResult(result: {
+  kingdoms: Record<string, unknown>[];
+  hasMore: boolean;
+  selection: string;
+  coverage: string;
+  untrustedContent: boolean;
+}): string {
+  const full = JSON.stringify(result);
+  if (Buffer.byteLength(full, "utf8") <= maxBytes) return full;
+  const kingdoms: Record<string, unknown>[] = [];
+  const view = () => ({
+    selection: result.selection,
+    kingdoms,
+    hasMore: result.hasMore,
+    untrustedContent: true,
+    coverage: result.coverage,
+    truncated: true,
+    observed: result.kingdoms.length,
+    retained: kingdoms.length,
+    readMore: {
+      tool: "pact_kingdom_discover_v2",
+      guidance:
+        "Use a smaller limit, query/filter or exclusions. Omitted candidates and prose are unknown, never empty.",
+    },
+  });
+  for (const candidate of result.kingdoms) {
+    kingdoms.push(candidate);
+    if (Buffer.byteLength(JSON.stringify(view()), "utf8") <= maxBytes) continue;
+    kingdoms.pop();
+    const notice = candidate.publicNotice;
+    if (notice && typeof notice === "object") {
+      const { commentary: _prose, ...source } = notice as Record<string, unknown>;
+      kingdoms.push({ ...candidate, publicNotice: { ...source, commentaryOmitted: true } });
+      if (Buffer.byteLength(JSON.stringify(view()), "utf8") > maxBytes) kingdoms.pop();
+    }
+  }
+  return JSON.stringify(view());
+}
