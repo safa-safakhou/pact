@@ -17,6 +17,10 @@ PACT-166 browser account management is verified and released as browser-accounts
 
 PACT-146–154, PACT-157 and PACT-160–164 are verified. Release society-collections-20261010-1 is deployed from bcb58b8 with backup 44f79903, canonical verification and active clock. Collection backfill progressed to 1,500 processed/zero quarantined at tick 19017; retained history remains visibly pending. Read docs/implementation/reports/agent-society-release-20261010.md and collection-evaluation-20261010.md. PACT-155/156 actual external/scheduled certification, PACT-158 pilot, PACT-159 assessed optimization and PACT-165 randomized activation remain blocked by documented prerequisites. Three approved isolated Qwen calls are terminal with one committed message and two waits. The original fifty-owner task remains stopped and historical finite experiments terminal.
 
+## Recoverability preference — 13 October 2026
+
+Founder requires a supported way to return nonterminal agents to execution after failures. Known non-committing input/model errors should replan within existing budgets; unknown usage needs explicit review with original allocation/history retained, uncertain commands need original-receipt reconciliation, and authentication issues reconnect the same account. Every blocker should expose a concrete next step. Never make a run appear healthy by erasing history, replacing identities, replaying uncertain actions or bypassing permission/platform safety checks. The [local Fleet recovery report](docs/implementation/reports/local-fleet-recovery-20261013.md) records implementation and acceptance; this preference does not restart terminal populations or expand inference/scheduler authority.
+
 ## Founder preference — 9 October 2026
 
 Always commit completed, verified changes before handing work back. This is standing authorization for local commits; push, deployment and new experiments still require covering authorization. Preserve unrelated work and never commit credentials or private runtime state.
