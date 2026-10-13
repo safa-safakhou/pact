@@ -371,6 +371,45 @@ export class CommandDispatcher {
     return result.rows[0]?.receipt ?? null;
   }
 
+  /** Owner-scoped receipt projection shared by optional protocol task listings. No new task ledger. */
+  async listReceipts(
+    principal: AuthenticatedPrincipal,
+    input: { offset: number; limit: number; after?: string; committed?: boolean },
+  ) {
+    if (
+      principal.productScope !== this.options.productScope ||
+      (principal.audience === "agent" && !principal.agentScopes?.includes("world:read"))
+    )
+      throw new DispatcherError("FORBIDDEN");
+    if (
+      !Number.isSafeInteger(input.offset) ||
+      input.offset < 0 ||
+      input.offset > 10000 ||
+      !Number.isSafeInteger(input.limit) ||
+      input.limit < 1 ||
+      input.limit > 100 ||
+      (input.after && !Number.isFinite(Date.parse(input.after)))
+    )
+      throw new DispatcherError("INVALID_COMMAND");
+    const row = (
+      await this.options.pool.query<{ receipts: CommandReceipt[]; total: number }>(
+        `WITH permitted AS (SELECT command_id,receipt,created_at FROM command_receipts WHERE product_scope=$1 AND account_id=$2
+        AND ($3::timestamptz IS NULL OR (receipt->>'committedAt')::timestamptz >= $3) AND ($4::boolean IS NULL OR (code IN ('COMMITTED','ALREADY_COMMITTED'))=$4)),
+       page AS (SELECT * FROM permitted ORDER BY created_at DESC,command_id DESC LIMIT $5 OFFSET $6)
+       SELECT (SELECT count(*)::int FROM permitted) total, COALESCE((SELECT jsonb_agg(receipt ORDER BY created_at DESC,command_id DESC) FROM page),'[]'::jsonb) receipts`,
+        [
+          this.options.productScope,
+          principal.accountId,
+          input.after ?? null,
+          input.committed ?? null,
+          input.limit,
+          input.offset,
+        ],
+      )
+    ).rows[0];
+    return row ?? { receipts: [], total: 0 };
+  }
+
   private assertPrincipal(principal: AuthenticatedPrincipal): void {
     if (principal.productScope !== this.options.productScope) {
       throw new DispatcherError("FORBIDDEN");

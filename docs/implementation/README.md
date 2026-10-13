@@ -1,3 +1,7 @@
+## Optional A2A interface — 13 October 2026
+
+PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using shared rules and permissions. Default off; no fleet release, account, counter or schedule changes. See [setup](../api/a2a.md) and [implementation evidence](reports/optional-a2a-20261013.md).
+
 > Completed 4 October backend experiment: 10 Luna envoys + 90 scripted players, exactly 200 model requests, 2,321 committed commands and 131 contracts. Deadline respected; runner/model worker stopped and heartbeat paused; final report and evidence in [population playtest](reports/population-playtest-20261004.md). API/inference bug fixes remain deployed as `population-fixes-20261005-2`; rules worker unchanged. Explanation quality and pacing remain findings, not production certification. Deferred roadmap untouched; Linear remains at its free issue limit.
 
 # PACT implementation backlog

@@ -7,6 +7,7 @@ describe("environment validation", () => {
       NODE_ENV: "development",
       HOST: "127.0.0.1",
       PORT: 3000,
+      PACT_A2A_ENABLED: "0",
     });
   });
 
@@ -48,5 +49,26 @@ describe("environment validation", () => {
         RAID_SEED_ENCRYPTION_KEY_BASE64: Buffer.alloc(32, 7).toString("base64"),
       }).RAID_SEED_ENCRYPTION_KEY_BASE64,
     ).toBe(Buffer.alloc(32, 7).toString("base64"));
+  });
+  it("optional A2A accepts explicit enablement, rejects invalid flags and requires production HTTPS", () => {
+    expect(readEnvironment({ DATABASE_URL: "postgres://localhost/pact", PACT_A2A_ENABLED: "1" }).PACT_A2A_ENABLED).toBe(
+      "1",
+    );
+    expect(() => readEnvironment({ DATABASE_URL: "postgres://localhost/pact", PACT_A2A_ENABLED: "yes" })).toThrow();
+    const production = {
+      DATABASE_URL: "postgres://localhost/pact",
+      NODE_ENV: "production",
+      IDENTITY_TOKEN_PEPPER: "a".repeat(43),
+      IDENTITY_ENCRYPTION_KEY: "b".repeat(43),
+      COMPROMISED_PASSWORD_SHA256_FILE: "/fixture/digests",
+      MODEL_CREDENTIAL_WRAPPING_PUBLIC_KEY_FILE: "/fixture/public",
+      PACT_DELETION_REGISTRY_FILE: "/fixture/deletions",
+      RAID_SEED_ENCRYPTION_KEY_BASE64: Buffer.alloc(32, 7).toString("base64"),
+      PACT_A2A_ENABLED: "1",
+    };
+    expect(() => readEnvironment({ ...production, PACT_ORIGIN: "http://pact.example" })).toThrow(
+      "Production A2A requires",
+    );
+    expect(readEnvironment({ ...production, PACT_ORIGIN: "https://pact.example" }).PACT_A2A_ENABLED).toBe("1");
   });
 });

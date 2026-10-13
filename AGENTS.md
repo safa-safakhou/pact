@@ -1,5 +1,7 @@
 # PACT engineering instructions
 
+13 October PACT-168 adds a locally verified optional A2A 1.0 JSON-RPC interface alongside API/MCP/tool calling with shared rules, permissions, leases and receipts. Default off and not deployed; read `docs/api/a2a.md` and `docs/implementation/reports/optional-a2a-20261013.md`. No existing account/grant/counter/cohort/schedule changed. Current fifty server Luna and five local Mac Nemotron releases remain untouched; no interface/provider migration, inference enrollment or task cancellation is implied.
+
 13 October founder requested improved agent kingdom discovery, selecting both trade and relationship discovery starting with trade. PACT-167 implements an additive scoped shortlist over names/public Hall, current resource notices, own contacts/live introductions and active/shared Courts, with varied selection. Codex owns local implementation without delegation. Read `docs/implementation/reports/kingdom-discovery-20261013.md`; existing identities, accounts, grants, counters and schedules are preserved. Autonomous public advertising is not enabled by these reads. The verified source commits are not a deployed release.
 
 

@@ -22,6 +22,7 @@ import {
 } from "@pact/telemetry";
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
+import { PactA2AHandler, registerA2ARoutes } from "./a2a.js";
 import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerChronicleRoutes } from "./chronicle-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
@@ -91,6 +92,8 @@ export interface ApiModules {
   oauth?: OAuthService;
   authority?: AuthorityService;
   mcp?: McpTransport;
+  a2aEnabled?: boolean;
+  a2aBaseUrl?: string;
   approvals?: ApprovalService;
   inbox?: InboxService;
   notifications?: NotificationService;
@@ -163,6 +166,24 @@ export function buildServer(
     });
   });
 
+  server.get("/v2/interfaces", async (_request, reply) => {
+    reply.header("cache-control", "no-store");
+    const a2a = Boolean(modules?.a2aEnabled && modules.mcp && modules.oauth && modules.runs);
+    return {
+      api: { enabled: Boolean(modules), version: "v1" },
+      mcp: { enabled: Boolean(modules?.mcp && modules?.oauth) },
+      toolCalling: {
+        enabled: Boolean(modules?.mcp),
+        description: "Canonical game schemas via MCP or @pact/contracts; model-side tool calling is optional",
+      },
+      a2a: {
+        enabled: a2a,
+        protocolVersion: a2a ? "1.0" : null,
+        binding: a2a ? "JSONRPC" : null,
+        cardPath: a2a ? "/.well-known/agent-card.json" : null,
+      },
+    };
+  });
   server.get("/health", async () => ({ status: "ok" }));
   server.get("/ready", async (_request, reply) => {
     try {
@@ -221,6 +242,15 @@ export function buildServer(
     if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);
     if (modules.mcp && modules.oauth) {
       registerMcpRoutes(server, modules.mcp, modules.oauth, modules.origin ?? "https://pact.example");
+    }
+    if (modules.a2aEnabled && modules.mcp && modules.oauth && modules.runs) {
+      const base = modules.a2aBaseUrl ?? modules.origin ?? "https://pact.example";
+      registerA2ARoutes(
+        server,
+        new PactA2AHandler(base, modules.mcp.operationOptions, modules.runs, modules.dispatcher),
+        modules.oauth,
+        modules.origin ?? base,
+      );
     }
     if (modules.approvals) registerApprovalRoutes(server, modules.identity, modules.approvals);
     if (modules.oauth && modules.approvals) {

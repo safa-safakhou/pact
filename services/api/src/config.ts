@@ -12,6 +12,7 @@ const EnvironmentSchema = z
     LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
     PACT_ORIGIN: z.url().default("http://127.0.0.1:5173"),
     PACT_PUBLIC_BASE_URL: z.url().optional(),
+    PACT_A2A_ENABLED: z.enum(["0", "1"]).default("0"),
     PACT_GUEST_PLAY: z.enum(["0", "1"]).default("0"),
     WEB_PUSH_PUBLIC_KEY: z.preprocess(
       (value) => (value === "" ? undefined : value),
@@ -62,6 +63,13 @@ const EnvironmentSchema = z
           value.RAID_SEED_ENCRYPTION_KEY_BASE64)
     ) {
       context.addIssue({ code: "custom", message: "Raid seed encryption key must be canonical base64 for 32 bytes" });
+    }
+    if (
+      value.NODE_ENV === "production" &&
+      value.PACT_A2A_ENABLED === "1" &&
+      new URL(value.PACT_PUBLIC_BASE_URL ?? value.PACT_ORIGIN).protocol !== "https:"
+    ) {
+      context.addIssue({ code: "custom", message: "Production A2A requires a public HTTPS origin" });
     }
     const telegramValues = [value.TELEGRAM_BOT_ID, value.TELEGRAM_BOT_TOKEN, value.TELEGRAM_WEBHOOK_SECRET];
     if (telegramValues.some(Boolean) && !telegramValues.every(Boolean)) {

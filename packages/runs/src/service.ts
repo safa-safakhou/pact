@@ -275,18 +275,13 @@ export class RunService {
     return transactionClient ? operation(transactionClient) : withTransaction(this.pool, operation);
   }
 
-  /** MCP `run.open`: write lease only — never starts provider inference. */
-  async openMcpLease(input: {
-    accountId: string;
-    subjectId?: string;
-    holderId: string;
-  }): Promise<{ leaseId: string; expiresAt: Date }> {
-    const subjectId = input.subjectId ?? input.accountId;
+  /** Opening an external interface lease never starts provider inference. */
+  async openExternalLease(input: { accountId: string; holderId: string; kind: "mcp" | "a2a"; subjectId?: string }) {
     const expiresAt = new Date(this.options.clock.now().getTime() + MCP_LEASE_MS);
     return withTransaction(this.pool, async (client) => {
       const lease = await this.acquireLease(client, {
-        subjectId,
-        holderKind: "mcp",
+        subjectId: input.subjectId ?? input.accountId,
+        holderKind: input.kind,
         holderId: input.holderId,
         expiresAt,
         allowSameHolder: true,
@@ -294,15 +289,17 @@ export class RunService {
       return { leaseId: lease.leaseId, expiresAt };
     });
   }
-
-  /** Closing one MCP session releases only the lease held by that same authenticated session. */
-  async releaseMcpLease(input: { accountId: string; holderId: string }): Promise<void> {
+  async openMcpLease(input: { accountId: string; subjectId?: string; holderId: string }) {
+    return this.openExternalLease({ ...input, kind: "mcp" });
+  }
+  async releaseExternalLease(input: { accountId: string; holderId: string; kind: "mcp" | "a2a" }) {
     await this.pool.query(
-      `UPDATE write_leases SET released_at = $4
-       WHERE product_scope = $1 AND subject_id = $2 AND holder_kind = 'mcp'
-         AND holder_id = $3 AND released_at IS NULL`,
-      [this.options.productScope, input.accountId, input.holderId, this.options.clock.now()],
+      "UPDATE write_leases SET released_at=$5 WHERE product_scope=$1 AND subject_id=$2 AND holder_kind=$3 AND holder_id=$4 AND released_at IS NULL",
+      [this.options.productScope, input.accountId, input.kind, input.holderId, this.options.clock.now()],
     );
+  }
+  async releaseMcpLease(input: { accountId: string; holderId: string }): Promise<void> {
+    await this.releaseExternalLease({ ...input, kind: "mcp" });
   }
 
   /** Check the exact external host lease inside the gameplay command transaction. */
@@ -327,13 +324,13 @@ export class RunService {
     if (!result.rowCount) throw new RunError("FORBIDDEN");
   }
 
-  /** Shared agent admission accepts the exact MCP session or the owner's active PACT run. */
+  /** Shared agent admission accepts the exact external interface holder or the owner's active PACT run. */
   async assertAgentWriteLease(client: PoolClient, accountId: string, holderId: string): Promise<void> {
     const result = await client.query(
       `SELECT 1 FROM write_leases l LEFT JOIN envoy_runs r ON r.run_id = l.run_id
        WHERE l.product_scope = $1 AND l.holder_id = $3
          AND l.released_at IS NULL AND l.expires_at > $4
-         AND ((l.holder_kind = 'mcp' AND l.subject_id = $2)
+         AND ((l.holder_kind IN ('mcp','a2a') AND l.subject_id = $2)
            OR (l.holder_kind = 'pact_run' AND r.account_id = $2
              AND r.subject_id = l.subject_id AND r.status = 'running'))
        FOR SHARE OF l`,
@@ -764,7 +761,7 @@ export class RunService {
     client: PoolClient,
     input: {
       subjectId: string;
-      holderKind: "pact_run" | "mcp" | "script";
+      holderKind: "pact_run" | "mcp" | "a2a" | "script";
       holderId: string;
       runId?: string;
       expiresAt: Date;

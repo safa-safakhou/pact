@@ -139,3 +139,5 @@ For long-running verification or pilot tickets, link the actual observation reco
 - [Fleet repository migration, 12 October](fleet-repository-migration-20261012.md): independent sibling repository, injected game adapter and fresh disabled deployment; terminal pilot state preservation is verified separately.
 
 - [PACT-167: targeted kingdom, trade and relationship discovery](kingdom-discovery-20261013.md) — verified local implementation, source-only rollout boundary, exact visibility and dependency-audit limitations.
+
+- [PACT-168: optional A2A interface](optional-a2a-20261013.md) — shared game authority, resource-bound OAuth, receipt recovery and existing-state preservation; default off and locally verified.

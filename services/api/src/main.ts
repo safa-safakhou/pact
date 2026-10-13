@@ -282,6 +282,7 @@ const oauth = new OAuthService(pool, {
   productScope: "pact",
   issuer: publicBaseUrl,
   mcpResource: `${publicBaseUrl}/mcp`,
+  ...(environment.PACT_A2A_ENABLED === "1" ? { a2aResource: `${publicBaseUrl}/a2a` } : {}),
   // The owned old edge still proxies this same application, accounts and OAuth registry.
   mcpResourceAliases:
     publicBaseUrl === "https://pact.tinyagenttools.com" ? ["https://tinyagenttools.com/pact/mcp"] : [],
@@ -673,6 +674,8 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   oauth,
   authority,
   mcp,
+  a2aEnabled: environment.PACT_A2A_ENABLED === "1",
+  a2aBaseUrl: publicBaseUrl,
   approvals,
   inbox,
   runs,

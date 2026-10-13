@@ -1,3 +1,7 @@
+# Optional A2A verified locally — 13 October 2026
+
+PACT-168 adds A2A 1.0 JSON-RPC through shared game operations/authorization and owner receipt tasks. Default off, not deployed: existing fleets/accounts/counters/providers/schedules remain unchanged. Full build/type/lint/contracts and 360 unit + 405 integration checks pass (one optional skip); synthetic migration preservation and official SDK/OAuth/retry/recovery checks pass. See [completion record](reports/optional-a2a-20261013.md) and [setup](../api/a2a.md). Deployment/enablement is the next operational step; no further implementation in this assignment remains.
+
 # Fleet P1 deployed and resumed — 13 October 2026
 
 Founder explicitly authorized deployment and same-fleet recovery. PACT `fleet-p1-20261013-1` / b40ee5d and Fleet `3407e5a` are live. The same fifty Luna medium agents resumed on their original fifteen-minute schedule after an audited review of the cancelled execution. Its full 40,000 allocation and historical unknown marker remain; exact usage was unavailable and no action was replayed. Networkless backup restoration verified every Fleet row before recovery; bindings, original counters/settings and historical groups are preserved. Actual resumed turns report usage, commit gameplay and expose fresh-read/recovery events. Read [deployment and acceptance](reports/fleet-p1-deployment-20261013.md). Future uncertainty, P2 experiments and old deferred work remain separately gated.

@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**89 tickets · 67 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**90 tickets · 68 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2797,3 +2797,36 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - reports/kingdom-discovery-20261013.md — additive HTTP/MCP/in-app discovery, targeted resource notices/Courts, public/owned visibility and no gameplay writes verified with ten isolated PostgreSQL cases.
 - reports/kingdom-discovery-20261013.md — 359 unit and 394 integration checks pass (one pre-existing optional skip); full build/type/lint/boundary/build-order and 26 unchanged published v1 schemas pass. Existing Expo/Metro audit findings recorded; no deployed/live-strategy certification claimed.
 - Sibling fleet/docs/discovery-20261013.md — compatible focused discovery and up-front schema; 59 Linux unit + 108 integration checks pass; original cohorts/accounts/counters/schedules remain intact. Linear creation rejected at free issue limit a49d97079f53b0e4.
+
+<a id="pact-168"></a>
+## PACT-168 — Add optional A2A interface with shared game authorization
+
+**Status:** done · **Role:** Platform · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-149](phase-3-season-one.md#pact-149), [PACT-154](phase-3-season-one.md#pact-154), [PACT-166](phase-3-season-one.md#pact-166), [PACT-167](phase-3-season-one.md#pact-167)
+
+**Components:** application agent operations, OAuth, run leases, API A2A adapter, contracts documentation.
+
+**Specification:** [architecture](../pact/architecture.md), [access](../pact/access.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** A05, A08, S01, R07
+
+**Implement / deliver**
+
+- Founder-authorized optional A2A gateway alongside API/MCP/tool calling, using shared canonical game operations, resource-bound OAuth, advertised capabilities and original command receipts.
+- Preserve all existing agents, accounts, grants, counters, schedules and terminal groups; no automatic protocol enrollment/migration, inference-on-message, new mandates or live experiment.
+
+**Acceptance**
+
+- [x] Disabled by default with accurate interface/Agent Card capabilities and standard pinned A2A client interoperability; unsupported protocol features are explicit.
+- [x] Reads and actions share existing authoritative handlers, scopes, mandates, exclusive lease, social delegation, human-only boundaries, receipts and idempotency; auth derives identity and isolates audiences/resources/accounts.
+- [x] Retries, conflicting payloads, revoked/expired/closed identities, foreign contexts/tasks, failed permissions and competing MCP/in-app leases are tested with no duplicate effects or counter reset.
+- [x] Transport privacy/retention and optional setup/API instructions are documented; relevant full build/type/lint/contracts/isolated database regression and verified local commits record actual acceptance and deployment limitations.
+
+**Assignee:** codex-optional-a2a
+
+**Evidence**
+
+- docs/implementation/reports/optional-a2a-20261013.md — official A2A SDK 1.3.0 / protocol 1.0 JSON-RPC interoperability, shared operations/permissions/receipts, separate PKCE account-bound OAuth and exclusive lease acceptance; default off, no live deployment.
+- docs/implementation/reports/optional-a2a-20261013.md — complete-row synthetic migration preservation, concurrent/idempotent/foreign/revoked/expired/scoped/human-only/uncertain/restart paths; 360 unit + 405 integration passed, one pre-existing optional skip; final 11 A2A cases passed.
+- docs/api/a2a.md — setup/schema/recovery/privacy; full build/type/lint/contracts/non-game and deployment configuration checks passed. Existing 23 Expo/Metro audit findings recorded; Linear free-limit rejection a49e4a6ff8bcf8e1.

@@ -63,3 +63,7 @@ This baseline fixes implementation decisions. Provider certification, security c
 [ChatGPT play and agent freedom](chatgpt.md) owns the founder-authorized personal plugin, private free-form notes and actual interaction view. It supersedes fixed ambition choices in the experience design.
 
 [Hall of Stories and collections](collections.md) owns the versioned catalog and cosmetic-only extension, with separate implementation acceptance.
+
+## Optional agent interfaces correction — 13 October 2026
+
+PACT-168 adds optional A2A alongside API, MCP and tool calling with shared game rules/permissions. It is disabled by default and locally verified, not deployed. The dated architecture/access/runtime/privacy corrections own this additive interface; the baseline economy and historical external-client certification remain unchanged. See [setup](../api/a2a.md) and [completion evidence](../implementation/reports/optional-a2a-20261013.md). Existing agents, accounts, counters, grants, models and schedules are preserved.

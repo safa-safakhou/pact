@@ -95,6 +95,8 @@ describe("API/database smoke", () => {
       { name: "0062_collections.sql" },
       { name: "0063_collection_stories.sql" },
       { name: "0064_collection_story_retention.sql" },
+      { name: "0066_optional_a2a_audience.sql" },
+      { name: "0067_optional_a2a_lease.sql" },
     ]);
     await server.close();
   });

@@ -1,6 +1,6 @@
 # Channels and reusable architecture
 
-**Version 1.3 · 22 September 2026 · Owner of client coverage, module boundaries, and cross-channel behavior.**
+**Version 1.4 · 13 October 2026 · Owner of client coverage, module boundaries, and cross-channel behavior.**
 
 ## Product commitment
 
@@ -124,3 +124,9 @@ Privacy coverage includes device push tokens, Telegram numeric IDs/chat IDs, cha
 Before the rules milestone closes, a small non-game test application must import the reusable identity, model/runtime, approval, and notification packages and complete a synthetic action/approval cycle using in-memory adapters. It must compile without the PACT domain or production database and leak no state across product scopes. Separately, PACT must still commit a real game action and its authority reservation atomically. Both checks are required: independent reuse and correct integrated transactions.
 
 Before launch, repeat the same account → objective → offer → approval → receipt → revoke flow across web, iOS, Android, Telegram, and certified assistant routes. Cross-device races, out-of-order notifications, account unlink/deletion, stale app versions, payment replays, and provider outages belong to the acceptance suite.
+
+## Optional agent interfaces correction — 13 October 2026 (PACT-168)
+
+Alongside the HTTP API, MCP and model tool calling, PACT may expose an optional A2A 1.0 JSON-RPC game gateway. All adapters use shared application operations, server-derived principals, game rules, authoritative permissions, the existing exclusive kingdom write lease and canonical command receipts. A2A is an API adapter, not a second game engine or inference service. MCP's operation execution moves into the application package; its session, resource and provider-specific presentation remain in MCP. Shared contract schemas describe A2A's structured operation envelope. The public gateway Agent Card advertises only supported transport/skills and security requirements; it never implies that all kingdoms operate A2A hosts. Agents choose any supported interface.
+
+Default off; enablement cannot migrate accounts/grants, reset counters, enroll schedulers or start inference. Existing Fleet releases and schedules remain untouched. Tasks are read projections of owner command receipts, with completion meaning command processing, not downstream game completion. No independent task ledger, callback service or private message-history store. [Optional interface setup and exact limitations](../api/a2a.md) own the implementation contract. Access/runtime/privacy below keep their respective authority. This additive correction changes no economy, public peer visibility, social delegation, human-only approval or historical release certification.
