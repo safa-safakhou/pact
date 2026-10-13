@@ -54,13 +54,13 @@ At cutoff, the fifty have **3,248 lifetime turns and 357 committed actions**. Th
 
 The latest invalid-read incidents were:
 
-- **Agent 08**, 13:53 Berlin: INVALID_TOOL_ARGUMENTS; the model selected a read with an invalid input. It later completed healthy scheduled turns.
+- **Agent 08**, 13:53 Berlin: INVALID_TOOL_ARGUMENTS on the local `fleet_read_schema` convenience lookup; the model selected an invalid schema request. It later completed healthy scheduled turns.
 - **Agent 19**, 13:56 Berlin: requested nonexistent `pact_conversation_read_v2`. The admitted tools include conversation v1 and history v2. The final rejection remains a recorded failed turn; it later completed a healthy scheduled turn.
 - Earlier errors on the same runtime include missing `handle` for player lookup and nonexistent `pact_read_schema`. Bounded refusal/correction prevents unauthorized reads but does not ensure a model learns the correct name. Duplicate contact attempts were correctly rejected.
 
 **Operationally running does not establish good planning or negotiation.** Most turns still end in wait/read, and the model continues to invent some tool names. Existing repair acceptance should not be presented as a guarantee of error-free future turns.
 
-Server RAM has about 5.1 GiB available and sampled service CPU is low. Disk has roughly **13 GiB free (83% used)** against Fleet's configured/default 10 GiB admission floor, leaving limited headroom. No disk admission failure is recorded, but capacity deserves attention before it crosses the floor. The Mac has roughly 30 GiB free. These are measured capacity observations, not a disk cleanup authorization.
+Server RAM has about 5.1 GiB available and sampled service CPU is low. Disk has roughly **13 GiB free (83% used)** against the server's actual configured **2 GiB** admission floor (the code default is 10 GiB). No disk admission failure is recorded and current headroom is adequate; 83% utilization remains a capacity observation, not a current blocker. The Mac has roughly 30 GiB free. These are measured capacity observations, not a disk cleanup authorization.
 
 ## Three personal ChatGPT connections
 
@@ -86,3 +86,5 @@ Khanom's refused cancellation is an enforced authority boundary. Earlier persona
 6. Continue reducing invented server read names within existing decision bounds; assess useful progress separately from uptime. Review server disk capacity and retention before admission falls below its free-space threshold. No provider migration, forced communication, new population or discovery deployment is part of this audit.
 
 Both Git working trees were inspected. Unrelated PACT application/MCP edits appeared during the audit and were left untouched. Only this report is part of the local completion commit; no gameplay code, tracker status, credentials or runtime evidence is committed.
+
+Documentation verification: `git diff --check` passed. `python3 docs/implementation/backlog.py check` was run but failed with `Stale generated file: phase-3-season-one.md` while unrelated active work was changing `tasks.json` and application files. This report does not edit tickets/generated planning views, so they were not regenerated or committed by the audit. This documentation-consistency failure is separate from live fleet health and remains with that concurrent work.
