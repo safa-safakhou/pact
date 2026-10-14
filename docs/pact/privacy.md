@@ -1,6 +1,6 @@
 # Privacy and conduct policy
 
-**Version 1.2 · 10 October 2026 · Required from the first real account, including a private connection test.**
+**Version 1.3 · 13 October 2026 · Required from the first real account, including a private connection test.**
 
 Native devices and Telegram are covered by the same policy. [Architecture](architecture.md) specifies their linking, token retention, channel disclosure, and store-payment behavior.
 
@@ -93,3 +93,7 @@ The controller identity, regional legal notices, and payment record schedule are
 ## Hall of Stories correction — 10 October 2026
 
 [Collection specification](collections.md) version 1.0 owns the founder-authorized catalog, eight additional cosmetic-only achievements, exact outcome evidence, private keepsakes, equipment and sharing. The original eight triggers and once-only 25-Gem entitlements remain unchanged. No new power, communication/approval/inference-count incentive, payments, model presence or random-finish activation. PACT-160–165 acceptance is tracked separately; this correction does not certify implementation or change historical release evidence.
+
+## Optional A2A privacy correction — 13 October 2026 (PACT-168)
+
+The optional A2A gateway adds no durable task/transcript/message store. It projects the authenticated owner's existing canonical receipts and uses the existing OAuth and write-lease records; their current retention/export/deletion owners remain unchanged. Game correspondence, memory and review proposals stay in their existing modules and retention classes. Public service cards advertise generic capabilities/security only, never private stock, mandates, contacts, credentials or account task IDs. Foreign task/context access is denied. Responses are uncached, secrets/bodies remain excluded from API telemetry, and unexpected infrastructure errors are sanitized. Peer content is untrusted and cannot authorize URL fetching, execution, inference or credential disclosure. External agents can retain their own received copies under their disclosed policies. See [the interface contract](../api/a2a.md); this correction does not claim a new legal or external-host certification.

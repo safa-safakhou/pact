@@ -17,7 +17,7 @@ const ACCESS_TTL_MS = 15 * 60_000;
 const REFRESH_TTL_MS = 30 * 24 * 60 * 60_000;
 const CODE_TTL_MS = 10 * 60_000;
 
-export type OAuthAudience = "human" | "mcp";
+export type OAuthAudience = "human" | "mcp" | "a2a";
 export type ClientType = "preregistered" | "metadata" | "dynamic";
 
 export interface OAuthClock {
@@ -65,6 +65,7 @@ export class OAuthService {
       productScope: string;
       issuer: string;
       mcpResource: string;
+      a2aResource?: string;
       /** Explicit addresses of this same protected application retained during a host migration. */
       mcpResourceAliases?: readonly string[];
       humanResource: string;
@@ -104,13 +105,21 @@ export class OAuthService {
   }
 
   protectedResourceMetadata(audience: OAuthAudience): Record<string, unknown> {
-    const resource = audience === "mcp" ? this.options.mcpResource : this.options.humanResource;
+    const resource = this.resourceFor(audience);
     return {
       resource,
       authorization_servers: [this.options.issuer],
       scopes_supported: ["world:read", "messages:write", "game:act"],
       bearer_methods_supported: ["header"],
     };
+  }
+
+  private resourceFor(audience: OAuthAudience): string {
+    if (audience === "a2a") {
+      if (!this.options.a2aResource) throw new OAuthError("UNAUTHORIZED_CLIENT");
+      return this.options.a2aResource;
+    }
+    return audience === "mcp" ? this.options.mcpResource : this.options.humanResource;
   }
 
   isMcpResourceAlias(resource: string): boolean {
@@ -131,6 +140,7 @@ export class OAuthService {
     audience: OAuthAudience;
     redirectUris: readonly string[];
   }): Promise<RegisteredClient> {
+    this.resourceFor(input.audience);
     await this.pool.query(
       `INSERT INTO oauth_clients(product_scope, client_id, client_type, audience, display_name, redirect_uris)
        VALUES ($1, $2, 'preregistered', $3, $4, $5)
@@ -151,6 +161,7 @@ export class OAuthService {
   }
 
   async registerFromMetadata(metadataUrl: string, audience: OAuthAudience): Promise<RegisteredClient> {
+    this.resourceFor(audience);
     const fetchMeta = this.options.metadataFetch ?? fetchClientMetadata;
     if (!this.options.metadataFetch) {
       await assertSafeMetadataUrl(metadataUrl);
@@ -182,6 +193,7 @@ export class OAuthService {
     audience: OAuthAudience;
     redirectUris: readonly string[];
   }): Promise<RegisteredClient> {
+    this.resourceFor(input.audience);
     const clientId = `dyn_${randomUUID()}`;
     await this.pool.query(
       `INSERT INTO oauth_clients(product_scope, client_id, client_type, audience, display_name, redirect_uris)
@@ -252,7 +264,7 @@ export class OAuthService {
     const client = await this.requireClient(input.clientId);
     if (client.audience !== input.expectedAudience) throw new OAuthError("UNAUTHORIZED_CLIENT");
     assertExactRedirect(client.redirect_uris, input.redirectUri);
-    const expectedResource = client.audience === "mcp" ? this.options.mcpResource : this.options.humanResource;
+    const expectedResource = this.resourceFor(client.audience);
     if (input.resource !== expectedResource && !(client.audience === "mcp" && this.isMcpResourceAlias(input.resource)))
       throw new OAuthError("INVALID_REQUEST");
     return {
@@ -391,7 +403,10 @@ export class OAuthService {
     });
   }
 
-  async introspectAccessToken(accessToken: string): Promise<{
+  async introspectAccessToken(
+    accessToken: string,
+    expectedAudience?: OAuthAudience,
+  ): Promise<{
     grantId: string;
     accountId: string;
     clientId: string;
@@ -406,15 +421,28 @@ export class OAuthService {
       audience: OAuthAudience;
       scopes: string[];
       subject_label: string;
+      resource: string;
       expires_at: Date;
       revoked_at: Date | null;
     }>(
-      `SELECT id, account_id, client_id, audience, scopes, subject_label, expires_at, revoked_at
+      `SELECT id, account_id, client_id, audience, resource, scopes, subject_label, expires_at, revoked_at
        FROM oauth_grants WHERE product_scope = $1 AND access_token_hash = $2`,
       [this.options.productScope, hashToken(accessToken)],
     );
     const row = result.rows[0];
     if (!row || row.revoked_at || row.expires_at <= this.options.clock.now()) return null;
+    if (expectedAudience && (row.audience !== expectedAudience || row.resource !== this.resourceFor(expectedAudience)))
+      return null;
+    if (
+      expectedAudience &&
+      !(
+        await this.pool.query("SELECT 1 FROM accounts WHERE id=$1 AND product_scope=$2 AND status='active'", [
+          row.account_id,
+          this.options.productScope,
+        ])
+      ).rowCount
+    )
+      return null;
     return {
       grantId: row.id,
       accountId: row.account_id,
@@ -434,7 +462,7 @@ export class OAuthService {
       "account.delete",
       "account.export",
     ];
-    if (audience === "mcp" && humanOnly.includes(operation)) throw new OAuthError("FORBIDDEN");
+    if (audience !== "human" && humanOnly.includes(operation)) throw new OAuthError("FORBIDDEN");
     if (operation === "credential.read") throw new OAuthError("FORBIDDEN");
     void scopes;
   }

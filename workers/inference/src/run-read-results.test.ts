@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   boundedCommandReceiptResult,
   boundedConversationResult,
+  boundedDiscoveryResult,
   boundedGuideResult,
   boundedRecordResult,
   boundedReportResult,
@@ -125,4 +126,41 @@ describe("bounded model read results", () => {
     expect(JSON.parse(result)).toMatchObject({ untrustedContent: true, truncated: true });
     expect(result).not.toContain(page.messages[0]?.body);
   });
+});
+
+it("bounded discovery preserves real identities and source versions while explicitly omitting oversized prose", () => {
+  const result = {
+    kingdoms: Array.from({ length: 20 }, (_, n) => ({
+      kingdomId: `kingdom-${n}`,
+      handle: `handle${n}`,
+      relationship: { contact: false },
+      publicNotice: {
+        postId: `post-${n}`,
+        version: 2,
+        title: "Grain wanted",
+        commentary: "界".repeat(1200),
+        untrustedContent: true,
+      },
+    })),
+    hasMore: true,
+    selection: "varied_sample",
+    coverage: "bounded public notice candidates",
+    untrustedContent: true,
+  };
+  const before = structuredClone(result),
+    encoded = boundedDiscoveryResult(result),
+    kept = JSON.parse(encoded);
+  expect(Buffer.byteLength(encoded)).toBeLessThanOrEqual(3600);
+  expect(kept.truncated).toBe(true);
+  expect(kept.observed).toBe(20);
+  expect(kept.retained).toBeGreaterThan(0);
+  expect(kept.retained).toBeLessThan(20);
+  for (const candidate of kept.kingdoms) {
+    expect(candidate.kingdomId).toMatch(/^kingdom-/);
+    expect(candidate.publicNotice).toMatchObject({ version: 2, title: "Grain wanted", commentaryOmitted: true });
+    expect(candidate.publicNotice).not.toHaveProperty("commentary");
+  }
+  expect(result).toEqual(before);
+  const small = { ...result, kingdoms: [] };
+  expect(boundedDiscoveryResult(small)).toBe(JSON.stringify(small));
 });

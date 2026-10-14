@@ -29,7 +29,7 @@ describe("API/database smoke", () => {
     const ready = await server.inject({ method: "GET", url: "/ready" });
     expect(ready.statusCode).toBe(200);
     expect(ready.json()).toEqual({ status: "ready" });
-    expect((await pool.query("SELECT name FROM app_migrations ORDER BY name")).rows).toEqual([
+    expect((await pool.query('SELECT name FROM app_migrations ORDER BY name COLLATE "C"')).rows).toEqual([
       { name: "0001_platform_foundation.sql" },
       { name: "0002_outbox_delivery_leases.sql" },
       { name: "0003_outbox_correlation.sql" },
@@ -96,6 +96,8 @@ describe("API/database smoke", () => {
       { name: "0063_collection_stories.sql" },
       { name: "0064_collection_story_retention.sql" },
       { name: "0065_administrator_password_auth.sql" },
+      { name: "0066_optional_a2a_audience.sql" },
+      { name: "0067_optional_a2a_lease.sql" },
     ]);
     await server.close();
   });

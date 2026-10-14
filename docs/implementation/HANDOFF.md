@@ -1,3 +1,15 @@
+# Optional A2A verified locally — 13 October 2026
+
+PACT-168 adds A2A 1.0 JSON-RPC through shared game operations/authorization and owner receipt tasks. Default off, not deployed: existing fleets/accounts/counters/providers/schedules remain unchanged. Full build/type/lint/contracts and 360 unit + 405 integration checks pass (one optional skip); synthetic migration preservation and official SDK/OAuth/retry/recovery checks pass. See [completion record](reports/optional-a2a-20261013.md) and [setup](../api/a2a.md). Deployment/enablement is the next operational step; no further implementation in this assignment remains.
+
+# Fleet P1 deployed and resumed — 13 October 2026
+
+Founder explicitly authorized deployment and same-fleet recovery. PACT `fleet-p1-20261013-1` / b40ee5d and Fleet `3407e5a` are live. The same fifty Luna medium agents resumed on their original fifteen-minute schedule after an audited review of the cancelled execution. Its full 40,000 allocation and historical unknown marker remain; exact usage was unavailable and no action was replayed. Networkless backup restoration verified every Fleet row before recovery; bindings, original counters/settings and historical groups are preserved. Actual resumed turns report usage, commit gameplay and expose fresh-read/recovery events. Read [deployment and acceptance](reports/fleet-p1-deployment-20261013.md). Future uncertainty, P2 experiments and old deferred work remain separately gated.
+
+# Fleet P1 implementation — 13 October 2026
+
+Founder assigned fresh reads, memory retention, permissions and construction recovery. Fleet `3407e5a` and PACT's owned prerequisite projection are locally implemented and verified: 217 relevant tests pass, complete production agent/turn/ledger/cohort hashes match. The same fifty-owner Luna group remains paused with one unresolved Codex execution; no accounts, counters, pending commands, owner permissions or schedules changed. Not deployed. Read [the P1 completion report](reports/fleet-p1-controller-20261013.md) and the sibling Fleet report for exact checks and the pending two-repository rollout proposal. P2 experiments and historical deferred work remain unstarted.
+
 # Fleet agent investigation plan 13 October 2026
 
 The founder requested committing the [PACT and Fleet investigation plan](fleet-agent-investigation-plan-20261013.md). It covers context and memory defects, actual action authority and recovery, and game incentives for communication, with a prioritized investigation and measurable acceptance criteria. The live evidence is the separate 50-account Luna cohort at 22:16 Berlin on 12 October; it is not a current status check or a restart of historical populations. This update records the plan only; implementation and experiments remain proposed. Earlier deployment and run-state notes below retain their original dates.

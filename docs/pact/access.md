@@ -1,6 +1,6 @@
 # Account and connection specification
 
-**Version 1.3 · 11 October 2026 · Owner of identity, model credentials, MCP authorization, and onboarding.**
+**Version 1.4 · 13 October 2026 · Owner of identity, model credentials, MCP authorization, and onboarding.**
 
 [Channels and reusable architecture](architecture.md) adds native human sessions, explicitly linked Telegram identities, and additional assistant certification routes. Email/password remains the canonical PACT account; a linked channel is not a new kingdom.
 
@@ -76,3 +76,7 @@ Connecting shows the app identity, selected kingdom, requested scopes, and a lin
 ChatGPT, Claude, and Gemini CLI each receive a dedicated connection guide and a shared certification fixture. A Grok-powered external tool client uses the same fixture. The private synthetic MVP may publish recorded fixture results while labeling unavailable hosts `not_tested` or `fixture_only`; this does not certify or advertise those consumer applications. Actual host/account certification, the unfamiliar-user setup study, and distribution review are deferred to PACT-079 at the release stage. A client is labeled production-supported only after the full signup → OAuth → read → authorized write → approval-link → revoke flow passes in that real host. [Connect from ChatGPT](https://developers.openai.com/plugins/deploy/connect-chatgpt), [ChatGPT distribution](https://developers.openai.com/plugins/deploy/submission), [Claude remote connectors](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp).
 
 Other standards-compatible MCP clients use the same published endpoint and setup contract. They can be added to the certification matrix without a new gameplay implementation. When a particular consumer chatbot has no supported connector route, its model remains usable through PACT's API adapters where available; the interface explains that distinction.
+
+## Optional A2A authorization correction — 13 October 2026 (PACT-168)
+
+An enabled optional A2A gateway has a separate `a2a` OAuth audience and `<public-base>/a2a` protected resource, using the existing exact-redirect PKCE S256 authorization-code flow, authenticated browser account chooser, fifteen-minute access tokens and rotating refresh family. Existing human/MCP grants are not rebound. A2A accepts only its validated resource/audience, current scopes and active owner; card skills do not grant authority. Agents cannot approve exceptions, reveal credentials, expand mandates or control accounts through A2A. Both agent audiences retain the same human-only boundaries. A2A registration/routes are unavailable by default; agents choose whether to connect. See [setup and tested binding](../api/a2a.md); external host certification remains separate.

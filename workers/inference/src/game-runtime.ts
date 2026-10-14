@@ -19,6 +19,7 @@ import {
   CourtReadQuerySchema,
   DecisionSupportQuerySchema,
   InboxReadQuerySchema,
+  KingdomDiscoveryQuerySchema,
   MemoryReadSchema,
   MemoryWriteSchema,
   PlayerFindQuerySchema,
@@ -32,6 +33,7 @@ import {
   pactCourtReadTool,
   pactDecisionSupportTool,
   pactInboxReadTool,
+  pactKingdomDiscoveryTool,
   pactMemoryReadTool,
   pactMemorySourceTool,
   pactMemoryWriteTool,
@@ -62,6 +64,7 @@ import {
   GameReportReader,
   GarrisonService,
   ImmediateExposureAdapter,
+  KingdomDiscoveryReader,
   KingdomService,
   ModerationError,
   PoliticsService,
@@ -86,10 +89,12 @@ import { OnboardingService } from "@pact/onboarding";
 import { RunError, RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
+import { inAppDiscoveryDescriptions } from "./discovery-tools.js";
 import { ownerRunContext } from "./run-context.js";
 import {
   boundedCommandReceiptResult,
   boundedConversationResult,
+  boundedDiscoveryResult,
   boundedGuideResult,
   boundedRecordResult,
   boundedReportResult,
@@ -129,6 +134,7 @@ export async function createInferenceGameRuntime(
   const courts = new CourtService(pool, productScope, clock);
   const politics = new PoliticsService(pool, productScope, clock);
   const views = new WorldViewService(pool, productScope);
+  const discovery = new KingdomDiscoveryReader(pool, productScope, clock.now);
   const guide = new AgentGuideReader(
     views,
     new SocialOverviewReader(pool, productScope),
@@ -200,6 +206,7 @@ export async function createInferenceGameRuntime(
       { ...pactMemoryReadTool, parseArguments: (input: unknown) => MemoryReadSchema.parse(input) },
       { ...pactMemoryWriteTool, parseArguments: (input: unknown) => MemoryWriteSchema.parse(input) },
       { ...pactAgentGuideTool, parseArguments: (input: unknown) => AgentGuideQuerySchema.parse(input) },
+      { ...pactKingdomDiscoveryTool, parseArguments: (input: unknown) => KingdomDiscoveryQuerySchema.parse(input) },
       { ...pactPlayerFindTool, parseArguments: (input: unknown) => PlayerFindQuerySchema.parse(input) },
       inboxReadTool,
       conversationReadTool,
@@ -214,7 +221,7 @@ export async function createInferenceGameRuntime(
       { ...pactCourtReadTool, parseArguments: (input: unknown) => CourtReadQuerySchema.parse(input) },
       { ...pactPoliticsReadTool, parseArguments: (input: unknown) => PoliticsReadQuerySchema.parse(input) },
       { ...pactSealReadTool, parseArguments: (input: unknown) => SealReadQuerySchema.parse(input) },
-    ],
+    ].map((tool) => ({ ...tool, description: inAppDiscoveryDescriptions[tool.name] ?? tool.description })),
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
@@ -223,6 +230,13 @@ export async function createInferenceGameRuntime(
           results.push({
             callId: call.id,
             content: boundedGuideResult(await guide.read(input.run.accountId, query.topic)),
+          });
+          continue;
+        }
+        if (call.name === pactKingdomDiscoveryTool.name) {
+          results.push({
+            callId: call.id,
+            content: boundedDiscoveryResult(await discovery.read(input.run.accountId, call.arguments)),
           });
           continue;
         }

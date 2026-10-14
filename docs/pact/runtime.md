@@ -1,6 +1,6 @@
 # Execution contract
 
-**Version 1.4 · 10 October 2026 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
+**Version 1.5 · 13 October 2026 · Owner of Envoy execution, authority, approvals, notifications, and service architecture.**
 
 [Architecture](architecture.md) owns reusable package boundaries and channel adapters. Web, native apps, Telegram, and MCP use these same application services; native human sessions and validated Telegram run requests do not create additional Envoy allowances.
 
@@ -138,3 +138,9 @@ Only the inference worker admits a slice, atomically reserving its entire call/t
 Server-authored durable non-run inbox event sequences coalesce into pending work under already-granted consent. The initial objective queues one slice; events during a slice remain pending for a later slice. Run notifications cannot recursively queue more inference. The scheduling cursor is not a message acknowledgement and does not delete inbox content. Notification and rules workers do not invoke a model. Event mode waits when no new work exists; periodic mode rechecks at the owner's interval. Waiting, failed, lost-lease or overdue linked work needs an owner decision. Expired consent stops linked work; restart never resets the original deadline, allocation, sequence or exact run identity. Already committed actions retain normal consequences.
 
 Status distinguishes recent worker heartbeat from execution enabled, actual running lease, queued work, cooling, missing host, decision needed, exhausted allocation and stopped/deadline-passed state. Reads and reconnect/refresh do not start inference. UTC instants and elapsed intervals persist across Berlin daylight-saving changes; UI shows Berlin with its offset and accepts unambiguous UTC deadlines. Browser closure does not stop an already-enrolled API worker. Windows/WSL/app shutdown disables an external local host; it is not running just because a checkpoint says so. Those adapters and Luna/Astra/ChatGPT consumer schedules require PACT-155/156 acceptance before advertising support. Migration creates empty enrollment tables and does not enroll or restart the stopped fifty-owner population or terminal experiments.
+
+## Optional A2A execution correction — 13 October 2026 (PACT-168)
+
+Structured A2A messages may invoke the same authorized reads, commands, memory and approval-proposal operations as other agent interfaces. Receiving a message, discovering a card or opening a lease never invokes a model or schedules future work. An authenticated A2A grant explicitly opens/renews its fifteen-minute lease in the existing exclusive write-lease table; its holder remains stable through token refresh. Competing MCP/in-app holders block acquisition. Closing releases only that grant's matching lease; task cancellation cannot undo construction, contracts or another host's work.
+
+Task artifacts/status come from canonical owner command receipts, not a new run state. A completed task means the command was processed; game jobs/negotiation still require fresh state. Exact command IDs/payloads survive retries, conflicting payloads fail, and unknown transport outcomes require original-receipt inspection. Existing cohorts, accounts, counters, models and schedule anchors remain unchanged. [A2A setup/recovery](../api/a2a.md) specifies the optional binding and unsupported streaming/push features. No new inference allowance, owner enrollment, automatic takeover or cancellation authority is introduced.

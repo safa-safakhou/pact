@@ -37,6 +37,14 @@
     header Cache-Control "no-store"
     reverse_proxy api:3000
   }
+  handle /v2/* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
+  handle /a2a* {
+    header Cache-Control "no-store"
+    reverse_proxy api:3000
+  }
   handle /mcp* {
     header Cache-Control "no-store"
     reverse_proxy api:3000

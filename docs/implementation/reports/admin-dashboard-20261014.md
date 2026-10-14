@@ -1,6 +1,6 @@
-# PACT-167 — administrator dashboard, 14 October 2026
+# PACT-169 — administrator dashboard, 14 October 2026
 
-Founder directly requested the full dashboard and deployment, then clarified that administration is a separate role requiring no kingdom. PACT-167 is assigned locally to `codex-admin-dashboard-20261014`. Dependencies PACT-053/130/005 are Done in the checked snapshot. Linear read failed with reauthentication required; no remote assignment, issue creation or completion is claimed. The original deferred roadmap is unchanged.
+Founder directly requested the full dashboard and deployment, then clarified that administration is a separate role requiring no kingdom. PACT-169 is assigned locally to `codex-admin-dashboard-20261014`. Dependencies PACT-053/130/005 are Done in the checked snapshot. Linear read failed with reauthentication required; no remote assignment, issue creation or completion is claimed. The original deferred roadmap is unchanged.
 
 Implemented `/admin` with independent administrator setup and username/password/MFA entry, seven views, manual/visible-page polling, 24/72/168-hour windows, literal player search and 25-row pagination, accessible hourly chart/table, exact 1/600 resource totals, status/lag/queue alerts, JSON aggregate export and the existing audited moderation console. Account provisioning creates only the existing staff identity, actual encrypted TOTP secret, Argon2 password and ten hashed recovery codes. It creates no draft, kingdom, gameplay grant or model connection. Host code/origin/expiry/rate checks and transaction serialization close first setup on completion. Staff MFA expiry clears access/data; human CSRF protects moderation/logout. Observation uses identity security audit events.
 

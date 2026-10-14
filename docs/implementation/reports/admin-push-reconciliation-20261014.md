@@ -1,0 +1,11 @@
+# Administrator push reconciliation, 14 October 2026
+
+Founder requested committing and pushing the dashboard changes. The four verified administrator commits were already local with a clean tree. Fetch found nine newer remote master commits; the ordinary push correctly refused to overwrite them. A normal merge preserves those commits and the previously deployed administrator commit IDs; no force push or rebase is used.
+
+Remote PACT-167 is the separately assigned kingdom-discovery feature and PACT-168 is the optional A2A gateway. The independently numbered dashboard assignment is reconciled to **PACT-169**, preserving the original remote tickets and all actual deployment evidence. Earlier administrator source commits used local PACT-167 before the remote tracker was fetched; this report records the mapping rather than changing or inventing their history. No remote Linear issue is claimed.
+
+Both server route registrations and all three migrations 0065/0066/0067 are preserved. Generated planning views are regenerated from the combined tracker. The merged access specification retains both the optional A2A account boundaries and the explicitly authorized password-only administrator policy; the affected source snapshot/review is updated for that combined text. Other remote specification snapshots retain their actual matching files. Read-only source integration does not deploy or activate the previously undeployed discovery/A2A features, restart agents or alter accounts/grants/counters/budgets/schedules. Current admin-password-20261014-1 deployment remains unchanged.
+
+Integrated verification passed: dependency installation, full build, typecheck, lint, all 362 unit tests, planning render/check (169 tickets) and diff whitespace checks. The full integration run passed 388 tests; the two incoming suites initially selected an unavailable fixture port, then all 21 of their tests passed with an explicit isolated `TEST_DATABASE_URL`. Across those runs, all 409 applicable integration tests passed; one optional provider test remained skipped. The disposable PostgreSQL fixture contained synthetic data only.
+
+The verified merge is committed for an ordinary push to `origin/master`. This source push does not change the deployed release.

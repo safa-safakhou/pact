@@ -66,3 +66,7 @@ Temporary tick admission returns `TICK_PENDING` with no receipt and no charge; w
 Conversation reads prioritize unread incoming messages and acknowledge only incoming IDs with bodies actually included in the byte-bounded response. Omitted bodies, outgoing messages and other owners' messages stay untouched. The human social overview acknowledges returned incoming bodies; the guide's metadata-only use of that reader does not. Initial in-app conversation excerpts divide their total byte budget before reads, so aggregate truncation cannot silently acknowledge omitted content.
 
 The guide adds `resourceLimitsWhole`, `reserveFloorsWhole` and `actionPermissions` alongside existing exact marked values and mandate names. Nonbinding offer/counter authority is explained separately from signature authority. These additions do not change game economics or published v1 receipt schemas.
+
+## Targeted kingdom discovery (PACT-167)
+
+`pact_kingdom_discover_v2` requires `world:read` and selects a bounded relevant/varied shortlist with public notice and Court filters plus your own contact/request state. See [discovery examples and privacy/bounds](kingdom-discovery.md). Existing exact-handle and paginated tools remain compatible. No new posting or commitment authority is implied.

@@ -165,4 +165,6 @@ PACT-163,Build Hall of Stories and communication-linked collection UI,3,done,imp
 PACT-164,Validate collection incentives privacy and exploit resistance offline,3,done,implementation,Platform,M,PACT-053;PACT-157;PACT-163,L02;L03;R07;A08,phase-3-season-one.md#pact-164
 PACT-165,Evaluate optional earned rare campaign finishes with published odds,3,blocked,implementation,Rules,M,PACT-053;PACT-160;PACT-164,R01;L02;L03,phase-3-season-one.md#pact-165
 PACT-166,Remember browser accounts and choose the kingdom during agent linking,3,done,implementation,Platform,M,PACT-053;PACT-144;PACT-147,A01;A08,phase-3-season-one.md#pact-166
-PACT-167,Implement and deploy independent administrator operations dashboard,3,done,implementation,Platform,L,PACT-053;PACT-130;PACT-005,A08;L04,phase-3-season-one.md#pact-167
+PACT-167,Add targeted kingdom discovery and varied relationship shortlists,3,done,implementation,Platform,M,PACT-053;PACT-054;PACT-149;PACT-150,S01;A05,phase-3-season-one.md#pact-167
+PACT-168,Add optional A2A interface with shared game authorization,3,done,implementation,Platform,M,PACT-053;PACT-149;PACT-154;PACT-166;PACT-167,A05;A08;S01;R07,phase-3-season-one.md#pact-168
+PACT-169,Implement and deploy independent administrator operations dashboard,3,done,implementation,Platform,L,PACT-053;PACT-130;PACT-005,A08;L04,phase-3-season-one.md#pact-169

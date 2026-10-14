@@ -22,6 +22,7 @@ import {
 } from "@pact/telemetry";
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
+import { PactA2AHandler, registerA2ARoutes } from "./a2a.js";
 import type { AdminReader } from "./admin-reader.js";
 import { type AdminSetup, registerAdminRoutes } from "./admin-routes.js";
 import { registerCapabilityRoutes } from "./capability-routes.js";
@@ -72,6 +73,7 @@ export interface ApiModules {
   identity: IdentityService;
   onboarding: OnboardingService;
   kingdom?: KingdomService;
+  kingdomDiscovery?: import("@pact/kingdom").KingdomDiscoveryReader;
   worldViews?: WorldViewService;
   decisionSupport?: DecisionSupportReader;
   socialOverview?: SocialOverviewReader;
@@ -93,6 +95,8 @@ export interface ApiModules {
   oauth?: OAuthService;
   authority?: AuthorityService;
   mcp?: McpTransport;
+  a2aEnabled?: boolean;
+  a2aBaseUrl?: string;
   approvals?: ApprovalService;
   inbox?: InboxService;
   notifications?: NotificationService;
@@ -165,6 +169,24 @@ export function buildServer(
     });
   });
 
+  server.get("/v2/interfaces", async (_request, reply) => {
+    reply.header("cache-control", "no-store");
+    const a2a = Boolean(modules?.a2aEnabled && modules.mcp && modules.oauth && modules.runs);
+    return {
+      api: { enabled: Boolean(modules), version: "v1" },
+      mcp: { enabled: Boolean(modules?.mcp && modules?.oauth) },
+      toolCalling: {
+        enabled: Boolean(modules?.mcp),
+        description: "Canonical game schemas via MCP or @pact/contracts; model-side tool calling is optional",
+      },
+      a2a: {
+        enabled: a2a,
+        protocolVersion: a2a ? "1.0" : null,
+        binding: a2a ? "JSONRPC" : null,
+        cardPath: a2a ? "/.well-known/agent-card.json" : null,
+      },
+    };
+  });
   server.get("/health", async () => ({ status: "ok" }));
   server.get("/ready", async (_request, reply) => {
     try {
@@ -210,7 +232,8 @@ export function buildServer(
     if (modules.seasons) registerSeasonRoutes(server, pool, modules.identity, modules.seasons, modules.oauth);
     if (modules.chronicle && modules.gameTime)
       registerChronicleRoutes(server, modules.identity, modules.chronicle, modules.gameTime);
-    if (modules.worldViews) registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth);
+    if (modules.worldViews)
+      registerWorldViewRoutes(server, modules.identity, modules.worldViews, modules.oauth, modules.kingdomDiscovery);
     if (modules.persistentPlay) registerEnrollmentRoutes(server, modules.identity, modules.persistentPlay);
     if (modules.privateMemory) registerMemoryRoutes(server, modules.identity, modules.privateMemory, modules.oauth);
     if (modules.collections) registerCollectionRoutes(server, modules.identity, modules.collections);
@@ -224,6 +247,15 @@ export function buildServer(
     if (modules.authority) registerAuthorityRoutes(server, modules.identity, modules.authority);
     if (modules.mcp && modules.oauth) {
       registerMcpRoutes(server, modules.mcp, modules.oauth, modules.origin ?? "https://pact.example");
+    }
+    if (modules.a2aEnabled && modules.mcp && modules.oauth && modules.runs) {
+      const base = modules.a2aBaseUrl ?? modules.origin ?? "https://pact.example";
+      registerA2ARoutes(
+        server,
+        new PactA2AHandler(base, modules.mcp.operationOptions, modules.runs, modules.dispatcher),
+        modules.oauth,
+        modules.origin ?? base,
+      );
     }
     if (modules.approvals) registerApprovalRoutes(server, modules.identity, modules.approvals);
     if (modules.oauth && modules.approvals) {

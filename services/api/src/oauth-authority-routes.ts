@@ -106,7 +106,7 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
           code_challenge_method: z.literal("S256"),
           resource: z.string().min(1),
           state: z.string().min(16),
-          audience: z.enum(["human", "mcp"]).default("mcp"),
+          audience: z.enum(["human", "mcp", "a2a"]).default("mcp"),
           subject_label: z.string().min(1).max(200).default("Your PACT kingdom"),
           response_type: z.literal("code"),
         })
@@ -138,7 +138,7 @@ export function registerOAuthRoutes(server: FastifyInstance, oauth: OAuthService
         )
         .header("referrer-policy", "no-referrer")
         .type("text/html; charset=utf-8");
-      if (query.audience === "mcp")
+      if (query.audience !== "human")
         return browserAccountsPage(
           { clientName: consent.clientName, scopes: consent.scopes, query, issuer },
           identity.guestPlayEnabled,
@@ -198,7 +198,7 @@ document.getElementById('login').addEventListener('submit',async(e)=>{
         .object({
           client_name: z.string().min(1).max(200).default("PACT connected agent"),
           redirect_uris: z.array(z.string().url()).min(1).max(10),
-          audience: z.enum(["human", "mcp"]).default("mcp"),
+          audience: z.enum(["human", "mcp", "a2a"]).default("mcp"),
         })
         .parse(request.body);
       const client = await oauth.registerDynamic({
@@ -231,7 +231,7 @@ document.getElementById('login').addEventListener('submit',async(e)=>{
           code_challenge_method: z.literal("S256"),
           resource: z.string().min(1),
           subject_label: z.string().min(1).max(200),
-          audience: z.enum(["human", "mcp"]),
+          audience: z.enum(["human", "mcp", "a2a"]),
           selected_account_id: z.uuid().optional(),
         })
         .parse(request.body);

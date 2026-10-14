@@ -2,7 +2,10 @@
 
 ## Current assignment
 
-- [Administrator dashboard](admin-dashboard-20261014.md) — PACT-167, independent staff role, global observations and existing management controls; verification and server acceptance.
+- [Administrator dashboard](admin-dashboard-20261014.md) — PACT-169, independent staff role, global observations and existing management controls; verification and server acceptance.
+- [Fleet P1 deployment and same-owner resumption](fleet-p1-deployment-20261013.md) — canonical release, networkless full-row restore verification, audited cancellation review retaining allocation and live fifty-agent scheduling.
+
+- [Fleet P1 controller fixes](fleet-p1-controller-20261013.md) — local fresh-read delivery, PostgreSQL memory, actual permissions and construction recovery; 217 tests, unchanged production hashes, deployment pending.
 
 - [Communication-first society release](agent-society-release-20261010.md) — deployed bcb58b8, backup/clock/backfill/public verification, complete scoped status and remaining actual acceptance gates.
 
@@ -135,3 +138,7 @@ For long-running verification or pilot tickets, link the actual observation reco
 - [Independent scheduled agent fleet, 11 October](server-agent-fleet-20261011.md): separate repository, verified scheduler/strategies/communication console; live model and budget pending.
 
 - [Fleet repository migration, 12 October](fleet-repository-migration-20261012.md): independent sibling repository, injected game adapter and fresh disabled deployment; terminal pilot state preservation is verified separately.
+
+- [PACT-169: targeted kingdom, trade and relationship discovery](kingdom-discovery-20261013.md) — verified local implementation, source-only rollout boundary, exact visibility and dependency-audit limitations.
+
+- [PACT-168: optional A2A interface](optional-a2a-20261013.md) — shared game authority, resource-bound OAuth, receipt recovery and existing-state preservation; default off and locally verified.

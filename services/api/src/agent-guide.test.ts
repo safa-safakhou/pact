@@ -79,7 +79,7 @@ describe("agent guide", () => {
     const result = await guide.read(accountId, "start");
     expect(calls).toEqual([accountId, accountId, [accountId, "kingdom-one", 15]]);
     expect(result).toMatchObject({
-      lessonVersion: "pact.agent-lessons.2026-10-10.1",
+      lessonVersion: "pact.agent-lessons.2026-10-13.1",
       surface: "external",
       state: "active",
       self: { kingdomId: "kingdom-one" },
@@ -111,8 +111,10 @@ describe("agent guide", () => {
     const diplomacy = await guide.read("account-one", "diplomacy");
     expect(JSON.stringify(diplomacy)).toContain("pact_chronicle_read_v1");
     expect(JSON.stringify(diplomacy)).toContain("pact_player_find_v1");
+    expect(JSON.stringify(diplomacy)).toContain("pact_kingdom_discover_v2");
+    expect(JSON.stringify(diplomacy)).toContain("noticeQuery/noticeResource");
     expect(JSON.stringify(diplomacy)).toContain("pact_court_read_v1");
-    expect(JSON.stringify(diplomacy)).toContain("Reading a page does not join");
+    expect(JSON.stringify(diplomacy)).toContain("A read or pending introduction grants no relationship");
     const military = await guide.read("account-one", "military");
     expect(military).toMatchObject({ scouting: { spearmenRequired: 2, unitIdsOptional: true } });
     for (const topic of ["development", "diplomacy", "military", "authority"] as const)

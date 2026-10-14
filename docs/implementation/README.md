@@ -1,14 +1,20 @@
+## Optional A2A interface — 13 October 2026
+
+PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using shared rules and permissions. Default off; no fleet release, account, counter or schedule changes. See [setup](../api/a2a.md) and [implementation evidence](reports/optional-a2a-20261013.md).
+
 > Completed 4 October backend experiment: 10 Luna envoys + 90 scripted players, exactly 200 model requests, 2,321 committed commands and 131 contracts. Deadline respected; runner/model worker stopped and heartbeat paused; final report and evidence in [population playtest](reports/population-playtest-20261004.md). API/inference bug fixes remain deployed as `population-fixes-20261005-2`; rules worker unchanged. Explanation quality and pacing remain findings, not production certification. Deferred roadmap untouched; Linear remains at its free issue limit.
 
 # PACT implementation backlog
 
 ## Administrator dashboard, 14 October
 
-The founder assigned PACT-167: implement and deploy an independent administrator dashboard, with no kingdom required. [Administrative extension](../pact/administration.md), [operator runbook](../operations/admin-dashboard.md), and [actual verification/release evidence](reports/admin-dashboard-20261014.md). Existing stopped experiments, Fleet state and deferred tasks retain their prior boundaries.
+The founder assigned PACT-169: implement and deploy an independent administrator dashboard, with no kingdom required. [Administrative extension](../pact/administration.md), [operator runbook](../operations/admin-dashboard.md), and [actual verification/release evidence](reports/admin-dashboard-20261014.md). Existing stopped experiments, Fleet state and deferred tasks retain their prior boundaries.
 
 ## Fleet agent investigation plan
 
-The [13 October investigation plan](fleet-agent-investigation-plan-20261013.md) analyzes the separate 50-account Luna cohort observed on 12 October at 22:16 Berlin. It distinguishes reproduced Fleet context defects, PACT capability and recovery restrictions, and hypotheses about communication incentives. It defines an ordered investigation, engine audit, controlled experiments and acceptance criteria. Findings are a dated baseline; fixes and experiments remain proposed. Historical launch and migration notes below describe earlier checkpoints.
+The founder subsequently authorized [P1 deployment, unknown-execution review and same-fleet resumption](reports/fleet-p1-deployment-20261013.md). Both releases are live and the original fifty Luna agents are running with preserved accounts, counters and fifteen-minute scheduling. The reviewed cancellation's unknown exact usage and full allocation remain visible.
+
+The [13 October investigation plan](fleet-agent-investigation-plan-20261013.md) analyzes the separate 50-account Luna cohort observed on 12 October at 22:16 Berlin. It distinguishes reproduced Fleet context defects, PACT capability and recovery restrictions, and hypotheses about communication incentives. The founder subsequently assigned the P1 fresh-read, memory, permission and construction-recovery fixes: [local implementation and verification](reports/fleet-p1-controller-20261013.md) are complete, with deployment pending and production state preserved. Experiments and P2 work remain proposed. Historical launch and migration notes below describe earlier checkpoints.
 
 ## Independent server agent fleet proposal
 
