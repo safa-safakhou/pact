@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema } from "@pact/db";
 import {
   AdminProvisioning,
@@ -7,8 +8,8 @@ import {
   IdentityService,
   LocalCompromisedPasswordChecker,
   TokenDigester,
-  totpForFixture,
 } from "@pact/identity";
+import { ModerationService } from "@pact/kingdom";
 import { WorldClockService } from "@pact/world";
 import Fastify from "fastify";
 import type { Pool } from "pg";
@@ -36,7 +37,7 @@ beforeAll(async () => {
     currentTermsVersion: "fixture",
     allowedOrigins: new Set(["https://pact.example"]),
   });
-  provision = new AdminProvisioning(pool, "pact", box, digester, checker);
+  provision = new AdminProvisioning(pool, "pact", checker);
   await new WorldClockService(pool, "pact").bootstrap();
 });
 afterAll(async () => {
@@ -45,59 +46,106 @@ afterAll(async () => {
   await admin?.end();
 });
 describe("administrator provisioning and projections", () => {
-  it("creates exactly one independent administrator under a race, then enforces actual MFA/revocation and one-use recovery", async () => {
+  it("upgrades existing operator identities while preserving ordinary staff/player authenticator data", async () => {
+    const legacySchema = await createTestSchema(admin, "admin_password_upgrade"),
+      legacy = createSchemaPool(url, legacySchema);
+    try {
+      await legacy.query("ALTER TABLE accounts DROP COLUMN staff_auth_policy");
+      const operator = randomUUID(),
+        staff = randomUUID(),
+        player = randomUUID();
+      for (const [id, email, role] of [
+        [operator, adminEmail("existing"), "staff"],
+        [staff, "legacy_staff@example.test", "staff"],
+        [player, "legacy_player@example.test", "player"],
+      ]) {
+        await legacy.query(
+          "INSERT INTO accounts(id,product_scope,email,password_hash,role,totp_secret_ciphertext) VALUES($1,'pact',$2,'fixture',$3,'encrypted-fixture')",
+          [id, email, role],
+        );
+        await legacy.query("INSERT INTO mfa_recovery_codes(account_id,code_hash) VALUES($1,'fixture')", [id]);
+        await legacy.query(
+          "INSERT INTO totp_enrollments(account_id,product_scope,secret_ciphertext) VALUES($1,'pact','fixture')",
+          [id],
+        );
+      }
+      await legacy.query(
+        await readFile(
+          new URL("../../packages/identity/migrations/0065_administrator_password_auth.sql", import.meta.url),
+          "utf8",
+        ),
+      );
+      expect(
+        (await legacy.query("SELECT staff_auth_policy,totp_secret_ciphertext FROM accounts WHERE id=$1", [operator]))
+          .rows[0],
+      ).toEqual({ staff_auth_policy: "password", totp_secret_ciphertext: null });
+      for (const id of [staff, player])
+        expect(
+          (await legacy.query("SELECT staff_auth_policy,totp_secret_ciphertext FROM accounts WHERE id=$1", [id]))
+            .rows[0],
+        ).toEqual({ staff_auth_policy: "mfa", totp_secret_ciphertext: "encrypted-fixture" });
+      expect((await legacy.query("SELECT count(*)::int AS count FROM mfa_recovery_codes")).rows[0]?.count).toBe(2);
+      expect((await legacy.query("SELECT count(*)::int AS count FROM totp_enrollments")).rows[0]?.count).toBe(2);
+    } finally {
+      await legacy.end();
+      await dropTestSchema(admin, legacySchema);
+    }
+  });
+  it("creates one password-only administrator under a race and preserves role, expiry, revocation and management checks", async () => {
     expect(await provision.available()).toBe(true);
     await expect(
       identity.signup({ email: adminEmail("admin"), password, age18Declared: true, acceptedTermsVersion: "fixture" }),
     ).rejects.toMatchObject({ code: "INVALID_INPUT" });
-    const enrollment = provision.begin(),
-      secret = Buffer.from(enrollment.secret, "base64url"),
-      code = totpForFixture(secret, now);
-    await expect(
-      provision.complete({ username: "admin", password, secret: enrollment.secret, code: "invalid" }, now),
-    ).rejects.toMatchObject({ code: "FORBIDDEN" });
     const results = await Promise.allSettled([
-      provision.complete({ username: "admin", password, secret: enrollment.secret, code }, now),
-      provision.complete({ username: "second", password, secret: enrollment.secret, code }, now),
+      provision.complete({ username: "admin", password }, now),
+      provision.complete({ username: "second", password }, now),
     ]);
     expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
-    expect(await provision.available()).toBe(false);
     const result = results.find((r) => r.status === "fulfilled");
-    if (!result || result.status !== "fulfilled") throw Error("No admin created");
+    if (result?.status !== "fulfilled") throw Error("No admin created");
     const username = result.value.username,
       email = adminEmail(username);
+    expect(await provision.available()).toBe(false);
     expect((await pool.query("SELECT count(*)::int AS count FROM kingdoms")).rows[0]?.count).toBe(0);
     expect((await pool.query("SELECT count(*)::int AS count FROM kingdom_drafts")).rows[0]?.count).toBe(0);
-    await expect(identity.login({ email, password, ip: "192.0.2.1" })).rejects.toMatchObject({ code: "MFA_REQUIRED" });
-    const session = await identity.login({ email, password, mfaCode: code, ip: "192.0.2.1" });
+    expect((await pool.query("SELECT count(*)::int AS count FROM mfa_recovery_codes")).rows[0]?.count).toBe(0);
+    expect(
+      (await pool.query("SELECT staff_auth_policy,totp_secret_ciphertext FROM accounts WHERE email=$1", [email]))
+        .rows[0],
+    ).toEqual({ staff_auth_policy: "password", totp_secret_ciphertext: null });
+    await expect(identity.login({ email, password: "wrong password", ip: "192.0.2.1" })).rejects.toMatchObject({
+      code: "INVALID_CREDENTIALS",
+    });
     const server = Fastify({ genReqId: () => randomUUID() });
     registerAdminRoutes(server, identity, new AdminReader(pool, "pact", () => now), provision, undefined, () => now);
     const login = await server.inject({
       method: "POST",
       url: "/v1/admin/login",
       headers: { origin: "https://pact.example" },
-      payload: { username, password, mfaCode: code },
+      payload: { username, password },
     });
     expect(login.statusCode).toBe(200);
     expect(login.json().csrfToken).toBeTypeOf("string");
-    const cookies = login.headers["set-cookie"] as string[];
-    const cookie = cookies.find((c) => c.startsWith("pact_session="))?.split(";")[0];
+    const cookies = login.headers["set-cookie"] as string[],
+      cookie = cookies.find((c) => c.startsWith("pact_session="))?.split(";")[0];
     expect((await server.inject({ url: "/v1/admin/overview", headers: { cookie } })).statusCode).toBe(200);
-    await expect(identity.requireStaffSession(session.sessionToken)).resolves.toMatchObject({
-      accountId: session.accountId,
+    now = new Date(now.getTime() + 3600000);
+    expect((await server.inject({ url: "/v1/admin/overview", headers: { cookie } })).statusCode).toBe(200);
+    const session = await identity.login({ email, password, ip: "192.0.2.1" });
+    const staff = await identity.requireStaffSession(session.sessionToken);
+    const moderation = new ModerationService(pool, { productScope: "pact", clock: { now: () => now }, secretBox: box });
+    await expect(moderation.queue({ accountId: staff.accountId, sessionId: staff.sessionId })).resolves.toMatchObject({
+      cases: [],
     });
-    now = new Date(now.getTime() + 300001);
+    expect(
+      (await pool.query("SELECT mfa_authenticated_at FROM sessions WHERE id=$1", [staff.sessionId])).rows[0]
+        ?.mfa_authenticated_at,
+    ).toBeNull();
+    await identity.signOutSession(session.sessionToken);
+    await expect(identity.requireStaffSession(session.sessionToken)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    now = new Date(now.getTime() + 31 * 86400000);
     expect((await server.inject({ url: "/v1/admin/overview", headers: { cookie } })).statusCode).toBe(403);
     await server.close();
-    await expect(identity.requireStaffSession(session.sessionToken)).rejects.toMatchObject({ code: "FORBIDDEN" });
-    const recovery = result.value.recoveryCodes[0];
-    if (!recovery) throw new Error("Missing recovery code");
-    const fresh = await identity.login({ email, password, mfaCode: recovery, ip: "192.0.2.1" });
-    await expect(identity.login({ email, password, mfaCode: recovery, ip: "192.0.2.1" })).rejects.toMatchObject({
-      code: "INVALID_MFA",
-    });
-    await identity.signOutSession(fresh.sessionToken);
-    await expect(identity.requireStaffSession(fresh.sessionToken)).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
   it("returns scoped totals, exact 1/600 resources, metadata-only events, reporting windows and literal bounded search", async () => {
     const owner = randomUUID(),

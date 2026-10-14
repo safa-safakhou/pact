@@ -151,7 +151,7 @@ export function ModerationPanel({ request, canWrite }: { request: Request; canWr
         <summary>Staff moderation console</summary>
         {staff && (
           <>
-            <p>Platform staff with a recent MFA sign-in only. Court roles grant no platform moderation access.</p>
+            <p>Authorized platform staff sessions only. Court roles grant no platform moderation access.</p>
             <button
               type="button"
               disabled={busy}

@@ -138,7 +138,8 @@ export class ModerationService {
     const allowed = await client.query(
       `SELECT s.id FROM sessions s JOIN accounts a ON a.id=s.account_id AND a.product_scope=s.product_scope
    WHERE s.product_scope=$1 AND s.id=$2 AND a.id=$3 AND a.role='staff' AND a.status='active' AND s.audience='human'
-   AND a.totp_secret_ciphertext IS NOT NULL AND s.revoked_at IS NULL AND s.expires_at>$4 AND s.idle_expires_at>$4 AND s.mfa_authenticated_at >= $5`,
+   AND s.revoked_at IS NULL AND s.expires_at>$4 AND s.idle_expires_at>$4
+   AND (a.staff_auth_policy='password' OR (a.totp_secret_ciphertext IS NOT NULL AND s.mfa_authenticated_at >= $5))`,
       [
         this.options.productScope,
         staff.sessionId,

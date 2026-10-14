@@ -18,7 +18,6 @@ function fixture() {
   };
   const provision = {
     available: vi.fn(async () => true),
-    begin: vi.fn(() => ({ secret: "fixture" })),
     complete: vi.fn(async () => ({ created: true })),
   };
   const server = Fastify();
@@ -64,14 +63,14 @@ describe("administrator HTTP boundary", () => {
   });
   it("requires canonical-origin host setup code, rejects replay/expiry and limits authentication attempts", async () => {
     const f = fixture(),
-      payload = { setupCode: "x".repeat(43) },
+      payload = { setupCode: "x".repeat(43), username: "admin", password: "Synthetic administrator password 2026" },
       headers = { origin: "https://pact.example" };
     for (const origin of [undefined, "https://attacker.example"])
       expect(
         (
           await f.server.inject({
             method: "POST",
-            url: "/v1/admin/setup/begin",
+            url: "/v1/admin/setup/complete",
             headers: origin ? { origin } : {},
             payload,
           })
@@ -81,24 +80,24 @@ describe("administrator HTTP boundary", () => {
       (
         await f.server.inject({
           method: "POST",
-          url: "/v1/admin/setup/begin",
+          url: "/v1/admin/setup/complete",
           headers,
-          payload: { setupCode: "y".repeat(43) },
+          payload: { ...payload, setupCode: "y".repeat(43) },
         })
       ).statusCode,
     ).toBe(403);
-    expect(f.provision.begin).not.toHaveBeenCalled();
-    expect((await f.server.inject({ method: "POST", url: "/v1/admin/setup/begin", headers, payload })).statusCode).toBe(
-      200,
-    );
+    expect(f.provision.complete).not.toHaveBeenCalled();
+    expect(
+      (await f.server.inject({ method: "POST", url: "/v1/admin/setup/complete", headers, payload })).statusCode,
+    ).toBe(200);
     f.provision.available.mockResolvedValue(false);
-    expect((await f.server.inject({ method: "POST", url: "/v1/admin/setup/begin", headers, payload })).statusCode).toBe(
-      403,
-    );
+    expect(
+      (await f.server.inject({ method: "POST", url: "/v1/admin/setup/complete", headers, payload })).statusCode,
+    ).toBe(403);
     f.setNow(new Date("2026-10-15T12:00:00Z"));
-    expect((await f.server.inject({ method: "POST", url: "/v1/admin/setup/begin", headers, payload })).statusCode).toBe(
-      403,
-    );
+    expect(
+      (await f.server.inject({ method: "POST", url: "/v1/admin/setup/complete", headers, payload })).statusCode,
+    ).toBe(403);
     for (let i = 0; i < 12; i++)
       await f.server.inject({ method: "POST", url: "/v1/admin/login", headers, payload: {} });
     expect((await f.server.inject({ method: "POST", url: "/v1/admin/login", headers, payload: {} })).statusCode).toBe(

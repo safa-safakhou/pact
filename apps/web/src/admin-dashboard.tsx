@@ -176,9 +176,7 @@ export function AdminDashboard() {
     [authorized, setAuthorized] = useState(false);
   const [setupOpen, setSetupOpen] = useState(false),
     [setupCode, setSetupCode] = useState(""),
-    [enrollment, setEnrollment] = useState<{ secret: string; authenticatorKey: string } | null>(null),
     [notice, setNotice] = useState("");
-  const [recoveryCodes, setRecoveryCodes] = useState<string[]>([]);
   const csrf = useRef(""),
     sequence = useRef(0),
     active = useRef(true);
@@ -211,7 +209,7 @@ export function AdminDashboard() {
         }
         throw new Error(
           response.status === 403
-            ? "Administrator sign-in with a current authenticator code is required."
+            ? "Administrator username and password sign-in is required."
             : response.status === 429
               ? "Too many attempts. Try again later."
               : `Request failed (${result.error?.code ?? response.status}).`,
@@ -360,23 +358,11 @@ export function AdminDashboard() {
             {notice}
           </p>
         )}
-        {!!recoveryCodes.length && (
-          <section className="admin-panel">
-            <h2>Save your recovery codes</h2>
-            <p>Each code replaces the authenticator once. Store these privately before closing this panel.</p>
-            <pre className="admin-secret">{recoveryCodes.join("\n")}</pre>
-            <button type="button" onClick={() => setRecoveryCodes([])}>
-              I saved my recovery codes
-            </button>
-          </section>
-        )}
         {!authorized ? (
           <section className="admin-panel admin-login">
             <div className="admin-eyebrow">ADMINISTRATOR ACCESS</div>
             <h2>Sign in to the control room</h2>
-            <p>
-              Use your administrator username, password and authenticator. No player account or kingdom is required.
-            </p>
+            <p>Use your administrator username and password. No player account or kingdom is required.</p>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -395,10 +381,6 @@ export function AdminDashboard() {
               <label>
                 Password
                 <input name="password" type="password" required autoComplete="current-password" />
-              </label>
-              <label>
-                Authenticator or recovery code
-                <input name="mfaCode" required autoComplete="one-time-code" />
               </label>
               <button type="submit" disabled={busy}>
                 Sign in
@@ -420,76 +402,43 @@ export function AdminDashboard() {
                     onChange={(e) => setSetupCode(e.target.value)}
                   />
                 </label>
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() =>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const fields = Object.fromEntries(new FormData(e.currentTarget));
                     void submit(async () => {
-                      setEnrollment(
-                        (await request("/v1/admin/setup/begin", "POST", { setupCode })) as unknown as typeof enrollment,
-                      );
-                    })
-                  }
+                      const r = await request("/v1/admin/setup/complete", "POST", { ...fields, setupCode });
+                      setSetupCode("");
+                      setSetupOpen(false);
+                      setNotice(`Administrator ${r.username} created. Sign in with your username and password.`);
+                    });
+                  }}
                 >
-                  Prepare authenticator
-                </button>
-                {enrollment && (
-                  <>
-                    <p>
-                      Add this key to your authenticator as <strong>PACT administrator</strong>:
-                    </p>
-                    <code className="admin-secret">{enrollment.authenticatorKey}</code>
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        const fields = Object.fromEntries(new FormData(e.currentTarget));
-                        void submit(async () => {
-                          const r = await request("/v1/admin/setup/complete", "POST", {
-                            ...fields,
-                            setupCode,
-                            secret: enrollment.secret,
-                          });
-                          setRecoveryCodes(r.recoveryCodes as string[]);
-                          setEnrollment(null);
-                          setSetupCode("");
-                          setSetupOpen(false);
-                          setNotice(
-                            `Administrator ${r.username} created. Sign in with your password and authenticator.`,
-                          );
-                        });
-                      }}
-                    >
-                      <label>
-                        Administrator username
-                        <input name="username" pattern="[a-z][a-z0-9_-]{2,31}" defaultValue="admin" required />
-                      </label>
-                      <label>
-                        New password · 15–128 characters
-                        <input
-                          name="password"
-                          type="password"
-                          minLength={15}
-                          maxLength={128}
-                          required
-                          autoComplete="new-password"
-                        />
-                      </label>
-                      <label>
-                        Authenticator code
-                        <input
-                          name="code"
-                          required
-                          pattern="[0-9]{6}"
-                          inputMode="numeric"
-                          autoComplete="one-time-code"
-                        />
-                      </label>
-                      <button type="submit" disabled={busy}>
-                        Create administrator
-                      </button>
-                    </form>
-                  </>
-                )}
+                  <label>
+                    Administrator username
+                    <input
+                      name="username"
+                      pattern="[a-z][a-z0-9_-]{2,31}"
+                      defaultValue="admin"
+                      required
+                      autoComplete="username"
+                    />
+                  </label>
+                  <label>
+                    New password · 15–128 characters
+                    <input
+                      name="password"
+                      type="password"
+                      minLength={15}
+                      maxLength={128}
+                      required
+                      autoComplete="new-password"
+                    />
+                  </label>
+                  <button type="submit" disabled={busy}>
+                    Create administrator
+                  </button>
+                </form>
               </div>
             )}
           </section>
@@ -811,7 +760,7 @@ export function AdminDashboard() {
                     <h2>Platform administration</h2>
                     <p>
                       Review the moderation queue, claim a report and apply an audited decision using the controls
-                      below. Staff access requires MFA renewed within five minutes; sign in again when prompted.
+                      below. Administrator access uses your username and password.
                     </p>
                     <p>
                       Game clock changes, backup restoration and deployment remain server operations. Administrator

@@ -8678,7 +8678,7 @@
       "id": "PACT-167",
       "title": "Implement and deploy independent administrator operations dashboard",
       "phase": 3,
-      "status": "done",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8698,12 +8698,12 @@
         "L04"
       ],
       "scope": [
-        "Dedicated administrator setup/sign-in using staff role, recent MFA and existing human sessions, with no kingdom or gameplay grant.",
+        "Dedicated administrator setup/sign-in using staff role, password-only authentication and existing human sessions, with no kingdom or gameplay grant.",
         "System-wide committed metrics, trends, player directory, exact aggregate resource ledger, diplomacy, agent observations and operational queues.",
         "Audited moderation management through existing handlers, responsive dashboard, synthetic verification and server deployment."
       ],
       "acceptance": [
-        "Administrator first setup is host-authorized, bounded and single-use; role/MFA/expiry, agent and player denials pass without creating kingdom state.",
+        "Administrator first setup is host-authorized, bounded and single-use with username/password only; role/session expiry, revocation and agent/player denials pass without creating kingdom state or fake MFA stamps.",
         "Metrics are product-scoped, consistent read-only snapshots; exact units, windows, pagination, empty/error states and privacy boundaries pass.",
         "Dashboard navigation, refresh, login/logout, setup, management and mobile rendering verified with synthetic data.",
         "Full relevant checks, durable runbook/report, verified local commits, backup and canonical server deployment checks complete."
@@ -8719,7 +8719,8 @@
         "docs/implementation/reports/admin-dashboard-20261014.md",
         "Verified source e20b17a; full build/types/lint, 360 unit and 387 integration passed (one optional provider skipped); actual synthetic desktop/mobile browser and HTTP acceptance.",
         "Release admin-dashboard-20261014-1: encrypted backup 4a37e125, exact image-layer match, current migrations/privacy replay, canonical verify and public staff gates, active tick 24714 to 24715; only API/gateway replaced.",
-        "Initial independent administrator setup is delivered privately for founder password/authenticator entry; no kingdom or real credential was created by the agent. Linear connector requires reauthentication; local evidence is the assignment record."
+        "Initial independent administrator setup is delivered privately for founder password/authenticator entry; no kingdom or real credential was created by the agent. Linear connector requires reauthentication; local evidence is the assignment record.",
+        "Founder explicitly requested password-only administrator setup/login on 14 October; correction tracked in reports/admin-password-login-20261014.md. Previous deployment evidence remains historical."
       ],
       "assignee": "codex-admin-dashboard-20261014",
       "blocked_by_external": [],
@@ -8729,7 +8730,7 @@
     }
   ],
   "source_sha256": {
-    "../pact/access.md": "f84f389f02bbbe2d4335ccdad7febd986114f272677768f6991fa3e34d124636",
+    "../pact/access.md": "344f921f313de6e912d07e75613beef964baf6bfa8a634cdf336972570ff8e11",
     "../pact/runtime.md": "d0554e82d856f81e7f666800e96a3d5faf77e311e3d222a908d3dfcfc447ab30",
     "../pact/rules.md": "7aba92c427a11e8a9c90b0e3cbee84e55261f3d7b7690d10519bc87c1e605f99",
     "../pact/social.md": "3798ecde03dec944dce6602e0c8548b2a5b045cc5d6b5db6867a7d4787f20027",
@@ -8741,7 +8742,7 @@
     "../pact/experience.md": "5c4f38ee89933b3da181cfe6994e8f0dafb421d8d9f006ccd20ac7476d08699a",
     "../pact/chatgpt.md": "ee31da0fd9d0cf8ad6091954faa4eeea101b1dfde000d8815673117a7b262efc",
     "../pact/collections.md": "c0472530b5b1b74f53a180a3886826c67b785246d60c5a01dadcaaa189ebca77",
-    "../pact/administration.md": "2175bb7e071c19c02486210fc89481f26624115213e060333da2688bfe6dc3b9"
+    "../pact/administration.md": "50821478c6728a7cbe80b43a2c1913d4c8dd33976050f218b44c27ebaaf48280"
   },
   "task_status_values": [
     "todo",
@@ -9404,6 +9405,60 @@
         "PACT-156"
       ],
       "report": "reports/browser-account-management-20261011.md"
+    },
+    {
+      "date": "2026-10-14",
+      "ticket": "PACT-167",
+      "sources": [
+        "access",
+        "administration"
+      ],
+      "affected_tickets": [
+        "PACT-002",
+        "PACT-003",
+        "PACT-006",
+        "PACT-007",
+        "PACT-008",
+        "PACT-009",
+        "PACT-010",
+        "PACT-011",
+        "PACT-012",
+        "PACT-013",
+        "PACT-014",
+        "PACT-015",
+        "PACT-016",
+        "PACT-017",
+        "PACT-020",
+        "PACT-023",
+        "PACT-083",
+        "PACT-084",
+        "PACT-085",
+        "PACT-024",
+        "PACT-025",
+        "PACT-086",
+        "PACT-026",
+        "PACT-031",
+        "PACT-049",
+        "PACT-055",
+        "PACT-061",
+        "PACT-091",
+        "PACT-073",
+        "PACT-079",
+        "PACT-098",
+        "PACT-100",
+        "PACT-101",
+        "PACT-102",
+        "PACT-103",
+        "PACT-108",
+        "PACT-144",
+        "PACT-145",
+        "PACT-147",
+        "PACT-155",
+        "PACT-156",
+        "PACT-166",
+        "PACT-167"
+      ],
+      "report": "reports/admin-password-login-20261014.md"
     }
   ]
 }

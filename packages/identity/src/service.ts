@@ -43,6 +43,7 @@ interface AccountRow {
   terms_version: string | null;
   role: "player" | "staff";
   totp_secret_ciphertext: string | null;
+  staff_auth_policy: "mfa" | "password";
 }
 
 interface SessionRow {
@@ -414,7 +415,7 @@ export class IdentityService {
     const ipLimit = await this.limitReached("login_ip", input.ip, 30, minutes(15), now);
     if (accountLimit || ipLimit) throw new IdentityError("RATE_LIMITED");
     const accountResult = await this.pool.query<AccountRow>(
-      `SELECT id, email, password_hash, email_verified_at, terms_version, role, totp_secret_ciphertext
+      `SELECT id, email, password_hash, email_verified_at, terms_version, role, totp_secret_ciphertext, staff_auth_policy
        FROM accounts WHERE product_scope = $1 AND email = $2 AND status = 'active'`,
       [this.options.productScope, email],
     );
@@ -427,7 +428,12 @@ export class IdentityService {
       throw new IdentityError("INVALID_CREDENTIALS");
     }
     await withTransaction(this.pool, async (client) => this.requireMfa(client, account, input.mfaCode, now));
-    return this.createSession(account.id, input.label, input.requestId, Boolean(account.totp_secret_ciphertext));
+    return this.createSession(
+      account.id,
+      input.label,
+      input.requestId,
+      account.staff_auth_policy !== "password" && Boolean(account.totp_secret_ciphertext),
+    );
   }
 
   async authenticate(sessionToken: string, touch = true): Promise<HumanSession> {
@@ -491,7 +497,7 @@ export class IdentityService {
     const row = await this.pool.query(
       `SELECT s.id FROM sessions s JOIN accounts a ON a.id=s.account_id AND a.product_scope=s.product_scope
        WHERE s.product_scope=$1 AND s.id=$2 AND a.role='staff' AND a.status='active'
-       AND a.totp_secret_ciphertext IS NOT NULL AND s.mfa_authenticated_at>=$3`,
+       AND (a.staff_auth_policy='password' OR (a.totp_secret_ciphertext IS NOT NULL AND s.mfa_authenticated_at>=$3))`,
       [this.options.productScope, session.sessionId, new Date(this.options.clock.now().getTime() - minutes(5))],
     );
     if (!row.rowCount) throw new IdentityError("FORBIDDEN");
@@ -513,7 +519,7 @@ export class IdentityService {
   }): Promise<SessionTokens> {
     const session = await this.authenticate(input.sessionToken, false);
     const accountResult = await this.pool.query<AccountRow>(
-      `SELECT id, email, password_hash, email_verified_at, terms_version, role, totp_secret_ciphertext
+      `SELECT id, email, password_hash, email_verified_at, terms_version, role, totp_secret_ciphertext, staff_auth_policy
        FROM accounts WHERE id = $1`,
       [session.accountId],
     );
@@ -526,7 +532,13 @@ export class IdentityService {
     await withTransaction(this.pool, async (client) => {
       await this.requireMfa(client, account, input.mfaCode, now);
       await client.query("UPDATE sessions SET revoked_at = $2 WHERE id = $1", [session.sessionId, now]);
-      await this.insertSession(client, next, undefined, now, Boolean(account.totp_secret_ciphertext));
+      await this.insertSession(
+        client,
+        next,
+        undefined,
+        now,
+        account.staff_auth_policy !== "password" && Boolean(account.totp_secret_ciphertext),
+      );
       await this.securityEvent(client, account.id, "session.reauthenticated", input.requestId);
     });
     return next.tokens;
@@ -881,6 +893,7 @@ export class IdentityService {
     code: string | undefined,
     now: Date,
   ): Promise<void> {
+    if (account.role === "staff" && account.staff_auth_policy === "password") return;
     if (!account.totp_secret_ciphertext) {
       if (account.role === "staff") throw new IdentityError("MFA_REQUIRED");
       return;

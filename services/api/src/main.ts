@@ -652,13 +652,7 @@ const telegram =
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   admin: {
     reader: new AdminReader(pool, "pact"),
-    provision: new AdminProvisioning(
-      pool,
-      "pact",
-      new AesGcmSecretBox(Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url")),
-      new TokenDigester(Buffer.from(environment.IDENTITY_TOKEN_PEPPER, "base64url")),
-      new LocalCompromisedPasswordChecker(compromisedPasswordDigests),
-    ),
+    provision: new AdminProvisioning(pool, "pact", new LocalCompromisedPasswordChecker(compromisedPasswordDigests)),
     ...(await readFile("/etc/pact/operator/admin-setup.json", "utf8")
       .then((s) => ({ setup: JSON.parse(s) as AdminSetup }))
       .catch((e: NodeJS.ErrnoException) => {

@@ -93,14 +93,12 @@ export function registerAdminRoutes(
         .object({
           username: z.string().regex(/^[a-z][a-z0-9_-]{2,31}$/),
           password: z.string().max(1024),
-          mfaCode: z.string().min(6).max(64),
         })
         .strict()
         .parse(request.body);
       const tokens = await identity.login({
         email: adminEmail(input.username),
         password: input.password,
-        mfaCode: input.mfaCode,
         ip: request.ip,
         label: "PACT administration",
         requestId: request.id,
@@ -110,16 +108,6 @@ export function registerAdminRoutes(
       return { authenticated: true, csrfToken: tokens.csrfToken };
     }),
   );
-  server.post("/v1/admin/setup/begin", (request, reply) =>
-    safe(reply, async () => {
-      const { setupCode } = z
-        .object({ setupCode: z.string().length(43) })
-        .strict()
-        .parse(request.body);
-      await setupAllowed(request, setupCode);
-      return provision.begin();
-    }),
-  );
   server.post("/v1/admin/setup/complete", (request, reply) =>
     safe(reply, async () => {
       const input = z
@@ -127,8 +115,6 @@ export function registerAdminRoutes(
           setupCode: z.string().length(43),
           username: z.string().max(32),
           password: z.string().max(1024),
-          secret: z.string().max(40),
-          code: z.string().length(6),
         })
         .strict()
         .parse(request.body);

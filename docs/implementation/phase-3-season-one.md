@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**89 tickets · 67 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**89 tickets · 66 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2767,7 +2767,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-167"></a>
 ## PACT-167 — Implement and deploy independent administrator operations dashboard
 
-**Status:** done · **Role:** Platform · **Size:** L · **Type:** implementation
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2779,16 +2779,16 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Implement / deliver**
 
-- Dedicated administrator setup/sign-in using staff role, recent MFA and existing human sessions, with no kingdom or gameplay grant.
+- Dedicated administrator setup/sign-in using staff role, password-only authentication and existing human sessions, with no kingdom or gameplay grant.
 - System-wide committed metrics, trends, player directory, exact aggregate resource ledger, diplomacy, agent observations and operational queues.
 - Audited moderation management through existing handlers, responsive dashboard, synthetic verification and server deployment.
 
 **Acceptance**
 
-- [x] Administrator first setup is host-authorized, bounded and single-use; role/MFA/expiry, agent and player denials pass without creating kingdom state.
-- [x] Metrics are product-scoped, consistent read-only snapshots; exact units, windows, pagination, empty/error states and privacy boundaries pass.
-- [x] Dashboard navigation, refresh, login/logout, setup, management and mobile rendering verified with synthetic data.
-- [x] Full relevant checks, durable runbook/report, verified local commits, backup and canonical server deployment checks complete.
+- [ ] Administrator first setup is host-authorized, bounded and single-use with username/password only; role/session expiry, revocation and agent/player denials pass without creating kingdom state or fake MFA stamps.
+- [ ] Metrics are product-scoped, consistent read-only snapshots; exact units, windows, pagination, empty/error states and privacy boundaries pass.
+- [ ] Dashboard navigation, refresh, login/logout, setup, management and mobile rendering verified with synthetic data.
+- [ ] Full relevant checks, durable runbook/report, verified local commits, backup and canonical server deployment checks complete.
 
 **Assignee:** codex-admin-dashboard-20261014
 
@@ -2798,3 +2798,4 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Verified source e20b17a; full build/types/lint, 360 unit and 387 integration passed (one optional provider skipped); actual synthetic desktop/mobile browser and HTTP acceptance.
 - Release admin-dashboard-20261014-1: encrypted backup 4a37e125, exact image-layer match, current migrations/privacy replay, canonical verify and public staff gates, active tick 24714 to 24715; only API/gateway replaced.
 - Initial independent administrator setup is delivered privately for founder password/authenticator entry; no kingdom or real credential was created by the agent. Linear connector requires reauthentication; local evidence is the assignment record.
+- Founder explicitly requested password-only administrator setup/login on 14 October; correction tracked in reports/admin-password-login-20261014.md. Previous deployment evidence remains historical.
