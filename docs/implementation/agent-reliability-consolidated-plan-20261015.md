@@ -6,6 +6,10 @@ This programme joins the fifty server Luna and twenty local Nemotron/Laya invest
 
 Local IDs `AR-P01`–`AR-P11` and `AR-F01`–`AR-F11` are proposal IDs, **not Linear issues or active PACT tickets**. The linked task registers are the source of truth for this unactivated proposal. Existing `tasks.json`, Linear statuses/assignments and generated roadmap views remain unchanged; integration into an implementation batch needs its own assignment. No task is in progress or completed by saving this plan.
 
+## Source implementation assignment 15 October
+
+The founder subsequently authorized source implementation and necessary synthetic/offline verification in dependency order, with a verified local commit per completed batch. The original planning text below remains the saved proposal; its planning-only restriction is superseded for source/offline work. Deployment, running-fleet changes and new real model experiments remain prohibited. Current claims, actual results and remaining gates are recorded in [the implementation register](agent-reliability-status-20261015.json). PACT-171–181 map to AR-P01–11 locally; no remote Linear IDs/status changes are claimed. Existing PACT-170 ownership and prior evidence remain untouched.
+
 ## Dated evidence and confidence
 
 All evidence below is dated **14 October**, not a fresh 15 October runtime census. The [13 October plan](fleet-agent-investigation-plan-20261013.md) and its checkpoints remain historical context; this proposal does not rewrite them or revive stale runtime claims.

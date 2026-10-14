@@ -130,6 +130,8 @@ describe("private free-form notes", () => {
       const own = await views.read(owner.id, owner.kingdomId, 15);
       expect(own?.audience).toBe("owner");
       expect(own).toHaveProperty("ambition", ambition);
+      expect(own).toHaveProperty("schemaVersion", "pact.world.owner.v1");
+      expect(own?.profile).not.toHaveProperty("ambition");
       const publicView = await views.read(other.id, owner.kingdomId, 15);
       expect(publicView).not.toHaveProperty("ambition");
       expect(publicView?.profile).not.toHaveProperty("ambition");

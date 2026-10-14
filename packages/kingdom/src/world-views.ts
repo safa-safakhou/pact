@@ -1,3 +1,4 @@
+import { ownedWorldIntentVersion } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
 import {
   type BuildingKind,
@@ -69,6 +70,7 @@ export interface PublicKingdomView {
 }
 
 export interface OwnerKingdomView {
+  schemaVersion: typeof ownedWorldIntentVersion;
   consequences: GameConsequences;
   audience: "owner";
   ambition: KingdomAmbition;
@@ -551,6 +553,7 @@ export class WorldViewService {
         )
       ).rows[0]?.id ?? "0";
     return {
+      schemaVersion: ownedWorldIntentVersion,
       audience: "owner",
       ambition: kingdom.ambition ?? "",
       consequences: await readGameConsequences(client, this.productScope, targetId, gameTimeMs),

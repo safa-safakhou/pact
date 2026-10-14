@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**92 tickets · 69 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 70 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2903,3 +2903,325 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Verified PACT 362 unit / 410 integration (+1 existing optional skip), full build/type/lint/contracts; exact release composition 11 discovery tests. Fleet 109 unit / 164 integration, build/check/boundaries and zero production audit findings.
 - Deployed PACT worldwide-discovery-20261014-1 with 927 source/compiled SHA256 readbacks; no PACT migration/A2A activation. Fleet 406d64b preserves twenty original accounts, all historical terminal records, Nemotron/Laya settings and original five-minute anchor. All twenty scheduled agents received actual fitted world-discovery/readiness candidates.
 - Reopened on 14 October after founder-requested failure investigation: the deployed Fleet accountObjective reads world.profile.ambition although real PACT exposes world.ambition, and cognition recall still seeds from historical controller strategy. The earlier first-round/synthetic acceptance missed this actual contract and growing-packet pressure. Worldwide discovery/readiness delivery remains verified; original accounts/history/settings/schedules remain unchanged. Research and prototype evidence is in sibling Fleet docs/fleet-failure-investigation-20261014.md and reports/windows-fleet-comparison-20261014.md. No remote Linear status update claimed; connector needs reauthentication.
+
+<a id="pact-171"></a>
+## PACT-171 — Faithful owned intent
+
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P01 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [x] A real-layout fixture exposes root ambition; a wrong-profile fixture cannot certify intent delivery. Empty/missing intent is explicit, not a fabricated strategy.
+- [x] Contract tests cover a changed owner objective, owner/audience scoping and compatible older responses. Changes propagate to the inputs checked in AR-F01.
+- [x] Documentation identifies the owning projection and version policy without changing a live account's ambition or authority.
+
+**Assignee:** codex-agent-reliability-20261015
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-intent-20261015.md
+- PACT 364 unit / 410 integration (+1 existing optional skip), full build/typecheck/lint/contracts; Fleet 111 unit /166 integration, check/build/boundaries and zero production audit vulnerabilities.
+
+<a id="pact-172"></a>
+## PACT-172 — Canonical operations and schemas
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-171](phase-3-season-one.md#pact-171)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P02 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Export/catalog parity covers admitted reads/actions and their exact required fields, additional-property policy and version requirements. Compatible old clients retain documented behavior; unsupported versions fail precisely.
+- [ ] Four archived synthetic bad calls and a legitimate building command remain a shared acceptance corpus. Fleet rejects the bad calls at its generation/validation boundary while PACT independently rejects any that reach it.
+- [ ] Invented conversation names, extraneous action `summary` and missing message body yield bounded field/schema-specific diagnostics. No transport implements a second permission gate or game engine.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-173"></a>
+## PACT-173 — Scoped semantic reference facts
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-172](phase-3-season-one.md#pact-172)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P03 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Controls cover outgoing, nonexistent, expired, wrong-type and stale-version targets; revoked delegation; unavailable/incorrect troops; and a valid incoming answer/scout target.
+- [ ] UUID syntax and semantic eligibility are tested separately. Nil/placeholder receipt IDs do not establish a command, uncertainty or ownership.
+- [ ] Authorized projections expose sufficient follow-up references without leaking another account's requests, units, private offers or receipts. Fake-ID enumeration has no private-state oracle.
+- [ ] Shared fixture roles/direction agree with AR-F03; no bad reference is silently replaced with a guessed valid one.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-174"></a>
+## PACT-174 — Executable compact observation sections
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-173](phase-3-season-one.md#pact-173)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P04 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Forecast-only and construction/request/agreement reads are executable against their published schemas. Agent 08's requested forecast can reach AR-F04 under the existing 24,000-byte full-envelope allowance.
+- [ ] Paging/omissions distinguish unknown records from empty collections; required terms, parties, direction, versions, deadlines and signature status remain whole when delivered.
+- [ ] Ownership, revoked access, stale cursor/version and privacy controls pass. Older broad reads remain compatible under a reviewed additive/versioned contract.
+- [ ] Large shared histories are read selectively; compact views do not create a new private message store or misleading complete-coverage claim.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-175"></a>
+## PACT-175 — Canonical outcomes and lifecycle evidence
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-172](phase-3-season-one.md#pact-172)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P05 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] A committed queue receipt can coexist with waiting/active work; a later completion is separately observed. Agreement signatures, activation and fulfillment/end are distinct states.
+- [ ] Known rejection, ordinary failed read, absent receipt and genuinely unresolved command remain distinct. An absent receipt does not fabricate a commit or uncertain-command record.
+- [ ] Duplicate events, lost acknowledgment, expired cursors and replayed receipt reads converge without duplicate effects. Existing IDs/history remain usable.
+- [ ] Outcomes are scoped and versioned; migration/retention plans preserve existing receipts and registered data classes, without logging private prompts.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-176"></a>
+## PACT-176 — Complete admission and construction quotes
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-173](phase-3-season-one.md#pact-173), [PACT-174](phase-3-season-one.md#pact-174), [PACT-175](phase-3-season-one.md#pact-175)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P06 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Reproduce all 106 historical Luna quota refusals with correct spend/reservation/game-time accounting; include Agent 02/32 reservation cases and within-limit positive controls.
+- [ ] Reproduce all seventeen local waiting orders: twelve LLM-only and five cognition orders, with overlapping stock/prerequisite counts. ZERO Iron/Silver reserve floors are not labelled a positive restriction. Completed Mine/Wall controls establish normal start/settlement.
+- [ ] Waiting reserves authority, not stock. Concurrent construction can consume usable stock; queue admission, waiting, active and completed are distinct. Show all limiting conditions and conditional game-time release/ETA, including paused-clock behavior.
+- [ ] Stale/racing quotes fail safely at admission without duplicate stock/spend/receipt effects. No cancellations, ceiling relaxation, new economy or second client permission system is inferred from legitimate waits.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-177"></a>
+## PACT-177 — Precise authentication and recovery evidence
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-172](phase-3-season-one.md#pact-172), [PACT-175](phase-3-season-one.md#pact-175)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P07 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Fixtures cover connection refused before processing, generic 502 with ambiguous processing, rotation with lost acknowledgment, concurrent refresh, revoked grant/family and stale fences.
+- [ ] Agent 17's dated incident retains the connection-refused/unused-token evidence. A generic 502 alone is not proof of nonexecution and cannot authorize retry.
+- [ ] Only confirmed nonexecution permits a bounded safe retry under the same account. Unknown rotation requires quarantine/reconnect preserving identity/history; unknown commands use original pending receipts, without replay or fabricated usage.
+- [ ] Ordinary not-found reads and explicit denials are precise noncommit outcomes. Shared OAuth/receipt services remain authoritative; recovery evidence is minimal, scoped and retained under policy.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-178"></a>
+## PACT-178 — Actionable social lifecycle views
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-174](phase-3-season-one.md#pact-174), [PACT-175](phase-3-season-one.md#pact-175), [PACT-176](phase-3-season-one.md#pact-176), [PACT-177](phase-3-season-one.md#pact-177)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P08 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Scripted isolated beneficial and bad trades exercise delivery, response, signatures, activation, fulfillment/end and valid decline/solo play; compare material benefit to a stated solo baseline.
+- [ ] Deadline controls cover two-decision cross-turn handoffs, game-clock pauses and opportunity delivery before expiry. Seeing a peer-read notice alone cannot count as full actionable offer delivery.
+- [ ] Fake IDs, wrong participants, stale terms/version, revoked access and private outsider data fail safely. Public presence does not promise a reply.
+- [ ] Preserve the 13 October 19-to-17 gift's four eligible turns and unresolved full-term delivery. Six-hour/zero-notice terms are valid; the exact malformed fields in Agent 03's failed offers remain unknown. No settlement bug, outreach quota, autoaccept, partner class or advertising is inferred.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-179"></a>
+## PACT-179 — Goal and authority feasibility
+
+**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-176](phase-3-season-one.md#pact-176), [PACT-178](phase-3-season-one.md#pact-178)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P09 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Every declared test goal is feasible under its actual stock/prerequisite/authority path or has an explicit unresolved owner decision. Prohibited objectives are not scored as agent failure.
+- [ ] Quote arithmetic distinguishes whole resource units from ledger units, full ceiling from rolling headroom, and I–II/III–IV/V–VI comparison bands from promotion payouts.
+- [ ] Unsupported territory expansion and autonomous Court lifecycle are labelled unavailable. Political/economic rule changes require a separate reviewed product/specification assignment.
+- [ ] An approved authority alternative would need scoped fixtures, versions and rollback; this plan changes no mandate, rules, account or permission.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-180"></a>
+## PACT-180 — Controlled world and incentive evaluation
+
+**Status:** todo · **Role:** Application · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-179](phase-3-season-one.md#pact-179)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P10 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Scenario definitions, independent units of comparison, randomization/replication and held-out cases are fixed before results. Shared-world interference is not presented as independent-agent causal evidence.
+- [ ] Measure legal goal completion, material kingdom benefit versus solo, fulfilled obligations, justified waits, latency, stage-specific failures and denominators, and token/call cost per useful outcome. Message count is not a target.
+- [ ] Farm I's 30 Grain/hour minus eight Guard upkeep and absence of a promotion payout are baseline facts, not proof that profitable cooperation is impossible or Luna intrinsically fails.
+- [ ] Future privacy-safe instrumentation records field paths, schema IDs and delivery coverage with minimal retention, not raw private prompts/secrets. Exact invalid-offer fields and historical model-visible term coverage remain unresolved until new authorized evidence exists.
+- [ ] Any economic/political variant requires explicit reviewed specifications and bounded experiment authorization; no rule change or live run is a plan default.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+
+<a id="pact-181"></a>
+## PACT-181 — Reviewed game rollout and preservation
+
+**Status:** todo · **Role:** Application · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-180](phase-3-season-one.md#pact-180)
+
+**Components:** packages/contracts, packages/kingdom, packages/application, packages/authority, packages/oauth.
+
+**Specification:** [architecture](../pact/architecture.md), [runtime](../pact/runtime.md), [privacy](../pact/privacy.md), [chatgpt](../pact/chatgpt.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Implement AR-P11 from docs/implementation/agent-reliability-consolidated-plan-20261015.md using shared authoritative operations; synthetic/offline scope only.
+
+**Acceptance**
+
+- [ ] Rehearsed migrations/rollback preserve account/kingdom bindings, mandates, receipt IDs, jobs, history, original schedules/anchors/models/budgets and unknown allocations. Rolling back code does not undo committed game effects or restore an old database over newer transactions.
+- [ ] Canary acceptance includes multiple rounds with growing memory and authoritative progression/obligation readback, rather than first-round delivery alone. Results are separately recorded for fifty Luna and twenty local agents.
+- [ ] Pending/unknown states retain originals and their required review. Terminal populations remain terminal; no new accounts or restart is implicit.
+- [ ] Implementation, hosted tests, experiments, deployment and push each require their covering assignment. Saving this plan authorizes none of them.
+
+**Evidence**
+
+- Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
+- Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.

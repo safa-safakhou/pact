@@ -1,5 +1,9 @@
 # PACT engineering instructions
 
+## Agent reliability source assignment — 15 October 2026
+
+Founder authorizes the consolidated dependency-ordered source/offline implementation and verified local commits only. Read `docs/implementation/agent-reliability-consolidated-plan-20261015.md` and its local status register; PACT-171–181 map to AR-P01–11. AR-P01 is source-verified; Fleet counterpart AR-F01 is source-verified. Continue authorized dependency-ready source work without delegation. No deployment/push, real model experiments, live fleet/account/mandate/configuration/model/budget/schedule changes, reconnects, cancellation/replay or unknown-usage reviews. Runtime releases and history remain unchanged; the running Windows release is outside these source checkouts. Linear requires reauthentication; local claims/evidence are recorded without invented remote issues or changes to another assignee.
+
 ## Worldwide discovery deployment — 14 October 2026
 
 Founder authorized game-wide discovery and neutral account-agent behavior for both existing Windows fleets. PACT-170 is verified and deployed as `worldwide-discovery-20261014-1` (API/inference only); Fleet `406d64b` is installed locally. All twenty original agents receive public discovery/contact/activity facts within existing input budgets, while accounts, history, model configuration and the common five-minute anchor are retained. Read `docs/implementation/reports/worldwide-agent-discovery-20261014.md`. Activity observations never promise presence or replies; communication remains the account agent's choice under existing authority. Server/Mac Fleet releases, historical experiments, gateway, PostgreSQL and the persistent backup/WAL shutdown remain untouched. Optional A2A remains default off and is not part of this release.
