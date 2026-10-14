@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fifty server Luna agents: causal investigation](fleet-root-causes-20261014.md) — reproduced packing/authority mechanisms, persistent continuations, first Hall III, nil-receipt loop, invalid offer validation and restart-related credential block; read-only investigation.
+
 - [Worldwide agent discovery and account autonomy](worldwide-agent-discovery-20261014.md) — PACT-170, deployed shared public readiness, whole-game discovery in both existing Windows fleets, neutral guidance and preserved accounts/history/five-minute timing.
 
 - [Fifty Luna agents gameplay investigation](fleet-gameplay-investigation-20261014.md) — two-day activity, current Hall progression, remaining quota/forecast defects, communication incentives and the [all-fifty roster](fleet-agent-roster-20261014.md).
