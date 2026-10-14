@@ -20,7 +20,9 @@ WireGuard `pact` is enabled on both hosts: old `10.77.0.1/30`, new `10.77.0.2/30
 
 ## Layout and operations
 
-Current release, 10 October: **`chatgpt-link-20261010-1` / `bfe8a64`**. Exact old MCP resource compatibility and canonical consent redirects repair cached ChatGPT account linking. Backup, full local regressions, standard deployment verification and public legacy/current route checks passed. Human ChatGPT reconnection remains to be retried by the founder. [Actual account-link verification](../implementation/reports/chatgpt-account-link-repair-20261010.md).
+Current administrator release, 14 October: **`admin-dashboard-20261014-1` / `e20b17a`** updates only API/gateway with the independent `/admin` surface. Other game workers retain `fleet-p1-20261013-1`; Fleet container identities are unchanged. Backup `4a37e125`, matching imported image layers, current migrations/privacy replay, canonical verification and advancing clock passed. First administrator setup requires the private host code and founder's own password/authenticator, with no kingdom. [Operator instructions](admin-dashboard.md) and [actual release evidence](../implementation/reports/admin-dashboard-20261014.md). Disk remains about 99% used; retained backups were preserved.
+
+Previous release, 10 October: **`chatgpt-link-20261010-1` / `bfe8a64`**. Exact old MCP resource compatibility and canonical consent redirects repair cached ChatGPT account linking. Backup, full local regressions, standard deployment verification and public legacy/current route checks passed. Human ChatGPT reconnection remains to be retried by the founder. [Actual account-link verification](../implementation/reports/chatgpt-account-link-repair-20261010.md).
 
 Previous release, 10 October: **`society-collections-20261010-1` / `bcb58b8`**. Communication, decision support, private memory and deterministic collections deployed with canonical public verification and progressing historical backfill. [Actual society release acceptance](../implementation/reports/agent-society-release-20261010.md). No player task or enrollment was started.
 

@@ -1,0 +1,16 @@
+[
+  {
+    "image": "pact-runtime:admin-dashboard-20261014-1",
+    "layersMatch": true,
+    "layerCount": 15,
+    "layersSha256": "bf11b1e26e392cd3ccbc2104f61fb3ca36766e40e2e3126a41bd12701ea37212",
+    "sourceCommit": "e20b17a"
+  },
+  {
+    "image": "pact-gateway:admin-dashboard-20261014-1",
+    "layersMatch": true,
+    "layerCount": 8,
+    "layersSha256": "c5c89b72feaa7b9e46010d73880a8fef89a81e2892a6eb4bda65d7b452e3909a",
+    "sourceCommit": "e20b17a"
+  }
+]

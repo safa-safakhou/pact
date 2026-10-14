@@ -1,0 +1,20 @@
+{
+  "changedServices": [
+    "pact-production-gateway-1",
+    "pact-production-api-1"
+  ],
+  "preservedServices": [
+    "fleet-console-1",
+    "fleet-database-1",
+    "fleet-worker-1",
+    "pact-agent-fleet-database-1",
+    "pact-production-channel-1",
+    "pact-production-inference-1",
+    "pact-production-mailpit-1",
+    "pact-production-notification-1",
+    "pact-production-postgres-1",
+    "pact-production-public-edge-1",
+    "pact-production-rules-1",
+    "pact-production-seals-1"
+  ]
+}

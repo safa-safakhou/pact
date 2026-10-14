@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/admin",
+    "method": "GET",
+    "status": 200,
+    "cacheControl": null
+  },
+  {
+    "path": "/v1/admin/overview",
+    "method": "GET",
+    "status": 403,
+    "cacheControl": "no-store"
+  },
+  {
+    "path": "/v1/admin/kingdoms",
+    "method": "GET",
+    "status": 403,
+    "cacheControl": "no-store"
+  },
+  {
+    "path": "/v1/admin/overview",
+    "method": "GET",
+    "status": 403,
+    "cacheControl": "no-store"
+  },
+  {
+    "path": "/v1/admin/setup/begin",
+    "method": "POST",
+    "status": 403,
+    "cacheControl": "no-store"
+  }
+]
