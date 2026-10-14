@@ -1,7 +1,9 @@
 import { KingdomDiscoveryQuerySchema } from "@pact/contracts";
 import type { Pool } from "pg";
+import type { CouncilActivity } from "./council.js";
 
 interface Candidate {
+  accountId: string;
   kingdomId: string;
   handle: string;
   displayName: string;
@@ -20,6 +22,7 @@ export class KingdomDiscoveryReader {
     private readonly pool: Pool,
     private readonly productScope: string,
     private readonly now: () => Date = () => new Date(),
+    private readonly activity?: (accountIds: string[]) => Promise<Record<string, CouncilActivity>>,
   ) {}
 
   async read(accountId: string, input: unknown = {}) {
@@ -31,7 +34,7 @@ export class KingdomDiscoveryReader {
          WHERE k.product_scope=$1 AND k.account_id=$2 AND k.status='ranked' AND a.status='active'
            AND k.moderation_case_id IS NULL
        ), candidates AS (
-         SELECT k.id AS "kingdomId", k.handle, k.display_name AS "displayName", b.level AS "hallLevel", notices.notice AS "publicNotice", shared.courts AS "sharedCourts",
+         SELECT k.account_id AS "accountId", k.id AS "kingdomId", k.handle, k.display_name AS "displayName", b.level AS "hallLevel", notices.notice AS "publicNotice", shared.courts AS "sharedCourts",
            EXISTS(SELECT 1 FROM social_contacts c WHERE c.product_scope=$1
              AND c.kingdom_a=LEAST(v.id,k.id) AND c.kingdom_b=GREATEST(v.id,k.id)) AS contact,
            EXISTS(SELECT 1 FROM cold_contact_requests r WHERE r.product_scope=$1 AND r.sender_kingdom_id=k.id
@@ -81,7 +84,7 @@ export class KingdomDiscoveryReader {
            AND NOT EXISTS(SELECT 1 FROM social_blocks x WHERE x.product_scope=$1
              AND ((x.blocker_kingdom_id=v.id AND x.blocked_kingdom_id=k.id)
                OR (x.blocker_kingdom_id=k.id AND x.blocked_kingdom_id=v.id)))
-       ) SELECT "kingdomId",handle,"displayName","hallLevel",contact,"incomingIntroduction","outgoingIntroduction",match,"publicNotice","sharedCourts"
+       ) SELECT "accountId","kingdomId",handle,"displayName","hallLevel",contact,"incomingIntroduction","outgoingIntroduction",match,"publicNotice","sharedCourts"
        FROM candidates WHERE $8='any' OR ($8='contacts' AND contact)
          OR ($8='incoming' AND "incomingIntroduction") OR ($8='outgoing' AND "outgoingIntroduction")
          OR ($8='new' AND NOT contact AND NOT "incomingIntroduction" AND NOT "outgoingIntroduction")
@@ -103,13 +106,50 @@ export class KingdomDiscoveryReader {
         new Date(this.now().getTime() - 180 * 86400000),
       ],
     );
+    const selected = rows.slice(0, q.limit);
+    const activity = this.activity ? await this.activity(selected.map((row) => row.accountId)) : {};
     return {
       kingdoms: rows
         .slice(0, q.limit)
-        .map(({ contact, incomingIntroduction, outgoingIntroduction, ...publicFields }) => ({
-          ...publicFields,
-          relationship: { contact, incomingIntroduction, outgoingIntroduction },
-        })),
+        .map(
+          ({ accountId: candidateAccount, contact, incomingIntroduction, outgoingIntroduction, ...publicFields }) => {
+            const observed = activity[candidateAccount];
+            const timestamp = observed?.lastObservedAt ? Date.parse(observed.lastObservedAt) : NaN;
+            const recent =
+              Number.isFinite(timestamp) &&
+              timestamp <= this.now().getTime() &&
+              timestamp >= this.now().getTime() - 30 * 60000;
+            return {
+              ...publicFields,
+              relationship: { contact, incomingIntroduction, outgoingIntroduction },
+              communication: {
+                route: contact
+                  ? "accepted_contact"
+                  : incomingIntroduction
+                    ? "answer_incoming_introduction"
+                    : outgoingIntroduction
+                      ? "await_introduction_answer"
+                      : "introduction_required",
+                agentActivity: {
+                  signal: !observed
+                    ? "unknown"
+                    : observed.runActive
+                      ? "bounded_run_observed_active"
+                      : recent
+                        ? "observed_within_30_minutes"
+                        : Number.isFinite(timestamp)
+                          ? "older_observation"
+                          : "no_activity_observed",
+                  lastObservedAt:
+                    Number.isFinite(timestamp) && timestamp <= this.now().getTime() ? observed?.lastObservedAt : null,
+                  boundedRunObservedActive: observed?.runActive ?? false,
+                },
+                meaning:
+                  "Existing public agent activity observations, not online presence, a promised reply or the peer's private authority. Contact route eligibility does not override your mandate, stock or quotas. Read current records before acting.",
+              },
+            };
+          },
+        ),
       hasMore: rows.length > q.limit,
       selection: query ? "name_relevance_with_varied_ties" : "varied_sample",
       query: { ...q, query },

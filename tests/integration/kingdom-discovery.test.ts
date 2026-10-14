@@ -100,9 +100,43 @@ describe("targeted authenticated discovery", () => {
         "relationship",
         "publicNotice",
         "sharedCourts",
+        "communication",
       ].sort(),
     );
-    expect(JSON.stringify(result)).not.toMatch(/accountId|stocks|troops|password|lastObserved|online|private fixture/);
+    expect(JSON.stringify(result)).not.toMatch(/accountId|stocks|troops|password|private fixture/);
+    expect(result.kingdoms[0]?.communication.agentActivity.signal).toBe("unknown");
+  });
+  it("reuses public agent observations without exposing accounts, online guarantees or peer authority", async () => {
+    const recent = await kingdom("readiness"),
+      stale = await kingdom("readiness"),
+      absent = await kingdom("readiness"),
+      running = await kingdom("readiness");
+    const now = new Date("2026-10-14T15:00:00Z");
+    let queried: string[] = [];
+    const withActivity = new KingdomDiscoveryReader(
+      pool,
+      "pact",
+      () => now,
+      async (ids) => {
+        queried = ids;
+        return {
+          [recent.accountId]: { lastObservedAt: "2026-10-14T14:45:00Z", runActive: false },
+          [stale.accountId]: { lastObservedAt: "2026-10-14T13:00:00Z", runActive: false },
+          [absent.accountId]: { lastObservedAt: null, runActive: false },
+          [running.accountId]: { lastObservedAt: null, runActive: true },
+        };
+      },
+    );
+    const result = await withActivity.read(viewer.accountId, { query: "readiness", limit: 20 });
+    const byId = new Map(result.kingdoms.map((k) => [k.kingdomId, k]));
+    expect(queried.sort()).toEqual([recent.accountId, stale.accountId, absent.accountId, running.accountId].sort());
+    expect(byId.get(recent.kingdomId)?.communication.agentActivity.signal).toBe("observed_within_30_minutes");
+    expect(byId.get(stale.kingdomId)?.communication.agentActivity.signal).toBe("older_observation");
+    expect(byId.get(absent.kingdomId)?.communication.agentActivity.signal).toBe("no_activity_observed");
+    expect(byId.get(running.kingdomId)?.communication.agentActivity.signal).toBe("bounded_run_observed_active");
+    expect(result.kingdoms.every((k) => k.communication.route === "introduction_required")).toBe(true);
+    expect(JSON.stringify(result)).not.toContain(recent.accountId);
+    expect(JSON.stringify(result)).not.toMatch(/online":|credentials|"mandate"|"approval"/);
   });
   it("derives accepted and both-direction introduction facts only from this viewer, ignoring expired requests", async () => {
     const contact = await kingdom("relations"),

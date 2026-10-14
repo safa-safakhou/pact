@@ -316,6 +316,22 @@ const persistentPlay = new PersistentPlayService(pool, "pact", {
   routeAvailable: (client, accountId, id, provider) =>
     storedCredentialRouteAvailable(client, "pact", accountId, id, provider),
 });
+async function publicAgentActivity(accountIds: string[]) {
+  const [runs, observed] = await Promise.all([
+    externalActivity.councilActivity(accountIds),
+    mcp.councilObservations(accountIds),
+  ]);
+  for (const id of accountIds) {
+    const previous = runs[id] ?? { lastObservedAt: null, runActive: false };
+    const contact = observed[id];
+    runs[id] = {
+      ...previous,
+      lastObservedAt:
+        contact && (!previous.lastObservedAt || contact > previous.lastObservedAt) ? contact : previous.lastObservedAt,
+    };
+  }
+  return runs;
+}
 const mcp = new McpTransport({
   persistentPlay,
   privateMemory,
@@ -345,7 +361,7 @@ const mcp = new McpTransport({
         isolation: "REPEATABLE READ",
       }),
   },
-  kingdomDiscovery: new KingdomDiscoveryReader(pool, "pact", clock.now),
+  kingdomDiscovery: new KingdomDiscoveryReader(pool, "pact", clock.now, publicAgentActivity),
   publicProfiles: { read: (handle) => worldViews.publicProfile(handle) },
   courts: { read: (handle, offset, accountId) => courts.read(handle, offset, accountId) },
   seals: { read: (id, accountId) => seals.read(id, accountId) },
@@ -376,30 +392,7 @@ const mcp = new McpTransport({
   approvalProposals: approvals,
   runLeases: runs,
 });
-const council = new CouncilReader(
-  pool,
-  "pact",
-  socialOverview,
-  async (accountIds) => {
-    const [runs, observed] = await Promise.all([
-      externalActivity.councilActivity(accountIds),
-      mcp.councilObservations(accountIds),
-    ]);
-    for (const id of accountIds) {
-      const previous = runs[id] ?? { lastObservedAt: null, runActive: false };
-      const contact = observed[id];
-      runs[id] = {
-        ...previous,
-        lastObservedAt:
-          contact && (!previous.lastObservedAt || contact > previous.lastObservedAt)
-            ? contact
-            : previous.lastObservedAt,
-      };
-    }
-    return runs;
-  },
-  clock.now,
-);
+const council = new CouncilReader(pool, "pact", socialOverview, publicAgentActivity, clock.now);
 async function readCouncil(
   accountId: string,
   query: { search: string; offset: number },
@@ -667,7 +660,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   onboarding,
   kingdom,
   worldViews,
-  kingdomDiscovery: new KingdomDiscoveryReader(pool, "pact", clock.now),
+  kingdomDiscovery: new KingdomDiscoveryReader(pool, "pact", clock.now, publicAgentActivity),
   decisionSupport: new DecisionSupportReader(worldViews, socialOverview),
   privateMemory,
   collections: new CollectionStoriesService(pool, "pact"),

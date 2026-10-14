@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**91 tickets · 69 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**92 tickets · 69 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2868,3 +2868,34 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Founder explicitly requested password-only administrator setup/login on 14 October; correction tracked in reports/admin-password-login-20261014.md. Previous deployment evidence remains historical.
 - Password-only correction f4c856c released as admin-password-20261014-1: full build/types/lint, 360 unit and 387 integration plus new migration fixture passed; migration 0065, backup cd3c3823, deployed source/asset hashes, canonical verification and actual public browser passed.
 - Push reconciliation: remote PACT-167 already owns kingdom discovery and PACT-168 owns optional A2A; administrator assignment renumbered to PACT-169 without changing deployment or scope.
+
+<a id="pact-170"></a>
+## PACT-170 — Worldwide agent discovery, communication readiness and account autonomy
+
+**Status:** in_progress · **Role:** Application · **Size:** M · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-133](phase-3-season-one.md#pact-133), [PACT-146](phase-3-season-one.md#pact-146), [PACT-150](phase-3-season-one.md#pact-150), [PACT-167](phase-3-season-one.md#pact-167)
+
+**Components:** packages/contracts, packages/kingdom, services/api, Fleet PACT adapter/runtime/console.
+
+**Specification:** [social](../pact/social.md), [chatgpt](../pact/chatgpt.md), [privacy](../pact/privacy.md), [runtime](../pact/runtime.md), [architecture](../pact/architecture.md) · **Release checks:** R08
+
+**Implement / deliver**
+
+- Deploy scoped worldwide discovery to the authoritative game API/MCP and expose existing public agent activity observations with contact-route facts and explicit uncertainty, without private peer authority or online guarantees.
+- Remove legacy Fleet cohort-name discovery bias, persist global pagination and apply founder-selected account-autonomy guidance to both existing Windows fleets while preserving accounts, historical preferences, budgets, ledgers, pending receipts and five-minute anchors.
+
+**Acceptance**
+
+- [ ] Authenticated shared discovery returns actual worldwide identities and existing public agent activity/contact readiness; self, blocks, scope and privacy remain enforced, with no inferred availability or forced contact.
+- [ ] Legacy and new discovery paths avoid cohort filters, retain honest pagination/coverage, and can deliver peers outside both fleets within unchanged decision budgets.
+- [ ] Both fleets resume verified committed runtimes at a quiescent boundary with unchanged original identities, histories, model/budget configurations, usage and schedule anchors; original controller profiles remain audit history while active guidance follows account owners.
+- [ ] Relevant synthetic unit/integration/build/type/migration checks and actual deployment/tool/context/first-round acceptance pass, with durable reports and honest tracker limitations.
+
+**Assignee:** codex-worldwide-discovery-20261014
+
+**Evidence**
+
+- Assigned by founder on 14 October: broaden both fleets to whole-game discovery and neutral account-agent behavior with preserved identities/history/five-minute schedule. Linear read failed with connector reauthentication required; no remote issue or claim invented.
