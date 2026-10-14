@@ -21,3 +21,11 @@ An initial read-only Restic inventory attempt omitted `--no-lock` on the read-on
 The host archive remains near its disk capacity. **Additional storage is required before another local backup can meet this conservative guard.** The guard preserves gameplay headroom and reports failure instead of filling the disk; it does not certify new backup success or provision paid infrastructure. Keep the full encrypted history, arrange sufficient capacity or explicitly review a retention/storage change, then retry the existing backup service. Do not erase snapshots or reduce retention silently.
 
 Source verification precedes installation of the guarded script. Actual script deployment/readback and subsequent world/paired Fleet acceptance are appended after completion. Existing stopped populations and unrelated server/Mac Fleet assignments remain unchanged.
+
+## Guard deployment and later readback
+
+Verified source commit **b22f0fa** was installed as a backup-script-only correction. The prior deployed script matched local parent SHA-256 `bbc539913be666f94fdb4e33791e5a86405b7ac272f6acce2b39d49696cf55a4`; a protected previous copy remains under `/srv/pact/state/backup-before-space-guard-20261014.sh`. Installed/source script SHA-256 is **fa1dad830f9e4f2f6ccd64d96448e4565a0de4e68e70e7f677bca8e7aa7b60b2**. Remote shell syntax validation passes. No application/container rollout or GitHub push was performed.
+
+An actual guarded backup invocation failed **before base copying** with `BACKUP_CAPACITY_REQUIRED`: **5,427,936 KiB available /12,660,368 KiB required**. This confirms safe refusal, not successful new backup coverage. All encrypted snapshots and the existing timer remain; the capacity prerequisite must be addressed before that timer can complete a new backup.
+
+At **14:41 UTC /16:41 Berlin**, the world remained active and had advanced to sequence **24785**, with no suspension reason. Twenty distinct fresh PACT kingdoms had enrolled normally and the two local Fleet cohorts were running from their identical **14:39:05.532 UTC** anchor. [Exact local launch and observed acceptance](windows-fleet-comparison-20261014.md). The original stopped experiments, server/Mac identities, allocations and schedules were preserved.
