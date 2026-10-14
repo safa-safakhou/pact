@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fifty Luna agents gameplay investigation](fleet-gameplay-investigation-20261014.md) — two-day activity, current Hall progression, remaining quota/forecast defects, communication incentives and the [all-fifty roster](fleet-agent-roster-20261014.md).
+
 - [Backup offload and server recovery](backup-offload-recovery-20261014.md) — verified local PACT/Fleet restores, masked snapshot job, persistent WAL-archive shutdown, verified archive offload/cleanup and preserved original server/local execution.
 
 - [Fleet operational review 14 October](fleet-operational-review-20261014.md) — read-only disk-exhaustion incident, database recovery and restart loops; current gameplay census unavailable, dated progress baseline and recovery priorities.
