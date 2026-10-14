@@ -27,6 +27,19 @@ compose="docker compose --env-file $deploy_env -f infra/production/compose.yaml"
 if [ -n "${PACT_COMPOSE_OVERRIDE_FILE:-}" ]; then
   compose="$compose -f $PACT_COMPOSE_OVERRIDE_FILE"
 fi
+
+# A local repository and the temporary base copy share the host disk. Refuse a
+# new copy before it can exhaust the space needed by the live database. Keep
+# every encrypted snapshot; capacity changes need an operator decision.
+if [ -n "${PACT_LOCAL_BACKUP_DIR:-}" ]; then
+  available_kb="$(df -Pk "$PACT_LOCAL_BACKUP_DIR" | awk 'NR==2 {print $4}')"
+  data_kb="$($compose exec -T -u postgres postgres du -sk /var/lib/postgresql/data | awk '{print $1}')"
+  required_kb="$((data_kb * 2 + 1048576))"
+  if [ "$available_kb" -lt "$required_kb" ]; then
+    echo "BACKUP_CAPACITY_REQUIRED: ${available_kb} KiB free; ${required_kb} KiB required for base copy, repository growth and live database headroom. Add storage before retrying; encrypted snapshots are preserved." >&2
+    exit 1
+  fi
+fi
 $compose exec -T -u postgres postgres sh -eu -c '
   find /var/lib/postgresql/basebackup -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
   pg_basebackup -U pact -D /var/lib/postgresql/basebackup/data -Fp -Xs -c fast
@@ -74,3 +87,12 @@ $compose exec -T -u postgres postgres sh -c '
   find /var/lib/postgresql/wal-archive -maxdepth 1 -type f \
     -name "????????????????????????" ! -newer "$1" -delete
 ' sh "$wal_cutoff"
+
+# Restic backup and retention have both succeeded under set -e. This temporary
+# copy is recreated by the next pg_basebackup; keep the encrypted repository,
+# live data and newer WAL intact instead of retaining a duplicate on the disk.
+$compose exec -T -u postgres postgres sh -eu -c '
+  test -f /var/lib/postgresql/basebackup/data/backup_manifest
+  test -f /var/lib/postgresql/basebackup/data/PG_VERSION
+  rm -rf -- /var/lib/postgresql/basebackup/data
+'

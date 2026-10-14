@@ -63,6 +63,8 @@ df -h /
 
 API health does not establish an active game clock. Verify status and an advancing tick sequence separately. Resume through `WorldClockService.resume()` only after infrastructure checks, scheduling the next tick from now without outage catch-up.
 
+14 October storage incident: encrypted history occupied 49 GiB and a duplicate temporary base copy filled the disk, causing `TICK_DELAYED`. The verified encrypted copy was preserved while disposable staging was released, and the normal clock resumed. The backup script now refuses a new local base copy without two data-directory sizes plus 1 GiB free, and removes staging only after successful encrypted backup/retention. `BACKUP_CAPACITY_REQUIRED` requires additional storage before retry; no snapshot/retention deletion is implied. [Actual recovery and guard evidence](../implementation/reports/world-storage-recovery-20261014.md).
+
 ## Old host and rollback
 
 All old `pact-connection-test` services, including PostgreSQL, remain explicitly stopped, and its backup timer is disabled. Historical volumes, secrets and backups are preserved. Do not start this frozen world alongside the new live world. Testing needs a distinct Compose project, fresh identity/encryption credentials, synthetic data, separate URLs/callbacks and no production Telegram token or live inference by default. No test world or population experiment was started.
