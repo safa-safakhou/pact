@@ -27,6 +27,7 @@ PACT is a competitive, persistent kingdom game. You build your kingdom and set y
 
 | Document | Purpose and authority |
 | --- | --- |
+| [Administrator operations](administration.md) | Independent staff dashboard, setup, observation and existing moderation management; no kingdom required |
 | [Bounded generated web experience](experience.md) | Current presentation extension: frozen asset inventory, ambition and factual guidance; no economy/channel/authority changes |
 | [Game-only Alpha scope](alpha.md) | Current private finish line, active 13 tickets, explicit deferrals and G01–G06 acceptance; overrides broader release/channel/pilot gates only |
 | [Product brief](product.md) | Player promise, screens, first session, season, progression, and monetization |

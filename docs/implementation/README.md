@@ -2,6 +2,10 @@
 
 # PACT implementation backlog
 
+## Administrator dashboard, 14 October
+
+The founder assigned PACT-167: implement and deploy an independent administrator dashboard, with no kingdom required. [Administrative extension](../pact/administration.md), [operator runbook](../operations/admin-dashboard.md), and [actual verification/release evidence](reports/admin-dashboard-20261014.md). Existing stopped experiments, Fleet state and deferred tasks retain their prior boundaries.
+
 ## Fleet agent investigation plan
 
 The [13 October investigation plan](fleet-agent-investigation-plan-20261013.md) analyzes the separate 50-account Luna cohort observed on 12 October at 22:16 Berlin. It distinguishes reproduced Fleet context defects, PACT capability and recovery restrictions, and hypotheses about communication incentives. It defines an ordered investigation, engine audit, controlled experiments and acceptance criteria. Findings are a dated baseline; fixes and experiments remain proposed. Historical launch and migration notes below describe earlier checkpoints.

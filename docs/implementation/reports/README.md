@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Administrator dashboard](admin-dashboard-20261014.md) — PACT-167, independent staff role, global observations and existing management controls; verification and server acceptance.
+
 - [Communication-first society release](agent-society-release-20261010.md) — deployed bcb58b8, backup/clock/backfill/public verification, complete scoped status and remaining actual acceptance gates.
 
 - [Collection offline acceptance](collection-evaluation-20261010.md) — PACT-164, exploit/retention/load evidence and inactive human comparison design.

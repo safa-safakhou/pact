@@ -8673,6 +8673,56 @@
       "block_reason": null,
       "delivery_track": "chatgpt",
       "implementation_authorization": "founder_20261011_browser_account_management"
+    },
+    {
+      "id": "PACT-167",
+      "title": "Implement and deploy independent administrator operations dashboard",
+      "phase": 3,
+      "status": "in_progress",
+      "kind": "implementation",
+      "owner_role": "Platform",
+      "size": "L",
+      "depends_on": [
+        "PACT-053",
+        "PACT-130",
+        "PACT-005"
+      ],
+      "sources": [
+        "architecture",
+        "privacy",
+        "runtime",
+        "administration"
+      ],
+      "covers": [
+        "A08",
+        "L04"
+      ],
+      "scope": [
+        "Dedicated administrator setup/sign-in using staff role, recent MFA and existing human sessions, with no kingdom or gameplay grant.",
+        "System-wide committed metrics, trends, player directory, exact aggregate resource ledger, diplomacy, agent observations and operational queues.",
+        "Audited moderation management through existing handlers, responsive dashboard, synthetic verification and server deployment."
+      ],
+      "acceptance": [
+        "Administrator first setup is host-authorized, bounded and single-use; role/MFA/expiry, agent and player denials pass without creating kingdom state.",
+        "Metrics are product-scoped, consistent read-only snapshots; exact units, windows, pagination, empty/error states and privacy boundaries pass.",
+        "Dashboard navigation, refresh, login/logout, setup, management and mobile rendering verified with synthetic data.",
+        "Full relevant checks, durable runbook/report, verified local commits, backup and canonical server deployment checks complete."
+      ],
+      "components": [
+        "web",
+        "API",
+        "identity",
+        "module-owned insight readers",
+        "operations"
+      ],
+      "evidence": [
+        "docs/implementation/reports/admin-dashboard-20261014.md"
+      ],
+      "assignee": "codex-admin-dashboard-20261014",
+      "blocked_by_external": [],
+      "block_reason": null,
+      "delivery_track": "chatgpt",
+      "implementation_authorization": "founder_20261014_dashboard_and_deployment"
     }
   ],
   "source_sha256": {
@@ -8687,7 +8737,8 @@
     "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9",
     "../pact/experience.md": "5c4f38ee89933b3da181cfe6994e8f0dafb421d8d9f006ccd20ac7476d08699a",
     "../pact/chatgpt.md": "ee31da0fd9d0cf8ad6091954faa4eeea101b1dfde000d8815673117a7b262efc",
-    "../pact/collections.md": "c0472530b5b1b74f53a180a3886826c67b785246d60c5a01dadcaaa189ebca77"
+    "../pact/collections.md": "c0472530b5b1b74f53a180a3886826c67b785246d60c5a01dadcaaa189ebca77",
+    "../pact/administration.md": "2175bb7e071c19c02486210fc89481f26624115213e060333da2688bfe6dc3b9"
   },
   "task_status_values": [
     "todo",

@@ -18,6 +18,7 @@ import {
 } from "@pact/credential-vault";
 import { createPool, withTransaction } from "@pact/db";
 import {
+  AdminProvisioning,
   AesGcmSecretBox,
   baselineCompromisedPasswordDigests,
   IdentityService,
@@ -72,6 +73,8 @@ import { FileDeletionRegistry, PrivacyService } from "@pact/privacy";
 import { ExternalAgentActivity, PersistentPlayService, RunError, RunService } from "@pact/runs";
 import { botRetention, TelegramBotService, TelegramError, TelegramService } from "@pact/telegram";
 import { WorldClockService } from "@pact/world";
+import { AdminReader } from "./admin-reader.js";
+import type { AdminSetup } from "./admin-routes.js";
 import { AgentGuideReader } from "./agent-guide.js";
 import { readEnvironment } from "./config.js";
 import { activityStateResolver } from "./external-activity-state.js";
@@ -647,6 +650,22 @@ const telegram =
       })
     : undefined;
 const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
+  admin: {
+    reader: new AdminReader(pool, "pact"),
+    provision: new AdminProvisioning(
+      pool,
+      "pact",
+      new AesGcmSecretBox(Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url")),
+      new TokenDigester(Buffer.from(environment.IDENTITY_TOKEN_PEPPER, "base64url")),
+      new LocalCompromisedPasswordChecker(compromisedPasswordDigests),
+    ),
+    ...(await readFile("/etc/pact/operator/admin-setup.json", "utf8")
+      .then((s) => ({ setup: JSON.parse(s) as AdminSetup }))
+      .catch((e: NodeJS.ErrnoException) => {
+        if (e.code !== "ENOENT") throw e;
+        return {};
+      })),
+  },
   identity,
   onboarding,
   kingdom,

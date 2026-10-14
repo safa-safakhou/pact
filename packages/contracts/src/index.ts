@@ -1,3 +1,4 @@
+export type { AdminKingdomPage, AdminOverview } from "./admin-types.js";
 export * from "./chronicle-schemas.js";
 export * from "./collection-catalog.js";
 export * from "./collection-display.js";

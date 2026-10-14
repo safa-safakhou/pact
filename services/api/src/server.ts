@@ -22,6 +22,8 @@ import {
 } from "@pact/telemetry";
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
+import type { AdminReader } from "./admin-reader.js";
+import { type AdminSetup, registerAdminRoutes } from "./admin-routes.js";
 import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerChronicleRoutes } from "./chronicle-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
@@ -63,6 +65,7 @@ function safeLogger(logger: boolean | object): false | Record<string, unknown> {
 }
 
 export interface ApiModules {
+  admin?: { reader: AdminReader; provision: import("@pact/identity").AdminProvisioning; setup?: AdminSetup };
   collections?: import("@pact/kingdom").CollectionStoriesService;
   persistentPlay?: import("@pact/runs").PersistentPlayService;
   privateMemory?: import("@pact/kingdom").PrivateMemoryService;
@@ -178,6 +181,8 @@ export function buildServer(
   });
   registerCapabilityRoutes(server);
   if (modules) {
+    if (modules.admin)
+      registerAdminRoutes(server, modules.identity, modules.admin.reader, modules.admin.provision, modules.admin.setup);
     const operatorPreflight =
       modules.operatorPreflight ?? OperatorPreflight.unavailable("operator register not supplied");
     registerIdentityRoutes(server, modules.identity, modules.onboarding, operatorPreflight, modules.kingdom);

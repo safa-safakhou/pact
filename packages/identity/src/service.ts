@@ -239,6 +239,7 @@ export class IdentityService {
     let email: string;
     try {
       email = normalizeEmail(input.email);
+      if (email.endsWith("@operators.pact.invalid")) throw new IdentityError("INVALID_INPUT");
       validatePassword(input.password);
     } catch {
       throw new IdentityError("INVALID_INPUT");
@@ -299,6 +300,7 @@ export class IdentityService {
     let email: string;
     try {
       email = normalizeEmail(input.email);
+      if (email.endsWith("@operators.pact.invalid")) throw new IdentityError("INVALID_INPUT");
       validatePassword(input.password);
     } catch {
       throw new IdentityError("INVALID_INPUT");
@@ -496,6 +498,13 @@ export class IdentityService {
     return session;
   }
 
+  async recordStaffObservation(sessionToken: string, requestId?: string): Promise<void> {
+    const session = await this.requireStaffSession(sessionToken);
+    await withTransaction(this.pool, async (client) => {
+      await this.securityEvent(client, session.accountId, "admin.dashboard_read", requestId);
+    });
+  }
+
   async reauthenticate(input: {
     sessionToken: string;
     password: string;
@@ -608,6 +617,7 @@ export class IdentityService {
     let newEmail: string;
     try {
       newEmail = normalizeEmail(input.newEmail);
+      if (newEmail.endsWith("@operators.pact.invalid")) throw new IdentityError("INVALID_INPUT");
     } catch {
       throw new IdentityError("INVALID_INPUT");
     }

@@ -1,3 +1,4 @@
+export * from "./admin-insights.js";
 export * from "./jobs.js";
 export * from "./migrate.js";
 export * from "./outbox.js";

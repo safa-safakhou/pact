@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**88 tickets · 66 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**89 tickets · 66 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2763,3 +2763,35 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - reports/browser-account-management-20261011.md — 357 unit checks and 384 PostgreSQL integration checks pass (one existing skipped); build/type/lint and three-account synthetic browser switching verified; local callback browser block documented.
 - reports/browser-account-management-20261011.md — browser-accounts-20261011-2 from 3e017c7; source archive integrity, backup, canonical verification, public chooser/empty anonymous roster/validated ChatGPT consent and final page corrections verified. Actual host callback/device limitations remain explicit; no remote Linear issue exists due free issue limit.
+
+<a id="pact-167"></a>
+## PACT-167 — Implement and deploy independent administrator operations dashboard
+
+**Status:** in_progress · **Role:** Platform · **Size:** L · **Type:** implementation
+
+**Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
+
+**Depends on:** [PACT-053](phase-1-rules.md#pact-053), [PACT-130](phase-3-season-one.md#pact-130), [PACT-005](phase-0-connections.md#pact-005)
+
+**Components:** web, API, identity, module-owned insight readers, operations.
+
+**Specification:** [architecture](../pact/architecture.md), [privacy](../pact/privacy.md), [runtime](../pact/runtime.md), [administration](../pact/administration.md) · **Release checks:** A08, L04
+
+**Implement / deliver**
+
+- Dedicated administrator setup/sign-in using staff role, recent MFA and existing human sessions, with no kingdom or gameplay grant.
+- System-wide committed metrics, trends, player directory, exact aggregate resource ledger, diplomacy, agent observations and operational queues.
+- Audited moderation management through existing handlers, responsive dashboard, synthetic verification and server deployment.
+
+**Acceptance**
+
+- [ ] Administrator first setup is host-authorized, bounded and single-use; role/MFA/expiry, agent and player denials pass without creating kingdom state.
+- [ ] Metrics are product-scoped, consistent read-only snapshots; exact units, windows, pagination, empty/error states and privacy boundaries pass.
+- [ ] Dashboard navigation, refresh, login/logout, setup, management and mobile rendering verified with synthetic data.
+- [ ] Full relevant checks, durable runbook/report, verified local commits, backup and canonical server deployment checks complete.
+
+**Assignee:** codex-admin-dashboard-20261014
+
+**Evidence**
+
+- docs/implementation/reports/admin-dashboard-20261014.md
