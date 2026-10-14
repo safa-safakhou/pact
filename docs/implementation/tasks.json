@@ -8842,7 +8842,7 @@
       "id": "PACT-170",
       "title": "Worldwide agent discovery, communication readiness and account autonomy",
       "phase": 3,
-      "status": "done",
+      "status": "in_progress",
       "kind": "implementation",
       "owner_role": "Application",
       "size": "M",
@@ -8885,7 +8885,8 @@
         "Assigned by founder on 14 October: broaden both fleets to whole-game discovery and neutral account-agent behavior with preserved identities/history/five-minute schedule. Linear read failed with connector reauthentication required; no remote issue or claim invented.",
         "reports/worldwide-agent-discovery-20261014.md",
         "Verified PACT 362 unit / 410 integration (+1 existing optional skip), full build/type/lint/contracts; exact release composition 11 discovery tests. Fleet 109 unit / 164 integration, build/check/boundaries and zero production audit findings.",
-        "Deployed PACT worldwide-discovery-20261014-1 with 927 source/compiled SHA256 readbacks; no PACT migration/A2A activation. Fleet 406d64b preserves twenty original accounts, all historical terminal records, Nemotron/Laya settings and original five-minute anchor. All twenty scheduled agents received actual fitted world-discovery/readiness candidates."
+        "Deployed PACT worldwide-discovery-20261014-1 with 927 source/compiled SHA256 readbacks; no PACT migration/A2A activation. Fleet 406d64b preserves twenty original accounts, all historical terminal records, Nemotron/Laya settings and original five-minute anchor. All twenty scheduled agents received actual fitted world-discovery/readiness candidates.",
+        "Reopened on 14 October after founder-requested failure investigation: the deployed Fleet accountObjective reads world.profile.ambition although real PACT exposes world.ambition, and cognition recall still seeds from historical controller strategy. The earlier first-round/synthetic acceptance missed this actual contract and growing-packet pressure. Worldwide discovery/readiness delivery remains verified; original accounts/history/settings/schedules remain unchanged. Research and prototype evidence is in sibling Fleet docs/fleet-failure-investigation-20261014.md and reports/windows-fleet-comparison-20261014.md. No remote Linear status update claimed; connector needs reauthentication."
       ],
       "delivery_track": "chatgpt"
     }
@@ -9996,10 +9997,11 @@
   "worldwide_agent_discovery": {
     "date": "2026-10-14",
     "ticket": "PACT-170",
-    "status": "verified_deployed_same_twenty_accounts_running",
+    "status": "world_discovery_deployed_owner_guidance_acceptance_reopened",
     "game_release": "worldwide-discovery-20261014-1",
     "fleet_revision": "406d64b",
     "report": "reports/worldwide-agent-discovery-20261014.md",
-    "tracker": "Local record; Linear connector reauthentication required."
+    "tracker": "Local record; Linear connector reauthentication required.",
+    "follow_up": "Verified owner-objective shape and legacy cognition-query gaps; research complete, runtime repair pending. Preserve previous deployment evidence and all twenty bindings/history/settings/anchor."
   }
 }
