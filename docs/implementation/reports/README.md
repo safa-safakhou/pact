@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Backup offload and server recovery](backup-offload-recovery-20261014.md) — verified local PACT/Fleet restores, preserved recovery keys, server backup removal, masked producer and stable original-cohort execution.
+
 - [Fleet operational review 14 October](fleet-operational-review-20261014.md) — read-only disk-exhaustion incident, database recovery and restart loops; current gameplay census unavailable, dated progress baseline and recovery priorities.
 
 - [Administrator dashboard](admin-dashboard-20261014.md) — PACT-169, independent staff role, global observations and existing management controls; verification and server acceptance.
