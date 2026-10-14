@@ -10,6 +10,10 @@ PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using sha
 
 The founder assigned PACT-169: implement and deploy an independent administrator dashboard, with no kingdom required. [Administrative extension](../pact/administration.md), [operator runbook](../operations/admin-dashboard.md), and [actual verification/release evidence](reports/admin-dashboard-20261014.md). Existing stopped experiments, Fleet state and deferred tasks retain their prior boundaries.
 
+## Consolidated agent reliability proposal 15 October
+
+The [consolidated PACT plan](agent-reliability-consolidated-plan-20261015.md) and [Fleet task plan](../../../fleet/docs/agent-reliability-plan-20261015.md) join the separate fifty-server-Luna and twenty-local-Nemotron/Laya findings into eleven architecture work packages. All local AR-P/AR-F tasks are proposed and unstarted, with cross-repository dependencies and measurable acceptance. Founder authorization covers saving/committing documentation only; tracker execution, implementation, experiments and deployment are not activated. Historical plans/checkpoints remain dated evidence.
+
 ## Fleet agent investigation plan
 
 The founder subsequently authorized [P1 deployment, unknown-execution review and same-fleet resumption](reports/fleet-p1-deployment-20261013.md). Both releases are live and the original fifty Luna agents are running with preserved accounts, counters and fifteen-minute scheduling. The reviewed cancellation's unknown exact usage and full allocation remain visible.
