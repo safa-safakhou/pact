@@ -8678,7 +8678,7 @@
       "id": "PACT-167",
       "title": "Implement and deploy independent administrator operations dashboard",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Platform",
       "size": "L",
@@ -8720,7 +8720,8 @@
         "Verified source e20b17a; full build/types/lint, 360 unit and 387 integration passed (one optional provider skipped); actual synthetic desktop/mobile browser and HTTP acceptance.",
         "Release admin-dashboard-20261014-1: encrypted backup 4a37e125, exact image-layer match, current migrations/privacy replay, canonical verify and public staff gates, active tick 24714 to 24715; only API/gateway replaced.",
         "Initial independent administrator setup is delivered privately for founder password/authenticator entry; no kingdom or real credential was created by the agent. Linear connector requires reauthentication; local evidence is the assignment record.",
-        "Founder explicitly requested password-only administrator setup/login on 14 October; correction tracked in reports/admin-password-login-20261014.md. Previous deployment evidence remains historical."
+        "Founder explicitly requested password-only administrator setup/login on 14 October; correction tracked in reports/admin-password-login-20261014.md. Previous deployment evidence remains historical.",
+        "Password-only correction f4c856c released as admin-password-20261014-1: full build/types/lint, 360 unit and 387 integration plus new migration fixture passed; migration 0065, backup cd3c3823, deployed source/asset hashes, canonical verification and actual public browser passed."
       ],
       "assignee": "codex-admin-dashboard-20261014",
       "blocked_by_external": [],
