@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Worldwide agent discovery and account autonomy](worldwide-agent-discovery-20261014.md) — PACT-170, deployed shared public readiness, whole-game discovery in both existing Windows fleets, neutral guidance and preserved accounts/history/five-minute timing.
+
 - [Fifty Luna agents gameplay investigation](fleet-gameplay-investigation-20261014.md) — two-day activity, current Hall progression, remaining quota/forecast defects, communication incentives and the [all-fifty roster](fleet-agent-roster-20261014.md).
 
 - [Backup offload and server recovery](backup-offload-recovery-20261014.md) — verified local PACT/Fleet restores, masked snapshot job, persistent WAL-archive shutdown, verified archive offload/cleanup and preserved original server/local execution.

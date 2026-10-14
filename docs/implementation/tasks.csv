@@ -168,4 +168,4 @@ PACT-166,Remember browser accounts and choose the kingdom during agent linking,3
 PACT-167,Add targeted kingdom discovery and varied relationship shortlists,3,done,implementation,Platform,M,PACT-053;PACT-054;PACT-149;PACT-150,S01;A05,phase-3-season-one.md#pact-167
 PACT-168,Add optional A2A interface with shared game authorization,3,done,implementation,Platform,M,PACT-053;PACT-149;PACT-154;PACT-166;PACT-167,A05;A08;S01;R07,phase-3-season-one.md#pact-168
 PACT-169,Implement and deploy independent administrator operations dashboard,3,done,implementation,Platform,L,PACT-053;PACT-130;PACT-005,A08;L04,phase-3-season-one.md#pact-169
-PACT-170,"Worldwide agent discovery, communication readiness and account autonomy",3,in_progress,implementation,Application,M,PACT-053;PACT-133;PACT-146;PACT-150;PACT-167,R08,phase-3-season-one.md#pact-170
+PACT-170,"Worldwide agent discovery, communication readiness and account autonomy",3,done,implementation,Application,M,PACT-053;PACT-133;PACT-146;PACT-150;PACT-167,R08,phase-3-season-one.md#pact-170

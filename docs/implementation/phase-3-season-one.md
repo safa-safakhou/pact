@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**92 tickets · 69 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**92 tickets · 70 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2872,7 +2872,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-170"></a>
 ## PACT-170 — Worldwide agent discovery, communication readiness and account autonomy
 
-**Status:** in_progress · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2889,13 +2889,16 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Authenticated shared discovery returns actual worldwide identities and existing public agent activity/contact readiness; self, blocks, scope and privacy remain enforced, with no inferred availability or forced contact.
-- [ ] Legacy and new discovery paths avoid cohort filters, retain honest pagination/coverage, and can deliver peers outside both fleets within unchanged decision budgets.
-- [ ] Both fleets resume verified committed runtimes at a quiescent boundary with unchanged original identities, histories, model/budget configurations, usage and schedule anchors; original controller profiles remain audit history while active guidance follows account owners.
-- [ ] Relevant synthetic unit/integration/build/type/migration checks and actual deployment/tool/context/first-round acceptance pass, with durable reports and honest tracker limitations.
+- [x] Authenticated shared discovery returns actual worldwide identities and existing public agent activity/contact readiness; self, blocks, scope and privacy remain enforced, with no inferred availability or forced contact.
+- [x] Legacy and new discovery paths avoid cohort filters, retain honest pagination/coverage, and can deliver peers outside both fleets within unchanged decision budgets.
+- [x] Both fleets resume verified committed runtimes at a quiescent boundary with unchanged original identities, histories, model/budget configurations, usage and schedule anchors; original controller profiles remain audit history while active guidance follows account owners.
+- [x] Relevant synthetic unit/integration/build/type/migration checks and actual deployment/tool/context/first-round acceptance pass, with durable reports and honest tracker limitations.
 
 **Assignee:** codex-worldwide-discovery-20261014
 
 **Evidence**
 
 - Assigned by founder on 14 October: broaden both fleets to whole-game discovery and neutral account-agent behavior with preserved identities/history/five-minute schedule. Linear read failed with connector reauthentication required; no remote issue or claim invented.
+- reports/worldwide-agent-discovery-20261014.md
+- Verified PACT 362 unit / 410 integration (+1 existing optional skip), full build/type/lint/contracts; exact release composition 11 discovery tests. Fleet 109 unit / 164 integration, build/check/boundaries and zero production audit findings.
+- Deployed PACT worldwide-discovery-20261014-1 with 927 source/compiled SHA256 readbacks; no PACT migration/A2A activation. Fleet 406d64b preserves twenty original accounts, all historical terminal records, Nemotron/Laya settings and original five-minute anchor. All twenty scheduled agents received actual fitted world-discovery/readiness candidates.

@@ -8842,7 +8842,7 @@
       "id": "PACT-170",
       "title": "Worldwide agent discovery, communication readiness and account autonomy",
       "phase": 3,
-      "status": "in_progress",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Application",
       "size": "M",
@@ -8882,7 +8882,10 @@
       "blocked_by_external": [],
       "assignee": "codex-worldwide-discovery-20261014",
       "evidence": [
-        "Assigned by founder on 14 October: broaden both fleets to whole-game discovery and neutral account-agent behavior with preserved identities/history/five-minute schedule. Linear read failed with connector reauthentication required; no remote issue or claim invented."
+        "Assigned by founder on 14 October: broaden both fleets to whole-game discovery and neutral account-agent behavior with preserved identities/history/five-minute schedule. Linear read failed with connector reauthentication required; no remote issue or claim invented.",
+        "reports/worldwide-agent-discovery-20261014.md",
+        "Verified PACT 362 unit / 410 integration (+1 existing optional skip), full build/type/lint/contracts; exact release composition 11 discovery tests. Fleet 109 unit / 164 integration, build/check/boundaries and zero production audit findings.",
+        "Deployed PACT worldwide-discovery-20261014-1 with 927 source/compiled SHA256 readbacks; no PACT migration/A2A activation. Fleet 406d64b preserves twenty original accounts, all historical terminal records, Nemotron/Laya settings and original five-minute anchor. All twenty scheduled agents received actual fitted world-discovery/readiness candidates."
       ],
       "delivery_track": "chatgpt"
     }
@@ -9978,9 +9981,10 @@
     "date": "2026-10-13",
     "ticket": "PACT-167",
     "authorization": "founder_requested_better_agent_discovery",
-    "status": "verified_local_not_deployed",
+    "status": "deployed_with_public_readiness_20261014",
     "tracker": "Local record; Linear creation rejected at free issue limit a49d97079f53b0e4.",
-    "report": "reports/kingdom-discovery-20261013.md"
+    "report": "reports/kingdom-discovery-20261013.md",
+    "deployment_report": "reports/worldwide-agent-discovery-20261014.md"
   },
   "optional_a2a": {
     "date": "2026-10-13",
@@ -9988,5 +9992,14 @@
     "status": "verified_local_default_off_not_deployed",
     "tracker": "Linear free issue limit rejected creation, request a49e4a6ff8bcf8e1.",
     "report": "reports/optional-a2a-20261013.md"
+  },
+  "worldwide_agent_discovery": {
+    "date": "2026-10-14",
+    "ticket": "PACT-170",
+    "status": "verified_deployed_same_twenty_accounts_running",
+    "game_release": "worldwide-discovery-20261014-1",
+    "fleet_revision": "406d64b",
+    "report": "reports/worldwide-agent-discovery-20261014.md",
+    "tracker": "Local record; Linear connector reauthentication required."
   }
 }
