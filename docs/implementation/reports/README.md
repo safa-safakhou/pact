@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fleet operational review 14 October](fleet-operational-review-20261014.md) — read-only disk-exhaustion incident, database recovery and restart loops; current gameplay census unavailable, dated progress baseline and recovery priorities.
+
 - [Administrator dashboard](admin-dashboard-20261014.md) — PACT-169, independent staff role, global observations and existing management controls; verification and server acceptance.
 - [Fleet P1 deployment and same-owner resumption](fleet-p1-deployment-20261013.md) — canonical release, networkless full-row restore verification, audited cancellation review retaining allocation and live fifty-agent scheduling.
 
