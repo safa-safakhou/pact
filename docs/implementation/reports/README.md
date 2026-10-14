@@ -2,7 +2,7 @@
 
 ## Current assignment
 
-- [Backup offload and server recovery](backup-offload-recovery-20261014.md) — verified local PACT/Fleet restores, preserved recovery keys, server backup removal, masked producer and stable original-cohort execution.
+- [Backup offload and server recovery](backup-offload-recovery-20261014.md) — verified local PACT/Fleet restores, masked snapshot job, persistent WAL-archive shutdown, verified archive offload/cleanup and preserved original server/local execution.
 
 - [Fleet operational review 14 October](fleet-operational-review-20261014.md) — read-only disk-exhaustion incident, database recovery and restart loops; current gameplay census unavailable, dated progress baseline and recovery priorities.
 

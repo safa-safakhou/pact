@@ -1,6 +1,10 @@
 # Dedicated PACT host: HTTPS terminates locally for pact.tinyagenttools.com.
 # Gateway HTTP stays private; the tunnel serves temporary legacy connections.
 services:
+  # This host's backup archives were offloaded and removed on 14 October.
+  # Keep archiving off on recreation; live pg_wal remains PostgreSQL-managed.
+  postgres:
+    command: ["postgres", "-c", "archive_mode=off", "-c", "archive_timeout=0"]
   gateway:
     ports: !override
       - "127.0.0.1:${PACT_LOOPBACK_PORT:-8088}:8080"
