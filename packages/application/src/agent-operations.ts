@@ -20,6 +20,8 @@ import {
   MemoryReadSchema,
   MemorySourceSchema,
   MemoryWriteSchema,
+  operationMetadata,
+  operationValidationDetail,
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
@@ -171,6 +173,7 @@ export class AgentOperationError extends Error {
   constructor(
     readonly code: "FORBIDDEN" | "INVALID_REQUEST" | "RUN_ALREADY_ACTIVE",
     readonly httpStatus = 400,
+    readonly detail?: Record<string, unknown>,
   ) {
     super(code);
   }
@@ -248,14 +251,29 @@ export class AgentOperationService {
             },
           ]
         : []),
-    ].map(({ name, description, inputSchema }) => ({ name, description, inputSchema }));
+    ].map(({ name, description, inputSchema }) => {
+      const write = [
+        "run.open",
+        pactGameActionV2Tool.name,
+        pactGameActionTool.name,
+        pactMemoryWriteTool.name,
+        pactApprovalProposalV2Tool.name,
+        pactApprovalProposalTool.name,
+      ].includes(name);
+      return {
+        name,
+        description,
+        inputSchema,
+        _meta: { "pact/operation": operationMetadata(name, [write ? "game:act" : "world:read"], !write) },
+      };
+    });
   }
   async execute(
     principal: AuthenticatedPrincipal,
     params: Record<string, unknown>,
     sessionId?: string,
   ): Promise<Record<string, unknown>> {
-    if (principal.audience !== "agent") {
+    if (principal.audience !== "agent" || principal.productScope !== this.options.productScope) {
       throw new AgentOperationError("FORBIDDEN", 403);
     }
     const name = String(params.name ?? "");
@@ -357,7 +375,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.agentGuide)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = AgentGuideQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const guide = await this.options.agentGuide.read(principal.accountId, query.data.topic);
       return {
         content: [{ type: "text", text: JSON.stringify(guide) }],
@@ -387,7 +406,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.kingdomDiscovery)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = KingdomDiscoveryQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const result = await this.options.kingdomDiscovery.read(principal.accountId, query.data);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -395,7 +415,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.publicProfiles)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = PlayerFindQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const kingdom = await this.options.publicProfiles.read(query.data.handle);
       const result = { found: kingdom !== null, kingdom, untrustedContent: true };
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
@@ -404,7 +425,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.courts)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = CourtReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const result = await this.options.courts.read(query.data.handle, query.data.offset, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -413,7 +435,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.seals)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = SealReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const result = await this.options.seals.read(query.data.sealId, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -421,7 +444,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.chronicle)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = ChronicleReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const result = await this.options.chronicle.read(query.data, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -430,7 +454,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.politics)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = PoliticsReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const result = await this.options.politics.read(query.data.handle, query.data.offset, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -438,7 +463,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.runReports)
         throw new AgentOperationError("FORBIDDEN", 403);
       const q = RunReportQuerySchema.safeParse(args);
-      if (!q.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!q.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, q.error.issues));
       const result = await this.options.runReports.read(q.data.runId, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -446,7 +472,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.seasons)
         throw new AgentOperationError("FORBIDDEN", 403);
       const q = SeasonReadQuerySchema.safeParse(args);
-      if (!q.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!q.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, q.error.issues));
       const result = await this.options.seasons.read(q.data, principal.accountId);
       return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
@@ -487,7 +514,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.reports)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = ReportReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const report = await this.options.reports.read(principal.accountId, query.data.kind, query.data.recordId);
       if (!report) throw new AgentOperationError("INVALID_REQUEST", 404);
       return {
@@ -499,7 +527,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.inbox)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = InboxReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const page = await this.options.inbox.readBounded(principal.accountId, query.data.cursor, query.data.limit);
       return {
         content: [{ type: "text", text: JSON.stringify(page) }],
@@ -621,7 +650,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.conversations)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = ConversationReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const page = await this.options.conversations.read(
         principal.accountId,
         query.data.counterpartyKingdomId,
@@ -636,7 +666,8 @@ export class AgentOperationService {
     if (name === pactReceiptReadTool.name) {
       if (!principal.agentScopes?.includes("world:read")) throw new AgentOperationError("FORBIDDEN", 403);
       const query = ReceiptReadQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const receipt = await this.options.dispatcher.lookupReceipt(principal, query.data.commandId);
       if (!receipt) {
         const result = {
@@ -653,7 +684,8 @@ export class AgentOperationService {
       if (!principal.agentScopes?.includes("world:read") || !this.options.approvals)
         throw new AgentOperationError("FORBIDDEN", 403);
       const query = ApprovalStatusQuerySchema.safeParse(args);
-      if (!query.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
       const status = await this.options.approvals.read(principal.accountId, query.data.approvalId);
       if (!status) throw new AgentOperationError("INVALID_REQUEST", 404);
       const result = {
@@ -671,7 +703,8 @@ export class AgentOperationService {
       const parsed = (
         name === pactApprovalProposalV2Tool.name ? ApprovalProposalV2Schema : ApprovalProposalSchema
       ).safeParse(args);
-      if (!parsed.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!parsed.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, parsed.error.issues));
       const approval = await this.options.approvalProposals.proposeAgent({ ...principal, sessionId }, parsed.data);
       const result = {
         code: "APPROVAL_REQUIRED",
@@ -687,7 +720,8 @@ export class AgentOperationService {
       const parsed = (name === pactGameActionV2Tool.name ? AgentGameActionV2Schema : AgentGameActionSchema).safeParse(
         args,
       );
-      if (!parsed.success) throw new AgentOperationError("INVALID_REQUEST");
+      if (!parsed.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, parsed.error.issues));
       const command = {
         schemaVersion: name === pactGameActionV2Tool.name ? "pact.command.v2" : SCHEMA_VERSION,
         commandId: parsed.data.commandId,
@@ -728,7 +762,12 @@ export class AgentOperationService {
             : name === "sandbox.draft.write"
               ? { kind: "sandbox.draft.write" as const, note: String(args.note ?? "") }
               : null;
-    if (!action) throw new AgentOperationError("INVALID_REQUEST");
+    if (!action)
+      throw new AgentOperationError(
+        "INVALID_REQUEST",
+        400,
+        operationValidationDetail(name, [{ path: ["name"], code: "unsupported_operation" }]),
+      );
     const command = {
       schemaVersion: SCHEMA_VERSION,
       commandId: randomUUID(),

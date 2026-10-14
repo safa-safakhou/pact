@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { operationMetadata } from "@pact/contracts";
 import { playHtml } from "./play-view.js";
 
 /** The host caches HTML by URI; every markup change must publish a different resource. */
@@ -90,7 +91,7 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
   ].includes(tool.name);
   // Reserving this connection's expiring lease is a state change, not an irreversible game action.
   const privateLease = tool.name === "run.open";
-  const scopes = [write || tool.name.startsWith("sandbox.") ? "game:act" : "world:read"];
+  const scopes: ("game:act" | "world:read")[] = [write || tool.name.startsWith("sandbox.") ? "game:act" : "world:read"];
   const securitySchemes = [{ type: "oauth2", scopes }];
   const meta = "_meta" in tool && typeof tool._meta === "object" ? tool._meta : {};
   return {
@@ -102,7 +103,7 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
       openWorldHint: !privateLease,
     },
     securitySchemes,
-    _meta: { ...meta, securitySchemes },
+    _meta: { ...meta, securitySchemes, "pact/operation": operationMetadata(tool.name, scopes, !write) },
   };
 }
 export { playHtml } from "./play-view.js";

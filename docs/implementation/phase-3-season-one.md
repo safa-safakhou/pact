@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 70 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 71 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2939,7 +2939,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-172"></a>
 ## PACT-172 — Canonical operations and schemas
 
-**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2955,14 +2955,18 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Export/catalog parity covers admitted reads/actions and their exact required fields, additional-property policy and version requirements. Compatible old clients retain documented behavior; unsupported versions fail precisely.
-- [ ] Four archived synthetic bad calls and a legitimate building command remain a shared acceptance corpus. Fleet rejects the bad calls at its generation/validation boundary while PACT independently rejects any that reach it.
-- [ ] Invented conversation names, extraneous action `summary` and missing message body yield bounded field/schema-specific diagnostics. No transport implements a second permission gate or game engine.
+- [x] Export/catalog parity covers admitted reads/actions and their exact required fields, additional-property policy and version requirements. Compatible old clients retain documented behavior; unsupported versions fail precisely.
+- [x] Four archived synthetic bad calls and a legitimate building command remain a shared acceptance corpus. Fleet rejects the bad calls at its generation/validation boundary while PACT independently rejects any that reach it.
+- [x] Invented conversation names, extraneous action `summary` and missing message body yield bounded field/schema-specific diagnostics. No transport implements a second permission gate or game engine.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-contracts-20261015.md
+- PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /168 integration, check/build/boundaries. Fake providers only.
 
 <a id="pact-173"></a>
 ## PACT-173 — Scoped semantic reference facts

@@ -41,7 +41,9 @@ async function safe(reply: FastifyReply, operation: () => Promise<unknown>): Pro
       return reply.code(error.code === "FORBIDDEN" ? 403 : 400).send({ error: { code: error.code } });
     }
     if (error instanceof McpError) {
-      return reply.code(error.httpStatus).send({ error: { code: error.code } });
+      return reply
+        .code(error.httpStatus)
+        .send({ error: { code: error.code, ...(error.detail ? { detail: error.detail } : {}) } });
     }
     if (error instanceof DispatcherError) {
       return reply

@@ -8944,7 +8944,7 @@
       "plan_id": "AR-P02",
       "title": "Canonical operations and schemas",
       "phase": 3,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Application",
       "size": "M",
@@ -8979,9 +8979,11 @@
       ],
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
-        "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only."
+        "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
+        "docs/implementation/reports/agent-reliability-contracts-20261015.md",
+        "PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /169 integration, check/build/boundaries. Fake providers only."
       ],
-      "assignee": null,
+      "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",

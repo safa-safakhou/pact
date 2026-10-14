@@ -26,16 +26,23 @@
       "depends_on": [
         "AR-P01"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Export/catalog parity covers admitted reads/actions and their exact required fields, additional-property policy and version requirements. Compatible old clients retain documented behavior; unsupported versions fail precisely.",
         "Four archived synthetic bad calls and a legitimate building command remain a shared acceptance corpus. Fleet rejects the bad calls at its generation/validation boundary while PACT independently rejects any that reach it.",
         "Invented conversation names, extraneous action `summary` and missing message body yield bounded field/schema-specific diagnostics. No transport implements a second permission gate or game engine."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-contracts-20261015.md"
+      ],
+      "gated_acceptance": [],
+      "contract_gate": {
+        "status": "verified",
+        "evidence": "4 focused contract/catalog tests, package build and complete typecheck passed before Fleet integration"
+      },
+      "dependency_gate": "Joint source/offline catalog and engine acceptance verified; actual provider qualification remains AR-F10"
     },
     {
       "id": "AR-P03",

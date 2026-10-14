@@ -73,6 +73,7 @@ export class McpError extends Error {
       | "SESSION_NOT_FOUND"
       | "RUN_ALREADY_ACTIVE",
     readonly httpStatus = 400,
+    readonly detail?: Record<string, unknown>,
   ) {
     super(code);
     this.name = "McpError";
@@ -497,7 +498,7 @@ export class McpTransport {
     try {
       return await this.operations.execute(principal, params, sessionId);
     } catch (error) {
-      if (error instanceof AgentOperationError) throw new McpError(error.code, error.httpStatus);
+      if (error instanceof AgentOperationError) throw new McpError(error.code, error.httpStatus, error.detail);
       throw error;
     }
   }

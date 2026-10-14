@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Executable operation contracts](agent-reliability-contracts-20261015.md) — AR-P02 / PACT-172 and Fleet AR-F02; source/offline acceptance.
+
 - [Faithful owner intent source acceptance](agent-reliability-intent-20261015.md) — AR-P01 / PACT-171 and Fleet AR-F01; verified source/offline only, no deployment.
 
 - [Consolidated agent reliability plan 15 October](../agent-reliability-consolidated-plan-20261015.md) and [Fleet tasks](../../../../fleet/docs/agent-reliability-plan-20261015.md) — proposed/unstarted architecture work, dependencies and acceptance from both 14 October investigations; documentation authorization only.

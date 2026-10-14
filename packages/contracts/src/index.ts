@@ -8,6 +8,7 @@ export * from "./discovery-schemas.js";
 export * from "./enrollment-schemas.js";
 export * from "./json-schema.js";
 export * from "./memory-schemas.js";
+export * from "./operation-catalog.js";
 export * from "./owner-intent.js";
 export * from "./politics-schemas.js";
 export * from "./run-report-schemas.js";
