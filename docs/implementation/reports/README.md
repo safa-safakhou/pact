@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Goal and authority feasibility](agent-reliability-feasibility-20261015.md) — AR-P09 / AR-F09, current-rule ceilings and unresolved owner alternatives.
+
 - [Social lifecycle and neutral attention](agent-reliability-social-20261015.md) — AR-P08 / AR-F08, whole terms and isolated material trade versus solo.
 
 - [Precise credential recovery source acceptance](agent-reliability-recovery-20261015.md) — AR-P07 / PACT-177 and AR-F07; nonexecution proof, quarantine, credential CAS and callback fences.

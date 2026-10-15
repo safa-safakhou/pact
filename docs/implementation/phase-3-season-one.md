@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 77 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 78 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -3163,7 +3163,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-179"></a>
 ## PACT-179 — Goal and authority feasibility
 
-**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -3179,15 +3179,18 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Every declared test goal is feasible under its actual stock/prerequisite/authority path or has an explicit unresolved owner decision. Prohibited objectives are not scored as agent failure.
-- [ ] Quote arithmetic distinguishes whole resource units from ledger units, full ceiling from rolling headroom, and I–II/III–IV/V–VI comparison bands from promotion payouts.
-- [ ] Unsupported territory expansion and autonomous Court lifecycle are labelled unavailable. Political/economic rule changes require a separate reviewed product/specification assignment.
-- [ ] An approved authority alternative would need scoped fixtures, versions and rollback; this plan changes no mandate, rules, account or permission.
+- [x] Every declared test goal is feasible under its actual stock/prerequisite/authority path or has an explicit unresolved owner decision. Prohibited objectives are not scored as agent failure.
+- [x] Quote arithmetic distinguishes whole resource units from ledger units, full ceiling from rolling headroom, and I–II/III–IV/V–VI comparison bands from promotion payouts.
+- [x] Unsupported territory expansion and autonomous Court lifecycle are labelled unavailable. Political/economic rule changes require a separate reviewed product/specification assignment.
+- [x] An approved authority alternative would need scoped fixtures, versions and rollback; this plan changes no mandate, rules, account or permission.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-feasibility-20261015.md
 
 <a id="pact-180"></a>
 ## PACT-180 — Controlled world and incentive evaluation

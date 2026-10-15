@@ -187,8 +187,8 @@
         "AR-P06",
         "AR-P08"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Every declared test goal is feasible under its actual stock/prerequisite/authority path or has an explicit unresolved owner decision. Prohibited objectives are not scored as agent failure.",
@@ -196,8 +196,13 @@
         "Unsupported territory expansion and autonomous Court lifecycle are labelled unavailable. Political/economic rule changes require a separate reviewed product/specification assignment.",
         "An approved authority alternative would need scoped fixtures, versions and rollback; this plan changes no mandate, rules, account or permission."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-feasibility-20261015.md"
+      ],
+      "gated_acceptance": [
+        "Owner must choose constrained goal, exact human approvals or reviewed bounded ceiling before live higher-Hall acceptance"
+      ],
+      "dependency_gate": "Rules-derived source feasibility complete; evaluation may use explicitly constrained synthetic goals"
     },
     {
       "id": "AR-P10",

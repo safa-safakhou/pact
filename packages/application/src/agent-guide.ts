@@ -10,6 +10,7 @@ import {
   wholeUnitText,
 } from "@pact/domain";
 import type { SocialOverviewReader, WorldViewService } from "@pact/kingdom";
+import { goalFeasibility } from "./goal-feasibility.js";
 
 export type AgentGuideTopic = "start" | "development" | "diplomacy" | "military" | "authority";
 
@@ -239,6 +240,7 @@ export class AgentGuideReader {
       ambition: world.ambition ?? "",
       asOfGameTimeMs: world.asOfGameTimeMs,
       worldStatus: world.worldStatus,
+      goalFeasibility: goalFeasibility(world),
       resources: Object.fromEntries(
         Object.entries(world.balances).map(([resource, balance]) => [
           resource,
