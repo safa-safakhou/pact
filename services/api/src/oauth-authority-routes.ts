@@ -262,6 +262,10 @@ document.getElementById('login').addEventListener('submit',async(e)=>{
           redirect_uri: z.string().optional(),
           code_verifier: z.string().optional(),
           refresh_token: z.string().optional(),
+          recovery_proof: z
+            .string()
+            .regex(/^[A-Za-z0-9_-]{43}$/)
+            .optional(),
           resource: z.string().optional(),
         })
         .parse(request.body);
@@ -287,6 +291,7 @@ document.getElementById('login').addEventListener('submit',async(e)=>{
       const tokens = await oauth.refresh({
         clientId: body.client_id,
         refreshToken: body.refresh_token,
+        ...(body.recovery_proof ? { recoveryProof: body.recovery_proof } : {}),
         ...(body.resource ? { resource: body.resource } : {}),
       });
       return {

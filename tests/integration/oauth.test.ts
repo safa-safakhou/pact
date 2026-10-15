@@ -408,3 +408,96 @@ describe("PACT OAuth", () => {
     expect(() => oauth.assertNotHumanOnly(tokens.scope.split(" "), "authority.raise", "mcp")).toThrow(OAuthError);
   });
 });
+
+describe("proof-bound refresh recovery", () => {
+  async function grant() {
+    const accountId = await verifiedAccount(`recovery-${randomUUID()}@example.test`);
+    const client = await oauth.registerDynamic({
+      displayName: "Recovery fixture",
+      audience: "mcp",
+      redirectUris: ["https://client.example/cb"],
+    });
+    const challenge = pkce();
+    const auth = await oauth.beginAuthorization({
+      accountId,
+      clientId: client.clientId,
+      redirectUri: client.redirectUris[0] ?? "",
+      resource: mcpResource,
+      scopes: "world:read game:act",
+      subjectLabel: "Fixture",
+      expectedAudience: "mcp",
+      codeChallenge: challenge.challenge,
+      codeChallengeMethod: "S256",
+    });
+    const tokens = await oauth.exchangeAuthorizationCode({
+      clientId: client.clientId,
+      code: auth.code,
+      redirectUri: client.redirectUris[0] ?? "",
+      codeVerifier: challenge.verifier,
+      resource: mcpResource,
+    });
+    return { accountId, client, tokens };
+  }
+  it("recovers exactly one committed rotation under concurrency without storing plaintext tokens", async () => {
+    const { accountId, client, tokens } = await grant();
+    const request = {
+      clientId: client.clientId,
+      refreshToken: tokens.refreshToken,
+      resource: mcpResource,
+      recoveryProof: randomBytes(32).toString("base64url"),
+    };
+    const [first, recovered] = await Promise.all([oauth.refresh(request), oauth.refresh(request)]);
+    expect(recovered).toEqual(first);
+    expect(await oauth.introspectAccessToken(recovered.accessToken)).toMatchObject({ accountId });
+    const saved = JSON.stringify(
+      (await pool.query("SELECT * FROM oauth_refresh_recoveries WHERE client_id=$1", [client.clientId])).rows,
+    );
+    for (const secret of [tokens.refreshToken, first.refreshToken, first.accessToken, request.recoveryProof])
+      expect(saved).not.toContain(secret);
+    const next = await oauth.refresh({
+      clientId: client.clientId,
+      refreshToken: first.refreshToken,
+      resource: mcpResource,
+      recoveryProof: randomBytes(32).toString("base64url"),
+    });
+    await expect(oauth.refresh(request)).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    expect(await oauth.introspectAccessToken(next.accessToken)).toMatchObject({ accountId });
+  });
+  it("never bypasses family revocation or legacy replay detection", async () => {
+    const { client, tokens } = await grant();
+    const request = {
+      clientId: client.clientId,
+      refreshToken: tokens.refreshToken,
+      recoveryProof: randomBytes(32).toString("base64url"),
+    };
+    const next = await oauth.refresh(request);
+    await oauth.revoke(next.accessToken);
+    await expect(oauth.refresh(request)).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    const other = await grant();
+    const rotated = await oauth.refresh({
+      clientId: other.client.clientId,
+      refreshToken: other.tokens.refreshToken,
+      recoveryProof: randomBytes(32).toString("base64url"),
+    });
+    await expect(
+      oauth.refresh({ clientId: other.client.clientId, refreshToken: other.tokens.refreshToken }),
+    ).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    expect(await oauth.introspectAccessToken(rotated.accessToken)).toBeNull();
+  });
+  it("rejects wrong proof and expiry without exposing a result", async () => {
+    const { client, tokens } = await grant();
+    const request = {
+      clientId: client.clientId,
+      refreshToken: tokens.refreshToken,
+      recoveryProof: randomBytes(32).toString("base64url"),
+    };
+    await oauth.refresh(request);
+    await pool.query("UPDATE oauth_refresh_recoveries SET expires_at='2026-09-20T17:00:00Z' WHERE client_id=$1", [
+      client.clientId,
+    ]);
+    await expect(oauth.refresh(request)).rejects.toMatchObject({ code: "INVALID_GRANT" });
+    await expect(
+      oauth.refresh({ ...request, recoveryProof: randomBytes(32).toString("base64url") }),
+    ).rejects.toMatchObject({ code: "INVALID_GRANT" });
+  });
+});

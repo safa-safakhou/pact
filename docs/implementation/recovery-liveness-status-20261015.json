@@ -1,0 +1,43 @@
+{
+  "assignment": "founder_20261015_implement_validate_server_deploy_push",
+  "assignee": "codex-recovery-20261015",
+  "tracking": "Local assignment register; Linear reauthentication unavailable; no remote issues invented.",
+  "tasks": [
+    {
+      "id": "RL-P01",
+      "title": "Credential attempt/result contract",
+      "status": "verified",
+      "dependsOn": [],
+      "evidence": [
+        "7 OAuth integration tests pass, including concurrent proof recovery, encrypted result, child rotation, revocation, expiry and legacy replay; @pact/oauth build passes."
+      ]
+    },
+    {
+      "id": "RL-P02",
+      "title": "Inference leases and durable failure accounting",
+      "status": "in_progress",
+      "dependsOn": [
+        "RL-P01"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "RL-P03",
+      "title": "Checked operational world recovery",
+      "status": "todo",
+      "dependsOn": [
+        "RL-P02"
+      ],
+      "evidence": []
+    },
+    {
+      "id": "RL-P04",
+      "title": "Verified server rollout and pushes",
+      "status": "todo",
+      "dependsOn": [
+        "RL-P03"
+      ],
+      "evidence": []
+    }
+  ]
+}

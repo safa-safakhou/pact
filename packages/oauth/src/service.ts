@@ -13,6 +13,8 @@ import {
   verifyPkceS256,
 } from "./crypto.js";
 
+import { openRecovery, recoveryKey, sealRecovery } from "./refresh-recovery.js";
+
 const ACCESS_TTL_MS = 15 * 60_000;
 const REFRESH_TTL_MS = 30 * 24 * 60 * 60_000;
 const CODE_TTL_MS = 10 * 60_000;
@@ -101,6 +103,7 @@ export class OAuthService {
       grant_types_supported: ["authorization_code", "refresh_token"],
       scopes_supported: ["world:read", "messages:write", "game:act"],
       token_endpoint_auth_methods_supported: ["none"],
+      refresh_recovery_supported: "pact.refresh-recovery.v1",
     };
   }
 
@@ -324,9 +327,16 @@ export class OAuthService {
     });
   }
 
-  async refresh(input: { clientId: string; refreshToken: string; resource?: string }): Promise<TokenResponse> {
+  async refresh(input: {
+    clientId: string;
+    refreshToken: string;
+    resource?: string;
+    recoveryProof?: string;
+  }): Promise<TokenResponse> {
     const client = await this.requireClient(input.clientId);
     const presentedHash = hashToken(input.refreshToken);
+    const proofHash = input.recoveryProof ? recoveryKey(input.recoveryProof).toString("hex") : null;
+    const binding = JSON.stringify([this.options.productScope, input.clientId, presentedHash]);
     const outcome = await withTransaction(this.pool, async (db) => {
       const token = await db.query<{
         id: string;
@@ -341,6 +351,41 @@ export class OAuthService {
       ]);
       const refresh = token.rows[0];
       if (!refresh) return { type: "invalid" as const };
+      // The old refresh token alone never retrieves its replacement. Exact attempt proof
+      // was supplied before rotation and is independent of the rotating credential.
+      if (refresh.used_at && !refresh.revoked_at && proofHash) {
+        const saved = (
+          await db.query<{ response_cipher: string; issued_at: Date; expires_at: Date }>(
+            `SELECT r.response_cipher,r.issued_at,r.expires_at FROM oauth_refresh_recoveries r
+           JOIN oauth_grants g ON g.id=r.grant_id AND g.product_scope=r.product_scope
+           JOIN accounts a ON a.id=g.account_id AND a.product_scope=g.product_scope AND a.status='active'
+           WHERE r.product_scope=$1 AND r.parent_hash=$2 AND r.client_id=$3 AND r.proof_hash=$4
+           AND g.revoked_at IS NULL AND g.client_id=$3 AND ($5::text IS NULL OR g.resource=$5) FOR UPDATE OF g`,
+            [this.options.productScope, presentedHash, client.client_id, proofHash, input.resource ?? null],
+          )
+        ).rows[0];
+        if (saved && saved.expires_at > this.options.clock.now()) {
+          const recovered = openRecovery<TokenResponse>(input.recoveryProof ?? "", binding, saved.response_cipher);
+          const child = (
+            await db.query(
+              `SELECT 1 FROM oauth_refresh_tokens WHERE product_scope=$1 AND token_hash=$2
+             AND grant_id=$3 AND used_at IS NULL AND revoked_at IS NULL AND expires_at>$4`,
+              [
+                this.options.productScope,
+                hashToken(recovered.refreshToken),
+                refresh.grant_id,
+                this.options.clock.now(),
+              ],
+            )
+          ).rowCount;
+          const remaining =
+            recovered.expiresIn - Math.ceil((this.options.clock.now().getTime() - saved.issued_at.getTime()) / 1000);
+          if (child && remaining > 0) return { type: "ok" as const, tokens: { ...recovered, expiresIn: remaining } };
+        }
+        if (!saved) await this.revokeFamily(db, refresh.token_family_id);
+        // A stale exact-proof recovery is rejected without revoking a newer child.
+        return { type: "invalid" as const };
+      }
       if (refresh.used_at || refresh.revoked_at) {
         await this.revokeFamily(db, refresh.token_family_id);
         return { type: "reuse" as const };
@@ -376,6 +421,23 @@ export class OAuthService {
         grantId: grantRow.id,
         parentRefreshHash: presentedHash,
       });
+      if (input.recoveryProof && proofHash) {
+        const now = this.options.clock.now();
+        await db.query(
+          `INSERT INTO oauth_refresh_recoveries(product_scope,parent_hash,client_id,grant_id,proof_hash,response_cipher,issued_at,expires_at)
+           VALUES($1,$2,$3,$4,$5,$6,$7,$8)`,
+          [
+            this.options.productScope,
+            presentedHash,
+            client.client_id,
+            grantRow.id,
+            proofHash,
+            sealRecovery(input.recoveryProof, binding, tokens),
+            now,
+            new Date(now.getTime() + 10 * 60_000),
+          ],
+        );
+      }
       return { type: "ok" as const, tokens };
     });
     if (outcome.type === "ok") return outcome.tokens;
