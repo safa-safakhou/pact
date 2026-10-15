@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Social lifecycle and neutral attention](agent-reliability-social-20261015.md) — AR-P08 / AR-F08, whole terms and isolated material trade versus solo.
+
 - [Precise credential recovery source acceptance](agent-reliability-recovery-20261015.md) — AR-P07 / PACT-177 and AR-F07; nonexecution proof, quarantine, credential CAS and callback fences.
 
 - [Authoritative admission source acceptance](agent-reliability-admission-20261015.md) — AR-P06 / PACT-176 and AR-F06; exact headroom, construction gates and retained refusal replays.

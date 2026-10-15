@@ -1,5 +1,6 @@
 import type { ObservationSectionQuery } from "@pact/contracts";
 import type { PoolClient } from "pg";
+import { socialAttentionSourceSql, supplyDeliverySql } from "./social-attention.js";
 import { type SupplyTerms, supplyPerspective } from "./supply-terms.js";
 import type { OwnerKingdomView } from "./world-views.js";
 
@@ -88,6 +89,7 @@ export async function readObservationSection(
       'scoutEligible',t.type='spearman' AND NOT t.home_guard AND t.host_kingdom_id=t.owner_kingdom_id AND t.placement='home'
         AND NOT EXISTS(SELECT 1 FROM battle_unit_eligibility e WHERE e.product_scope=t.product_scope AND e.troop_id=t.id AND e.locked_until_game_time_ms>$6)) AS data
       FROM kingdom_troops t WHERE t.product_scope=$1 AND t.owner_kingdom_id=$2`;
+  else if (query.section === "social_attention") source = socialAttentionSourceSql();
   else if (query.section === "requests")
     source = `SELECT 'ContactRequest:'||r.id AS key,r.id,
     jsonb_build_object('type','ContactRequest','id',r.id,'ownerKingdomId',$2::uuid,'senderKingdomId',r.sender_kingdom_id,'recipientKingdomId',r.recipient_kingdom_id,
@@ -115,7 +117,7 @@ export async function readObservationSection(
       right: string,
     ) => `SELECT '${prefix}:'||o.id AS key,o.id,
       jsonb_build_object('type','${prefix}','id',o.id,'ownerKingdomId',$2::uuid,'kingdomA',o.${left},'kingdomB',o.${right},
-      'counterpartyKingdomId',CASE WHEN o.${left}=$2 THEN o.${right} ELSE o.${left} END,'terms',o.terms,'status',o.status,
+      'counterpartyKingdomId',CASE WHEN o.${left}=$2 THEN o.${right} ELSE o.${left} END,'terms',o.terms,'status',o.status,'deliveries',${prefix === "SupplyContract" ? supplyDeliverySql() : "'[]'::jsonb"},
       'offerId',o.offer_id,'offerVersion',${prefix === "SupplyContract" ? "o.offer_version" : "(SELECT version FROM garrison_offers WHERE id=o.offer_id AND product_scope=o.product_scope)"},'startGameTimeMs',o.start_game_time_ms::text,'endGameTimeMs',o.end_game_time_ms::text) AS data
       FROM ${table} o WHERE o.product_scope=$1 AND (o.${left}=$2 OR o.${right}=$2)`;
     // Identifiers are code-owned, never interpolated from the request.
@@ -126,6 +128,17 @@ export async function readObservationSection(
       contract("garrison_contracts", "GarrisonContract", "lender_kingdom_id", "host_kingdom_id"),
     ].join(" UNION ALL ");
   }
+  if (query.section === "social_attention")
+    source = `SELECT lpad((row_number() OVER(PARTITION BY data->>'type',COALESCE(data->>'direction','') ORDER BY key))::text,8,'0')||':'||key AS key,id,data FROM (${source}) balanced`;
+  const delegation =
+    query.section === "social_attention"
+      ? (
+          await client.query<{ mode: string; allowed_kingdom_ids: string[]; version: number }>(
+            "SELECT mode,allowed_kingdom_ids,version FROM social_delegations WHERE product_scope=$1 AND kingdom_id=$2",
+            [scope, owner.id],
+          )
+        ).rows[0]
+      : undefined;
   const rows = (
     await client.query<{ key: string; id: string; data: Record<string, unknown> }>(
       `SELECT * FROM (${source}) selected WHERE ($3::uuid IS NULL OR id=$3) AND key>$4 ORDER BY key LIMIT $5`,
@@ -143,6 +156,14 @@ export async function readObservationSection(
   return {
     ...header,
     records,
+    socialDelegation:
+      query.section === "social_attention"
+        ? {
+            mode: delegation?.mode ?? "manual",
+            allowedKingdomIds: delegation?.allowed_kingdom_ids ?? [],
+            version: delegation?.version ?? 0,
+          }
+        : undefined,
     coverage: {
       complete: !more,
       delivered: records.length,
@@ -157,6 +178,10 @@ export async function readObservationSection(
           afterKey: kept.at(-1)?.key,
         }
       : null,
-    untrustedContent: query.section === "requests",
+    selection:
+      query.section === "social_attention"
+        ? "Interleaved live request/offer/obligation categories, with GAME-time expiry within each category. Unranked strategic options; no acceptance or outreach requirement."
+        : undefined,
+    untrustedContent: ["requests", "social_attention"].includes(query.section),
   };
 }

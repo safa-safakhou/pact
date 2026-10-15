@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 76 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 77 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -3131,7 +3131,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-178"></a>
 ## PACT-178 — Actionable social lifecycle views
 
-**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -3147,15 +3147,18 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Scripted isolated beneficial and bad trades exercise delivery, response, signatures, activation, fulfillment/end and valid decline/solo play; compare material benefit to a stated solo baseline.
-- [ ] Deadline controls cover two-decision cross-turn handoffs, game-clock pauses and opportunity delivery before expiry. Seeing a peer-read notice alone cannot count as full actionable offer delivery.
-- [ ] Fake IDs, wrong participants, stale terms/version, revoked access and private outsider data fail safely. Public presence does not promise a reply.
-- [ ] Preserve the 13 October 19-to-17 gift's four eligible turns and unresolved full-term delivery. Six-hour/zero-notice terms are valid; the exact malformed fields in Agent 03's failed offers remain unknown. No settlement bug, outreach quota, autoaccept, partner class or advertising is inferred.
+- [x] Scripted isolated beneficial and bad trades exercise delivery, response, signatures, activation, fulfillment/end and valid decline/solo play; compare material benefit to a stated solo baseline.
+- [x] Deadline controls cover two-decision cross-turn handoffs, game-clock pauses and opportunity delivery before expiry. Seeing a peer-read notice alone cannot count as full actionable offer delivery.
+- [x] Fake IDs, wrong participants, stale terms/version, revoked access and private outsider data fail safely. Public presence does not promise a reply.
+- [x] Preserve the 13 October 19-to-17 gift's four eligible turns and unresolved full-term delivery. Six-hour/zero-notice terms are valid; the exact malformed fields in Agent 03's failed offers remain unknown. No settlement bug, outreach quota, autoaccept, partner class or advertising is inferred.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-social-20261015.md
 
 <a id="pact-179"></a>
 ## PACT-179 — Goal and authority feasibility

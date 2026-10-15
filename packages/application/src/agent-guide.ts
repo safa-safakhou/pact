@@ -151,7 +151,7 @@ export class AgentGuideReader {
         },
       };
     const [social, mandate] = await Promise.all([
-      this.socialOverview.read(accountId),
+      this.socialOverview.read(accountId, { acknowledgeDeliveredMessages: false }),
       this.authority.getMandate(accountId),
     ]);
     if (topic === "authority")

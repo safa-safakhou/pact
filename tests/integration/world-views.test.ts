@@ -149,6 +149,45 @@ describe("authorized world views", () => {
       youSend: null,
       signedBy: [peer.kingdomId],
     });
+
+    const attention = await views.readSection(owner.accountId, { section: "social_attention", limit: 2 });
+    expect(attention.records).toHaveLength(2);
+    expect(attention.records).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "ContactRequest", direction: "incoming", status: "pending" }),
+        expect.objectContaining({
+          type: "SupplyOffer",
+          id: offerId,
+          version: 2,
+          terms,
+          youReceive: terms.aToB,
+          youSend: null,
+          signedBy: [peer.kingdomId],
+          yourRole: "party_b",
+          reason: "signature_decision",
+        }),
+      ]),
+    );
+    expect(attention.coverage).toMatchObject({ complete: false, delivered: 2 });
+    expect(attention.socialDelegation).toMatchObject({ mode: "manual", version: 0 });
+    const remaining = await views.readSection(
+      owner.accountId,
+      ObservationSectionQuerySchema.parse({ section: "social_attention", limit: 2, cursor: attention.next }),
+    );
+    expect(
+      (remaining.records as { id: string }[]).every(
+        (r) => !(attention.records as { id: string }[]).some((a) => a.id === r.id),
+      ),
+    ).toBe(true);
+    expect(
+      (await views.readSection(outsider.accountId, { section: "social_attention", recordId: offerId })).records,
+    ).toEqual([]);
+    await pool.query("UPDATE world_clocks SET status='paused' WHERE product_scope='pact'");
+    const paused = await views.readSection(owner.accountId, { section: "social_attention", recordId: offerId });
+    expect(await views.readSection(owner.accountId, { section: "social_attention", recordId: offerId })).toEqual(
+      paused,
+    );
+    await pool.query("UPDATE world_clocks SET status='active' WHERE product_scope='pact'");
     expect((await views.readSection(outsider.accountId, { section: "agreements", recordId: offerId })).records).toEqual(
       [],
     );
@@ -186,6 +225,26 @@ describe("authorized world views", () => {
         arguments: { section: "requests", accountId: outsider.accountId },
       }),
     ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+  });
+
+  it("does not acknowledge message bodies omitted from guide lessons", async () => {
+    const owner = await kingdom(),
+      peer = await kingdom(),
+      id = randomUUID();
+    await pool.query(
+      `INSERT INTO direct_messages(id,product_scope,sender_kingdom_id,recipient_kingdom_id,body,operation_key,agent_originated,sent_game_time_ms)
+      VALUES($1::uuid,'pact',$2,$3,'Private undelivered marker',$1::text,true,0)`,
+      [id, peer.kingdomId, owner.kingdomId],
+    );
+    const guide = new AgentGuideReader(new WorldViewService(pool, scope), new SocialOverviewReader(pool, scope), {
+      getMandate: async () => null,
+    });
+    for (const topic of ["start", "authority", "development", "diplomacy", "military"] as const) {
+      expect(JSON.stringify(await guide.read(owner.accountId, topic))).not.toContain("Private undelivered marker");
+      expect(
+        (await pool.query("SELECT read_game_time_ms FROM direct_messages WHERE id=$1", [id])).rows[0].read_game_time_ms,
+      ).toBeNull();
+    }
   });
 
   it("publishes owner-only typed units with fresh Home Guard, placement and battle-lock eligibility", async () => {

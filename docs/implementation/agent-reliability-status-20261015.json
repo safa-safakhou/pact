@@ -163,8 +163,8 @@
         "AR-P06",
         "AR-P07"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Scripted isolated beneficial and bad trades exercise delivery, response, signatures, activation, fulfillment/end and valid decline/solo play; compare material benefit to a stated solo baseline.",
@@ -172,8 +172,13 @@
         "Fake IDs, wrong participants, stale terms/version, revoked access and private outsider data fail safely. Public presence does not promise a reply.",
         "Preserve the 13 October 19-to-17 gift's four eligible turns and unresolved full-term delivery. Six-hour/zero-notice terms are valid; the exact malformed fields in Agent 03's failed offers remain unknown. No settlement bug, outreach quota, autoaccept, partner class or advertising is inferred."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-social-20261015.md"
+      ],
+      "gated_acceptance": [
+        "Live delivery and model recognition/negotiation require separately approved rollout and real-provider qualification"
+      ],
+      "dependency_gate": "Scoped source lifecycle, optional two-decision choices and real isolated material-benefit control verified"
     },
     {
       "id": "AR-P09",
