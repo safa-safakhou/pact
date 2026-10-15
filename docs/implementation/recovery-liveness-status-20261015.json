@@ -37,12 +37,29 @@
     {
       "id": "RL-P04",
       "title": "Verified server rollout and pushes",
-      "status": "in_progress",
+      "status": "verified",
       "dependsOn": [
         "RL-P03"
       ],
-      "evidence": []
+      "evidence": [
+        "docs/implementation/reports/recovery-liveness-deployment-20261015.md"
+      ]
     }
   ],
-  "findingsRegister": "docs/implementation/recovery-liveness-findings-20261015.json"
+  "findingsRegister": "docs/implementation/recovery-liveness-findings-20261015.json",
+  "deployment": {
+    "serverVerifiedAt": "2026-10-15T13:24:52Z",
+    "runtimeSource": "1e21a6b8c57e32840d0f4cb9ee9352ff055e70a0",
+    "sourcePushVerified": true,
+    "report": "docs/implementation/reports/recovery-liveness-deployment-20261015.md",
+    "server50": "paused generation 17; historical gates retained",
+    "local20": "existing runtime unchanged; 20 ready, no unknown usage",
+    "mac": "unavailable/excluded"
+  },
+  "sourceVerification": {
+    "unit": 384,
+    "integration": 436,
+    "optionalLiveProviderSkipped": 1,
+    "realModelQualification": false
+  }
 }
