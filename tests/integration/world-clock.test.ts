@@ -343,3 +343,43 @@ describe("atomic world clock", () => {
     expect(admitted).toMatchObject({ kind: "admitted", value: 1n });
   });
 });
+
+it("automatically recovers only operational pauses without replaying offline economic ticks", async () => {
+  const world = new WorldClockService(pool, "recover_operational");
+  const before = await world.bootstrap();
+  await pool.query(
+    "UPDATE world_clocks SET last_heartbeat_at=clock_timestamp()-interval '5 minutes' WHERE product_scope='recover_operational'",
+  );
+  expect(await world.acquireLease("fixture")).toBeNull();
+  await pool.query(
+    "UPDATE world_clocks SET paused_at=clock_timestamp()-interval '6 seconds' WHERE product_scope='recover_operational'",
+  );
+  expect(await world.recoverOperationalPause()).toBe(false);
+  expect(await world.recoverOperationalPause()).toBe(false);
+  expect(await world.recoverOperationalPause()).toBe(true);
+  const after = await world.read();
+  expect(after.status).toBe("active");
+  expect(after.gameTimeMs).toBe(before.gameTimeMs);
+  expect(after.sequence).toBe(before.sequence);
+  expect(after.nextTickDueAt.getTime()).toBeGreaterThan(Date.now());
+  expect(await world.acquireLease("new-worker")).not.toBeNull();
+});
+it("preserves operator and legacy pauses even if their reason resembles an outage", async () => {
+  const world = new WorldClockService(pool, "recover_manual");
+  await world.bootstrap();
+  await world.pause("HEARTBEAT_DELAYED");
+  await pool.query(
+    "UPDATE world_clocks SET paused_at=clock_timestamp()-interval '1 hour' WHERE product_scope='recover_manual'",
+  );
+  for (let i = 0; i < 5; i++) expect(await world.recoverOperationalPause()).toBe(false);
+  expect((await world.read()).status).toBe("paused");
+});
+it("refuses operational recovery when committed clock and tick history disagree", async () => {
+  const world = new WorldClockService(pool, "recover_inconsistent");
+  await world.bootstrap();
+  await pool.query(
+    "UPDATE world_clocks SET status='paused',pause_origin='operational',suspension_reason='TICK_DELAYED',tick_sequence=1,paused_at=clock_timestamp()-interval '1 hour' WHERE product_scope='recover_inconsistent'",
+  );
+  await expect(world.recoverOperationalPause()).rejects.toThrow("WORLD_RECOVERY_INCONSISTENT");
+  expect((await world.read()).status).toBe("paused");
+});

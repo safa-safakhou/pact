@@ -300,6 +300,7 @@ export class PrivacyService {
       const drafts = await client.query("DELETE FROM kingdom_drafts WHERE activated_at IS NULL AND expires_at <= $1", [
         now,
       ]);
+      await client.query("DELETE FROM oauth_refresh_recoveries WHERE expires_at<=$1", [now]);
       const runs = await client.query(
         `DELETE FROM envoy_runs WHERE status IN ('finished', 'stopped', 'failed') AND updated_at <= $1`,
         [new Date(now.getTime() - days(30))],
@@ -500,6 +501,9 @@ export class PrivacyService {
                     used_messages AS "usedMessages", used_calls AS "usedCalls", used_tokens AS "usedTokens",
                     created_at AS "createdAt", updated_at AS "updatedAt", stopped_at AS "stoppedAt"
              FROM envoy_runs WHERE product_scope = $1 AND account_id = $2`);
+    const modelAttempts = await query(
+      `SELECT t.request_id AS "requestId",t.run_id AS "runId",t.phase,t.status,t.allocation_tokens AS "allocationTokens",t.actual_tokens AS "actualTokens",t.code,t.started_at AS "startedAt",t.deadline_at AS "deadlineAt",t.updated_at AS "updatedAt" FROM envoy_model_attempts t JOIN envoy_runs r ON r.run_id=t.run_id WHERE t.product_scope=$1 AND r.account_id=$2`,
+    );
     const runToolResults = await query(`SELECT t.run_id AS "runId", t.request_id AS "requestId",
                     t.call_id AS "callId", t.summary, t.created_at AS "createdAt"
              FROM envoy_run_tool_results t JOIN envoy_runs r ON r.run_id = t.run_id
@@ -604,6 +608,7 @@ export class PrivacyService {
       authorityHumanPermits,
       runs,
       runToolResults,
+      modelAttempts,
       inbox,
       telegram,
       messages,

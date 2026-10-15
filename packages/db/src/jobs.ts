@@ -73,3 +73,19 @@ export async function failJob(
   );
   return (result.rowCount ?? 0) > 0;
 }
+
+/** Unique worker IDs per acquisition are execution fences, not process identities. */
+export async function renewJob(
+  pool: Pool,
+  jobId: string,
+  workerId: string,
+  leaseMilliseconds: number,
+): Promise<boolean> {
+  if (!Number.isSafeInteger(leaseMilliseconds) || leaseMilliseconds <= 0) throw new Error("INVALID_JOB_LEASE");
+  const result = await pool.query(
+    `UPDATE durable_jobs SET lease_expires_at=clock_timestamp()+$3*interval '1 millisecond',updated_at=clock_timestamp()
+    WHERE id=$1 AND leased_by=$2 AND status='ready' AND lease_expires_at>clock_timestamp()`,
+    [jobId, workerId, leaseMilliseconds],
+  );
+  return result.rowCount === 1;
+}

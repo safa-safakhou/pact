@@ -98,6 +98,9 @@ describe("API/database smoke", () => {
       { name: "0065_administrator_password_auth.sql" },
       { name: "0066_optional_a2a_audience.sql" },
       { name: "0067_optional_a2a_lease.sql" },
+      { name: "0068_refresh_recovery.sql" },
+      { name: "0069_model_attempts.sql" },
+      { name: "0070_operational_clock_recovery.sql" },
     ]);
     await server.close();
   });

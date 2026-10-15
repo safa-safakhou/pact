@@ -25,6 +25,7 @@ export class ProviderError extends Error {
   constructor(
     readonly code: ProviderErrorCode,
     readonly retryable: boolean,
+    readonly finalUsage?: { inputTokens: number; outputTokens: number },
   ) {
     super(code);
     this.name = "ProviderError";

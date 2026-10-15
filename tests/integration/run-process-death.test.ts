@@ -195,8 +195,15 @@ describe("PACT-051 inference process death", () => {
     expect(reclaimed).toMatchObject({ type: "envoy.run.tick", attempts: 2 });
     if (!reclaimed) throw new Error("Missing reclaimed job");
     expect((reclaimed.payload as { runId?: string }).runId).toBe(run.runId);
-    const recovered = await service.failInterruptedModelCall(run.runId);
-    expect(recovered).toMatchObject({ status: "failed", ambiguousCrash: true, usedMessages: 1, usedCalls: 0 });
+    expect((await service.failInterruptedModelCall(run.runId)).status).toBe("running");
+    await pool.query("UPDATE envoy_runs SET request_deadline_at=$2 WHERE run_id=$1", [run.runId, new Date(0)]);
+    const recoveredAfterDeadline = await service.failInterruptedModelCall(run.runId);
+    expect(recoveredAfterDeadline).toMatchObject({
+      status: "failed",
+      ambiguousCrash: true,
+      usedMessages: 1,
+      usedCalls: 0,
+    });
     expect(await service.executeModelCall(run.runId)).toMatchObject({ status: "failed", usedMessages: 1 });
     expect(recoveryInvocations).toBe(0);
     expect(await completeJob(pool, reclaimed.id, "replacement-after-tool")).toBe(true);
@@ -296,8 +303,10 @@ describe("PACT-051 inference process death", () => {
     expect(reclaimed).toMatchObject({ type: "envoy.run.tick", attempts: 2 });
     if (!reclaimed) throw new Error("Missing reclaimed job");
     expect((reclaimed.payload as { runId?: string }).runId).toBe(run.runId);
-    const recovered = await service.failInterruptedModelCall(run.runId);
-    expect(recovered).toMatchObject({
+    expect((await service.failInterruptedModelCall(run.runId)).status).toBe("running");
+    await pool.query("UPDATE envoy_runs SET request_deadline_at=$2 WHERE run_id=$1", [run.runId, new Date(0)]);
+    const recoveredAfterDeadline = await service.failInterruptedModelCall(run.runId);
+    expect(recoveredAfterDeadline).toMatchObject({
       status: "failed",
       ambiguousCrash: true,
       lastErrorCode: "AMBIGUOUS_PROVIDER_CRASH",

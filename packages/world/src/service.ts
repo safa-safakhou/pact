@@ -19,6 +19,9 @@ interface ClockRow {
   lease_token: string | null;
   lease_expires_at: Date | null;
   suspension_reason: string | null;
+  pause_origin: string;
+  recovery_checks: number;
+  paused_at: Date | null;
 }
 
 export interface TickContext {
@@ -74,12 +77,18 @@ async function lockedClock(client: PoolClient, productScope: string): Promise<Cl
   return row;
 }
 
-async function suspend(client: PoolClient, productScope: string, reason: string, now: Date): Promise<void> {
+async function suspend(
+  client: PoolClient,
+  productScope: string,
+  reason: string,
+  now: Date,
+  origin = "operational",
+): Promise<void> {
   await client.query(
     `UPDATE world_clocks SET status = 'paused', paused_at = $2, suspension_reason = $3,
-       lease_holder = NULL, lease_token = NULL, lease_expires_at = NULL
+       lease_holder = NULL, lease_token = NULL, lease_expires_at = NULL,pause_origin=$4,recovery_checks=0
      WHERE product_scope = $1`,
-    [productScope, now, reason],
+    [productScope, now, reason, origin],
   );
 }
 
@@ -244,10 +253,56 @@ export class WorldClockService {
   async pause(reason = "OPERATOR_PAUSE"): Promise<void> {
     await withTransaction(this.pool, async (client) => {
       await lockedClock(client, this.productScope);
-      await suspend(client, this.productScope, reason, await databaseNow(client));
+      await suspend(client, this.productScope, reason, await databaseNow(client), "operator");
     });
   }
 
+  /** Only future, explicitly operational pauses; never clears a manual/legacy pause. */
+  async recoverOperationalPause(): Promise<boolean> {
+    return withTransaction(this.pool, async (client) => {
+      const row = await lockedClock(client, this.productScope),
+        now = await databaseNow(client);
+      if (
+        row.status !== "paused" ||
+        row.pause_origin !== "operational" ||
+        !["HEARTBEAT_DELAYED", "TICK_DELAYED"].includes(row.suspension_reason ?? "")
+      )
+        return false;
+      const latest = (
+        await client.query<{ n: string; time: string | null }>(
+          "SELECT coalesce(max(tick_sequence),0)::text n,max(game_time_ms)::text time FROM world_ticks WHERE product_scope=$1",
+          [this.productScope],
+        )
+      ).rows[0];
+      if (
+        !latest ||
+        BigInt(latest.n) !== BigInt(row.tick_sequence) ||
+        (latest.time !== null && Number(latest.time) !== gameTime(row))
+      )
+        throw new Error("WORLD_RECOVERY_INCONSISTENT");
+      await client.query("UPDATE world_clocks SET recovery_checks=recovery_checks+1 WHERE product_scope=$1", [
+        this.productScope,
+      ]);
+      if (row.recovery_checks < 2 || !row.paused_at || now.getTime() - row.paused_at.getTime() < 5000) return false;
+      await client.query(
+        `UPDATE world_clocks SET status='active',paused_at=NULL,suspension_reason=NULL,recovery_checks=0,
+        next_tick_due_at=$2,last_heartbeat_at=$3,lease_holder=NULL,lease_token=NULL,lease_expires_at=NULL WHERE product_scope=$1`,
+        [this.productScope, new Date(now.getTime() + GAME_MINUTE_MS), now],
+      );
+      await appendOutbox(client, {
+        productScope: this.productScope,
+        eventId: randomUUID(),
+        type: "world.clock.recovered.v1",
+        payload: {
+          reason: row.suspension_reason,
+          sequence: row.tick_sequence,
+          gameTimeMs: row.committed_game_time_ms,
+          policy: "operational-recovery-v1",
+        },
+      });
+      return true;
+    });
+  }
   async resume(): Promise<WorldSnapshot> {
     return withTransaction(this.pool, async (client) => {
       const row = await lockedClock(client, this.productScope);

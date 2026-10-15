@@ -329,9 +329,22 @@ export class PersistentPlayService {
             await this.state(client, row, "needs_owner");
             return { code: "NEEDS_OWNER", runId: run.runId };
           }
+          await client.query(
+            "UPDATE persistent_enrollments SET next_eligible_at=$4 WHERE product_scope=$1 AND account_id=$2 AND id=$3",
+            [this.scope, row.account_id, row.id, new Date(now.getTime() + 30_000)],
+          );
           return { code: "RUN_ACTIVE", runId: run.runId };
         }
-        if (run?.status !== "finished" || run.lastErrorCode) {
+        const safeTransient =
+          run?.status === "finished" &&
+          ["PROVIDER_UNAVAILABLE", "RECOVERED_NO_GAME_EFFECTS"].includes(run.lastErrorCode ?? "") &&
+          !run.ambiguousCrash &&
+          !(
+            await client.query("SELECT 1 FROM envoy_model_attempts WHERE run_id=$1 AND status='unknown' LIMIT 1", [
+              run.runId,
+            ])
+          ).rowCount;
+        if (run?.status !== "finished" || (run.lastErrorCode && !safeTransient)) {
           await this.state(client, row, "needs_owner");
           return { code: "NEEDS_OWNER" };
         }

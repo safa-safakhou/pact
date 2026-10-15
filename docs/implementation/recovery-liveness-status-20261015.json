@@ -9,35 +9,40 @@
       "status": "verified",
       "dependsOn": [],
       "evidence": [
-        "7 OAuth integration tests pass, including concurrent proof recovery, encrypted result, child rotation, revocation, expiry and legacy replay; @pact/oauth build passes."
+        "docs/implementation/reports/recovery-liveness-source-20261015.md"
       ]
     },
     {
       "id": "RL-P02",
       "title": "Inference leases and durable failure accounting",
-      "status": "in_progress",
+      "status": "verified",
       "dependsOn": [
         "RL-P01"
       ],
-      "evidence": []
+      "evidence": [
+        "docs/implementation/reports/recovery-liveness-source-20261015.md"
+      ]
     },
     {
       "id": "RL-P03",
       "title": "Checked operational world recovery",
-      "status": "todo",
+      "status": "verified",
       "dependsOn": [
         "RL-P02"
       ],
-      "evidence": []
+      "evidence": [
+        "docs/implementation/reports/recovery-liveness-source-20261015.md"
+      ]
     },
     {
       "id": "RL-P04",
       "title": "Verified server rollout and pushes",
-      "status": "todo",
+      "status": "in_progress",
       "dependsOn": [
         "RL-P03"
       ],
       "evidence": []
     }
-  ]
+  ],
+  "findingsRegister": "docs/implementation/recovery-liveness-findings-20261015.json"
 }

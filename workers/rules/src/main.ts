@@ -16,6 +16,7 @@ if (!databaseUrl || !raidKey || raidKey.length !== 32 || raidKey.toString("base6
     throw new Error("INVALID_SEASON_OPENING");
   const { world } = createRulesRuntime(pool, "pact", raidKey, undefined, opening);
   const workerId = `rules-${randomUUID()}`;
+  pool.on("error", () => console.error("rules database connection unavailable"));
   let leaseToken: string | null = null;
   let busy = false;
   let stopped = false;
@@ -24,7 +25,10 @@ if (!databaseUrl || !raidKey || raidKey.length !== 32 || raidKey.toString("base6
     if (busy || stopped) return;
     busy = true;
     try {
-      if (!leaseToken) leaseToken = await world.acquireLease(workerId);
+      if (!leaseToken) {
+        await world.recoverOperationalPause();
+        leaseToken = await world.acquireLease(workerId);
+      }
       if (!leaseToken) return;
       if (!(await world.heartbeat(workerId, leaseToken))) {
         leaseToken = null;

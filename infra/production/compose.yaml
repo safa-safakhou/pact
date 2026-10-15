@@ -143,6 +143,7 @@ services:
 
   inference:
     <<: *runtime
+    stop_grace_period: 120s
     command: ["npm", "run", "start", "--workspace", "@pact/inference-worker"]
     environment:
       <<: *runtime-environment

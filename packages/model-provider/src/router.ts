@@ -146,7 +146,6 @@ export class ProviderRouter {
     } catch (error) {
       throw sanitizeFailure(error);
     }
-    const toolCalls = validateToolCalls(response.toolCalls, request.tools);
     const usage = response.usage ?? { status: "unavailable" as const };
     if (
       "inputTokens" in usage &&
@@ -156,6 +155,14 @@ export class ProviderRouter {
         usage.outputTokens < 0)
     ) {
       throw new ProviderError("PROVIDER_UNAVAILABLE", false);
+    }
+    let toolCalls: readonly ProviderToolCall[];
+    try {
+      toolCalls = validateToolCalls(response.toolCalls, request.tools);
+    } catch (error) {
+      if (error instanceof ProviderError)
+        throw new ProviderError(error.code, false, "inputTokens" in usage ? usage : undefined);
+      throw error;
     }
     return { route: prepared.route, response: { ...response, toolCalls }, usage };
   }

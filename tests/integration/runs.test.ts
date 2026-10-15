@@ -299,8 +299,10 @@ describe("PACT-021 bounded runs and write leases", () => {
     });
     const original = service.executeModelCall(started.runId);
     await providerEntered;
-    const recovered = await service.failInterruptedModelCall(started.runId);
-    expect(recovered).toMatchObject({
+    expect((await service.failInterruptedModelCall(started.runId)).status).toBe("running");
+    await pool.query("UPDATE envoy_runs SET request_deadline_at=$2 WHERE run_id=$1", [started.runId, new Date(0)]);
+    const recoveredAfterDeadline = await service.failInterruptedModelCall(started.runId);
+    expect(recoveredAfterDeadline).toMatchObject({
       status: "failed",
       ambiguousCrash: true,
       lastErrorCode: "AMBIGUOUS_PROVIDER_CRASH",

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { storedCredentialRouteAvailable } from "@pact/credential-vault";
-import { acquireJob, completeJob, createPool, failJob } from "@pact/db";
+import { acquireJob, completeJob, createPool, failJob, renewJob } from "@pact/db";
 import { PersistentPlayService } from "@pact/runs";
 import { createInferenceCredentialResolver, createVaultBoundCredentialUse } from "./credential-access.js";
 import { createInferenceGameRuntime } from "./game-runtime.js";
@@ -64,35 +64,77 @@ if (!databaseUrl) {
         console.error("enrollment maintenance failed", error instanceof Error ? error.name : "unknown");
       }
     }
-    const job = await acquireJob(pool, workerId, 30_000);
+    const owner = `${workerId}:${randomUUID()}`;
+    const job = await acquireJob(pool, owner, 30_000);
     if (!job) return;
+    const controller = new AbortController();
+    let renewing = false;
+    const assertCurrent = async () => {
+      if (controller.signal.aborted || !(await renewJob(pool, job.id, owner, 30_000))) {
+        controller.abort();
+        throw new Error("EXECUTION_FENCED");
+      }
+    };
+    const renewal = setInterval(() => {
+      if (renewing) return;
+      renewing = true;
+      void assertCurrent()
+        .catch(() => controller.abort())
+        .finally(() => {
+          renewing = false;
+        });
+    }, 5000);
     try {
       if (job.type !== "envoy.run.tick") {
-        await completeJob(pool, job.id, workerId);
+        await completeJob(pool, job.id, owner);
         return;
       }
       const payload = job.payload as { runId?: string };
       if (!payload.runId) {
-        await failJob(pool, job.id, workerId);
+        await failJob(pool, job.id, owner);
         return;
       }
-      if (job.attempts > 1) await runs.failInterruptedModelCall(payload.runId);
-      await runs.executeModelCall(payload.runId);
-      await completeJob(pool, job.id, workerId);
+      if (job.attempts > 1) {
+        const recovered = await runs.failInterruptedModelCall(payload.runId);
+        if (recovered.lastErrorCode === "RECOVERED_NO_GAME_EFFECTS") {
+          await completeJob(pool, job.id, owner);
+          return;
+        }
+      }
+      await runs.executeModelCall(payload.runId, { signal: controller.signal, assertCurrent });
+      await completeJob(pool, job.id, owner);
     } catch (error) {
-      console.error("inference job failed", error instanceof Error ? error.message : "unknown");
-      // Ambiguous/provider failures are recorded on the run; do not unbounded-retry the job.
-      await failJob(pool, job.id, workerId);
+      console.error("inference job deferred", error instanceof Error ? error.name : "unknown");
+      // Re-entry is guarded by the durable in-flight request and its original deadline.
+      await failJob(pool, job.id, owner, { retryAfterMs: 5000 });
+    } finally {
+      clearInterval(renewal);
     }
   };
 
+  let busy = false,
+    stopping = false;
+  const poll = async () => {
+    if (busy || stopping) return;
+    busy = true;
+    try {
+      await tick();
+    } catch (error) {
+      console.error("inference supervision deferred", error instanceof Error ? error.name : "unknown");
+    } finally {
+      busy = false;
+    }
+  };
+  pool.on("error", () => console.error("inference database connection unavailable"));
   const timer = setInterval(() => {
-    void tick();
-  }, 1_000);
-  void tick();
+    void poll();
+  }, 1000);
+  void poll();
 
   const shutdown = async (): Promise<void> => {
+    stopping = true;
     clearInterval(timer);
+    while (busy) await new Promise((resolve) => setTimeout(resolve, 100));
     await pool.end();
   };
   for (const signal of ["SIGINT", "SIGTERM"] as const) {

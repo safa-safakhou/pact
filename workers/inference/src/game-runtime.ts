@@ -237,6 +237,7 @@ export async function createInferenceGameRuntime(
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        await input.assertCurrent?.();
         if (call.name === pactObservationSectionTool.name) {
           results.push({
             callId: call.id,

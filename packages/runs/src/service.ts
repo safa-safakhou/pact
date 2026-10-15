@@ -11,6 +11,7 @@ import type {
 import { ProviderError } from "@pact/model-provider";
 import type { Pool, PoolClient } from "pg";
 import { runDefaults, withinRunLimit } from "./portable.js";
+import { abortable } from "./recovery.js";
 import { boundedAssessment, factualRunReport } from "./report.js";
 
 export class RunError extends Error {
@@ -98,6 +99,7 @@ interface RunRow {
   used_tokens: number;
   reserved_tokens: number;
   in_flight_request_id: string | null;
+  request_deadline_at: Date | null;
   model_calls: number;
   last_error_code: string | null;
   ambiguous_crash: boolean;
@@ -167,6 +169,7 @@ export class RunService {
         run: RunView;
         requestId: string;
         calls: readonly ProviderToolCall[];
+        assertCurrent?: () => Promise<void>;
       }) => Promise<readonly RunToolResult[]> | Promise<void>;
     },
   ) {}
@@ -367,6 +370,10 @@ export class RunService {
         return toView(row);
       }
       const now = this.options.clock.now();
+      await client.query(
+        "UPDATE envoy_model_attempts SET status=CASE WHEN phase='prepared' THEN 'not_dispatched' WHEN status='reported' THEN status ELSE 'unknown' END,code='OWNER_STOP',updated_at=$2 WHERE request_id=$1",
+        [row.in_flight_request_id, now],
+      );
       const updated = await client.query<RunRow>(
         `UPDATE envoy_runs SET status = 'stopped', in_flight_request_id = NULL, reserved_tokens = 0,
            stopped_at = $2, updated_at = $2 WHERE run_id = $1 RETURNING *`,
@@ -497,6 +504,50 @@ export class RunService {
       const row = await this.lockRun(client, runId);
       if (row.status !== "running" || !row.in_flight_request_id) return toView(row);
       const now = this.options.clock.now();
+      // Expired queue ownership does not prove that an external request stopped.
+      if (row.request_deadline_at && row.request_deadline_at > now) return toView(row);
+      const attempt = (
+        await client.query<{ phase: string; actual_tokens: number | null }>(
+          "SELECT phase,actual_tokens FROM envoy_model_attempts WHERE request_id=$1 FOR UPDATE",
+          [row.in_flight_request_id],
+        )
+      ).rows[0];
+      if (
+        attempt &&
+        (attempt.phase === "prepared" || (attempt.phase === "model_reported" && attempt.actual_tokens !== null))
+      ) {
+        const known = attempt.phase === "model_reported",
+          usedCalls = row.used_calls + 1,
+          usedTokens = row.used_tokens + (known ? (attempt.actual_tokens ?? row.reserved_tokens) : row.reserved_tokens);
+        const status =
+          row.deadline_at <= now || usedCalls >= row.max_calls || usedTokens >= row.max_tokens ? "finished" : "running";
+        await client.query(
+          "UPDATE envoy_model_attempts SET phase='settled_without_game_effects',status=$2,code='RECOVERED_NO_GAME_EFFECTS',updated_at=$3 WHERE request_id=$1",
+          [row.in_flight_request_id, known ? "reported" : "not_dispatched", now],
+        );
+        const next = (
+          await client.query<RunRow>(
+            "UPDATE envoy_runs SET status=$2,in_flight_request_id=NULL,reserved_tokens=0,used_calls=$3,used_tokens=$4,model_calls=model_calls+$5,last_error_code='RECOVERED_NO_GAME_EFFECTS',updated_at=$6,stopped_at=CASE WHEN $2='finished' THEN $6 ELSE stopped_at END WHERE run_id=$1 RETURNING *",
+            [runId, status, usedCalls, usedTokens, known ? 1 : 0, now],
+          )
+        ).rows[0];
+        if (!next) throw new Error("recovery failed");
+        if (status === "running")
+          await enqueueJob(client, {
+            productScope: this.options.productScope,
+            uniqueKey: `envoy.run.tick:${runId}:${usedCalls}`,
+            type: "envoy.run.tick",
+            payload: { runId, sequence: usedCalls },
+            availableAt: new Date(now.getTime() + 30000),
+          });
+        else await this.releaseLease(client, row.subject_id);
+        return toView(next);
+      }
+
+      await client.query(
+        "UPDATE envoy_model_attempts SET status='unknown',code='AMBIGUOUS_PROVIDER_CRASH',updated_at=$2 WHERE request_id=$1 AND status='reserved'",
+        [row.in_flight_request_id, now],
+      );
       const failed = await client.query<RunRow>(
         `UPDATE envoy_runs SET status = 'failed', ambiguous_crash = TRUE,
            last_error_code = 'AMBIGUOUS_PROVIDER_CRASH', in_flight_request_id = NULL,
@@ -512,7 +563,10 @@ export class RunService {
   }
 
   /** One bounded provider step. Safe to retry; never extends the original deadline. */
-  async executeModelCall(runId: string): Promise<RunView> {
+  async executeModelCall(
+    runId: string,
+    execution: { signal?: AbortSignal; assertCurrent?: () => Promise<void> } = {},
+  ): Promise<RunView> {
     const router = this.options.providerRouter;
     if (!router) throw new Error("providerRouter is required for executeModelCall");
 
@@ -555,10 +609,15 @@ export class RunService {
       }
       const outputCeiling = Math.min(MAX_OUTPUT_RESERVATION, remainingTokens - estimatedInput);
       const requestId = randomUUID();
+      const requestDeadline = new Date(Math.min(row.deadline_at.getTime(), now.getTime() + 90_000));
+      await client.query(
+        "INSERT INTO envoy_model_attempts(request_id,product_scope,run_id,phase,status,allocation_tokens,started_at,deadline_at,updated_at) VALUES($1,$2,$3,'prepared','reserved',$4,$5,$6,$5)",
+        [requestId, this.options.productScope, runId, estimatedInput + outputCeiling, now, requestDeadline],
+      );
       const updated = await client.query<RunRow>(
-        `UPDATE envoy_runs SET in_flight_request_id = $2, reserved_tokens = $3, updated_at = $4
+        `UPDATE envoy_runs SET in_flight_request_id = $2, reserved_tokens = $3, updated_at = $4,request_deadline_at=$5
          WHERE run_id = $1 RETURNING *`,
-        [runId, requestId, estimatedInput + outputCeiling, now],
+        [runId, requestId, estimatedInput + outputCeiling, now, requestDeadline],
       );
       const next = updated.rows[0];
       if (!next) throw new Error("reserve failed");
@@ -577,7 +636,42 @@ export class RunService {
 
     let usageTokens = prepared.estimatedInput + prepared.outputCeiling;
     let errorCode: string | null = null;
-    let ambiguous = false;
+    let ambiguous = false,
+      dispatched = false,
+      reported = false,
+      retryable = false;
+    const remaining = Math.max(
+      1,
+      (prepared.row.request_deadline_at ?? prepared.row.deadline_at).getTime() - this.options.clock.now().getTime(),
+    );
+    const signal = AbortSignal.any([...(execution.signal ? [execution.signal] : []), AbortSignal.timeout(remaining)]);
+    const assertOperation = async () => {
+      signal.throwIfAborted();
+      await execution.assertCurrent?.();
+      const current = await this.pool.query(
+        "SELECT 1 FROM envoy_runs WHERE run_id=$1 AND status='running' AND in_flight_request_id=$2 AND deadline_at>$3 AND request_deadline_at>$3",
+        [runId, prepared.requestId, this.options.clock.now()],
+      );
+      if (!current.rowCount) throw new RunError("IN_FLIGHT");
+    };
+    const markPhase = async (phase: string) => {
+      signal.throwIfAborted();
+      await execution.assertCurrent?.();
+      await withTransaction(this.pool, async (client) => {
+        const current = await this.lockRun(client, runId);
+        if (
+          current.status !== "running" ||
+          current.in_flight_request_id !== prepared.requestId ||
+          current.deadline_at <= this.options.clock.now()
+        )
+          throw new RunError("IN_FLIGHT");
+        await client.query("UPDATE envoy_model_attempts SET phase=$2,updated_at=$3 WHERE request_id=$1", [
+          prepared.requestId,
+          phase,
+          this.options.clock.now(),
+        ]);
+      });
+    };
     let toolResults: readonly RunToolResult[] = [];
     let assessment: string | undefined;
     try {
@@ -586,20 +680,32 @@ export class RunService {
         model: prepared.row.model,
         credentialId: prepared.row.credential_id ?? "00000000-0000-4000-8000-000000000099",
       };
-      const preparedRoute = await router.prepare(
-        route,
-        prepared.estimatedInput,
-        prepared.outputCeiling,
-        new AbortController().signal,
+      const preparedRoute = await abortable(
+        router.prepare(route, prepared.estimatedInput, prepared.outputCeiling, signal),
+        signal,
       );
-      const invoke = (credential: Uint8Array) =>
-        router.run(preparedRoute, {
-          requestId: prepared.requestId,
-          messages: prepared.messages,
-          tools: prepared.tools,
-          credential,
-          signal: new AbortController().signal,
-        });
+      const invoke = async (credential: Uint8Array) => {
+        signal.throwIfAborted();
+        await markPhase("dispatched");
+        dispatched = true;
+        return abortable(
+          router.run(preparedRoute, {
+            requestId: prepared.requestId,
+            messages: prepared.messages,
+            tools: prepared.tools,
+            credential,
+            signal,
+          }),
+          signal,
+          async (result) => {
+            if ("inputTokens" in result.usage)
+              await this.pool.query(
+                "UPDATE envoy_model_attempts SET actual_tokens=$2,phase='late_usage_reported',updated_at=$3 WHERE request_id=$1",
+                [prepared.requestId, result.usage.inputTokens + result.usage.outputTokens, this.options.clock.now()],
+              );
+          },
+        );
+      };
       const credentialId = prepared.row.credential_id;
       const result = credentialId
         ? await (async () => {
@@ -608,15 +714,25 @@ export class RunService {
           })()
         : await invoke(new Uint8Array());
       if ("inputTokens" in result.usage) {
+        reported = true;
         usageTokens = result.usage.inputTokens + result.usage.outputTokens;
       }
+      if (reported)
+        await this.pool.query(
+          "UPDATE envoy_model_attempts SET phase='model_reported',status=CASE WHEN status='unknown' THEN status ELSE 'reported' END,actual_tokens=$2,updated_at=$3 WHERE request_id=$1",
+          [prepared.requestId, usageTokens, this.options.clock.now()],
+        );
+      signal.throwIfAborted();
+      await assertOperation();
       if (result.response.text) assessment = boundedAssessment(result.response.text);
       if (result.response.toolCalls.length > 0) {
         if (!this.options.executeToolCalls) throw new ProviderError("MALFORMED_TOOL_CALL", false);
+        await markPhase("tools_dispatching");
         const returned = await this.options.executeToolCalls({
           run: toView(prepared.row),
           requestId: prepared.requestId,
           calls: result.response.toolCalls,
+          assertCurrent: assertOperation,
         });
         if (returned) {
           const expected = new Set(result.response.toolCalls.map((call) => call.id));
@@ -639,26 +755,49 @@ export class RunService {
         ambiguous = true;
         errorCode = "AMBIGUOUS_PROVIDER_CRASH";
       } else if (error instanceof ProviderError) {
+        retryable = error.retryable && !dispatched;
+        if (error.finalUsage) {
+          reported = true;
+          usageTokens = error.finalUsage.inputTokens + error.finalUsage.outputTokens;
+          retryable = error.code === "MALFORMED_TOOL_CALL";
+        }
         // Sanitized unknown transport failures are treated as ambiguous: no auto-retry billing loop.
-        if (error.code === "PROVIDER_UNAVAILABLE") {
+        if (dispatched && !reported && ["PROVIDER_UNAVAILABLE", "TIMEOUT"].includes(error.code)) {
           ambiguous = true;
           errorCode = "AMBIGUOUS_PROVIDER_CRASH";
         } else {
           errorCode = error.code;
         }
       } else {
-        ambiguous = true;
-        errorCode = "AMBIGUOUS_PROVIDER_CRASH";
+        ambiguous = dispatched;
+        retryable = !dispatched;
+        errorCode = dispatched ? "AMBIGUOUS_PROVIDER_CRASH" : "PROVIDER_UNAVAILABLE";
       }
     }
 
     return withTransaction(this.pool, async (client) => {
       const row = await this.lockRun(client, runId);
       if (row.in_flight_request_id !== prepared.requestId) {
-        // Another worker reconciled this request; do not double-charge.
+        // Late final usage is evidence, not permission to refund a retained unknown allocation.
+        if (reported)
+          await client.query(
+            "UPDATE envoy_model_attempts SET actual_tokens=$2,phase='late_usage_reported',updated_at=$3 WHERE request_id=$1",
+            [prepared.requestId, usageTokens, this.options.clock.now()],
+          );
         return toView(row);
       }
       const now = this.options.clock.now();
+      await client.query(
+        "UPDATE envoy_model_attempts SET phase=$2,status=$3,actual_tokens=$4,code=$5,updated_at=$6 WHERE request_id=$1",
+        [
+          prepared.requestId,
+          ambiguous ? "uncertain" : "settled",
+          reported ? "reported" : dispatched ? "unknown" : "not_dispatched",
+          reported ? usageTokens : null,
+          errorCode,
+          now,
+        ],
+      );
       if (ambiguous) {
         const failed = await client.query<RunRow>(
           `UPDATE envoy_runs SET status = 'failed', ambiguous_crash = TRUE, last_error_code = $2,
@@ -681,7 +820,7 @@ export class RunService {
         row.deadline_at <= now ||
         errorCode === "QUOTA_EXHAUSTED";
       const status: RunStatus =
-        errorCode && errorCode !== "QUOTA_EXHAUSTED" ? "failed" : exhausted ? "finished" : "running";
+        errorCode && errorCode !== "QUOTA_EXHAUSTED" && !retryable ? "failed" : exhausted ? "finished" : "running";
       for (const result of toolResults) {
         await client.query(
           `INSERT INTO envoy_run_tool_results(product_scope, run_id, request_id, call_id, summary)
@@ -719,6 +858,7 @@ export class RunService {
           uniqueKey: `envoy.run.tick:${runId}:${usedCalls}`,
           type: "envoy.run.tick",
           payload: { runId, sequence: usedCalls },
+          ...(retryable ? { availableAt: new Date(now.getTime() + 30_000) } : {}),
         });
       }
       return toView(next);
