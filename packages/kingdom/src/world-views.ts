@@ -9,10 +9,12 @@ import {
   rulesCatalog,
   wholeUnitText,
 } from "@pact/domain";
+import { WorldClockService } from "@pact/world";
 import type { Pool, PoolClient } from "pg";
 import { ActionLimitService, type ChargeView } from "./action-limits.js";
 import { type GameConsequences, readGameConsequences } from "./consequences.js";
 import { readObservationSection } from "./observation-sections.js";
+import { OwnerRecordStates } from "./owner-record-states.js";
 import { SeasonService, seasonPosition } from "./seasons.js";
 import type { KingdomAmbition } from "./service.js";
 import { type SupplyTerms, supplyPerspective } from "./supply-terms.js";
@@ -211,6 +213,14 @@ export class WorldViewService {
       },
       { isolation: "REPEATABLE READ" },
     );
+  }
+
+  readRecordStates(accountId: string, records: string[]) {
+    return new OwnerRecordStates(
+      this.pool,
+      this.productScope,
+      new WorldClockService(this.pool, this.productScope),
+    ).read(accountId, records);
   }
 
   async readSection(accountId: string, query: ObservationSectionQuery) {

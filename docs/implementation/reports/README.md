@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Durable continuation source acceptance](agent-reliability-continuation-20261015.md) — AR-P05 / PACT-175 and AR-F05; structured goals, waits and distinct outcomes.
+
 - [Observation envelope source acceptance](agent-reliability-envelope-20261015.md) — AR-P04 / PACT-174 and Fleet AR-F04; usable scoped reads and measured growing-memory packets.
 
 - [Typed target source acceptance](agent-reliability-references-20261015.md) — AR-P03 / PACT-173 and Fleet AR-F03; includes reproduced automatic scout selection defect.

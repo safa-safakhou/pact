@@ -90,7 +90,7 @@ describe("owner Envoy context boundary", () => {
     expect(messages[2]?.content).toContain("mandate");
     expect(mandate).toHaveBeenCalledWith(accountId);
     expect(JSON.stringify(messages)).not.toContain("WITHHELD_LARGE_TEXT");
-    expect(messages[0]?.content).toContain("Receipts distinguish commitments from proposals");
+    expect(messages[0]?.content).toContain("Receipts distinguish commitment, proposal and pending work");
     expect(messages[0]?.content).not.toContain("Ignore the mandate");
   });
   it("keeps counterpart prose in user-role data and excludes arbitrary inbox payloads", async () => {

@@ -2,6 +2,7 @@ export type { AdminKingdomPage, AdminOverview } from "./admin-types.js";
 export * from "./chronicle-schemas.js";
 export * from "./collection-catalog.js";
 export * from "./collection-display.js";
+export * from "./command-outcomes.js";
 export * from "./court-schemas.js";
 export * from "./decision-schemas.js";
 export * from "./discovery-schemas.js";

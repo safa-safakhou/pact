@@ -3,6 +3,7 @@ import {
   AgentGuideReader,
   AgentOperationService,
   type CommandDispatcher,
+  commandOutcome,
   DecisionSupportReader,
 } from "@pact/application";
 import { ObservationSectionQuerySchema, ProductScopeSchema, pactObservationSectionTool } from "@pact/contracts";
@@ -480,6 +481,20 @@ describe("authorized world views", () => {
       { status: "active" },
     ]);
     expect(await states.read(outsider.accountId, refs)).toEqual([]);
+    // Receipt lookup and subsequent record lifecycle remain separate, owner scoped reads.
+    const lifecycle = await views.readRecordStates(owner.accountId, refs);
+    expect(lifecycle).toMatchObject([
+      { status: "completed" },
+      { offerStatus: "active", contractStatus: "active", activated: true, offerVersion: 1 },
+      { status: "active" },
+    ]);
+    expect(commandOutcome(randomUUID(), null, lifecycle)).toMatchObject({
+      execution: "unknown",
+      lookup: "not_found",
+      lifecycle,
+    });
+    expect(await views.readRecordStates(outsider.accountId, refs)).toEqual([]);
+
     const requestId = randomUUID();
     await pool.query(
       `INSERT INTO cold_contact_requests(id,product_scope,sender_kingdom_id,recipient_kingdom_id,note,operation_key,created_game_time_ms,expires_game_time_ms,status) VALUES($1,'pact',$2,$3,'synthetic', $4,0,3600000,'accepted')`,

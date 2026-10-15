@@ -28,6 +28,10 @@ export class AgentGuideReader {
     private readonly surface: "external" | "in_app" = "external",
   ) {}
 
+  readRecords(accountId: string, records: string[]) {
+    return this.worldViews.readRecordStates(accountId, records);
+  }
+
   readSection(accountId: string, query: ObservationSectionQuery) {
     return this.worldViews.readSection(accountId, query);
   }

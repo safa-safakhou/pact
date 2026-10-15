@@ -16,6 +16,7 @@ import {
   pactApprovalProposalV2Tool,
   pactApprovalStatusTool,
   pactChronicleReadTool,
+  pactCommandOutcomeTool,
   pactConversationReadTool,
   pactCourtReadTool,
   pactDecisionSupportTool,
@@ -351,6 +352,9 @@ export class McpTransport {
                 ? [pactObservationSectionTool]
                 : []),
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
+              ...(this.options.agentGuide?.readRecords && principal.agentScopes?.includes("world:read")
+                ? [pactCommandOutcomeTool]
+                : []),
               ...(this.options.publicProfiles && principal.agentScopes?.includes("world:read")
                 ? [pactPlayerFindTool]
                 : []),

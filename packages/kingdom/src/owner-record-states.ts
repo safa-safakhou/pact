@@ -7,6 +7,11 @@ export interface OwnerRecordState {
   status: string;
   nextStep: string;
   asOfGameTimeMs: number;
+  offerStatus?: string;
+  contractStatus?: string | null;
+  signaturesOnVersion?: number;
+  offerVersion?: number;
+  activated?: boolean;
 }
 /** Selected private record status for an authenticated owner; no messages, stocks or arguments. */
 export class OwnerRecordStates {
@@ -73,8 +78,8 @@ export class OwnerRecordStates {
                 ? "Contact accepted. You can message and negotiate; no further acceptance is pending."
                 : status === "pending"
                   ? r.recipient_kingdom_id === owner.id
-                    ? "Human: review the incoming contact request in People."
-                    : "Await the other human’s contact decision; no agreement is assumed."
+                    ? "Review the incoming request under the current recipient social delegation; pending is not an accepted contact."
+                    : "Await the recipient's owner or delegated agent decision; no agreement is assumed."
                   : `Contact request ${status}; respect the decision and choose another goal.`,
           });
         }
@@ -93,6 +98,11 @@ export class OwnerRecordStates {
             record: `supply-offer:${o.id}`,
             label: `Supply offer · current version ${o.version}`,
             status: o.contract_status ?? o.status,
+            offerStatus: o.status,
+            contractStatus: o.contract_status,
+            offerVersion: o.version,
+            signaturesOnVersion: o.signatures,
+            activated: o.contract_status !== null,
             asOfGameTimeMs,
             nextStep: o.contract_status
               ? `Contract ${o.contract_status}; inspect actual deliveries in People or Chronicle. No proposal signature is pending.`

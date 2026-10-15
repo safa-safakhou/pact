@@ -92,8 +92,8 @@
       "depends_on": [
         "AR-P02"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "A committed queue receipt can coexist with waiting/active work; a later completion is separately observed. Agreement signatures, activation and fulfillment/end are distinct states.",
@@ -101,8 +101,11 @@
         "Duplicate events, lost acknowledgment, expired cursors and replayed receipt reads converge without duplicate effects. Existing IDs/history remain usable.",
         "Outcomes are scoped and versioned; migration/retention plans preserve existing receipts and registered data classes, without logging private prompts."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-continuation-20261015.md"
+      ],
+      "gated_acceptance": [],
+      "dependency_gate": "Joint canonical outcomes and fake-engine restart/source acceptance verified"
     },
     {
       "id": "AR-P06",

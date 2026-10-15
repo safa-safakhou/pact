@@ -2,6 +2,7 @@ import {
   AgentGuideReader,
   ChronicleFactReader,
   CommandDispatcher,
+  commandOutcome,
   DecisionSupportReader,
   DispatcherError,
   dispatchRunCommandTools,
@@ -30,6 +31,7 @@ import {
   pactApprovalProposalV2Tool as pactApprovalProposalTool,
   pactApprovalStatusTool,
   pactChronicleReadTool,
+  pactCommandOutcomeTool,
   pactConversationReadTool,
   pactCourtReadTool,
   pactDecisionSupportTool,
@@ -219,6 +221,8 @@ export async function createInferenceGameRuntime(
       { ...pactSeasonReadTool, parseArguments: (input: unknown) => SeasonReadQuerySchema.parse(input) },
       reportReadTool,
       receiptReadTool,
+
+      { ...pactCommandOutcomeTool, parseArguments: (input: unknown) => ReceiptReadQuerySchema.parse(input) },
       approvalStatusTool,
       approvalProposalTool,
       { ...pactChronicleReadTool, parseArguments: (input: unknown) => ChronicleReadQuerySchema.parse(input) },
@@ -303,6 +307,27 @@ export async function createInferenceGameRuntime(
           results.push({
             callId: call.id,
             content: page ? boundedConversationResult(page) : JSON.stringify({ code: "NOT_FOUND" }),
+          });
+          continue;
+        }
+        if (call.name === pactCommandOutcomeTool.name) {
+          const query = ReceiptReadQuerySchema.parse(call.arguments);
+          const receipt = await dispatcher.lookupReceipt(
+            {
+              accountId: input.run.accountId,
+              productScope: scope,
+              audience: "agent",
+              sessionId: input.run.runId,
+              agentScopes: ["world:read"],
+            },
+            query.commandId,
+          );
+          const lifecycle = receipt
+            ? await guide.readRecords(input.run.accountId, Object.keys(receipt.recordVersions))
+            : [];
+          results.push({
+            callId: call.id,
+            content: JSON.stringify(commandOutcome(query.commandId, receipt, lifecycle)),
           });
           continue;
         }

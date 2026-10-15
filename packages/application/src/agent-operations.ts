@@ -32,6 +32,7 @@ import {
   pactApprovalProposalV2Tool,
   pactApprovalStatusTool,
   pactChronicleReadTool,
+  pactCommandOutcomeTool,
   pactConversationReadTool,
   pactCourtReadTool,
   pactDecisionSupportTool,
@@ -61,6 +62,7 @@ import {
   worldReadValidationHelp,
 } from "@pact/contracts";
 import { agentRecovery } from "./agent-recovery.js";
+import { commandOutcome } from "./command-outcomes.js";
 import type { CommandDispatcher } from "./dispatcher.js";
 import type { AuthenticatedPrincipal } from "./types.js";
 
@@ -124,6 +126,7 @@ export interface WorldViewReader {
 
 /** Product-owned owner projection and learning guide; MCP never accepts a caller-supplied account. */
 export interface AgentGuidePort {
+  readRecords?(accountId: string, records: string[]): Promise<unknown[]>;
   readSection?(accountId: string, query: ObservationSectionQuery): Promise<Record<string, unknown>>;
   read(
     accountId: string,
@@ -225,6 +228,7 @@ export class AgentOperationService {
       [this.options.privateMemory, pactMemoryReadTool],
       [this.options.privateMemory, pactMemorySourceTool],
       [true, pactReceiptReadTool],
+      [this.options.agentGuide?.readRecords, pactCommandOutcomeTool],
     ] as const;
     return [
       ...(read ? candidates.filter(([port]) => Boolean(port)).map(([, tool]) => tool) : []),
@@ -686,6 +690,19 @@ export class AgentOperationService {
         content: [{ type: "text", text: JSON.stringify(page) }],
         structuredContent: page as Record<string, unknown>,
       };
+    }
+    if (name === pactCommandOutcomeTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.agentGuide?.readRecords)
+        throw new AgentOperationError("FORBIDDEN", 403);
+      const query = ReceiptReadQuerySchema.safeParse(args);
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
+      const receipt = await this.options.dispatcher.lookupReceipt(principal, query.data.commandId);
+      const lifecycle = receipt
+        ? await this.options.agentGuide.readRecords(principal.accountId, Object.keys(receipt.recordVersions))
+        : [];
+      const result = commandOutcome(query.data.commandId, receipt, lifecycle);
+      return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
     }
     if (name === pactReceiptReadTool.name) {
       if (!principal.agentScopes?.includes("world:read")) throw new AgentOperationError("FORBIDDEN", 403);
