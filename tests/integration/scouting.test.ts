@@ -93,6 +93,51 @@ async function troop(
 }
 
 describe("timed scout operations", () => {
+  it("automatically chooses available Spearmen when an earlier identity is battle locked", async () => {
+    const owner = await kingdom(),
+      target = await kingdom();
+    const ids = [
+      await troop(owner.kingdomId, false),
+      await troop(owner.kingdomId, false),
+      await troop(owner.kingdomId, false),
+    ].sort();
+    await withTransaction(pool, (c) =>
+      new TroopService("pact", ledger).captureBattleEligibility(c, {
+        battleId: randomUUID(),
+        hostKingdomId: owner.kingdomId,
+        raidId: randomUUID(),
+        lockUntilGameTimeMs: 120000,
+      }),
+    );
+    await pool.query("DELETE FROM battle_unit_eligibility WHERE host_kingdom_id=$1 AND troop_id<>$2", [
+      owner.kingdomId,
+      ids[0],
+    ]);
+    const operationId = randomUUID();
+    await withTransaction(pool, (c) =>
+      scouts.start(c, {
+        accountId: owner.accountId,
+        operationId,
+        operationKey: `scout:${operationId}`,
+        targetKingdomId: target.kingdomId,
+        actorKind: "human",
+        gameTimeMs: 61000,
+      }),
+    );
+    expect(
+      (
+        await pool.query(
+          "SELECT id FROM kingdom_troops WHERE placement='scouting' AND owner_kingdom_id=$1 ORDER BY id",
+          [owner.kingdomId],
+        )
+      ).rows.map((r) => r.id),
+    ).toEqual(ids.slice(1));
+    expect((await pool.query("SELECT placement FROM kingdom_troops WHERE id=$1", [ids[0]])).rows[0].placement).toBe(
+      "home",
+    );
+    expect(await withTransaction(pool, (c) => scouts.finishDue(c, 720000))).toBe(1);
+  });
+
   it("rejects invalid admission without spending and charges one successful retry once", async () => {
     const source = await kingdom();
     const target = await kingdom();

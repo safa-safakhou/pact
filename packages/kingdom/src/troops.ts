@@ -376,10 +376,13 @@ export class TroopService {
       `SELECT * FROM kingdom_troops WHERE product_scope = $1 AND owner_kingdom_id = $2
        AND host_kingdom_id = $2 AND placement = 'home' AND home_guard = false AND type = $3
        ${input.explicitIds ? "AND id = ANY($4::uuid[])" : ""}
-       ORDER BY id LIMIT ${input.count} FOR UPDATE`,
+       ORDER BY EXISTS(SELECT 1 FROM battle_unit_eligibility e
+         WHERE e.product_scope=kingdom_troops.product_scope AND e.troop_id=kingdom_troops.id
+           AND e.locked_until_game_time_ms>$${input.explicitIds ? 5 : 4}) ASC, id
+       LIMIT ${input.count} FOR UPDATE`,
       input.explicitIds
-        ? [this.productScope, input.ownerKingdomId, input.type, input.explicitIds]
-        : [this.productScope, input.ownerKingdomId, input.type],
+        ? [this.productScope, input.ownerKingdomId, input.type, input.explicitIds, input.gameTimeMs]
+        : [this.productScope, input.ownerKingdomId, input.type, input.gameTimeMs],
     );
     if (selected.rows.length !== input.count) throw new TroopError("UNITS_UNAVAILABLE");
     for (const row of selected.rows) {

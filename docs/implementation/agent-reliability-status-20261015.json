@@ -50,8 +50,8 @@
       "depends_on": [
         "AR-P02"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Controls cover outgoing, nonexistent, expired, wrong-type and stale-version targets; revoked delegation; unavailable/incorrect troops; and a valid incoming answer/scout target.",
@@ -59,8 +59,11 @@
         "Authorized projections expose sufficient follow-up references without leaking another account's requests, units, private offers or receipts. Fake-ID enumeration has no private-state oracle.",
         "Shared fixture roles/direction agree with AR-F03; no bad reference is silently replaced with a guessed valid one."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-references-20261015.md"
+      ],
+      "gated_acceptance": [],
+      "dependency_gate": "Joint typed references, privacy, role and fake-engine controls source verified"
     },
     {
       "id": "AR-P04",

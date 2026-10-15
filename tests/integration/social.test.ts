@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
+import { AgentGuideReader } from "@pact/application";
 import { ExposureService } from "@pact/authority";
+import { ObservedRequestReferenceSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { wholeResources } from "@pact/domain";
 import {
@@ -8,8 +10,10 @@ import {
   ImmediateExposureAdapter,
   SocialOverviewReader,
   SocialService,
+  WorldViewService,
 } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
+import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -91,6 +95,61 @@ async function connect(
 }
 
 describe("contacts, messages, and transfers", () => {
+  it("rejects outgoing, nonexistent, wrong-role and expired request IDs without revealing outsider state", async () => {
+    const sender = await kingdom(),
+      recipient = await kingdom(),
+      outsider = await kingdom();
+    const id = await withTransaction(pool, (c) =>
+      social.requestContact(c, {
+        accountId: sender.accountId,
+        recipientKingdomId: recipient.kingdomId,
+        note: "Review a trial",
+        operationKey: randomUUID(),
+        gameTimeMs: 60000,
+      }),
+    );
+    const answer = (accountId: string, requestId: string, gameTimeMs = 120000) =>
+      withTransaction(pool, (c) => social.answerRequest(c, { accountId, requestId, accept: true, gameTimeMs }));
+    for (const [accountId, requestId] of [
+      [sender.accountId, id],
+      [outsider.accountId, id],
+      [recipient.accountId, randomUUID()],
+      [recipient.accountId, sender.kingdomId],
+      [recipient.accountId, "00000000-0000-0000-0000-000000000000"],
+    ] as const)
+      await expect(answer(accountId, requestId)).rejects.toMatchObject({ code: "REQUEST_NOT_FOUND" });
+    const expiry = Number(
+      (await pool.query("SELECT expires_game_time_ms FROM cold_contact_requests WHERE id=$1", [id])).rows[0]
+        .expires_game_time_ms,
+    );
+    await expect(answer(recipient.accountId, id, expiry)).rejects.toMatchObject({ code: "REQUEST_EXPIRED" });
+    expect((await new SocialOverviewReader(pool, "pact").read(outsider.accountId))?.requests).toEqual([]);
+    await new WorldClockService(pool, "pact").bootstrap();
+    await pool.query("UPDATE world_clocks SET committed_game_time_ms=120000 WHERE product_scope='pact'");
+    const guide = new AgentGuideReader(new WorldViewService(pool, "pact"), new SocialOverviewReader(pool, "pact"), {
+      getMandate: async () => null,
+    });
+    for (const [party, direction] of [
+      [sender, "outgoing"],
+      [recipient, "incoming"],
+    ] as const) {
+      const read = await guide.read(party.accountId, "start");
+      const reference = (read.contactRequests as { id: string; reference: unknown }[]).find(
+        (r) => r.id === id,
+      )?.reference;
+      expect(ObservedRequestReferenceSchema.parse(reference)).toMatchObject({
+        id,
+        type: "ContactRequest",
+        direction,
+        ownerKingdomId: party.kingdomId,
+      });
+    }
+    await answer(recipient.accountId, id);
+    expect((await pool.query("SELECT status FROM cold_contact_requests WHERE id=$1", [id])).rows[0].status).toBe(
+      "accepted",
+    );
+  });
+
   it("requires owner delegation, checks allow-list and revocation, and grants no contract authority", async () => {
     const sender = await kingdom(),
       recipient = await kingdom();

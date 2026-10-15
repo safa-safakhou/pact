@@ -59,6 +59,51 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("publishes owner-only typed units with fresh Home Guard, placement and battle-lock eligibility", async () => {
+    const owner = await kingdom(),
+      outsider = await kingdom();
+    const ordinary = randomUUID(),
+      guard = randomUUID(),
+      locked = randomUUID(),
+      away = randomUUID();
+    for (const [id, homeGuard, placement] of [
+      [ordinary, false, "home"],
+      [guard, true, "home"],
+      [locked, false, "home"],
+      [away, false, "scouting"],
+    ] as const)
+      await pool.query(
+        `INSERT INTO kingdom_troops(id,product_scope,owner_kingdom_id,host_kingdom_id,type,home_guard,placement,placement_ref,created_game_time_ms,created_at)
+        VALUES($1,'pact',$2,$2,'spearman',$3,$4,$5,0,clock_timestamp())`,
+        [id, owner.kingdomId, homeGuard, placement, placement === "home" ? null : randomUUID()],
+      );
+    await withTransaction(pool, (c) =>
+      new TroopService(scope, new ResourceLedger(scope)).captureBattleEligibility(c, {
+        battleId: randomUUID(),
+        hostKingdomId: owner.kingdomId,
+        raidId: randomUUID(),
+        lockUntilGameTimeMs: Number.MAX_SAFE_INTEGER,
+      }),
+    );
+    await pool.query("DELETE FROM battle_unit_eligibility WHERE host_kingdom_id=$1 AND troop_id<>$2", [
+      owner.kingdomId,
+      locked,
+    ]);
+    const views = new WorldViewService(pool, scope),
+      owned = await views.readSelf(owner.accountId);
+    expect(owned?.unitReferences.schemaVersion).toBe("pact.references.v1");
+    expect(owned?.unitReferences.units.find((u) => u.id === ordinary)).toMatchObject({
+      type: "Unit",
+      ownerKingdomId: owner.kingdomId,
+      scoutEligible: true,
+    });
+    for (const id of [guard, locked, away])
+      expect(owned?.unitReferences.units.find((u) => u.id === id)?.scoutEligible).toBe(false);
+    expect(owned?.unitReferences.units.every((u) => u.asOfGameTimeMs === owned.asOfGameTimeMs)).toBe(true);
+    expect(await views.read(outsider.accountId, owner.kingdomId)).not.toHaveProperty("unitReferences");
+    expect((await views.readSelf(outsider.accountId))?.unitReferences.units).toEqual([]);
+  });
+
   it("explains a waiting Hall prerequisite without exposing the owner queue publicly", async () => {
     const owner = await kingdom(),
       outsider = await kingdom();

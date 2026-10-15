@@ -1,4 +1,5 @@
 import type { MandateView } from "@pact/authority";
+import { referenceCatalogVersion } from "@pact/contracts";
 import {
   type BuildingKind,
   communicationPolicy,
@@ -201,6 +202,18 @@ export class AgentGuideReader {
       kingdomId,
       handle,
       direction,
+      status: "pending",
+      reference: {
+        type: "ContactRequest",
+        id,
+        ownerKingdomId: social.kingdomId,
+        counterpartyKingdomId: kingdomId,
+        direction,
+        status: "pending",
+        expiresGameTimeMs,
+        asOfGameTimeMs: world.asOfGameTimeMs,
+        delegationVersion: social.delegation?.version ?? 0,
+      },
       decisionAuthority: direction === "incoming" ? social.delegation : "counterparty_policy_unknown",
       expiresGameTimeMs,
     }));
@@ -284,12 +297,24 @@ export class AgentGuideReader {
       troops: world.troops,
       threats: world.threats,
       contacts,
+      referenceCatalogVersion,
       contactRequests: requests,
       socialDelegation: social.delegation,
       communicationCapacity: social.communicationPolicy,
       openSupplyOffers: social.supplyOffers.slice(0, 10).map((offer) => ({
         id: offer.id,
         version: offer.version,
+        status: "open",
+        reference: {
+          type: "SupplyOffer",
+          id: offer.id,
+          ownerKingdomId: social.kingdomId,
+          counterpartyKingdomId: offer.kingdomId,
+          status: "open",
+          version: offer.version,
+          expiresGameTimeMs: offer.expiresGameTimeMs,
+          asOfGameTimeMs: world.asOfGameTimeMs,
+        },
         counterpartyKingdomId: offer.kingdomId,
         counterpartyHandle: offer.handle,
         kingdomA: offer.kingdomA,

@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Typed target source acceptance](agent-reliability-references-20261015.md) — AR-P03 / PACT-173 and Fleet AR-F03; includes reproduced automatic scout selection defect.
+
 - [Executable operation contracts](agent-reliability-contracts-20261015.md) — AR-P02 / PACT-172 and Fleet AR-F02; source/offline acceptance.
 
 - [Faithful owner intent source acceptance](agent-reliability-intent-20261015.md) — AR-P01 / PACT-171 and Fleet AR-F01; verified source/offline only, no deployment.

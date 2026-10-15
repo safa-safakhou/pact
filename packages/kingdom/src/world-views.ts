@@ -1,4 +1,4 @@
-import { ownedWorldIntentVersion } from "@pact/contracts";
+import { type ObservedUnitReference, ownedWorldIntentVersion, referenceCatalogVersion } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
 import {
   type BuildingKind,
@@ -116,6 +116,13 @@ export interface OwnerKingdomView {
     prerequisiteCheck?: string | null;
     missingBuildings?: { kind: string; level: number }[];
   }[];
+  kingdomReference: { type: "Kingdom"; id: string; role: "self"; asOfGameTimeMs: number };
+  unitReferences: {
+    schemaVersion: typeof referenceCatalogVersion;
+    units: ObservedUnitReference[];
+    hasMore: boolean;
+    scoutTroopsRequired: number;
+  };
   troops: {
     type: string;
     placement: string;
@@ -408,6 +415,47 @@ export class WorldViewService {
       homeGuard: row.home_guard,
       count: Number(row.count),
     }));
+    // Individual identities are owner-only. Aggregate visiting troop facts
+    // do not expose somebody else's private unit IDs.
+    const unitRows = (
+      await client.query<{
+        id: string;
+        type: string;
+        host_kingdom_id: string;
+        placement: string;
+        home_guard: boolean;
+        battle_locked: boolean;
+      }>(
+        `SELECT t.id,t.type,t.host_kingdom_id,t.placement,t.home_guard,
+      EXISTS(SELECT 1 FROM battle_unit_eligibility e WHERE e.product_scope=t.product_scope
+        AND e.troop_id=t.id AND e.locked_until_game_time_ms>$3) AS battle_locked
+      FROM kingdom_troops t WHERE t.product_scope=$1 AND t.owner_kingdom_id=$2
+      ORDER BY t.id LIMIT 33`,
+        [this.productScope, targetId, gameTimeMs],
+      )
+    ).rows;
+    const unitReferences: OwnerKingdomView["unitReferences"] = {
+      schemaVersion: referenceCatalogVersion,
+      units: unitRows.slice(0, 32).map((unit) => ({
+        id: unit.id,
+        type: "Unit",
+        ownerKingdomId: targetId,
+        asOfGameTimeMs: gameTimeMs,
+        unitType: unit.type,
+        hostKingdomId: unit.host_kingdom_id,
+        placement: unit.placement,
+        homeGuard: unit.home_guard,
+        battleLocked: unit.battle_locked,
+        scoutEligible:
+          unit.type === "spearman" &&
+          !unit.home_guard &&
+          !unit.battle_locked &&
+          unit.placement === "home" &&
+          unit.host_kingdom_id === targetId,
+      })),
+      hasMore: unitRows.length > 32,
+      scoutTroopsRequired: rulesCatalog.scouting.ordinarySpearmen,
+    };
     const training = (
       await client.query<{
         id: string;
@@ -555,6 +603,7 @@ export class WorldViewService {
     return {
       schemaVersion: ownedWorldIntentVersion,
       audience: "owner",
+      kingdomReference: { type: "Kingdom", id: targetId, role: "self", asOfGameTimeMs: gameTimeMs },
       ambition: kingdom.ambition ?? "",
       consequences: await readGameConsequences(client, this.productScope, targetId, gameTimeMs),
       ...common,
@@ -592,6 +641,7 @@ export class WorldViewService {
       nextUpgradeChecks,
       builders,
       troops,
+      unitReferences,
       training,
       upkeep: { perMinuteUnits: upkeep.toString(), hungry: upkeepState?.hungry ?? false },
       contracts: activeContracts.map((row) => ({

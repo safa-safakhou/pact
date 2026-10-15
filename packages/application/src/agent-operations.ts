@@ -178,7 +178,7 @@ export class AgentOperationError extends Error {
     super(code);
   }
 }
-function receiptToolResult(receipt: CommandReceipt) {
+function receiptToolResult(receipt: CommandReceipt, ownerAccountId: string) {
   const denied = receipt.code !== "COMMITTED" && receipt.code !== "ALREADY_COMMITTED";
   return {
     content: [
@@ -186,6 +186,7 @@ function receiptToolResult(receipt: CommandReceipt) {
       ...(denied ? [{ type: "text", text: agentRecovery(receipt.code) }] : []),
     ],
     structuredContent: receipt,
+    _meta: { "pact/reference": { type: "Receipt", id: receipt.commandId, ownerAccountId, status: receipt.code } },
     ...(denied ? { isError: true } : {}),
   };
 }
@@ -673,12 +674,15 @@ export class AgentOperationService {
         const result = {
           code: "RECEIPT_NOT_FOUND",
           receiptExists: false,
+          lookup: "not_found",
+          commandState: "unknown",
+          evidence: "Receipt absence alone establishes neither a commit nor transport uncertainty.",
           message:
             "No receipt for this account and command ID. A deterministic validation/rules denial before commit creates no receipt. Correct the denied action; do not interpret this as success. After a transport timeout reconcile the same ID before retrying.",
         };
         return { isError: true, content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
       }
-      return receiptToolResult(receipt);
+      return receiptToolResult(receipt, principal.accountId);
     }
     if (name === pactApprovalStatusTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.approvals)
@@ -739,7 +743,7 @@ export class AgentOperationService {
         { ...principal, ...(sessionId ? { sessionId } : {}) },
         command,
       );
-      return receiptToolResult(receipt);
+      return receiptToolResult(receipt, principal.accountId);
     }
     if (name === "pact_command_v1") {
       const receipt = await this.options.dispatcher.dispatch(
@@ -784,6 +788,6 @@ export class AgentOperationService {
       { ...principal, ...(sessionId ? { sessionId } : {}) },
       command,
     );
-    return receiptToolResult(receipt);
+    return receiptToolResult(receipt, principal.accountId);
   }
 }

@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 71 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 72 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -2966,12 +2966,12 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-contracts-20261015.md
-- PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /168 integration, check/build/boundaries. Fake providers only.
+- PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /169 integration, check/build/boundaries. Fake providers only.
 
 <a id="pact-173"></a>
 ## PACT-173 — Scoped semantic reference facts
 
-**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -2987,15 +2987,18 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Controls cover outgoing, nonexistent, expired, wrong-type and stale-version targets; revoked delegation; unavailable/incorrect troops; and a valid incoming answer/scout target.
-- [ ] UUID syntax and semantic eligibility are tested separately. Nil/placeholder receipt IDs do not establish a command, uncertainty or ownership.
-- [ ] Authorized projections expose sufficient follow-up references without leaking another account's requests, units, private offers or receipts. Fake-ID enumeration has no private-state oracle.
-- [ ] Shared fixture roles/direction agree with AR-F03; no bad reference is silently replaced with a guessed valid one.
+- [x] Controls cover outgoing, nonexistent, expired, wrong-type and stale-version targets; revoked delegation; unavailable/incorrect troops; and a valid incoming answer/scout target.
+- [x] UUID syntax and semantic eligibility are tested separately. Nil/placeholder receipt IDs do not establish a command, uncertainty or ownership.
+- [x] Authorized projections expose sufficient follow-up references without leaking another account's requests, units, private offers or receipts. Fake-ID enumeration has no private-state oracle.
+- [x] Shared fixture roles/direction agree with AR-F03; no bad reference is silently replaced with a guessed valid one.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-references-20261015.md
 
 <a id="pact-174"></a>
 ## PACT-174 — Executable compact observation sections

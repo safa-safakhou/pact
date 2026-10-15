@@ -72,3 +72,17 @@ it("rejects unknown operations and action kinds without dispatch or private inpu
   ).rejects.toThrow("FORBIDDEN");
   expect(dispatch).not.toHaveBeenCalled();
 });
+
+it("bounds missing receipt evidence without asserting a committed or uncertain command", async () => {
+  const result = await operations.execute(principal, {
+    name: "pact_receipt_read_v1",
+    arguments: { commandId: "00000000-0000-0000-0000-000000000000" },
+  });
+  expect(result.structuredContent).toMatchObject({
+    code: "RECEIPT_NOT_FOUND",
+    receiptExists: false,
+    lookup: "not_found",
+    commandState: "unknown",
+  });
+  expect(result).not.toHaveProperty("pendingCommand");
+});
