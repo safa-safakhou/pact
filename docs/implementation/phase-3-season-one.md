@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 79 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 80 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -3228,7 +3228,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-181"></a>
 ## PACT-181 — Reviewed game rollout and preservation
 
-**Status:** todo · **Role:** Application · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -3244,12 +3244,15 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Rehearsed migrations/rollback preserve account/kingdom bindings, mandates, receipt IDs, jobs, history, original schedules/anchors/models/budgets and unknown allocations. Rolling back code does not undo committed game effects or restore an old database over newer transactions.
-- [ ] Canary acceptance includes multiple rounds with growing memory and authoritative progression/obligation readback, rather than first-round delivery alone. Results are separately recorded for fifty Luna and twenty local agents.
-- [ ] Pending/unknown states retain originals and their required review. Terminal populations remain terminal; no new accounts or restart is implicit.
-- [ ] Implementation, hosted tests, experiments, deployment and push each require their covering assignment. Saving this plan authorizes none of them.
+- [x] Rehearsed migrations/rollback preserve account/kingdom bindings, mandates, receipt IDs, jobs, history, original schedules/anchors/models/budgets and unknown allocations. Rolling back code does not undo committed game effects or restore an old database over newer transactions.
+- [x] Canary acceptance includes multiple rounds with growing memory and authoritative progression/obligation readback, rather than first-round delivery alone. Results are separately recorded for fifty Luna and twenty local agents.
+- [x] Pending/unknown states retain originals and their required review. Terminal populations remain terminal; no new accounts or restart is implicit.
+- [x] Implementation, hosted tests, experiments, deployment and push each require their covering assignment. Saving this plan authorizes none of them.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-rollout-20261015.md

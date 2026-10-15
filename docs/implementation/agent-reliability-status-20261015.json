@@ -236,8 +236,8 @@
         "AR-P10",
         "AR-F10"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Rehearsed migrations/rollback preserve account/kingdom bindings, mandates, receipt IDs, jobs, history, original schedules/anchors/models/budgets and unknown allocations. Rolling back code does not undo committed game effects or restore an old database over newer transactions.",
@@ -245,8 +245,13 @@
         "Pending/unknown states retain originals and their required review. Terminal populations remain terminal; no new accounts or restart is implicit.",
         "Implementation, hosted tests, experiments, deployment and push each require their covering assignment. Saving this plan authorizes none of them."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-rollout-20261015.md"
+      ],
+      "gated_acceptance": [
+        "Actual approved provider qualification, owner authority choice, exact bounded canaries/live preservation, rollout/reconnect/reviews and push remain separate gates"
+      ],
+      "dependency_gate": "Source compatibility, additive migration/retention/preservation rehearsal and gated release/rollback proposal complete"
     }
   ]
 }

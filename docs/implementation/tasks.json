@@ -9404,7 +9404,7 @@
       "plan_id": "AR-P11",
       "title": "Reviewed game rollout and preservation",
       "phase": 3,
-      "status": "todo",
+      "status": "done",
       "kind": "implementation",
       "owner_role": "Application",
       "size": "L",
@@ -9442,9 +9442,10 @@
       ],
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
-        "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only."
+        "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
+        "docs/implementation/reports/agent-reliability-rollout-20261015.md"
       ],
-      "assignee": null,
+      "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
       "block_reason": null,
       "delivery_track": "chatgpt",
