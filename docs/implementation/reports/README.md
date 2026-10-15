@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Consolidated source acceptance and remaining gates](agent-reliability-source-acceptance-20261015.md) — all 22 task mappings, eleven commit pairs, final checks and unfulfilled live/provider/owner gates.
+
 - [Release and preservation review](agent-reliability-rollout-20261015.md) — AR-P11 / AR-F11, offline migration rehearsal and separately gated rollout proposal.
 
 - [Controlled evaluation infrastructure](agent-reliability-evaluation-20261015.md) — AR-P10 / AR-F10, independent world setup, deterministic provider contracts and outcome denominators.

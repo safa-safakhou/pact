@@ -1,5 +1,6 @@
 # Consolidated agent reliability and game analysis plan
 
+Execution update, 15 October: all eleven paired source/offline batches are verified and locally committed. The original proposal statuses below are retained as planning history; see [consolidated acceptance](reports/agent-reliability-source-acceptance-20261015.md) and the local status register for all 22 source mappings and remaining owner/provider/rollout gates.
 Planning date: **15 October 2026, Europe/Berlin**. Status: **proposed and unstarted**. Founder authorization covers saving the consolidated plan and verified local documentation commits only. Implementation, deployment and experiments require a subsequent covering assignment.
 
 This programme joins the fifty server Luna and twenty local Nemotron/Laya investigations into one architecture-level proposal: faithful owner intent, closed executable contracts, grounded references, deliverable observations and durable outcomes must work together before conclusions about agent incentives or provider quality are drawn. The [Fleet counterpart](../../../fleet/docs/agent-reliability-plan-20261015.md) owns controller tasks; this document owns PACT tasks and the shared programme boundaries/order. Each task scope has one owning document. Cross-repository dependency links refer to that owner rather than duplicating its acceptance definition.
