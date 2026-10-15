@@ -137,8 +137,8 @@
         "AR-P02",
         "AR-P05"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Fixtures cover connection refused before processing, generic 502 with ambiguous processing, rotation with lost acknowledgment, concurrent refresh, revoked grant/family and stale fences.",
@@ -146,8 +146,13 @@
         "Only confirmed nonexecution permits a bounded safe retry under the same account. Unknown rotation requires quarantine/reconnect preserving identity/history; unknown commands use original pending receipts, without replay or fabricated usage.",
         "Ordinary not-found reads and explicit denials are precise noncommit outcomes. Shared OAuth/receipt services remain authoritative; recovery evidence is minimal, scoped and retained under policy."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-recovery-20261015.md"
+      ],
+      "gated_acceptance": [
+        "Actual Agent 17 or other live reconnect/review remains separately authorized; generic gateway ambiguity still requires same-account reconnect"
+      ],
+      "dependency_gate": "Scoped source diagnostics and deterministic controller recovery/CAS/fence acceptance verified"
     },
     {
       "id": "AR-P08",

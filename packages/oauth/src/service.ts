@@ -382,6 +382,41 @@ export class OAuthService {
     throw new OAuthError("INVALID_GRANT");
   }
 
+  /** Internal owner-bound diagnostic port, never a public token-validity endpoint or retry grant.
+   * accountId must come from the authenticated owner composition, never tool arguments.
+   * Current unused state cannot prove that an earlier transport attempt never executed.
+   */
+  async readRefreshEvidence(accountId: string, clientId: string, presentedRefreshToken: string) {
+    const row = (
+      await this.pool.query<{
+        used_at: Date | null;
+        revoked_at: Date | null;
+        grant_revoked_at: Date | null;
+        expires_at: Date;
+      }>(
+        `SELECT r.used_at,r.revoked_at,g.revoked_at AS grant_revoked_at,r.expires_at FROM oauth_refresh_tokens r JOIN oauth_grants g ON g.product_scope=r.product_scope AND g.id=r.grant_id WHERE r.product_scope=$1 AND g.account_id=$2 AND g.client_id=$3 AND r.token_hash=$4`,
+        [this.options.productScope, accountId, clientId, hashToken(presentedRefreshToken)],
+      )
+    ).rows[0];
+    const state = !row
+      ? "unknown"
+      : row.revoked_at || row.grant_revoked_at
+        ? "revoked"
+        : row.used_at
+          ? "rotated"
+          : row.expires_at <= this.options.clock.now()
+            ? "expired"
+            : "unused";
+    return {
+      schemaVersion: "pact.refresh-evidence.v1",
+      state,
+      observedAt: this.options.clock.now().toISOString(),
+      safeToRetry: false,
+      meaning:
+        "Scoped current server state, not an attempt receipt. Unused does not rule out a concurrent/in-flight attempt. Unknown rotation requires same-account reconnect; never replay an ambiguous refresh or expose token/hash/grant secrets.",
+    };
+  }
+
   async revoke(accessOrRefreshToken: string): Promise<void> {
     const hash = hashToken(accessOrRefreshToken);
     await withTransaction(this.pool, async (db) => {

@@ -305,10 +305,40 @@ describe("PACT OAuth", () => {
     expect(tokens.audience).toBe("mcp");
     expect(verifyPkceS256(challenge.verifier, challenge.challenge)).toBe(true);
 
+    const beforeEvidence = (await pool.query("SELECT count(*)::int n FROM oauth_refresh_tokens")).rows[0]?.n;
+    const unused = await oauth.readRefreshEvidence(accountId, mcp.clientId, tokens.refreshToken);
+    expect(unused).toMatchObject({ state: "unused", safeToRetry: false });
+    expect(Object.keys(unused).sort()).toEqual(["meaning", "observedAt", "safeToRetry", "schemaVersion", "state"]);
+    expect(await oauth.readRefreshEvidence(randomUUID(), mcp.clientId, tokens.refreshToken)).toMatchObject({
+      state: "unknown",
+      safeToRetry: false,
+    });
+    expect(await oauth.readRefreshEvidence(accountId, "other-client", tokens.refreshToken)).toMatchObject({
+      state: "unknown",
+    });
+    expect(await oauth.readRefreshEvidence(accountId, mcp.clientId, "nonexistent-synthetic-token")).toMatchObject({
+      state: "unknown",
+    });
+    expect((await pool.query("SELECT count(*)::int n FROM oauth_refresh_tokens")).rows[0]?.n).toBe(beforeEvidence);
+    expect(JSON.stringify(unused)).not.toContain(tokens.refreshToken);
     const rotated = await oauth.refresh({ clientId: mcp.clientId, refreshToken: tokens.refreshToken });
+    // Lost client acknowledgement would still leave an actual rotated server state.
+    expect(await oauth.readRefreshEvidence(accountId, mcp.clientId, tokens.refreshToken)).toMatchObject({
+      state: "rotated",
+      safeToRetry: false,
+    });
+    expect(await oauth.readRefreshEvidence(accountId, mcp.clientId, rotated.refreshToken)).toMatchObject({
+      state: "unused",
+      safeToRetry: false,
+    });
+
     expect(await oauth.introspectAccessToken(rotated.accessToken)).not.toBeNull();
     await expect(oauth.refresh({ clientId: mcp.clientId, refreshToken: tokens.refreshToken })).rejects.toMatchObject({
       code: "INVALID_GRANT",
+    });
+    expect(await oauth.readRefreshEvidence(accountId, mcp.clientId, rotated.refreshToken)).toMatchObject({
+      state: "revoked",
+      safeToRetry: false,
     });
     // Refresh reuse detection revokes the token family.
     expect(await oauth.introspectAccessToken(rotated.accessToken)).toBeNull();

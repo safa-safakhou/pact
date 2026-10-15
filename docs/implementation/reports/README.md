@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Precise credential recovery source acceptance](agent-reliability-recovery-20261015.md) — AR-P07 / PACT-177 and AR-F07; nonexecution proof, quarantine, credential CAS and callback fences.
+
 - [Authoritative admission source acceptance](agent-reliability-admission-20261015.md) — AR-P06 / PACT-176 and AR-F06; exact headroom, construction gates and retained refusal replays.
 
 - [Durable continuation source acceptance](agent-reliability-continuation-20261015.md) — AR-P05 / PACT-175 and AR-F05; structured goals, waits and distinct outcomes.
