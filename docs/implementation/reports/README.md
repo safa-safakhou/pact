@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Authoritative admission source acceptance](agent-reliability-admission-20261015.md) — AR-P06 / PACT-176 and AR-F06; exact headroom, construction gates and retained refusal replays.
+
 - [Durable continuation source acceptance](agent-reliability-continuation-20261015.md) — AR-P05 / PACT-175 and AR-F05; structured goals, waits and distinct outcomes.
 
 - [Observation envelope source acceptance](agent-reliability-envelope-20261015.md) — AR-P04 / PACT-174 and Fleet AR-F04; usable scoped reads and measured growing-memory packets.

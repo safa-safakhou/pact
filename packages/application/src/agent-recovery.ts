@@ -26,6 +26,10 @@ export function agentRecovery(code: string, detail?: string): string {
     return "A contact request between these players is already pending. Read current requests and delegation. The recipient's owner or delegated agent decides; do not send another or treat it as accepted.";
   if (code === "ALREADY_CONTACT")
     return "These players are already contacts. Read the current contact list and message the existing contact instead of requesting contact again.";
+  if (code === "INSUFFICIENT_ALLOWANCE")
+    return "No command committed: full quoted reservation exceeds current rolling GAME-time headroom. Read current authority, spent amounts, reservations and release schedule. A cost above the full ceiling cannot be solved by waiting; only the owner may approve an exact exception or revise authority. Stock and permission are different.";
+  if (code === "TROOP_LIMIT")
+    return "No command committed: current troop authority is insufficient. Read actual ordinary-unit availability and delegated troop limit. Home Guard or an advertised action cannot substitute for eligible troops.";
   if (code === "INSUFFICIENT_STOCK")
     return "No successful move is established. Read current stock and costs: founding allowances only cover their eligible uses; transfers and trade need ordinary stock. Approval cannot create resources.";
   if (["INVALID_REQUEST", "INVALID_INPUT", "INVALID_COMMAND", "MALFORMED_TOOL_CALL"].includes(code))

@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 74 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 75 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -3067,7 +3067,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-176"></a>
 ## PACT-176 — Complete admission and construction quotes
 
-**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -3083,15 +3083,18 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Reproduce all 106 historical Luna quota refusals with correct spend/reservation/game-time accounting; include Agent 02/32 reservation cases and within-limit positive controls.
-- [ ] Reproduce all seventeen local waiting orders: twelve LLM-only and five cognition orders, with overlapping stock/prerequisite counts. ZERO Iron/Silver reserve floors are not labelled a positive restriction. Completed Mine/Wall controls establish normal start/settlement.
-- [ ] Waiting reserves authority, not stock. Concurrent construction can consume usable stock; queue admission, waiting, active and completed are distinct. Show all limiting conditions and conditional game-time release/ETA, including paused-clock behavior.
-- [ ] Stale/racing quotes fail safely at admission without duplicate stock/spend/receipt effects. No cancellations, ceiling relaxation, new economy or second client permission system is inferred from legitimate waits.
+- [x] Reproduce all 106 historical Luna quota refusals with correct spend/reservation/game-time accounting; include Agent 02/32 reservation cases and within-limit positive controls.
+- [x] Reproduce all seventeen local waiting orders: twelve LLM-only and five cognition orders, with overlapping stock/prerequisite counts. ZERO Iron/Silver reserve floors are not labelled a positive restriction. Completed Mine/Wall controls establish normal start/settlement.
+- [x] Waiting reserves authority, not stock. Concurrent construction can consume usable stock; queue admission, waiting, active and completed are distinct. Show all limiting conditions and conditional game-time release/ETA, including paused-clock behavior.
+- [x] Stale/racing quotes fail safely at admission without duplicate stock/spend/receipt effects. No cancellations, ceiling relaxation, new economy or second client permission system is inferred from legitimate waits.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-admission-20261015.md
 
 <a id="pact-177"></a>
 ## PACT-177 — Precise authentication and recovery evidence

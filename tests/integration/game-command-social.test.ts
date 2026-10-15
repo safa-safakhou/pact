@@ -2864,7 +2864,7 @@ describe("shared gameplay command admission", () => {
       });
       const denied = await sign(deniedSign);
       expect(denied.json().result).toMatchObject({ isError: true });
-      expect(JSON.parse(denied.json().result.content[0].text).error.code).toBe("FORBIDDEN");
+      expect(JSON.parse(denied.json().result.content[0].text).error.code).toBe("INSUFFICIENT_ALLOWANCE");
       expect(
         (await pool.query("SELECT 1 FROM supply_offer_signatures WHERE offer_id = $1", [alternate.commandId])).rowCount,
       ).toBe(0);

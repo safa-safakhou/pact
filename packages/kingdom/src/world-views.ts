@@ -1,3 +1,4 @@
+import { type ExposureContext, readExposureContext } from "@pact/authority";
 import type { ObservationSectionQuery } from "@pact/contracts";
 import { type ObservedUnitReference, ownedWorldIntentVersion, referenceCatalogVersion } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
@@ -76,6 +77,7 @@ export interface PublicKingdomView {
 export interface OwnerKingdomView {
   schemaVersion: typeof ownedWorldIntentVersion;
   consequences: GameConsequences;
+  authority?: ExposureContext;
   audience: "owner";
   ambition: KingdomAmbition;
   profile: PublicKingdomView["profile"];
@@ -630,6 +632,7 @@ export class WorldViewService {
       kingdomReference: { type: "Kingdom", id: targetId, role: "self", asOfGameTimeMs: gameTimeMs },
       ambition: kingdom.ambition ?? "",
       consequences: await readGameConsequences(client, this.productScope, targetId, gameTimeMs),
+      authority: await readExposureContext(client, this.productScope, accountId, gameTimeMs),
       ...common,
       lastCommittedEventId,
       charges: await new ActionLimitService(this.productScope).readCharges(client, targetId, gameTimeMs),

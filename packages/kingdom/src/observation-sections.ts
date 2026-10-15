@@ -60,6 +60,8 @@ export async function readObservationSection(
       ...(query.section === "forecast"
         ? { forecast: world.forecast }
         : {
+            authority: world.authority,
+            balances: world.balances,
             buildings: world.buildings,
             builders: world.builders,
             nextUpgradeChecks: world.nextUpgradeChecks,

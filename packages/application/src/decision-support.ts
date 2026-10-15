@@ -19,6 +19,7 @@ import {
   supplyExposure,
   type WorldViewService,
 } from "@pact/kingdom";
+import { constructionAdmissionQuote } from "./construction-quote.js";
 
 export interface DecisionCandidate {
   id: string;
@@ -41,8 +42,10 @@ export function calculateDecisionSupport(view: OwnerKingdomView, social?: Social
     .update(
       JSON.stringify({
         clock: view.asOfGameTimeMs,
+        worldStatus: view.worldStatus,
         tick: view.committedTickSequence,
         balances: view.balances,
+        authority: view.authority,
         buildings: view.buildings,
         builders: view.builders,
         troops: view.troops,
@@ -58,6 +61,9 @@ export function calculateDecisionSupport(view: OwnerKingdomView, social?: Social
   const stamp = `${view.profile.kingdomId}:${fingerprint}`;
   const militaryKnownInputs = {
     troops: view.troops,
+    unitReferences: view.unitReferences,
+    authorityTroopLimit: view.authority?.troopLimit,
+    authorityTroopReserved: view.authority?.troopReserved,
     unitDefinitions: rulesCatalog.units,
     wallPower: rulesCatalog.levels[(view.buildings.find((b) => b.kind === "wall")?.level ?? 1) - 1]?.wallPower,
     hungry: view.upkeep.hungry,
@@ -115,6 +121,7 @@ export function calculateDecisionSupport(view: OwnerKingdomView, social?: Social
         action: { kind: "game.building.queue", building: kind, targetLevel: target, slot },
         checks: {
           prerequisite: checkUpgrade(levels, kind, target),
+          admissionQuote: constructionAdmissionQuote(view, kind, target, slot),
           affordable: affordability.affordable,
           builderObservedState: view.builders.find((b) => b.slot === slot)?.state ?? null,
           buildingAlreadyQueued: view.builders.some((b) => b.kind === kind && b.instructionId),
@@ -215,6 +222,7 @@ export function calculateDecisionSupport(view: OwnerKingdomView, social?: Social
     forecast: view.forecast,
     upkeep: view.upkeep,
     charges: view.charges,
+    authority: view.authority,
     militaryKnownInputs,
     proposals,
     proposalOffset,

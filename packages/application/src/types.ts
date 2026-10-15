@@ -25,6 +25,8 @@ export type DispatcherFailureCode =
   | "STALE_VERSION"
   | "RATE_LIMITED"
   | "EXPIRED"
+  | "INSUFFICIENT_ALLOWANCE"
+  | "TROOP_LIMIT"
   | "INSUFFICIENT_STOCK"
   | "RESERVE_FLOOR"
   | "UNIT_LOCKED"

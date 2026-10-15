@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { ExactHumanPermitService, ExposureService, type HumanPermitPort } from "@pact/authority";
+import { readFileSync } from "node:fs";
+import { ExactHumanPermitService, ExposureService, type HumanPermitPort, readExposureContext } from "@pact/authority";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { ConstructionExposureAdapter } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
@@ -434,4 +435,101 @@ describe("future authority exposure", () => {
         ?.total,
     ).toBe("50");
   });
+});
+
+it("quotes rolling GAME-time spend and actual reservations read-only without foreign scope leakage", async () => {
+  const id = await account({ limit: "100" }),
+    other = await account();
+  const ref = await withTransaction(pool, (c) => reserve(c, id, "quote-reserve", 60n, 60000));
+  await withTransaction(pool, async (c) => {
+    await exposure.activate(c, ref, "fixture-contract");
+    await exposure.consume(c, { ref, asset: "silver", units: 20n, operationKey: "quote-spend", gameTimeMs: 60000 });
+  });
+  const before = (
+    await pool.query("SELECT reserved_units FROM authority_ledger WHERE account_id=$1 AND asset='silver'", [id])
+  ).rows;
+  const read = (t: number, owner = id, scope = "pact") =>
+    withTransaction(pool, (c) => readExposureContext(c, scope, owner, t), { isolation: "REPEATABLE READ" });
+  const q = await read(60000);
+  expect(q.resources.silver).toMatchObject({
+    ceilingUnits: "100",
+    rollingSpentUnits: "20",
+    reservedUnits: "40",
+    headroomUnits: "40",
+    reserveFloorUnits: "0",
+    releaseSchedule: [{ gameTimeMs: 86460000, units: "20" }],
+    reservations: [{ commitmentId: ref, units: "40" }],
+  });
+  expect(await read(60000)).toEqual(q); // Wall time does not change a paused game clock.
+  expect((await read(86460000)).resources.silver).toMatchObject({
+    rollingSpentUnits: "0",
+    reservedUnits: "40",
+    headroomUnits: "60",
+  });
+  expect((await read(60000, other)).resources.silver?.headroomUnits).toBe("100");
+  expect((await read(60000, id, "other-scope")).resources).toEqual({});
+  expect(
+    (await pool.query("SELECT reserved_units FROM authority_ledger WHERE account_id=$1 AND asset='silver'", [id])).rows,
+  ).toEqual(before);
+});
+
+it("replays 106 retained aggregate spend/reservation cases against real read and atomic admission ledgers", async () => {
+  const data = JSON.parse(
+    readFileSync(new URL("../fixtures/admission-replays-20261014.json", import.meta.url), "utf8"),
+  );
+  expect(data.quotaRefusals).toHaveLength(106);
+  for (const r of data.quotaRefusals) {
+    const id = await account(),
+      units = (n: number) => String(Math.round(n * 600));
+    await pool.query("UPDATE kingdom_mandates SET resource_limits=$2 WHERE account_id=$1", [
+      id,
+      Object.fromEntries(["iron", "silver"].map((a) => [a, units(r.permissionWhole[a].limit)])),
+    ]);
+    for (const asset of ["iron", "silver"]) {
+      const a = r.permissionWhole[asset];
+      await pool.query(
+        "INSERT INTO authority_ledger(product_scope,account_id,asset,spent_units,reserved_units) VALUES('pact',$1,$2,$3,$4)",
+        [id, asset, units(a.legacy), units(a.reserved)],
+      );
+      if (a.rolling_spent > 0)
+        await pool.query(
+          "INSERT INTO authority_spends(id,product_scope,account_id,asset,units,game_time_ms,operation_key,count_against_limit) VALUES($1,'pact',$2,$3,$4,60000,$5,true)",
+          [randomUUID(), id, asset, units(a.rolling_spent), `retained-aggregate:${asset}`],
+        );
+    }
+    const before = (
+      await pool.query(
+        "SELECT asset,spent_units,reserved_units FROM authority_ledger WHERE account_id=$1 ORDER BY asset",
+        [id],
+      )
+    ).rows;
+    const observed = await withTransaction(pool, (c) => readExposureContext(c, "pact", id, 60000));
+    for (const asset of ["iron", "silver"])
+      expect(observed.resources[asset]?.headroomUnits, `case ${r.case}`).toBe(
+        units(r.permissionWhole[asset].remaining),
+      );
+    await expect(
+      withTransaction(pool, (c) =>
+        exposure.reserve(c, {
+          accountId: id,
+          operationKey: "replay-build",
+          action: "building.queue",
+          actor: "agent",
+          assets: { iron: BigInt(units(r.costWhole.iron)), silver: BigInt(units(r.costWhole.silver)) },
+          gameTimeMs: 60000,
+        }),
+      ),
+    ).rejects.toMatchObject({ code: "INSUFFICIENT_ALLOWANCE" });
+    expect(
+      (
+        await pool.query(
+          "SELECT asset,spent_units,reserved_units FROM authority_ledger WHERE account_id=$1 ORDER BY asset",
+          [id],
+        )
+      ).rows,
+    ).toEqual(before);
+    expect(
+      (await pool.query("SELECT count(*)::int n FROM authority_commitments WHERE account_id=$1", [id])).rows[0].n,
+    ).toBe(0);
+  }
 });

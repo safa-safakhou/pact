@@ -115,8 +115,8 @@
         "AR-P04",
         "AR-P05"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Reproduce all 106 historical Luna quota refusals with correct spend/reservation/game-time accounting; include Agent 02/32 reservation cases and within-limit positive controls.",
@@ -124,8 +124,11 @@
         "Waiting reserves authority, not stock. Concurrent construction can consume usable stock; queue admission, waiting, active and completed are distinct. Show all limiting conditions and conditional game-time release/ETA, including paused-clock behavior.",
         "Stale/racing quotes fail safely at admission without duplicate stock/spend/receipt effects. No cancellations, ceiling relaxation, new economy or second client permission system is inferred from legitimate waits."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-admission-20261015.md"
+      ],
+      "gated_acceptance": [],
+      "dependency_gate": "Joint source numeric and isolated database admission/version/privacy/delivery acceptance verified"
     },
     {
       "id": "AR-P07",

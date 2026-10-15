@@ -519,7 +519,13 @@ export class GameCommandHandler {
       if (error instanceof DispatcherError) throw error;
       if (error instanceof ActionLimitError) throw new DispatcherError("RATE_LIMITED");
       if (error instanceof ExposureError)
-        throw new DispatcherError(error.code === "STALE_MANDATE" ? "STALE_VERSION" : "FORBIDDEN");
+        throw new DispatcherError(
+          error.code === "STALE_MANDATE"
+            ? "STALE_VERSION"
+            : error.code === "INSUFFICIENT_ALLOWANCE" || error.code === "TROOP_LIMIT"
+              ? error.code
+              : "FORBIDDEN",
+        );
       if (error instanceof SocialError) {
         if (error.code === "DELEGATION_REQUIRED")
           throw new DispatcherError("FORBIDDEN", undefined, "DELEGATION_REQUIRED");

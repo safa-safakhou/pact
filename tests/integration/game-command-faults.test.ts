@@ -1217,7 +1217,7 @@ describe("agent garrison authority interleavings", () => {
     const results = await Promise.allSettled(commands.map((command) => dispatcher.dispatch(agent, command)));
     expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
     expect(results.filter((r) => r.status === "rejected")).toHaveLength(1);
-    expect(results.find((r) => r.status === "rejected")).toMatchObject({ reason: { code: "FORBIDDEN" } });
+    expect(results.find((r) => r.status === "rejected")).toMatchObject({ reason: { code: "TROOP_LIMIT" } });
     expect(await balances()).toEqual(stock);
     const winnerIndex = results.findIndex((r) => r.status === "fulfilled");
     const winner = commands[winnerIndex];
@@ -1238,7 +1238,7 @@ describe("agent garrison authority interleavings", () => {
       version: 1,
     });
     const before = await snapshot();
-    await expect(dispatcher.dispatch(hostAgent, hostCommand)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(dispatcher.dispatch(hostAgent, hostCommand)).rejects.toMatchObject({ code: "INSUFFICIENT_ALLOWANCE" });
     expect(await snapshot()).toEqual(before);
     await pool.query(
       "UPDATE kingdom_mandates SET resource_limits=jsonb_set(resource_limits,'{grain}','\"1300\"') WHERE account_id=$1",

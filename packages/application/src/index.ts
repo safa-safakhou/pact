@@ -29,6 +29,7 @@ export { describeApprovalEffects } from "./approval-effects.js";
 export { canonicalPayloadHash } from "./canonical.js";
 export * from "./chronicle-facts.js";
 export { commandOutcome } from "./command-outcomes.js";
+export * from "./construction-quote.js";
 export * from "./decision-support.js";
 export { CommandDispatcher, type GameCommandMutation, type GameCommandPort } from "./dispatcher.js";
 export { GameCommandHandler } from "./game-command-handler.js";
