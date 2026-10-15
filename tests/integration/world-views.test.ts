@@ -1,10 +1,21 @@
 import { randomUUID } from "node:crypto";
-import { type CommandDispatcher, DecisionSupportReader } from "@pact/application";
-import { ProductScopeSchema } from "@pact/contracts";
+import {
+  AgentGuideReader,
+  AgentOperationService,
+  type CommandDispatcher,
+  DecisionSupportReader,
+} from "@pact/application";
+import { ObservationSectionQuerySchema, ProductScopeSchema, pactObservationSectionTool } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import { rulesCatalog } from "@pact/domain";
 import type { IdentityService } from "@pact/identity";
-import { ActionLimitService, OwnerRecordStates, TroopService, WorldViewService } from "@pact/kingdom";
+import {
+  ActionLimitService,
+  OwnerRecordStates,
+  SocialOverviewReader,
+  TroopService,
+  WorldViewService,
+} from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
 import { WorldClockService } from "@pact/world";
@@ -59,6 +70,123 @@ async function kingdom(): Promise<{ accountId: string; kingdomId: string }> {
 }
 
 describe("authorized world views", () => {
+  it("executes compact forecast/construction and scoped paged request/agreement/unit sections", async () => {
+    const owner = await kingdom(),
+      peer = await kingdom(),
+      outsider = await kingdom();
+    const views = new WorldViewService(pool, scope),
+      whole = await views.readSelf(owner.accountId);
+    const forecast = await views.readSection(owner.accountId, { section: "forecast" });
+    expect(forecast.forecast).toEqual(whole?.forecast);
+    expect(forecast).not.toHaveProperty("balances");
+    expect(forecast).not.toHaveProperty("contacts");
+    expect(Buffer.byteLength(JSON.stringify(forecast))).toBeLessThan(5000);
+    const construction = await views.readSection(owner.accountId, { section: "construction" });
+    expect(construction.builders).toEqual(whole?.builders);
+    const ids = [randomUUID(), randomUUID(), randomUUID()].sort();
+    for (const id of ids)
+      await pool.query(
+        `INSERT INTO cold_contact_requests(id,product_scope,sender_kingdom_id,recipient_kingdom_id,note,operation_key,created_game_time_ms,expires_game_time_ms,status)
+      VALUES($1::uuid,'pact',$2,$3,'Whole request terms',$1::text,0,9999999999999,'pending')`,
+        [id, peer.kingdomId, owner.kingdomId],
+      );
+    const first = await views.readSection(owner.accountId, { section: "requests", limit: 1 });
+    expect(first.coverage).toMatchObject({ complete: false, delivered: 1 });
+    const second = await views.readSection(
+      owner.accountId,
+      ObservationSectionQuerySchema.parse({ section: "requests", limit: 1, cursor: first.next }),
+    );
+    expect((first.records as { id: string }[])[0]?.id).not.toBe((second.records as { id: string }[])[0]?.id);
+    expect((first.records as unknown[])[0]).toMatchObject({
+      type: "ContactRequest",
+      direction: "incoming",
+      status: "pending",
+      note: "Whole request terms",
+    });
+    expect((await views.readSection(outsider.accountId, { section: "requests", recordId: ids[0] })).records).toEqual(
+      [],
+    );
+    expect(
+      (await views.readSection(outsider.accountId, { section: "requests", recordId: randomUUID() })).records,
+    ).toEqual([]);
+    await expect(
+      views.readSection(
+        outsider.accountId,
+        ObservationSectionQuerySchema.parse({ section: "requests", cursor: first.next }),
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    const oldCursor = ObservationSectionQuerySchema.parse({ section: "requests", cursor: first.next });
+    await pool.query("UPDATE world_clocks SET tick_sequence=tick_sequence+1 WHERE product_scope='pact'");
+    await expect(views.readSection(owner.accountId, oldCursor)).rejects.toMatchObject({ code: "STALE_OBSERVATION" });
+    await pool.query("UPDATE world_clocks SET tick_sequence=tick_sequence-1 WHERE product_scope='pact'");
+    const offerId = randomUUID(),
+      terms = {
+        aToB: { resource: "grain", wholePerHour: 1 },
+        bToA: null,
+        aBond: null,
+        bBond: null,
+        durationHours: 6,
+        noticeHours: 0,
+      };
+    await pool.query(
+      `INSERT INTO supply_offers(id,product_scope,kingdom_a,kingdom_b,version,terms,status,expires_game_time_ms,created_game_time_ms,updated_game_time_ms)
+      VALUES($1,'pact',$2,$3,2,$4,'open',9999999999999,0,0)`,
+      [offerId, peer.kingdomId, owner.kingdomId, terms],
+    );
+    await pool.query(
+      "INSERT INTO supply_offer_signatures(product_scope,offer_id,version,kingdom_id,actor_kind,signed_game_time_ms) VALUES('pact',$1,2,$2,'human',0)",
+      [offerId, peer.kingdomId],
+    );
+    const agreements = await views.readSection(owner.accountId, { section: "agreements", recordId: offerId });
+    expect((agreements.records as unknown[])[0]).toMatchObject({
+      type: "SupplyOffer",
+      id: offerId,
+      version: 2,
+      status: "open",
+      terms,
+      youReceive: terms.aToB,
+      youSend: null,
+      signedBy: [peer.kingdomId],
+    });
+    expect((await views.readSection(outsider.accountId, { section: "agreements", recordId: offerId })).records).toEqual(
+      [],
+    );
+    expect((await views.readSection(owner.accountId, { section: "units" })).records).toEqual(
+      whole?.unitReferences.units,
+    );
+    const operations = new AgentOperationService({
+      productScope: scope,
+      dispatcher: {} as CommandDispatcher,
+      origin: "https://fixture.example",
+      clock: { now: () => new Date() },
+      agentGuide: new AgentGuideReader(views, new SocialOverviewReader(pool, scope), { getMandate: async () => null }),
+    });
+    const principal = {
+      accountId: owner.accountId,
+      productScope: ProductScopeSchema.parse(scope),
+      audience: "agent" as const,
+      agentScopes: ["world:read"] as const,
+    };
+    expect(operations.listOperations(principal).some((t) => t.name === pactObservationSectionTool.name)).toBe(true);
+    const result = await operations.execute(principal, {
+      name: pactObservationSectionTool.name,
+      arguments: { section: "forecast" },
+    });
+    expect(result.structuredContent).toHaveProperty("forecast");
+    await expect(
+      operations.execute(
+        { ...principal, agentScopes: [] },
+        { name: pactObservationSectionTool.name, arguments: { section: "requests" } },
+      ),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      operations.execute(principal, {
+        name: pactObservationSectionTool.name,
+        arguments: { section: "requests", accountId: outsider.accountId },
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_REQUEST" });
+  });
+
   it("publishes owner-only typed units with fresh Home Guard, placement and battle-lock eligibility", async () => {
     const owner = await kingdom(),
       outsider = await kingdom();

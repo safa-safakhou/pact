@@ -1,3 +1,4 @@
+import type { ObservationSectionQuery } from "@pact/contracts";
 import { type ObservedUnitReference, ownedWorldIntentVersion, referenceCatalogVersion } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
 import {
@@ -11,6 +12,7 @@ import {
 import type { Pool, PoolClient } from "pg";
 import { ActionLimitService, type ChargeView } from "./action-limits.js";
 import { type GameConsequences, readGameConsequences } from "./consequences.js";
+import { readObservationSection } from "./observation-sections.js";
 import { SeasonService, seasonPosition } from "./seasons.js";
 import type { KingdomAmbition } from "./service.js";
 import { type SupplyTerms, supplyPerspective } from "./supply-terms.js";
@@ -207,6 +209,18 @@ export class WorldViewService {
         const view = await this.readSnapshot(client, accountId, owner.id, forecastMinutes);
         return view?.audience === "owner" ? view : null;
       },
+      { isolation: "REPEATABLE READ" },
+    );
+  }
+
+  async readSection(accountId: string, query: ObservationSectionQuery) {
+    return withTransaction(
+      this.pool,
+      (client) =>
+        readObservationSection(client, this.productScope, accountId, query, async (id, minutes) => {
+          const view = await this.readSnapshot(client, accountId, id, minutes);
+          return view?.audience === "owner" ? view : null;
+        }),
       { isolation: "REPEATABLE READ" },
     );
   }

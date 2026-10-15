@@ -20,6 +20,8 @@ import {
   MemoryReadSchema,
   MemorySourceSchema,
   MemoryWriteSchema,
+  type ObservationSectionQuery,
+  ObservationSectionQuerySchema,
   operationMetadata,
   operationValidationDetail,
   PlayerFindQuerySchema,
@@ -41,6 +43,7 @@ import {
   pactMemoryReadTool,
   pactMemorySourceTool,
   pactMemoryWriteTool,
+  pactObservationSectionTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
   pactProfileTool,
@@ -121,6 +124,7 @@ export interface WorldViewReader {
 
 /** Product-owned owner projection and learning guide; MCP never accepts a caller-supplied account. */
 export interface AgentGuidePort {
+  readSection?(accountId: string, query: ObservationSectionQuery): Promise<Record<string, unknown>>;
   read(
     accountId: string,
     topic: "start" | "development" | "diplomacy" | "military" | "authority",
@@ -171,7 +175,7 @@ export interface ApprovalProposalPort {
 
 export class AgentOperationError extends Error {
   constructor(
-    readonly code: "FORBIDDEN" | "INVALID_REQUEST" | "RUN_ALREADY_ACTIVE",
+    readonly code: "FORBIDDEN" | "INVALID_REQUEST" | "RUN_ALREADY_ACTIVE" | "STALE_OBSERVATION",
     readonly httpStatus = 400,
     readonly detail?: Record<string, unknown>,
   ) {
@@ -206,6 +210,7 @@ export class AgentOperationService {
       [this.options.publicProfiles, pactPlayerFindTool],
       [this.options.profile, pactProfileTool],
       [this.options.agentGuide, pactAgentGuideTool],
+      [this.options.agentGuide?.readSection, pactObservationSectionTool],
       [this.options.courts, pactCourtReadTool],
       [this.options.politics, pactPoliticsReadTool],
       [this.options.seals, pactSealReadTool],
@@ -371,6 +376,24 @@ export class AgentOperationService {
         structuredContent: profile,
         isError: false,
       };
+    }
+    if (name === pactObservationSectionTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.agentGuide?.readSection)
+        throw new AgentOperationError("FORBIDDEN", 403);
+      const query = ObservationSectionQuerySchema.safeParse(args);
+      if (!query.success)
+        throw new AgentOperationError("INVALID_REQUEST", 400, operationValidationDetail(name, query.error.issues));
+      try {
+        const result = await this.options.agentGuide.readSection(principal.accountId, query.data);
+        return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+      } catch (error) {
+        const code = error && typeof error === "object" && "code" in error ? error.code : null;
+        if (code === "FORBIDDEN" || code === "INVALID_REQUEST" || code === "STALE_OBSERVATION")
+          throw new AgentOperationError(code, code === "FORBIDDEN" ? 403 : code === "STALE_OBSERVATION" ? 409 : 400, {
+            schemaId: name,
+          });
+        throw error;
+      }
     }
     if (name === pactAgentGuideTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.agentGuide)

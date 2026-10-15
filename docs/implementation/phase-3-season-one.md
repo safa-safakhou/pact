@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 72 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 73 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -3003,7 +3003,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-174"></a>
 ## PACT-174 — Executable compact observation sections
 
-**Status:** todo · **Role:** Application · **Size:** M · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** M · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -3019,15 +3019,18 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Forecast-only and construction/request/agreement reads are executable against their published schemas. Agent 08's requested forecast can reach AR-F04 under the existing 24,000-byte full-envelope allowance.
-- [ ] Paging/omissions distinguish unknown records from empty collections; required terms, parties, direction, versions, deadlines and signature status remain whole when delivered.
-- [ ] Ownership, revoked access, stale cursor/version and privacy controls pass. Older broad reads remain compatible under a reviewed additive/versioned contract.
-- [ ] Large shared histories are read selectively; compact views do not create a new private message store or misleading complete-coverage claim.
+- [x] Forecast-only and construction/request/agreement reads are executable against their published schemas. Agent 08's requested forecast can reach AR-F04 under the existing 24,000-byte full-envelope allowance.
+- [x] Paging/omissions distinguish unknown records from empty collections; required terms, parties, direction, versions, deadlines and signature status remain whole when delivered.
+- [x] Ownership, revoked access, stale cursor/version and privacy controls pass. Older broad reads remain compatible under a reviewed additive/versioned contract.
+- [x] Large shared histories are read selectively; compact views do not create a new private message store or misleading complete-coverage claim.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-envelope-20261015.md
 
 <a id="pact-175"></a>
 ## PACT-175 — Canonical outcomes and lifecycle evidence

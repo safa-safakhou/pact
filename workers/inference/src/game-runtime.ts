@@ -22,6 +22,7 @@ import {
   KingdomDiscoveryQuerySchema,
   MemoryReadSchema,
   MemoryWriteSchema,
+  ObservationSectionQuerySchema,
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
@@ -37,6 +38,7 @@ import {
   pactMemoryReadTool,
   pactMemorySourceTool,
   pactMemoryWriteTool,
+  pactObservationSectionTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
   pactReceiptReadTool,
@@ -85,6 +87,7 @@ import {
 } from "@pact/kingdom";
 import { ResourceLedger } from "@pact/ledger";
 import type { ProviderRouter } from "@pact/model-provider";
+import { assertionSchema } from "@pact/model-provider";
 import { OnboardingService } from "@pact/onboarding";
 import { RunError, RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
@@ -206,6 +209,7 @@ export async function createInferenceGameRuntime(
       { ...pactMemoryReadTool, parseArguments: (input: unknown) => MemoryReadSchema.parse(input) },
       { ...pactMemoryWriteTool, parseArguments: (input: unknown) => MemoryWriteSchema.parse(input) },
       { ...pactAgentGuideTool, parseArguments: (input: unknown) => AgentGuideQuerySchema.parse(input) },
+      { ...pactObservationSectionTool, parseArguments: (input: unknown) => ObservationSectionQuerySchema.parse(input) },
       { ...pactKingdomDiscoveryTool, parseArguments: (input: unknown) => KingdomDiscoveryQuerySchema.parse(input) },
       { ...pactPlayerFindTool, parseArguments: (input: unknown) => PlayerFindQuerySchema.parse(input) },
       inboxReadTool,
@@ -221,10 +225,23 @@ export async function createInferenceGameRuntime(
       { ...pactCourtReadTool, parseArguments: (input: unknown) => CourtReadQuerySchema.parse(input) },
       { ...pactPoliticsReadTool, parseArguments: (input: unknown) => PoliticsReadQuerySchema.parse(input) },
       { ...pactSealReadTool, parseArguments: (input: unknown) => SealReadQuerySchema.parse(input) },
-    ].map((tool) => ({ ...tool, description: inAppDiscoveryDescriptions[tool.name] ?? tool.description })),
+    ].map((tool) => ({
+      ...tool,
+      inputSchema: assertionSchema(tool.inputSchema),
+      description: inAppDiscoveryDescriptions[tool.name] ?? tool.description,
+    })),
     executeToolCalls: async (input) => {
       const results = [];
       for (const call of input.calls) {
+        if (call.name === pactObservationSectionTool.name) {
+          results.push({
+            callId: call.id,
+            content: JSON.stringify(
+              await guide.readSection(input.run.accountId, ObservationSectionQuerySchema.parse(call.arguments)),
+            ),
+          });
+          continue;
+        }
         if (call.name === pactAgentGuideTool.name) {
           const query = AgentGuideQuerySchema.parse(call.arguments);
           results.push({

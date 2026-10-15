@@ -1,4 +1,5 @@
 import type { MandateView } from "@pact/authority";
+import type { ObservationSectionQuery } from "@pact/contracts";
 import { referenceCatalogVersion } from "@pact/contracts";
 import {
   type BuildingKind,
@@ -26,6 +27,10 @@ export class AgentGuideReader {
     private readonly authority: GuideAuthority,
     private readonly surface: "external" | "in_app" = "external",
   ) {}
+
+  readSection(accountId: string, query: ObservationSectionQuery) {
+    return this.worldViews.readSection(accountId, query);
+  }
 
   async read(accountId: string, topic: AgentGuideTopic): Promise<Record<string, unknown>> {
     const header = {

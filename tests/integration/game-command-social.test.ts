@@ -235,6 +235,7 @@ describe("shared gameplay command admission", () => {
       ["pact_agent_guide_v1", { topic: "start" }],
       ["pact_agent_guide_v1", { topic: "military" }],
       ["pact_agent_guide_v1", { topic: "authority" }],
+      ["pact_observation_read_v2", { section: "forecast" }],
       ["pact_player_find_v1", { handle: handle.toUpperCase() }],
       ["pact_player_find_v1", { handle: "MissingSyntheticPlayer" }],
     ] as const) {
@@ -274,6 +275,10 @@ describe("shared gameplay command admission", () => {
       } else if (toolName === "pact_agent_guide_v1") {
         expect(result.rule).toContain("already holds the bounded write lease");
         expect(result.recovery.uncertainResult).toContain("original commandId");
+      } else if (toolName === "pact_observation_read_v2") {
+        expect(result).toMatchObject({ section: "forecast", coverage: { complete: true } });
+        expect(result.forecast).toBeDefined();
+        expect(result).not.toHaveProperty("contacts");
       } else if ("handle" in args && args.handle === handle.toUpperCase()) {
         expect(result.report).toMatchObject({
           found: true,
@@ -1469,20 +1474,27 @@ describe("shared gameplay command admission", () => {
       await inbox.publish(owner.accountId, "message.received", { text: hostile, index });
     }
     let providerMessages: readonly { role: string; content: string }[] = [];
+    const admission: number[][] = [];
+    const measuredRouter = new ProviderRouter([
+      {
+        provider: "fixture",
+        listModels: async () => [fakeProviderModel],
+        invoke: async (request) => {
+          providerMessages = request.messages;
+          return { stopReason: "completed" as const, toolCalls: [], usage: { inputTokens: 30, outputTokens: 5 } };
+        },
+      },
+    ]);
+    const prepare = measuredRouter.prepare.bind(measuredRouter);
+    measuredRouter.prepare = (...args: Parameters<ProviderRouter["prepare"]>) => {
+      admission.push([args[1], args[2]]);
+      return prepare(...args);
+    };
     const runtime = await createInferenceGameRuntime({
       pool,
       productScope: "pact",
       clock: { now: () => new Date() },
-      providerRouter: new ProviderRouter([
-        {
-          provider: "fixture",
-          listModels: async () => [fakeProviderModel],
-          invoke: async (request) => {
-            providerMessages = request.messages;
-            return { stopReason: "completed" as const, toolCalls: [], usage: { inputTokens: 30, outputTokens: 5 } };
-          },
-        },
-      ]),
+      providerRouter: measuredRouter,
       termsVersion: "terms-v1",
     });
     const run = await runtime.runs.start({
@@ -1493,7 +1505,14 @@ describe("shared gameplay command admission", () => {
       limits: { maxCalls: 1 },
     });
     const completed = await runtime.runs.executeModelCall(run.runId);
-    expect({ status: completed.status, code: completed.lastErrorCode }).toEqual({ status: "finished", code: null });
+    expect({ status: completed.status, code: completed.lastErrorCode }, JSON.stringify(admission)).toEqual({
+      status: "finished",
+      code: null,
+    });
+    expect(admission).toHaveLength(1);
+    expect((admission[0]?.[0] ?? Infinity) + (admission[0]?.[1] ?? Infinity)).toBeLessThanOrEqual(
+      fakeProviderModel.contextWindowTokens,
+    );
     const snapshot = providerMessages.find((message) => message.content.includes("pact.owner_snapshot.v1"));
     expect(snapshot?.role).toBe("user");
     expect(snapshot?.content).toContain(owner.kingdomId);

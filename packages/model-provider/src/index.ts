@@ -5,5 +5,6 @@ export * from "./gemini.js";
 export * from "./openai.js";
 export * from "./openrouter.js";
 export * from "./router.js";
+export { assertionSchema } from "./schema-projection.js";
 export * from "./types.js";
 export * from "./xai.js";

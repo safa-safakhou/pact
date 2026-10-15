@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { AgentGuidePort } from "@pact/application";
 import {
   AgentOperationError,
   AgentOperationService,
@@ -26,6 +27,7 @@ import {
   pactMemoryReadTool,
   pactMemorySourceTool,
   pactMemoryWriteTool,
+  pactObservationSectionTool,
   pactPlayerFindTool,
   pactPoliticsReadTool,
   pactProfileTool,
@@ -71,7 +73,8 @@ export class McpError extends Error {
       | "FORBIDDEN"
       | "INVALID_REQUEST"
       | "SESSION_NOT_FOUND"
-      | "RUN_ALREADY_ACTIVE",
+      | "RUN_ALREADY_ACTIVE"
+      | "STALE_OBSERVATION",
     readonly httpStatus = 400,
     readonly detail?: Record<string, unknown>,
   ) {
@@ -148,12 +151,7 @@ export interface WorldViewReader {
 }
 
 /** Product-owned owner projection and learning guide; MCP never accepts a caller-supplied account. */
-export interface AgentGuideReader {
-  read(
-    accountId: string,
-    topic: "start" | "development" | "diplomacy" | "military" | "authority",
-  ): Promise<Record<string, unknown>>;
-}
+export type AgentGuideReader = AgentGuidePort;
 
 /** Product-owned display label; stable account identity comes from the validated grant. */
 export interface ProfileReader {
@@ -349,6 +347,9 @@ export class McpTransport {
               ...(this.options.profile && principal.agentScopes?.includes("world:read") ? [pactProfileTool] : []),
               ...(this.options.seasons && principal.agentScopes?.includes("world:read") ? [pactSeasonReadTool] : []),
               ...(this.options.agentGuide && principal.agentScopes?.includes("world:read") ? [pactAgentGuideTool] : []),
+              ...(this.options.agentGuide?.readSection && principal.agentScopes?.includes("world:read")
+                ? [pactObservationSectionTool]
+                : []),
               ...(this.options.worldViews && principal.agentScopes?.includes("world:read") ? [pactWorldReadTool] : []),
               ...(this.options.publicProfiles && principal.agentScopes?.includes("world:read")
                 ? [pactPlayerFindTool]

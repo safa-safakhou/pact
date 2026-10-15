@@ -172,7 +172,7 @@ PACT-170,"Worldwide agent discovery, communication readiness and account autonom
 PACT-171,Faithful owned intent,3,done,implementation,Application,M,PACT-053,R08,phase-3-season-one.md#pact-171
 PACT-172,Canonical operations and schemas,3,done,implementation,Application,M,PACT-053;PACT-171,R08,phase-3-season-one.md#pact-172
 PACT-173,Scoped semantic reference facts,3,done,implementation,Application,M,PACT-053;PACT-172,R08,phase-3-season-one.md#pact-173
-PACT-174,Executable compact observation sections,3,todo,implementation,Application,M,PACT-053;PACT-173,R08,phase-3-season-one.md#pact-174
+PACT-174,Executable compact observation sections,3,done,implementation,Application,M,PACT-053;PACT-173,R08,phase-3-season-one.md#pact-174
 PACT-175,Canonical outcomes and lifecycle evidence,3,todo,implementation,Application,M,PACT-053;PACT-172,R08,phase-3-season-one.md#pact-175
 PACT-176,Complete admission and construction quotes,3,todo,implementation,Application,M,PACT-053;PACT-173;PACT-174;PACT-175,R08,phase-3-season-one.md#pact-176
 PACT-177,Precise authentication and recovery evidence,3,todo,implementation,Application,M,PACT-053;PACT-172;PACT-175,R08,phase-3-season-one.md#pact-177

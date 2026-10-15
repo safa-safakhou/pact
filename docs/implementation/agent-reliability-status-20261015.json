@@ -71,8 +71,8 @@
       "depends_on": [
         "AR-P03"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Forecast-only and construction/request/agreement reads are executable against their published schemas. Agent 08's requested forecast can reach AR-F04 under the existing 24,000-byte full-envelope allowance.",
@@ -80,8 +80,11 @@
         "Ownership, revoked access, stale cursor/version and privacy controls pass. Older broad reads remain compatible under a reviewed additive/versioned contract.",
         "Large shared histories are read selectively; compact views do not create a new private message store or misleading complete-coverage claim."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-envelope-20261015.md"
+      ],
+      "gated_acceptance": [],
+      "dependency_gate": "Joint executable section and measured fake-engine contract verified; no real provider or live acceptance claimed"
     },
     {
       "id": "AR-P05",

@@ -8,6 +8,7 @@ export * from "./discovery-schemas.js";
 export * from "./enrollment-schemas.js";
 export * from "./json-schema.js";
 export * from "./memory-schemas.js";
+export * from "./observation-sections.js";
 export * from "./observed-references.js";
 export * from "./operation-catalog.js";
 export * from "./owner-intent.js";
