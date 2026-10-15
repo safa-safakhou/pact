@@ -717,6 +717,7 @@ export class RunService {
         reported = true;
         usageTokens = result.usage.inputTokens + result.usage.outputTokens;
       }
+      if (!reported) throw new AmbiguousProviderCrash();
       if (reported)
         await this.pool.query(
           "UPDATE envoy_model_attempts SET phase='model_reported',status=CASE WHEN status='unknown' THEN status ELSE 'reported' END,actual_tokens=$2,updated_at=$3 WHERE request_id=$1",

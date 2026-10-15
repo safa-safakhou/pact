@@ -258,3 +258,33 @@ it("recovers a pre-dispatch orphan and fences its old worker without another pro
     (await pool.query("SELECT status FROM envoy_model_attempts WHERE run_id=$1", [run.runId])).rows[0].status,
   ).toBe("not_dispatched");
 });
+
+it("retains unavailable final usage as an exposure gate rather than an invented measured bill", async () => {
+  const runs = new RunService(pool, {
+    productScope: "pact",
+    clock: { now: () => new Date() },
+    providerRouter: new ProviderRouter([
+      {
+        provider: "fixture",
+        listModels: async () => [fakeProviderModel],
+        invoke: async () => ({ stopReason: "completed", toolCalls: [] }),
+      },
+    ]),
+  });
+  const run = await runs.start({
+    accountId: await owner(),
+    objective: "Fixture",
+    provider: "fixture",
+    model: fakeProviderModel.id,
+    limits: { maxCalls: 2 },
+  });
+  expect((await runs.executeModelCall(run.runId)).status).toBe("failed");
+  const evidence = (
+    await pool.query("SELECT status,allocation_tokens,actual_tokens FROM envoy_model_attempts WHERE run_id=$1", [
+      run.runId,
+    ])
+  ).rows[0];
+  expect(evidence.status).toBe("unknown");
+  expect(evidence.allocation_tokens).toBeGreaterThan(0);
+  expect(evidence.actual_tokens).toBeNull();
+});
