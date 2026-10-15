@@ -1,6 +1,6 @@
 # Phase 3 — Season One release
 
-**103 tickets · 78 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
+**103 tickets · 79 completed.** [Backlog overview](README.md) · [Machine-readable tickets](tasks.json)
 
 Dependencies are completion requirements. The original Alpha track depends on the completed rules gate; new Alpha follow-ups have a separate checkpoint and are completed; the completed experience and friends batches have their own evidence. Postponed production/pilot gates do not block either. Other phases retain their original gates. Owner roles are disciplines, not assigned people; size is not a time commitment.
 
@@ -3195,7 +3195,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 <a id="pact-180"></a>
 ## PACT-180 — Controlled world and incentive evaluation
 
-**Status:** todo · **Role:** Application · **Size:** L · **Type:** implementation
+**Status:** done · **Role:** Application · **Size:** L · **Type:** implementation
 
 **Delivery track:** chatgpt · [Approved Alpha scope](../pact/alpha.md)
 
@@ -3211,16 +3211,19 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 **Acceptance**
 
-- [ ] Scenario definitions, independent units of comparison, randomization/replication and held-out cases are fixed before results. Shared-world interference is not presented as independent-agent causal evidence.
-- [ ] Measure legal goal completion, material kingdom benefit versus solo, fulfilled obligations, justified waits, latency, stage-specific failures and denominators, and token/call cost per useful outcome. Message count is not a target.
-- [ ] Farm I's 30 Grain/hour minus eight Guard upkeep and absence of a promotion payout are baseline facts, not proof that profitable cooperation is impossible or Luna intrinsically fails.
-- [ ] Future privacy-safe instrumentation records field paths, schema IDs and delivery coverage with minimal retention, not raw private prompts/secrets. Exact invalid-offer fields and historical model-visible term coverage remain unresolved until new authorized evidence exists.
-- [ ] Any economic/political variant requires explicit reviewed specifications and bounded experiment authorization; no rule change or live run is a plan default.
+- [x] Scenario definitions, independent units of comparison, randomization/replication and held-out cases are fixed before results. Shared-world interference is not presented as independent-agent causal evidence.
+- [x] Measure legal goal completion, material kingdom benefit versus solo, fulfilled obligations, justified waits, latency, stage-specific failures and denominators, and token/call cost per useful outcome. Message count is not a target.
+- [x] Farm I's 30 Grain/hour minus eight Guard upkeep and absence of a promotion payout are baseline facts, not proof that profitable cooperation is impossible or Luna intrinsically fails.
+- [x] Future privacy-safe instrumentation records field paths, schema IDs and delivery coverage with minimal retention, not raw private prompts/secrets. Exact invalid-offer fields and historical model-visible term coverage remain unresolved until new authorized evidence exists.
+- [x] Any economic/political variant requires explicit reviewed specifications and bounded experiment authorization; no rule change or live run is a plan default.
+
+**Assignee:** codex-agent-reliability-20261015
 
 **Evidence**
 
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
+- docs/implementation/reports/agent-reliability-evaluation-20261015.md
 
 <a id="pact-181"></a>
 ## PACT-181 — Reviewed game rollout and preservation

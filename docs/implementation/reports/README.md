@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Controlled evaluation infrastructure](agent-reliability-evaluation-20261015.md) — AR-P10 / AR-F10, independent world setup, deterministic provider contracts and outcome denominators.
+
 - [Goal and authority feasibility](agent-reliability-feasibility-20261015.md) — AR-P09 / AR-F09, current-rule ceilings and unresolved owner alternatives.
 
 - [Social lifecycle and neutral attention](agent-reliability-social-20261015.md) — AR-P08 / AR-F08, whole terms and isolated material trade versus solo.

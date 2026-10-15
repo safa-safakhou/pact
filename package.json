@@ -36,7 +36,8 @@
     "smoke": "vitest run --config vitest.integration.config.ts tests/smoke",
     "test": "vitest run --config vitest.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
-    "typecheck": "tsc --noEmit -p tsconfig.check.json"
+    "typecheck": "tsc --noEmit -p tsconfig.check.json",
+    "eval:offline": "vitest run --config vitest.config.ts tests/unit/evaluation-plan.test.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

@@ -211,8 +211,8 @@
         "AR-P09",
         "AR-F09"
       ],
-      "status": "todo",
-      "assignee": null,
+      "status": "done",
+      "assignee": "codex-agent-reliability-20261015",
       "plan": "docs/implementation/agent-reliability-consolidated-plan-20261015.md",
       "acceptance": [
         "Scenario definitions, independent units of comparison, randomization/replication and held-out cases are fixed before results. Shared-world interference is not presented as independent-agent causal evidence.",
@@ -221,8 +221,13 @@
         "Future privacy-safe instrumentation records field paths, schema IDs and delivery coverage with minimal retention, not raw private prompts/secrets. Exact invalid-offer fields and historical model-visible term coverage remain unresolved until new authorized evidence exists.",
         "Any economic/political variant requires explicit reviewed specifications and bounded experiment authorization; no rule change or live run is a plan default."
       ],
-      "evidence": [],
-      "gated_acceptance": []
+      "evidence": [
+        "docs/implementation/reports/agent-reliability-evaluation-20261015.md"
+      ],
+      "gated_acceptance": [
+        "Actual pinned provider generation qualification and bounded behavior runs remain unauthorized/unexecuted; 336 cells are planned, not results"
+      ],
+      "dependency_gate": "Fixed independent synthetic design, isolated setup, deterministic qualification and metric infrastructure verified"
     },
     {
       "id": "AR-P11",
