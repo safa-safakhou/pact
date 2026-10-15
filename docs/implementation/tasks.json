@@ -8931,7 +8931,8 @@
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
         "docs/implementation/reports/agent-reliability-intent-20261015.md",
-        "PACT 364 unit / 410 integration (+1 existing optional skip), full build/typecheck/lint/contracts; Fleet 111 unit /166 integration, check/build/boundaries and zero production audit vulnerabilities."
+        "PACT 364 unit / 410 integration (+1 existing optional skip), full build/typecheck/lint/contracts; Fleet 111 unit /166 integration, check/build/boundaries and zero production audit vulnerabilities.",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -8981,7 +8982,8 @@
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
         "docs/implementation/reports/agent-reliability-contracts-20261015.md",
-        "PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /169 integration, check/build/boundaries. Fake providers only."
+        "PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /169 integration, check/build/boundaries. Fake providers only.",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9031,7 +9033,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-references-20261015.md"
+        "docs/implementation/reports/agent-reliability-references-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9081,7 +9084,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-envelope-20261015.md"
+        "docs/implementation/reports/agent-reliability-envelope-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9131,7 +9135,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-continuation-20261015.md"
+        "docs/implementation/reports/agent-reliability-continuation-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9183,7 +9188,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-admission-20261015.md"
+        "docs/implementation/reports/agent-reliability-admission-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9234,7 +9240,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-recovery-20261015.md"
+        "docs/implementation/reports/agent-reliability-recovery-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9287,7 +9294,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-social-20261015.md"
+        "docs/implementation/reports/agent-reliability-social-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9338,7 +9346,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-feasibility-20261015.md"
+        "docs/implementation/reports/agent-reliability-feasibility-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9391,7 +9400,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-evaluation-20261015.md"
+        "docs/implementation/reports/agent-reliability-evaluation-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -9443,7 +9453,8 @@
       "evidence": [
         "Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.",
         "Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.",
-        "docs/implementation/reports/agent-reliability-rollout-20261015.md"
+        "docs/implementation/reports/agent-reliability-rollout-20261015.md",
+        "Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct."
       ],
       "assignee": "codex-agent-reliability-20261015",
       "blocked_by_external": [],
@@ -10593,8 +10604,9 @@
       "AR-P10",
       "AR-P11"
     ],
-    "authorization": "source/offline implementation only; deployment/model experiments and live product/authority decisions gated",
+    "authorization": "Verified source plus explicitly authorized existing server/Windows deployment; no new experiments, permission/economy change, unknown review/reconnect or push.",
     "tracking": "local while Linear requires reauthentication",
-    "register": "docs/implementation/agent-reliability-status-20261015.json"
+    "register": "docs/implementation/agent-reliability-status-20261015.json",
+    "deployment_report": "docs/implementation/reports/agent-reliability-deployment-20261015.md"
   }
 }

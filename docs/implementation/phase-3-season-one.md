@@ -2935,6 +2935,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-intent-20261015.md
 - PACT 364 unit / 410 integration (+1 existing optional skip), full build/typecheck/lint/contracts; Fleet 111 unit /166 integration, check/build/boundaries and zero production audit vulnerabilities.
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-172"></a>
 ## PACT-172 — Canonical operations and schemas
@@ -2967,6 +2968,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-contracts-20261015.md
 - PACT 369 unit /62 relevant integration, build/typecheck/lint/freeze; Fleet 116 unit /169 integration, check/build/boundaries. Fake providers only.
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-173"></a>
 ## PACT-173 — Scoped semantic reference facts
@@ -2999,6 +3001,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-references-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-174"></a>
 ## PACT-174 — Executable compact observation sections
@@ -3031,6 +3034,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-envelope-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-175"></a>
 ## PACT-175 — Canonical outcomes and lifecycle evidence
@@ -3063,6 +3067,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-continuation-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-176"></a>
 ## PACT-176 — Complete admission and construction quotes
@@ -3095,6 +3100,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-admission-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-177"></a>
 ## PACT-177 — Precise authentication and recovery evidence
@@ -3127,6 +3133,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-recovery-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-178"></a>
 ## PACT-178 — Actionable social lifecycle views
@@ -3159,6 +3166,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-social-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-179"></a>
 ## PACT-179 — Goal and authority feasibility
@@ -3191,6 +3199,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-feasibility-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-180"></a>
 ## PACT-180 — Controlled world and incentive evaluation
@@ -3224,6 +3233,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-evaluation-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
 
 <a id="pact-181"></a>
 ## PACT-181 — Reviewed game rollout and preservation
@@ -3256,3 +3266,4 @@ Dependencies are completion requirements. The original Alpha track depends on th
 - Source/offline implementation explicitly assigned by founder on 15 October. No deployment, running-fleet change or new model experiments.
 - Linear read failed with UNAUTHORIZED/reauthentication required; local claims only.
 - docs/implementation/reports/agent-reliability-rollout-20261015.md
+- Subsequent founder-authorized actual existing-installation deployment: docs/implementation/reports/agent-reliability-deployment-20261015.md. Server50 remains paused; original local20 scheduling restored; owner/provider/behavior/recovery gates remain distinct.
