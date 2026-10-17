@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Provider qualification and fresh-world planning](provider-qualification-world-plan-20261018.md) — proposed model budgets and100 Luna+mixed-local world; no execution/reset authority.
+
 - [Fleet disabled local installation](fleet-disabled-local-install-20261018.md) — fresh snapshot, protected migration, verified selected artifact and persistent execution disable; server/new runs excluded.
 
 - [Fleet local release rehearsal](fleet-local-release-rehearsal-20261018.md) — authenticated local restore, disabled source rollback and temporary fencing; server/new runs excluded.

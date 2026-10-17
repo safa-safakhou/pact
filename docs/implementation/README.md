@@ -1,3 +1,7 @@
+## Provider qualification and fresh-world planning —18 October2026
+
+The founder-requested [budgeted qualification/mixed-world plan](reports/provider-qualification-world-plan-20261018.md) proposes100 server Luna and four local groups while preserving current histories. This is planning only: server/new runs/reset/implementation remain excluded. Local installed Fleet stays disabled; no tracker/deferred work is activated.
+
 ## Fleet disabled local installation — 18 October 2026
 
 The founder separately authorized [installing verified Fleet locally with execution disabled](reports/fleet-disabled-local-install-20261018.md). PACT application/runtime unchanged; server Fleet/new runs excluded. Original accounts/history/recovery gates remain preserved; no backlog/deferred task is activated.
