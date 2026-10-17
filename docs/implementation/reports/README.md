@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [P2 factual owner outlook](agent-outlook-20261017.md) — phase3 source/offline projection and verification.
+
 - [Local reboot recovery](local-reboot-recovery-20261015.md) — same twenty accounts, exact interrupted-turn review, retained allocations, restored local model/recall services and scheduled acceptance.
 
 - [Consolidated source acceptance and remaining gates](agent-reliability-source-acceptance-20261015.md) — all 22 task mappings, eleven commit pairs, final checks and unfulfilled live/provider/owner gates.

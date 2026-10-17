@@ -1,5 +1,6 @@
 export type { AdminKingdomPage, AdminOverview } from "./admin-types.js";
 export * from "./agent-event-schemas.js";
+export * from "./agent-outlook-schemas.js";
 export * from "./chronicle-schemas.js";
 export * from "./collection-catalog.js";
 export * from "./collection-display.js";

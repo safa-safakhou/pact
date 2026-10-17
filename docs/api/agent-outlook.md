@@ -1,0 +1,11 @@
+# Owner factual outlook — P2
+
+`PACT_AGENT_OUTLOOK_ENABLED=1` exposes `GET /v1/game/agent-outlook` and the shared MCP/tool operation `pact_agent_outlook_v1`. Default off. `/v2/interfaces.agentOutlook` advertises exact `pact.agent-outlook.v1` support. No inference, enrollment or event wake is initiated. Rollback: remove the flag; there is no migration or stored projection.
+
+Query: `forecastMinutes` integer1–60, default60. No account/kingdom arguments. Human sessions or currently introspected grants with `world:read` select the authenticated active owner's view; responses are no-store. All reads compose in one repeatable database snapshot. Revision hashes current facts and values; source references identify authorized records, not access tokens or a public lookup API.
+
+The projection reuses exact game forecast, exposure and admission formulas. Ordinary stock, founding allowance, locks, production, current upkeep, conditional forecast and full signed authority exposure remain separate. A one-hour host-food signature reserves up to65 minutes under the existing lock bound; this is not an additional stock debit. Current visiting upkeep is already in the short forecast. Flow concentration is an exact numerator/denominator of observed incoming signed rates, not a partner quality score.
+
+Construction/training admission, material fulfilment, defaults and own battle results remain separate. Natural garrison expiry without default is fulfilled; mutual release is cancelled. Retained supply aggregates do not prove complete lifetime coverage: closed non-default supply remains unknown. Active threats include deadlines but never hidden enemy strength or intent. No trust/survival score, ally preference, forced communication or strategic ranking is supplied. Per-action feasibility is unranked and grants no permission; command handlers revalidate actual stock, authority, floors, versions and prerequisites.
+
+Coverage is bounded (latest20 construction/supply/garrison/battle records, active training, existing threat limits), incomplete-world and owner-scoped. Missing/omitted records prove no outcome. Forecasts assume stated funding and current rates; they do not predict future peer choices, battle dice, future construction or all defaults. Fleet may derive subjective hypotheses from these facts, separately from owner values.

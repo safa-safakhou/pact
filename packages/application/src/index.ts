@@ -24,6 +24,7 @@ export function createApplication(
 export { AgentGuideReader, type AgentGuideTopic } from "./agent-guide.js";
 export type { AgentGuidePort } from "./agent-operations.js";
 export { AgentOperationError, type AgentOperationOptions, AgentOperationService } from "./agent-operations.js";
+export * from "./agent-outlook.js";
 export { agentRecovery } from "./agent-recovery.js";
 export { describeApprovalEffects } from "./approval-effects.js";
 export { canonicalPayloadHash } from "./canonical.js";

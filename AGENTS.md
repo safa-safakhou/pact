@@ -1,3 +1,7 @@
+# PACT phase3 source acceptance — 17 October 2026
+
+P2 owner factual outlook is source/offline verified; read `docs/implementation/reports/agent-outlook-20261017.md`. Optional default-off read reuses exact domain formulas and authenticated ownership. No game runtime, server Fleet or installed local Fleet changed; no new experiments, enrollment, recovery review, deployment or push. Fleet F5 is the companion phase3 package. Existing preservation instructions below remain applicable.
+
 # PACT engineering instructions
 
 ## Fleet platform phase2 — 17 October 2026

@@ -94,7 +94,7 @@ function validateTerms(input: GarrisonTerms): GarrisonTerms {
   };
 }
 
-function upkeepExposure(terms: GarrisonTerms): bigint {
+export function garrisonUpkeepExposure(terms: GarrisonTerms): bigint {
   const perMinute = terms.units.reduce(
     (sum, item) => sum + hourlyRatePerMinute(rulesCatalog.units[item.type].grainPerHour) * BigInt(item.count),
     0n,
@@ -285,7 +285,7 @@ export class GarrisonService {
     const bond = lender ? terms.lenderBond : terms.hostBond;
     const assets: Record<string, bigint> = {};
     if (bond) assets[bond.resource] = wholeResources(bond.wholeAmount);
-    if (!lender) assets.grain = (assets.grain ?? 0n) + upkeepExposure(terms);
+    if (!lender) assets.grain = (assets.grain ?? 0n) + garrisonUpkeepExposure(terms);
     const troopCount = lender ? terms.units.reduce((sum, unit) => sum + unit.count, 0) : 0;
     const authorityRef =
       input.actorKind === "agent" || input.permitId

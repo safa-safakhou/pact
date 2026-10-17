@@ -200,21 +200,28 @@ export class WorldViewService {
     if (!validId(accountId)) return null;
     if (!Number.isSafeInteger(forecastMinutes) || forecastMinutes < 1 || forecastMinutes > 60)
       throw new Error("INVALID_FORECAST_HORIZON");
-    return withTransaction(
-      this.pool,
-      async (client) => {
-        const owner = (
-          await client.query<{ id: string }>(
-            "SELECT id FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
-            [this.productScope, accountId],
-          )
-        ).rows[0];
-        if (!owner) return null;
-        const view = await this.readSnapshot(client, accountId, owner.id, forecastMinutes);
-        return view?.audience === "owner" ? view : null;
-      },
-      { isolation: "REPEATABLE READ" },
-    );
+    return withTransaction(this.pool, (client) => this.readSelfSnapshot(client, accountId, forecastMinutes), {
+      isolation: "REPEATABLE READ",
+    });
+  }
+
+  async readSelfSnapshot(
+    client: PoolClient,
+    accountId: string,
+    forecastMinutes = 60,
+  ): Promise<OwnerKingdomView | null> {
+    if (!validId(accountId)) return null;
+    if (!Number.isSafeInteger(forecastMinutes) || forecastMinutes < 1 || forecastMinutes > 60)
+      throw new Error("INVALID_FORECAST_HORIZON");
+    const owner = (
+      await client.query<{ id: string }>(
+        "SELECT id FROM kingdoms WHERE product_scope=$1 AND account_id=$2 AND status='ranked'",
+        [this.productScope, accountId],
+      )
+    ).rows[0];
+    if (!owner) return null;
+    const view = await this.readSnapshot(client, accountId, owner.id, forecastMinutes);
+    return view?.audience === "owner" ? view : null;
   }
 
   readRecordStates(accountId: string, records: string[]) {

@@ -1,0 +1,3 @@
+# Factual agent outlook correction — 17 October 2026
+
+P2 adds an optional owner-only factual read, governed by existing ownership, world:read authorization and privacy. [Contract and limits](../api/agent-outlook.md) define the bounded snapshot. PACT owns exact resource forecasts, signed exposure, task fulfilment and visible threat facts. Fleet owns any subjective belief or strategic choice derived from them. A read grants no authority, triggers no inference and changes no game economy, rules or existing observation outputs. Default off; source acceptance does not authorize installation or a new run.

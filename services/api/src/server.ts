@@ -101,6 +101,7 @@ export interface ApiModules {
   a2aBaseUrl?: string;
   approvals?: ApprovalService;
   inbox?: InboxService;
+  agentOutlook?: import("@pact/kingdom").AgentOutlookService;
   agentEvents?: import("@pact/inbox").AgentEventService;
   notifications?: NotificationService;
   moderation?: import("@pact/kingdom").ModerationService;
@@ -181,6 +182,10 @@ export function buildServer(
       toolCalling: {
         enabled: Boolean(modules?.mcp),
         description: "Canonical game schemas via MCP or @pact/contracts; model-side tool calling is optional",
+      },
+      agentOutlook: {
+        enabled: Boolean(modules?.agentOutlook),
+        schemaVersion: modules?.agentOutlook ? "pact.agent-outlook.v1" : null,
       },
       agentEvents: {
         enabled: Boolean(modules?.agentEvents),
@@ -281,6 +286,7 @@ export function buildServer(
       );
     if (modules.notifications)
       registerNotificationRoutes(server, modules.identity, modules.notifications, modules.webPushPublicKey);
+    if (modules.agentOutlook) registerOutlookRoutes(server, modules.identity, modules.agentOutlook, modules.oauth);
     if (modules.agentEvents) registerAgentEventRoutes(server, modules.identity, modules.agentEvents, modules.oauth);
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
@@ -296,6 +302,6 @@ export function buildServer(
 
 import type { DecisionSupportReader } from "@pact/application";
 import { registerCollectionRoutes } from "./collection-routes.js";
-import { registerDecisionRoutes } from "./decision-routes.js";
+import { registerDecisionRoutes, registerOutlookRoutes } from "./decision-routes.js";
 import { registerEnrollmentRoutes } from "./enrollment-routes.js";
 import { registerMemoryRoutes } from "./memory-routes.js";

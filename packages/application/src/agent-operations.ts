@@ -4,6 +4,7 @@ import {
   AgentGameActionSchema,
   AgentGameActionV2Schema,
   AgentGuideQuerySchema,
+  AgentOutlookQuerySchema,
   ApprovalProposalSchema,
   ApprovalProposalV2Schema,
   ApprovalStatusQuerySchema,
@@ -30,6 +31,7 @@ import {
   ProductScopeSchema,
   pactAgentEventsTool,
   pactAgentGuideTool,
+  pactAgentOutlookTool,
   pactApprovalProposalTool,
   pactApprovalProposalV2Tool,
   pactApprovalStatusTool,
@@ -69,6 +71,7 @@ import type { CommandDispatcher } from "./dispatcher.js";
 import type { AuthenticatedPrincipal } from "./types.js";
 
 export interface AgentOperationOptions {
+  readonly agentOutlook?: { readOwner(principal: AuthenticatedPrincipal, query: unknown): Promise<unknown> };
   readonly agentEvents?: { read(principal: AuthenticatedPrincipal, cursor?: string, limit?: number): Promise<unknown> };
   readonly persistentPlay?: { read(accountId: string, query?: EnrollmentQuery): Promise<unknown> };
   readonly privateMemory?: {
@@ -226,6 +229,7 @@ export class AgentOperationService {
       [this.options.reports, pactReportReadTool],
       [this.options.inbox, pactInboxReadTool],
       [this.options.agentEvents, pactAgentEventsTool],
+      [this.options.agentOutlook, pactAgentOutlookTool],
       [this.options.conversations, pactConversationReadTool],
       [this.options.approvals, pactApprovalStatusTool],
       [this.options.decisionSupport, pactDecisionSupportTool],
@@ -553,6 +557,17 @@ export class AgentOperationService {
       return {
         content: [{ type: "text", text: JSON.stringify(report) }],
         structuredContent: report as Record<string, unknown>,
+      };
+    }
+    if (name === pactAgentOutlookTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.agentOutlook)
+        throw new AgentOperationError("FORBIDDEN", 403);
+      const query = AgentOutlookQuerySchema.safeParse(args);
+      if (!query.success) throw new AgentOperationError("INVALID_REQUEST", 400);
+      const result = await this.options.agentOutlook.readOwner(principal, query.data);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result) }],
+        structuredContent: result as Record<string, unknown>,
       };
     }
     if (name === pactAgentEventsTool.name) {

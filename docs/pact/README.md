@@ -72,3 +72,7 @@ PACT-168 adds optional A2A alongside API, MCP and tool calling with shared game 
 ## Scoped agent events correction — 17 October 2026
 
 P1 adds an optional default-off owner metadata feed for separately enrolled external hosts. The dated runtime/architecture/access/privacy corrections and [API/source coverage](../api/agent-events.md) own this additive behavior. [Source acceptance](../implementation/reports/agent-events-20261017.md) is separate from installation or a new run. Existing game rules, engines, cohorts and inference authority remain unchanged.
+
+## Factual agent outlook correction — 17 October 2026
+
+[P2 owner outlook](agent-outlook.md) owns the additive default-off factual projection. Existing rules and permissions remain authoritative.

@@ -6,6 +6,7 @@ import {
   CommandDispatcher,
   DispatcherError,
   GameCommandHandler,
+  outlookFeasibility,
   SocialCommandHandler,
 } from "@pact/application";
 import { ApprovalService, ApprovalStatusReader } from "@pact/approvals";
@@ -29,6 +30,7 @@ import { AgentEventService, InboxService, NotificationService } from "@pact/inbo
 import {
   ActionLimitService,
   AgentEventProjector,
+  AgentOutlookService,
   BuildingEngine,
   ChronicleOutcomeReader,
   ChronicleService,
@@ -124,6 +126,7 @@ const kingdom = new KingdomService(pool, {
 });
 const politics = new PoliticsService(pool, "pact", clock);
 const worldViews = new WorldViewService(pool, "pact", undefined, politics);
+const agentOutlook = new AgentOutlookService(pool, "pact", worldViews, outlookFeasibility);
 const seasons = new SeasonService("pact");
 const honors = new SeasonHonorsService("pact");
 const seasonViews = {
@@ -403,6 +406,7 @@ const mcp = new McpTransport({
   },
   reports,
   inbox,
+  ...(process.env.PACT_AGENT_OUTLOOK_ENABLED === "1" ? { agentOutlook } : {}),
   ...(process.env.PACT_AGENT_EVENTS_ENABLED === "1" ? { agentEvents } : {}),
   conversations: new ConversationReader(pool, "pact"),
   approvals: new ApprovalStatusReader(pool, "pact", clock, new URL(publicBaseUrl).pathname),
@@ -702,6 +706,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   a2aBaseUrl: publicBaseUrl,
   approvals,
   inbox,
+  ...(process.env.PACT_AGENT_OUTLOOK_ENABLED === "1" ? { agentOutlook } : {}),
   ...(process.env.PACT_AGENT_EVENTS_ENABLED === "1" ? { agentEvents } : {}),
   runs,
   externalActivity,
