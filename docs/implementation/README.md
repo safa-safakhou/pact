@@ -1,3 +1,7 @@
+## Fleet local release rehearsal — 18 October 2026
+
+The separately authorized [local operational rehearsal](reports/fleet-local-release-rehearsal-20261018.md) passed encrypted restore, disabled source rollback and temporary fencing without PACT source/runtime changes, server contact or new runs. Original local Fleet release/history/recovery gates remain preserved. No new tracker/deferred-roadmap assignment is selected.
+
 ## F8 dependency qualification follow-up — 17 October 2026
 
 Founder authorizes fixing the three dependency advisories found by F8 and rerunning local qualification. Work is owned by Codex without delegation; server Fleet, installed local runtimes and all real runs remain excluded. [Status](dependency-qualification-status-20261017.json), [completion evidence](reports/dependency-qualification-20261017.md) and [backport provenance/maintenance](../../vendor/security/README.md) record actual acceptance. Original backlog assignments and deferred production tasks remain unchanged.

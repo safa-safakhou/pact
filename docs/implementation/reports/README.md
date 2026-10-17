@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fleet local release rehearsal](fleet-local-release-rehearsal-20261018.md) — authenticated local restore, disabled source rollback and temporary fencing; server/new runs excluded.
+
 - [P2 factual owner outlook](agent-outlook-20261017.md) — phase3 source/offline projection and verification.
 
 - [Local reboot recovery](local-reboot-recovery-20261015.md) — same twenty accounts, exact interrupted-turn review, retained allocations, restored local model/recall services and scheduled acceptance.
