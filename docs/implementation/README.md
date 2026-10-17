@@ -6,6 +6,10 @@ PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using sha
 
 # PACT implementation backlog
 
+## Fleet architecture and phased integration proposal — 17 October
+
+The founder-requested [shared Fleet architecture](../../../fleet/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md), [Fleet plan](../../../fleet/docs/superpowers/plans/2026-10-17-multi-engine-platform.md) and [PACT integration plan](../superpowers/plans/2026-10-17-fleet-platform-integration.md) preserve the current engines while proposing selectable engines, reviewed environment adapters, scoped events and factual outlooks. Reliable agent operation remains primary; comparisons/reports are optional. This is planning only: no new tracker assignment, implementation, product-specification correction, installation, account, model call or run is activated. See [planning handoff](reports/fleet-platform-planning-20261017.md).
+
 ## Administrator dashboard, 14 October
 
 The founder assigned PACT-169: implement and deploy an independent administrator dashboard, with no kingdom required. [Administrative extension](../pact/administration.md), [operator runbook](../operations/admin-dashboard.md), and [actual verification/release evidence](reports/admin-dashboard-20261014.md). Existing stopped experiments, Fleet state and deferred tasks retain their prior boundaries.
