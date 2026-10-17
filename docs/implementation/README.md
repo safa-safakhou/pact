@@ -1,3 +1,7 @@
+## F8 dependency qualification follow-up — 17 October 2026
+
+Founder authorizes fixing the three dependency advisories found by F8 and rerunning local qualification. Work is owned by Codex without delegation; server Fleet, installed local runtimes and all real runs remain excluded. [Status](dependency-qualification-status-20261017.json), [completion evidence](reports/dependency-qualification-20261017.md) and [backport provenance/maintenance](../../vendor/security/README.md) record actual acceptance. Original backlog assignments and deferred production tasks remain unchanged.
+
 ## Optional A2A interface — 13 October 2026
 
 PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using shared rules and permissions. Default off; no fleet release, account, counter or schedule changes. See [setup](../api/a2a.md) and [implementation evidence](reports/optional-a2a-20261013.md).

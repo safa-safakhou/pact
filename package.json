@@ -32,21 +32,32 @@
     "dev:web": "npm run dev --workspace @pact/web",
     "preflight:operator": "node --import tsx services/api/src/operator-preflight-cli.ts",
     "play:baseline": "node --import tsx scripts/play-baseline.ts",
-    "lint": "biome check . && npm run check:boundaries && npm run check:build-order && npm run check:contracts",
+    "lint": "biome check . && npm run check:boundaries && npm run check:build-order && npm run check:contracts && npm run check:dependencies",
     "smoke": "vitest run --config vitest.integration.config.ts tests/smoke",
     "test": "vitest run --config vitest.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "typecheck": "tsc --noEmit -p tsconfig.check.json",
-    "eval:offline": "vitest run --config vitest.config.ts tests/unit/evaluation-plan.test.ts"
+    "eval:offline": "vitest run --config vitest.config.ts tests/unit/evaluation-plan.test.ts",
+    "check:dependencies": "node scripts/verify-security-backports.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
     "@types/node": "24.10.1",
     "tsx": "4.23.14",
     "typescript": "7.0.2",
-    "vitest": "5.0.1"
+    "vitest": "5.0.1",
+    "braces": "file:vendor/security/braces",
+    "node-forge": "file:vendor/security/node-forge",
+    "expo": "57.0.24"
   },
   "allowScripts": {
     "esbuild@0.28.2": true
+  },
+  "overrides": {
+    "braces": "$braces",
+    "node-forge": "$node-forge",
+    "xcode": {
+      "uuid": "11.1.1"
+    }
   }
 }

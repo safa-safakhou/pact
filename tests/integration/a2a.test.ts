@@ -75,6 +75,11 @@ async function fixture(targetPool = pool) {
     termsVersion: "terms-v1",
     providerRouter: new ProviderRouter([new DeterministicFakeProvider({ scenario: "success" })]),
   });
+  // No rules worker runs in this authorization fixture. Keep real wall time from
+  // changing the tested result into TICK_PENDING at the next minute boundary.
+  await pool.query(
+    "UPDATE world_clocks SET next_tick_due_at=clock_timestamp()+interval '1 hour' WHERE product_scope='pact'",
+  );
   const oauth = new OAuthService(pool, {
     productScope: "pact",
     issuer: origin,
@@ -178,6 +183,30 @@ function command(action: Record<string, unknown>, commandId = randomUUID()) {
 }
 
 describe("optional A2A with canonical authorization", () => {
+  it("keeps authorization fixtures independent of wall-clock tick rollover", async () => {
+    const initial = await fixture();
+    await initial.api.close();
+    await pool.query(
+      "UPDATE world_clocks SET next_tick_due_at=clock_timestamp()-interval '1 minute' WHERE product_scope='pact'",
+    );
+    const f = await fixture(),
+      a = await owner(),
+      b = await owner(),
+      t = await token(f.oauth, a.accountId);
+    try {
+      await send(f.api, t.accessToken, "run.open");
+      const result = await send(
+        f.api,
+        t.accessToken,
+        "pact_game_action_v2",
+        command({ kind: "game.contact.request", recipientKingdomId: b.kingdomId, note: "Rollover fixture" }),
+      );
+      expect(result.json()).toMatchObject({ result: { task: { status: { state: "TASK_STATE_COMPLETED" } } } });
+    } finally {
+      await f.api.close();
+    }
+  });
+
   it("is absent by default, advertises interfaces accurately, and disabled OAuth cannot enroll A2A", async () => {
     const api = buildServer(pool, false);
     try {

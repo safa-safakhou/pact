@@ -1,9 +1,32 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
   "files": {
-    "includes": ["**", "!!**/dist", "!!**/coverage", "!!.tmp", "!!node_modules", "!!docs", "!!product-discovery"]
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!!**/coverage",
+      "!!.tmp",
+      "!!node_modules",
+      "!!docs",
+      "!!product-discovery",
+      "!!vendor/security"
+    ]
   },
-  "formatter": { "enabled": true, "indentStyle": "space", "lineWidth": 120 },
-  "linter": { "enabled": true, "rules": { "preset": "recommended" } },
-  "javascript": { "formatter": { "quoteStyle": "double", "semicolons": "always" } }
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "lineWidth": 120
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  }
 }
