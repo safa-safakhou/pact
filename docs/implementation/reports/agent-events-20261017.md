@@ -17,7 +17,9 @@ The additive dated product correction covers runtime/architecture/access/privacy
 
 ## Verification
 
-Node24.12.0; dedicated loopback PostgreSQL17 fixture at5438/pact_test with per-suite isolated schemas. No installed Fleet/database credentials were used by tests.
+Node24.12.0; dedicated loopback PostgreSQL17 fixture at5438/pact_test with per-suite isolated schemas. No installed Fleet/database credentials were used by tests. The new suite honors the repository's `TEST_DATABASE_URL` and standard5432/pact_test default, accepting only a loopback `pact_test` database.
+
+For this machine's separate fixture: `docker run -d --name pact-phase2-test-db -e POSTGRES_USER=pact -e POSTGRES_PASSWORD=pact -e POSTGRES_DB=pact_test -p 127.0.0.1:5438:5432 postgres:17-alpine`. Build first (`npm run build`), then set `TEST_DATABASE_URL=postgres://pact:pact@127.0.0.1:5438/pact_test` for the commands below. The credentials are synthetic test-only values. If the owned fixture already exists, use `docker start pact-phase2-test-db`; stop that fixture after checks. Installed Fleet uses a different database and was never a test target.
 
 | Command | Result |
 | --- | --- |

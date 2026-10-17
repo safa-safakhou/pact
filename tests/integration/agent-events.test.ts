@@ -24,9 +24,11 @@ let now = new Date("2026-10-17T08:00:00Z");
 beforeEach(() => {
   now = new Date("2026-10-17T08:00:00Z");
 });
-const url = process.env.TEST_DATABASE_URL!;
+const url = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test";
 beforeAll(async () => {
-  if (!url?.includes("127.0.0.1:5438/pact_test")) throw new Error("isolated phase2 test database required");
+  const target = new URL(url);
+  if (!["127.0.0.1", "localhost", "[::1]"].includes(target.hostname) || target.pathname !== "/pact_test")
+    throw new Error("ISOLATED_TEST_DATABASE_REQUIRED");
   admin = createPool(url);
   schema = await createTestSchema(admin, "agent_events");
   pool = createSchemaPool(url, schema);
