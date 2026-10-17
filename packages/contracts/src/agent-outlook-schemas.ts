@@ -63,6 +63,7 @@ export const AgentOutlookSchema = z
             fulfilment: z.enum(["pending", "fulfilled", "defaulted", "cancelled", "unknown"]),
             status: z.string().max(40),
             dueGameTimeMs: time.nullable(),
+            settledGameTimeMs: time.nullable(),
             authorityExposureUnits: z.record(z.string().max(20), units),
             hostFoodExposure: z
               .object({
@@ -116,6 +117,7 @@ export const AgentOutlookSchema = z
             id: z.uuid(),
             kind: z.literal("battle"),
             result: z.enum(["won", "lost", "unknown"]),
+            gameTimeMs: time,
             sourceRefs: refs,
           })
           .strict(),

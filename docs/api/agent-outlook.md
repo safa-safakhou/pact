@@ -9,3 +9,7 @@ The projection reuses exact game forecast, exposure and admission formulas. Ordi
 Construction/training admission, material fulfilment, defaults and own battle results remain separate. Natural garrison expiry without default is fulfilled; mutual release is cancelled. Retained supply aggregates do not prove complete lifetime coverage: closed non-default supply remains unknown. Active threats include deadlines but never hidden enemy strength or intent. No trust/survival score, ally preference, forced communication or strategic ranking is supplied. Per-action feasibility is unranked and grants no permission; command handlers revalidate actual stock, authority, floors, versions and prerequisites.
 
 Coverage is bounded (latest20 construction/supply/garrison/battle records, active training, existing threat limits), incomplete-world and owner-scoped. Missing/omitted records prove no outcome. Forecasts assume stated funding and current rates; they do not predict future peer choices, battle dice, future construction or all defaults. Fleet may derive subjective hypotheses from these facts, separately from owner values.
+
+Settlement timestamps are authoritative when present. Supply closure time remains unavailable in this projection. Historical outcomes cannot test a prediction made later; consumers must compare occurrence and observation times.
+
+`coverage.garrisonOmitted` uses a bounded sentinel query:0 or1 is a lower bound, not the total number of older rows. Other retained-history caps are not exhaustive counts.

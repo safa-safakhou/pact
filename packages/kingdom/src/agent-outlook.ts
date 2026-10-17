@@ -53,8 +53,9 @@ export class AgentOutlookService {
             lender_default: boolean;
             host_default: boolean;
             close_reason: string | null;
+            closed_game_time_ms: string | null;
           }>(
-            "SELECT id,lender_kingdom_id,host_kingdom_id,terms,status,end_game_time_ms::text,lender_default,host_default,close_reason FROM garrison_contracts WHERE product_scope=$1 AND (lender_kingdom_id=$2 OR host_kingdom_id=$2) ORDER BY start_game_time_ms DESC,id DESC LIMIT 21",
+            "SELECT id,lender_kingdom_id,host_kingdom_id,terms,status,end_game_time_ms::text,lender_default,host_default,close_reason,closed_game_time_ms::text FROM garrison_contracts WHERE product_scope=$1 AND (lender_kingdom_id=$2 OR host_kingdom_id=$2) ORDER BY start_game_time_ms DESC,id DESC LIMIT 21",
             [this.scope, view.profile.kingdomId],
           )
         ).rows;
@@ -81,6 +82,7 @@ export class AgentOutlookService {
                   : "pending",
             status: row.state,
             dueGameTimeMs: row.dueGameTimeMs === null ? null : String(row.dueGameTimeMs),
+            settledGameTimeMs: row.settledGameTimeMs === null ? null : String(row.settledGameTimeMs),
             authorityExposureUnits: {},
             hostFoodExposure: null,
             sourceRefs: source("construction", row.id),
@@ -94,6 +96,7 @@ export class AgentOutlookService {
             fulfilment: row.completedCount >= row.requestedCount ? "fulfilled" : "pending",
             status: "active",
             dueGameTimeMs: String(row.nextUnitDueGameTimeMs),
+            settledGameTimeMs: null,
             authorityExposureUnits: {},
             hostFoodExposure: null,
             sourceRefs: source("training", row.batchId),
@@ -125,6 +128,7 @@ export class AgentOutlookService {
                     : "unknown",
             status: row.status,
             dueGameTimeMs: String(row.noticeEndGameTimeMs ?? row.endGameTimeMs),
+            settledGameTimeMs: null,
             authorityExposureUnits: Object.fromEntries(Object.entries(exposure).map(([k, v]) => [k, String(v)])),
             hostFoodExposure: null,
             sourceRefs: source("supply-contract", row.id),
@@ -181,6 +185,7 @@ export class AgentOutlookService {
                       : "unknown",
             status: row.status,
             dueGameTimeMs: row.end_game_time_ms,
+            settledGameTimeMs: row.closed_game_time_ms,
             authorityExposureUnits: exposure,
             hostFoodExposure: host
               ? {
@@ -218,14 +223,15 @@ export class AgentOutlookService {
           };
         });
         const battles = (
-          await c.query<{ id: string; leader_kingdom_id: string; winner: string | null }>(
-            "SELECT id,leader_kingdom_id,public_report->>'winner' AS winner FROM raids WHERE product_scope=$1 AND (leader_kingdom_id=$2 OR target_kingdom_id=$2) AND status='resolved' AND resolved_game_time_ms IS NOT NULL ORDER BY resolved_game_time_ms DESC,id DESC LIMIT 20",
+          await c.query<{ id: string; leader_kingdom_id: string; winner: string | null; game_time_ms: string }>(
+            "SELECT id,leader_kingdom_id,public_report->>'winner' AS winner,resolved_game_time_ms::text AS game_time_ms FROM raids WHERE product_scope=$1 AND (leader_kingdom_id=$2 OR target_kingdom_id=$2) AND status='resolved' AND resolved_game_time_ms IS NOT NULL ORDER BY resolved_game_time_ms DESC,id DESC LIMIT 20",
             [this.scope, view.profile.kingdomId],
           )
         ).rows;
         const outcomes = battles.map((row) => ({
           id: row.id,
           kind: "battle" as const,
+          gameTimeMs: row.game_time_ms,
           result:
             row.winner === "attacker" || row.winner === "defender"
               ? (row.leader_kingdom_id === view.profile.kingdomId) === (row.winner === "attacker")

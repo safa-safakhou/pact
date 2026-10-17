@@ -9,3 +9,5 @@ Verification with Node24.12.0 and isolated loopback5438/pact_test: full build/ty
 Plan choice: read is separately versioned/default-off, so existing observation-section enums/tool catalogs stay unchanged. Full signed garrison exposure includes its bond; conditional resource forecasts already include current visitor upkeep. Runtime/current cohorts/recovery blocks remain untouched. Source verification does not establish live model quality or performance under long retained histories.
 
 Next dependency-ready package: Fleet F5 grounded continuity. F6 specialists/F7 product UI remain later phases.
+
+F5 integration review added authoritative construction/garrison settlement and battle occurrence timestamps to the new contract, preventing retrospective prediction tests. Supply closure time stays null rather than inferred. Full build/type/lint,388 unit and453 integration checks were rerun successfully after this correction. `garrisonOmitted` is a sentinel lower bound (0 or1), not a count of all older rows. A synthetic snapshot from the actual P2 service is retained in Fleet's offline adapter fixtures; no live data is copied.

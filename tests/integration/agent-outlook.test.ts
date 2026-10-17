@@ -126,7 +126,7 @@ it("separates fulfilled assistance from a lost battle and does not claim early r
   );
   const v = await outlook.readOwner(host);
   expect(v.commitments.find((c) => c.id === contract)?.fulfilment).toBe("fulfilled");
-  expect(v.outcomes).toContainEqual(expect.objectContaining({ id: raid, result: "lost" }));
+  expect(v.outcomes).toContainEqual(expect.objectContaining({ id: raid, result: "lost", gameTimeMs: "1200000" }));
   expect(JSON.stringify(v)).not.toContain("PRIVATE");
   expect((await outlook.readOwner(lender)).outcomes).toHaveLength(0);
   await pool.query("UPDATE garrison_contracts SET close_reason='mutual_release' WHERE id=$1", [contract]);
