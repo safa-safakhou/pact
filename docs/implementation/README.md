@@ -1,3 +1,7 @@
+## Fleet disabled local installation — 18 October 2026
+
+The founder separately authorized [installing verified Fleet locally with execution disabled](reports/fleet-disabled-local-install-20261018.md). PACT application/runtime unchanged; server Fleet/new runs excluded. Original accounts/history/recovery gates remain preserved; no backlog/deferred task is activated.
+
 ## Fleet local release rehearsal — 18 October 2026
 
 The separately authorized [local operational rehearsal](reports/fleet-local-release-rehearsal-20261018.md) passed encrypted restore, disabled source rollback and temporary fencing without PACT source/runtime changes, server contact or new runs. Original local Fleet release/history/recovery gates remain preserved. No new tracker/deferred-roadmap assignment is selected.

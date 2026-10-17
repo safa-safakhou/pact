@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fleet disabled local installation](fleet-disabled-local-install-20261018.md) — fresh snapshot, protected migration, verified selected artifact and persistent execution disable; server/new runs excluded.
+
 - [Fleet local release rehearsal](fleet-local-release-rehearsal-20261018.md) — authenticated local restore, disabled source rollback and temporary fencing; server/new runs excluded.
 
 - [P2 factual owner outlook](agent-outlook-20261017.md) — phase3 source/offline projection and verification.
