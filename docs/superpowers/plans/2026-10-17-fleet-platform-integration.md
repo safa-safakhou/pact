@@ -18,7 +18,7 @@
 - PACT notification/rules workers do not call models, and the exclusive write lease remains.
 - Private relationship models stay in Fleet; no global trust score or prescribed reply/coalition behavior is added.
 - Current economics, troop ownership, persistent buildings, rolling authority, exact approvals and command receipts remain unchanged.
-- All work here is proposed. New local work-package IDs P1–P3 are not tracker issues or modifications of historical AR-P tasks. Before implementation, record a covering assignment and reconcile actual tracker/assignee/dependencies. Saving this plan does not change product specifications or their hashes.
+- P1 is authorized and source-verified under the founder’s phase2 assignment; P2/P3 remain proposed future work. Local work-package IDs P1–P3 are not tracker issues or modifications of historical AR-P tasks. The local status register records actual assignment/dependencies. P1 includes the dated product correction; saving the original plan alone did not change specifications.
 
 ## Review focus
 
