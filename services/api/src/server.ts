@@ -5,6 +5,7 @@ import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
 import type { InboxService, NotificationService } from "@pact/inbox";
 import type { InvitationService, KingdomService, SocialOverviewReader, WorldViewService } from "@pact/kingdom";
+import { agentEventCoverage } from "@pact/kingdom";
 import type { McpTransport } from "@pact/mcp";
 import type { OAuthService } from "@pact/oauth";
 import type { OnboardingService } from "@pact/onboarding";
@@ -25,6 +26,7 @@ import type { Pool } from "pg";
 import { PactA2AHandler, registerA2ARoutes } from "./a2a.js";
 import type { AdminReader } from "./admin-reader.js";
 import { type AdminSetup, registerAdminRoutes } from "./admin-routes.js";
+import { registerAgentEventRoutes } from "./agent-event-routes.js";
 import { registerCapabilityRoutes } from "./capability-routes.js";
 import { registerChronicleRoutes } from "./chronicle-routes.js";
 import { registerCommandRoutes } from "./command-routes.js";
@@ -99,6 +101,7 @@ export interface ApiModules {
   a2aBaseUrl?: string;
   approvals?: ApprovalService;
   inbox?: InboxService;
+  agentEvents?: import("@pact/inbox").AgentEventService;
   notifications?: NotificationService;
   moderation?: import("@pact/kingdom").ModerationService;
   webPushPublicKey?: string | undefined;
@@ -178,6 +181,14 @@ export function buildServer(
       toolCalling: {
         enabled: Boolean(modules?.mcp),
         description: "Canonical game schemas via MCP or @pact/contracts; model-side tool calling is optional",
+      },
+      agentEvents: {
+        enabled: Boolean(modules?.agentEvents),
+        schemaVersion: modules?.agentEvents ? "pact.agent-events.v1" : null,
+        delivery: "poll",
+        parallelReasoning: false,
+        sourceTypes: modules?.agentEvents ? Object.keys(agentEventCoverage) : [],
+        completeWorld: false,
       },
       a2a: {
         enabled: a2a,
@@ -270,6 +281,7 @@ export function buildServer(
       );
     if (modules.notifications)
       registerNotificationRoutes(server, modules.identity, modules.notifications, modules.webPushPublicKey);
+    if (modules.agentEvents) registerAgentEventRoutes(server, modules.identity, modules.agentEvents, modules.oauth);
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);
     if (modules.runs) registerRunRoutes(server, modules.identity, modules.runs, modules.externalActivity);

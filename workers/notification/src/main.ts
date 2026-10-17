@@ -1,11 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { claimOutboxDelivery, createPool, markOutboxDelivered } from "@pact/db";
 import { AesGcmSecretBox } from "@pact/identity";
-import { InboxService, NotificationService } from "@pact/inbox";
-import { GameNotificationProjector, gameNotificationCategories } from "@pact/kingdom";
+import { AgentEventService, InboxService, NotificationService } from "@pact/inbox";
+import { AgentEventProjector, GameNotificationProjector, gameNotificationCategories } from "@pact/kingdom";
 import { WorldClockService } from "@pact/world";
 import nodemailer from "nodemailer";
 import type { PoolClient } from "pg";
+import { agentEventBatch } from "./agent-events.js";
 import { independentNotificationBatch } from "./batch.js";
 import { parseSecurityEmailPayload, renderSecurityEmail } from "./email.js";
 import { smtpGamePort, webPushPort } from "./game-delivery.js";
@@ -16,12 +17,12 @@ const databaseUrl = process.env.DATABASE_URL;
 const publicBaseUrl = (process.env.PACT_PUBLIC_BASE_URL ?? process.env.PACT_ORIGIN ?? "").replace(/\/$/, "");
 const from = process.env.SMTP_FROM ?? "PACT MVP <noreply@safa.dedyn.io>";
 
-if (!smtpUrl || !encryptionKey || !databaseUrl || !publicBaseUrl) {
-  throw new Error("Notification worker requires SMTP_URL, identity encryption, database, and public URL configuration");
+if (!encryptionKey || !databaseUrl || !publicBaseUrl) {
+  throw new Error("Notification worker requires identity encryption, database, and public URL configuration");
 }
 
 const pool = createPool(databaseUrl);
-const transport = nodemailer.createTransport(smtpUrl);
+const transport = smtpUrl ? nodemailer.createTransport(smtpUrl) : undefined;
 const secretBox = new AesGcmSecretBox(Buffer.from(encryptionKey, "base64url"));
 const workerId = `notification-${randomUUID()}`;
 const consumer = "security-email-v1";
@@ -44,7 +45,7 @@ const projector = new GameNotificationProjector(pool, {
     enqueue: (client, input) => notifications.enqueue(client, input),
   },
 });
-const ports = [smtpGamePort(transport, from)];
+const ports = transport ? [smtpGamePort(transport, from)] : [];
 if (process.env.WEB_PUSH_PUBLIC_KEY && process.env.WEB_PUSH_PRIVATE_KEY && process.env.WEB_PUSH_SUBJECT)
   ports.push(
     webPushPort({
@@ -53,6 +54,19 @@ if (process.env.WEB_PUSH_PUBLIC_KEY && process.env.WEB_PUSH_PRIVATE_KEY && proce
       subject: process.env.WEB_PUSH_SUBJECT,
     }),
   );
+const agentProjector = new AgentEventProjector(pool, {
+  productScope: "pact",
+  clock,
+  publish: (c, input) => agentFeed.publishForAccount(c, input),
+});
+const agentFeed = new AgentEventService(pool, {
+  productScope: "pact",
+  worldScope: publicBaseUrl,
+  clock,
+  cursorKey: Buffer.from(encryptionKey, "base64url"),
+  authorizeOwner: (c, account) => agentProjector.authorizeOwner(c, account),
+  authorize: (c, account, event) => agentProjector.authorized(c, account, event),
+});
 let stopping = false;
 
 interface CandidateRow {
@@ -79,6 +93,7 @@ async function claim(client: PoolClient, eventId: string): Promise<boolean> {
 }
 
 async function deliverBatch(): Promise<number> {
+  if (!transport) return 0;
   const candidates = await pool.query<CandidateRow>(
     `SELECT e.event_id, e.payload, a.email AS account_email
        FROM outbox_events e
@@ -129,39 +144,46 @@ async function deliverBatch(): Promise<number> {
 }
 
 async function run(): Promise<void> {
-  console.log(JSON.stringify({ event: "notification.ready", adapter: "smtp" }));
+  console.log(JSON.stringify({ event: "notification.ready", adapter: transport ? "smtp" : "disabled" }));
   while (!stopping) {
-    const delivered = await independentNotificationBatch(
-      deliverBatch,
-      async () => {
-        await projector.project();
-        await notifications.projectInbox({ "approval.requested.v1": "approval" });
-        await projector.expiryNotices();
-        return notifications.deliverBatch(ports, workerId);
-      },
-      (phase, error) =>
-        console.error(
-          JSON.stringify({
-            event: "notification.batch_failed",
-            phase,
-            code:
-              error &&
-              typeof error === "object" &&
-              "code" in error &&
-              typeof error.code === "string" &&
-              /^[A-Z0-9_]+$/.test(error.code)
-                ? error.code
-                : "DELIVERY_FAILED",
-          }),
-        ),
+    const agentDelivered = await agentEventBatch(
+      process.env.PACT_AGENT_EVENTS_ENABLED === "1",
+      () => agentProjector.processBatch(),
+      () => console.error(JSON.stringify({ event: "agent_events.batch_failed" })),
     );
+    const delivered =
+      agentDelivered +
+      (await independentNotificationBatch(
+        deliverBatch,
+        async () => {
+          await projector.project();
+          await notifications.projectInbox({ "approval.requested.v1": "approval" });
+          await projector.expiryNotices();
+          return notifications.deliverBatch(ports, workerId);
+        },
+        (phase, error) =>
+          console.error(
+            JSON.stringify({
+              event: "notification.batch_failed",
+              phase,
+              code:
+                error &&
+                typeof error === "object" &&
+                "code" in error &&
+                typeof error.code === "string" &&
+                /^[A-Z0-9_]+$/.test(error.code)
+                  ? error.code
+                  : "DELIVERY_FAILED",
+            }),
+          ),
+      ));
     if (delivered === 0) await new Promise((resolve) => setTimeout(resolve, 2_000));
   }
 }
 
 async function shutdown(): Promise<void> {
   stopping = true;
-  transport.close();
+  transport?.close();
   await pool.end();
 }
 

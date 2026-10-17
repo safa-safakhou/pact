@@ -11,6 +11,7 @@ import {
   commandJsonSchema,
   type EnrollmentQuery,
   type KingdomDiscoveryQuery,
+  pactAgentEventsTool,
   pactAgentGuideTool,
   pactApprovalProposalTool,
   pactApprovalProposalV2Tool,
@@ -92,6 +93,7 @@ export interface McpJsonRpcRequest {
 }
 
 export interface McpTransportOptions {
+  readonly agentEvents?: NonNullable<import("@pact/application").AgentOperationOptions["agentEvents"]>;
   readonly persistentPlay?: { read(accountId: string, query?: EnrollmentQuery): Promise<unknown> };
   readonly privateMemory?: {
     read(accountId: string, query: unknown): Promise<unknown>;
@@ -372,6 +374,9 @@ export class McpTransport {
                 : []),
               ...(this.options.reports && principal.agentScopes?.includes("world:read") ? [pactReportReadTool] : []),
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
+              ...(this.options.agentEvents && principal.agentScopes?.includes("world:read")
+                ? [pactAgentEventsTool]
+                : []),
               ...(this.options.conversations && principal.agentScopes?.includes("world:read")
                 ? [pactConversationReadTool]
                 : []),

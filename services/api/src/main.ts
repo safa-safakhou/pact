@@ -25,9 +25,10 @@ import {
   LocalCompromisedPasswordChecker,
   TokenDigester,
 } from "@pact/identity";
-import { InboxService, NotificationService } from "@pact/inbox";
+import { AgentEventService, InboxService, NotificationService } from "@pact/inbox";
 import {
   ActionLimitService,
+  AgentEventProjector,
   BuildingEngine,
   ChronicleOutcomeReader,
   ChronicleService,
@@ -142,6 +143,21 @@ const moderation = new ModerationService(pool, {
   clock,
   secretBox: new AesGcmSecretBox(Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url")),
   closeAccount: (accountId) => privacy.requestDeletion(accountId),
+});
+const agentEventProjector = new AgentEventProjector(pool, {
+  productScope: "pact",
+  clock,
+  publish: async (c, input) => {
+    if (agentEvents) await agentEvents.publishForAccount(c, input);
+  },
+});
+const agentEvents = new AgentEventService(pool, {
+  productScope: "pact",
+  worldScope: publicBaseUrl,
+  clock,
+  cursorKey: Buffer.from(environment.IDENTITY_ENCRYPTION_KEY, "base64url"),
+  authorizeOwner: (c, account) => agentEventProjector.authorizeOwner(c, account),
+  authorize: (c, account, event) => agentEventProjector.authorized(c, account, event),
 });
 const inbox = new InboxService(pool, { productScope: "pact", clock });
 const runs = new RunService(pool, {
@@ -387,6 +403,7 @@ const mcp = new McpTransport({
   },
   reports,
   inbox,
+  ...(process.env.PACT_AGENT_EVENTS_ENABLED === "1" ? { agentEvents } : {}),
   conversations: new ConversationReader(pool, "pact"),
   approvals: new ApprovalStatusReader(pool, "pact", clock, new URL(publicBaseUrl).pathname),
   approvalProposals: approvals,
@@ -450,6 +467,7 @@ const privacy = new PrivacyService(pool, {
     externalActivity.retention,
     council.retention,
     notifications.retention,
+    agentEvents.retention,
     moderation.retention,
     social.retention,
     council.history.retention,
@@ -684,6 +702,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   a2aBaseUrl: publicBaseUrl,
   approvals,
   inbox,
+  ...(process.env.PACT_AGENT_EVENTS_ENABLED === "1" ? { agentEvents } : {}),
   runs,
   externalActivity,
   openRouter,

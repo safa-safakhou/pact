@@ -1,5 +1,10 @@
 # PACT engineering instructions
 
+## Fleet platform phase2 — 17 October 2026
+
+Founder authorizes P1 then Fleet F4 source/offline implementation, with existing local/server runtimes and recovery gates unchanged. Read `docs/implementation/fleet-platform-status-20261017.json` and `docs/api/agent-events.md`. No delegation, push, installation, new model experiment or cohort enrollment. P2/F5 remain future scope.
+
+
 ## Local reboot recovery — 15 October 2026
 
 Founder reported a complete computer restart and explicitly requested running the same local20 again. Exact twenty reboot interruptions were reviewed with original unknown40000 allocations and history retained; Windows Ollama was restarted with its prior process settings and missing certified Laya helper files restored from the previous verified installation. Same accounts, runtime243d9e4, generation18, five-minute anchor, models/allowances and terminal populations remain. Read [docs/implementation/reports/local-reboot-recovery-20261015.md](docs/implementation/reports/local-reboot-recovery-20261015.md) for preservation and scheduled acceptance. No blanket future unknown review or new experiment is authorized.

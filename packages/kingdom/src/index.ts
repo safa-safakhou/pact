@@ -1,6 +1,7 @@
 export * from "./achievements.js";
 export * from "./action-limits.js";
 export * from "./admin-insights.js";
+export * from "./agent-events.js";
 export * from "./building-rules.js";
 export * from "./buildings.js";
 export * from "./chronicle.js";

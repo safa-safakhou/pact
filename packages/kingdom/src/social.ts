@@ -327,6 +327,7 @@ export class SocialService {
     );
     await this.emit(client, "contact.requested.v1", {
       requestId,
+      gameTimeMs: input.gameTimeMs,
       senderKingdomId: sender,
       recipientKingdomId: input.recipientKingdomId,
     });
@@ -409,6 +410,7 @@ export class SocialService {
     ]);
     await this.emit(client, input.accept ? "contact.accepted.v1" : "contact.declined.v1", {
       requestId: input.requestId,
+      gameTimeMs: input.gameTimeMs,
     });
   }
 

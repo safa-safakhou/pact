@@ -223,6 +223,7 @@ export class GarrisonService {
     );
     await this.emit(client, "garrison.offer.created.v1", {
       offerId: input.offerId,
+      gameTimeMs: input.gameTimeMs,
       lenderId,
       hostId: input.hostKingdomId,
     });
@@ -412,6 +413,7 @@ export class GarrisonService {
     await client.query("UPDATE garrison_offers SET status = 'active' WHERE id = $1", [offer.id]);
     await this.emit(client, "garrison.contract.activated.v1", {
       contractId: id,
+      gameTimeMs,
       offerId: offer.id,
       startGameTimeMs: start,
       endGameTimeMs: end,

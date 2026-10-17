@@ -101,6 +101,7 @@ describe("API/database smoke", () => {
       { name: "0068_refresh_recovery.sql" },
       { name: "0069_model_attempts.sql" },
       { name: "0070_operational_clock_recovery.sql" },
+      { name: "0071_agent_events.sql" },
     ]);
     await server.close();
   });

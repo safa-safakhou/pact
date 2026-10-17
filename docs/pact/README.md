@@ -68,3 +68,7 @@ This baseline fixes implementation decisions. Provider certification, security c
 ## Optional agent interfaces correction — 13 October 2026
 
 PACT-168 adds optional A2A alongside API, MCP and tool calling with shared game rules/permissions. It is disabled by default and locally verified, not deployed. The dated architecture/access/runtime/privacy corrections own this additive interface; the baseline economy and historical external-client certification remain unchanged. See [setup](../api/a2a.md) and [completion evidence](../implementation/reports/optional-a2a-20261013.md). Existing agents, accounts, counters, grants, models and schedules are preserved.
+
+## Scoped agent events correction — 17 October 2026
+
+P1 adds an optional default-off owner metadata feed for separately enrolled external hosts. The dated runtime/architecture/access/privacy corrections and [API/source coverage](../api/agent-events.md) own this additive behavior. [Source acceptance](../implementation/reports/agent-events-20261017.md) is separate from installation or a new run. Existing game rules, engines, cohorts and inference authority remain unchanged.

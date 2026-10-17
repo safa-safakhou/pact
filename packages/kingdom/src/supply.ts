@@ -231,7 +231,11 @@ export class SupplyService {
       "INSERT INTO supply_offer_versions(product_scope,offer_id,version,terms,expires_game_time_ms,observed_game_time_ms,proposed_by) VALUES($1,$2,1,$3,$4,$5,$6)",
       [this.productScope, input.offerId, input.terms, offer.expires_game_time_ms, input.gameTimeMs, party],
     );
-    await this.emit(client, "supply.offer.created.v1", { offerId: input.offerId, version: 1 });
+    await this.emit(client, "supply.offer.created.v1", {
+      offerId: input.offerId,
+      version: 1,
+      gameTimeMs: input.gameTimeMs,
+    });
     return { id: input.offerId, version: 1 };
   }
 
@@ -286,7 +290,11 @@ export class SupplyService {
         party,
       ],
     );
-    await this.emit(client, "supply.offer.countered.v1", { offerId: offer.id, version: offer.version + 1 });
+    await this.emit(client, "supply.offer.countered.v1", {
+      offerId: offer.id,
+      version: offer.version + 1,
+      gameTimeMs: input.gameTimeMs,
+    });
     return offer.version + 1;
   }
 
@@ -461,6 +469,7 @@ export class SupplyService {
     await client.query("UPDATE supply_offers SET status = 'active' WHERE id = $1", [offer.id]);
     await this.emit(client, "supply.contract.activated.v1", {
       contractId: id,
+      gameTimeMs,
       offerId: offer.id,
       version: offer.version,
       startGameTimeMs: start,
@@ -493,7 +502,7 @@ export class SupplyService {
       "UPDATE supply_offers SET status = 'withdrawn', updated_game_time_ms = $2, closed_at = clock_timestamp() WHERE id = $1",
       [offer.id, gameTimeMs],
     );
-    await this.emit(client, "supply.offer.withdrawn.v1", { offerId });
+    await this.emit(client, "supply.offer.withdrawn.v1", { offerId, gameTimeMs });
   }
 
   async expireOffers(client: PoolClient, gameTimeMs: number): Promise<number> {
