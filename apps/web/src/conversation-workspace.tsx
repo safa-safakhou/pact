@@ -153,9 +153,18 @@ export function AgreementTracks({
         </article>
       ))}
       {group.contracts.map((c) => (
-        <article className="cw-agreement" key={c.id}>
+        <article className="cw-agreement" key={c.id} id={`agreement-${c.id}`}>
           <span className="cw-tag">Engine contract · {c.status}</span>
           <h3>{"youSend" in c ? "Supply" : "Garrison"} obligations</h3>
+          <p className="cw-muted">
+            Admission does not establish fulfilment. A recorded default does not prove motive; a fulfilled obligation
+            does not guarantee a won battle.
+          </p>
+          <a
+            href={`?conversation=${encodeURIComponent(group.kingdomId)}&conversationPanel=agreements#agreement-${encodeURIComponent(c.id)}`}
+          >
+            Link to this authorized record
+          </a>
           {"youSend" in c && (
             <p>
               You send {flow(c.youSend)}

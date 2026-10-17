@@ -1,3 +1,7 @@
+# Fleet platform P3 — 17 October 2026
+
+Founder requested Fleet F7 and PACT P3 with local tests and server Fleet untouched. P3 is source/offline verified:389 unit and465 integration checks pass,1 existing optional skip, build/type/lint/contracts/boundaries/eval/backlog pass. Read `docs/implementation/reports/agent-engine-scenarios-20261017.md` and `docs/operations/agent-engine-compatibility.md`. Six frozen scenarios use scripted synthetic decisions and normal receipts/outbox/ticks; they do not certify provider skill. Existing runtime releases, identities/history/allocations/anchors/recovery gates and default-off flags remain unchanged. No delegation, push, deployment, server Fleet contact, new live run or review is authorized. F8 is future release qualification.
+
 # PACT phase3 source acceptance — 17 October 2026
 
 P2 owner factual outlook is source/offline verified; read `docs/implementation/reports/agent-outlook-20261017.md`. Optional default-off read reuses exact domain formulas and authenticated ownership. No game runtime, server Fleet or installed local Fleet changed; no new experiments, enrollment, recovery review, deployment or push. Fleet F5 is the companion phase3 package. Existing preservation instructions below remain applicable.

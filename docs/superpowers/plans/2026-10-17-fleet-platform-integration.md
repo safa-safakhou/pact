@@ -127,7 +127,7 @@ P1 source acceptance: [event feed report](../../implementation/reports/agent-eve
 
 **Interfaces:** Extend the existing isolated-world scenario registration with `threat-help`, `costly-help`, `unneeded-help`, `early-recall`, `food-pressure` and `silence-valid` scenarios. All scenario IDs have frozen starting conditions, rules/clock/random inputs, expected observable outcomes and a declared split. `readScenarioOutcome(world, actor): Promise<OutcomeEvidence>` returns authoritative losses, upkeep/shortage duration, due/fulfilled/defaulted obligations and source IDs, without asserting motives or agent intelligence. World/actor types remain owned by the current evaluation harness; Fleet consumes exported versioned evidence, not these source types.
 
-- [ ] Write red integration assertions that Cedar can receive authorized reinforcements before the existing raid lock; a fulfilled garrison and lost battle can coexist; early recall is a recorded default without proving motive; and waiting can be valid when help is unnecessary.
+- [x] Write red integration assertions that Cedar can receive authorized reinforcements before the existing raid lock; a fulfilled garrison and lost battle can coexist; early recall is a recorded default without proving motive; and waiting can be valid when help is unnecessary.
 
   ```ts
   expect(battle.resolutionMinutes).toBe(20);
@@ -138,11 +138,13 @@ P1 source acceptance: [event feed report](../../implementation/reports/agent-eve
   expect(waitScenario.requiresMessage).toBe(false);
   ```
 
-- [ ] Run `npm run eval:offline` and the new focused integration suites to red. Freeze fixtures before inspecting model performance; deterministic fake decisions prove only game/plumbing behavior.
-- [ ] Implement the scenarios with the existing pure rules, committed receipts, visibility and outbox pipeline. Keep actual mechanics: lender needs Hall III; host accepts food/return obligations; assignment is immediate; separate payment supply contracts are not magically atomic with a garrison; raid locks five minutes before its twenty-minute resolution; buildings remain intact. Set synthetic permissions/capacity explicitly so a prohibited action is not scored as agent failure.
-- [ ] Extend outcome exports and compatibility documentation. Support recorded playback without inference and separately created sandbox branches; a seed does not guarantee identical LLM decisions. For optional cross-engine comparisons, distinguish one interacting world from independent replicas and report metric definitions/denominators/coverage. Do not publish private peer text through a report.
-- [ ] Run `npm run test`, `npm run test:integration`, `npm run typecheck`, `npm run check:contracts`, `npm run check:boundaries`, `npm run build`, `npm run eval:offline`, and `python3 docs/implementation/backlog.py check` on documented isolated setups. Record actual results and compatibility versions. External/provider acceptance stays distinct from these checks.
-- [ ] Commit P3 and a completion report. Prepare exact source releases, disabled/default-off flags, state preservation and rollback with Fleet F8. A new twenty-account/week-long comparison still needs its own exact accounts, cap, duration and launch authorization; none is created here.
+- [x] Run `npm run eval:offline` and the new focused integration suites to red. Freeze fixtures before inspecting model performance; deterministic fake decisions prove only game/plumbing behavior.
+- [x] Implement the scenarios with the existing pure rules, committed receipts, visibility and outbox pipeline. Keep actual mechanics: lender needs Hall III; host accepts food/return obligations; assignment is immediate; separate payment supply contracts are not magically atomic with a garrison; raid locks five minutes before its twenty-minute resolution; buildings remain intact. Set synthetic permissions/capacity explicitly so a prohibited action is not scored as agent failure.
+- [x] Extend outcome exports and compatibility documentation. Support recorded playback without inference and separately created sandbox branches; a seed does not guarantee identical LLM decisions. For optional cross-engine comparisons, distinguish one interacting world from independent replicas and report metric definitions/denominators/coverage. Do not publish private peer text through a report.
+- [x] Run `npm run test`, `npm run test:integration`, `npm run typecheck`, `npm run check:contracts`, `npm run check:boundaries`, `npm run build`, `npm run eval:offline`, and `python3 docs/implementation/backlog.py check` on documented isolated setups. Record actual results and compatibility versions. External/provider acceptance stays distinct from these checks.
+- [x] Commit P3 and a completion report. Prepare exact source releases, disabled/default-off flags, state preservation and rollback with Fleet F8. A new twenty-account/week-long comparison still needs its own exact accounts, cap, duration and launch authorization; none is created here.
+
+P3 source/offline evidence: [completion report](../../implementation/reports/agent-engine-scenarios-20261017.md). No live/provider acceptance or release proposal is claimed; those remain F8.
 
 ## Product evolution kept separate
 
