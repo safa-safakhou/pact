@@ -1,3 +1,7 @@
+## Fleet local provider qualification —18 October2026
+
+The separately authorized [local qualification](reports/fleet-local-provider-qualification-20261018.md) built/tested the isolated Fleet harness, then stopped at Q1 after the second empty final response:2 executions/80000 reserved tokens,402 reported,0 unknown. Q2 did not start. Installed Fleet remains disabled and server/game/reset/population boundaries unchanged; no PACT implementation ticket or deferred task is activated.
+
 ## Provider qualification and fresh-world planning —18 October2026
 
 The founder-requested [budgeted qualification/mixed-world plan](reports/provider-qualification-world-plan-20261018.md) proposes100 server Luna and four local groups while preserving current histories. This is planning only: server/new runs/reset/implementation remain excluded. Local installed Fleet stays disabled; no tracker/deferred work is activated.

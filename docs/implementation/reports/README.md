@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fleet local provider qualification](fleet-local-provider-qualification-20261018.md) — harness/offline checks passed; actual Q1 failed after2 executions, Q2 not started; installed execution disabled and server/game/populations untouched.
+
 - [Provider qualification and fresh-world planning](provider-qualification-world-plan-20261018.md) — proposed model budgets and100 Luna+mixed-local world; no execution/reset authority.
 
 - [Fleet disabled local installation](fleet-disabled-local-install-20261018.md) — fresh snapshot, protected migration, verified selected artifact and persistent execution disable; server/new runs excluded.
