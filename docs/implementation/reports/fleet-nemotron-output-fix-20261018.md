@@ -21,3 +21,6 @@ All38 retained installed-table fingerprints match: same953034e release,20 blocke
 Original encrypted backup/key retained. A new authenticated14,032,801-byte post-diagnosis encrypted archive preserves both controls/mappings (268 readable TOC entries), with key outside artifacts; this is archive readability/authentication, not another full restore rehearsal. Raw provider thinking is not retained or exposed. Companion Fleet `docs/nemotron-empty-output-fix-20261018.md` and status own exact source/approval/budget evidence; private root `/home/mnim/.local/share/fleet-phase0-validation-20261017/nemotron-empty-fix-20261018/`.
 
 No provider/deployment/release gate is cleared. Further full qualification needs a concrete mode/source plan and remaining aggregate allowance; no old failure/unknown is erased or rerun automatically.
+
+
+Subsequent founder-requested retry/resilience repair: [Fleet model recovery](fleet-model-recovery-20261018.md). Original control evidence and usage above remain unchanged.
