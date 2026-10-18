@@ -19,3 +19,7 @@ All38 retained non-ephemeral installed Fleet table fingerprints match the prior 
 Encrypted row-bound raw evidence and an authenticated9,564,701-byte custom database archive (258 readable TOC entries) remain privately stored; separate key outside artifacts, no private data in Git. Decryption/hash/TOC checks are not a new full restore rehearsal. Companion Fleet report `docs/local-provider-qualification-20261018.md` and `docs/local-provider-qualification-status-20261018.json` own detailed accounting, source/configuration pins and the actual failed result. Private evidence root: `/home/mnim/.local/share/fleet-phase0-validation-20261017/local-qualification-20261018`.
 
 Task1 is verified; Task2 is blocked at Q1. Next useful work is offline investigation/correction of empty provider output, with a separately reviewed attempt before any qualification continuation. New-world identity, bounded renewal, cross-host enrollment, Luna/shadow qualification and population work remain unapproved/unimplemented. No tracker status, product specification/hash, source release proposal or live-qualified gate is cleared by this result.
+
+## Subsequent local correction
+
+See [Nemotron output fix](fleet-nemotron-output-fix-20261018.md) for separately authorized mode diagnosis, source fix and updated aggregate usage18/104 while preserving this original Q1 record. Thinking-on6/8 and thinking-off8/8 controls do not restart Q1/Q2 or qualify four engines. PACT/runtime/server/population boundaries remain unchanged.

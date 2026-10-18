@@ -1,3 +1,7 @@
+## Fleet local Nemotron output fix —18 October2026
+
+The [local source fix and mode controls](reports/fleet-nemotron-output-fix-20261018.md) reproduced thinking-only final-output failures and supports both modes explicitly. Controls6/8 versus8/8; original Q1/history preserved, aggregate18/104 calls, no Q2/population/server/runtime change. No PACT ticket/specification scope changed.
+
 ## Fleet local provider qualification —18 October2026
 
 The separately authorized [local qualification](reports/fleet-local-provider-qualification-20261018.md) built/tested the isolated Fleet harness, then stopped at Q1 after the second empty final response:2 executions/80000 reserved tokens,402 reported,0 unknown. Q2 did not start. Installed Fleet remains disabled and server/game/reset/population boundaries unchanged; no PACT implementation ticket or deferred task is activated.

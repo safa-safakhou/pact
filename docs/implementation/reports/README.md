@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Fleet Nemotron output fix](fleet-nemotron-output-fix-20261018.md) — explicit thinking modes, separate bounded controls and preserved original Q1; no qualification restart or runtime/server change.
+
 - [Fleet local provider qualification](fleet-local-provider-qualification-20261018.md) — harness/offline checks passed; actual Q1 failed after2 executions, Q2 not started; installed execution disabled and server/game/populations untouched.
 
 - [Provider qualification and fresh-world planning](provider-qualification-world-plan-20261018.md) — proposed model budgets and100 Luna+mixed-local world; no execution/reset authority.
