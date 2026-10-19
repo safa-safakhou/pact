@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing Node24/TypeScript, Fastify, PostgreSQL17, module-owned migrations and shared API/MCP handlers.
 
-**Spec:** Fleet companion `fleet/.worktrees/phase0-engine-baseline/docs/superpowers/specs/2026-10-18-provider-qualification-and-mixed-world-design.md`; [plan from this checkout](../../../../fleet/.worktrees/phase0-engine-baseline/docs/superpowers/plans/2026-10-18-provider-qualification-and-mixed-world.md).
+**Spec:** Fleet companion `fleet/.worktrees/phase0-engine-baseline/docs/superpowers/specs/2026-10-18-provider-qualification-and-mixed-world-design.md`; [plan from this checkout](https://github.com/safa-safakhou/fleet/blob/master/.worktrees/phase0-engine-baseline/docs/superpowers/plans/2026-10-18-provider-qualification-and-mixed-world.md).
 
 ## Global constraints
 

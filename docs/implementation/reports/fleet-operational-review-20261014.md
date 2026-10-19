@@ -88,7 +88,7 @@ Current evidence consists of timestamped SSH read-only `df`, `du`, container met
 Historical sources and implementation references:
 
 - [13 October P1 deployment and reliability acceptance](fleet-p1-deployment-20261013.md).
-- [Full Fleet reliability follow-up](../../../../fleet/docs/reliability-follow-up-20261013.md).
+- [Full Fleet reliability follow-up](https://github.com/safa-safakhou/fleet/blob/master/docs/reliability-follow-up-20261013.md).
 - [12 October baseline recorded in the investigation plan](../fleet-agent-investigation-plan-20261013.md).
 - [Backup policy](../../../infra/production/bin/backup.sh) and [host layout and backup timer](../../operations/dedicated-pact-host.md).
 - Deployed Fleet worker/engine inspected at commit `b4ad9db`: `src/worker.ts` and `src/engine.ts`. Later source HEAD is not substituted for deployed behavior.

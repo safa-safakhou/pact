@@ -1,3 +1,7 @@
+## Consolidated project handbook —19 October2026
+
+The founder requested shareable documentation of the full technical/design/report journey and publication to master. Read the [game-side project guide](../project/README.md), [architecture](../project/architecture.md), [journey](../project/journey.md) and [report catalogue](../project/report-catalog.md), together with the [Fleet handbook](https://github.com/safa-safakhou/fleet/blob/master/docs/project/README.md). These are explanatory documents; canonical rules and existing ticket scope remain authoritative. Latest local diagnostics found memory-writing/delivery and semantic-quality gaps despite passing structured-output checks. Source publication is not deployment, recovery review, reset or run authorization. Historical notices below retain their original dates/scopes.
+
 ## Fleet local Nemotron output fix —18 October2026
 
 The [local source fix and mode controls](reports/fleet-nemotron-output-fix-20261018.md) reproduced thinking-only final-output failures and supports both modes explicitly. Controls6/8 versus8/8; original Q1/history preserved, aggregate18/104 calls, no Q2/population/server/runtime change. No PACT ticket/specification scope changed.
@@ -32,7 +36,7 @@ PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using sha
 
 ## Fleet architecture and phased integration proposal — 17 October
 
-The founder-requested [shared Fleet architecture](../../../fleet/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md), [Fleet plan](../../../fleet/docs/superpowers/plans/2026-10-17-multi-engine-platform.md) and [PACT integration plan](../superpowers/plans/2026-10-17-fleet-platform-integration.md) preserve the current engines while proposing selectable engines, reviewed environment adapters, scoped events and factual outlooks. Reliable agent operation remains primary; comparisons/reports are optional. This is planning only: no new tracker assignment, implementation, product-specification correction, installation, account, model call or run is activated. See [planning handoff](reports/fleet-platform-planning-20261017.md).
+The founder-requested [shared Fleet architecture](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md), [Fleet plan](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/plans/2026-10-17-multi-engine-platform.md) and [PACT integration plan](../superpowers/plans/2026-10-17-fleet-platform-integration.md) preserve the current engines while proposing selectable engines, reviewed environment adapters, scoped events and factual outlooks. Reliable agent operation remains primary; comparisons/reports are optional. This is planning only: no new tracker assignment, implementation, product-specification correction, installation, account, model call or run is activated. See [planning handoff](reports/fleet-platform-planning-20261017.md).
 
 ## Administrator dashboard, 14 October
 
@@ -40,7 +44,7 @@ The founder assigned PACT-169: implement and deploy an independent administrator
 
 ## Consolidated agent reliability proposal 15 October
 
-The [consolidated PACT plan](agent-reliability-consolidated-plan-20261015.md) and [Fleet task plan](../../../fleet/docs/agent-reliability-plan-20261015.md) join the separate fifty-server-Luna and twenty-local-Nemotron/Laya findings into eleven architecture work packages. All local AR-P/AR-F tasks are proposed and unstarted, with cross-repository dependencies and measurable acceptance. Founder authorization covers saving/committing documentation only; tracker execution, implementation, experiments and deployment are not activated. Historical plans/checkpoints remain dated evidence.
+The [consolidated PACT plan](agent-reliability-consolidated-plan-20261015.md) and [Fleet task plan](https://github.com/safa-safakhou/fleet/blob/master/docs/agent-reliability-plan-20261015.md) join the separate fifty-server-Luna and twenty-local-Nemotron/Laya findings into eleven architecture work packages. All local AR-P/AR-F tasks are proposed and unstarted, with cross-repository dependencies and measurable acceptance. Founder authorization covers saving/committing documentation only; tracker execution, implementation, experiments and deployment are not activated. Historical plans/checkpoints remain dated evidence.
 
 ## Fleet agent investigation plan
 

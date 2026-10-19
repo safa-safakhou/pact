@@ -1,6 +1,6 @@
 # Fleet disabled local installation — 18 October 2026
 
-Founder authorized installing the verified Fleet release locally with execution disabled, keeping server Fleet untouched and starting no new runs. Companion [installation report](../../../../fleet/.worktrees/phase0-engine-baseline/docs/local-disabled-install-20261018.md) records Fleet953034e24b5f93f82f0571eef55ecce9a61999d2, fresh authenticated encrypted backup/restore, protected actual migration twice, source selection and post-install verification.
+Founder authorized installing the verified Fleet release locally with execution disabled, keeping server Fleet untouched and starting no new runs. Companion [installation report](https://github.com/safa-safakhou/fleet/blob/master/.worktrees/phase0-engine-baseline/docs/local-disabled-install-20261018.md) records Fleet953034e24b5f93f82f0571eef55ecce9a61999d2, fresh authenticated encrypted backup/restore, protected actual migration twice, source selection and post-install verification.
 
 PACT application source/runtime/game host is unchanged: dependency-qualified source60ec57b remains the counterpart. PACT provenance/consumer checks and audit0 were rerun before installation. No new PACT backlog or deferred task was selected; this is an operational follow-up with local documentation only. Server/Mac Fleet and game host were not contacted.
 

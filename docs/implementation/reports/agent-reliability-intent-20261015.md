@@ -11,7 +11,7 @@ Fleet reads the root field, retains intent in protected compact facts and uses f
 | Faithful layout and absence/version behavior | Shared contract tests include real-layout, empty, wrong-profile, public and unsupported-version controls | Pass |
 | Owner guidance changes reach every downstream input | Fleet unit tests and actual fake-provider turns in both memory modes, including changed owner intent and recall-query spy | Pass |
 | Scoped view/private history compatibility | Kingdom-ambition integration covers repeated owner changes, public/private separation, account scoping/export and unchanged economics; Fleet preserves consumed strategy/settings/anchor/ledger | Pass |
-| Documented contract and generic boundary | [Owner intent API](../../api/owner-intent.md), [Fleet guidance](../../../../fleet/docs/owner-guidance.md); both architecture checks | Pass |
+| Documented contract and generic boundary | [Owner intent API](../../api/owner-intent.md), [Fleet guidance](https://github.com/safa-safakhou/fleet/blob/master/docs/owner-guidance.md); both architecture checks | Pass |
 
 PACT: `npm run build`, `npm run typecheck`, `npm run lint`, `npm test` (364), `npm run test:integration -- --maxWorkers=2` (410 pass, one existing optional live-provider test skipped). Published v1 schema freeze remains 26/26 unchanged. Fleet: `npm run check`, `npm test` (111), `npm run test:integration` (166), `npm run build`, `npm run check:boundaries`, `npm audit --omit=dev` (zero vulnerabilities). Existing lint/bundle warnings remain. Backlog render/check and scoped whitespace check pass.
 

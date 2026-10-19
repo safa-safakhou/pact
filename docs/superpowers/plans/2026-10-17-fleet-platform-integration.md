@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing Node 24, TypeScript, Fastify, PostgreSQL 17, React and Vitest monorepo; pure rules and transactional command/outbox effects remain authoritative.
 
-**Spec:** [Shared architecture](../../../../fleet/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md). [Fleet implementation plan](../../../../fleet/docs/superpowers/plans/2026-10-17-multi-engine-platform.md).
+**Spec:** [Shared architecture](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md). [Fleet implementation plan](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/plans/2026-10-17-multi-engine-platform.md).
 
 ## Global constraints
 

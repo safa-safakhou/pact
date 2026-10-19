@@ -6,7 +6,7 @@ Founder assignment: implement fresh reads, memory retention, permissions and rec
 
 ## Implementation boundary
 
-Fleet commit `3407e5a` implements the controller, retention, permission matrix, recovery inspection and synthetic/cross-repository acceptance. Read [its full report](../../../../fleet/docs/p1-controller-20261013.md) for checks, compatibility, complete-row production hashes and the pending rollout proposal.
+Fleet commit `3407e5a` implements the controller, retention, permission matrix, recovery inspection and synthetic/cross-repository acceptance. Read [its full report](https://github.com/safa-safakhou/fleet/blob/master/docs/p1-controller-20261013.md) for checks, compatibility, complete-row production hashes and the pending rollout proposal.
 
 PACT changes only the owned world projection in `packages/kingdom/src/world-views.ts`:
 
