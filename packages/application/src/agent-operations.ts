@@ -1,8 +1,10 @@
 import { randomUUID } from "node:crypto";
 import {
+  AgentEventQuerySchema,
   AgentGameActionSchema,
   AgentGameActionV2Schema,
   AgentGuideQuerySchema,
+  AgentOutlookQuerySchema,
   ApprovalProposalSchema,
   ApprovalProposalV2Schema,
   ApprovalStatusQuerySchema,
@@ -27,7 +29,9 @@ import {
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
+  pactAgentEventsTool,
   pactAgentGuideTool,
+  pactAgentOutlookTool,
   pactApprovalProposalTool,
   pactApprovalProposalV2Tool,
   pactApprovalStatusTool,
@@ -67,6 +71,8 @@ import type { CommandDispatcher } from "./dispatcher.js";
 import type { AuthenticatedPrincipal } from "./types.js";
 
 export interface AgentOperationOptions {
+  readonly agentOutlook?: { readOwner(principal: AuthenticatedPrincipal, query: unknown): Promise<unknown> };
+  readonly agentEvents?: { read(principal: AuthenticatedPrincipal, cursor?: string, limit?: number): Promise<unknown> };
   readonly persistentPlay?: { read(accountId: string, query?: EnrollmentQuery): Promise<unknown> };
   readonly privateMemory?: {
     read(accountId: string, query: unknown): Promise<unknown>;
@@ -222,6 +228,8 @@ export class AgentOperationService {
       [this.options.seasons, pactSeasonReadTool],
       [this.options.reports, pactReportReadTool],
       [this.options.inbox, pactInboxReadTool],
+      [this.options.agentEvents, pactAgentEventsTool],
+      [this.options.agentOutlook, pactAgentOutlookTool],
       [this.options.conversations, pactConversationReadTool],
       [this.options.approvals, pactApprovalStatusTool],
       [this.options.decisionSupport, pactDecisionSupportTool],
@@ -550,6 +558,34 @@ export class AgentOperationService {
         content: [{ type: "text", text: JSON.stringify(report) }],
         structuredContent: report as Record<string, unknown>,
       };
+    }
+    if (name === pactAgentOutlookTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.agentOutlook)
+        throw new AgentOperationError("FORBIDDEN", 403);
+      const query = AgentOutlookQuerySchema.safeParse(args);
+      if (!query.success) throw new AgentOperationError("INVALID_REQUEST", 400);
+      const result = await this.options.agentOutlook.readOwner(principal, query.data);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result) }],
+        structuredContent: result as Record<string, unknown>,
+      };
+    }
+    if (name === pactAgentEventsTool.name) {
+      if (!principal.agentScopes?.includes("world:read") || !this.options.agentEvents)
+        throw new AgentOperationError("FORBIDDEN", 403);
+      const parsed = AgentEventQuerySchema.safeParse(args);
+      if (!parsed.success) throw new AgentOperationError("INVALID_REQUEST", 400);
+      try {
+        const page = await this.options.agentEvents.read(principal, parsed.data.cursor, parsed.data.limit);
+        return {
+          content: [{ type: "text", text: JSON.stringify(page) }],
+          structuredContent: page as Record<string, unknown>,
+        };
+      } catch (error) {
+        if (error && typeof error === "object" && "code" in error && error.code === "FORBIDDEN")
+          throw new AgentOperationError("FORBIDDEN", 403);
+        throw error;
+      }
     }
     if (name === pactInboxReadTool.name) {
       if (!principal.agentScopes?.includes("world:read") || !this.options.inbox)

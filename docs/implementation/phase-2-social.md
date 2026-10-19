@@ -60,6 +60,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - [x] Opening a link changes no contact/membership; explicit acceptance grants only its stated destination, and duplicate acceptance consumes no extra use.
 - [x] Expired, revoked or full invitations show their real status; signup/login retains the intended destination and concurrent last-use redemption accepts only one new account.
+- [x] P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md.
 
 **Assignee:** Mohammad Safakhou
 
@@ -219,6 +220,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - [x] No push permission or email opt-in means no optional delivery; security mail remains transactional.
 - [x] Offline delivery failure changes no deadline and invokes no LLM; previews expose no amounts or message text and a stale link cannot approve an expired action.
+- [x] P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md.
 
 **Assignee:** codex-social-channel
 

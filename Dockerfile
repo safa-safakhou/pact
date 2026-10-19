@@ -6,6 +6,7 @@ COPY packages ./packages
 COPY services ./services
 COPY workers ./workers
 COPY scripts ./scripts
+COPY vendor ./vendor
 RUN npm ci
 ARG PACT_WEB_BASE_PATH=/
 ARG PACT_TELEGRAM_BASE_PATH=/telegram/
@@ -24,8 +25,10 @@ COPY --from=build /app/packages ./packages
 COPY --from=build /app/services ./services
 COPY --from=build /app/workers ./workers
 COPY --from=build /app/scripts ./scripts
+COPY --from=build /app/vendor ./vendor
 COPY infra/production/container-entrypoint.sh /usr/local/bin/pact-entrypoint
 RUN chmod 0555 /usr/local/bin/pact-entrypoint
+RUN node scripts/verify-security-backports.mjs
 ENTRYPOINT ["pact-entrypoint"]
 
 FROM caddy:2.10.2-alpine AS gateway

@@ -1,0 +1,5 @@
+# Preserve the reviewed upstream bytes and required unified-diff context.
+# Provenance/integrity guards verify these files; first-party files retain normal whitespace checks.
+vendor/security/braces.patch -whitespace
+vendor/security/braces/lib/stringify.js -whitespace
+vendor/security/node-forge/LICENSE -whitespace

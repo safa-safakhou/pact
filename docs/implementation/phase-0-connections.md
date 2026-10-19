@@ -57,6 +57,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - [x] A forbidden platform-to-PACT import fails CI; packages expose only declared interfaces and carry explicit product scope.
 - [x] Document and fixture-test the atomic unit of work spanning domain stock and authorization reservations; notification delivery remains an outbox effect.
+- [x] P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md.
 
 **Assignee:** codex-foundation-run
 
@@ -698,6 +699,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - [x] A fake-provider run stops at each limit, preserves allowance on resume, and cannot be extended by repeated callbacks.
 - [x] Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop.
+- [x] P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md.
 
 **Assignee:** codex-mcp-metadata
 
@@ -733,6 +735,7 @@ Dependencies are completion requirements. The original Alpha track depends on th
 
 - [x] Disconnect/reconnect returns ordered authorized events without duplicate user-visible cards.
 - [x] Notification/outbox workers never invoke the provider adapter; omitted or unavailable delivery cannot change an action receipt.
+- [x] P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md.
 
 **Assignee:** cursor-agent
 

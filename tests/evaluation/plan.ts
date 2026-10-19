@@ -4,7 +4,33 @@ import { rulesCatalog } from "@pact/domain";
 export const design = JSON.parse(readFileSync(new URL("./design.json", import.meta.url), "utf8")) as {
   rulesId: string;
   seeds: { development: number[]; heldOut: number[] };
-  scenarios: { id: string; eligibility: string }[];
+  scenarios: {
+    id: string;
+    eligibility: string;
+    requiresMessage?: boolean;
+    fixture?: {
+      lenderHall: number;
+      hostBarracks: number;
+      lenderBarracks: number;
+      enemyBarracks: number;
+      helpSpearmen: number;
+      attackerSpearmen: number;
+      attackerArchers: number;
+      hostOrdinaryGrain: number;
+      ordinaryIron: number;
+      ordinarySilver: number;
+      hostSilverBond: number;
+      durationHours: 1;
+      offerAtMinute: number;
+      acceptAtMinute: number;
+      earlyRecallAtMinute: number | null;
+      endMinute: number;
+      entropyByte: number;
+      permissions: string[];
+      executor: string;
+      randomness: string;
+    };
+  }[];
   oneFactor: string[];
   interactions: string[][];
 };

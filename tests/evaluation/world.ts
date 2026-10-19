@@ -6,7 +6,8 @@ import { ResourceLedger } from "@pact/ledger";
 import { OnboardingService } from "@pact/onboarding";
 import { WorldClockService } from "@pact/world";
 import type { Pool } from "pg";
-import { independentPlan } from "./plan.js";
+import { design, independentPlan } from "./plan.js";
+import { initializeScenario } from "./scenarios.js";
 /** Disposable test-only worlds. Never takes a live schema or account selector. */
 export async function evaluationWorld(admin: Pool, url: string, replicaId: string) {
   const target = new URL(url);
@@ -34,7 +35,7 @@ export async function evaluationWorld(admin: Pool, url: string, replicaId: strin
       ledger = new ResourceLedger("pact"),
       kingdom = new KingdomService(pool, { productScope: "pact", onboarding, world, ledger });
     const players = [];
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < (design.scenarios.find((s) => s.id === replica.scenario)?.fixture ? 3 : 2); i++) {
       // Same logical identity/initial inputs across arms, isolated by schema; never a real account.
       const raw = createHash("sha256").update(`${replica.scenario}:${replica.seed}:${i}`).digest("hex"),
         accountId = `${raw.slice(0, 8)}-${raw.slice(8, 12)}-4${raw.slice(13, 16)}-8${raw.slice(17, 20)}-${raw.slice(20, 32)}`;
@@ -101,7 +102,9 @@ export async function evaluationWorld(admin: Pool, url: string, replicaId: strin
         }
       });
     }
-    return { pool, schema, players, replica, close };
+    const result = { pool, schema, players, replica, close };
+    await initializeScenario(result);
+    return result;
   } catch (e) {
     await close();
     throw e;

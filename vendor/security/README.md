@@ -1,7 +1,5 @@
 # Reviewed local security backports
 
-> Publication note,19October2026: this is the historical guide for the locally verified implementation candidate. The documentation-only publication does not merge its vendor distributions, dependency wiring or verification scripts into master. The commands/results below describe that candidate, not a claim that the published master or a deployed host has these backports installed. See the [project publication scope](../../docs/project/README.md#publication-scope).
-
 These are private source distributions of **braces3.0.3** and **node-forge1.4.0**, not upstream releases. Published fixes were unavailable on17 October2026. Their names stay unchanged; local versions explicitly identify the backport (`3.0.4-pact.1`, `1.4.1-pact.1`). Expo/React/React Native versions are unchanged. No advisory is waived or suppressed.
 
 | Dependency | Fix | Source |

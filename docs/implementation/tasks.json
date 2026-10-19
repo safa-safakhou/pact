@@ -65,7 +65,8 @@
       ],
       "acceptance": [
         "A forbidden platform-to-PACT import fails CI; packages expose only declared interfaces and carry explicit product scope.",
-        "Document and fixture-test the atomic unit of work spanning domain stock and authorization reservations; notification delivery remains an outbox effect."
+        "Document and fixture-test the atomic unit of work spanning domain stock and authorization reservations; notification delivery remains an outbox effect.",
+        "P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md."
       ],
       "components": [
         "workspace packages",
@@ -876,7 +877,8 @@
       ],
       "acceptance": [
         "A fake-provider run stops at each limit, preserves allowance on resume, and cannot be extended by repeated callbacks.",
-        "Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop."
+        "Close the browser during a real run and observe bounded completion; inject an inbox event while idle and observe zero model calls. Ambiguous provider-call crashes are surfaced without an unbounded retry/billing loop.",
+        "P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md."
       ],
       "components": [
         "run service",
@@ -921,7 +923,8 @@
       ],
       "acceptance": [
         "Disconnect/reconnect returns ordered authorized events without duplicate user-visible cards.",
-        "Notification/outbox workers never invoke the provider adapter; omitted or unavailable delivery cannot change an action receipt."
+        "Notification/outbox workers never invoke the provider adapter; omitted or unavailable delivery cannot change an action receipt.",
+        "P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md."
       ],
       "components": [
         "inbox service",
@@ -2750,7 +2753,8 @@
       ],
       "acceptance": [
         "Opening a link changes no contact/membership; explicit acceptance grants only its stated destination, and duplicate acceptance consumes no extra use.",
-        "Expired, revoked or full invitations show their real status; signup/login retains the intended destination and concurrent last-use redemption accepts only one new account."
+        "Expired, revoked or full invitations show their real status; signup/login retains the intended destination and concurrent last-use redemption accepts only one new account.",
+        "P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md."
       ],
       "components": [
         "invitation service and landing pages"
@@ -3056,7 +3060,8 @@
       ],
       "acceptance": [
         "No push permission or email opt-in means no optional delivery; security mail remains transactional.",
-        "Offline delivery failure changes no deadline and invokes no LLM; previews expose no amounts or message text and a stale link cannot approve an expired action."
+        "Offline delivery failure changes no deadline and invokes no LLM; previews expose no amounts or message text and a stale link cannot approve an expired action.",
+        "P1 additive correction 2026-10-17: independent owner metadata feed defaults off; shared world:read authorization, opaque scoped cursors, seven-day/source-aligned retention and no event-triggered PACT inference. Historical acceptance/status retained; new acceptance/evidence: docs/implementation/reports/agent-events-20261017.md."
       ],
       "components": [
         "notification worker and preferences"
@@ -9464,14 +9469,14 @@
     }
   ],
   "source_sha256": {
-    "../pact/access.md": "506d8656ad085878eeda524232bd8b9e5cd5d9de6ab46c57d5de35fb605a6907",
-    "../pact/runtime.md": "7c3357e06f1b56a4f5249f68736b8b128ffc7e4923463aac454eb5163e385b93",
+    "../pact/access.md": "7b0b9d92a89629555b329bc6f51ece2f052f211ff6dc48940cabd198e62b7855",
+    "../pact/runtime.md": "e9ef2cbef8cd710490a3205e6847db54487abd5550e812a77b24398cb75cada3",
     "../pact/rules.md": "7aba92c427a11e8a9c90b0e3cbee84e55261f3d7b7690d10519bc87c1e605f99",
     "../pact/social.md": "8b76a31d5c98aa8e74b8b4b8469e80ced1f16014c810a4e3bc5277c312248370",
-    "../pact/privacy.md": "a70b40655c37be4cabce63e052476be7620679ccd02d0efd37e8a2d0022822e7",
+    "../pact/privacy.md": "23320c1aee3426a719d5dd71400e6e2f6932229292ffb49a95b227a5d4dce90d",
     "../pact/product.md": "1acd07ea575e418c4e24e79b9d4ee9acb71e903060cae511a3961b8c70f0bb06",
     "../pact/delivery.md": "d2f649767dd488689bd5b0ccf572753bcbe3518107ad8ea251f1d4af7fe8b155",
-    "../pact/architecture.md": "0f130ddda7368c04a74deedc56b739cbb6518c608c5be002b808deb0bccd33cb",
+    "../pact/architecture.md": "67819b77ef66e09a79aee12e71c3f04f45ab30929a03e2c93f44e8c712dfad9f",
     "../pact/alpha.md": "89a9f6b890e122a6efba516b551da9585ed012352d8095cfc8f8698a7a30a7f9",
     "../pact/experience.md": "5c4f38ee89933b3da181cfe6994e8f0dafb421d8d9f006ccd20ac7476d08699a",
     "../pact/chatgpt.md": "9ecd8d652f87932c382b9e5facf4dc62789a9ce72aaee4734a42059b311c6a20",

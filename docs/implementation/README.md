@@ -1,3 +1,7 @@
+## Paired implementation merge — 19 October 2026
+
+The founder explicitly authorized merging both existing implementation branches into master and pushing them. See the [PACT integration report](reports/master-integration-20261019.md) and [paired verification receipt](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for source provenance, the clean typecheck correction and complete local checks. This supersedes the earlier documentation-only publication scope for source integration. It does not install or activate the code or authorize a model/game run.
+
 ## Consolidated project handbook —19 October2026
 
 The founder requested shareable documentation of the full technical/design/report journey and publication to master. Read the [game-side project guide](../project/README.md), [architecture](../project/architecture.md), [journey](../project/journey.md) and [report catalogue](../project/report-catalog.md), together with the [Fleet handbook](https://github.com/safa-safakhou/fleet/blob/master/docs/project/README.md). These are explanatory documents; canonical rules and existing ticket scope remain authoritative. Latest local diagnostics found memory-writing/delivery and semantic-quality gaps despite passing structured-output checks. Source publication is not deployment, recovery review, reset or run authorization. Historical notices below retain their original dates/scopes.

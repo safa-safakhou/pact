@@ -73,6 +73,8 @@ describe("conversation state and structured agreement tracks", () => {
     if (!group) throw Error("fixture");
     const html = renderToStaticMarkup(<AgreementTracks group={group} ownerId="owner" />);
     expect(html).toContain("Engine contract · defaulted");
+    expect(html).toContain("#agreement-contract");
+    expect(html).toContain("Admission does not establish fulfilment");
     expect(html).toContain("Your signature: recorded");
     expect(html).toContain("Their signature: pending");
   });

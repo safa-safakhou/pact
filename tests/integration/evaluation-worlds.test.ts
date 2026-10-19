@@ -35,13 +35,15 @@ for (const scenario of design.scenarios)
         (await right.pool.query("SELECT ambition FROM kingdoms WHERE id=$1", [b.kingdomId])).rows[0].ambition,
       ).not.toBe("synthetic left only");
       expect(l?.balances.iron.ordinaryUnits).toBe(
-        ["overflow", "bad_trade"].includes(scenario.id)
-          ? "360000"
-          : ["later_development", "ceiling_control"].includes(scenario.id)
+        scenario.fixture
+          ? "60000"
+          : ["overflow", "bad_trade"].includes(scenario.id)
             ? "360000"
-            : scenario.id === "complementary_needs"
-              ? "60000"
-              : "0",
+            : ["later_development", "ceiling_control"].includes(scenario.id)
+              ? "360000"
+              : scenario.id === "complementary_needs"
+                ? "60000"
+                : "0",
       );
     } finally {
       await left.close();

@@ -6,7 +6,11 @@ PACT is a competitive persistent kingdom game. A human owns a kingdom, chooses p
 
 Fleet is a separate repository/database/service that runs authorized agents. It preserves the original loop while adding alternative engines and environment contracts. The purpose is useful gameplay; optional comparisons and reports help us decide which implementations work. No agent receives human credentials or the ability to approve its own exception.
 
-## Publication scope
+## Implementation integration — 19 October 2026
+
+The founder subsequently authorized merging both implementation branches into master. See the [paired integration and verification report](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for current integrated source/checks and the typecheck correction. The publication-only scope and CI observation below describe the earlier checkpoint. Source publication does not install or activate Fleet or PACT features.
+
+## Initial documentation publication scope
 
 This documentation-only publication includes the technical narrative and dated source evidence. It does not merge the paired PACT/Fleet implementation branches. Newer candidate API protocols and code maps therefore describe locally verified source, not an assertion that `master` or a deployed host already exposes them. Canonical specifications and the active tracker on the published branch remain authoritative.
 
@@ -53,6 +57,6 @@ The proposed fresh world with 100 Luna kingdoms and local engine groups is not a
 
 Use the linked handbook, aggregate reports and labelled synthetic examples. Do not publish keys, `.env` files, private game correspondence, account exports or decrypted traces. Existing specification/API/operations documents retain their original authority. Older dated reports are history; use the combined [current-state assessment](https://github.com/safa-safakhou/fleet/blob/master/docs/project/current-state.md) for the latest checkpoint and its limits.
 
-## Publication verification caveat
+## Initial publication verification caveat
 
 The documentation is published on master. [Hosted CI for the initial publication](https://github.com/safa-safakhou/pact/actions/runs/39233624129) failed at typechecking before the build: three existing workspace subpath imports depend on generated declarations without source aliases. The affected source, package exports and CI order are unchanged from the previous remote master. Local lint, 384 unit tests and backlog validation passed; these do not establish hosted CI success. See the [paired publication receipt](https://github.com/safa-safakhou/fleet/blob/master/docs/project/publication-20261019.md) for the precise scope and outstanding verification gap. No runtime or code fix is included in this documentation publication.
