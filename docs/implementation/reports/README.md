@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Goal and prerequisite follow-up](goal-prerequisite-repair-20261019.md) — legacy chose/started BarracksII; reactive chose FarmII but used an occupied slot. Follow-up fitting and generation contracts repaired, with all actual failures retained.
+
 - [Local autonomous-work investigation](autonomous-work-repair-20261019.md) — goals/permissions present, Fleet handoff defects repaired, two accepted constructions and remaining non-cognition planning failures; six bounded turns preserved and world parked.
 
 - [Local four-fleet operability repair](local-world-operability-20261019.md) — session isolation, useful context delivery, audited local input allowance, four successful bounded turns with two preserved zero-call failures; final state parked.

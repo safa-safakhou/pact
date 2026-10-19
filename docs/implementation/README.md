@@ -1,3 +1,7 @@
+## Goal/prerequisite follow-up — 19 October 2026
+
+The [follow-up report](reports/goal-prerequisite-repair-20261019.md) records improved goal/target selection, legacy's accepted BarracksII, reactive's occupied-slot failure and the resulting context/generation-contract repairs. All actual attempts remain; the original hour and consumed verification pass stay closed. No additional turn is silently inferred from the requested one-per-profile check.
+
 ## Local autonomous-work investigation — 19 October 2026
 
 The [actual repair report](reports/autonomous-work-repair-20261019.md) records current goals/permissions for all12 local actors, corrected Fleet instruction/assignment/read-context handoffs and11 fully reported model calls. Both cognition profiles committed construction; legacy loop/reactive basic still show goal-use/prerequisite-planning failures. The original hour and both bounded passes are closed, clock/groups paused and worker stopped. No broader permission, new long run or server/population change is implied.
