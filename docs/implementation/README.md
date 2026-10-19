@@ -1,3 +1,7 @@
+## Local four-fleet environment prepared — 19 October 2026
+
+The founder authorized preparation and explicitly deferred launch. The [operator guide](../operations/local-world.md) and [preparation acceptance](reports/local-world-preparation-20261019.md) record twelve new kingdoms, four profiles and a paused/disarmed local instance. One shared hour is the experiment budget; actual calls and tokens are measured without equalizing them. No observation or inference has started.
+
 ## Paired implementation merge — 19 October 2026
 
 The founder explicitly authorized merging both existing implementation branches into master and pushing them. See the [PACT integration report](reports/master-integration-20261019.md) and [paired verification receipt](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for source provenance, the clean typecheck correction and complete local checks. This supersedes the earlier documentation-only publication scope for source integration. It does not install or activate the code or authorize a model/game run.

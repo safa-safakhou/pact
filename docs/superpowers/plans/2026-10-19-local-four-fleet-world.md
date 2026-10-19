@@ -1,3 +1,5 @@
+> Preparation authorized subsequently; see [actual preparation receipt](../../implementation/reports/local-world-preparation-20261019.md). No launch was requested. Superseding rulings: use native application processes with PostgreSQL-only containers, the existing certified helper, no added experiment restrictions/reserve floor, and the existing three-call/three-command turn structure. This checklist retains original planning provenance; the receipt records actual completed checks and remaining observation work.
+
 # Fresh Local PACT World and Four Fleet Profiles Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: use superpowers:executing-plans to implement this plan task-by-task. No delegation. Planning only; this revision starts no world, account, model/helper inference or existing-service pause.
