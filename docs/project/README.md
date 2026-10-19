@@ -52,3 +52,7 @@ The proposed fresh world with 100 Luna kingdoms and local engine groups is not a
 ## Sharing
 
 Use the linked handbook, aggregate reports and labelled synthetic examples. Do not publish keys, `.env` files, private game correspondence, account exports or decrypted traces. Existing specification/API/operations documents retain their original authority. Older dated reports are history; use the combined [current-state assessment](https://github.com/safa-safakhou/fleet/blob/master/docs/project/current-state.md) for the latest checkpoint and its limits.
+
+## Publication verification caveat
+
+The documentation is published on master. [Hosted CI for the initial publication](https://github.com/safa-safakhou/pact/actions/runs/39233624129) failed at typechecking before the build: three existing workspace subpath imports depend on generated declarations without source aliases. The affected source, package exports and CI order are unchanged from the previous remote master. Local lint, 384 unit tests and backlog validation passed; these do not establish hosted CI success. See the [paired publication receipt](https://github.com/safa-safakhou/fleet/blob/master/docs/project/publication-20261019.md) for the precise scope and outstanding verification gap. No runtime or code fix is included in this documentation publication.
