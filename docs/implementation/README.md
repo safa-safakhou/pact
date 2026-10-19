@@ -1,3 +1,7 @@
+## One-hour local four-fleet observation complete — 19 October 2026
+
+The founder explicitly launched the prepared world for one hour. The [actual observation report](reports/local-world-observation-20261019.md) records one completed FarmII, four waiting HallII orders, no established interactions,41 reported model executions and session/context failures that prevent a fair architecture comparison. The clock/four groups are paused, the deadline closed, and all12 identities/history preserved. No additional run or repair deployment is implied. Earlier preparation notices below are historical.
+
 ## Local four-fleet environment prepared — 19 October 2026
 
 The founder authorized preparation and explicitly deferred launch. The [operator guide](../operations/local-world.md) and [preparation acceptance](reports/local-world-preparation-20261019.md) record twelve new kingdoms, four profiles and a paused/disarmed local instance. One shared hour is the experiment budget; actual calls and tokens are measured without equalizing them. No observation or inference has started.
