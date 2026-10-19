@@ -1,6 +1,6 @@
-# Approved additional local C0 check —20 October2026
+# Approved additional local C0 check complete —20 October2026
 
-Founder explicitly selected “Run one additional verification turn.” Exactly one additional original reactive-basic C0 turn on installed Fleet da0277a is covered; preserve144 prior turns/192 executions including the failed check,12 identities, goals/mandates/models/budgets/anchors/queues and all closed gates. Use the separate approved-check gate, park afterward, independently verify actual Hall relevance/receipts/preservation/restore and locally commit reports. Pending-choice notes below are historical only. No other actor, worker, further inference, reset/replay/cancellation, server/other-population change, push or delegation is implied.
+The explicit additional C0 turn ran on unchanged Fleet da0277a and failed: INVALID_COMMAND supply offer,0 effects,1 reported response. It avoided occupied training but mistook outgoing Iron for income and proposed bonds rejected by deployed BOND_EXCEEDS_FLOW validation. Hall reasoning remains unaccepted. Both checks/history retained. Final145 turns/193 reported executions,12 ready actors,4 groups/clock paused tick139,0 active/unknown/pending/blockers; no worker/all gates closed, encrypted10-PACT/39-Fleet-table restore verified. Read docs/implementation/reports/reactive-goal-stock-20261020.md and sibling Fleet report. PACT application20c41ef and Fleet699-test/1,628-artifact release unchanged; goals/mandates/models/budgets/anchors/queues/history preserved. Additional-turn approval consumed, not pending. No more inference, source repair, server/other-population change, push or delegation is implied.
 
 # Local reactive-basic goal/stock checkpoint —20 October2026
 

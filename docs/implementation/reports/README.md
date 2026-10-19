@@ -4,7 +4,7 @@
 
 ## Current assignment
 
-- [Reactive-basic Hall goal/stock checkpoint](reactive-goal-stock-20261020.md) — explicit current prerequisites/stock delivery and occupied-training guard; one actual turn failed goal reasoning, world parked and additional-turn choice pending.
+- [Reactive-basic Hall goal/stock checkpoint](reactive-goal-stock-20261020.md) — explicit current prerequisites/stock delivery and occupied-training guard; both the first check and explicitly approved additional check failed, with reversed trade direction/invalid bonds retained; world parked.
 
 - [Clean legacy/Hall verification](clean-legacy-hall-verification-20261019.md) — audited legacy output allowance repair, strict clean-turn acceptance and the founder's explicit Hall-prerequisite priority for selected reactive actor.
 
