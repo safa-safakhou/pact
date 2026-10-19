@@ -785,6 +785,8 @@ describe("trusted collection outcome projection", () => {
   it("quarantines malformed source IDs and leaves world work usable on a projection failure", async () => {
     const a = await player();
     await withTransaction(pool, async (c) => {
+      // A migrated public schema must not mask the deliberately missing fixture table.
+      await c.query("SELECT set_config('search_path', $1, true)", [schema]);
       await appendOutbox(c, {
         productScope: "pact",
         eventId: randomUUID(),
@@ -797,6 +799,9 @@ describe("trusted collection outcome projection", () => {
       await c.query("ALTER TABLE collection_award_sources RENAME TO collection_award_sources_fixture");
       expect((await collections.processSafely(c, 120000)).failed).toBe(false);
       await c.query("ALTER TABLE collection_projection_state RENAME TO collection_projection_state_fixture");
+      expect(
+        (await c.query("SELECT to_regclass('collection_projection_state') AS table_name")).rows[0].table_name,
+      ).toBeNull();
       expect((await collections.processSafely(c, 180000)).failed).toBe(true);
       expect((await c.query("SELECT 1 AS usable")).rows[0].usable).toBe(1);
     });
