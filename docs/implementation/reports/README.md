@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Local autonomous-work investigation](autonomous-work-repair-20261019.md) — goals/permissions present, Fleet handoff defects repaired, two accepted constructions and remaining non-cognition planning failures; six bounded turns preserved and world parked.
+
 - [Local four-fleet operability repair](local-world-operability-20261019.md) — session isolation, useful context delivery, audited local input allowance, four successful bounded turns with two preserved zero-call failures; final state parked.
 
 - [One-hour local four-fleet observation](local-world-observation-20261019.md) — completed original hour, per-group outcomes, no established interaction,41 reported model executions and reactive session/context failures; world/groups paused, no restart.

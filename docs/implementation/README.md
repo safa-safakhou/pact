@@ -1,3 +1,7 @@
+## Local autonomous-work investigation — 19 October 2026
+
+The [actual repair report](reports/autonomous-work-repair-20261019.md) records current goals/permissions for all12 local actors, corrected Fleet instruction/assignment/read-context handoffs and11 fully reported model calls. Both cognition profiles committed construction; legacy loop/reactive basic still show goal-use/prerequisite-planning failures. The original hour and both bounded passes are closed, clock/groups paused and worker stopped. No broader permission, new long run or server/population change is implied.
+
 ## One-hour local four-fleet observation complete — 19 October 2026
 
 The founder explicitly launched the prepared world for one hour. The [actual observation report](reports/local-world-observation-20261019.md) records one completed FarmII, four waiting HallII orders, no established interactions,41 reported model executions and session/context failures that prevent a fair architecture comparison. The clock/four groups are paused, the deadline closed, and all12 identities/history preserved. No additional run or repair deployment is implied. Earlier preparation notices below are historical.
