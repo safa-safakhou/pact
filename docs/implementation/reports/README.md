@@ -2,7 +2,7 @@
 
 ## Current assignment
 
-- [Goal and prerequisite follow-up](goal-prerequisite-repair-20261019.md) — legacy chose/started BarracksII; reactive chose FarmII but used an occupied slot. Follow-up fitting and generation contracts repaired, with all actual failures retained.
+- [Goal and prerequisite follow-up](goal-prerequisite-repair-20261019.md) — assignment/prerequisite and queue-contract repairs; A BarracksII/StorehouseII and C WallII committed across retained diagnostic/final checks. Late legacy output failure and unfinished Hall chain remain explicit.
 
 - [Local autonomous-work investigation](autonomous-work-repair-20261019.md) — goals/permissions present, Fleet handoff defects repaired, two accepted constructions and remaining non-cognition planning failures; six bounded turns preserved and world parked.
 

@@ -1,6 +1,6 @@
 ## Goal/prerequisite follow-up — 19 October 2026
 
-The [follow-up report](reports/goal-prerequisite-repair-20261019.md) records improved goal/target selection, legacy's accepted BarracksII, reactive's occupied-slot failure and the resulting context/generation-contract repairs. All actual attempts remain; the original hour and consumed verification pass stay closed. No additional turn is silently inferred from the requested one-per-profile check.
+The [follow-up report](reports/goal-prerequisite-repair-20261019.md) records the completed assignment/history, prerequisite and queue-contract repairs. Diagnostic/final A/C checks committed BarracksII/StorehouseII and WallII; a late legacy output truncation and the unfinished Hall path remain explicit. All attempts and receipts remain; the original hour and both check gates stay closed, world/groups paused and worker stopped.
 
 ## Local autonomous-work investigation — 19 October 2026
 
