@@ -4,8 +4,8 @@ The founder requested a concrete architecture and phased implementation plan con
 
 ## Deliverables
 
-- [Shared architecture and diagrams](../../../../fleet/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md): preserved compatibility engines, generic environment boundaries, task/event admission, capability negotiation, beliefs/relationships, both specialist coordination alternatives and six delivery phases.
-- [Fleet implementation plan](../../../../fleet/docs/superpowers/plans/2026-10-17-multi-engine-platform.md): F1–F8 packages, concrete file/interface boundaries, failure-path acceptance, fake-provider checks, local commit and later qualification requirements.
+- [Shared architecture and diagrams](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md): preserved compatibility engines, generic environment boundaries, task/event admission, capability negotiation, beliefs/relationships, both specialist coordination alternatives and six delivery phases.
+- [Fleet implementation plan](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/plans/2026-10-17-multi-engine-platform.md): F1–F8 packages, concrete file/interface boundaries, failure-path acceptance, fake-provider checks, local commit and later qualification requirements.
 - [PACT counterpart](../../superpowers/plans/2026-10-17-fleet-platform-integration.md): P1–P3 for scoped replayable events, factual owner outlooks and isolated integrated scenarios. The existing game rules, command authority and one write lease remain authoritative.
 
 Source anchors inspected: Fleet `a2c82db03232ddef5eeb524a1d86325c463960f6` and PACT `a567c5e80943473551945042c1941cbe48e219f5`. Actual current run-debugging/readable-step reports were read so the plan extends existing inspection features. No fresh live-runtime/cohort census was performed.

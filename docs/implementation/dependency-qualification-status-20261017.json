@@ -1,0 +1,31 @@
+{
+  "assignment": "Founder F8 PACT dependency follow-up2026-10-17",
+  "assignee": "Codex",
+  "status": "done",
+  "dependencies": {
+    "PACT P3": "177ad6c",
+    "Fleet F8": "293b0c5"
+  },
+  "scope": "Fix three underlying dependency advisories and rerun offline qualification; no runtime, server, paid provider, run or recovery mutation",
+  "tracker": "Local founder follow-up register; no remote issue fabricated; original backlog/deferred tasks unchanged",
+  "evidence": [
+    "docs/implementation/reports/dependency-qualification-20261017.md",
+    "vendor/security/provenance.json",
+    "16 security/compatibility unit checks red then green;405 total unit passed",
+    "466 integration passed with1 existing optional skip; full rerun maxWorkers2",
+    "Clean install, registry SRI/62 original hashes, consumer guard, type/build/lint/eval/backlog passed",
+    "Local and pruned runtime-image audit0; full runtime Docker build enforces provenance/consumer guard",
+    "Offline native Android export733 modules; actual PACT/Fleet acceptance12 passed",
+    "22 installed application-table fingerprints exactly unchanged; server Fleet untouched"
+  ],
+  "qualification": "source_offline_only",
+  "liveProviderQualified": false,
+  "installedRuntimeChanged": false,
+  "serverFleetTouched": false,
+  "newRunsStarted": false,
+  "limitations": [
+    "Private backports require ongoing original-version advisory review; audit0 is not independent source certification",
+    "Actual provider, deployment, target-specific encrypted rollback and recovery prerequisites remain gated",
+    "Author review only under no-delegation instructions"
+  ]
+}

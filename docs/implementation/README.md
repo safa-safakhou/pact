@@ -1,3 +1,31 @@
+## Consolidated project handbook —19 October2026
+
+The founder requested shareable documentation of the full technical/design/report journey and publication to master. Read the [game-side project guide](../project/README.md), [architecture](../project/architecture.md), [journey](../project/journey.md) and [report catalogue](../project/report-catalog.md), together with the [Fleet handbook](https://github.com/safa-safakhou/fleet/blob/master/docs/project/README.md). These are explanatory documents; canonical rules and existing ticket scope remain authoritative. Latest local diagnostics found memory-writing/delivery and semantic-quality gaps despite passing structured-output checks. Source publication is not deployment, recovery review, reset or run authorization. Historical notices below retain their original dates/scopes.
+
+## Fleet local Nemotron output fix —18 October2026
+
+The [local source fix and mode controls](reports/fleet-nemotron-output-fix-20261018.md) reproduced thinking-only final-output failures and supports both modes explicitly. Controls6/8 versus8/8; original Q1/history preserved, aggregate18/104 calls, no Q2/population/server/runtime change. No PACT ticket/specification scope changed.
+
+## Fleet local provider qualification —18 October2026
+
+The separately authorized [local qualification](reports/fleet-local-provider-qualification-20261018.md) built/tested the isolated Fleet harness, then stopped at Q1 after the second empty final response:2 executions/80000 reserved tokens,402 reported,0 unknown. Q2 did not start. Installed Fleet remains disabled and server/game/reset/population boundaries unchanged; no PACT implementation ticket or deferred task is activated.
+
+## Provider qualification and fresh-world planning —18 October2026
+
+The founder-requested [budgeted qualification/mixed-world plan](reports/provider-qualification-world-plan-20261018.md) proposes100 server Luna and four local groups while preserving current histories. This is planning only: server/new runs/reset/implementation remain excluded. Local installed Fleet stays disabled; no tracker/deferred work is activated.
+
+## Fleet disabled local installation — 18 October 2026
+
+The founder separately authorized [installing verified Fleet locally with execution disabled](reports/fleet-disabled-local-install-20261018.md). PACT application/runtime unchanged; server Fleet/new runs excluded. Original accounts/history/recovery gates remain preserved; no backlog/deferred task is activated.
+
+## Fleet local release rehearsal — 18 October 2026
+
+The separately authorized [local operational rehearsal](reports/fleet-local-release-rehearsal-20261018.md) passed encrypted restore, disabled source rollback and temporary fencing without PACT source/runtime changes, server contact or new runs. Original local Fleet release/history/recovery gates remain preserved. No new tracker/deferred-roadmap assignment is selected.
+
+## F8 dependency qualification follow-up — 17 October 2026
+
+Founder authorizes fixing the three dependency advisories found by F8 and rerunning local qualification. Work is owned by Codex without delegation; server Fleet, installed local runtimes and all real runs remain excluded. [Status](dependency-qualification-status-20261017.json), [completion evidence](reports/dependency-qualification-20261017.md) and [backport provenance/maintenance](../../vendor/security/README.md) record actual acceptance. Original backlog assignments and deferred production tasks remain unchanged.
+
 ## Optional A2A interface — 13 October 2026
 
 PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using shared rules and permissions. Default off; no fleet release, account, counter or schedule changes. See [setup](../api/a2a.md) and [implementation evidence](reports/optional-a2a-20261013.md).
@@ -8,7 +36,7 @@ PACT-168 adds an optional A2A interface alongside API/MCP/tool calling using sha
 
 ## Fleet architecture and phased integration proposal — 17 October
 
-The founder-requested [shared Fleet architecture](../../../fleet/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md), [Fleet plan](../../../fleet/docs/superpowers/plans/2026-10-17-multi-engine-platform.md) and [PACT integration plan](../superpowers/plans/2026-10-17-fleet-platform-integration.md) preserve the current engines while proposing selectable engines, reviewed environment adapters, scoped events and factual outlooks. Reliable agent operation remains primary; comparisons/reports are optional. This is planning only: no new tracker assignment, implementation, product-specification correction, installation, account, model call or run is activated. See [planning handoff](reports/fleet-platform-planning-20261017.md).
+The founder-requested [shared Fleet architecture](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md), [Fleet plan](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/plans/2026-10-17-multi-engine-platform.md) and [PACT integration plan](../superpowers/plans/2026-10-17-fleet-platform-integration.md) preserve the current engines while proposing selectable engines, reviewed environment adapters, scoped events and factual outlooks. Reliable agent operation remains primary; comparisons/reports are optional. This is planning only: no new tracker assignment, implementation, product-specification correction, installation, account, model call or run is activated. See [planning handoff](reports/fleet-platform-planning-20261017.md).
 
 ## Administrator dashboard, 14 October
 
@@ -16,7 +44,7 @@ The founder assigned PACT-169: implement and deploy an independent administrator
 
 ## Consolidated agent reliability proposal 15 October
 
-The [consolidated PACT plan](agent-reliability-consolidated-plan-20261015.md) and [Fleet task plan](../../../fleet/docs/agent-reliability-plan-20261015.md) join the separate fifty-server-Luna and twenty-local-Nemotron/Laya findings into eleven architecture work packages. All local AR-P/AR-F tasks are proposed and unstarted, with cross-repository dependencies and measurable acceptance. Founder authorization covers saving/committing documentation only; tracker execution, implementation, experiments and deployment are not activated. Historical plans/checkpoints remain dated evidence.
+The [consolidated PACT plan](agent-reliability-consolidated-plan-20261015.md) and [Fleet task plan](https://github.com/safa-safakhou/fleet/blob/master/docs/agent-reliability-plan-20261015.md) join the separate fifty-server-Luna and twenty-local-Nemotron/Laya findings into eleven architecture work packages. All local AR-P/AR-F tasks are proposed and unstarted, with cross-repository dependencies and measurable acceptance. Founder authorization covers saving/committing documentation only; tracker execution, implementation, experiments and deployment are not activated. Historical plans/checkpoints remain dated evidence.
 
 ## Fleet agent investigation plan
 

@@ -2,6 +2,18 @@
 
 ## Current assignment
 
+- [Fleet Nemotron output fix](fleet-nemotron-output-fix-20261018.md) — explicit thinking modes, separate bounded controls and preserved original Q1; no qualification restart or runtime/server change.
+
+- [Fleet local provider qualification](fleet-local-provider-qualification-20261018.md) — harness/offline checks passed; actual Q1 failed after2 executions, Q2 not started; installed execution disabled and server/game/populations untouched.
+
+- [Provider qualification and fresh-world planning](provider-qualification-world-plan-20261018.md) — proposed model budgets and100 Luna+mixed-local world; no execution/reset authority.
+
+- [Fleet disabled local installation](fleet-disabled-local-install-20261018.md) — fresh snapshot, protected migration, verified selected artifact and persistent execution disable; server/new runs excluded.
+
+- [Fleet local release rehearsal](fleet-local-release-rehearsal-20261018.md) — authenticated local restore, disabled source rollback and temporary fencing; server/new runs excluded.
+
+- [P2 factual owner outlook](agent-outlook-20261017.md) — phase3 source/offline projection and verification.
+
 - [Local reboot recovery](local-reboot-recovery-20261015.md) — same twenty accounts, exact interrupted-turn review, retained allocations, restored local model/recall services and scheduled acceptance.
 
 - [Consolidated source acceptance and remaining gates](agent-reliability-source-acceptance-20261015.md) — all 22 task mappings, eleven commit pairs, final checks and unfulfilled live/provider/owner gates.
@@ -28,7 +40,7 @@
 
 - [Faithful owner intent source acceptance](agent-reliability-intent-20261015.md) — AR-P01 / PACT-171 and Fleet AR-F01; verified source/offline only, no deployment.
 
-- [Consolidated agent reliability plan 15 October](../agent-reliability-consolidated-plan-20261015.md) and [Fleet tasks](../../../../fleet/docs/agent-reliability-plan-20261015.md) — proposed/unstarted architecture work, dependencies and acceptance from both 14 October investigations; documentation authorization only.
+- [Consolidated agent reliability plan 15 October](../agent-reliability-consolidated-plan-20261015.md) and [Fleet tasks](https://github.com/safa-safakhou/fleet/blob/master/docs/agent-reliability-plan-20261015.md) — proposed/unstarted architecture work, dependencies and acceptance from both 14 October investigations; documentation authorization only.
 
 - [Fifty server Luna agents: causal investigation](fleet-root-causes-20261014.md) — reproduced packing/authority mechanisms, persistent continuations, first Hall III, nil-receipt loop, invalid offer validation and restart-related credential block; read-only investigation.
 

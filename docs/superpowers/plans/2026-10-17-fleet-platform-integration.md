@@ -8,7 +8,7 @@
 
 **Tech Stack:** Existing Node 24, TypeScript, Fastify, PostgreSQL 17, React and Vitest monorepo; pure rules and transactional command/outbox effects remain authoritative.
 
-**Spec:** [Shared architecture](../../../../fleet/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md). [Fleet implementation plan](../../../../fleet/docs/superpowers/plans/2026-10-17-multi-engine-platform.md).
+**Spec:** [Shared architecture](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/specs/2026-10-17-multi-engine-platform-design.md). [Fleet implementation plan](https://github.com/safa-safakhou/fleet/blob/master/docs/superpowers/plans/2026-10-17-multi-engine-platform.md).
 
 ## Global constraints
 
@@ -18,7 +18,7 @@
 - PACT notification/rules workers do not call models, and the exclusive write lease remains.
 - Private relationship models stay in Fleet; no global trust score or prescribed reply/coalition behavior is added.
 - Current economics, troop ownership, persistent buildings, rolling authority, exact approvals and command receipts remain unchanged.
-- All work here is proposed. New local work-package IDs P1–P3 are not tracker issues or modifications of historical AR-P tasks. Before implementation, record a covering assignment and reconcile actual tracker/assignee/dependencies. Saving this plan does not change product specifications or their hashes.
+- P1 is authorized and source-verified under the founder’s phase2 assignment; P2/P3 remain proposed future work. Local work-package IDs P1–P3 are not tracker issues or modifications of historical AR-P tasks. The local status register records actual assignment/dependencies. P1 includes the dated product correction; saving the original plan alone did not change specifications.
 
 ## Review focus
 
@@ -73,7 +73,7 @@ Page limits: default 20, maximum 50 entries, maximum 32,768 serialized bytes inc
 
 Proposed new feed retention: at most seven real days and no longer than its source's allowed lifetime; deletion/revocation rules still apply. Cursor expiry returns explicit `resyncRequired` plus a safe current resume token. This value is a design choice awaiting the product correction, not an existing configured retention claim.
 
-- [ ] Write failing contract/integration cases for defaults/caps/bytes, cross-account denial, source deduplication, late commit, rollback, retention gap and disabled inference. Include:
+- [x] Write failing contract/integration cases for defaults/caps/bytes, cross-account denial, source deduplication, late commit, rollback, retention gap and disabled inference. Include:
 
   ```ts
   expect(defaultPage.events.length).toBeLessThanOrEqual(20);
@@ -86,12 +86,14 @@ Proposed new feed retention: at most seven real days and no longer than its sour
   expect(provider.calls).toBe(0);
   ```
 
-- [ ] Run `npx vitest run --config vitest.config.ts tests/unit/agent-event-contract.test.ts` and `npx vitest run --config vitest.integration.config.ts tests/integration/agent-events.test.ts`. Expect missing/new feed assertions to fail; use only the documented isolated test database.
-- [ ] Implement the generic inbox-owned projection and kingdom-owned audience mapping. Assign per-owner publication sequences while holding an owner cursor-row lock until commit. Process independent source transactions through committed outbox delivery claims; record projection rows and consumer completion atomically. Crash/retry must not duplicate publication. Event order is publication order; actual occurrence/game time remains explicit for reasoning.
-- [ ] Wire disabled-by-default agent projection into an independent notification-worker batch. It must work when SMTP/push delivery is disabled or failing; move external-channel setup behind its existing enablement checks as needed without changing enabled delivery behavior. Support initial `building completed`, `training completed`, own-authorized `message/contact/offer/contract`, raid declaration/lock/resolution, and resource/obligation consequence categories through an explicit source coverage table. Unsupported/missing category coverage stays advertised as such. Projection failures must not block the game clock or other notification channels.
-- [ ] Add authenticated API/MCP capability exposure and document external-host wake enrollment. Fleet stores explicit owner-enabled categories/caps; PACT only exposes facts. Preserve the default one-model-request-in-flight rule. The optional F6 parallel-reasoning correction is a separate, named capability and cannot activate through feed enrollment. Recheck current grants/visibility when reading; source references cannot bypass authorization.
-- [ ] Run rollback, two-transaction late-commit, lease-expiry/retry, owner deletion, grant revocation, muted wake categories, no-SMTP and no-provider tests. Verify unprocessed late events are retried, page boundaries lose nothing, and old inbox/MCP routes retain their behavior. Run relevant unit/integration, type, contract and boundary checks.
-- [ ] Update API/operations/retention docs, source coverage and completion evidence. Regenerate/check backlog views only after actual authorized ticket/spec edits. Commit P1; prepare installation separately. This feed is not itself a scheduled inference service.
+- [x] Run `npx vitest run --config vitest.config.ts tests/unit/agent-event-contract.test.ts` and `npx vitest run --config vitest.integration.config.ts tests/integration/agent-events.test.ts`. Expect missing/new feed assertions to fail; use only the documented isolated test database.
+- [x] Implement the generic inbox-owned projection and kingdom-owned audience mapping. Assign per-owner publication sequences while holding an owner cursor-row lock until commit. Process independent source transactions through committed outbox delivery claims; record projection rows and consumer completion atomically. Crash/retry must not duplicate publication. Event order is publication order; actual occurrence/game time remains explicit for reasoning.
+- [x] Wire disabled-by-default agent projection into an independent notification-worker batch. It must work when SMTP/push delivery is disabled or failing; move external-channel setup behind its existing enablement checks as needed without changing enabled delivery behavior. Support initial `building completed`, `training completed`, own-authorized `message/contact/offer/contract`, raid declaration/lock/resolution, and resource/obligation consequence categories through an explicit source coverage table. Unsupported/missing category coverage stays advertised as such. Projection failures must not block the game clock or other notification channels.
+- [x] Add authenticated API/MCP capability exposure and document external-host wake enrollment. Fleet stores explicit owner-enabled categories/caps; PACT only exposes facts. Preserve the default one-model-request-in-flight rule. The optional F6 parallel-reasoning correction is a separate, named capability and cannot activate through feed enrollment. Recheck current grants/visibility when reading; source references cannot bypass authorization.
+- [x] Run rollback, two-transaction late-commit, lease-expiry/retry, owner deletion, grant revocation, muted wake categories, no-SMTP and no-provider tests. Verify unprocessed late events are retried, page boundaries lose nothing, and old inbox/MCP routes retain their behavior. Run relevant unit/integration, type, contract and boundary checks.
+- [x] Update API/operations/retention docs, source coverage and completion evidence. Regenerate/check backlog views only after actual authorized ticket/spec edits. Commit P1; prepare installation separately. This feed is not itself a scheduled inference service.
+
+P1 source acceptance: [event feed report](../../implementation/reports/agent-events-20261017.md),386 unit and447 integration tests passed with one existing skip. No installation or inference enrollment.
 
 ## P2 — Expose factual survival and dependency outlooks (platform phase 3)
 
@@ -125,7 +127,7 @@ Proposed new feed retention: at most seven real days and no longer than its sour
 
 **Interfaces:** Extend the existing isolated-world scenario registration with `threat-help`, `costly-help`, `unneeded-help`, `early-recall`, `food-pressure` and `silence-valid` scenarios. All scenario IDs have frozen starting conditions, rules/clock/random inputs, expected observable outcomes and a declared split. `readScenarioOutcome(world, actor): Promise<OutcomeEvidence>` returns authoritative losses, upkeep/shortage duration, due/fulfilled/defaulted obligations and source IDs, without asserting motives or agent intelligence. World/actor types remain owned by the current evaluation harness; Fleet consumes exported versioned evidence, not these source types.
 
-- [ ] Write red integration assertions that Cedar can receive authorized reinforcements before the existing raid lock; a fulfilled garrison and lost battle can coexist; early recall is a recorded default without proving motive; and waiting can be valid when help is unnecessary.
+- [x] Write red integration assertions that Cedar can receive authorized reinforcements before the existing raid lock; a fulfilled garrison and lost battle can coexist; early recall is a recorded default without proving motive; and waiting can be valid when help is unnecessary.
 
   ```ts
   expect(battle.resolutionMinutes).toBe(20);
@@ -136,11 +138,13 @@ Proposed new feed retention: at most seven real days and no longer than its sour
   expect(waitScenario.requiresMessage).toBe(false);
   ```
 
-- [ ] Run `npm run eval:offline` and the new focused integration suites to red. Freeze fixtures before inspecting model performance; deterministic fake decisions prove only game/plumbing behavior.
-- [ ] Implement the scenarios with the existing pure rules, committed receipts, visibility and outbox pipeline. Keep actual mechanics: lender needs Hall III; host accepts food/return obligations; assignment is immediate; separate payment supply contracts are not magically atomic with a garrison; raid locks five minutes before its twenty-minute resolution; buildings remain intact. Set synthetic permissions/capacity explicitly so a prohibited action is not scored as agent failure.
-- [ ] Extend outcome exports and compatibility documentation. Support recorded playback without inference and separately created sandbox branches; a seed does not guarantee identical LLM decisions. For optional cross-engine comparisons, distinguish one interacting world from independent replicas and report metric definitions/denominators/coverage. Do not publish private peer text through a report.
-- [ ] Run `npm run test`, `npm run test:integration`, `npm run typecheck`, `npm run check:contracts`, `npm run check:boundaries`, `npm run build`, `npm run eval:offline`, and `python3 docs/implementation/backlog.py check` on documented isolated setups. Record actual results and compatibility versions. External/provider acceptance stays distinct from these checks.
-- [ ] Commit P3 and a completion report. Prepare exact source releases, disabled/default-off flags, state preservation and rollback with Fleet F8. A new twenty-account/week-long comparison still needs its own exact accounts, cap, duration and launch authorization; none is created here.
+- [x] Run `npm run eval:offline` and the new focused integration suites to red. Freeze fixtures before inspecting model performance; deterministic fake decisions prove only game/plumbing behavior.
+- [x] Implement the scenarios with the existing pure rules, committed receipts, visibility and outbox pipeline. Keep actual mechanics: lender needs Hall III; host accepts food/return obligations; assignment is immediate; separate payment supply contracts are not magically atomic with a garrison; raid locks five minutes before its twenty-minute resolution; buildings remain intact. Set synthetic permissions/capacity explicitly so a prohibited action is not scored as agent failure.
+- [x] Extend outcome exports and compatibility documentation. Support recorded playback without inference and separately created sandbox branches; a seed does not guarantee identical LLM decisions. For optional cross-engine comparisons, distinguish one interacting world from independent replicas and report metric definitions/denominators/coverage. Do not publish private peer text through a report.
+- [x] Run `npm run test`, `npm run test:integration`, `npm run typecheck`, `npm run check:contracts`, `npm run check:boundaries`, `npm run build`, `npm run eval:offline`, and `python3 docs/implementation/backlog.py check` on documented isolated setups. Record actual results and compatibility versions. External/provider acceptance stays distinct from these checks.
+- [x] Commit P3 and a completion report. Prepare exact source releases, disabled/default-off flags, state preservation and rollback with Fleet F8. A new twenty-account/week-long comparison still needs its own exact accounts, cap, duration and launch authorization; none is created here.
+
+P3 source/offline evidence: [completion report](../../implementation/reports/agent-engine-scenarios-20261017.md). No live/provider acceptance or release proposal is claimed; those remain F8.
 
 ## Product evolution kept separate
 

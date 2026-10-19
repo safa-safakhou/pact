@@ -1,4 +1,53 @@
+# Project handbook and source publication —19 October2026
+
+Founder requests comprehensive shareable technical/design/findings/journey documentation, verified commits and push to master. This covers documentation/publication, not deployment or execution. Preserve existing work, private raw evidence/keys, accounts/history/allocations and installed disabled Fleet. No server/game contact, model/helper call, reset, shadow/population, review/replay, authority/model/budget/schedule change or delegation. Read docs/project/README.md and the dated current-state/evidence links. This publication is documentation-only under the original request; no implementation merge is inferred from an unanswered optional scope question. Earlier no-push instructions are superseded only for this documentation publication assignment. Do not infer runtime activation from repository publication.
+
+# Local Fleet retry qualification completed —18 October2026
+
+Founder-approved local continuation source9ce3f55 is terminal:49 new calls/1960000 reservations/113718 measured,0 unknown; all44 planned cases completed. Thinking17/22 acceptable cases, non-thinking21/22, both fail overall qualification. Two legacy cognition schema repairs succeeded; thinking also rejected2 unavailable requests/3 unsupported schema IDs, and non-thinking exhausted one malformed cognition case. No empty final was observed. Laya12 supported abstentions/1 timeout, no positive selection. Read `docs/implementation/reports/fleet-retry-qualification-20261018.md` and sibling Fleet report/status. Original18 allocations/parent/closed diagnostics exact; aggregate67/2680000/117006, unused37/1480000 is not an automatic rerun. All38 installed tables match;953034e remains disabled, original identities/history/unknowns/settings/schedules retained. Owned provider/fixtures stopped; encrypted authenticated evidence retained with separate key. No PACT application/server/game-host change, reset, population, installation, push, old recovery review or delegation. No release gate cleared; do not reopen terminal controls or extend deadlines.
+
+# Fleet accounted model-output recovery — 18 October 2026
+
+Founder requested investigating Nemotron and bounded retries. Fleet local source `11e5e0b3d633a25b943e55fa07571b77d18209f8` is verified with201 unit/357 standalone serial integration/12 paired PACT tests, all checks/build/boundaries passed, full audit0. Read `docs/implementation/reports/fleet-model-recovery-20261018.md`. Exact upstream grammar permits thinking-only early termination. Fleet adds one separately metered corrective attempt, preserves sibling/coordinator headroom and schedules known exhausted failures for later recovery; no uncertain command or unknown model spend is blindly retried. Original legacy engine/baseline unchanged. Actual qualification remains18 calls/720000 reserved/3288 measured,0 new calls; original Q1/controls retained and full qualification remains blocked. All38 installed tables match;953034e remains disabled. PACT application/runtime, server/game host, accounts/authority/history/settings and population remain untouched. No installation, push, delegation, new real-provider plan/run or automatic use of unused allowance. The next operational step needs a concrete remaining-budget/source/mode qualification plan.
+
+# Local Fleet Nemotron output fix —18 October2026
+
+Founder authorized local output investigation/fix and explicitly chose both thinking modes qualified separately. Fleet5beccbd source is verified:192 unit/340 integration/12 paired checks, audit0; controls6/8 valid thinking-on versus8/8 thinking-off. Read `docs/implementation/reports/fleet-nemotron-output-fix-20261018.md` and companion Fleet status. Original failed Q1 plan/two calls exact; two closed controls consume the same parent ceiling: aggregate18 executions/720000 reserved/3288 reported tokens,0 unknown. Q2 not started, no full qualification/release eligibility; unused86/3440000 is not automatic restart authority. Installed953034e stays disabled;38 retained tables/accounts/settings/history/unknowns preserved. No PACT application/runtime change, server contact/reset, population/game account, installation, push or delegation. Owned provider/fixture stopped; encrypted evidence retained.
+
+# Fleet local qualification result —18 October2026
+
+Founder authorized isolated local harness/tests and Q1+Q2 only within104 executions/4160000 reserved tokens. Harness source d0b49b0 passed offline acceptance; real Q1 stopped after2 executions/80000 reservation/402 reported tokens because the second final output was empty,0 unknown. Q2 did not start; no reset/restart/remaining-allowance reuse is authorized. Read `docs/implementation/reports/fleet-local-provider-qualification-20261018.md` and companion Fleet report/status. Installed953034e stays disabled;38 retained tables match; original accounts/history/unknown allocations/settings remain. PACT application source/runtime and server Fleet/game host are unchanged; no server contact, game reset, real account enrollment, population, push or delegation. Earlier planning-only wording is superseded solely for this completed harness/failed one-shot Task1/Task2 attempt; future mixed-world work remains unapproved.
+
+# Fresh-world/mixed-fleet planning —18 October2026
+
+Founder requests a concrete plan for local provider qualification and a future clean PACT world with100 Luna+20 proposed local accounts. Read `docs/superpowers/plans/2026-10-18-fresh-world-and-mixed-fleets.md` and companion Fleet design/numeric proposal. Planning only: no server contact/reset, model calls, new accounts/runs, implementation/flag changes, enrollment/deployment/push or delegation. Preserve original worlds/identities/history/unknown allocations and terminal populations; installed local Fleet953034e stays disabled. No supported production reset/instance rollover/renewable budget capability is implied by the proposal. Local documentation commits authorized; no new backlog/deferred ticket selected.
+
+# Fleet disabled local installation — 18 October 2026
+
+Founder authorized installing verified Fleet953034e locally with execution disabled, server Fleet untouched and no new runs. Read `docs/implementation/reports/fleet-disabled-local-install-20261018.md` and companion Fleet report/status. Primary live flag0 plus persistent service Env0; original22 business tables/20 blocked agents/40 unknown allocations retained, new engine/task/binding tables empty, no recovery review/reconnect/replay or provider call. PACT application/runtime/game host unchanged. Fresh encrypted backup/restore and installed migration/HTTP acceptance recorded; original helper/keepalive retained. Generic live proposal disarmed. No delegation/push/new experiment/authority/model/budget/schedule change. This covers local disabled Fleet installation only.
+
+# Fleet local release rehearsal — 18 October 2026
+
+Founder authorized local Fleet encrypted backup/restore, disabled source rollback and temporary maintenance fencing, with server Fleet untouched and no new runs. Read `docs/implementation/reports/fleet-local-release-rehearsal-20261018.md` and companion Fleet evidence. Rehearsal passed; original local7093cb8 release/services/keepalive restored,22 retained business-table fingerprints unchanged, zero new turns/allocations;20 agents remain needs_owner and40 unknown allocations retained. Only the companion rollbackRehearsed gate cleared; current quiescence/authority/provider/deployment/run gates remain. PACT application/runtime unchanged. No delegation, push, new experiment, recovery review/reconnect/replay or deployment. Temporary authorized local service/task barriers are not a standing authorization to change runtime/account eligibility.
+
+# F8 dependency qualification follow-up — 17 October 2026
+
+Founder authorized fixing F8's dependency findings and local requalification only. Read `docs/implementation/reports/dependency-qualification-20261017.md`, the local status register and `vendor/security/README.md`. UUID11.1.1 and provenance-checked private braces/node-forge backports resolve all23 original audit entries; local and pruned image audits report0. Full405 unit +466 integration passed with1 existing optional skip; native Android export and12 Fleet/PACT acceptance checks pass. Root same-version Expo pin and transitive consumer guard address npm's workspace override issue; Docker copies/verifies vendor source in the runtime stage. A2A fixture clock rollover was repaired in test code only. No runtime installation, server Fleet contact, delegation, push, real provider call, new run, recovery review or account/model/budget/schedule change occurred. Same installed7093cb8 and22 retained application-table fingerprints remain unchanged. Private backports need original-version advisory review; real-provider/rollout/recovery gates remain unresolved.
+
+# Fleet platform P3 — 17 October 2026
+
+Founder requested Fleet F7 and PACT P3 with local tests and server Fleet untouched. P3 is source/offline verified:389 unit and465 integration checks pass,1 existing optional skip, build/type/lint/contracts/boundaries/eval/backlog pass. Read `docs/implementation/reports/agent-engine-scenarios-20261017.md` and `docs/operations/agent-engine-compatibility.md`. Six frozen scenarios use scripted synthetic decisions and normal receipts/outbox/ticks; they do not certify provider skill. Existing runtime releases, identities/history/allocations/anchors/recovery gates and default-off flags remain unchanged. No delegation, push, deployment, server Fleet contact, new live run or review is authorized. F8 is future release qualification.
+
+# PACT phase3 source acceptance — 17 October 2026
+
+P2 owner factual outlook is source/offline verified; read `docs/implementation/reports/agent-outlook-20261017.md`. Optional default-off read reuses exact domain formulas and authenticated ownership. No game runtime, server Fleet or installed local Fleet changed; no new experiments, enrollment, recovery review, deployment or push. Fleet F5 is the companion phase3 package. Existing preservation instructions below remain applicable.
+
 # PACT engineering instructions
+
+## Fleet platform phase2 — 17 October 2026
+
+Founder authorizes P1 then Fleet F4 source/offline implementation, with existing local/server runtimes and recovery gates unchanged. Read `docs/implementation/fleet-platform-status-20261017.json` and `docs/api/agent-events.md`. No delegation, push, installation, new model experiment or cohort enrollment. P2/F5 remain future scope.
+
 
 ## Local reboot recovery — 15 October 2026
 

@@ -1,0 +1,22 @@
+# Fleet retry qualification in both modes —18 October2026
+
+Founder authorized a bounded local continuation within remaining86 model executions/3440000 reserved tokens. Fleet harness source `9ce3f558bbcfb03207856061ad66121642267369` completed all44 cases using49 new executions,1960000 reserved tokens and113718 measured tokens, zero unknown/unresolved. No PACT application source, game host, server Fleet, accounts, gameplay, population, installed runtime, authority, models, schedules, historical recovery review or push changed. PACT code is unchanged; this is a documentation-only handoff.
+
+| Mode | New executions | Raw schema-valid | Acceptable cases | Recovered outputs |
+| --- | ---: | ---: | ---: | ---: |
+| thinking=true |25/43 |24/25 |17/22 |1 |
+| thinking=false |24/43 |21/24 |21/22 |1 |
+
+Both modes **fail overall qualification**. Thinking failed two legacy-loop cases by targeting unavailable observed requests, plus three reactive cases by selecting unadvertised action schema IDs. Non-thinking failed one legacy-cognition scarcity case after both attempts omitted required decision fields. The two natural repairs were legacy cognition schema corrections. Generic admission's retry path was not triggered naturally by this provider sample; its recovery/cancellation/cap behavior is verified offline with injected fake outputs. No empty finals, truncation or incomplete completion occurred in49 calls, so this does not establish that the earlier Nemotron thinking-only termination is eliminated.
+
+Per-profile acceptable trials (thinking/non-thinking): legacy-loop3/5 versus5/5; legacy-cognition5/5 versus4/5; reactive-basic3/5 versus5/5; reactive-cognition4/5 versus5/5. Both calibration cases passed per mode. Every game command was withheld in synthetic ports; zero pending commands/scope violations. The smaller subset omits the original prerequisites case/second repeat and real-world gameplay, so it is not full original Q1/Q2 or population certification. Thirteen helper calls yielded12 supported Laya abstentions and one3s timeout; no positive recall selection was established. Abstention is not a crash and fallback is not proof of useful ranking.
+
+Original parent,18 original call rows/ciphertexts, both diagnostic grants and links are exact before/after. Aggregate67/104 executions,2680000/4160000 reservations,117006 reported tokens, zero unknown/unresolved. Original Q1 stays blocked and completed controls stay terminal. Unused37 executions/1480000 reservations are not an automatic new grant/rerun or deadline extension.
+
+Offline/source verification:201 unit,362 standalone serial integration,12 actual paired PACT acceptance; type/style/build/boundary checks and full audit0 passed, with24 existing non-failing style warnings. PACT backlog render/check and diff checks validate this documentation update. No hosted CI or independent review is claimed under the no-delegation instruction.
+
+New authenticated encrypted qualification archive:56365989 plaintext bytes, SHA256 ae042de4c3ab837cf50f7506f7e0684abda657e617a0b035a1fcfa8ce7a7fea1,288 readable TOC entries, key retained separately and no plaintext dump written. This is authentication/readability, not a repeated full restore rehearsal. Older archives/keys remain. All38 retained installed tables match: same953034e release, two original cohorts/20 blocked accounts with ready credentials,10121 turns,40 historical unknown40000 allocations/1600000 conservative tokens. Primary/persistent live0 retained; worker/console/Laya active; health200/liveEnabled=false and readiness503/LIVE_DISABLED. Owned provider PID27980 and5436/5438 fixtures are stopped; volumes retained. Main checkouts unchanged.
+
+Remaining work is concrete: bind action schema IDs in the model-facing contract to the advertised registry, provide bounded feedback for recoverable semantic rejections, repair/requalify the legacy cognition envelope and obtain positive helper selection evidence before claiming it. These are findings, not source changes during the frozen run. No release/execution gate is cleared. Fleet `docs/retry-mode-qualification-20261018.md` and status own detailed source/protocol/budget evidence; private artifacts remain in `/home/mnim/.local/share/fleet-phase0-validation-20261017/retry-mode-qualification-20261018/`.
+
+Fleet result/evidence handoff committed locally as `f9effe7b06aa0321c82edcf1b82c8dea9c662e5c`; provider execution remains pinned to source9ce3f55.

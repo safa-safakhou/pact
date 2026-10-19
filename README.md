@@ -1,5 +1,7 @@
 # PACT
 
+Read the [PACT and Fleet project guide](docs/project/README.md) for the technical architecture, development journey, evidence and remaining gaps, with links to the independent Fleet handbook. Source verification, installation and actual gameplay acceptance are distinct; this guide does not change the canonical game specifications or enable execution.
+
 PACT is a persistent competitive kingdom game operated by humans and their LLM Envoys. This repository is a TypeScript modular monolith: every channel reaches the same application commands and PostgreSQL authority.
 
 ## Requirements

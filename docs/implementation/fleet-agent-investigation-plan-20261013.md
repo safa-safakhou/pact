@@ -168,23 +168,23 @@ The dated aggregates and diagnostic conclusions above are the repository evidenc
 
 **Fresh-read packing.** Frozen context-diagnostic.json: accounts 03/04/12/34; reconstructed deployed packing.
 
-- [fleet/src/engine.ts](../../../fleet/src/engine.ts#L144)
-- [fleet/src/context.ts](../../../fleet/src/context.ts#L25)
-- [fleet/src/games/pact/context.ts](../../../fleet/src/games/pact/context.ts#L145)
+- [fleet/src/engine.ts](https://github.com/safa-safakhou/fleet/blob/master/src/engine.ts#L144)
+- [fleet/src/context.ts](https://github.com/safa-safakhou/fleet/blob/master/src/context.ts#L25)
+- [fleet/src/games/pact/context.ts](https://github.com/safa-safakhou/fleet/blob/master/src/games/pact/context.ts#L145)
 
 ### Source 2
 
 **Checkpoint retention.** Storage retains last three while merge policy/documents describe up to four plus four.
 
-- [fleet/src/store.ts](../../../fleet/src/store.ts#L335)
-- [fleet/src/games/pact/context.ts](../../../fleet/src/games/pact/context.ts#L130)
-- [fleet/docs/controller-communication-repair-20261012.md](../../../fleet/docs/controller-communication-repair-20261012.md#L9)
+- [fleet/src/store.ts](https://github.com/safa-safakhou/fleet/blob/master/src/store.ts#L335)
+- [fleet/src/games/pact/context.ts](https://github.com/safa-safakhou/fleet/blob/master/src/games/pact/context.ts#L130)
+- [fleet/docs/controller-communication-repair-20261012.md](https://github.com/safa-safakhou/fleet/blob/master/docs/controller-communication-repair-20261012.md#L9)
 
 ### Source 3
 
 **Action capability mismatch.** Human checks at handler lines 159, 171, 223 and 416; Fleet excludes only non-game actions and two raid kinds.
 
-- [fleet/src/games/pact/adapter.ts](../../../fleet/src/games/pact/adapter.ts#L36)
+- [fleet/src/games/pact/adapter.ts](https://github.com/safa-safakhou/fleet/blob/master/src/games/pact/adapter.ts#L36)
 - [pact/packages/application/src/game-command-handler.ts](../../packages/application/src/game-command-handler.ts#L159)
 
 ### Source 4
@@ -199,22 +199,22 @@ The dated aggregates and diagnostic conclusions above are the repository evidenc
 
 **Read validation and recording.** Validation occurs before detailed reading event; Ajv materializes tool defaults.
 
-- [fleet/src/engine.ts](../../../fleet/src/engine.ts#L237)
-- [fleet/src/tools.ts](../../../fleet/src/tools.ts)
+- [fleet/src/engine.ts](https://github.com/safa-safakhou/fleet/blob/master/src/engine.ts#L237)
+- [fleet/src/tools.ts](https://github.com/safa-safakhou/fleet/blob/master/src/tools.ts)
 
 ### Source 6
 
 **Projection ordering.** Candidates sorted by ID and whole-item projections bounded by byte allowance.
 
-- [fleet/src/games/pact/context.ts](../../../fleet/src/games/pact/context.ts#L41)
+- [fleet/src/games/pact/context.ts](https://github.com/safa-safakhou/fleet/blob/master/src/games/pact/context.ts#L41)
 - [pact/packages/application/src/decision-support.ts](../../packages/application/src/decision-support.ts#L229)
 
 ### Source 7
 
 **Continuation state.** Undated private notes with fresh environment; observed account summaries in frozen evidence.
 
-- [fleet/src/engine.ts](../../../fleet/src/engine.ts#L134)
-- [fleet/src/store.ts](../../../fleet/src/store.ts#L531)
+- [fleet/src/engine.ts](https://github.com/safa-safakhou/fleet/blob/master/src/engine.ts#L134)
+- [fleet/src/store.ts](https://github.com/safa-safakhou/fleet/blob/master/src/store.ts#L531)
 
 ### Source 8
 
@@ -235,15 +235,15 @@ The dated aggregates and diagnostic conclusions above are the repository evidenc
 
 - [pact/packages/kingdom/src/supply.ts](../../packages/kingdom/src/supply.ts#L182)
 - [pact/packages/contracts/src/schemas.ts](../../packages/contracts/src/schemas.ts#L173)
-- [fleet/src/domain.ts](../../../fleet/src/domain.ts#L91)
+- [fleet/src/domain.ts](https://github.com/safa-safakhou/fleet/blob/master/src/domain.ts#L91)
 
 ### Source 11
 
 **Observation and schema surface.** Compact facts, supplied action schemas, public discovery and rotating contact observation.
 
-- [fleet/src/games/pact/adapter.ts](../../../fleet/src/games/pact/adapter.ts#L41)
-- [fleet/src/games/pact/adapter.ts](../../../fleet/src/games/pact/adapter.ts#L147)
-- [fleet/src/engine.ts](../../../fleet/src/engine.ts#L121)
+- [fleet/src/games/pact/adapter.ts](https://github.com/safa-safakhou/fleet/blob/master/src/games/pact/adapter.ts#L41)
+- [fleet/src/games/pact/adapter.ts](https://github.com/safa-safakhou/fleet/blob/master/src/games/pact/adapter.ts#L147)
+- [fleet/src/engine.ts](https://github.com/safa-safakhou/fleet/blob/master/src/engine.ts#L121)
 
 ### Source 12
 
@@ -291,15 +291,15 @@ The dated aggregates and diagnostic conclusions above are the repository evidenc
 
 **Profile grounding.** Actual objectives and absence of geographic/territorial map mechanics.
 
-- [fleet/src/domain.ts](../../../fleet/src/domain.ts#L6)
+- [fleet/src/domain.ts](https://github.com/safa-safakhou/fleet/blob/master/src/domain.ts#L6)
 - [pact/docs/pact/product.md](../../docs/pact/product.md#L21)
 
 ### Source 19
 
 **Model continuity.** Ephemeral executions and explicit memory; no trained decision policy.
 
-- [fleet/docs/codex-provider.md](../../../fleet/docs/codex-provider.md#L7)
-- [fleet/README.md](../../../fleet/README.md#L56)
+- [fleet/docs/codex-provider.md](https://github.com/safa-safakhou/fleet/blob/master/docs/codex-provider.md#L7)
+- [fleet/README.md](https://github.com/safa-safakhou/fleet/blob/master/README.md#L56)
 
 ### Source 20
 
