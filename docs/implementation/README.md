@@ -4,7 +4,7 @@ The founder explicitly authorized merging both existing implementation branches 
 
 ## Proposed local four-fleet world — 19 October 2026
 
-The founder requested a concrete setup, budget and observation plan for this Mac. Read the [design](../superpowers/specs/2026-10-19-local-four-fleet-world-design.md) and [execution plan](../superpowers/plans/2026-10-19-local-four-fleet-world.md): twelve new kingdoms, four profiles, a 32-call local qualification and a separately authorized 24-hour world window capped at 1,152 calls. Shared admission/helper controls and isolated-stack acceptance precede launch. Existing local Fleet reports live execution enabled, so exclusive inference requires an exact reviewed pause/restoration scope. This is planning only; no implementation, runtime change, account or inference run is activated, and original deferred tickets remain unchanged.
+The founder requested a concrete local setup/observation plan, then corrected the comparison to equal elapsed time with architecture-dependent compute. Read the [design](../superpowers/specs/2026-10-19-local-four-fleet-world-design.md) and [execution plan](../superpowers/plans/2026-10-19-local-four-fleet-world.md): twelve new kingdoms, four profiles and a proposed shared one-hour observation, with actual calls/tokens measured rather than equalized. The unexecuted 32-call preflight and 24-hour/equal-compute proposal are superseded. Isolated-stack/offline acceptance and a fail-closed time-window gate precede launch. Existing Mac Fleet reports live execution enabled, so local GPU pause/restoration needs a concrete scope. Planning activates no implementation, runtime, account or inference run, and deferred tickets remain unchanged.
 
 ## Consolidated project handbook —19 October2026
 
