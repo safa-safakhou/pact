@@ -2,6 +2,10 @@
 
 The founder explicitly authorized merging both existing implementation branches into master and pushing them. See the [PACT integration report](reports/master-integration-20261019.md) and [paired verification receipt](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for source provenance, the clean typecheck correction and complete local checks. This supersedes the earlier documentation-only publication scope for source integration. It does not install or activate the code or authorize a model/game run.
 
+## Proposed local four-fleet world — 19 October 2026
+
+The founder requested a concrete setup, budget and observation plan for this Mac. Read the [design](../superpowers/specs/2026-10-19-local-four-fleet-world-design.md) and [execution plan](../superpowers/plans/2026-10-19-local-four-fleet-world.md): twelve new kingdoms, four profiles, a 32-call local qualification and a separately authorized 24-hour world window capped at 1,152 calls. Shared admission/helper controls and isolated-stack acceptance precede launch. Existing local Fleet reports live execution enabled, so exclusive inference requires an exact reviewed pause/restoration scope. This is planning only; no implementation, runtime change, account or inference run is activated, and original deferred tickets remain unchanged.
+
 ## Consolidated project handbook —19 October2026
 
 The founder requested shareable documentation of the full technical/design/report journey and publication to master. Read the [game-side project guide](../project/README.md), [architecture](../project/architecture.md), [journey](../project/journey.md) and [report catalogue](../project/report-catalog.md), together with the [Fleet handbook](https://github.com/safa-safakhou/fleet/blob/master/docs/project/README.md). These are explanatory documents; canonical rules and existing ticket scope remain authoritative. Latest local diagnostics found memory-writing/delivery and semantic-quality gaps despite passing structured-output checks. Source publication is not deployment, recovery review, reset or run authorization. Historical notices below retain their original dates/scopes.
