@@ -1,5 +1,7 @@
 # Implementation completion reports
 
+- [Repaired one-hour observation](repaired-hour-observation-20261019.md) — four original fleet groups, a fresh elapsed-hour gate and baseline-relative achievements/interactions.
+
 ## Current assignment
 
 - [Clean legacy/Hall verification](clean-legacy-hall-verification-20261019.md) — audited legacy output allowance repair, strict clean-turn acceptance and the founder's explicit Hall-prerequisite priority for selected reactive actor.
