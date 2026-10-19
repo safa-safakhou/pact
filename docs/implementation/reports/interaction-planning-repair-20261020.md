@@ -1,0 +1,9 @@
+# Local Fleet planning and interaction repair —20 October2026
+
+Founder explicitly requests repairing busy construction retries, self-target messages and invalid trade/planning decisions, then exactly one turn per four existing local Fleet profiles. Fleet source/installation and those four tasks in the isolated local world are covered; PACT rules/application, server and other populations remain unchanged. Original12 actors,138 prior turns/183 reported executions, goals, permissions, models, budgets, anchors and queues are retained. No new identity, worker, reopened historical window, uncertain replay, push or delegation.
+
+The sibling isolated Fleet worktree owns the implementation and detailed record at `../fleet/docs/interaction-planning-repair-20261020.md`. It shares observed PACT proposal shapes across engine families and legacy schema lookup, closes modern trade schemas, identifies self/peer/contact roles, constrains reference IDs, exposes observed Hall unlocks and distinguishes schema lookup from a state read. This uses existing authorized game observations and pinned contracts; the PACT server remains authoritative.
+
+Actual source checks, exact four-turn outcomes and encrypted restore/preservation evidence will be appended after completion. No simulated contract test is claimed as live communication or trade.
+
+Fleet final-source checks passed272 unit,404 integration and12 paired PACT tests (688) on isolated Node24/PG17 fixtures. Native type/style, build, import-boundary, audit and diff checks passed, with existing non-failing style diagnostics and zero vulnerabilities. Fresh fake-provider packets for both legacy actors and all6 reactive actors fit existing allowances with current owner intent and core facts; no real inference/commands occurred during those checks. PACT planning render/check passes181 tickets and37 release criteria. No PACT application source changed.
