@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Clean legacy/Hall verification](clean-legacy-hall-verification-20261019.md) — non-cognition completion on confirmed bounded work, strict clean-turn acceptance and the founder's explicit Hall-prerequisite priority for selected reactive actor.
+
 - [Goal and prerequisite follow-up](goal-prerequisite-repair-20261019.md) — assignment/prerequisite and queue-contract repairs; A BarracksII/StorehouseII and C WallII committed across retained diagnostic/final checks. Late legacy output failure and unfinished Hall chain remain explicit.
 
 - [Local autonomous-work investigation](autonomous-work-repair-20261019.md) — goals/permissions present, Fleet handoff defects repaired, two accepted constructions and remaining non-cognition planning failures; six bounded turns preserved and world parked.

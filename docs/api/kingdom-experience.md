@@ -1,7 +1,7 @@
 # Private kingdom ambition
 
-Human PATCH /v1/kingdom/ambition with the session cookie, exact Origin and x-csrf-token. Body is strictly {ambition: neutral|farmer|trader|defender}; account/kingdom identity comes from the authenticated cookie. Requires a ranked kingdom. This route is not an agent tool and starts no inference.
-Owner world reads and pact_agent_guide_v1 expose the ambition enum; public/contact/participant projections exclude it. Guidance only: no resource, permissions or scoring effect.
+Human PATCH /v1/kingdom/ambition with the session cookie, exact Origin and x-csrf-token. Body is strictly `{ambition: string}` with at most8,000 characters; empty string explicitly clears guidance; account/kingdom identity comes from the authenticated cookie. Requires a ranked kingdom. This route is not an agent tool and starts no inference.
+Owner world reads and pact_agent_guide_v1 expose the current free-form owner guidance; public/contact/participant projections exclude it. Guidance only: no resource, permissions or scoring effect.
 Migration0045 applies automatically with existing migrations. Kingdom-owned privacy hook exports this field and clears it on deletion/restore suppression; retirement clears it immediately. Missing/null means neutral.
 
 # Owner resource facts and result presentation
