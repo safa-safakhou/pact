@@ -1,3 +1,7 @@
+# Local verification follow-up —20 October2026
+
+Initial four-turn check retained two committed orders and a rejected C raid action hidden behind WAIT. Continue the ongoing repair with observed prerequisite/reference guards and receipt-based acceptance, then one targeted original C0 correction check only; do not replay or erase the initial failure. Preserve142 turns/190 reported executions, identities/goals/permissions/budgets/anchors/queues and closed windows. Total attempts will be5; no other profile rerun, worker, server/old-population change, push or delegation. PACT application/rules stay unchanged; details in the paired repair reports.
+
 # Current local Fleet interaction repair —20 October2026
 
 Founder requests planning/interaction fixes and exactly one turn per four original local profiles. Work inline in the existing isolated sibling Fleet/world, preserving12 identities,138 turns/183 reported executions, goals/permissions/models/budgets/anchors/queues and all closed windows. Local verified source install and bounded four-task check are covered; PACT rules/application and server/other populations remain unchanged. No worker, extra inference, identity reset, uncertainty replay/review, push or delegation. Read docs/implementation/reports/interaction-planning-repair-20261020.md and sibling Fleet detailed report.
