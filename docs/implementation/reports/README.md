@@ -2,6 +2,8 @@
 
 ## Current assignment
 
+- [Local four-fleet operability repair](local-world-operability-20261019.md) — session isolation, useful context delivery, audited local input allowance, four successful bounded turns with two preserved zero-call failures; final state parked.
+
 - [One-hour local four-fleet observation](local-world-observation-20261019.md) — completed original hour, per-group outcomes, no established interaction,41 reported model executions and reactive session/context failures; world/groups paused, no restart.
 
 - [Local world preparation](local-world-preparation-20261019.md) — historical setup/restore acceptance preceding that explicit launch.

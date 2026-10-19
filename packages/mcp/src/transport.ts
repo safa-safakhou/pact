@@ -481,16 +481,30 @@ export class McpTransport {
     if (!SUPPORTED_MCP_PROTOCOLS.has(requested)) {
       throw new McpError("UNSUPPORTED_PROTOCOL");
     }
+    const meta = body.params?._meta;
+    const connectionScoped =
+      !!meta &&
+      typeof meta === "object" &&
+      !Array.isArray(meta) &&
+      (meta as Record<string, unknown>)["pact/session-scope"] === "connection";
     const now = this.options.clock.now();
     const inserted = await this.options.pool.query<{ id: string }>(
-      `INSERT INTO mcp_sessions(id, product_scope, account_id, protocol_version, created_at, last_seen_at, oauth_grant_id)
-       VALUES ($1, $2, $3, $4, $5, $5, $6)
+      `INSERT INTO mcp_sessions(id, product_scope, account_id, protocol_version, created_at, last_seen_at, oauth_grant_id, connection_scoped)
+       VALUES ($1, $2, $3, $4, $5, $5, $6, $7)
        ON CONFLICT (product_scope, oauth_grant_id)
-         WHERE oauth_grant_id IS NOT NULL AND closed_at IS NULL
+         WHERE oauth_grant_id IS NOT NULL AND closed_at IS NULL AND NOT connection_scoped
        DO UPDATE SET last_seen_at = EXCLUDED.last_seen_at, protocol_version = EXCLUDED.protocol_version
        WHERE mcp_sessions.account_id = EXCLUDED.account_id
        RETURNING id`,
-      [randomUUID(), this.options.productScope, principal.accountId, requested, now, principal.agentGrantId ?? null],
+      [
+        randomUUID(),
+        this.options.productScope,
+        principal.accountId,
+        requested,
+        now,
+        principal.agentGrantId ?? null,
+        connectionScoped,
+      ],
     );
     const sessionId = inserted.rows[0]?.id;
     if (!sessionId) throw new McpError("FORBIDDEN", 403);
@@ -498,7 +512,9 @@ export class McpTransport {
       sessionId,
       response: this.result(body.id, {
         protocolVersion: requested,
+        ...(connectionScoped ? { _meta: { "pact/session-scope": "connection" } } : {}),
         capabilities: {
+          experimental: { "pact/connection-sessions": true },
           tools: { listChanged: false },
           ...(this.options.playView
             ? { resources: { listChanged: false }, extensions: { "io.modelcontextprotocol/ui": {} } }

@@ -47,3 +47,14 @@ At T1 new model/helper/command admissions close. Original requests/receipts drai
 Encrypted pg_dump archives use independent AES256-GCM keys in a separate keys directory. `restore-check.mjs` authenticates/decrypts in memory, restores into a temporary network-disabled PostgreSQL clone and compares complete rows. Prepared acceptance matched10 core game tables and39 Fleet tables. This is local recoverability evidence, not off-host disaster recovery.
 
 Source verification and actual prepared-state evidence are in the dated completion report. Preparation is not live-agent performance acceptance. The original Mac Fleet/helper and all server/historical worlds retain their own state; shared local GPU demand must be included in observed queue/latency results.
+
+
+## Repair and one-pass verification — 19 October
+
+The original hour is complete and its registration remains closed. The founder subsequently authorized repairing session/context failures and one operation per profile. See [the repair report](../implementation/reports/local-world-operability-20261019.md).
+
+Fleet now requests separate connection-scoped MCP sessions for readers/writers. This isolated PACT database was migrated to0072; no hosted/server installation was changed. Only these four local cohorts received an audited future-input allowance increase from24KB to48KB; original usage, identities, anchor, lifetime quotas and closed-hour times remain. Current packets retain whole game facts and peers; generic packing never silently deletes the world.
+
+From the isolated Fleet source, `node --import tsx scripts/verify-local-world-turns.ts '<private-state-directory>' '<unique-pass-id>'` is the explicit operator one-pass command. It starts no worker, claims only one exact task per requested existing profile, appends a private registration, and closes/parks in `finally`. Optional comma-separated profile selection supports an explicitly authorized repair of failed profiles without repeating successful ones. A pass ID cannot be replayed. The emergency outer gate retains the existing one-hour file shape, but no scheduler uses it: only the selected task IDs execute once. Crash recovery requires original task/receipt inspection; there is no automatic resumption.
+
+The completed check contains four successful turns and two preserved, pre-inference legacy failures. Seven actual model executions were fully reported, with no pending command or unknown allocation. All groups/world are paused and the background Fleet worker is stopped. A future run still requires covering user instructions; do not invoke the old hour's launch control or replace its configuration/artifact record with the repair manifest.

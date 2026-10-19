@@ -112,7 +112,7 @@ async function status() {
         (SELECT count(*)::int FROM cognitive_episodes WHERE cohort_id=$1 AND kind='interpretation') legacy_interpretations,
         (SELECT count(*)::int FROM cognitive_updates u JOIN agents a ON a.id=u.agent_id WHERE a.cohort_id=$1) legacy_updates,
         (SELECT count(*)::int FROM continuity_updates WHERE cohort_id=$1) modern_updates,
-        (SELECT count(*)::int FROM turn_events WHERE cohort_id=$1 AND label='Laya recall request') helper_requests`,
+        (SELECT count(*)::int FROM turn_events WHERE cohort_id=$1 AND label='Debug: Laya recall request') helper_requests`,
           [group.id],
         )
       ).rows[0];
