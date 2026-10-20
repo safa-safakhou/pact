@@ -63,3 +63,8 @@ The completed check contains four successful turns and two preserved, pre-infere
 ## Thirty-minute observation, 20 October 2026
 
 The same twelve actors completed the separately authorized 08:48:44.581–09:18:44.581 UTC window under a new private gate. Fleet source `45abda8` additionally accepts exactly 1,800,000 ms; the original single-use hour launcher is unchanged and must not be reused. All groups and game time are paused at tick 169, lifetime totals193 turns/246 reported executions, worker stopped and all gates closed. Existing active contracts and failure history remain. Read the [receipt-based report](../implementation/reports/local-half-hour-20261020.md). The new gate/controller is terminal; further gameplay needs a separately authorized window.
+
+
+## Packing/negotiation repair checkpoint, 20 October 2026
+
+The four-task check is terminal at197 lifetime turns/254 reported executions, world/cohorts paused tick173, original gates plus the new single-pass gate closed and no worker. Fleet final source `df4d0c3` is installed; the four actual tasks used `2c203b2` and include one failed self-raid and one valid outgoing signature. Further source guards were checked offline only. Preserve existing contracts/history; no automatic rerun is implied. See the [full repair and partial-acceptance report](../implementation/reports/packing-negotiation-goal-20261020.md).
