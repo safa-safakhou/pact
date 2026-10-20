@@ -173,6 +173,28 @@ describe("PACT-017 MCP transport", () => {
     await withTransaction(pool, (client) =>
       runs.assertMcpWriteLease(client, accountId, reconnects[0]?.sessionId as string),
     );
+    // Concurrent consumers opt into separate transport lifetimes under the same grant.
+    const isolatedInit = {
+      ...init,
+      params: { ...init.params, _meta: { "pact/session-scope": "connection" } },
+    };
+    const readers = await Promise.all([
+      mcp.handlePost(principal, isolatedInit),
+      mcp.handlePost(principal, isolatedInit),
+    ]);
+    expect(new Set([sessionId, ...readers.map((r) => r.sessionId)]).size).toBe(3);
+    await mcp.closeSession(principal, readers[0].sessionId as string);
+    await expect(mcp.openStream(principal, sessionId)).resolves.toBeDefined();
+    await withTransaction(pool, (client) => runs.assertMcpWriteLease(client, accountId, sessionId));
+    await expect(
+      mcp.handlePost(
+        principal,
+        { method: "tools/call", id: 8, params: { name: "run.open", arguments: {} } },
+        readers[1].sessionId,
+      ),
+    ).rejects.toMatchObject({ code: "RUN_ALREADY_ACTIVE" });
+    await mcp.closeSession(principal, readers[1].sessionId as string);
+    await withTransaction(pool, (client) => runs.assertMcpWriteLease(client, accountId, sessionId));
     const other = { ...principal, agentGrantId: grants[1] };
     const otherSession = (await mcp.handlePost(other, init)).sessionId as string;
     expect(otherSession).not.toBe(sessionId);

@@ -8,6 +8,8 @@ Fleet is a separate repository/database/service that runs authorized agents. It 
 
 ## Implementation integration — 19 October 2026
 
+The [20 October local-world publication](../implementation/reports/master-publication-20261020.md) adds the subsequent four-profile repairs and complete observation/result reports. The [latest native outcomes](../implementation/reports/fleet-reasoning-outcomes-20261020.md) retain partial behavioral acceptance; publication leaves the local world parked.
+
 The founder subsequently authorized merging both implementation branches into master. See the [paired integration and verification report](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for current integrated source/checks and the typecheck correction. The publication-only scope and CI observation below describe the earlier checkpoint. Source publication does not install or activate Fleet or PACT features.
 
 ## Initial documentation publication scope

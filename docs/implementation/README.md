@@ -1,3 +1,19 @@
+## Goal/prerequisite follow-up — 19 October 2026
+
+The [follow-up report](reports/goal-prerequisite-repair-20261019.md) records the completed assignment/history, prerequisite and queue-contract repairs. Diagnostic/final A/C checks committed BarracksII/StorehouseII and WallII; a late legacy output truncation and the unfinished Hall path remain explicit. All attempts and receipts remain; the original hour and both check gates stay closed, world/groups paused and worker stopped.
+
+## Local autonomous-work investigation — 19 October 2026
+
+The [actual repair report](reports/autonomous-work-repair-20261019.md) records current goals/permissions for all12 local actors, corrected Fleet instruction/assignment/read-context handoffs and11 fully reported model calls. Both cognition profiles committed construction; legacy loop/reactive basic still show goal-use/prerequisite-planning failures. The original hour and both bounded passes are closed, clock/groups paused and worker stopped. No broader permission, new long run or server/population change is implied.
+
+## One-hour local four-fleet observation complete — 19 October 2026
+
+The founder explicitly launched the prepared world for one hour. The [actual observation report](reports/local-world-observation-20261019.md) records one completed FarmII, four waiting HallII orders, no established interactions,41 reported model executions and session/context failures that prevent a fair architecture comparison. The clock/four groups are paused, the deadline closed, and all12 identities/history preserved. No additional run or repair deployment is implied. Earlier preparation notices below are historical.
+
+## Local four-fleet environment prepared — 19 October 2026
+
+The founder authorized preparation and explicitly deferred launch. The [operator guide](../operations/local-world.md) and [preparation acceptance](reports/local-world-preparation-20261019.md) record twelve new kingdoms, four profiles and a paused/disarmed local instance. One shared hour is the experiment budget; actual calls and tokens are measured without equalizing them. No observation or inference has started.
+
 ## Paired implementation merge — 19 October 2026
 
 The founder explicitly authorized merging both existing implementation branches into master and pushing them. See the [PACT integration report](reports/master-integration-20261019.md) and [paired verification receipt](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for source provenance, the clean typecheck correction and complete local checks. This supersedes the earlier documentation-only publication scope for source integration. It does not install or activate the code or authorize a model/game run.

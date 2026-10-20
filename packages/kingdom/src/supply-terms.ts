@@ -36,6 +36,23 @@ export function supplyPerspective(terms: SupplyTerms, ownerIsA: boolean) {
   return { youSend: ownerIsA ? terms.aToB : terms.bToA, youReceive: ownerIsA ? terms.bToA : terms.aToB };
 }
 
+/** Read-only parameters from the same canonical rules/value function as admission. */
+export function supplyTermsRules() {
+  const supply = rulesCatalog.supply;
+  return {
+    schemaVersion: "pact.supply-terms.v1",
+    durationHours: supply.durationHours,
+    noticeHours: supply.noticeHours,
+    maxBondFlowHours: supply.maxBondFlowHours,
+    valueUnitsPerWhole: Object.fromEntries(
+      (["iron", "silver", "grain"] as const).map((resource) => [resource, String(markedValue(resource, 1))]),
+    ),
+    minOfferExpiryMinutes: supply.minOfferExpiryMinutes,
+    maxOfferExpiryMinutes: supply.maxOfferExpiryMinutes,
+    outgoingRateLimit: "storage_capacity_whole_per_hour",
+  };
+}
+
 export function validateSupplyTerms(terms: SupplyTerms): void {
   const supply = rulesCatalog.supply;
   if (
@@ -56,10 +73,8 @@ export function validateSupplyTerms(terms: SupplyTerms): void {
     if (bond && !flow) throw new Error("BOND_WITHOUT_FLOW");
     if (bond && flow) {
       const markedBond = markedValue(bond.resource, bond.wholeAmount);
-      const maximum = markedValue(
-        flow.resource,
-        flow.wholePerHour * Math.min(terms.durationHours, supply.maxBondFlowHours),
-      );
+      const maximum =
+        markedValue(flow.resource, flow.wholePerHour) * BigInt(Math.min(terms.durationHours, supply.maxBondFlowHours));
       if (markedBond > maximum) throw new Error("BOND_EXCEEDS_FLOW");
     }
   }

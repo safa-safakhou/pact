@@ -1,6 +1,36 @@
 # Implementation completion reports
 
+- [Repaired one-hour observation](repaired-hour-observation-20261019.md) — four original fleet groups, a fresh elapsed-hour gate and baseline-relative achievements/interactions.
+
 ## Current assignment
+
+- [Local-world master publication](master-publication-20261020.md) — integration of the repairs and all result reports, merged-source checks and preserved paused runtime.
+
+- [Fleet reasoning and actual outcomes](fleet-reasoning-outcomes-20261020.md) — remaining operation/receipt/construction reasoning repairs and a separately recorded four-profile single pass.
+
+- [Fleet prompt and useful-work verification](fleet-prompt-goal-verification-20261020.md) — four exact diagnostic attempts, useful FarmII/contact work with remaining reasoning failures, one preserved unknown allocation, and an offline-verified legacy consent-schema follow-up; world parked.
+
+- [Packing, negotiation and Hall reasoning repair](packing-negotiation-goal-20261020.md) — fixed packet fitting and proposal checks; four actual turns retained with one failed self-raid, one valid outgoing signature and partial behavioral acceptance.
+
+- [Thirty-minute local world observation](local-half-hour-20261020.md) — all four original groups, five completed upgrades, two delivering contracts and nine context failures; world parked.
+
+- [Reactive stale-goal reconciliation](reactive-stale-goal-20261020.md) — separate owner intent/current construction facts, check factual waits and one bounded C0 verification.
+
+- [Reactive trade direction and bonds](reactive-trade-repair-20261020.md) — canonical read-only supply rules, exact bond arithmetic, checked model direction claims and one bounded C0 verification.
+
+- [Reactive-basic Hall goal/stock checkpoint](reactive-goal-stock-20261020.md) — explicit current prerequisites/stock delivery and occupied-training guard; both the first check and explicitly approved additional check failed, with reversed trade direction/invalid bonds retained; world parked.
+
+- [Clean legacy/Hall verification](clean-legacy-hall-verification-20261019.md) — audited legacy output allowance repair, strict clean-turn acceptance and the founder's explicit Hall-prerequisite priority for selected reactive actor.
+
+- [Goal and prerequisite follow-up](goal-prerequisite-repair-20261019.md) — assignment/prerequisite and queue-contract repairs; A BarracksII/StorehouseII and C WallII committed across retained diagnostic/final checks. Late legacy output failure and unfinished Hall chain remain explicit.
+
+- [Local autonomous-work investigation](autonomous-work-repair-20261019.md) — goals/permissions present, Fleet handoff defects repaired, two accepted constructions and remaining non-cognition planning failures; six bounded turns preserved and world parked.
+
+- [Local four-fleet operability repair](local-world-operability-20261019.md) — session isolation, useful context delivery, audited local input allowance, four successful bounded turns with two preserved zero-call failures; final state parked.
+
+- [One-hour local four-fleet observation](local-world-observation-20261019.md) — completed original hour, per-group outcomes, no established interaction,41 reported model executions and reactive session/context failures; world/groups paused, no restart.
+
+- [Local world preparation](local-world-preparation-20261019.md) — historical setup/restore acceptance preceding that explicit launch.
 
 - [Fleet Nemotron output fix](fleet-nemotron-output-fix-20261018.md) — explicit thinking modes, separate bounded controls and preserved original Q1; no qualification restart or runtime/server change.
 
