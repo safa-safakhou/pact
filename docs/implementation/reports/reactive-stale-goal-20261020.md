@@ -1,0 +1,7 @@
+# Reactive-basic stale-goal reconciliation —20 October2026
+
+The founder requests fixing stale prerequisite reasoning, then exactly one original C0 turn. Baseline146 turns/194 reported executions,12 original actors, owner goal version3 and existing mandates/models/budgets/anchors/queues/history are preserved. The PACT application remains fb7a1ba; the repair belongs to Fleet's modern adapter and generic optional contracts. No game rule, permission, server, other population or legacy controller change is required.
+
+The prior turn waited for FarmII/BarracksII despite their completed levels and HallII's explicit stock shortage. Fleet had promoted raw owner prose as a factual current objective and accepted a wait without checking its factual basis. The repair separates verbatim owner intent from derived current construction state and checks PACT wait level/phase assertions against the current authorized snapshot. Correct resource waits remain legal; useful work is not fabricated or forced. Owner ambition/version is not rewritten. Lossless references preserve repeated whole briefing facts within the same48KB budget. Read sibling `fleet/docs/reactive-stale-goal-20261020.md` and its plan for implementation and evidence.
+
+Focused red-to-green checks pass. Final full Fleet checks, locally installed source, actual one-turn outcome and encrypted preservation/restore acceptance are pending; source tests alone do not prove useful autonomy. Work remains inline, with exactly one new C0 task and no extra attempt/reset/cancel/replay, worker, push or server rollout.

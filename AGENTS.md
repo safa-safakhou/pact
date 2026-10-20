@@ -1,3 +1,7 @@
+# Current reactive stale-goal repair —20 October2026
+
+Founder explicitly requests a Fleet stale-goal reconciliation repair and exactly one new original C0 turn, preserving146/194 history,12 identities and current goal/settings/queues. Work inline; source/offline verification, owned local Fleet-console installation, that one task and parked encrypted restore/report/commits are covered. PACT applicationfb7a1ba and other services/populations stay unchanged. See docs/implementation/reports/reactive-stale-goal-20261020.md and sibling Fleet plan. No extra live attempt, reset/cancel/replay, server rollout or push.
+
 # Local reactive trade repair checkpoint complete —20 October2026
 
 PACT fb7a1ba / Fleet a906488 are installed locally with710 Fleet tests and408 PACT unit/18 supply integration checks passed. One original C0 turn returned WAIT (1 reported execution,0 actions), incorrectly calling completed FarmII/BarracksII missing despite complete Hall stock/trade facts. Trade guards pass offline/real-handler checks; live useful Hall/trade reasoning remains unverified. Final146 turns/194 reported executions,12 ready actors, four groups/clock paused tick139, no active/pending/unknown/blockers/worker, all gates closed. All prior145/193 history, identities/goals/mandates/models/budgets/anchors/queues are retained; encrypted10-PACT/39-Fleet-table restore verified. Read docs/implementation/reports/reactive-trade-repair-20261020.md. This consumes this assignment's single live turn; no extra attempt, population/server change, push or delegation is implied.

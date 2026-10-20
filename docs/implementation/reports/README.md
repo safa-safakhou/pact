@@ -4,6 +4,8 @@
 
 ## Current assignment
 
+- [Reactive stale-goal reconciliation](reactive-stale-goal-20261020.md) — separate owner intent/current construction facts, check factual waits and one bounded C0 verification.
+
 - [Reactive trade direction and bonds](reactive-trade-repair-20261020.md) — canonical read-only supply rules, exact bond arithmetic, checked model direction claims and one bounded C0 verification.
 
 - [Reactive-basic Hall goal/stock checkpoint](reactive-goal-stock-20261020.md) — explicit current prerequisites/stock delivery and occupied-training guard; both the first check and explicitly approved additional check failed, with reversed trade direction/invalid bonds retained; world parked.
