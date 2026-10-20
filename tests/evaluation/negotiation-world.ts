@@ -4,6 +4,7 @@ import {
   type AuthenticatedPrincipal,
   CommandDispatcher,
   GameCommandHandler,
+  outlookFeasibility,
 } from "@pact/application";
 import { AuthorityService, ExactHumanPermitService, ExposureService } from "@pact/authority";
 import {
@@ -24,8 +25,11 @@ import {
 } from "@pact/identity";
 import {
   ActionLimitService,
+  AgentOutlookService,
+  CouncilReader,
   GarrisonService,
   ImmediateExposureAdapter,
+  KingdomDiscoveryReader,
   KingdomService,
   SocialOverviewReader,
   SocialService,
@@ -57,7 +61,10 @@ export interface NegotiationActor {
   readSelf(): Promise<Snapshot | null>;
   readPeer(kingdomId: string): ReturnType<WorldViewService["read"]>;
   readSection(query: ObservationSectionQuery): ReturnType<WorldViewService["readSection"]>;
-  guide(topic?: "start" | "diplomacy" | "authority"): Promise<Record<string, unknown>>;
+  guide(topic?: "start" | "development" | "diplomacy" | "authority"): Promise<Record<string, unknown>>;
+  discover(query: unknown): ReturnType<KingdomDiscoveryReader["read"]>;
+  thread(peer: string): ReturnType<CouncilReader["thread"]>;
+  outlook(): ReturnType<AgentOutlookService["readOwner"]>;
   history(): Promise<{ gameTimeMs: string; observation: Snapshot }[]>;
 }
 export interface NegotiationWorld {
@@ -172,6 +179,9 @@ export async function createNegotiationWorld(
     const social = new SocialService("pact", runtime.ledger, limits, clock, new ImmediateExposureAdapter(exposure));
     const supply = new SupplyService("pact", runtime.ledger, limits, social, new SupplyExposureAdapter(exposure));
     const views = new WorldViewService(db, "pact");
+    const discovery = new KingdomDiscoveryReader(db, "pact", clock.now);
+    const council = new CouncilReader(db, "pact", new SocialOverviewReader(db, "pact"), async () => ({}));
+    const outlook = new AgentOutlookService(db, "pact", views, outlookFeasibility);
     const guide = new AgentGuideReader(views, new SocialOverviewReader(db, "pact"), authority);
     const handler = new GameCommandHandler(
       social,
@@ -386,6 +396,18 @@ export async function createNegotiationWorld(
           async guide(topic = "start") {
             await active();
             return guide.read(p.accountId, topic);
+          },
+          async discover(query) {
+            await active();
+            return discovery.read(p.accountId, query);
+          },
+          async thread(peer) {
+            await active();
+            return council.thread(p.accountId, peer);
+          },
+          async outlook() {
+            await active();
+            return outlook.readOwner(credential.principal);
           },
           async history() {
             await active();
