@@ -12,7 +12,7 @@
 
 **Original status:** Planning only, 20 October 2026. No new runs, source implementation or runtime changes. Baseline `41e8bcdd85b320fa31bbf31c328214b71dd6e0e1`. This details PACT ownership of N01/N02/N06/N08, not another task list to execute twice.
 
-**Implementation checkpoint (20 October 2026):** F00/F01 and N01/N02 are implemented and verified in the isolated `codex/two-kingdom-offline` worktrees. F02–F06 and N03–N08 remain open. Earlier planning-only wording below records the original assignment; the founder subsequently authorized offline implementation. No real-provider stage is authorized or started.
+**Implementation checkpoint (21 October 2026):** F00–F06 and N01–N08 are complete and verified inline in the isolated `codex/two-kingdom-offline` worktrees. See the [paired source/offline acceptance report](../../implementation/reports/two-kingdom-negotiation-source-acceptance-20261020.md). F07/F08, persistent specialists and skills remain open. Original planning-only wording is historical; later source authorization covers offline implementation only. E1–E4 remain unstarted and real-model quality is unqualified.
 
 ## Global Constraints
 
@@ -21,7 +21,7 @@
 - Unchanged rules, integer scaling, ordinary/founding resources, contact/lease/grant checks, supply formulas and minute ordering.
 - Exactly two active kingdoms per negotiation world; separate solo worlds. Evaluator-only data never enters actor observations.
 - Historical `tests/evaluation/design.json`/672-cell registry remains unchanged. Supply evidence gets its own schema; the existing garrison schema does not already cover it.
-- This assignment is prose only. Listed commands belong to a later source/offline assignment; real models remain a further separate gate.
+- The original assignment was prose only. Subsequent authorization covers the completed source/offline work; real models remain a separate unstarted gate.
 
 ## Review Focus
 
@@ -79,4 +79,4 @@ This milestone does not implement specialist A07/A08. Existing single-controller
 
 The proposed `reactive-cognition@2` needs Fleet F02–F06. PACT rules and old profiles remain compatible. Six architecture families can have more than six version choices; catalog tests must preserve that distinction.
 
-E1 is the first future operational proposal: two development cells, at most 144 model calls / 5,760,000 reserved tokens, zero helpers and six sequential wall hours. It is **unapproved and unstarted**. All other matrices/thresholds are in design §§6–8. This planning task selects no actual model artifact, launch time or grant.
+E1 is the first future operational proposal: two development cells, at most 144 model calls / 5,760,000 reserved tokens, zero helpers and six sequential wall hours. It is **unapproved and unstarted**. All other matrices/thresholds are in design §§6–8. This source checkpoint selects no actual model artifact, launch time or grant.
