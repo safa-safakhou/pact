@@ -1,4 +1,18 @@
-# Prepared local one-hour PACT world
+# Local four-fleet worlds
+
+## Current parked fresh world —20 October 2026
+
+The founder authorized a complete fresh local reset and thirty-minute observation. Old world `local-four-20261019-ef5d29eb` is encrypted-snapshotted and its owned services/databases stopped, with volumes and197 turns/254 calls retained. Do not start its databases on occupied ports or reopen its closed windows.
+
+New world `local-four-20261020-f1df002c` has twelve new kingdoms, three per original type, with matched guardian/merchant/diplomat goals and no inherited gameplay/memory. Its private directory under `~/Library/Application Support/PACT Local Worlds/` now owns game/API3400/3401, Fleet8830 and databases5451/5452. Unrelated installations/helper/provider were not changed. Fleet applicationdf4d0c3 and PACTfb7a1ba stayed unchanged;1631 artifact hashes matched.
+
+The exact10:55:11.227–11:25:11.227UTC window is closed. It produced32 turns/48 reported calls/30 committed commands/16 completed upgrades. No aggregate call/token/action/turn quota applied. World/cohorts are paused tick30, twelve actors ready, zero active/pending/unknown/reserved/blockers, worker stopped. Two contacts and two offers remain pending; no active agreement or HallII. Both fresh gates are terminal. Do not invoke the old one-hour launcher for this completed run. Read the [receipt-based report](../implementation/reports/local-fresh-half-hour-20261020.md).
+
+Use `control.mjs status '<new-private-directory>'` for read-only status. A continuation needs explicit authority and a new gate, retaining identities/counters/failures/orders. Snapshot and restore-check controls retain explicit-root usage; final encrypted restore matched10 PACT/39 Fleet tables. Credentials/evidence remain outside Git.
+
+## Historical preparation and archived checks
+
+The following records the original19October instance and repairs. It does not describe the current endpoints' identities or authorize relaunch.
 
 19 October 2026. The founder authorized preparing a fresh local world and four fleet architectures, with launch explicitly deferred until requested. One elapsed hour is the experiment budget. There is no total model/helper-call or token quota and no equal-compute limiter. Ordinary game authority, model context/transport bounds and the existing engine turn structure remain.
 
