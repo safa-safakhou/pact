@@ -10,7 +10,9 @@
 
 **Spec:** [Milestone design](../../../../fleet/docs/superpowers/specs/2026-10-20-two-kingdom-negotiation-design.md). [Canonical tasks N01–N08](../../../../fleet/docs/superpowers/plans/2026-10-20-two-kingdom-negotiation.md).
 
-**Status:** Planning only, 20 October 2026. No new runs, source implementation or runtime changes. Baseline `41e8bcdd85b320fa31bbf31c328214b71dd6e0e1`. This details PACT ownership of N01/N02/N06/N08, not another task list to execute twice.
+**Original status:** Planning only, 20 October 2026. No new runs, source implementation or runtime changes. Baseline `41e8bcdd85b320fa31bbf31c328214b71dd6e0e1`. This details PACT ownership of N01/N02/N06/N08, not another task list to execute twice.
+
+**Implementation checkpoint (20 October 2026):** F00/F01 and N01/N02 are implemented and verified in the isolated `codex/two-kingdom-offline` worktrees. F02–F06 and N03–N08 remain open. Earlier planning-only wording below records the original assignment; the founder subsequently authorized offline implementation. No real-provider stage is authorized or started.
 
 ## Global Constraints
 
@@ -59,11 +61,11 @@
 
 **Interfaces:** `createNegotiationWorld(ownedFixture,cell):Promise<NegotiationWorld>`; `readNegotiationEvidence(world):Promise<NegotiationEvidence>`; `compareSolo(trade,controls):SoloComparison[]`. The handle supplies actor-scoped reads/dispatch, full-tick `advanceTo(gameMinute)` and manifest-owned cleanup. No production migration is expected.
 
-- [ ] Test separate identities/stocks, onboarding invariants, agent-decided contact, same-version signatures, canonical receipts, 60 installments/flow and natural expiry. Cover C02 owner-goal amendment/stale version; C03 negative value; C04 expired/revoked/stale admission; C05 true default versus fulfillment. Do not use fixed UUIDs as model hints.
-- [ ] Run both new integration files through F00's PACT runner; establish red on a missing behavior, not absent infrastructure.
-- [ ] Construct initial stocks before decisions with ledger provenance. Later actions use agent principals/current mandates/leases/shared dispatcher. C05's scripted owner intervention uses its real handler and is labelled. Execute all ordinary ticks in order; never selectively freeze native time while a model thinks.
-- [ ] Rerun new suites and existing social-material/supply-offers/supply-settlement/game-command-social/game-command-faults checks. At actual final refill boundary require A donor Iron equal solo and Silver +1; B donor Silver equal solo and Iron +2. Derive times from actual activation/start/end records. Actor adapters cannot read private opposing state.
-- [ ] Commit fixtures/evidence/tests. A reproduced production defect receives a separate minimal fix/regression/report; no economic or authority change to make an agent pass.
+- [x] Test separate identities/stocks, onboarding invariants, agent-decided contact, same-version signatures, canonical receipts, 60 installments/flow and natural expiry. Cover C02 owner-goal amendment/stale version; C03 negative value; C04 expired/revoked/stale admission; C05 true default versus fulfillment. Do not use fixed UUIDs as model hints.
+- [x] Run both new integration files through F00's PACT runner; establish red on a missing behavior, not absent infrastructure.
+- [x] Construct initial stocks before decisions with ledger provenance. Later actions use agent principals/current mandates/leases/shared dispatcher. C05's scripted owner intervention uses its real handler and is labelled. Execute all ordinary ticks in order; never selectively freeze native time while a model thinks.
+- [x] Rerun new suites and existing social-material/supply-offers/supply-settlement/game-command-social/game-command-faults checks. At actual final refill boundary require A donor Iron equal solo and Silver +1; B donor Silver equal solo and Iron +2. Derive times from actual activation/start/end records. Actor adapters cannot read private opposing state.
+- [x] Commit fixtures/evidence/tests. A reproduced production defect receives a separate minimal fix/regression/report; no economic or authority change to make an agent pass.
 
 ## N06/N08 — Paired acceptance and report
 
