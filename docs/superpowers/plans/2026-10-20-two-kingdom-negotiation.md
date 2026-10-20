@@ -47,11 +47,11 @@
 
 **Interfaces:** Implement canonical N01 cells/evidence/solo contracts and strict `pact.negotiation-outcome.v1` JSON Schema mirrored for Fleet validation. This is evaluation data, not a deployed endpoint/permission.
 
-- [ ] Freeze C01–C06 state, private objectives, reference outcomes, caps, clock modes and split rotations. Test wrong world/config, duplicate cells, private fields and incorrect amount scaling.
-- [ ] From Fleet run `npm run test:architecture -- --repo pact tests/unit/negotiation-plan.test.ts`; see the intended missing contract assertion fail.
-- [ ] Implement exact decimal-string amounts, scoped refs and explicit coverage. Mark provider stages unapproved and preserve historical manifests.
-- [ ] Rerun new/existing evaluation-plan suites and mirror digest checks. Parsing must create no fixture, account or provider call.
-- [ ] Commit N01 files locally using the canonical task message.
+- [x] Freeze C01–C06 state, private objectives, reference outcomes, caps, clock modes and split rotations. Test wrong world/config, duplicate cells, private fields and incorrect amount scaling.
+- [x] From Fleet run `npm run test:architecture -- --repo pact tests/unit/negotiation-plan.test.ts`; see the intended missing contract assertion fail.
+- [x] Implement exact decimal-string amounts, scoped refs and explicit coverage. Mark provider stages unapproved and preserve historical manifests.
+- [x] Rerun new/existing evaluation-plan suites and mirror digest checks. Parsing must create no fixture, account or provider call.
+- [x] Commit N01 files locally using the canonical task message.
 
 ## N02 — Worlds, full lifecycle and independent controls
 
