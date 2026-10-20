@@ -1,3 +1,7 @@
+# Stale-goal checkpoint complete with partial behavioral acceptance —20 October2026
+
+Fleet b6d83ed is installed locally;716 tests pass, PACT applicationfb7a1ba unchanged. One original C0 turn committed a valid unsigned offer:send4 Iron/hour, receive8 Silver/hour, null bonds. It avoided the stale FarmII/BarracksII wait and targeted Hall Silver, but spends needed Iron; beneficial full-goal planning remains unverified. No signatures/contracts/delivery or stock/Hall change. Final147 turns/195 reported executions,12 ready actors, four groups/clock paused tick139, no active/pending/unknown/blockers/worker, all gates closed. Prior146/194 history, identities/settings/goals/queues retained; encrypted10-PACT/39-Fleet-table restore verified. Read docs/implementation/reports/reactive-stale-goal-20261020.md. Single-turn authorization consumed; no extra attempt, cancellation/reset/replay, server/population change, push or delegation implied.
+
 # Current reactive stale-goal repair —20 October2026
 
 Founder explicitly requests a Fleet stale-goal reconciliation repair and exactly one new original C0 turn, preserving146/194 history,12 identities and current goal/settings/queues. Work inline; source/offline verification, owned local Fleet-console installation, that one task and parked encrypted restore/report/commits are covered. PACT applicationfb7a1ba and other services/populations stay unchanged. See docs/implementation/reports/reactive-stale-goal-20261020.md and sibling Fleet plan. No extra live attempt, reset/cancel/replay, server rollout or push.
