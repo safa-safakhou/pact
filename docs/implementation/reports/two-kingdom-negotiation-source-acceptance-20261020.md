@@ -46,3 +46,5 @@ F02–F06 supply the exact-version/scoped foundation for `reactive-cognition@2`,
 F07/F08 UI/CLI presentation, persistent specialists A01–A08 and skills K01–K07 remain separate. A04 may reuse the explicit evidence policy; specialist PACT comparisons still require A07/A08. F6 remains unsupported by this benchmark.
 
 E1's preview lists only two frozen baseline `@1` cells, at most 144 calls / 5,760,000 reserved tokens, zero helpers and six sequential wall hours. It has no model/settings/policy selection, private grant, executable owned composition, fixture bindings or UTC start/cutoff. The source-pinned preview must be regenerated before any future grant after documentation changes HEAD. No E1 execution or subsequent E2/E3/E4 is implied by source acceptance. The original world stays parked.
+
+21 October follow-up: [E1 approval preparation](negotiation-E1-approval-20261021.md) pins the proposed model/settings/fixture/budget/stop conditions. It starts no run and explicitly records the still-unimplemented owned composition and baseline operational preflight.
