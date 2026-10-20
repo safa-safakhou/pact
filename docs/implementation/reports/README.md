@@ -4,6 +4,8 @@
 
 ## Current assignment
 
+- [Thirty-minute local world observation](local-half-hour-20261020.md) — all four original groups, five completed upgrades, two delivering contracts and nine context failures; world parked.
+
 - [Reactive stale-goal reconciliation](reactive-stale-goal-20261020.md) — separate owner intent/current construction facts, check factual waits and one bounded C0 verification.
 
 - [Reactive trade direction and bonds](reactive-trade-repair-20261020.md) — canonical read-only supply rules, exact bond arithmetic, checked model direction claims and one bounded C0 verification.
