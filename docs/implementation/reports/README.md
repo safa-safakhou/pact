@@ -4,6 +4,8 @@
 
 ## Current assignment
 
+- [Fleet prompt and useful-work verification](fleet-prompt-goal-verification-20261020.md) — four exact diagnostic attempts, useful FarmII/contact work with remaining reasoning failures, one preserved unknown allocation, and an offline-verified legacy consent-schema follow-up; world parked.
+
 - [Packing, negotiation and Hall reasoning repair](packing-negotiation-goal-20261020.md) — fixed packet fitting and proposal checks; four actual turns retained with one failed self-raid, one valid outgoing signature and partial behavioral acceptance.
 
 - [Thirty-minute local world observation](local-half-hour-20261020.md) — all four original groups, five completed upgrades, two delivering contracts and nine context failures; world parked.

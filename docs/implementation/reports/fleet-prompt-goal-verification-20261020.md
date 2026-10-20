@@ -1,0 +1,24 @@
+# Fleet prompt and useful-work verification — 20 October 2026
+
+Founder requested repairing the reviewed prompts across all four types, followed by one native turn per type. Work remained inline in the isolated local-world worktrees. PACT game code, rules, ownership, permissions and installed application artifacts were unchanged. Fleet owns the source changes and full report at sibling `fleet/docs/prompt-goal-verification-20261020.md`.
+
+Fleet `98e4c20` added concise current-state/construction readiness, negotiation lifecycle and exact consent guidance, clearer native output semantics and subjective-memory guidance. Four diagnostic actors ran exactly once at13:05:25.648–13:10:12.809UTC in `local-four-20261020-f1df002c`. Their native call/action limits, continuous budgets, Nemotron digest, identities, owner goals and cadence remained unchanged. No worker, reset or extra probe was launched.
+
+| Group | Actual result | Assessment |
+| --- | --- | --- |
+| Legacy loop / A2 | Bookkeeping-schema read described as completing trade; second inference returned a native Ollama HTTP500 after88.319s. No game command. | Failed reasoning/useful-work check; one unknown40,000-token allocation retained. |
+| Legacy cognition / B2 | New unsigned one-way10 Grain/hour request to another peer; claimed an original offer was signed, income established and the objective satisfied. | Legal proposal, failed consent/delivery/goal reasoning. Saved result quotation is accurate; its strategic interpretation is not verified. |
+| Reactive basic / C3 | FarmII order committed in the free slot, addressing its queued HallII prerequisite. | Useful work, with false claims that Farm produces Iron/Silver, removes the Hall order and frees resources. |
+| Reactive cognition / D1 | Invalid factual wait rejected; corrected within the same native turn to a committed contact request seeking resource assistance, with accurate completed FarmII/BarracksII and stock-short Hall facts. | Useful introduction; no accepted contact, alliance or resource delivery yet. |
+
+Seven allocations produced six reported responses and one unknown. Three commands committed: a supply offer, a FarmII order and a contact request. All three receipts were read back through their authenticated owners. A terminal WAIT label does not summarize actual decision quality.
+
+Actual request replay then proved an additional legacy mismatch: the brief's exact signature was not admitted by the generation schema without another lookup. Fleet `259d285` now advertises eligible observed signatures and retains signature/contact-answer shapes through corrective narrowing and optional-schema paging. Six new real-engine/fake-provider regressions cover both legacy profiles, stale duplicate feedback and forced paging. This follow-up was installed while parked; no extra real turn was authorized or run. Behavioral acceptance of that correction remains offline only.
+
+Final source checks:317 Linux unit +410 Linux integration +14 paired PACT checks = **741 passes**; type/style, boundary, build and diff checks pass. All1,631 application hashes were verified, with PACT byte-identical to the previous installation. Twelve-state packet replay fits the unchanged native limits. The historical controller digest and old goldens remain retained with the narrowly recorded shape-retention exception.
+
+Final world: **36 turns/55 allocations:54 reported,one unknown**. Four profiled groups and clock paused at **tick34**, no worker/executing turn/pending game command/reserved allocation/provider-capacity lease. Eleven matched actors ready; A2 awaits the explicitly requested review of its40,000 unknown allocation. No exact token usage was fabricated. The separate stopped two-agent Random Fleet draft is untouched. Original32 turns/48 allocations, identities, bindings/settings/anchors, all twelve owned goals/full mandates/social delegation and original gate bytes were verified unchanged. The new gate is closed; existing gameplay and every failure remain recorded.
+
+Encrypted `prompt-final-20261020` archives authenticated and restored in a network-disabled clone with complete-row matches across10 PACT and39 Fleet tables, including the unknown allocation. Task-owned test/restore containers were removed. Raw packets, private runtime data and credentials remain outside Git.
+
+This is partial behavioral acceptance, not a fully healthy autonomous system or an architecture ranking. The concrete next operational step is the separately requested exact unknown-usage review; it would preserve the unknown marker/full allocation, terminalize only the interrupted controller turn and restore the same agent's eligibility without another inference or game action. Elapsed time or a preselected approval option is not consent. No server/other-population change, new run, replay/cancellation/reset, push or deferred PACT task is implied.
