@@ -12,6 +12,10 @@ The [20 October local-world publication](../implementation/reports/master-public
 
 The founder subsequently authorized merging both implementation branches into master. See the [paired integration and verification report](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for current integrated source/checks and the typecheck correction. The publication-only scope and CI observation below describe the earlier checkpoint. Source publication does not install or activate Fleet or PACT features.
 
+## Proposed negotiation milestone — 20 October 2026
+
+The [two-kingdom negotiation plan](../superpowers/plans/2026-10-20-two-kingdom-negotiation.md) defines paired Fleet/PACT fixes, isolated beneficial/bad/stale-offer scenarios, outcome-memory checks and separate source/model/native-timing acceptance. It connects to the specialist architecture foundations without requiring persistent specialists for the first milestone. This is planning only: no new runs or runtime changes, and the paused world remains preserved.
+
 ## Initial documentation publication scope
 
 This documentation-only publication includes the technical narrative and dated source evidence. It does not merge the paired PACT/Fleet implementation branches. Newer candidate API protocols and code maps therefore describe locally verified source, not an assertion that `master` or a deployed host already exposes them. Canonical specifications and the active tracker on the published branch remain authoritative.
