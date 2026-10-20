@@ -62,6 +62,12 @@ export class AgentGuideReader {
         upgradeMultipliersAndMinutes: rulesCatalog.upgrades,
         troopCostsWholeAndMinutes: rulesCatalog.units,
         hallUnlocks: rulesCatalog.hallUnlocks,
+        productionBuildings: { farm: "grain", mine: "iron", market: "silver" },
+        constructionEffect: {
+          admitted: "Adds one construction instruction; existing orders remain.",
+          started: "Spends Iron/Silver construction stock; does not acquire resources.",
+          completed: "Changes the selected building's level and effects only after completion.",
+        },
         exampleActions: [
           { kind: "game.building.queue", building: "farm", targetLevel: 2, slot: 1 },
           { kind: "game.training.queue", type: "spearman", count: 1 },

@@ -1,0 +1,7 @@
+# Fleet reasoning and actual outcomes —20 October2026
+
+Founder requested repairing remaining reasoning in three profiles and one new native turn for all four. Source/runtime work stays in the existing isolated local world, preserving36 turns/55 allocations, the owner-reviewed unknown40000 allocation, all identities/goals/authority/settings/jobs/offers and stopped draft. No delegation, reset or background run.
+
+PACT adds only read-only development lessons: Farm produces Grain, Mine Iron, Market Silver; queue admission preserves other orders, starting construction spends stock, and levels/effects change at completion. No game handler, economy, command contract, permission or scheduler change. Fleet preserves those facts, makes optional bookkeeping unnecessary for gameplay and explains confirmed receipts/prior outcomes without treating a proposal as consent/delivery. It also admits only supported audited historical uncertainty reviews in the local one-pass preflight. See sibling `fleet/docs/reasoning-outcomes-20261020.md` and its implementation plan for the complete evidence.
+
+The new PACT regression failed before the lesson change and passes afterward. `npm test`:409 passes; typecheck, boundary checks, changed-file style check, package/API builds and fourteen paired Fleet/PACT acceptance checks pass. Final Fleet verification, exact four-turn results and parked restore verification are pending below. No useful behavioral result is claimed from synthetic checks alone.
