@@ -79,7 +79,7 @@ describe("agent guide", () => {
     const result = await guide.read(accountId, "start");
     expect(calls).toEqual([accountId, accountId, [accountId, "kingdom-one", 15]]);
     expect(result).toMatchObject({
-      lessonVersion: "pact.agent-lessons.2026-10-13.1",
+      lessonVersion: "pact.agent-lessons.2026-10-20.1",
       surface: "external",
       state: "active",
       self: { kingdomId: "kingdom-one" },
