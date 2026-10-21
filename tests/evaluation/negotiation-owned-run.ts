@@ -1,12 +1,12 @@
 import { designDigest, type NegotiationCell } from "./negotiation-plan.js";
-import { constructNegotiationWorld, type NegotiationWorld } from "./negotiation-world.js";
+import { constructNegotiationWorld, type NegotiationFixtureCell, type NegotiationWorld } from "./negotiation-world.js";
 export type WorldSecrets = { rulesKey: string; tokenKey: string; encryptionKey: string };
-export type OwnedWorldCheckpoint = {
-  schemaVersion: "pact.negotiation-owned-world.v1";
+export type OwnedWorldCheckpoint<C extends NegotiationFixtureCell = NegotiationCell> = {
+  schemaVersion: "pact.negotiation-owned-world.v1" | "pact.rc1-owned-world.v1";
   schema: string;
   nonce: string;
   worldId: string;
-  cell: NegotiationCell;
+  cell: C;
   control: boolean;
   players: NegotiationWorld["players"];
   credentials: { kingdomId: string; accountId: string; token: string; holderId: string }[];
@@ -14,8 +14,11 @@ export type OwnedWorldCheckpoint = {
   openingOfferId: string | null;
   decisionStartGameTimeMs: number;
 };
-export type OwnedNegotiationWorld = Omit<NegotiationWorld, "close"> & {
-  checkpoint(): OwnedWorldCheckpoint;
+export type OwnedNegotiationWorld<C extends NegotiationFixtureCell = NegotiationCell> = Omit<
+  NegotiationWorld<C>,
+  "close"
+> & {
+  checkpoint(): OwnedWorldCheckpoint<C>;
   disconnect(): Promise<void>;
   activateLeases(): Promise<void>;
   renewLeases(): Promise<void>;

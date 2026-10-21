@@ -47,6 +47,9 @@ import { NegotiationTermsSchema } from "./negotiation-contracts.js";
 import design from "./negotiation-design.json" with { type: "json" };
 import type { OwnedNegotiationWorld, OwnedWorldCheckpoint, WorldSecrets } from "./negotiation-owned-run.js";
 import { designDigest, type NegotiationCell, negotiationPlan } from "./negotiation-plan.js";
+import { type RC1Cell, type RC1Protocol, validateRC1Cell } from "./post-e3-plan.js";
+
+export type NegotiationFixtureCell = NegotiationCell | RC1Cell;
 
 type OwnedTarget = { pactUrl: string; nonce: string };
 type Resource = "iron" | "silver" | "grain";
@@ -72,10 +75,10 @@ export interface NegotiationActor {
   outlook(): ReturnType<AgentOutlookService["readOwner"]>;
   history(): Promise<{ gameTimeMs: string; observation: Snapshot }[]>;
 }
-export interface NegotiationWorld {
+export interface NegotiationWorld<C extends NegotiationFixtureCell = NegotiationCell> {
   worldId: string;
   pool: Pool;
-  cell: NegotiationCell;
+  cell: C;
   control: boolean;
   players: readonly [NegotiationPlayer, NegotiationPlayer];
   openingOfferId: string | null;
@@ -93,18 +96,19 @@ export async function createNegotiationWorld(
 ): Promise<NegotiationWorld> {
   return constructNegotiationWorld(target, cell, options);
 }
-export async function constructNegotiationWorld(
+export async function constructNegotiationWorld<C extends NegotiationFixtureCell>(
   target: OwnedTarget,
-  cell: NegotiationCell,
+  cell: C,
   options: {
     control?: boolean;
     retention?: "preserve";
     secrets?: WorldSecrets;
-    checkpoint?: OwnedWorldCheckpoint;
+    checkpoint?: OwnedWorldCheckpoint<C>;
     onCreated?: (schema: string, worldId: string) => Promise<void>;
-    onPrepared?: (world: NegotiationWorld) => Promise<void>;
+    onPrepared?: (world: NegotiationWorld<C>) => Promise<void>;
+    rc1Protocol?: RC1Protocol;
   } = {},
-): Promise<NegotiationWorld & Omit<OwnedNegotiationWorld, keyof NegotiationWorld>> {
+): Promise<NegotiationWorld<C> & Omit<OwnedNegotiationWorld<C>, keyof NegotiationWorld<C>>> {
   let parsed: URL;
   try {
     parsed = new URL(target.pactUrl);
@@ -127,14 +131,19 @@ export async function constructNegotiationWorld(
   try {
     const marker = (await admin.query("SELECT nonce FROM public.architecture_fixture_owner")).rows;
     if (marker.length !== 1 || marker[0]?.nonce !== target.nonce) throw Error("NEGOTIATION_OWNED_FIXTURE_REQUIRED");
-    const planned = negotiationPlan(cell.stage, {
-      sources: cell.sources,
-      modelDigest: cell.modelDigest,
-      policyDigest: cell.policyDigest,
-      selectedProfile: cell.profile,
-      ...(cell.baselineAmendment ? { baselineAmendment: cell.baselineAmendment } : {}),
-    }).find((c) => c.id === cell.id);
-    if (!planned || designDigest(planned) !== designDigest(cell)) throw Error("NEGOTIATION_DESIGN_MISMATCH");
+    if ("study" in cell) {
+      if (!options.rc1Protocol) throw Error("RC1_PROTOCOL_REQUIRED");
+      validateRC1Cell(options.rc1Protocol, cell);
+    } else {
+      const planned = negotiationPlan(cell.stage, {
+        sources: cell.sources,
+        modelDigest: cell.modelDigest,
+        policyDigest: cell.policyDigest,
+        selectedProfile: cell.profile,
+        ...(cell.baselineAmendment ? { baselineAmendment: cell.baselineAmendment } : {}),
+      }).find((c) => c.id === cell.id);
+      if (!planned || designDigest(planned) !== designDigest(cell)) throw Error("NEGOTIATION_DESIGN_MISMATCH");
+    }
     const family = design.families.find((f) => f.id === cell.family);
     if (!family?.variants.includes(cell.variant) || cell.realProviderAuthorized !== false)
       throw Error("UNPLANNED_NEGOTIATION_CELL");
@@ -407,7 +416,7 @@ export async function constructNegotiationWorld(
     let workerToken: string | null = null,
       nativeStarted = false,
       nativeLost = false;
-    const world: NegotiationWorld & Omit<OwnedNegotiationWorld, keyof NegotiationWorld> = {
+    const world: NegotiationWorld<C> & Omit<OwnedNegotiationWorld<C>, keyof NegotiationWorld<C>> = {
       worldId,
       pool: db,
       cell,
@@ -644,7 +653,7 @@ export async function constructNegotiationWorld(
       checkpoint() {
         if (!options.secrets || !options.retention) throw Error("OWNED_CHECKPOINT_REQUIRED");
         return structuredClone({
-          schemaVersion: "pact.negotiation-owned-world.v1",
+          schemaVersion: "study" in cell ? "pact.rc1-owned-world.v1" : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
           worldId,

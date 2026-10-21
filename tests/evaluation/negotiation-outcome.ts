@@ -7,7 +7,7 @@ import {
 } from "./negotiation-contracts.js";
 import design from "./negotiation-design.json" with { type: "json" };
 import { designDigest } from "./negotiation-plan.js";
-import type { NegotiationWorld } from "./negotiation-world.js";
+import type { NegotiationFixtureCell, NegotiationWorld } from "./negotiation-world.js";
 
 type Resource = "iron" | "silver" | "grain";
 type Terms = NegotiationEvidence["offers"][number]["terms"];
@@ -21,7 +21,9 @@ type CommandRow = {
   receipt: CommandReceipt;
 };
 /** Evaluator-only database view. Never supplied through an actor adapter. */
-export async function readNegotiationEvidence(world: Omit<NegotiationWorld, "close">): Promise<NegotiationEvidence> {
+export async function readNegotiationEvidence(
+  world: Omit<NegotiationWorld<NegotiationFixtureCell>, "close">,
+): Promise<NegotiationEvidence> {
   return withTransaction(
     world.pool,
     async (c) => {
