@@ -20,6 +20,9 @@ export type OwnedNegotiationWorld = Omit<NegotiationWorld, "close"> & {
   activateLeases(): Promise<void>;
   renewLeases(): Promise<void>;
   refreshControlledSchedule(): Promise<void>;
+  startNativeClock(): Promise<void>;
+  tickNativeClock(): Promise<{ committed: boolean; gameTimeMs: number; sequence: string; nextTickDueAt: string }>;
+  pauseClock(reason?: string): Promise<void>;
   leaseFacts(): Promise<
     { accountId: string; kingdomId: string; holderId: string; leaseId: string | null; live: boolean }[]
   >;

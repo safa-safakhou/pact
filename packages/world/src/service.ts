@@ -307,17 +307,27 @@ export class WorldClockService {
     return withTransaction(this.pool, async (client) => {
       const row = await lockedClock(client, this.productScope);
       if (row.status === "active") return snapshot(row);
-      const now = await databaseNow(client);
-      const result = await client.query<ClockRow>(
-        `UPDATE world_clocks SET status = 'active', paused_at = NULL, suspension_reason = NULL,
+      return this.resumeClock(client, await databaseNow(client));
+    });
+  }
+  /** Conditional operator resume: rechecks the pause under its row lock. */
+  async resumeIfPaused(expectedReason: string): Promise<WorldSnapshot | null> {
+    return withTransaction(this.pool, async (client) => {
+      const row = await lockedClock(client, this.productScope);
+      if (row.status !== "paused" || row.suspension_reason !== expectedReason) return null;
+      return this.resumeClock(client, await databaseNow(client));
+    });
+  }
+  private async resumeClock(client: PoolClient, now: Date): Promise<WorldSnapshot> {
+    const result = await client.query<ClockRow>(
+      `UPDATE world_clocks SET status = 'active', paused_at = NULL, suspension_reason = NULL,
            next_tick_due_at = $2, last_heartbeat_at = $3,
            lease_holder = NULL, lease_token = NULL, lease_expires_at = NULL
          WHERE product_scope = $1 RETURNING *`,
-        [this.productScope, new Date(now.getTime() + GAME_MINUTE_MS), now],
-      );
-      const resumed = result.rows[0];
-      if (!resumed) throw new Error("WORLD_NOT_BOOTSTRAPPED");
-      return snapshot(resumed);
-    });
+      [this.productScope, new Date(now.getTime() + GAME_MINUTE_MS), now],
+    );
+    const resumed = result.rows[0];
+    if (!resumed) throw new Error("WORLD_NOT_BOOTSTRAPPED");
+    return snapshot(resumed);
   }
 }

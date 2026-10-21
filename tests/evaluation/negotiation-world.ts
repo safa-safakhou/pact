@@ -396,7 +396,9 @@ export async function constructNegotiationWorld(
         expectedVersion: current.version,
       });
     };
-    let workerToken: string | null = null;
+    let workerToken: string | null = null,
+      nativeStarted = false,
+      nativeLost = false;
     const world: NegotiationWorld & Omit<OwnedNegotiationWorld, keyof NegotiationWorld> = {
       worldId,
       pool: db,
@@ -552,6 +554,55 @@ export async function constructNegotiationWorld(
           "UPDATE world_clocks SET next_tick_due_at=clock_timestamp()+interval '10 minutes',last_heartbeat_at=clock_timestamp() WHERE product_scope='pact' AND status='active' RETURNING product_scope",
         );
         if (refreshed.rowCount !== 1) throw Error("CONTROLLED_CLOCK_NOT_ACTIVE");
+      },
+      async startNativeClock() {
+        await active();
+        if (!options.retention || cell.clockMode !== "native") throw Error("OWNED_NATIVE_CLOCK_REQUIRED");
+        const claimed = await db.query(
+          "UPDATE negotiation_fixture_identity SET owned_native_clock_started=true WHERE world_id=$1 AND owned_native_clock_started=false RETURNING world_id",
+          [worldId],
+        );
+        if (claimed.rowCount !== 1) throw Error("NATIVE_CLOCK_ALREADY_STARTED");
+        const resumedClock = await runtime.world.resumeIfPaused("NEGOTIATION_PREPARED");
+        if (!resumedClock) throw Error("NATIVE_PREPARATION_PAUSE_REQUIRED");
+        workerToken = await runtime.world.acquireLease(`negotiation:${worldId}`);
+        if (!workerToken) {
+          nativeLost = true;
+          throw Error("NATIVE_CLOCK_LEASE_LOST");
+        }
+        nativeStarted = true;
+      },
+      async tickNativeClock() {
+        await active();
+        if (!options.retention || cell.clockMode !== "native") throw Error("OWNED_NATIVE_CLOCK_REQUIRED");
+        if (nativeLost) throw Error("NATIVE_CLOCK_LEASE_LOST");
+        if (!nativeStarted || !workerToken) throw Error("NATIVE_CLOCK_NOT_STARTED");
+        if (!(await runtime.world.heartbeat(`negotiation:${worldId}`, workerToken))) {
+          nativeLost = true;
+          throw Error("NATIVE_CLOCK_LEASE_LOST");
+        }
+        const tick = await runtime.world.advance(`negotiation:${worldId}`, workerToken);
+        if (tick.kind !== "committed" && tick.kind !== "not_due") {
+          nativeLost = true;
+          throw Error("NATIVE_CLOCK_LEASE_LOST");
+        }
+        const current = await runtime.world.read();
+        if (tick.kind === "committed")
+          await db.query("INSERT INTO negotiation_fixture_ticks VALUES($1,$2,clock_timestamp())", [
+            current.sequence,
+            current.gameTimeMs,
+          ]);
+        return {
+          committed: tick.kind === "committed",
+          gameTimeMs: current.gameTimeMs,
+          sequence: String(current.sequence),
+          nextTickDueAt: current.nextTickDueAt.toISOString(),
+        };
+      },
+      async pauseClock(reason = "NEGOTIATION_BATCH_STOPPED") {
+        await active();
+        if (!options.retention) throw Error("OWNED_CLOCK_REQUIRED");
+        if ((await runtime.world.read()).status !== "paused") await runtime.world.pause(reason);
       },
       checkpoint() {
         if (!options.secrets || !options.retention) throw Error("OWNED_CHECKPOINT_REQUIRED");
@@ -722,6 +773,12 @@ export async function constructNegotiationWorld(
         await db.query("UPDATE negotiation_fixture_identity SET owned_checkpoint_digest=$1", [
           designDigest(world.checkpoint()),
         ]);
+        if (cell.clockMode === "native") {
+          await db.query(
+            "ALTER TABLE negotiation_fixture_identity ADD COLUMN owned_native_clock_started boolean NOT NULL DEFAULT false",
+          );
+          await runtime.world.pause("NEGOTIATION_PREPARED");
+        }
       }
     }
     prefix = false;
