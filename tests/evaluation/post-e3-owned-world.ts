@@ -1,23 +1,23 @@
 import type { OwnedNegotiationWorld, OwnedWorldCheckpoint, WorldSecrets } from "./negotiation-owned-run.js";
 import { designDigest } from "./negotiation-plan.js";
 import { constructNegotiationWorld } from "./negotiation-world.js";
-import { type RC1Cell, type RC1Protocol, validateRC1Cell } from "./post-e3-plan.js";
+import { type PostE3Cell, type PostE3Protocol, validatePostE3Cell } from "./post-e3-rc2-plan.js";
 
 /** Separate validated study entrypoint; the original owned-world entrypoint
  * still refuses R1 stages and specialist profiles. No destructive cleanup. */
-export async function prepareOwnedRC1World(
+export async function prepareOwnedRC1World<C extends PostE3Cell>(
   target: { pactUrl: string; nonce: string },
-  protocol: RC1Protocol,
-  cell: RC1Cell,
+  protocol: PostE3Protocol,
+  cell: C,
   options: {
     control?: boolean;
     retention: "preserve";
     secrets: WorldSecrets;
-    checkpoint?: OwnedWorldCheckpoint<RC1Cell>;
+    checkpoint?: OwnedWorldCheckpoint<C>;
     onCreated?: (schema: string, worldId: string) => Promise<void>;
   },
-): Promise<OwnedNegotiationWorld<RC1Cell>> {
-  validateRC1Cell(protocol, cell);
+): Promise<OwnedNegotiationWorld<C>> {
+  validatePostE3Cell(protocol, cell);
   if (
     options.retention !== "preserve" ||
     Object.keys(options.secrets).sort().join() !== "encryptionKey,rulesKey,tokenKey" ||
@@ -32,7 +32,7 @@ export async function prepareOwnedRC1World(
   const c = options.checkpoint;
   if (
     c &&
-    (c.schemaVersion !== "pact.rc1-owned-world.v1" ||
+    (c.schemaVersion !== (cell.study === "negotiation-r2" ? "pact.rc2-owned-world.v1" : "pact.rc1-owned-world.v1") ||
       !/^test_negotiation_[a-f0-9]{32}$/.test(c.schema) ||
       c.nonce !== target.nonce ||
       designDigest(c.cell) !== designDigest(cell) ||
@@ -46,3 +46,6 @@ export async function prepareOwnedRC1World(
   });
   return world;
 }
+
+/** Same owned fixture implementation, separately validated R2 namespace. */
+export const prepareOwnedRC2World = prepareOwnedRC1World;

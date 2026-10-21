@@ -47,9 +47,9 @@ import { NegotiationTermsSchema } from "./negotiation-contracts.js";
 import design from "./negotiation-design.json" with { type: "json" };
 import type { OwnedNegotiationWorld, OwnedWorldCheckpoint, WorldSecrets } from "./negotiation-owned-run.js";
 import { designDigest, type NegotiationCell, negotiationPlan } from "./negotiation-plan.js";
-import { type RC1Cell, type RC1Protocol, validateRC1Cell } from "./post-e3-plan.js";
+import { type PostE3Cell, type PostE3Protocol, validatePostE3Cell } from "./post-e3-rc2-plan.js";
 
-export type NegotiationFixtureCell = NegotiationCell | RC1Cell;
+export type NegotiationFixtureCell = NegotiationCell | PostE3Cell;
 
 type OwnedTarget = { pactUrl: string; nonce: string };
 type Resource = "iron" | "silver" | "grain";
@@ -106,7 +106,7 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
     checkpoint?: OwnedWorldCheckpoint<C>;
     onCreated?: (schema: string, worldId: string) => Promise<void>;
     onPrepared?: (world: NegotiationWorld<C>) => Promise<void>;
-    rc1Protocol?: RC1Protocol;
+    rc1Protocol?: PostE3Protocol;
   } = {},
 ): Promise<NegotiationWorld<C> & Omit<OwnedNegotiationWorld<C>, keyof NegotiationWorld<C>>> {
   let parsed: URL;
@@ -133,7 +133,7 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
     if (marker.length !== 1 || marker[0]?.nonce !== target.nonce) throw Error("NEGOTIATION_OWNED_FIXTURE_REQUIRED");
     if ("study" in cell) {
       if (!options.rc1Protocol) throw Error("RC1_PROTOCOL_REQUIRED");
-      validateRC1Cell(options.rc1Protocol, cell);
+      validatePostE3Cell(options.rc1Protocol, cell);
     } else {
       const planned = negotiationPlan(cell.stage, {
         sources: cell.sources,
@@ -653,7 +653,12 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
       checkpoint() {
         if (!options.secrets || !options.retention) throw Error("OWNED_CHECKPOINT_REQUIRED");
         return structuredClone({
-          schemaVersion: "study" in cell ? "pact.rc1-owned-world.v1" : "pact.negotiation-owned-world.v1",
+          schemaVersion:
+            "study" in cell
+              ? cell.study === "negotiation-r2"
+                ? "pact.rc2-owned-world.v1"
+                : "pact.rc1-owned-world.v1"
+              : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
           worldId,
