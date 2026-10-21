@@ -18,7 +18,9 @@ The [last local-world result](implementation/reports/fleet-reasoning-outcomes-20
 
 ## Next work and reading
 
-Use the paired local acceptance record for current source tests and passive package status, and the [continuation](implementation/reports/negotiation-continuation-20261021.md) for operational gates. Supported denial resolution, fresh operational rosters and encrypted restore proof, exact grants, real held-out qualification and isolated release/rollback/activation acceptance remain pending. Existing E4/KQ1 ceilings, terminal failures, frozen artifacts and the preserved world remain unchanged; no RC2 real-model allowance or release acceptance exists.
+Current user restriction: **do not start a local Ollama server; use only what is already working**. The separate empty local PACT web/API and Fleet console remain healthy; Fleet reports live execution disabled. Do not pursue the rejected provider startup or change services/settings to satisfy older plans. A listener alone is not a verified or qualified model route.
+
+Use the paired local acceptance record for source tests and passive package status, and the [continuation](implementation/reports/negotiation-continuation-20261021.md) for the still-pending operational gates. Fresh operational rosters and encrypted restore proof, exact grants, real held-out qualification and isolated release/rollback/activation acceptance are unfinished. Existing E4/KQ1 ceilings, terminal failures, frozen artifacts and the preserved world remain unchanged; existing service availability does not replace their exact provider/model bindings or create a new study allowance.
 For a new task, read only its applicable guide/spec and affected source/tests. Detailed plans, reports and historical evidence remain at their existing paths.
 Update this file when a verified milestone changes; do not append execution diaries to AGENTS.md. Read the [original instruction snapshot](reference/agent-instructions-before-20261021.txt) only for a specific historical question; past grants there are not current authority.
 
