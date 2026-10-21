@@ -1,5 +1,6 @@
 import { randomBytes, randomUUID } from "node:crypto";
 import {
+  ActionEffectsService,
   AgentGuideReader,
   type AuthenticatedPrincipal,
   CommandDispatcher,
@@ -8,6 +9,7 @@ import {
 } from "@pact/application";
 import { AuthorityService, ExactHumanPermitService, ExposureService } from "@pact/authority";
 import {
+  type ActionEffectsGuard,
   type CommandEnvelope,
   type CommandReceipt,
   type GameAction,
@@ -58,6 +60,8 @@ export type NegotiationPlayer = {
 type Snapshot = NonNullable<Awaited<ReturnType<WorldViewService["readSelf"]>>>;
 export interface NegotiationActor {
   dispatch(action: GameAction, commandId?: string): Promise<CommandReceipt>;
+  effects(command: Parameters<ActionEffectsService["quote"]>[1]): ReturnType<ActionEffectsService["quote"]>;
+  submitGuarded(command: unknown, guard: ActionEffectsGuard): Promise<CommandReceipt>;
   receipt(commandId: string): Promise<CommandReceipt | null>;
   readSelf(): Promise<Snapshot | null>;
   readPeer(kingdomId: string): ReturnType<WorldViewService["read"]>;
@@ -79,6 +83,7 @@ export interface NegotiationWorld {
   actor(kingdomId: string): NegotiationActor;
   advanceTo(gameMinute: number): Promise<void>;
   ownerSetSupplyPermission(index: number, allowed: boolean): Promise<void>;
+  ownerSetGoal(index: number, goal: string): Promise<void>;
   close(): Promise<void>;
 }
 export async function createNegotiationWorld(
@@ -97,6 +102,7 @@ export async function constructNegotiationWorld(
     secrets?: WorldSecrets;
     checkpoint?: OwnedWorldCheckpoint;
     onCreated?: (schema: string, worldId: string) => Promise<void>;
+    onPrepared?: (world: NegotiationWorld) => Promise<void>;
   } = {},
 ): Promise<NegotiationWorld & Omit<OwnedNegotiationWorld, keyof NegotiationWorld>> {
   let parsed: URL;
@@ -344,10 +350,12 @@ export async function constructNegotiationWorld(
     let prefix = !resumed,
       closed = false,
       inFlight = 0;
+    const effects = new ActionEffectsService(db, "pact", clock.now);
     const dispatcher = new CommandDispatcher({
       pool: db,
       clock,
       productScope: "pact",
+      actionEffects: effects,
       game: {
         admit: (op) => runtime.world.admitCommand((c, s) => op(c, s.gameTimeMs)),
         execute: (c, p, v, t) => handler.execute(c, p, v, t),
@@ -412,29 +420,50 @@ export async function constructNegotiationWorld(
           credential = credentials.get(kingdomId);
         if (!p || !credential) throw Error("NEGOTIATION_ACTOR_SCOPE_MISMATCH");
         const requests = new Map<string, CommandEnvelope>();
-        return {
-          async dispatch(action, commandId = randomUUID()) {
-            await active();
-            if (options.control) throw Error("SOLO_CONTROL_NO_INTERACTION");
-            if (options.retention && !prefix) {
-              const owned = (
-                await db.query(
-                  "SELECT o.lease_id,l.released_at,l.expires_at,l.holder_id,i.owned_activation_complete FROM negotiation_owned_leases o CROSS JOIN negotiation_fixture_identity i LEFT JOIN write_leases l ON l.product_scope='pact' AND l.holder_kind='mcp' AND l.subject_id=o.account_id AND l.lease_id=o.lease_id WHERE o.kingdom_id=$1",
-                  [p.kingdomId],
-                )
-              ).rows[0];
-              if (!owned?.lease_id || !owned.owned_activation_complete) throw Error("OWNED_WORLD_FENCED");
-              if (
-                owned.released_at ||
-                !owned.expires_at ||
-                new Date(owned.expires_at) <= clock.now() ||
-                owned.holder_id !== credential.holderId
+        const assertWrite = async () => {
+          await active();
+          if (options.control) throw Error("SOLO_CONTROL_NO_INTERACTION");
+          if (options.retention && !prefix) {
+            const owned = (
+              await db.query(
+                "SELECT o.lease_id,l.released_at,l.expires_at,l.holder_id,i.owned_activation_complete FROM negotiation_owned_leases o CROSS JOIN negotiation_fixture_identity i LEFT JOIN write_leases l ON l.product_scope='pact' AND l.holder_kind='mcp' AND l.subject_id=o.account_id AND l.lease_id=o.lease_id WHERE o.kingdom_id=$1",
+                [p.kingdomId],
               )
-                throw Error("FORBIDDEN");
-            }
+            ).rows[0];
+            if (!owned?.lease_id || !owned.owned_activation_complete) throw Error("OWNED_WORLD_FENCED");
+            if (
+              owned.released_at ||
+              !owned.expires_at ||
+              new Date(owned.expires_at) <= clock.now() ||
+              owned.holder_id !== credential.holderId
+            )
+              throw Error("FORBIDDEN");
+          }
+          await identity.authenticate(credential.token);
+        };
+        return {
+          async effects(command) {
+            await assertWrite();
             inFlight++;
             try {
-              await identity.authenticate(credential.token);
+              return await effects.quote(credential.principal, command);
+            } finally {
+              inFlight--;
+            }
+          },
+          async submitGuarded(command, guard) {
+            await assertWrite();
+            inFlight++;
+            try {
+              return await dispatcher.dispatchGuarded(credential.principal, { command, guard });
+            } finally {
+              inFlight--;
+            }
+          },
+          async dispatch(action, commandId = randomUUID()) {
+            await assertWrite();
+            inFlight++;
+            try {
               const old = requests.get(commandId);
               const envelope =
                 old && JSON.stringify(old.action) === JSON.stringify(action)
@@ -528,6 +557,14 @@ export async function constructNegotiationWorld(
             ? [...new Set([...current.allowedActions, "supply.sign"])]
             : current.allowedActions.filter((a) => a !== "supply.sign"),
         }));
+      },
+      async ownerSetGoal(index, goal) {
+        await active();
+        const player = players[index];
+        if (!player || typeof goal !== "string" || !goal.trim() || goal.length > 8000)
+          throw Error("INVALID_OWNED_GOAL");
+        await kingdoms.setAmbition(player.accountId, goal);
+        player.goalDigest = designDigest(goal);
       },
       async close() {
         if (closed) return;
@@ -747,6 +784,10 @@ export async function constructNegotiationWorld(
       }
     }
     if (!resumed) {
+      if (options.onPrepared) {
+        if (options.retention !== "preserve") throw Error("RETAINED_SETUP_REQUIRED");
+        await options.onPrepared(world);
+      }
       world.decisionStartGameTimeMs = (await runtime.world.read()).gameTimeMs;
       await db.query("UPDATE negotiation_fixture_identity SET decision_start_game_time_ms=$1", [
         world.decisionStartGameTimeMs,

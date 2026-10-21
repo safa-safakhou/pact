@@ -36,6 +36,8 @@ export async function prepareOwnedNegotiationWorld(
     retention: "preserve";
     checkpoint?: OwnedWorldCheckpoint;
     onCreated?: (schema: string, worldId: string) => Promise<void>;
+    /** Fixed source-owned synthetic setup, never deserialized operator code. */
+    onPrepared?: (world: NegotiationWorld) => Promise<void>;
   },
 ): Promise<OwnedNegotiationWorld> {
   if (
