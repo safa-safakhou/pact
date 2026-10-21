@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import {
+  ActionEffectsQuoteSchema,
   AgentEventQuerySchema,
   AgentGameActionSchema,
   AgentGameActionV2Schema,
@@ -16,6 +17,7 @@ import {
   DecisionSupportQuerySchema,
   type EnrollmentQuery,
   EnrollmentQuerySchema,
+  GuardedCommandSchema,
   InboxReadQuerySchema,
   type KingdomDiscoveryQuery,
   KingdomDiscoveryQuerySchema,
@@ -29,6 +31,8 @@ import {
   PlayerFindQuerySchema,
   PoliticsReadQuerySchema,
   ProductScopeSchema,
+  pactActionEffectsExecuteTool,
+  pactActionEffectsQuoteTool,
   pactAgentEventsTool,
   pactAgentGuideTool,
   pactAgentOutlookTool,
@@ -71,6 +75,7 @@ import type { CommandDispatcher } from "./dispatcher.js";
 import type { AuthenticatedPrincipal } from "./types.js";
 
 export interface AgentOperationOptions {
+  readonly actionEffects?: import("./action-effects.js").ActionEffectsService;
   readonly agentOutlook?: { readOwner(principal: AuthenticatedPrincipal, query: unknown): Promise<unknown> };
   readonly agentEvents?: { read(principal: AuthenticatedPrincipal, cursor?: string, limit?: number): Promise<unknown> };
   readonly persistentPlay?: { read(accountId: string, query?: EnrollmentQuery): Promise<unknown> };
@@ -230,6 +235,7 @@ export class AgentOperationService {
       [this.options.inbox, pactInboxReadTool],
       [this.options.agentEvents, pactAgentEventsTool],
       [this.options.agentOutlook, pactAgentOutlookTool],
+      [this.options.actionEffects, pactActionEffectsQuoteTool],
       [this.options.conversations, pactConversationReadTool],
       [this.options.approvals, pactApprovalStatusTool],
       [this.options.decisionSupport, pactDecisionSupportTool],
@@ -257,6 +263,7 @@ export class AgentOperationService {
           ]
         : []),
       ...(act ? [pactGameActionV2Tool, pactGameActionTool] : []),
+      ...(act && this.options.actionEffects ? [pactActionEffectsExecuteTool] : []),
       ...(act && this.options.privateMemory ? [pactMemoryWriteTool] : []),
       ...(act && this.options.approvalProposals ? [pactApprovalProposalV2Tool, pactApprovalProposalTool] : []),
       ...(act && this.options.runLeases
@@ -273,6 +280,7 @@ export class AgentOperationService {
       const write = [
         "run.open",
         pactGameActionV2Tool.name,
+        pactActionEffectsExecuteTool.name,
         pactGameActionTool.name,
         pactMemoryWriteTool.name,
         pactApprovalProposalV2Tool.name,
@@ -301,6 +309,21 @@ export class AgentOperationService {
     )
       throw new AgentOperationError("INVALID_REQUEST");
     const args = (params.arguments ?? {}) as Record<string, unknown>;
+    if (name === pactActionEffectsQuoteTool.name || name === pactActionEffectsExecuteTool.name) {
+      const write = name === pactActionEffectsExecuteTool.name;
+      if (!this.options.actionEffects || !principal.agentScopes?.includes(write ? "game:act" : "world:read"))
+        throw new AgentOperationError("FORBIDDEN", 403);
+      const parsed = (write ? GuardedCommandSchema : ActionEffectsQuoteSchema).safeParse(args);
+      if (!parsed.success) throw new AgentOperationError("INVALID_REQUEST", 400);
+      const actor = { ...principal, ...(sessionId ? { sessionId } : {}) };
+      const result = write
+        ? await this.options.dispatcher.dispatchGuarded(actor, parsed.data)
+        : await this.options.actionEffects.quote(actor, parsed.data.command);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result) }],
+        structuredContent: result as unknown as Record<string, unknown>,
+      };
+    }
     if (name === "pact_council_thread_v1") {
       if (!principal.agentScopes?.includes("world:read") || !this.options.councilThreads)
         throw new AgentOperationError("FORBIDDEN", 403);

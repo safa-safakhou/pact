@@ -11,6 +11,8 @@ import {
   commandJsonSchema,
   type EnrollmentQuery,
   type KingdomDiscoveryQuery,
+  pactActionEffectsExecuteTool,
+  pactActionEffectsQuoteTool,
   pactAgentEventsTool,
   pactAgentGuideTool,
   pactAgentOutlookTool,
@@ -95,6 +97,7 @@ export interface McpJsonRpcRequest {
 
 export interface McpTransportOptions {
   readonly agentOutlook?: NonNullable<import("@pact/application").AgentOperationOptions["agentOutlook"]>;
+  readonly actionEffects?: NonNullable<import("@pact/application").AgentOperationOptions["actionEffects"]>;
   readonly agentEvents?: NonNullable<import("@pact/application").AgentOperationOptions["agentEvents"]>;
   readonly persistentPlay?: { read(accountId: string, query?: EnrollmentQuery): Promise<unknown> };
   readonly privateMemory?: {
@@ -378,6 +381,12 @@ export class McpTransport {
               ...(this.options.inbox && principal.agentScopes?.includes("world:read") ? [pactInboxReadTool] : []),
               ...(this.options.agentOutlook && principal.agentScopes?.includes("world:read")
                 ? [pactAgentOutlookTool]
+                : []),
+              ...(this.options.actionEffects && principal.agentScopes?.includes("world:read")
+                ? [pactActionEffectsQuoteTool]
+                : []),
+              ...(this.options.actionEffects && principal.agentScopes?.includes("game:act")
+                ? [pactActionEffectsExecuteTool]
                 : []),
               ...(this.options.agentEvents && principal.agentScopes?.includes("world:read")
                 ? [pactAgentEventsTool]

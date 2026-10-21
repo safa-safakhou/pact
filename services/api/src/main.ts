@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { clearInterval, setInterval } from "node:timers";
 import {
+  ActionEffectsService,
   ChronicleFactReader,
   CommandDispatcher,
   DispatcherError,
@@ -270,7 +271,10 @@ const gameCommands = new GameCommandHandler(
   raids,
   (client, accountId, holderId) => runs.consumeOutgoingMessageAllowance(client, accountId, holderId),
 );
+const actionEffects =
+  process.env.PACT_AGENT_ACTION_EFFECTS_ENABLED === "1" ? new ActionEffectsService(pool, "pact", clock.now) : undefined;
 const dispatcher = new CommandDispatcher({
+  ...(actionEffects ? { actionEffects } : {}),
   pool,
   assertPlayAllowed: async (client, accountId) => {
     try {
@@ -407,6 +411,7 @@ const mcp = new McpTransport({
   reports,
   inbox,
   ...(process.env.PACT_AGENT_OUTLOOK_ENABLED === "1" ? { agentOutlook } : {}),
+  ...(actionEffects ? { actionEffects } : {}),
   ...(process.env.PACT_AGENT_EVENTS_ENABLED === "1" ? { agentEvents } : {}),
   conversations: new ConversationReader(pool, "pact"),
   approvals: new ApprovalStatusReader(pool, "pact", clock, new URL(publicBaseUrl).pathname),
@@ -707,6 +712,7 @@ const server = buildServer(pool, { level: environment.LOG_LEVEL }, undefined, {
   approvals,
   inbox,
   ...(process.env.PACT_AGENT_OUTLOOK_ENABLED === "1" ? { agentOutlook } : {}),
+  ...(actionEffects ? { actionEffects } : {}),
   ...(process.env.PACT_AGENT_EVENTS_ENABLED === "1" ? { agentEvents } : {}),
   runs,
   externalActivity,

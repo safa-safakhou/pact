@@ -1,6 +1,7 @@
 import type { CommandDispatcher } from "@pact/application";
 import type { ApprovalService } from "@pact/approvals";
 import type { AuthorityService } from "@pact/authority";
+import { actionEffectsCoverage } from "@pact/contracts";
 import type { CredentialVaultService } from "@pact/credential-vault";
 import type { IdentityService } from "@pact/identity";
 import type { InboxService, NotificationService } from "@pact/inbox";
@@ -24,6 +25,7 @@ import {
 import Fastify, { type FastifyInstance, LogController } from "fastify";
 import type { Pool } from "pg";
 import { PactA2AHandler, registerA2ARoutes } from "./a2a.js";
+import { actionEffectsAuthenticator, registerActionEffectsRoutes } from "./action-effects-routes.js";
 import type { AdminReader } from "./admin-reader.js";
 import { type AdminSetup, registerAdminRoutes } from "./admin-routes.js";
 import { registerAgentEventRoutes } from "./agent-event-routes.js";
@@ -102,6 +104,7 @@ export interface ApiModules {
   approvals?: ApprovalService;
   inbox?: InboxService;
   agentOutlook?: import("@pact/kingdom").AgentOutlookService;
+  actionEffects?: import("@pact/application").ActionEffectsService;
   agentEvents?: import("@pact/inbox").AgentEventService;
   notifications?: NotificationService;
   moderation?: import("@pact/kingdom").ModerationService;
@@ -186,6 +189,11 @@ export function buildServer(
       agentOutlook: {
         enabled: Boolean(modules?.agentOutlook),
         schemaVersion: modules?.agentOutlook ? "pact.agent-outlook.v1" : null,
+      },
+      actionEffects: {
+        enabled: Boolean(modules?.actionEffects),
+        schemaVersion: modules?.actionEffects ? "fleet.action-effects.v1" : null,
+        actions: modules?.actionEffects ? actionEffectsCoverage : [],
       },
       agentEvents: {
         enabled: Boolean(modules?.agentEvents),
@@ -287,6 +295,13 @@ export function buildServer(
     if (modules.notifications)
       registerNotificationRoutes(server, modules.identity, modules.notifications, modules.webPushPublicKey);
     if (modules.agentOutlook) registerOutlookRoutes(server, modules.identity, modules.agentOutlook, modules.oauth);
+    if (modules.actionEffects)
+      registerActionEffectsRoutes(
+        server,
+        actionEffectsAuthenticator(modules.identity, modules.oauth),
+        modules.actionEffects,
+        modules.dispatcher,
+      );
     if (modules.agentEvents) registerAgentEventRoutes(server, modules.identity, modules.agentEvents, modules.oauth);
     if (modules.inbox) registerInboxRoutes(server, modules.identity, modules.inbox, modules.dispatcher);
     if (modules.credentialVault) registerModelCredentialRoutes(server, modules.identity, modules.credentialVault);

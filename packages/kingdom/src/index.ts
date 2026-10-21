@@ -1,4 +1,5 @@
 export * from "./achievements.js";
+export * from "./action-effect-facts.js";
 export * from "./action-limits.js";
 export * from "./admin-insights.js";
 export * from "./agent-events.js";
