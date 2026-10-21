@@ -503,6 +503,7 @@ export async function constructNegotiationWorld(
         if (cell.clockMode !== "controlled") throw Error("NATIVE_CLOCK_REQUIRES_ELAPSED_TIME");
         if (inFlight) throw Error("NEGOTIATION_OPERATION_IN_FLIGHT");
         if (!Number.isSafeInteger(gameMinute) || gameMinute < 0) throw Error("INVALID_FIXTURE_TIME");
+        if (options.retention) await world.refreshControlledSchedule();
         if (!workerToken) workerToken = await runtime.world.acquireLease(`negotiation:${worldId}`);
         if (!workerToken) throw Error("FIXTURE_WORLD_LEASE_REQUIRED");
         while ((await runtime.world.read()).gameTimeMs < gameMinute * 60000) {
@@ -539,6 +540,18 @@ export async function constructNegotiationWorld(
         await db.end();
         await admin.end();
         closed = true;
+      },
+      async refreshControlledSchedule() {
+        await active();
+        if (!options.retention || cell.clockMode !== "controlled") throw Error("OWNED_CONTROLLED_CLOCK_REQUIRED");
+        if (inFlight) throw Error("NEGOTIATION_OPERATION_IN_FLIGHT");
+        // Controlled-clock studies freeze GAME time between scheduled ticks.
+        // Wall time still bounds every native call/turn/cell. Refresh only the
+        // synthetic scheduler's wall cadence; never clear a pause or move GAME.
+        const refreshed = await db.query(
+          "UPDATE world_clocks SET next_tick_due_at=clock_timestamp()+interval '10 minutes',last_heartbeat_at=clock_timestamp() WHERE product_scope='pact' AND status='active' RETURNING product_scope",
+        );
+        if (refreshed.rowCount !== 1) throw Error("CONTROLLED_CLOCK_NOT_ACTIVE");
       },
       checkpoint() {
         if (!options.secrets || !options.retention) throw Error("OWNED_CHECKPOINT_REQUIRED");

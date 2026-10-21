@@ -40,6 +40,29 @@ async function make(family = "C01") {
   open.push(w);
   return w;
 }
+it("retained controlled clock excludes preparation/model wall gaps without advancing game time or clearing pauses", async () => {
+  const w = await make();
+  await w.pool.query(
+    "UPDATE world_clocks SET last_heartbeat_at=clock_timestamp()-interval '5 minutes',next_tick_due_at=clock_timestamp()-interval '5 minutes' WHERE product_scope='pact'",
+  );
+  const before = (
+    await w.pool.query("SELECT committed_game_time_ms::text time,tick_sequence::text sequence FROM world_clocks")
+  ).rows;
+  await expect(w.advanceTo(0)).resolves.toBeUndefined();
+  await expect(w.refreshControlledSchedule()).resolves.toBeUndefined();
+  expect(
+    (await w.pool.query("SELECT committed_game_time_ms::text time,tick_sequence::text sequence FROM world_clocks"))
+      .rows,
+  ).toEqual(before);
+  await w.pool.query(
+    "UPDATE world_clocks SET status='paused',paused_at=clock_timestamp(),pause_origin='operator',suspension_reason='TEST_PAUSE',lease_holder=NULL,lease_token=NULL,lease_expires_at=NULL WHERE product_scope='pact'",
+  );
+  await expect(w.refreshControlledSchedule()).rejects.toThrow("CONTROLLED_CLOCK_NOT_ACTIVE");
+  expect((await w.pool.query("SELECT status,suspension_reason FROM world_clocks")).rows[0]).toEqual({
+    status: "paused",
+    suspension_reason: "TEST_PAUSE",
+  });
+});
 it.each(["C01", "C02"])(
   "disconnect retains %s identities, source rows and fenced run holders, and reconnects without new actors",
   async (family) => {

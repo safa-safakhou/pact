@@ -19,6 +19,7 @@ export type OwnedNegotiationWorld = Omit<NegotiationWorld, "close"> & {
   disconnect(): Promise<void>;
   activateLeases(): Promise<void>;
   renewLeases(): Promise<void>;
+  refreshControlledSchedule(): Promise<void>;
   leaseFacts(): Promise<
     { accountId: string; kingdomId: string; holderId: string; leaseId: string | null; live: boolean }[]
   >;
