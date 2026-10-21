@@ -43,6 +43,7 @@ import type { Pool } from "pg";
 import { createRulesRuntime } from "../../workers/rules/src/runtime.js";
 import { NegotiationTermsSchema } from "./negotiation-contracts.js";
 import design from "./negotiation-design.json" with { type: "json" };
+import type { OwnedNegotiationWorld, OwnedWorldCheckpoint, WorldSecrets } from "./negotiation-owned-run.js";
 import { designDigest, type NegotiationCell, negotiationPlan } from "./negotiation-plan.js";
 
 type OwnedTarget = { pactUrl: string; nonce: string };
@@ -85,6 +86,19 @@ export async function createNegotiationWorld(
   cell: NegotiationCell,
   options: { control?: boolean } = {},
 ): Promise<NegotiationWorld> {
+  return constructNegotiationWorld(target, cell, options);
+}
+export async function constructNegotiationWorld(
+  target: OwnedTarget,
+  cell: NegotiationCell,
+  options: {
+    control?: boolean;
+    retention?: "preserve";
+    secrets?: WorldSecrets;
+    checkpoint?: OwnedWorldCheckpoint;
+    onCreated?: (schema: string, worldId: string) => Promise<void>;
+  } = {},
+): Promise<NegotiationWorld & Omit<OwnedNegotiationWorld, keyof NegotiationWorld>> {
   let parsed: URL;
   try {
     parsed = new URL(target.pactUrl);
@@ -124,40 +138,61 @@ export async function createNegotiationWorld(
       rulesId: design.rulesId,
     });
     if (expected !== cell.initialStateDigest) throw Error("NEGOTIATION_DESIGN_MISMATCH");
-    schema = await createTestSchema(admin, "negotiation");
+    const resumed = options.checkpoint;
+    schema = resumed?.schema ?? (await createTestSchema(admin, "negotiation"));
     pool = createSchemaPool(target.pactUrl, schema);
     const db = pool,
-      worldId = randomUUID(),
+      worldId = resumed?.worldId ?? randomUUID(),
       clock = { now: () => new Date() };
-    await db.query(
-      "CREATE TABLE negotiation_fixture_identity(world_id uuid PRIMARY KEY,nonce text,cell_id text,initial_state_digest text,decision_start_game_time_ms bigint DEFAULT 0)",
-    );
-    await db.query(
-      "INSERT INTO negotiation_fixture_identity(world_id,nonce,cell_id,initial_state_digest) VALUES($1,$2,$3,$4)",
-      [worldId, target.nonce, cell.id, cell.initialStateDigest],
-    );
-    await db.query(
-      "CREATE TABLE negotiation_fixture_commands(command_id uuid PRIMARY KEY,actor_id uuid,kind text,scripted_prefix boolean,game_time_ms bigint,wall_time timestamptz,receipt jsonb)",
-    );
-    await db.query(
-      "CREATE TABLE negotiation_fixture_observations(sequence bigserial PRIMARY KEY,actor_id uuid,game_time_ms bigint,observation jsonb)",
-    );
-    await db.query(
-      "CREATE TABLE negotiation_fixture_ticks(sequence bigint PRIMARY KEY,game_time_ms bigint,wall_time timestamptz)",
-    );
-    const runtime = createRulesRuntime(db, "pact", randomBytes(32), undefined, 0);
-    await runtime.world.bootstrap();
-    await db.query(
-      "UPDATE world_clocks SET committed_game_time_ms=0,tick_sequence=0,next_tick_due_at=clock_timestamp()+interval '10 minutes',last_heartbeat_at=clock_timestamp() WHERE product_scope='pact'",
-    );
+    if (!resumed) {
+      await options.onCreated?.(schema, worldId);
+      await db.query(
+        "CREATE TABLE negotiation_fixture_identity(world_id uuid PRIMARY KEY,nonce text,cell_id text,initial_state_digest text,decision_start_game_time_ms bigint DEFAULT 0)",
+      );
+      await db.query(
+        "INSERT INTO negotiation_fixture_identity(world_id,nonce,cell_id,initial_state_digest) VALUES($1,$2,$3,$4)",
+        [worldId, target.nonce, cell.id, cell.initialStateDigest],
+      );
+      await db.query(
+        "CREATE TABLE negotiation_fixture_commands(command_id uuid PRIMARY KEY,actor_id uuid,kind text,scripted_prefix boolean,game_time_ms bigint,wall_time timestamptz,receipt jsonb)",
+      );
+      await db.query(
+        "CREATE TABLE negotiation_fixture_observations(sequence bigserial PRIMARY KEY,actor_id uuid,game_time_ms bigint,observation jsonb)",
+      );
+      await db.query(
+        "CREATE TABLE negotiation_fixture_ticks(sequence bigint PRIMARY KEY,game_time_ms bigint,wall_time timestamptz)",
+      );
+    } else {
+      const saved = (
+        await db.query(
+          "SELECT nonce,cell_id,owned_checkpoint_digest FROM negotiation_fixture_identity WHERE world_id=$1",
+          [worldId],
+        )
+      ).rows[0];
+      if (
+        saved?.nonce !== target.nonce ||
+        saved.cell_id !== cell.id ||
+        saved.owned_checkpoint_digest !== designDigest(resumed)
+      )
+        throw Error("OWNED_CHECKPOINT_MISMATCH");
+    }
+    const secret = (name: keyof WorldSecrets) =>
+      options.secrets ? Buffer.from(options.secrets[name], "base64") : randomBytes(32);
+    const runtime = createRulesRuntime(db, "pact", secret("rulesKey"), undefined, 0);
+    if (!resumed) {
+      await runtime.world.bootstrap();
+      await db.query(
+        "UPDATE world_clocks SET committed_game_time_ms=0,tick_sequence=0,next_tick_due_at=clock_timestamp()+interval '10 minutes',last_heartbeat_at=clock_timestamp() WHERE product_scope='pact'",
+      );
+    }
     const identity = new IdentityService(db, {
       guestPlayEnabled: true,
       productScope: "pact",
       currentTermsVersion: "terms-v1",
       allowedOrigins: new Set(["https://negotiation.example.test"]),
       clock,
-      digester: new TokenDigester(randomBytes(32)),
-      secretBox: new AesGcmSecretBox(randomBytes(32)),
+      digester: new TokenDigester(secret("tokenKey")),
+      secretBox: new AesGcmSecretBox(secret("encryptionKey")),
       compromisedPasswords: new LocalCompromisedPasswordChecker(baselineCompromisedPasswordDigests),
     });
     const authority = new AuthorityService(db, { productScope: "pact", identity, now: clock.now });
@@ -201,85 +236,111 @@ export async function createNegotiationWorld(
     const people: NegotiationPlayer[] = [],
       credentials = new Map<string, { token: string; holderId: string; principal: AuthenticatedPrincipal }>();
     const state = family.initialState;
-    for (let index = 0; index < 2; index++) {
-      const role = (cell.rolesReversed ? (index === 0 ? "B" : "A") : index === 0 ? "A" : "B") as "A" | "B";
-      const session = await identity.joinGuest(randomUUID());
-      const human = await identity.authenticate(session.sessionToken);
-      const draft = await onboarding.ensureDraft(session.accountId);
-      const suffix = designDigest({ seed: cell.worldSeed, index }).slice(0, 12);
-      await onboarding.updateDraft(session.accountId, {
-        displayName: `Negotiator ${suffix}`,
-        proposedHandle: `neg_${suffix}`,
-        portrait: "portrait.wolf",
-        expectedVersion: draft.version,
-      });
-      await onboarding.recordConnectionCheck(session.accountId);
-      const activated = await kingdoms.activate(session.accountId);
-      const mandate = await authority.ensureMandate(session.accountId);
-      await authority.raiseMandate(session.sessionToken, {
-        allowedActions: ["world.read", "inbox.read", "message.send.contact", "contact.request", "supply.sign"],
-        resourceLimits: { iron: "600000", silver: "600000", grain: "600000" },
-        reserveFloors: {},
-        expectedVersion: mandate.version,
-      });
-      await withTransaction(db, (c) =>
-        social.configureDelegation(
-          c,
-          session.accountId,
-          { mode: "agent_decides", allowedKingdomIds: [], expectedVersion: 0 },
-          0,
-        ),
-      );
-      const goal = state.goals[role];
-      await kingdoms.setAmbition(session.accountId, JSON.stringify(goal));
-      const holderId = randomUUID();
-      await runs.openMcpLease({ accountId: session.accountId, holderId });
-      credentials.set(activated.kingdomId, {
-        token: session.sessionToken,
-        holderId,
-        principal: {
-          accountId: session.accountId,
-          productScope: ProductScopeSchema.parse("pact"),
-          audience: "agent",
-          sessionId: holderId,
-          agentOrigin: "external",
-          agentScopes: ["world:read", "game:act"],
-        },
-      });
-      await withTransaction(db, async (c) => {
-        for (const resource of ["iron", "silver", "grain"] as const) {
-          const value = state.ordinaryStocks[role][resource];
-          if (value)
-            await runtime.ledger.creditOrdinary(c, {
-              kingdomId: activated.kingdomId,
-              resource,
-              amount: wholeResources(value),
-              operationKey: `fixture-initial:${resource}`,
-              reason: "fixture",
-              gameTimeMs: 0,
-            });
-        }
-      });
-      const initial = await views.readSelf(session.accountId);
-      if (!initial) throw Error("MISSING_FOUNDER");
-      people.push({
-        accountId: session.accountId,
-        kingdomId: activated.kingdomId,
-        role,
-        goalDigest: designDigest(goal),
-        ordinaryStart: {
-          iron: initial.balances.iron.ordinaryUnits,
-          silver: initial.balances.silver.ordinaryUnits,
-          grain: initial.balances.grain.ordinaryUnits,
-        },
-      });
-      if (human.accountId !== session.accountId) throw Error("IDENTITY_MISMATCH");
+    if (resumed) {
+      people.push(...structuredClone(resumed.players));
+      for (const c of resumed.credentials) {
+        const authenticated = await identity.authenticate(c.token);
+        if (
+          authenticated.accountId !== c.accountId ||
+          !people.some((p) => p.accountId === c.accountId && p.kingdomId === c.kingdomId)
+        )
+          throw Error("OWNED_CHECKPOINT_MISMATCH");
+        const k = (await db.query("SELECT account_id FROM kingdoms WHERE id=$1", [c.kingdomId])).rows[0];
+        if (k?.account_id !== c.accountId) throw Error("OWNED_CHECKPOINT_MISMATCH");
+        credentials.set(c.kingdomId, {
+          token: c.token,
+          holderId: c.holderId,
+          principal: {
+            accountId: c.accountId,
+            productScope: ProductScopeSchema.parse("pact"),
+            audience: "agent",
+            sessionId: c.holderId,
+            agentOrigin: "external",
+            agentScopes: ["world:read", "game:act"],
+          },
+        });
+      }
     }
+    if (!resumed)
+      for (let index = 0; index < 2; index++) {
+        const role = (cell.rolesReversed ? (index === 0 ? "B" : "A") : index === 0 ? "A" : "B") as "A" | "B";
+        const session = await identity.joinGuest(randomUUID());
+        const human = await identity.authenticate(session.sessionToken);
+        const draft = await onboarding.ensureDraft(session.accountId);
+        const suffix = designDigest({ seed: cell.worldSeed, index }).slice(0, 12);
+        await onboarding.updateDraft(session.accountId, {
+          displayName: `Negotiator ${suffix}`,
+          proposedHandle: `neg_${suffix}`,
+          portrait: "portrait.wolf",
+          expectedVersion: draft.version,
+        });
+        await onboarding.recordConnectionCheck(session.accountId);
+        const activated = await kingdoms.activate(session.accountId);
+        const mandate = await authority.ensureMandate(session.accountId);
+        await authority.raiseMandate(session.sessionToken, {
+          allowedActions: ["world.read", "inbox.read", "message.send.contact", "contact.request", "supply.sign"],
+          resourceLimits: { iron: "600000", silver: "600000", grain: "600000" },
+          reserveFloors: {},
+          expectedVersion: mandate.version,
+        });
+        await withTransaction(db, (c) =>
+          social.configureDelegation(
+            c,
+            session.accountId,
+            { mode: "agent_decides", allowedKingdomIds: [], expectedVersion: 0 },
+            0,
+          ),
+        );
+        const goal = state.goals[role];
+        await kingdoms.setAmbition(session.accountId, JSON.stringify(goal));
+        const holderId = randomUUID();
+        await runs.openMcpLease({ accountId: session.accountId, holderId });
+        credentials.set(activated.kingdomId, {
+          token: session.sessionToken,
+          holderId,
+          principal: {
+            accountId: session.accountId,
+            productScope: ProductScopeSchema.parse("pact"),
+            audience: "agent",
+            sessionId: holderId,
+            agentOrigin: "external",
+            agentScopes: ["world:read", "game:act"],
+          },
+        });
+        await withTransaction(db, async (c) => {
+          for (const resource of ["iron", "silver", "grain"] as const) {
+            const value = state.ordinaryStocks[role][resource];
+            if (value)
+              await runtime.ledger.creditOrdinary(c, {
+                kingdomId: activated.kingdomId,
+                resource,
+                amount: wholeResources(value),
+                operationKey: `fixture-initial:${resource}`,
+                reason: "fixture",
+                gameTimeMs: 0,
+              });
+          }
+        });
+        const initial = await views.readSelf(session.accountId);
+        if (!initial) throw Error("MISSING_FOUNDER");
+        people.push({
+          accountId: session.accountId,
+          kingdomId: activated.kingdomId,
+          role,
+          goalDigest: designDigest(goal),
+          ordinaryStart: {
+            iron: initial.balances.iron.ordinaryUnits,
+            silver: initial.balances.silver.ordinaryUnits,
+            grain: initial.balances.grain.ordinaryUnits,
+          },
+        });
+        if (human.accountId !== session.accountId) throw Error("IDENTITY_MISMATCH");
+      }
     const first = people[0],
       second = people[1];
     if (!first || !second) throw Error("MISSING_NEGOTIATION_PLAYERS");
     const players: readonly [NegotiationPlayer, NegotiationPlayer] = [first, second];
-    let prefix = true,
+    let prefix = !resumed,
       closed = false,
       inFlight = 0;
     const dispatcher = new CommandDispatcher({
@@ -335,14 +396,14 @@ export async function createNegotiationWorld(
       });
     };
     let workerToken: string | null = null;
-    const world: NegotiationWorld = {
+    const world: NegotiationWorld & Omit<OwnedNegotiationWorld, keyof NegotiationWorld> = {
       worldId,
       pool: db,
       cell,
       players,
       control: options.control === true,
-      openingOfferId: null,
-      decisionStartGameTimeMs: 0,
+      openingOfferId: resumed?.openingOfferId ?? null,
+      decisionStartGameTimeMs: resumed?.decisionStartGameTimeMs ?? 0,
       actor(kingdomId) {
         const p = players.find((a) => a.kingdomId === kingdomId),
           credential = credentials.get(kingdomId);
@@ -352,6 +413,22 @@ export async function createNegotiationWorld(
           async dispatch(action, commandId = randomUUID()) {
             await active();
             if (options.control) throw Error("SOLO_CONTROL_NO_INTERACTION");
+            if (options.retention && !prefix) {
+              const owned = (
+                await db.query(
+                  "SELECT o.lease_id,l.released_at,l.expires_at,l.holder_id,i.owned_activation_complete FROM negotiation_owned_leases o CROSS JOIN negotiation_fixture_identity i LEFT JOIN write_leases l ON l.product_scope='pact' AND l.holder_kind='mcp' AND l.subject_id=o.account_id AND l.lease_id=o.lease_id WHERE o.kingdom_id=$1",
+                  [p.kingdomId],
+                )
+              ).rows[0];
+              if (!owned?.lease_id || !owned.owned_activation_complete) throw Error("OWNED_WORLD_FENCED");
+              if (
+                owned.released_at ||
+                !owned.expires_at ||
+                new Date(owned.expires_at) <= clock.now() ||
+                owned.holder_id !== credential.holderId
+              )
+                throw Error("FORBIDDEN");
+            }
             inFlight++;
             try {
               await identity.authenticate(credential.token);
@@ -452,9 +529,86 @@ export async function createNegotiationWorld(
         if (closed) return;
         await active();
         await db.end();
-        await dropTestSchema(admin, schema as string);
+        if (!options.retention) await dropTestSchema(admin, schema as string);
         await admin.end();
         closed = true;
+      },
+      async disconnect() {
+        if (closed) return;
+        await db.end();
+        await admin.end();
+        closed = true;
+      },
+      checkpoint() {
+        if (!options.secrets || !options.retention) throw Error("OWNED_CHECKPOINT_REQUIRED");
+        return structuredClone({
+          schemaVersion: "pact.negotiation-owned-world.v1",
+          schema: schema as string,
+          nonce: target.nonce,
+          worldId,
+          cell,
+          control: options.control === true,
+          players,
+          credentials: [...credentials.entries()].map(([kingdomId, c]) => ({
+            kingdomId,
+            accountId: c.principal.accountId,
+            token: c.token,
+            holderId: c.holderId,
+          })),
+          secrets: options.secrets,
+          openingOfferId: world.openingOfferId,
+          decisionStartGameTimeMs: world.decisionStartGameTimeMs,
+        });
+      },
+      async activateLeases() {
+        await active();
+        if (!options.retention || options.control) throw Error("OWNED_TREATMENT_REQUIRED");
+        // Consume first-acquisition authority before opening either lease. A partial
+        // activation is retained and cannot be retried as a replacement acquisition.
+        const claimed = await db.query(
+          "UPDATE negotiation_fixture_identity SET owned_activation_started=true WHERE world_id=$1 AND owned_activation_started=false RETURNING world_id",
+          [worldId],
+        );
+        if (!claimed.rowCount) throw Error("OWNED_LEASES_ALREADY_ACTIVATED");
+        for (const p of players) {
+          const c = credentials.get(p.kingdomId)!;
+          const opened = await runs.openMcpLease({ accountId: p.accountId, holderId: c.holderId });
+          await db.query("UPDATE negotiation_owned_leases SET lease_id=$2 WHERE kingdom_id=$1 AND lease_id IS NULL", [
+            p.kingdomId,
+            opened.leaseId,
+          ]);
+        }
+        await db.query("UPDATE negotiation_fixture_identity SET owned_activation_complete=true WHERE world_id=$1", [
+          worldId,
+        ]);
+      },
+      async renewLeases() {
+        await active();
+        if (
+          !(
+            await db.query("SELECT owned_activation_complete FROM negotiation_fixture_identity WHERE world_id=$1", [
+              worldId,
+            ])
+          ).rows[0]?.owned_activation_complete
+        )
+          throw Error("OWNED_WORLD_FENCED");
+        for (const p of players) {
+          const c = credentials.get(p.kingdomId)!;
+          const row = (
+            await db.query("SELECT lease_id FROM negotiation_owned_leases WHERE kingdom_id=$1", [p.kingdomId])
+          ).rows[0];
+          if (!row?.lease_id) throw Error("OWNED_WORLD_FENCED");
+          await runs.renewMcpLease({ accountId: p.accountId, holderId: c.holderId, expectedLeaseId: row.lease_id });
+        }
+      },
+      async leaseFacts() {
+        await active();
+        return (
+          await db.query(
+            `SELECT o.account_id AS "accountId",o.kingdom_id AS "kingdomId",o.holder_id AS "holderId",o.lease_id AS "leaseId",(l.lease_id IS NOT NULL AND l.released_at IS NULL AND l.expires_at>$1 AND l.holder_id=o.holder_id::text) AS live FROM negotiation_owned_leases o LEFT JOIN write_leases l ON l.product_scope='pact' AND l.holder_kind='mcp' AND l.subject_id=o.account_id AND l.lease_id=o.lease_id ORDER BY o.ordinal`,
+            [clock.now()],
+          )
+        ).rows;
       },
     };
     const roleA = players.find((p) => p.role === "A"),
@@ -472,7 +626,7 @@ export async function createNegotiationWorld(
       if (!key) throw Error("MISSING_CONTACT_RECEIPT");
       await b.dispatch({ kind: "game.contact.answer", requestId: key.slice("contact-request:".length), accept: true });
     };
-    if (!options.control) {
+    if (!resumed && !options.control) {
       if (state.contacts) await intro();
       if ("openingOffer" in state && state.openingOffer) {
         if (cell.family === "C02") {
@@ -527,15 +681,40 @@ export async function createNegotiationWorld(
         world.openingOfferId = next.commandId;
       }
     }
-    world.decisionStartGameTimeMs = (await runtime.world.read()).gameTimeMs;
-    await db.query("UPDATE negotiation_fixture_identity SET decision_start_game_time_ms=$1", [
-      world.decisionStartGameTimeMs,
-    ]);
+    if (!resumed) {
+      world.decisionStartGameTimeMs = (await runtime.world.read()).gameTimeMs;
+      await db.query("UPDATE negotiation_fixture_identity SET decision_start_game_time_ms=$1", [
+        world.decisionStartGameTimeMs,
+      ]);
+      if (options.retention) {
+        await db.query(
+          "CREATE TABLE negotiation_owned_leases(account_id uuid PRIMARY KEY,kingdom_id uuid UNIQUE NOT NULL,holder_id uuid UNIQUE NOT NULL,ordinal int UNIQUE NOT NULL,lease_id uuid)",
+        );
+        for (const [ordinal, p] of players.entries()) {
+          const c = credentials.get(p.kingdomId)!;
+          await runs.releaseMcpLease({ accountId: p.accountId, holderId: c.holderId });
+          c.holderId = randomUUID();
+          c.principal = { ...c.principal, sessionId: c.holderId };
+          await db.query("INSERT INTO negotiation_owned_leases VALUES($1,$2,$3,$4,NULL)", [
+            p.accountId,
+            p.kingdomId,
+            c.holderId,
+            ordinal,
+          ]);
+        }
+        await db.query(
+          "ALTER TABLE negotiation_fixture_identity ADD COLUMN owned_activation_started boolean NOT NULL DEFAULT false, ADD COLUMN owned_activation_complete boolean NOT NULL DEFAULT false, ADD COLUMN owned_checkpoint_digest text",
+        );
+        await db.query("UPDATE negotiation_fixture_identity SET owned_checkpoint_digest=$1", [
+          designDigest(world.checkpoint()),
+        ]);
+      }
+    }
     prefix = false;
     return world;
   } catch (error) {
     if (pool) await pool.end();
-    if (schema) await dropTestSchema(admin, schema);
+    if (schema && !options.retention) await dropTestSchema(admin, schema);
     await admin.end();
     throw error;
   }
