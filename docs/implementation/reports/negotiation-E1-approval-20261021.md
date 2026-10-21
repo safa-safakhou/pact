@@ -1,5 +1,7 @@
 # E1 negotiation approval preparation — 21 October 2026
 
+> **Later preparation update:** the [owned adapter / safe renewal / paired preflight report](negotiation-E1-owned-preflight-20261021.md) supersedes this document's unimplemented-task status. Frozen @1 fails before provider admission; a separate unregistered @1.1 repair is ready for review. E1 launch remains unapproved and not operationally ready. The historical proposal below is retained.
+
 E1 is prepared for **proposal review only**, with no launch approval, fixture creation or model/helper/game/test run. The paused world, private settings, identities, queues, history and unknown allocations were not contacted or changed. Work stayed inline, without delegation. Only documents and a pure disarmed preview were added.
 
 The canonical [Fleet approval package and unstarted preparation tasks](../../../../fleet/docs/superpowers/plans/2026-10-21-negotiation-E1-approval.md) and [exact JSON definition](../../../../fleet/docs/negotiation-E1-approval-20261021.json) propose:

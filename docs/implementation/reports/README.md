@@ -2,6 +2,10 @@
 
 - [Repaired one-hour observation](repaired-hour-observation-20261019.md) — four original fleet groups, a fresh elapsed-hour gate and baseline-relative achievements/interactions.
 
+## Current negotiation preparation
+
+- [Owned adapter, safe lease renewal and E1 preflight](negotiation-E1-owned-preflight-20261021.md) — verified retained fixtures and encrypted restore; frozen @1 blocks before provider admission, a separate unregistered @1.1 repair passes offline, and E1 remains unstarted/unapproved.
+
 ## Current assignment
 
 - [Local-world master publication](master-publication-20261020.md) — integration of the repairs and all result reports, merged-source checks and preserved paused runtime.
