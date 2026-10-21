@@ -1,0 +1,9 @@
+# Native negotiation preparation —21 October2026
+
+Packaged Windows mechanism verification passed on Fleet `cc07350496fbc6136eae3054e2386055e6d6d569` / PACT `9d0f480d71cf9f1a7c966117ded039bb35e07d07`, inventory digest `f60ddeedcc394fe23ccd785eab4bb42afca7eb2783a4dffdc11496156048ebcd`. Two fresh treatment/solo pairs used normal PACT clocks and Fleet timed-review hosts. All four committed GAME60,000/tick1 while the first authored fake response was withheld. Both fake allocations reported, one shared provider lane, zero commands, no unresolved work, all clocks/cohorts paused. **Zero real-provider calls; no real E4 grant consumed or behavior qualified.**
+
+The earlier Windows failure remains retained: one reported fake allocation/zero real calls, four normally paused clocks, encrypted authenticated restore SHA256 `01f9d2ba2a845630bfbb4ba7c85dae09ea164ad417b6a991f30f39fc8d58e5a8`, state digest `890e88ebad2ea662ac5fb8f1cb515506359d7b8f713d1c03a003efba490337fb`. Fleet repaired a stale clock-check reservation race, post-await admission closure and lost clock-error cause, with observed failing then passing regressions. No native activation or historical fixture was reset/reused.
+
+The successful fresh fixture also authenticated/restored: archive SHA256 `7ce75f61f930dbcdfb37ad21aa307807c372df4e195ef917be36413014fc4980`, state digest `44b1e5daba0bad957cb363a331c964149ef336274f98883c06dc504d02558966`. Checkpoints, keys and failures remain private. Disk recovery retained all historical logical paths, bytes and inventory digests; mutable provider stores stayed separate.
+
+The source is prepared for separately granted E3/E4 assessment; it is not production-qualified. The release target is a separate isolated candidate installation. The retained paused local world/public services stayed unchanged by non-access. Work remained inline. The sibling Fleet report `docs/negotiation-native-preflight-20261021.md` contains the complete mechanism record.
