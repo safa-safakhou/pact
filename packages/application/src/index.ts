@@ -21,6 +21,7 @@ export function createApplication(
   });
 }
 
+export * from "./action-effects.js";
 export { AgentGuideReader, type AgentGuideTopic } from "./agent-guide.js";
 export type { AgentGuidePort } from "./agent-operations.js";
 export { AgentOperationError, type AgentOperationOptions, AgentOperationService } from "./agent-operations.js";

@@ -295,6 +295,46 @@ export class RunService {
   async openMcpLease(input: { accountId: string; subjectId?: string; holderId: string }) {
     return this.openExternalLease({ ...input, kind: "mcp" });
   }
+  /** Renew only the same live external holder. Unlike openMcpLease this never
+   * acquires/replaces a released, expired or superseded lease. */
+  async renewMcpLease(input: {
+    accountId: string;
+    holderId: string;
+    expectedLeaseId: string;
+  }): Promise<{ leaseId: string; expiresAt: Date }> {
+    return withTransaction(this.pool, async (client) => {
+      const row = (
+        await client.query<{
+          lease_id: string;
+          holder_kind: string;
+          holder_id: string;
+          expires_at: Date;
+          released_at: Date | null;
+        }>(
+          "SELECT lease_id,holder_kind,holder_id,expires_at,released_at FROM write_leases WHERE product_scope=$1 AND subject_id=$2 FOR UPDATE",
+          [this.options.productScope, input.accountId],
+        )
+      ).rows[0];
+      const now = this.options.clock.now();
+      if (
+        !row ||
+        row.holder_kind !== "mcp" ||
+        row.holder_id !== input.holderId ||
+        row.lease_id !== input.expectedLeaseId ||
+        row.released_at ||
+        row.expires_at <= now
+      )
+        throw new RunError("FORBIDDEN");
+      const expiresAt = new Date(now.getTime() + MCP_LEASE_MS);
+      await client.query("UPDATE write_leases SET expires_at=$3 WHERE product_scope=$1 AND subject_id=$2", [
+        this.options.productScope,
+        input.accountId,
+        expiresAt,
+      ]);
+      return { leaseId: row.lease_id, expiresAt };
+    });
+  }
+
   async releaseExternalLease(input: { accountId: string; holderId: string; kind: "mcp" | "a2a" }) {
     await this.pool.query(
       "UPDATE write_leases SET released_at=$5 WHERE product_scope=$1 AND subject_id=$2 AND holder_kind=$3 AND holder_id=$4 AND released_at IS NULL",

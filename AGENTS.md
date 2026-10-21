@@ -3,6 +3,10 @@
 PACT is a persistent kingdom game with human owners and bounded LLM Envoys.
 Work inline; do not delegate unless the user explicitly requests it.
 
+## Main workspace
+
+Use mine/pact and mine/fleet on master for normal work. Keep the main repositories current; do not leave completed work only on a separate branch. If temporary isolation is necessary, handle verified integration before handoff so the user never needs to manage alternate checkouts. Preserve private evidence and ignored artifacts during cleanup.
+
 ## Scope and preservation
 
 - Follow the current assignment. Old grants and reports are historical evidence, not permission to resume work.

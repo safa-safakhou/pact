@@ -10,7 +10,11 @@
 
 **Spec:** [Milestone design](../../../../fleet/docs/superpowers/specs/2026-10-20-two-kingdom-negotiation-design.md). [Canonical tasks N01–N08](../../../../fleet/docs/superpowers/plans/2026-10-20-two-kingdom-negotiation.md).
 
-**Status:** Planning only, 20 October 2026. No new runs, source implementation or runtime changes. Baseline `41e8bcdd85b320fa31bbf31c328214b71dd6e0e1`. This details PACT ownership of N01/N02/N06/N08, not another task list to execute twice.
+**Original status:** Planning only, 20 October 2026. No new runs, source implementation or runtime changes. Baseline `41e8bcdd85b320fa31bbf31c328214b71dd6e0e1`. This details PACT ownership of N01/N02/N06/N08, not another task list to execute twice.
+
+**Implementation checkpoint (21 October 2026):** F00–F06 and N01–N08 are complete and verified inline in the isolated `codex/two-kingdom-offline` worktrees. See the [paired source/offline acceptance report](../../implementation/reports/two-kingdom-negotiation-source-acceptance-20261020.md). F07/F08, persistent specialists and skills remain open. Original planning-only wording is historical; later source authorization covers offline implementation only. E1–E4 remain unstarted and real-model quality is unqualified.
+
+**E1 proposal checkpoint (21 October 2026):** The [approval package](../../implementation/reports/negotiation-E1-approval-20261021.md) now pins a proposed existing model, settings, fixture definition, budget and stop conditions. It is disarmed and starts no test/fixture/provider/game run. Owned execution composition, baseline operational preflight and same-live-lease renewal remain unimplemented preparation work; exact execution sources/UUIDs/private grant and launch approval are still required.
 
 ## Global Constraints
 
@@ -19,7 +23,7 @@
 - Unchanged rules, integer scaling, ordinary/founding resources, contact/lease/grant checks, supply formulas and minute ordering.
 - Exactly two active kingdoms per negotiation world; separate solo worlds. Evaluator-only data never enters actor observations.
 - Historical `tests/evaluation/design.json`/672-cell registry remains unchanged. Supply evidence gets its own schema; the existing garrison schema does not already cover it.
-- This assignment is prose only. Listed commands belong to a later source/offline assignment; real models remain a further separate gate.
+- The original assignment was prose only. Subsequent authorization covers the completed source/offline work; real models remain a separate unstarted gate.
 
 ## Review Focus
 
@@ -47,11 +51,11 @@
 
 **Interfaces:** Implement canonical N01 cells/evidence/solo contracts and strict `pact.negotiation-outcome.v1` JSON Schema mirrored for Fleet validation. This is evaluation data, not a deployed endpoint/permission.
 
-- [ ] Freeze C01–C06 state, private objectives, reference outcomes, caps, clock modes and split rotations. Test wrong world/config, duplicate cells, private fields and incorrect amount scaling.
-- [ ] From Fleet run `npm run test:architecture -- --repo pact tests/unit/negotiation-plan.test.ts`; see the intended missing contract assertion fail.
-- [ ] Implement exact decimal-string amounts, scoped refs and explicit coverage. Mark provider stages unapproved and preserve historical manifests.
-- [ ] Rerun new/existing evaluation-plan suites and mirror digest checks. Parsing must create no fixture, account or provider call.
-- [ ] Commit N01 files locally using the canonical task message.
+- [x] Freeze C01–C06 state, private objectives, reference outcomes, caps, clock modes and split rotations. Test wrong world/config, duplicate cells, private fields and incorrect amount scaling.
+- [x] From Fleet run `npm run test:architecture -- --repo pact tests/unit/negotiation-plan.test.ts`; see the intended missing contract assertion fail.
+- [x] Implement exact decimal-string amounts, scoped refs and explicit coverage. Mark provider stages unapproved and preserve historical manifests.
+- [x] Rerun new/existing evaluation-plan suites and mirror digest checks. Parsing must create no fixture, account or provider call.
+- [x] Commit N01 files locally using the canonical task message.
 
 ## N02 — Worlds, full lifecycle and independent controls
 
@@ -59,11 +63,11 @@
 
 **Interfaces:** `createNegotiationWorld(ownedFixture,cell):Promise<NegotiationWorld>`; `readNegotiationEvidence(world):Promise<NegotiationEvidence>`; `compareSolo(trade,controls):SoloComparison[]`. The handle supplies actor-scoped reads/dispatch, full-tick `advanceTo(gameMinute)` and manifest-owned cleanup. No production migration is expected.
 
-- [ ] Test separate identities/stocks, onboarding invariants, agent-decided contact, same-version signatures, canonical receipts, 60 installments/flow and natural expiry. Cover C02 owner-goal amendment/stale version; C03 negative value; C04 expired/revoked/stale admission; C05 true default versus fulfillment. Do not use fixed UUIDs as model hints.
-- [ ] Run both new integration files through F00's PACT runner; establish red on a missing behavior, not absent infrastructure.
-- [ ] Construct initial stocks before decisions with ledger provenance. Later actions use agent principals/current mandates/leases/shared dispatcher. C05's scripted owner intervention uses its real handler and is labelled. Execute all ordinary ticks in order; never selectively freeze native time while a model thinks.
-- [ ] Rerun new suites and existing social-material/supply-offers/supply-settlement/game-command-social/game-command-faults checks. At actual final refill boundary require A donor Iron equal solo and Silver +1; B donor Silver equal solo and Iron +2. Derive times from actual activation/start/end records. Actor adapters cannot read private opposing state.
-- [ ] Commit fixtures/evidence/tests. A reproduced production defect receives a separate minimal fix/regression/report; no economic or authority change to make an agent pass.
+- [x] Test separate identities/stocks, onboarding invariants, agent-decided contact, same-version signatures, canonical receipts, 60 installments/flow and natural expiry. Cover C02 owner-goal amendment/stale version; C03 negative value; C04 expired/revoked/stale admission; C05 true default versus fulfillment. Do not use fixed UUIDs as model hints.
+- [x] Run both new integration files through F00's PACT runner; establish red on a missing behavior, not absent infrastructure.
+- [x] Construct initial stocks before decisions with ledger provenance. Later actions use agent principals/current mandates/leases/shared dispatcher. C05's scripted owner intervention uses its real handler and is labelled. Execute all ordinary ticks in order; never selectively freeze native time while a model thinks.
+- [x] Rerun new suites and existing social-material/supply-offers/supply-settlement/game-command-social/game-command-faults checks. At actual final refill boundary require A donor Iron equal solo and Silver +1; B donor Silver equal solo and Iron +2. Derive times from actual activation/start/end records. Actor adapters cannot read private opposing state.
+- [x] Commit fixtures/evidence/tests. A reproduced production defect receives a separate minimal fix/regression/report; no economic or authority change to make an agent pass.
 
 ## N06/N08 — Paired acceptance and report
 
@@ -77,4 +81,4 @@ This milestone does not implement specialist A07/A08. Existing single-controller
 
 The proposed `reactive-cognition@2` needs Fleet F02–F06. PACT rules and old profiles remain compatible. Six architecture families can have more than six version choices; catalog tests must preserve that distinction.
 
-E1 is the first future operational proposal: two development cells, at most 144 model calls / 5,760,000 reserved tokens, zero helpers and six sequential wall hours. It is **unapproved and unstarted**. All other matrices/thresholds are in design §§6–8. This planning task selects no actual model artifact, launch time or grant.
+E1 is the first future operational proposal: two development cells, at most 144 model calls / 5,760,000 reserved tokens, zero helpers and six sequential wall hours. It is **unapproved and unstarted**. All other matrices/thresholds are in design §§6–8. This source checkpoint selects no actual model artifact, launch time or grant.

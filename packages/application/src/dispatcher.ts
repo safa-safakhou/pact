@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import {
   AcceptedCommandEnvelopeSchema,
   AcceptedSocialCommandSchema,
+  type ActionEffectsGuard,
   type ChronicleCommand,
   ChronicleCommandSchema,
   type CommandEnvelope,
@@ -9,6 +10,7 @@ import {
   type CourtCommand,
   CourtCommandSchema,
   type GameAction,
+  GuardedCommandSchema,
   type PoliticsCommand,
   PoliticsCommandSchema,
   type SandboxAction,
@@ -18,6 +20,7 @@ import {
   type SocialCommand,
 } from "@pact/contracts";
 import { appendOutbox, withTransaction } from "@pact/db";
+import { effectDigest } from "@pact/kingdom";
 import type { Clock } from "@pact/platform";
 import { type CorrelationIds, createCorrelationIds, type TraceReporter } from "@pact/telemetry";
 import type { Pool, PoolClient } from "pg";
@@ -31,6 +34,7 @@ export interface CommandDispatcherOptions {
   readonly productScope: string;
   readonly trace?: TraceReporter;
   readonly game?: GameCommandPort;
+  readonly actionEffects?: import("./action-effects.js").ActionEffectsService;
   readonly social?: SocialCommandPort;
   readonly assertPlayAllowed?: (client: PoolClient, accountId: string) => Promise<void>;
   /** Transaction-bound metadata observer; failure rolls back the command and its receipt together. */
@@ -107,6 +111,15 @@ function deriveEnvelope(principal: AuthenticatedPrincipal, parsed: CommandEnvelo
 
 export class CommandDispatcher {
   constructor(private readonly options: CommandDispatcherOptions) {}
+  async dispatchGuarded(principal: AuthenticatedPrincipal, raw: unknown): Promise<CommandReceipt> {
+    this.assertPrincipal(principal);
+    const parsed = GuardedCommandSchema.safeParse(raw);
+    if (!parsed.success || !this.options.actionEffects) throw new DispatcherError("INVALID_COMMAND");
+    const command = deriveEnvelope(principal, parsed.data.command);
+    if (!isGameAction(command.action)) throw new DispatcherError("INVALID_COMMAND");
+    const payloadHash = effectDigest({ command: canonicalPayloadHash(command), guard: parsed.data.guard });
+    return this.dispatchGame(principal, { ...command, action: command.action }, payloadHash, parsed.data.guard);
+  }
 
   /** Human-only social choices use the same transaction, receipt journal and world admission as game commands. */
   async dispatchSocial(
@@ -279,6 +292,7 @@ export class CommandDispatcher {
     principal: AuthenticatedPrincipal,
     command: CommandEnvelope & { action: GameAction },
     payloadHash: string,
+    guard?: ActionEffectsGuard,
   ): Promise<CommandReceipt> {
     const game = this.options.game;
     if (!game) throw new DispatcherError("INVALID_COMMAND");
@@ -294,6 +308,10 @@ export class CommandDispatcher {
         const existing = await this.loadReceipt(client, command.commandId);
         if (existing) return this.replayed(principal, command.commandId, payloadHash, existing);
         await this.options.assertPlayAllowed?.(client, principal.accountId);
+        if (guard) {
+          if (!this.options.actionEffects) throw new DispatcherError("INVALID_COMMAND");
+          await this.options.actionEffects.validateWithin(client, principal, command, guard, gameTimeMs);
+        }
         const mutation = await game.execute(client, principal, command, gameTimeMs);
         const receipt: CommandReceipt = {
           schemaVersion: SCHEMA_VERSION,

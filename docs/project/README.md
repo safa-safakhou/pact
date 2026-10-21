@@ -8,13 +8,15 @@ Fleet is a separate repository/database/service that runs authorized agents. It 
 
 ## Implementation integration — 19 October 2026
 
+Later21 October [paired specialist source acceptance](../implementation/reports/autonomous-specialists-source-acceptance-20261021.md) records completed source implementation, default-off guarded effects and full offline verification. E1 operational/behavioral and production gates remain open. No retained-world access, real-model run, installation or activation occurred.
+
 The [20 October local-world publication](../implementation/reports/master-publication-20261020.md) adds the subsequent four-profile repairs and complete observation/result reports. The [latest native outcomes](../implementation/reports/fleet-reasoning-outcomes-20261020.md) retain partial behavioral acceptance; publication leaves the local world parked.
 
 The founder subsequently authorized merging both implementation branches into master. See the [paired integration and verification report](https://github.com/safa-safakhou/fleet/blob/master/docs/project/merge-20261019.md) for current integrated source/checks and the typecheck correction. The publication-only scope and CI observation below describe the earlier checkpoint. Source publication does not install or activate Fleet or PACT features.
 
 ## Proposed negotiation milestone — 20 October 2026
 
-The [two-kingdom negotiation plan](../superpowers/plans/2026-10-20-two-kingdom-negotiation.md) defines paired Fleet/PACT fixes, isolated beneficial/bad/stale-offer scenarios, outcome-memory checks and separate source/model/native-timing acceptance. It connects to the specialist architecture foundations without requiring persistent specialists for the first milestone. This is planning only: no new runs or runtime changes, and the paused world remains preserved.
+The [two-kingdom negotiation plan](../superpowers/plans/2026-10-20-two-kingdom-negotiation.md) defines paired Fleet/PACT fixes, isolated beneficial/bad/stale-offer scenarios, outcome-memory checks and separate source/model/native-timing acceptance. It connects to the specialist architecture foundations without requiring persistent specialists for the first milestone. The source/offline milestone is now implemented and verified in the isolated branch; real E1–E4 stages remain unstarted, runtime is unchanged, and the paused world remains preserved.
 
 ## Initial documentation publication scope
 
