@@ -1,5 +1,7 @@
 # Approved negotiation baseline preparation —21 October2026
 
+Latest: [E1 is terminal after a retained operational failure](negotiation-E1-result-20261021.md), one reported model call and zero commands. E2 preparation is separate; the earlier paragraphs below retain their source/preparation scope.
+
 The founder approved the remaining qualification/release tasks, including the explicit separate packing baseline, owned launcher, E1–E4 and specialist/skill diagnostics. New execution must use fresh isolated worlds and exact one-shot source/model/settings/binding/window grants. Historical grants, the paused local world and other populations remain unchanged. Work is inline, without delegation; stage caps and critical stop conditions remain binding.
 
 The mirrored plan now accepts the exact approved baseline-amendment digest, emits distinct `reactive-cognition@1.1` cells and carries that digest through canonical validation. Unamended original `@1` cells, frozen design JSON and limits remain unchanged. Retained-world construction accepts only planned exact cells; checkpoint scope/secret/nonce checks and non-destructive disconnect remain. The outcome reader accepts its actual read-only retained surface without requiring a disposable teardown method.
