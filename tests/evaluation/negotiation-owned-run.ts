@@ -49,12 +49,11 @@ export async function prepareOwnedNegotiationWorld(
   )
     throw Error("OWNED_WORLD_SECRETS_REQUIRED");
   if (
-    cell.stage !== "E1" ||
+    !["E1", "E2", "E3", "E4"].includes(cell.stage) ||
     cell.profile.id !== "reactive-cognition" ||
-    cell.profile.version !== "1" ||
-    !["C01", "C02"].includes(cell.family)
+    !["1", "1.1", "2"].includes(cell.profile.version)
   )
-    throw Error("OWNED_E1_BASELINE_REQUIRED");
+    throw Error("OWNED_NEGOTIATION_PROFILE_REQUIRED");
   const c = options.checkpoint;
   if (
     c &&

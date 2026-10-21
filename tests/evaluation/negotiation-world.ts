@@ -126,6 +126,7 @@ export async function constructNegotiationWorld(
       modelDigest: cell.modelDigest,
       policyDigest: cell.policyDigest,
       selectedProfile: cell.profile,
+      ...(cell.baselineAmendment ? { baselineAmendment: cell.baselineAmendment } : {}),
     }).find((c) => c.id === cell.id);
     if (!planned || designDigest(planned) !== designDigest(cell)) throw Error("NEGOTIATION_DESIGN_MISMATCH");
     const family = design.families.find((f) => f.id === cell.family);

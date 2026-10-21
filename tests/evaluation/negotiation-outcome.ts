@@ -21,7 +21,7 @@ type CommandRow = {
   receipt: CommandReceipt;
 };
 /** Evaluator-only database view. Never supplied through an actor adapter. */
-export async function readNegotiationEvidence(world: NegotiationWorld): Promise<NegotiationEvidence> {
+export async function readNegotiationEvidence(world: Omit<NegotiationWorld, "close">): Promise<NegotiationEvidence> {
   return withTransaction(
     world.pool,
     async (c) => {
