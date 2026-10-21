@@ -6,7 +6,7 @@ import {
   CommandDispatcher,
   GameCommandHandler,
 } from "@pact/application";
-import { ExactHumanPermitService, ExposureService, readMandateContext } from "@pact/authority";
+import { ExactHumanPermitService, ExposureService, readMandateContext, readReserveFloor } from "@pact/authority";
 import { type CommandEnvelope, ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import {
@@ -19,6 +19,7 @@ import {
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
+  SupplySettlementService,
   TroopService,
   WorldViewService,
 } from "@pact/kingdom";
@@ -173,6 +174,19 @@ export async function actionEffectsFixture() {
   return {
     views,
     guide,
+    settleSupply: async (gameTimeMs: number) =>
+      withTransaction(pool, async (client) => {
+        const settlement = new SupplySettlementService(
+          "pact",
+          ledger,
+          { read: (c, a, r) => readReserveFloor(c, "pact", a, r) },
+          new SupplyExposureAdapter(exposure),
+        );
+        await settlement.settleBoundaries(client, gameTimeMs);
+        await settlement.capture(client, gameTimeMs);
+        await settlement.settleDeliveries(client, gameTimeMs);
+        await settlement.settleDefaults(client, gameTimeMs);
+      }),
     pool,
     world,
     ledger,
