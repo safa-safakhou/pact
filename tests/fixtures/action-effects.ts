@@ -6,7 +6,7 @@ import {
   CommandDispatcher,
   GameCommandHandler,
 } from "@pact/application";
-import { ExactHumanPermitService, ExposureService, readMandateContext, readReserveFloor } from "@pact/authority";
+import { ExactHumanPermitService, ExposureService, readMandateContext } from "@pact/authority";
 import { type CommandEnvelope, ProductScopeSchema } from "@pact/contracts";
 import { createPool, createSchemaPool, createTestSchema, dropTestSchema, withTransaction } from "@pact/db";
 import {
@@ -19,7 +19,6 @@ import {
   SocialService,
   SupplyExposureAdapter,
   SupplyService,
-  SupplySettlementService,
   TroopService,
   WorldViewService,
 } from "@pact/kingdom";
@@ -27,6 +26,7 @@ import { ResourceLedger } from "@pact/ledger";
 import { OnboardingService } from "@pact/onboarding";
 import { RunService } from "@pact/runs";
 import { WorldClockService } from "@pact/world";
+import { createRulesRuntime } from "../../workers/rules/src/runtime.js";
 
 export async function actionEffectsFixture() {
   const url = process.env.TEST_DATABASE_URL ?? "postgres://pact:pact@127.0.0.1:5432/pact_test",
@@ -41,8 +41,10 @@ export async function actionEffectsFixture() {
   const clock = { now: () => new Date(now) };
   await world.bootstrap();
   await pool.query(
-    "UPDATE world_clocks SET next_tick_due_at=clock_timestamp()+interval '10 minutes' WHERE product_scope='pact'",
+    "UPDATE world_clocks SET committed_game_time_ms=0,tick_sequence=0,next_tick_due_at=clock_timestamp()+interval '10 minutes',last_heartbeat_at=clock_timestamp() WHERE product_scope='pact'",
   );
+  const rules = createRulesRuntime(pool, "pact", Buffer.alloc(32, 7), undefined, 0);
+  let workerToken: string | null = null;
   const ledger = new ResourceLedger("pact"),
     permits = new ExactHumanPermitService("pact"),
     exposure = new ExposureService("pact", permits),
@@ -98,6 +100,17 @@ export async function actionEffectsFixture() {
         [kingdomId, accountId, "fx_" + randomUUID().slice(0, 8), randomUUID()],
       );
       await ledger.initializeKingdom(c, kingdomId, 0);
+      await c.query("INSERT INTO kingdom_score_baselines(product_scope,kingdom_id,game_time_ms) VALUES('pact',$1,0)", [
+        kingdomId,
+      ]);
+      for (const [kind, capacity] of [
+        ["raid", 3],
+        ["scout", 4],
+      ] as const)
+        await c.query(
+          "INSERT INTO kingdom_charges(product_scope,kingdom_id,kind,available,capacity,last_regenerated_game_time_ms) VALUES('pact',$1,$2,$3,$3,0)",
+          [kingdomId, kind, capacity],
+        );
       for (const kind of ["hall", "farm", "mine", "market", "storehouse", "barracks", "wall"])
         await c.query("INSERT INTO kingdom_buildings(product_scope,kingdom_id,kind,level) VALUES('pact',$1,$2,1)", [
           kingdomId,
@@ -174,19 +187,19 @@ export async function actionEffectsFixture() {
   return {
     views,
     guide,
-    settleSupply: async (gameTimeMs: number) =>
-      withTransaction(pool, async (client) => {
-        const settlement = new SupplySettlementService(
-          "pact",
-          ledger,
-          { read: (c, a, r) => readReserveFloor(c, "pact", a, r) },
-          new SupplyExposureAdapter(exposure),
+    settleSupply: async (gameTimeMs: number) => {
+      if (!Number.isSafeInteger(gameTimeMs) || gameTimeMs < 0 || gameTimeMs > 24 * 3600000 || gameTimeMs % 60000 !== 0)
+        throw Error("INVALID_FIXTURE_TIME");
+      workerToken ??= await rules.world.acquireLease("specialist-effects-fixture");
+      if (!workerToken) throw Error("FIXTURE_WORLD_LEASE_REQUIRED");
+      while ((await rules.world.read()).gameTimeMs < gameTimeMs) {
+        await pool.query(
+          "UPDATE world_clocks SET next_tick_due_at=clock_timestamp()-interval '1 second',last_heartbeat_at=clock_timestamp(),lease_expires_at=clock_timestamp()+interval '30 seconds' WHERE product_scope='pact'",
         );
-        await settlement.settleBoundaries(client, gameTimeMs);
-        await settlement.capture(client, gameTimeMs);
-        await settlement.settleDeliveries(client, gameTimeMs);
-        await settlement.settleDefaults(client, gameTimeMs);
-      }),
+        const result = await rules.world.advance("specialist-effects-fixture", workerToken);
+        if (result.kind !== "committed") throw Error(`FIXTURE_TICK_${result.kind}`);
+      }
+    },
     pool,
     world,
     ledger,
