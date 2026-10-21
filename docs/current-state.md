@@ -23,4 +23,6 @@ Update this file when a verified milestone changes; do not append execution diar
 
 Maintenance checks: instruction/state links resolve; the historical snapshot matches the original AGENTS.md bytes; default search skips that snapshot. Existing source and all other documents remain unchanged.
 
-Integration verification: fresh main-repository checks passed415unit and509integration/smoke tests (one opt-in model test skipped), full build, type/lint/contracts/boundary checks, backlog validation and dependency audit with0findings. No model/live-world run or deployment occurred. Both original instruction snapshots remain retained; prior qualification outcomes and frozen artifact pins are unchanged.
+Integration verification: fresh main-repository checks passed 415 unit and 509 integration/smoke tests (one opt-in model test skipped), full build, type/lint/contracts/boundary checks, backlog validation and dependency audit with 0 findings. No model/live-world run or deployment occurred. Both original instruction snapshots remain retained; prior qualification outcomes and frozen artifact pins are unchanged.
+
+Paired main-repository verification also passed Fleet501unit/562integration/38acceptance checks, its builds/type/style/boundaries and a zero-finding audit. Both repositories use main master checkouts for normal work.
