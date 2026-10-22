@@ -33,23 +33,25 @@ export async function prepareOwnedRC1World<C extends PostE3Cell>(
   if (
     c &&
     (c.schemaVersion !==
-      (cell.study === "negotiation-r9"
-        ? "pact.rc9-owned-world.v1"
-        : cell.study === "negotiation-r8"
-          ? "pact.rc8-owned-world.v1"
-          : cell.study === "negotiation-r7"
-            ? "pact.rc7-owned-world.v1"
-            : cell.study === "negotiation-r6"
-              ? "pact.rc6-owned-world.v1"
-              : cell.study === "negotiation-r5"
-                ? "pact.rc5-owned-world.v1"
-                : cell.study === "negotiation-r4"
-                  ? "pact.rc4-owned-world.v1"
-                  : cell.study === "negotiation-r3"
-                    ? "pact.rc3-owned-world.v1"
-                    : cell.study === "negotiation-r2"
-                      ? "pact.rc2-owned-world.v1"
-                      : "pact.rc1-owned-world.v1") ||
+      (cell.study === "negotiation-r10"
+        ? "pact.rc10-owned-world.v1"
+        : cell.study === "negotiation-r9"
+          ? "pact.rc9-owned-world.v1"
+          : cell.study === "negotiation-r8"
+            ? "pact.rc8-owned-world.v1"
+            : cell.study === "negotiation-r7"
+              ? "pact.rc7-owned-world.v1"
+              : cell.study === "negotiation-r6"
+                ? "pact.rc6-owned-world.v1"
+                : cell.study === "negotiation-r5"
+                  ? "pact.rc5-owned-world.v1"
+                  : cell.study === "negotiation-r4"
+                    ? "pact.rc4-owned-world.v1"
+                    : cell.study === "negotiation-r3"
+                      ? "pact.rc3-owned-world.v1"
+                      : cell.study === "negotiation-r2"
+                        ? "pact.rc2-owned-world.v1"
+                        : "pact.rc1-owned-world.v1") ||
       !/^test_negotiation_[a-f0-9]{32}$/.test(c.schema) ||
       c.nonce !== target.nonce ||
       designDigest(c.cell) !== designDigest(cell) ||
@@ -82,3 +84,5 @@ export const prepareOwnedRC7World = prepareOwnedRC1World;
 export const prepareOwnedRC8World = prepareOwnedRC1World;
 
 export const prepareOwnedRC9World = prepareOwnedRC1World;
+
+export const prepareOwnedRC10World = prepareOwnedRC1World;
