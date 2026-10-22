@@ -655,11 +655,13 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
         return structuredClone({
           schemaVersion:
             "study" in cell
-              ? cell.study === "negotiation-r3"
-                ? "pact.rc3-owned-world.v1"
-                : cell.study === "negotiation-r2"
-                  ? "pact.rc2-owned-world.v1"
-                  : "pact.rc1-owned-world.v1"
+              ? cell.study === "negotiation-r4"
+                ? "pact.rc4-owned-world.v1"
+                : cell.study === "negotiation-r3"
+                  ? "pact.rc3-owned-world.v1"
+                  : cell.study === "negotiation-r2"
+                    ? "pact.rc2-owned-world.v1"
+                    : "pact.rc1-owned-world.v1"
               : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
