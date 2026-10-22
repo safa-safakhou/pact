@@ -315,9 +315,11 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
             goal,
             "study" in cell &&
               "intentAuthorityContract" in cell.configuration &&
-              (cell.configuration.intentAuthorityContract === "separate.v2"
-                ? "external.v1"
-                : cell.configuration.intentAuthorityContract === "separate.v1"),
+              (cell.configuration.intentAuthorityContract === "separate.v3"
+                ? "external.v2"
+                : cell.configuration.intentAuthorityContract === "separate.v2"
+                  ? "external.v1"
+                  : cell.configuration.intentAuthorityContract === "separate.v1"),
           ),
         );
         const holderId = randomUUID();
@@ -666,39 +668,41 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
         return structuredClone({
           schemaVersion:
             "study" in cell
-              ? cell.study === "negotiation-r17"
-                ? "pact.rc17-owned-world.v1"
-                : cell.study === "negotiation-r16"
-                  ? "pact.rc16-owned-world.v1"
-                  : cell.study === "negotiation-r15"
-                    ? "pact.rc15-owned-world.v1"
-                    : cell.study === "negotiation-r14"
-                      ? "pact.rc14-owned-world.v1"
-                      : cell.study === "negotiation-r13"
-                        ? "pact.rc13-owned-world.v1"
-                        : cell.study === "negotiation-r12"
-                          ? "pact.rc12-owned-world.v1"
-                          : cell.study === "negotiation-r11"
-                            ? "pact.rc11-owned-world.v1"
-                            : cell.study === "negotiation-r10"
-                              ? "pact.rc10-owned-world.v1"
-                              : cell.study === "negotiation-r9"
-                                ? "pact.rc9-owned-world.v1"
-                                : cell.study === "negotiation-r8"
-                                  ? "pact.rc8-owned-world.v1"
-                                  : cell.study === "negotiation-r7"
-                                    ? "pact.rc7-owned-world.v1"
-                                    : cell.study === "negotiation-r6"
-                                      ? "pact.rc6-owned-world.v1"
-                                      : cell.study === "negotiation-r5"
-                                        ? "pact.rc5-owned-world.v1"
-                                        : cell.study === "negotiation-r4"
-                                          ? "pact.rc4-owned-world.v1"
-                                          : cell.study === "negotiation-r3"
-                                            ? "pact.rc3-owned-world.v1"
-                                            : cell.study === "negotiation-r2"
-                                              ? "pact.rc2-owned-world.v1"
-                                              : "pact.rc1-owned-world.v1"
+              ? cell.study === "negotiation-r18"
+                ? "pact.rc18-owned-world.v1"
+                : cell.study === "negotiation-r17"
+                  ? "pact.rc17-owned-world.v1"
+                  : cell.study === "negotiation-r16"
+                    ? "pact.rc16-owned-world.v1"
+                    : cell.study === "negotiation-r15"
+                      ? "pact.rc15-owned-world.v1"
+                      : cell.study === "negotiation-r14"
+                        ? "pact.rc14-owned-world.v1"
+                        : cell.study === "negotiation-r13"
+                          ? "pact.rc13-owned-world.v1"
+                          : cell.study === "negotiation-r12"
+                            ? "pact.rc12-owned-world.v1"
+                            : cell.study === "negotiation-r11"
+                              ? "pact.rc11-owned-world.v1"
+                              : cell.study === "negotiation-r10"
+                                ? "pact.rc10-owned-world.v1"
+                                : cell.study === "negotiation-r9"
+                                  ? "pact.rc9-owned-world.v1"
+                                  : cell.study === "negotiation-r8"
+                                    ? "pact.rc8-owned-world.v1"
+                                    : cell.study === "negotiation-r7"
+                                      ? "pact.rc7-owned-world.v1"
+                                      : cell.study === "negotiation-r6"
+                                        ? "pact.rc6-owned-world.v1"
+                                        : cell.study === "negotiation-r5"
+                                          ? "pact.rc5-owned-world.v1"
+                                          : cell.study === "negotiation-r4"
+                                            ? "pact.rc4-owned-world.v1"
+                                            : cell.study === "negotiation-r3"
+                                              ? "pact.rc3-owned-world.v1"
+                                              : cell.study === "negotiation-r2"
+                                                ? "pact.rc2-owned-world.v1"
+                                                : "pact.rc1-owned-world.v1"
               : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
@@ -793,9 +797,11 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
               { ...state.goals.A, maximumSendPerHour: 4 },
               "study" in cell &&
                 "intentAuthorityContract" in cell.configuration &&
-                (cell.configuration.intentAuthorityContract === "separate.v2"
-                  ? "external.v1"
-                  : cell.configuration.intentAuthorityContract === "separate.v1"),
+                (cell.configuration.intentAuthorityContract === "separate.v3"
+                  ? "external.v2"
+                  : cell.configuration.intentAuthorityContract === "separate.v2"
+                    ? "external.v1"
+                    : cell.configuration.intentAuthorityContract === "separate.v1"),
             ),
           );
         }
@@ -813,9 +819,11 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
               state.goals.A,
               "study" in cell &&
                 "intentAuthorityContract" in cell.configuration &&
-                (cell.configuration.intentAuthorityContract === "separate.v2"
-                  ? "external.v1"
-                  : cell.configuration.intentAuthorityContract === "separate.v1"),
+                (cell.configuration.intentAuthorityContract === "separate.v3"
+                  ? "external.v2"
+                  : cell.configuration.intentAuthorityContract === "separate.v2"
+                    ? "external.v1"
+                    : cell.configuration.intentAuthorityContract === "separate.v1"),
             ),
           );
         if (cell.family === "C04") await world.advanceTo(6);
