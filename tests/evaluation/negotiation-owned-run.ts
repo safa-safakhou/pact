@@ -2,7 +2,11 @@ import { designDigest, type NegotiationCell } from "./negotiation-plan.js";
 import { constructNegotiationWorld, type NegotiationFixtureCell, type NegotiationWorld } from "./negotiation-world.js";
 export type WorldSecrets = { rulesKey: string; tokenKey: string; encryptionKey: string };
 export type OwnedWorldCheckpoint<C extends NegotiationFixtureCell = NegotiationCell> = {
-  schemaVersion: "pact.negotiation-owned-world.v1" | "pact.rc1-owned-world.v1" | "pact.rc2-owned-world.v1";
+  schemaVersion:
+    | "pact.negotiation-owned-world.v1"
+    | "pact.rc1-owned-world.v1"
+    | "pact.rc2-owned-world.v1"
+    | "pact.rc3-owned-world.v1";
   schema: string;
   nonce: string;
   worldId: string;

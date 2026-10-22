@@ -32,7 +32,12 @@ export async function prepareOwnedRC1World<C extends PostE3Cell>(
   const c = options.checkpoint;
   if (
     c &&
-    (c.schemaVersion !== (cell.study === "negotiation-r2" ? "pact.rc2-owned-world.v1" : "pact.rc1-owned-world.v1") ||
+    (c.schemaVersion !==
+      (cell.study === "negotiation-r3"
+        ? "pact.rc3-owned-world.v1"
+        : cell.study === "negotiation-r2"
+          ? "pact.rc2-owned-world.v1"
+          : "pact.rc1-owned-world.v1") ||
       !/^test_negotiation_[a-f0-9]{32}$/.test(c.schema) ||
       c.nonce !== target.nonce ||
       designDigest(c.cell) !== designDigest(cell) ||
@@ -49,3 +54,6 @@ export async function prepareOwnedRC1World<C extends PostE3Cell>(
 
 /** Same owned fixture implementation, separately validated R2 namespace. */
 export const prepareOwnedRC2World = prepareOwnedRC1World;
+
+/** New R3 checkpoint namespace with the repaired read-contract configuration. */
+export const prepareOwnedRC3World = prepareOwnedRC1World;
