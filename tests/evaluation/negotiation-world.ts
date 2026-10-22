@@ -45,6 +45,7 @@ import type { Pool } from "pg";
 import { createRulesRuntime } from "../../workers/rules/src/runtime.js";
 import { NegotiationTermsSchema } from "./negotiation-contracts.js";
 import design from "./negotiation-design.json" with { type: "json" };
+import { negotiationGoalText } from "./negotiation-goal.js";
 import type { OwnedNegotiationWorld, OwnedWorldCheckpoint, WorldSecrets } from "./negotiation-owned-run.js";
 import { designDigest, type NegotiationCell, negotiationPlan } from "./negotiation-plan.js";
 import { type PostE3Cell, type PostE3Protocol, validatePostE3Cell } from "./post-e3-rc2-plan.js";
@@ -308,7 +309,15 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
           ),
         );
         const goal = state.goals[role];
-        await kingdoms.setAmbition(session.accountId, JSON.stringify(goal));
+        await kingdoms.setAmbition(
+          session.accountId,
+          negotiationGoalText(
+            goal,
+            "study" in cell &&
+              "intentAuthorityContract" in cell.configuration &&
+              cell.configuration.intentAuthorityContract === "separate.v1",
+          ),
+        );
         const holderId = randomUUID();
         await runs.openMcpLease({ accountId: session.accountId, holderId });
         credentials.set(activated.kingdomId, {
@@ -655,13 +664,15 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
         return structuredClone({
           schemaVersion:
             "study" in cell
-              ? cell.study === "negotiation-r4"
-                ? "pact.rc4-owned-world.v1"
-                : cell.study === "negotiation-r3"
-                  ? "pact.rc3-owned-world.v1"
-                  : cell.study === "negotiation-r2"
-                    ? "pact.rc2-owned-world.v1"
-                    : "pact.rc1-owned-world.v1"
+              ? cell.study === "negotiation-r5"
+                ? "pact.rc5-owned-world.v1"
+                : cell.study === "negotiation-r4"
+                  ? "pact.rc4-owned-world.v1"
+                  : cell.study === "negotiation-r3"
+                    ? "pact.rc3-owned-world.v1"
+                    : cell.study === "negotiation-r2"
+                      ? "pact.rc2-owned-world.v1"
+                      : "pact.rc1-owned-world.v1"
               : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
@@ -750,7 +761,15 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
       if (state.contacts) await intro();
       if ("openingOffer" in state && state.openingOffer) {
         if (cell.family === "C02") {
-          await kingdoms.setAmbition(roleA.accountId, JSON.stringify({ ...state.goals.A, maximumSendPerHour: 4 }));
+          await kingdoms.setAmbition(
+            roleA.accountId,
+            negotiationGoalText(
+              { ...state.goals.A, maximumSendPerHour: 4 },
+              "study" in cell &&
+                "intentAuthorityContract" in cell.configuration &&
+                cell.configuration.intentAuthorityContract === "separate.v1",
+            ),
+          );
         }
         const offer = await a.dispatch({
           kind: "game.supply.offer",
@@ -759,7 +778,16 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
           expiryMinutes: cell.family === "C04" ? 5 : 60,
         });
         world.openingOfferId = offer.commandId;
-        if (cell.family === "C02") await kingdoms.setAmbition(roleA.accountId, JSON.stringify(state.goals.A));
+        if (cell.family === "C02")
+          await kingdoms.setAmbition(
+            roleA.accountId,
+            negotiationGoalText(
+              state.goals.A,
+              "study" in cell &&
+                "intentAuthorityContract" in cell.configuration &&
+                cell.configuration.intentAuthorityContract === "separate.v1",
+            ),
+          );
         if (cell.family === "C04") await world.advanceTo(6);
       }
       if (cell.family === "C05") {
