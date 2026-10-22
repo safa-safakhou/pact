@@ -9,7 +9,8 @@ export type OwnedWorldCheckpoint<C extends NegotiationFixtureCell = NegotiationC
     | "pact.rc3-owned-world.v1"
     | "pact.rc4-owned-world.v1"
     | "pact.rc5-owned-world.v1"
-    | "pact.rc6-owned-world.v1";
+    | "pact.rc6-owned-world.v1"
+    | "pact.rc7-owned-world.v1";
   schema: string;
   nonce: string;
   worldId: string;
