@@ -2,8 +2,11 @@ import { randomBytes, randomUUID } from "node:crypto";
 import {
   ActionEffectsService,
   AgentGuideReader,
+  AgentOperationError,
+  AgentOperationService,
   type AuthenticatedPrincipal,
   CommandDispatcher,
+  DispatcherError,
   GameCommandHandler,
   outlookFeasibility,
 } from "@pact/application";
@@ -42,6 +45,7 @@ import {
 import { OnboardingService } from "@pact/onboarding";
 import { RunService } from "@pact/runs";
 import type { Pool } from "pg";
+import { councilThreadTool } from "../../packages/mcp/src/chatgpt.js";
 import { createRulesRuntime } from "../../workers/rules/src/runtime.js";
 import { NegotiationTermsSchema } from "./negotiation-contracts.js";
 import design from "./negotiation-design.json" with { type: "json" };
@@ -63,6 +67,15 @@ export type NegotiationPlayer = {
 };
 type Snapshot = NonNullable<Awaited<ReturnType<WorldViewService["readSelf"]>>>;
 export interface NegotiationActor {
+  tools(): Promise<
+    {
+      name: string;
+      description: string;
+      inputSchema: Record<string, unknown>;
+      annotations: { readOnlyHint: boolean };
+    }[]
+  >;
+  readTool(name: string, args: Record<string, unknown>): Promise<Record<string, unknown>>;
   dispatch(action: GameAction, commandId?: string): Promise<CommandReceipt>;
   effects(command: Parameters<ActionEffectsService["quote"]>[1]): ReturnType<ActionEffectsService["quote"]>;
   submitGuarded(command: unknown, guard: ActionEffectsGuard): Promise<CommandReceipt>;
@@ -397,6 +410,20 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
         ]);
       },
     });
+    const operations = new AgentOperationService({
+      productScope: "pact",
+      dispatcher,
+      origin: "http://127.0.0.1",
+      clock,
+      worldViews: views,
+      kingdomDiscovery: discovery,
+      agentOutlook: outlook,
+      agentGuide: {
+        read: (id, topic) => guide.read(id, topic),
+        readSection: (id, query) => views.readSection(id, query),
+      },
+      councilThreads: { read: (id, peer, before) => council.thread(id, peer, before) },
+    });
     const active = async () => {
       if (closed) throw Error("NEGOTIATION_WORLD_CLOSED");
       const row = (
@@ -464,6 +491,40 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
           await identity.authenticate(credential.token);
         };
         return {
+          async tools() {
+            await active();
+            const names = new Set([
+              "pact_agent_guide_v1",
+              "pact_world_read_v1",
+              "pact_kingdom_discover_v2",
+              "pact_observation_read_v2",
+              "pact_agent_outlook_v1",
+              "pact_game_action_v2",
+            ]);
+            return [
+              ...operations.listOperations(credential.principal).filter((t) => names.has(t.name)),
+              councilThreadTool,
+            ].map((t) => ({
+              name: t.name,
+              description: t.description,
+              inputSchema: t.inputSchema as Record<string, unknown>,
+              annotations: { readOnlyHint: t.name !== "pact_game_action_v2" },
+            }));
+          },
+          async readTool(name, args) {
+            await active();
+            const allowed = new Set([
+              "pact_agent_guide_v1",
+              "pact_world_read_v1",
+              "pact_kingdom_discover_v2",
+              "pact_observation_read_v2",
+              "pact_agent_outlook_v1",
+              "pact_council_thread_v1",
+            ]);
+            if (!allowed.has(name)) throw new AgentOperationError("FORBIDDEN", 403);
+            const result = await operations.execute(credential.principal, { name, arguments: args });
+            return result.structuredContent as Record<string, unknown>;
+          },
           async effects(command) {
             await assertWrite();
             inFlight++;
@@ -668,45 +729,47 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
         return structuredClone({
           schemaVersion:
             "study" in cell
-              ? cell.study === "negotiation-r20"
-                ? "pact.rc20-owned-world.v1"
-                : cell.study === "negotiation-r19"
-                  ? "pact.rc19-owned-world.v1"
-                  : cell.study === "negotiation-r18"
-                    ? "pact.rc18-owned-world.v1"
-                    : cell.study === "negotiation-r17"
-                      ? "pact.rc17-owned-world.v1"
-                      : cell.study === "negotiation-r16"
-                        ? "pact.rc16-owned-world.v1"
-                        : cell.study === "negotiation-r15"
-                          ? "pact.rc15-owned-world.v1"
-                          : cell.study === "negotiation-r14"
-                            ? "pact.rc14-owned-world.v1"
-                            : cell.study === "negotiation-r13"
-                              ? "pact.rc13-owned-world.v1"
-                              : cell.study === "negotiation-r12"
-                                ? "pact.rc12-owned-world.v1"
-                                : cell.study === "negotiation-r11"
-                                  ? "pact.rc11-owned-world.v1"
-                                  : cell.study === "negotiation-r10"
-                                    ? "pact.rc10-owned-world.v1"
-                                    : cell.study === "negotiation-r9"
-                                      ? "pact.rc9-owned-world.v1"
-                                      : cell.study === "negotiation-r8"
-                                        ? "pact.rc8-owned-world.v1"
-                                        : cell.study === "negotiation-r7"
-                                          ? "pact.rc7-owned-world.v1"
-                                          : cell.study === "negotiation-r6"
-                                            ? "pact.rc6-owned-world.v1"
-                                            : cell.study === "negotiation-r5"
-                                              ? "pact.rc5-owned-world.v1"
-                                              : cell.study === "negotiation-r4"
-                                                ? "pact.rc4-owned-world.v1"
-                                                : cell.study === "negotiation-r3"
-                                                  ? "pact.rc3-owned-world.v1"
-                                                  : cell.study === "negotiation-r2"
-                                                    ? "pact.rc2-owned-world.v1"
-                                                    : "pact.rc1-owned-world.v1"
+              ? cell.study === "negotiation-r21"
+                ? "pact.rc21-owned-world.v1"
+                : cell.study === "negotiation-r20"
+                  ? "pact.rc20-owned-world.v1"
+                  : cell.study === "negotiation-r19"
+                    ? "pact.rc19-owned-world.v1"
+                    : cell.study === "negotiation-r18"
+                      ? "pact.rc18-owned-world.v1"
+                      : cell.study === "negotiation-r17"
+                        ? "pact.rc17-owned-world.v1"
+                        : cell.study === "negotiation-r16"
+                          ? "pact.rc16-owned-world.v1"
+                          : cell.study === "negotiation-r15"
+                            ? "pact.rc15-owned-world.v1"
+                            : cell.study === "negotiation-r14"
+                              ? "pact.rc14-owned-world.v1"
+                              : cell.study === "negotiation-r13"
+                                ? "pact.rc13-owned-world.v1"
+                                : cell.study === "negotiation-r12"
+                                  ? "pact.rc12-owned-world.v1"
+                                  : cell.study === "negotiation-r11"
+                                    ? "pact.rc11-owned-world.v1"
+                                    : cell.study === "negotiation-r10"
+                                      ? "pact.rc10-owned-world.v1"
+                                      : cell.study === "negotiation-r9"
+                                        ? "pact.rc9-owned-world.v1"
+                                        : cell.study === "negotiation-r8"
+                                          ? "pact.rc8-owned-world.v1"
+                                          : cell.study === "negotiation-r7"
+                                            ? "pact.rc7-owned-world.v1"
+                                            : cell.study === "negotiation-r6"
+                                              ? "pact.rc6-owned-world.v1"
+                                              : cell.study === "negotiation-r5"
+                                                ? "pact.rc5-owned-world.v1"
+                                                : cell.study === "negotiation-r4"
+                                                  ? "pact.rc4-owned-world.v1"
+                                                  : cell.study === "negotiation-r3"
+                                                    ? "pact.rc3-owned-world.v1"
+                                                    : cell.study === "negotiation-r2"
+                                                      ? "pact.rc2-owned-world.v1"
+                                                      : "pact.rc1-owned-world.v1"
               : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
@@ -918,4 +981,15 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
     await admin.end();
     throw error;
   }
+}
+
+/** Test-only transport parity: only native typed failures are authoritative denials. */
+export function nativeEvaluationRejection(
+  error: unknown,
+): { code: string; status: number; detail?: Record<string, unknown> } | undefined {
+  if (error instanceof AgentOperationError)
+    return { code: error.code, status: error.httpStatus, ...(error.detail ? { detail: error.detail } : {}) };
+  if (error instanceof DispatcherError)
+    return { code: error.code, status: error.code === "FORBIDDEN" ? 403 : error.code === "STALE_VERSION" ? 409 : 400 };
+  return undefined;
 }
