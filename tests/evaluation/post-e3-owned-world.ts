@@ -33,7 +33,7 @@ export async function prepareOwnedRC1World<C extends PostE3Cell>(
   if (
     c &&
     (c.schemaVersion !==
-      (cell.study === "negotiation-r29" ? "pact.rc29-owned-world.v1" : cell.study === "negotiation-r28" ? "pact.rc28-owned-world.v1" : cell.study === "negotiation-r27" ? "pact.rc27-owned-world.v1" : cell.study === "negotiation-r26"
+      (cell.study === "negotiation-r30" ? "pact.rc30-owned-world.v1" : cell.study === "negotiation-r29" ? "pact.rc29-owned-world.v1" : cell.study === "negotiation-r28" ? "pact.rc28-owned-world.v1" : cell.study === "negotiation-r27" ? "pact.rc27-owned-world.v1" : cell.study === "negotiation-r26"
         ? "pact.rc26-owned-world.v1"
         : cell.study === "negotiation-r25"
           ? "pact.rc25-owned-world.v1"
@@ -156,3 +156,5 @@ export const prepareOwnedRC27World = prepareOwnedRC1World;
 export const prepareOwnedRC28World = prepareOwnedRC1World;
 
 export const prepareOwnedRC29World = prepareOwnedRC1World;
+
+export const prepareOwnedRC30World = prepareOwnedRC1World;
