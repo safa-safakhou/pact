@@ -1,6 +1,10 @@
 # PACT current state
 
-Documentary checkpoint: 22 October 2026. This is source/report state, not a fresh runtime inspection or execution grant.
+Documentary checkpoint: 23 October 2026. This is source/report state, not a fresh runtime inspection or execution grant.
+
+## Current cross-repository checkpoint
+
+Fleet's [bounded qualification and release-readiness record](../../fleet/docs/bounded-qualification-release-readiness-20261023.md) closes the fresh Nemotron 4B matrix at its first semantic failure: the status value was correct, but the final summary invented its source path. Three calls / 4,506 measured tokens / zero game commands; remaining cases/allowance are not resumed. Offline encrypted restore and source rollback mechanisms passed 25 checks against fresh synthetic fixtures. Fleet dependency advisories were repaired as `b6da0fd`; 893 unit / 63 isolated integration tests and a zero-finding Fleet audit passed. PACT application source/dependencies and the paused world were not changed or audited by this Fleet repair. Actual disabled installation, broader qualification and activation remain unfinished. Ordinary game execution stays disabled; E4/KQ1 still lack platform-issued clearance and remain blocked. No denied action, retained grant or unknown command was retried.
 
 ## Source and milestone
 
