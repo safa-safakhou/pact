@@ -67,7 +67,7 @@ export type NegotiationPlayer = {
 };
 type Snapshot = NonNullable<Awaited<ReturnType<WorldViewService["readSelf"]>>>;
 export interface NegotiationActor {
-  tools(): Promise<
+  tools(includeEffects?: boolean): Promise<
     {
       name: string;
       description: string;
@@ -415,6 +415,7 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
       dispatcher,
       origin: "http://127.0.0.1",
       clock,
+      actionEffects: effects,
       worldViews: views,
       kingdomDiscovery: discovery,
       agentOutlook: outlook,
@@ -491,7 +492,7 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
           await identity.authenticate(credential.token);
         };
         return {
-          async tools() {
+          async tools(includeEffects = false) {
             await active();
             const names = new Set([
               "pact_agent_guide_v1",
@@ -500,6 +501,7 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
               "pact_observation_read_v2",
               "pact_agent_outlook_v1",
               "pact_game_action_v2",
+              ...(includeEffects ? ["pact_action_effects_quote_v1", "pact_action_effects_execute_v1"] : []),
             ]);
             return [
               ...operations.listOperations(credential.principal).filter((t) => names.has(t.name)),
@@ -508,7 +510,9 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
               name: t.name,
               description: t.description,
               inputSchema: t.inputSchema as Record<string, unknown>,
-              annotations: { readOnlyHint: t.name !== "pact_game_action_v2" },
+              annotations: {
+                readOnlyHint: !["pact_game_action_v2", "pact_action_effects_execute_v1"].includes(t.name),
+              },
             }));
           },
           async readTool(name, args) {
@@ -520,6 +524,7 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
               "pact_observation_read_v2",
               "pact_agent_outlook_v1",
               "pact_council_thread_v1",
+              "pact_action_effects_quote_v1",
             ]);
             if (!allowed.has(name)) throw new AgentOperationError("FORBIDDEN", 403);
             const result = await operations.execute(credential.principal, { name, arguments: args });
@@ -729,47 +734,49 @@ export async function constructNegotiationWorld<C extends NegotiationFixtureCell
         return structuredClone({
           schemaVersion:
             "study" in cell
-              ? cell.study === "negotiation-r21"
-                ? "pact.rc21-owned-world.v1"
-                : cell.study === "negotiation-r20"
-                  ? "pact.rc20-owned-world.v1"
-                  : cell.study === "negotiation-r19"
-                    ? "pact.rc19-owned-world.v1"
-                    : cell.study === "negotiation-r18"
-                      ? "pact.rc18-owned-world.v1"
-                      : cell.study === "negotiation-r17"
-                        ? "pact.rc17-owned-world.v1"
-                        : cell.study === "negotiation-r16"
-                          ? "pact.rc16-owned-world.v1"
-                          : cell.study === "negotiation-r15"
-                            ? "pact.rc15-owned-world.v1"
-                            : cell.study === "negotiation-r14"
-                              ? "pact.rc14-owned-world.v1"
-                              : cell.study === "negotiation-r13"
-                                ? "pact.rc13-owned-world.v1"
-                                : cell.study === "negotiation-r12"
-                                  ? "pact.rc12-owned-world.v1"
-                                  : cell.study === "negotiation-r11"
-                                    ? "pact.rc11-owned-world.v1"
-                                    : cell.study === "negotiation-r10"
-                                      ? "pact.rc10-owned-world.v1"
-                                      : cell.study === "negotiation-r9"
-                                        ? "pact.rc9-owned-world.v1"
-                                        : cell.study === "negotiation-r8"
-                                          ? "pact.rc8-owned-world.v1"
-                                          : cell.study === "negotiation-r7"
-                                            ? "pact.rc7-owned-world.v1"
-                                            : cell.study === "negotiation-r6"
-                                              ? "pact.rc6-owned-world.v1"
-                                              : cell.study === "negotiation-r5"
-                                                ? "pact.rc5-owned-world.v1"
-                                                : cell.study === "negotiation-r4"
-                                                  ? "pact.rc4-owned-world.v1"
-                                                  : cell.study === "negotiation-r3"
-                                                    ? "pact.rc3-owned-world.v1"
-                                                    : cell.study === "negotiation-r2"
-                                                      ? "pact.rc2-owned-world.v1"
-                                                      : "pact.rc1-owned-world.v1"
+              ? cell.study === "negotiation-r22"
+                ? "pact.rc22-owned-world.v1"
+                : cell.study === "negotiation-r21"
+                  ? "pact.rc21-owned-world.v1"
+                  : cell.study === "negotiation-r20"
+                    ? "pact.rc20-owned-world.v1"
+                    : cell.study === "negotiation-r19"
+                      ? "pact.rc19-owned-world.v1"
+                      : cell.study === "negotiation-r18"
+                        ? "pact.rc18-owned-world.v1"
+                        : cell.study === "negotiation-r17"
+                          ? "pact.rc17-owned-world.v1"
+                          : cell.study === "negotiation-r16"
+                            ? "pact.rc16-owned-world.v1"
+                            : cell.study === "negotiation-r15"
+                              ? "pact.rc15-owned-world.v1"
+                              : cell.study === "negotiation-r14"
+                                ? "pact.rc14-owned-world.v1"
+                                : cell.study === "negotiation-r13"
+                                  ? "pact.rc13-owned-world.v1"
+                                  : cell.study === "negotiation-r12"
+                                    ? "pact.rc12-owned-world.v1"
+                                    : cell.study === "negotiation-r11"
+                                      ? "pact.rc11-owned-world.v1"
+                                      : cell.study === "negotiation-r10"
+                                        ? "pact.rc10-owned-world.v1"
+                                        : cell.study === "negotiation-r9"
+                                          ? "pact.rc9-owned-world.v1"
+                                          : cell.study === "negotiation-r8"
+                                            ? "pact.rc8-owned-world.v1"
+                                            : cell.study === "negotiation-r7"
+                                              ? "pact.rc7-owned-world.v1"
+                                              : cell.study === "negotiation-r6"
+                                                ? "pact.rc6-owned-world.v1"
+                                                : cell.study === "negotiation-r5"
+                                                  ? "pact.rc5-owned-world.v1"
+                                                  : cell.study === "negotiation-r4"
+                                                    ? "pact.rc4-owned-world.v1"
+                                                    : cell.study === "negotiation-r3"
+                                                      ? "pact.rc3-owned-world.v1"
+                                                      : cell.study === "negotiation-r2"
+                                                        ? "pact.rc2-owned-world.v1"
+                                                        : "pact.rc1-owned-world.v1"
               : "pact.negotiation-owned-world.v1",
           schema: schema as string,
           nonce: target.nonce,
