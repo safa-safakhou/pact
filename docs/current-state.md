@@ -1,12 +1,14 @@
 # PACT current state
 
-Documentary checkpoint: 23 October 2026. This is source/report state, not a fresh runtime inspection or execution grant.
+Documentary checkpoint: 24 October 2026. This is source/report state, not a fresh runtime inspection or execution grant.
 
 ## Current cross-repository checkpoint
 
-The latest paired assignment is complete through approval handoff: Fleet's [final-fact qualification and actual disabled installation](../../fleet/docs/final-facts-qualification-and-installation-20261023.md). Source `966f2d2` passed 896 unit / 63 isolated integration tests and type/style/build/boundary checks; fresh Fleet audit has zero findings. Four fresh game-free Nemotron 4B cases passed in six calls / 76.096 seconds / 9,444 measured tokens, zero unknowns/retries/game commands. Actual isolated installation passed 70 checks with six native console processes, independent encrypted restore and source rollback preserving newer writes; a seventh verified the exact final saved configuration and stopped. The new empty database is retained privately; its console is stopped with no worker/autostart and zero actors/tasks/commands/allocations.
+The isolated Fleet console was explicitly approved, started and verified; see [activation acceptance](../../fleet/docs/isolated-console-activation-20261023.md). Source `966f2d2` is running at `http://127.0.0.1:38765`, loopback only and game-disabled. All 20 activation checks passed. No worker/autostart was installed; no actors, tasks, allocations or commands were created. This supersedes the previous awaiting-approval/stopped checkpoint. PACT application source/dependencies, ordinary services and paused worlds remain unchanged.
 
-The private [activation package](/home/mnim/.local/share/fleet-candidate-final-facts-20261023-2141/ACTIVATION.md) awaits explicit approval until 24 October 2026 at 21:48:40 UTC. Scope is only the isolated console with game execution disabled: zero model calls, game commands, enrollment, workers or existing-instance cutover. This does not establish broader negotiation or gameplay acceptance. PACT application source/dependencies, existing services and paused world are unchanged. Local inference remains Nemotron 4B only. E4/KQ1 remain frozen and unrun; the old Windows denial is not a blanket gate for separately authorized native WSL work. Earlier failed results and unused allowances remain closed.
+The [earlier four-case Nemotron 4B qualification and installation](../../fleet/docs/final-facts-qualification-and-installation-20261023.md) remains narrow accepted evidence: six calls / 76.096 seconds / 9,444 measured tokens, no retries/unknowns/game commands; 70 installation checks and an additional exact-configuration verification. Its allowance is closed. General negotiation/gameplay remains unqualified; E4/KQ1 stay blocked and unrun.
+
+The [30-minute offline follow-up](../../fleet/docs/offline-post-activation-follow-up-20261024.md) is complete: activation records reconciled, read-only status passed 18 tests and checked the original console PID; 35 focused Fleet unit / 62 isolated integration tests passed. The installed empty instance has no requests/bindings/v3 profiles by design. Zero model calls, workers, game commands, restarts or settings changes. No demonstrated failure warrants another trial; first define a separate concrete owner-task/profile proposal without activation. Nemotron 4B only for any separately authorized future inference. Earlier failed studies/allowances remain closed.
 
 ## Source and milestone
 
