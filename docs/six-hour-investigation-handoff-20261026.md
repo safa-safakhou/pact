@@ -1,5 +1,7 @@
 # Six-hour run: investigation handoff
 
+Follow-up: [Agent society systems investigation](agent-society-system-investigation-20261026.md) adds the causal analysis and links to Fleet's detailed architecture/context report. No runtime changes were made.
+
 Use this note to continue the investigation from a separate PACT checkout. The authoritative cross-system handoff is in the Fleet repository:
 
 - [Fleet investigation handoff](https://github.com/safa-safakhou/fleet/blob/master/docs/six-hour-investigation-handoff-20261026.md): findings, source entry points, unresolved questions, evidence locations and reproduction limits.
