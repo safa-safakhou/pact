@@ -1,5 +1,6 @@
 import { AgentOperationService } from "@pact/application";
 import { pactActionEffectsExecuteTool, pactActionEffectsQuoteTool } from "@pact/contracts";
+import { MCP_PROTOCOL_PRIMARY, McpTransport } from "@pact/mcp";
 import Fastify from "fastify";
 import { afterAll, beforeAll, expect, it } from "vitest";
 import {
@@ -15,6 +16,36 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await f?.close();
+});
+it("the actual MCP tools/list wire metadata preserves guarded execute as a game:act write", async () => {
+  const a = await f.owner();
+  const transport = new McpTransport({
+    pool: f.pool,
+    productScope: "pact",
+    dispatcher: f.dispatcher,
+    actionEffects: f.effects,
+    origin: "http://fixture.example",
+    clock: { now: () => new Date() },
+  });
+  const initialized = await transport.handlePost(a.principal, {
+    method: "initialize",
+    id: 1,
+    params: { protocolVersion: MCP_PROTOCOL_PRIMARY },
+  });
+  const listed = await transport.handlePost(a.principal, { method: "tools/list", id: 2 }, initialized.sessionId);
+  const tools = (
+    listed.response.result as {
+      tools: {
+        name: string;
+        annotations: { readOnlyHint: boolean };
+        _meta: { "pact/operation": { readOnly: boolean; requiredScopes: string[] } };
+      }[];
+    }
+  ).tools;
+  const execute = tools.find((tool) => tool.name === pactActionEffectsExecuteTool.name);
+  expect(execute?.annotations.readOnlyHint).toBe(false);
+  expect(execute?._meta["pact/operation"]).toMatchObject({ readOnly: false, requiredScopes: ["game:act"] });
+  expect(tools.find((tool) => tool.name === pactActionEffectsQuoteTool.name)?.annotations.readOnlyHint).toBe(true);
 });
 it("declares read/write tools accurately and shares normal API/MCP guard semantics", async () => {
   const a = await f.owner(),

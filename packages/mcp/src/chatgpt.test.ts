@@ -1,7 +1,18 @@
+import { pactActionEffectsExecuteTool, pactActionEffectsQuoteTool } from "@pact/contracts";
 import { describe, expect, it } from "vitest";
 import { chatgptDescriptor, playHtml } from "./chatgpt.js";
 
 describe("versioned host tool annotations and conversation app", () => {
+  it("preserves canonical action-effect write annotations through host decoration", () => {
+    const execute = chatgptDescriptor(pactActionEffectsExecuteTool);
+    expect(execute.annotations).toMatchObject({ readOnlyHint: false, destructiveHint: true, openWorldHint: false });
+    expect(execute.securitySchemes[0]?.scopes).toEqual(["game:act"]);
+    expect(execute._meta["pact/operation"]).toMatchObject({ readOnly: false, requiredScopes: ["game:act"] });
+    expect(chatgptDescriptor(pactActionEffectsQuoteTool).annotations.readOnlyHint).toBe(true);
+    expect(
+      chatgptDescriptor({ name: "new_canonical_write", annotations: { readOnlyHint: false } }).annotations.readOnlyHint,
+    ).toBe(false);
+  });
   it("describes lease reservation as a private non-destructive write without changing gameplay labels", () => {
     expect(chatgptDescriptor({ name: "run.open" })).toMatchObject({
       annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false, idempotentHint: false },

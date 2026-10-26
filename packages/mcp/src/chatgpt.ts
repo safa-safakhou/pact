@@ -75,20 +75,28 @@ export const notesWriteTool = {
   },
 };
 export function chatgptDescriptor<T extends { name: string }>(tool: T) {
-  const write = [
-    "pact_game_action_v1",
-    "pact_game_action_v2",
-    "pact_command_v1",
-    "pact_command_v2",
-    "pact_approval_propose_v1",
-    "pact_approval_propose_v2",
-    "run.open",
-    "pact_notes_write_v1",
-    "pact_private_memory_write_v2",
-    "sandbox.echo",
-    "sandbox.counter.increment",
-    "sandbox.draft.write",
-  ].includes(tool.name);
+  const canonical =
+    "annotations" in tool && tool.annotations && typeof tool.annotations === "object"
+      ? (tool.annotations as Record<string, unknown>)
+      : {};
+  const write =
+    canonical.readOnlyHint === false ||
+    [
+      "pact_game_action_v1",
+      "pact_game_action_v2",
+      "pact_command_v1",
+      "pact_command_v2",
+      "pact_approval_propose_v1",
+      "pact_approval_propose_v2",
+      "run.open",
+      "pact_notes_write_v1",
+      "pact_private_memory_write_v2",
+      "sandbox.echo",
+      "sandbox.counter.increment",
+      "sandbox.draft.write",
+    ].includes(tool.name);
+  const annotation = (key: string, fallback: boolean) =>
+    typeof canonical[key] === "boolean" ? (canonical[key] as boolean) : fallback;
   // Reserving this connection's expiring lease is a state change, not an irreversible game action.
   const privateLease = tool.name === "run.open";
   const scopes: ("game:act" | "world:read")[] = [write || tool.name.startsWith("sandbox.") ? "game:act" : "world:read"];
@@ -98,9 +106,12 @@ export function chatgptDescriptor<T extends { name: string }>(tool: T) {
     ...tool,
     annotations: {
       readOnlyHint: !write,
-      destructiveHint: write && !privateLease,
-      idempotentHint: !write || tool.name === "pact_notes_write_v1" || tool.name === "pact_private_memory_write_v2",
-      openWorldHint: !privateLease,
+      destructiveHint: annotation("destructiveHint", write && !privateLease),
+      idempotentHint: annotation(
+        "idempotentHint",
+        !write || tool.name === "pact_notes_write_v1" || tool.name === "pact_private_memory_write_v2",
+      ),
+      openWorldHint: annotation("openWorldHint", !privateLease),
     },
     securitySchemes,
     _meta: { ...meta, securitySchemes, "pact/operation": operationMetadata(tool.name, scopes, !write) },
