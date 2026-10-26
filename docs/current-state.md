@@ -1,5 +1,7 @@
 # PACT current state
 
+**Fresh half-hour deployment completed — 26–27 October 2026; world PAUSED.** [Actual results and remaining failures](fresh-half-hour-run-20261026.md): separate fresh 24 kingdoms, Nemotron 4B only, 216 attempts/250 calls/68 actions, 32 completed upgrades, 14 rejection/error outcomes. Final unknown usage 0, in-flight turns 0, pending/unknown commands 0; bounded shutdown and encrypted restore verified. Old world/nine unknown allocations preserved; E4/KQ1 blocked. This supersedes the source-only checkpoint below for deployment status and does not authorize another run.
+
 **Fleet society reliability implementation — 26 October 2026 (source only).** [Implementation and research fields](../../fleet/docs/agent-society-reliability-20261026.md) repair agent context/delivery and fresh admission without changing PACT rules or its atomic authorization/effect guards. Native PACT handlers are checked only on fresh synthetic fixtures. No deployment, model calls, world changes or uncertainty settlement; E4/KQ1 remain blocked.
 
 **Continue the investigation:** [Six-hour investigation handoff](six-hour-investigation-handoff-20261026.md) provides a standalone PACT summary and links to Fleet's detailed findings, source entry points and evidence inventory. This is a documentation handoff; the paused world and retained uncertainty are unchanged.
