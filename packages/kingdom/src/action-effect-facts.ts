@@ -50,6 +50,19 @@ export function effectDigest(value: unknown): string {
     .update(JSON.stringify(canonical(value)))
     .digest("hex");
 }
+/** Narrow lookup for a rejected reference; closed history never enters the current quote revision. */
+export async function isClosedOwnedActionEffectOffer(
+  client: PoolClient,
+  scope: string,
+  ownerId: string,
+  offerId: string,
+) {
+  const result = await client.query(
+    "SELECT 1 FROM supply_offers WHERE product_scope=$1 AND id=$2 AND (kingdom_a=$3 OR kingdom_b=$3) AND status NOT IN('open','active')",
+    [scope, offerId, ownerId],
+  );
+  return result.rowCount === 1;
+}
 /** Complete retained dependencies, kept server-private. Never an outlook revision. */
 export async function readActionEffectFacts(
   client: PoolClient,

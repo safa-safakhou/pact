@@ -16,6 +16,36 @@ const terms = {
   durationHours: 1 as const,
   noticeHours: 0 as const,
 };
+it("reports closed owned offers as expired without exposing foreign offer existence", async () => {
+  const a = await f.owner(),
+    b = await f.owner(),
+    outsider = await f.owner();
+  await f.pool.query(
+    "INSERT INTO social_contacts(product_scope,kingdom_a,kingdom_b,accepted_game_time_ms) VALUES('pact',$1,$2,0)",
+    [...[a.kingdomId, b.kingdomId].sort()],
+  );
+  const offer = f.command(a.principal, { kind: "game.supply.offer", counterpartyKingdomId: b.kingdomId, terms });
+  await f.dispatcher.dispatchGuarded(a.principal, await f.guarded(a.principal, offer));
+  await f.pool.query("UPDATE supply_offers SET status='expired',expires_game_time_ms=0 WHERE id=$1", [offer.commandId]);
+  const before = (await f.pool.query("SELECT count(*)::int n FROM command_receipts")).rows[0].n;
+  for (const actor of [a, b, outsider]) {
+    for (const action of [
+      { kind: "game.supply.sign" as const, offerId: offer.commandId, version: 1 },
+      { kind: "game.supply.counter" as const, offerId: offer.commandId, expectedVersion: 1, terms },
+    ]) {
+      await expect(f.effects.quote(actor.principal, f.command(actor.principal, action))).rejects.toThrow(
+        actor === outsider ? "FORBIDDEN" : "EXPIRED",
+      );
+    }
+  }
+  await expect(
+    f.effects.quote(
+      a.principal,
+      f.command(a.principal, { kind: "game.supply.sign", offerId: outsider.kingdomId, version: 1 }),
+    ),
+  ).rejects.toThrow("FORBIDDEN");
+  expect((await f.pool.query("SELECT count(*)::int n FROM command_receipts")).rows[0].n).toBe(before);
+});
 it("covers eight actual action handlers with read-only quotes and exact one-time guarded receipts", async () => {
   const a = await f.owner(),
     b = await f.owner();

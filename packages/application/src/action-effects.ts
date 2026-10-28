@@ -22,6 +22,7 @@ import {
 import {
   type ActionEffectFacts,
   effectDigest,
+  isClosedOwnedActionEffectOffer,
   readActionEffectFacts,
   readActionEffectPeer,
   type SupplyTerms,
@@ -156,6 +157,8 @@ export class ActionEffectsService {
     let offer: ActionEffectFacts["data"]["supply_offers"][number] | undefined;
     if (action.kind === "game.supply.counter" || action.kind === "game.supply.sign") {
       offer = data.supply_offers.find((r) => r.id === action.offerId);
+      if (!offer && (await isClosedOwnedActionEffectOffer(client, this.scope, owner.id, action.offerId)))
+        throw new DispatcherError("EXPIRED");
       if (!offer || (offer.kingdom_a !== owner.id && offer.kingdom_b !== owner.id))
         throw new DispatcherError("FORBIDDEN");
       if (Number(offer.expires_game_time_ms) <= f.time || offer.status !== "open") throw new DispatcherError("EXPIRED");
