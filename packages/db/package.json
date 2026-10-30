@@ -17,10 +17,10 @@
     "@pact/contracts": "0.1.0",
     "@pact/platform": "0.1.0",
     "@pact/telemetry": "0.1.0",
-    "pg": "8.23.0"
+    "pg": "8.23.1"
   },
   "devDependencies": {
     "@types/pg": "8.23.1",
-    "tsx": "4.23.14"
+    "tsx": "4.23.15"
   }
 }

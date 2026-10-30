@@ -9,7 +9,7 @@
     "start": "node dist/main.js"
   },
   "devDependencies": {
-    "tsx": "4.23.14"
+    "tsx": "4.23.15"
   },
   "dependencies": {
     "@pact/db": "0.1.0",

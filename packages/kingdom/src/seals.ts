@@ -1,4 +1,4 @@
-import type { JsonWebKey } from "node:crypto";
+import type { webcrypto } from "node:crypto";
 import type { SealCommand, SealSelection } from "@pact/contracts";
 import { withTransaction } from "@pact/db";
 import { canonicalJson, selectExcerpt, sha256, verifyPayload } from "@pact/evidence";
@@ -165,7 +165,7 @@ export class SealService {
   async keys() {
     return {
       keys: (
-        await this.pool.query<{ public_jwk: JsonWebKey }>(
+        await this.pool.query<{ public_jwk: webcrypto.JsonWebKey }>(
           "SELECT public_jwk FROM seal_signing_keys WHERE product_scope=$1 ORDER BY created_at,kid",
           [this.scope],
         )
@@ -189,7 +189,7 @@ export class SealService {
         preview_payload: Record<string, unknown>;
         signed_payload: Record<string, unknown> | null;
         signature: string | null;
-        public_jwk: JsonWebKey | null;
+        public_jwk: webcrypto.JsonWebKey | null;
         compromised: boolean;
         removed_source: boolean;
         expired: boolean;

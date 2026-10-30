@@ -19,6 +19,6 @@
     "@pact/world": "0.1.0"
   },
   "devDependencies": {
-    "tsx": "4.23.14"
+    "tsx": "4.23.15"
   }
 }

@@ -8,8 +8,8 @@ PACT is a persistent competitive kingdom game operated by humans and their LLM E
 
 ## Requirements
 
-- Node.js 24 (the exact verified version is in `.nvmrc` and `.node-version`)
-- npm 11
+- Node.js 26.13.0 (the exact verified version is in `.nvmrc` and `.node-version`)
+- npm 12.2.1
 - Docker with Compose, or PostgreSQL 17 reachable through `DATABASE_URL`
 
 No provider key is needed for the foundation workspace.
@@ -65,3 +65,5 @@ Integration tests create an isolated PostgreSQL schema per test file, migrate it
 Authenticated clients submit commands to `POST /v1/commands` and reconcile uncertain writes with `GET /v1/receipts/:commandId`. The write requires the session cookie plus exact Origin/CSRF proof; both routes derive the account server-side and set `Cache-Control: no-store`.
 
 See [architecture](docs/architecture/modules.md), [client SDK](docs/api/client-sdk.md), [model credentials](docs/api/model-credentials.md), [provider adapters](docs/api/provider-adapters.md), [identity operations](docs/operations/identity.md), [OAuth API](docs/api/oauth.md), [authority API](docs/api/authority.md), [database operations](docs/operations/database.md), and [telemetry operations](docs/operations/telemetry.md) for ownership, privacy, and recovery boundaries.
+
+Dependency and runtime upgrade details, compatibility pins, and verification limits: [30 October upgrade record](docs/superpowers/plans/2026-10-30-dependency-upgrade.md).

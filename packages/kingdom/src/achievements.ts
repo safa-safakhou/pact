@@ -189,7 +189,7 @@ export class AchievementService {
             creator_kingdom_id: string;
             signed_payload: Record<string, unknown>;
             signature: string;
-            public_jwk: import("node:crypto").JsonWebKey;
+            public_jwk: import("node:crypto").webcrypto.JsonWebKey;
             at: string;
           }>(
             `SELECT s.creator_kingdom_id,s.signed_payload,s.signature,k.public_jwk,COALESCE(w.committed_game_time_ms,0)::text AS at FROM evidence_seals s JOIN seal_signing_keys k ON k.kid=s.kid AND k.product_scope=s.product_scope LEFT JOIN world_clocks w ON w.product_scope=s.product_scope WHERE s.product_scope=$1 AND s.id=$2 AND s.status='published' AND NOT k.compromised`,

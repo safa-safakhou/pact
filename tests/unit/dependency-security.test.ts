@@ -70,24 +70,22 @@ it.each([true, false])("accepts the correct SHA256 AlgorithmIdentifier with NULL
   expect(publicKey.verify(value.digest, value.signature)).toBe(true);
   expect(publicKey.verify(forge.md.sha256.create().update("other").digest().getBytes(), value.signature)).toBe(false);
 });
-it("preserves Xcode CommonJS UUID generation and rejects short v3/v5 output buffers", () => {
-  const uuid = require("uuid"),
-    xcode = require("xcode"),
+it("preserves Xcode CommonJS UUID generation without the removed UUID dependency", () => {
+  const xcode = require("xcode"),
     project = xcode.project("synthetic.pbxproj");
   project.hash = { project: { objects: {} } };
   expect(project.generateUuid()).toMatch(/^[A-F0-9]{24}$/);
-  for (const v of [uuid.v3, uuid.v5]) expect(() => v("test", uuid.v4(), new Uint8Array(8), 4)).toThrow(RangeError);
+  expect(require("xcode/package.json").dependencies).not.toHaveProperty("uuid");
 });
 
 it("all transitive consumers resolve the patched copies, not merely root test dependencies", () => {
   const fromMicro = createRequire(require.resolve("micromatch")),
     fromExpo = createRequire(require.resolve("@expo/cli/package.json")),
-    fromCertificates = createRequire(require.resolve("@expo/code-signing-certificates")),
-    fromXcode = createRequire(require.resolve("xcode"));
+    fromCertificates = createRequire(require.resolve("@expo/code-signing-certificates"));
   expect(fromMicro("braces")).toBe(braces);
   expect(fromExpo("node-forge")).toBe(forge);
   expect(fromCertificates("node-forge")).toBe(forge);
-  expect(fromXcode("uuid/package.json").version).toBe("11.1.1");
+  expect(require("xcode/package.json").version).toBe("4.0.0");
 });
 it("retains Expo self-signed certificate, CSR and signed update-buffer verification", () => {
   const api = require("@expo/code-signing-certificates"),
@@ -113,4 +111,34 @@ it("allows normal nested input and escaped/quoted literal braces", () => {
   expect(braces.expand("{a,{b,c}}")).toEqual(["a", "b", "c"]);
   expect(() => braces.compile("{".repeat(100) + "x" + "}".repeat(100))).not.toThrow();
   expect(braces.expand('"' + "{".repeat(200) + '"')).toEqual(["{".repeat(200)]);
+});
+
+it("uses patched Zod for Expo plugin validation and preserves MCP extension schemas", () => {
+  const fromExpo = createRequire(require.resolve("@expo/cli/package.json"));
+  expect(fromExpo("zod")).toBe(require("zod"));
+  const { PluginSchema, DevToolsPluginOutputSchema } = fromExpo("./build/src/start/server/DevToolsPlugin.schema.js");
+  const { createMCPDevToolsExtensionSchema } = fromExpo("./build/src/start/server/createMCPDevToolsExtensionSchema.js");
+  const plugin = PluginSchema.parse({
+    packageName: "synthetic-tools",
+    packageRoot: "/synthetic",
+    cliExtensions: {
+      description: "Synthetic commands",
+      entryPoint: "index.js",
+      commands: [
+        {
+          name: "inspect",
+          title: "Inspect",
+          environments: ["mcp"],
+          parameters: [{ name: "count", type: "number" }],
+        },
+      ],
+    },
+  });
+  const schema = createMCPDevToolsExtensionSchema(plugin);
+  expect(schema.parse({ command: "inspect", count: 2 })).toEqual({ command: "inspect", count: 2 });
+  expect(schema.safeParse({ command: "inspect", count: "2" }).success).toBe(false);
+  expect(schema.safeParse({ command: "unknown" }).success).toBe(false);
+  expect(schema.safeParse({ command: "inspect", extra: true }).success).toBe(false);
+  expect(DevToolsPluginOutputSchema.safeParse([{ type: "text", text: "ok", level: "info" }]).success).toBe(true);
+  expect(DevToolsPluginOutputSchema.safeParse([{ type: "text", text: "ok", level: "unknown" }]).success).toBe(false);
 });

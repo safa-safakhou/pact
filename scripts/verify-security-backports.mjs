@@ -10,7 +10,7 @@ if (root.devDependencies.expo !== native.dependencies.expo) throw Error("ROOT_EX
 if (
   root.overrides.braces !== "$braces" ||
   root.overrides["node-forge"] !== "$node-forge" ||
-  root.overrides.xcode.uuid !== "11.1.1"
+  root.overrides["@expo/cli"].zod !== "$zod"
 )
   throw Error("SECURITY_OVERRIDES_CHANGED_REVIEW_REQUIRED");
 for (const entry of provenance.packages) {
@@ -47,6 +47,10 @@ for (const [consumer, name] of [
     expected = require(name);
   if (actual !== expected) throw Error(`UNPATCHED_TRANSITIVE_COPY:${consumer}`);
 }
-const uuid = createRequire(require.resolve("xcode"))("uuid/package.json");
-if (uuid.version !== "11.1.1") throw Error("XCODE_UUID_NOT_PATCHED");
-console.log("PASS: local backport hashes/inventory, consumer resolution, native Expo pin and patched UUID");
+if (createRequire(require.resolve("@expo/cli/package.json"))("zod") !== require("zod"))
+  throw Error("EXPO_ZOD_MUST_USE_PATCHED_VERSION");
+const xcode = require("xcode/package.json");
+if (xcode.version !== "4.0.0" || xcode.dependencies.uuid) throw Error("XCODE_MUST_USE_BUILTIN_CRYPTO");
+console.log(
+  "PASS: local backport hashes/inventory, consumer resolution, native Expo pin, patched Expo Zod and UUID-free Xcode",
+);

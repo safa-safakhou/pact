@@ -31,7 +31,7 @@ Use scoped rg searches/file reads; graph tools are optional when useful. Read ma
 
 ## Engineering invariants
 
-- Node 24/TypeScript, React/Fastify, PostgreSQL 17; native clients use React Native/Expo. Pin dependencies and lockfiles.
+- Node 26/TypeScript, React/Fastify, PostgreSQL 17; native clients use React Native/Expo. Pin dependencies and lockfiles.
 - All clients/providers use the same authoritative application handlers, authorization and receipts. Reusable platform packages use contracts/injected ports, not PACT domain imports.
 - Modules own tables/migrations/retention and expose public interfaces. Rules use explicit state, clock and randomness with exact arithmetic.
 - Commit resource changes, reservations, receipts and outbox events atomically. No network/model calls inside database transactions; retries must not duplicate effects.

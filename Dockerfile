@@ -1,4 +1,4 @@
-FROM node:24.21.0-bookworm-slim AS build
+FROM node:26.13.0-bookworm-slim AS build
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.base.json tsconfig.check.json ./
 COPY apps ./apps
@@ -7,7 +7,7 @@ COPY services ./services
 COPY workers ./workers
 COPY scripts ./scripts
 COPY vendor ./vendor
-RUN npm ci
+RUN npm install --global npm@12.2.1 && npm ci
 ARG PACT_WEB_BASE_PATH=/
 ARG PACT_TELEGRAM_BASE_PATH=/telegram/
 ENV PACT_WEB_BASE_PATH=$PACT_WEB_BASE_PATH
@@ -15,7 +15,7 @@ ENV PACT_TELEGRAM_BASE_PATH=$PACT_TELEGRAM_BASE_PATH
 RUN npm run build
 RUN npm prune --omit=dev
 
-FROM node:24.21.0-bookworm-slim AS runtime
+FROM node:26.13.0-bookworm-slim AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/package.json /app/package-lock.json ./
@@ -31,7 +31,7 @@ RUN chmod 0555 /usr/local/bin/pact-entrypoint
 RUN node scripts/verify-security-backports.mjs
 ENTRYPOINT ["pact-entrypoint"]
 
-FROM caddy:2.10.2-alpine AS gateway
+FROM caddy:2.11.7-alpine AS gateway
 COPY infra/production/Caddyfile /etc/caddy/Caddyfile
 COPY --from=build /app/apps/web/dist /srv/web
 COPY --from=build /app/apps/telegram/dist /srv/telegram

@@ -1,4 +1,4 @@
-import { createHash, createPublicKey, type JsonWebKey, type KeyObject, sign, verify } from "node:crypto";
+import { createHash, createPublicKey, type KeyObject, sign, verify, type webcrypto } from "node:crypto";
 
 export function validUnicode(value: string): boolean {
   for (let i = 0; i < value.length; i++) {
@@ -79,7 +79,7 @@ export function signPayload(domain: string, payload: unknown, key: KeyObject): s
   if (key.asymmetricKeyType !== "ed25519") throw new Error("INVALID_KEY");
   return sign(null, Buffer.from(domain + canonicalJson(payload), "utf8"), key).toString("base64url");
 }
-export function verifyPayload(domain: string, payload: unknown, signature: string, jwk: JsonWebKey): boolean {
+export function verifyPayload(domain: string, payload: unknown, signature: string, jwk: webcrypto.JsonWebKey): boolean {
   try {
     if (!/^[A-Za-z0-9_-]{86}$/.test(signature) || jwk.kty !== "OKP" || jwk.crv !== "Ed25519" || jwk.d !== undefined)
       return false;

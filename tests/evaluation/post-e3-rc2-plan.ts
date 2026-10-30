@@ -1578,7 +1578,8 @@ export type PostE3Cell =
   | RC26Cell
   | RC27Cell
   | RC28Cell
-  | RC29Cell | RC30Cell;
+  | RC29Cell
+  | RC30Cell;
 export type PostE3Protocol =
   | RC1Protocol
   | RC2Protocol
@@ -1843,7 +1844,7 @@ export function validateRC30Cell(protocol: RC30Protocol, cell: RC30Cell) {
     throw Error("RC30_UNPLANNED_OR_CHANGED_CELL");
 }
 export function validatePostE3Cell(protocol: PostE3Protocol, cell: PostE3Cell) {
-  if(protocol.study === "negotiation-r30" && cell.study === "negotiation-r30") return validateRC30Cell(protocol,cell);
+  if (protocol.study === "negotiation-r30" && cell.study === "negotiation-r30") return validateRC30Cell(protocol, cell);
   if (protocol.study === "negotiation-r29" && cell.study === "negotiation-r29") return validateRC29Cell(protocol, cell);
   if (protocol.study === "negotiation-r28" && cell.study === "negotiation-r28") return validateRC28Cell(protocol, cell);
   if (protocol.study === "negotiation-r27" && cell.study === "negotiation-r27") return validateRC27Cell(protocol, cell);

@@ -3,9 +3,9 @@ import {
   createDecipheriv,
   createPrivateKey,
   generateKeyPairSync,
-  type JsonWebKey,
   randomBytes,
   randomUUID,
+  type webcrypto,
 } from "node:crypto";
 import { appendOutbox, withTransaction } from "@pact/db";
 import { signPayload } from "@pact/evidence";
@@ -71,7 +71,7 @@ export class SealSigner {
         return row.id;
       }
       const stored = (
-        await client.query<{ kid: string; public_jwk: JsonWebKey; encrypted_private_key: Buffer }>(
+        await client.query<{ kid: string; public_jwk: webcrypto.JsonWebKey; encrypted_private_key: Buffer }>(
           "SELECT kid,public_jwk,encrypted_private_key FROM seal_signing_keys WHERE product_scope=$1 AND active AND NOT compromised FOR SHARE",
           [this.scope],
         )
