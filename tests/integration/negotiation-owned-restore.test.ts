@@ -32,6 +32,10 @@ it("encrypted owned C02 archive restores every table and sequence on a network-d
     (await docker(["inspect", "--format", '{{ index .Config.Labels "fleet.architecture.fixture" }}', source])) !== nonce
   )
     throw Error("OWNED_FIXTURE_REQUIRED");
+  // Restore with the exact image of the verified source fixture, keeping dump
+  // and server versions aligned without relying on a developer's cached image.
+  const image = await docker(["inspect", "--format", "{{.Image}}", source]);
+  if (!/^sha256:[a-f0-9]{64}$/.test(image)) throw Error("OWNED_FIXTURE_IMAGE_REQUIRED");
   const cell = negotiationPlan("E1", {
     sources: { fleet: "a".repeat(40), pact: "b".repeat(40) },
     modelDigest: "c".repeat(64),
@@ -147,7 +151,7 @@ it("encrypted owned C02 archive restores every table and sequence on a network-d
       "POSTGRES_DB=pact_test",
       "-e",
       "POSTGRES_HOST_AUTH_METHOD=trust",
-      "sha256:79bd7c99e923138f136f8009d6bffa66e21e9d4fda5c0c561b00fc9c90cfe537",
+      image,
     ]);
     for (let i = 0; i < 100; i++) {
       try {
