@@ -27,6 +27,7 @@ This documentation-only publication includes the technical narrative and dated s
 | Topic | Source |
 |---|---|
 | Combined project story, diagrams and presentation notes | [Fleet project handbook](https://github.com/safa-safakhou/fleet/blob/master/docs/project/README.md) |
+| Game agent architecture research, synthesis and 80 paper notes | [Literature review](../research/agent-architecture/README.md) |
 | Game source/process/authority map | [PACT technical architecture](architecture.md) |
 | Product and paired implementation journey | [PACT journey](journey.md) |
 | Normative rules and document ownership | [Canonical specification index](../pact/README.md) |

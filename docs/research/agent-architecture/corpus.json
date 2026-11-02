@@ -1,0 +1,752 @@
+[
+  {
+    "id": "01",
+    "title": "A Robust Layered Control System for a Mobile Robot",
+    "url": "https://people.csail.mit.edu/brooks/papers/AIM-864.pdf",
+    "pdf_url": "https://people.csail.mit.edu/brooks/papers/AIM-864.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/01.md"
+  },
+  {
+    "id": "02",
+    "title": "Intelligence Without Representation",
+    "url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+    "pdf_url": "https://people.csail.mit.edu/brooks/papers/representation.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/02.md"
+  },
+  {
+    "id": "03",
+    "title": "Integrating Planning and Reacting in a Heterogeneous Asynchronous Architecture for Controlling Real-World Mobile Robots",
+    "url": "https://cdn.aaai.org/AAAI/1992/AAAI92-125.pdf",
+    "pdf_url": "https://cdn.aaai.org/AAAI/1992/AAAI92-125.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/03.md"
+  },
+  {
+    "id": "04",
+    "title": "An Architecture for Autonomy",
+    "url": "https://homepages.laas.fr/rachid/pdfs/archi/1997-ijrr-alami-hal.pdf",
+    "pdf_url": "https://homepages.laas.fr/rachid/pdfs/archi/1997-ijrr-alami-hal.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/04.md"
+  },
+  {
+    "id": "05",
+    "title": "Decision-Making in an Embedded Reasoning System",
+    "url": "https://www.ijcai.org/Proceedings/89-1/Papers/156.pdf",
+    "pdf_url": "https://ijcai.org/proceedings/1989/0156.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/05.md"
+  },
+  {
+    "id": "06",
+    "title": "BDI Agents: From Theory to Practice",
+    "url": "https://cdn.aaai.org/ICMAS/1995/ICMAS95-042.pdf",
+    "pdf_url": "https://cdn.aaai.org/ICMAS/1995/ICMAS95-042.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/06.md"
+  },
+  {
+    "id": "07",
+    "title": "The HEARSAY-II Speech-Understanding System: Integrating Knowledge to Resolve Uncertainty",
+    "url": "https://mas.cs.umass.edu/Documents/Erman_Hearsay80.pdf",
+    "pdf_url": "https://mas.cs.umass.edu/Documents/Erman_Hearsay80.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/07.md"
+  },
+  {
+    "id": "08",
+    "title": "Introduction to Soar",
+    "url": "https://arxiv.org/abs/2205.03854",
+    "pdf_url": "https://arxiv.org/pdf/2205.03854",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/08.md"
+  },
+  {
+    "id": "09",
+    "title": "A Standard Model of the Mind",
+    "url": "https://ojs.aaai.org/aimagazine/index.php/aimagazine/article/view/2744/0",
+    "pdf_url": null,
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "source_version": "19-page author copy linked by symposium organizers; Table 2 visually inspected",
+    "notes_file": "papers/09.md"
+  },
+  {
+    "id": "10",
+    "title": "An Integrated Theory of the Mind",
+    "url": "https://chil.rice.edu/research/pdf/AndersonEA2004.pdf",
+    "pdf_url": "http://chil.rice.edu/research/pdf/AndersonEA2004.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/10.md"
+  },
+  {
+    "id": "11",
+    "title": "An Analysis and Comparison of ACT-R and Soar",
+    "url": "https://arxiv.org/abs/2201.09305",
+    "pdf_url": "https://arxiv.org/pdf/2201.09305",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/11.md"
+  },
+  {
+    "id": "12",
+    "title": "A Review of 40 Years of Cognitive Architecture Research",
+    "url": "https://arxiv.org/abs/1610.08602",
+    "pdf_url": "https://arxiv.org/pdf/1610.08602",
+    "status": "main_body_reviewed",
+    "source_version": "arXiv v3 January 13 2018",
+    "notes_saved": true,
+    "unread": "54-74 references; supplements",
+    "notes_file": "papers/12.md"
+  },
+  {
+    "id": "13",
+    "title": "Uncertainty-Based Competition Between Prefrontal and Dorsolateral Striatal Systems for Behavioral Control",
+    "url": "https://www.princeton.edu/~ndaw/dnd05.pdf",
+    "pdf_url": "https://www.princeton.edu/~ndaw/dnd05.pdf",
+    "status": "main_body_reviewed",
+    "unread": "Supplementary Methods",
+    "notes_saved": true,
+    "notes_file": "papers/13.md"
+  },
+  {
+    "id": "14",
+    "title": "Homeostatic Reinforcement Learning for Integrating Reward Collection and Physiological Stability",
+    "url": "https://elifesciences.org/articles/04811",
+    "pdf_url": "https://cdn.elifesciences.org/articles/04811/elife-04811-v1.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Figure supplements, parameter files, references 24-26",
+    "notes_file": "papers/14.md"
+  },
+  {
+    "id": "15",
+    "title": "Continuous Homeostatic Reinforcement Learning for Self-Regulated Autonomous Agents",
+    "url": "https://arxiv.org/abs/2109.06580",
+    "pdf_url": "https://arxiv.org/pdf/2109.06580",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Referenced implementation appendix absent from PDF",
+    "notes_file": "papers/15.md"
+  },
+  {
+    "id": "16",
+    "title": "Active Inference and Learning",
+    "url": "https://www.fil.ion.ucl.ac.uk/~karl/Active%20inference%20and%20learning.pdf",
+    "pdf_url": "https://www.fil.ion.ucl.ac.uk/~karl/Active%20inference%20and%20learning.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Embedded equations and Appendix A derivations not fully audited",
+    "notes_file": "papers/16.md"
+  },
+  {
+    "id": "17",
+    "title": "A Survey of Behavior Trees in Robotics and AI",
+    "url": "https://arxiv.org/abs/2005.05842",
+    "pdf_url": "https://arxiv.org/pdf/2005.05842",
+    "status": "main_body_reviewed",
+    "source_version": "arXiv v2 May 13 2020",
+    "notes_saved": true,
+    "unread": "19-22 references",
+    "notes_file": "papers/17.md"
+  },
+  {
+    "id": "18",
+    "title": "Behavior Trees in Robot Control Systems",
+    "url": "https://arxiv.org/abs/2203.13083",
+    "pdf_url": "https://arxiv.org/pdf/2203.13083",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Proofs read but not independently rederived",
+    "notes_file": "papers/18.md"
+  },
+  {
+    "id": "19",
+    "title": "How Behavior Trees Modularize Hybrid Control Systems and Generalize Sequential Behavior Compositions, the Subsumption Architecture, and Decision Trees",
+    "url": "https://www.diva-portal.org/smash/get/diva2%3A1078931/FULLTEXT01.pdf",
+    "pdf_url": "https://www.diva-portal.org/smash/get/diva2%3A1078931/FULLTEXT01.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Proofs not independently rederived",
+    "notes_file": "papers/19.md"
+  },
+  {
+    "id": "20",
+    "title": "Hierarchical Task and Motion Planning in the Now",
+    "url": "https://people.csail.mit.edu/tlp/pdf/2011/hpnICRA11Final.pdf",
+    "pdf_url": "https://people.csail.mit.edu/tlp/pdf/2011/hpnICRA11Final.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/20.md"
+  },
+  {
+    "id": "21",
+    "title": "Integrated Task and Motion Planning",
+    "url": "https://arxiv.org/abs/2010.01083",
+    "pdf_url": "https://arxiv.org/pdf/2010.01083",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "References 26-30; figure layouts not exhaustively audited",
+    "notes_file": "papers/21.md"
+  },
+  {
+    "id": "22",
+    "title": "Using Anytime Algorithms in Intelligent Systems",
+    "url": "https://anytime.cs.umass.edu/shlomo/papers/Zaimag96.pdf",
+    "pdf_url": "https://anytime.cs.umass.edu/shlomo/papers/Zaimag96.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "External theorem proofs not audited",
+    "notes_file": "papers/22.md"
+  },
+  {
+    "id": "23",
+    "title": "Principles of Metareasoning",
+    "url": "https://www.sciencedirect.com/science/article/pii/000437029190015C",
+    "pdf_url": null,
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Equations not independently audited; see note",
+    "notes_file": "papers/23.md"
+  },
+  {
+    "id": "24",
+    "title": "Event-Triggered Real-Time Scheduling of Stabilizing Control Tasks",
+    "url": "https://www.ee.ucla.edu/~tabuada/Papers/EventTriggered.pdf",
+    "pdf_url": "https://www.ee.ucla.edu/~tabuada/Papers/EventTriggered.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "unread": "Equations not independently audited; see note",
+    "notes_file": "papers/24.md"
+  },
+  {
+    "id": "25",
+    "title": "Feudal Reinforcement Learning",
+    "url": "https://papers.nips.cc/paper/1992/hash/d14220ee66aeec73c49038385428ec4c-Abstract.html",
+    "pdf_url": null,
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/25.md"
+  },
+  {
+    "id": "26",
+    "title": "Between MDPs and Semi-MDPs: A Framework for Temporal Abstraction in Reinforcement Learning",
+    "url": "https://www.ece.uvic.ca/~bctill/papers/learning/Sutton_etal_1999.pdf",
+    "pdf_url": "https://www.ece.uvic.ca/~bctill/papers/learning/Sutton_etal_1999.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/26.md"
+  },
+  {
+    "id": "27",
+    "title": "Hierarchical Reinforcement Learning with the MAXQ Value Function Decomposition",
+    "url": "https://arxiv.org/abs/cs/9905014",
+    "pdf_url": "https://arxiv.org/pdf/cs/9905014",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/27.md"
+  },
+  {
+    "id": "28",
+    "title": "The Option-Critic Architecture",
+    "url": "https://arxiv.org/abs/1609.05140",
+    "pdf_url": "https://arxiv.org/pdf/1609.05140",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/28.md"
+  },
+  {
+    "id": "29",
+    "title": "FeUdal Networks for Hierarchical Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1703.01161",
+    "pdf_url": "https://arxiv.org/pdf/1703.01161",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/29.md"
+  },
+  {
+    "id": "30",
+    "title": "Data-Efficient Hierarchical Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1805.08296",
+    "pdf_url": "https://arxiv.org/pdf/1805.08296",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/30.md"
+  },
+  {
+    "id": "31",
+    "title": "Learning Multi-Level Hierarchies with Hindsight",
+    "url": "https://arxiv.org/abs/1712.00948",
+    "pdf_url": "https://arxiv.org/pdf/1712.00948",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/31.md"
+  },
+  {
+    "id": "32",
+    "title": "Hierarchical Deep Reinforcement Learning: Integrating Temporal Abstraction and Intrinsic Motivation",
+    "url": "https://arxiv.org/abs/1604.06057",
+    "pdf_url": "https://arxiv.org/pdf/1604.06057",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/32.md"
+  },
+  {
+    "id": "33",
+    "title": "Diversity Is All You Need: Learning Skills Without a Reward Function",
+    "url": "https://arxiv.org/abs/1802.06070",
+    "pdf_url": "https://arxiv.org/pdf/1802.06070",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/33.md"
+  },
+  {
+    "id": "34",
+    "title": "Dynamics-Aware Unsupervised Discovery of Skills",
+    "url": "https://arxiv.org/abs/1907.01657",
+    "pdf_url": "https://arxiv.org/pdf/1907.01657",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/34.md"
+  },
+  {
+    "id": "35",
+    "title": "Accelerating Reinforcement Learning with Learned Skill Priors",
+    "url": "https://arxiv.org/abs/2010.11944",
+    "pdf_url": "https://arxiv.org/pdf/2010.11944",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/35.md"
+  },
+  {
+    "id": "36",
+    "title": "Learning Latent Plans from Play",
+    "url": "https://arxiv.org/abs/1903.01973",
+    "pdf_url": "https://arxiv.org/pdf/1903.01973",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/36.md"
+  },
+  {
+    "id": "37",
+    "title": "DeepMimic: Example-Guided Deep Reinforcement Learning of Physics-Based Character Skills",
+    "url": "https://xbpeng.github.io/projects/DeepMimic/DeepMimic_2018.pdf",
+    "pdf_url": "https://xbpeng.github.io/projects/DeepMimic/DeepMimic_2018.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/37.md"
+  },
+  {
+    "id": "38",
+    "title": "AMP: Adversarial Motion Priors for Stylized Physics-Based Character Control",
+    "url": "https://arxiv.org/abs/2104.02180",
+    "pdf_url": "https://arxiv.org/pdf/2104.02180",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/38.md"
+  },
+  {
+    "id": "39",
+    "title": "Universal Value Function Approximators",
+    "url": "https://proceedings.mlr.press/v37/schaul15.html",
+    "pdf_url": "http://proceedings.mlr.press/v37/schaul15.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "coverage": "See individual note for exact pages and limits",
+    "notes_file": "papers/39.md"
+  },
+  {
+    "id": "40",
+    "title": "From Skills to Symbols: Learning Symbolic Representations for Abstract High-Level Planning",
+    "url": "https://lis.csail.mit.edu/pubs/konidaris-jair18.pdf",
+    "pdf_url": "https://lis.csail.mit.edu/pubs/konidaris-jair18.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/40.md"
+  },
+  {
+    "id": "41",
+    "title": "World Models",
+    "url": "https://arxiv.org/abs/1803.10122",
+    "pdf_url": "https://arxiv.org/pdf/1803.10122",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/41.md"
+  },
+  {
+    "id": "42",
+    "title": "Dream to Control: Learning Behaviors by Latent Imagination",
+    "url": "https://arxiv.org/abs/1912.01603",
+    "pdf_url": "https://arxiv.org/pdf/1912.01603",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/42.md"
+  },
+  {
+    "id": "43",
+    "title": "Mastering Diverse Domains Through World Models",
+    "url": "https://arxiv.org/abs/2301.04104",
+    "pdf_url": "https://arxiv.org/pdf/2301.04104",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/43.md"
+  },
+  {
+    "id": "44",
+    "title": "Mastering Atari, Go, Chess and Shogi by Planning with a Learned Model",
+    "url": "https://arxiv.org/abs/1911.08265",
+    "pdf_url": "https://arxiv.org/pdf/1911.08265",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/44.md"
+  },
+  {
+    "id": "45",
+    "title": "Hybrid Computing Using a Neural Network with Dynamic External Memory",
+    "url": "https://www.nature.com/articles/nature20101",
+    "pdf_url": null,
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/45.md"
+  },
+  {
+    "id": "46",
+    "title": "Neural Episodic Control",
+    "url": "https://arxiv.org/abs/1703.01988",
+    "pdf_url": "https://arxiv.org/pdf/1703.01988",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/46.md"
+  },
+  {
+    "id": "47",
+    "title": "Imagination-Augmented Agents for Deep Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1707.06203",
+    "pdf_url": "https://arxiv.org/pdf/1707.06203",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/47.md"
+  },
+  {
+    "id": "48",
+    "title": "Successor Features for Transfer in Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1606.05312",
+    "pdf_url": "https://arxiv.org/pdf/1606.05312",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/48.md"
+  },
+  {
+    "id": "49",
+    "title": "Modular Multitask Reinforcement Learning with Policy Sketches",
+    "url": "https://arxiv.org/abs/1611.01796",
+    "pdf_url": "https://arxiv.org/pdf/1611.01796",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/49.md"
+  },
+  {
+    "id": "50",
+    "title": "Recurrent Independent Mechanisms",
+    "url": "https://arxiv.org/abs/1909.10893",
+    "pdf_url": "https://arxiv.org/pdf/1909.10893",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/50.md"
+  },
+  {
+    "id": "51",
+    "title": "Progressive Neural Networks",
+    "url": "https://arxiv.org/abs/1606.04671",
+    "pdf_url": "https://arxiv.org/pdf/1606.04671",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/51.md"
+  },
+  {
+    "id": "52",
+    "title": "PathNet: Evolution Channels Gradient Descent in Super Neural Networks",
+    "url": "https://arxiv.org/abs/1701.08734",
+    "pdf_url": "https://arxiv.org/pdf/1701.08734",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/52.md"
+  },
+  {
+    "id": "53",
+    "title": "Overcoming Catastrophic Forgetting in Neural Networks",
+    "url": "https://arxiv.org/abs/1612.00796",
+    "pdf_url": "https://arxiv.org/pdf/1612.00796",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/53.md"
+  },
+  {
+    "id": "54",
+    "title": "Continual Learning Through Synaptic Intelligence",
+    "url": "https://arxiv.org/abs/1703.04200",
+    "pdf_url": "https://arxiv.org/pdf/1703.04200",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/54.md"
+  },
+  {
+    "id": "55",
+    "title": "Composable Deep Reinforcement Learning for Robotic Manipulation",
+    "url": "https://arxiv.org/abs/1803.06773",
+    "pdf_url": "https://arxiv.org/pdf/1803.06773",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/55.md"
+  },
+  {
+    "id": "56",
+    "title": "Neural Production Systems: Learning Rule-Governed Visual Dynamics",
+    "url": "https://arxiv.org/abs/2103.01937",
+    "pdf_url": "https://arxiv.org/pdf/2103.01937",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/56.md"
+  },
+  {
+    "id": "57",
+    "title": "The Simplex Architecture for Safe On-Line Control System Upgrades",
+    "url": "https://experts.illinois.edu/en/publications/the-simplex-architecture-for-safe-on-line-control-system-upgrades/",
+    "pdf_url": null,
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/57.md"
+  },
+  {
+    "id": "58",
+    "title": "Neural Simplex Architecture",
+    "url": "https://arxiv.org/abs/1908.00528",
+    "pdf_url": "https://arxiv.org/pdf/1908.00528",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/58.md"
+  },
+  {
+    "id": "59",
+    "title": "Safe Reinforcement Learning via Shielding",
+    "url": "https://arxiv.org/abs/1708.08611",
+    "pdf_url": "https://arxiv.org/pdf/1708.08611",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/59.md"
+  },
+  {
+    "id": "60",
+    "title": "Safe Reinforcement Learning via Shielding Under Partial Observability",
+    "url": "https://arxiv.org/abs/2204.00755",
+    "pdf_url": "https://arxiv.org/pdf/2204.00755",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/60.md"
+  },
+  {
+    "id": "61",
+    "title": "Control Barrier Function Based Quadratic Programs for Safety Critical Systems",
+    "url": "https://arxiv.org/abs/1609.06408",
+    "pdf_url": "https://arxiv.org/pdf/1609.06408",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/61.md"
+  },
+  {
+    "id": "62",
+    "title": "Recovery RL: Safe Reinforcement Learning with Learned Recovery Zones",
+    "url": "https://arxiv.org/abs/2010.15920",
+    "pdf_url": "https://arxiv.org/pdf/2010.15920",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/62.md"
+  },
+  {
+    "id": "63",
+    "title": "Robots That Can Adapt Like Animals",
+    "url": "https://arxiv.org/abs/1407.3501",
+    "pdf_url": "https://arxiv.org/pdf/1407.3501",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/63.md"
+  },
+  {
+    "id": "64",
+    "title": "Learning Robust Perceptive Locomotion for Quadrupedal Robots in the Wild",
+    "url": "https://arxiv.org/abs/2201.08117",
+    "pdf_url": "https://arxiv.org/pdf/2201.08117",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/64.md"
+  },
+  {
+    "id": "65",
+    "title": "Human-Level Performance in First-Person Multiplayer Games with Population-Based Deep Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1807.01281",
+    "pdf_url": "https://arxiv.org/pdf/1807.01281",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/65.md"
+  },
+  {
+    "id": "66",
+    "title": "Grandmaster Level in StarCraft II Using Multi-Agent Reinforcement Learning",
+    "url": "https://www.nature.com/articles/s41586-019-1724-z",
+    "pdf_url": "https://gwern.net/doc/reinforcement-learning/model-free/alphastar/2019-vinyals.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/66.md"
+  },
+  {
+    "id": "67",
+    "title": "Counter-Strike Deathmatch with Large-Scale Behavioural Cloning",
+    "url": "https://arxiv.org/abs/2104.04258",
+    "pdf_url": "https://arxiv.org/pdf/2104.04258",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/67.md"
+  },
+  {
+    "id": "68",
+    "title": "Hierarchical Imitation and Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1803.00590",
+    "pdf_url": "https://arxiv.org/pdf/1803.00590",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/68.md"
+  },
+  {
+    "id": "69",
+    "title": "Learning Agile Soccer Skills for a Bipedal Robot with Deep Reinforcement Learning",
+    "url": "https://arxiv.org/abs/2304.13653",
+    "pdf_url": "https://arxiv.org/pdf/2304.13653",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/69.md"
+  },
+  {
+    "id": "70",
+    "title": "Dota 2 with Large Scale Deep Reinforcement Learning",
+    "url": "https://arxiv.org/abs/1912.06680",
+    "pdf_url": "https://arxiv.org/pdf/1912.06680",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/70.md"
+  },
+  {
+    "id": "71",
+    "title": "Hierarchical Macro Strategy Model for MOBA Game AI",
+    "url": "https://arxiv.org/abs/1812.07887",
+    "pdf_url": "https://arxiv.org/pdf/1812.07887",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/71.md"
+  },
+  {
+    "id": "72",
+    "title": "RMA: Rapid Motor Adaptation for Legged Robots",
+    "url": "https://arxiv.org/abs/2107.04034",
+    "pdf_url": "https://ashish-kmr.github.io/rma-legged-robots/rma-locomotion-final.pdf",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/72.md"
+  },
+  {
+    "id": "73",
+    "title": "Do As I Can, Not As I Say: Grounding Language in Robotic Affordances",
+    "url": "https://arxiv.org/abs/2204.01691",
+    "pdf_url": "https://arxiv.org/pdf/2204.01691",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/73.md"
+  },
+  {
+    "id": "74",
+    "title": "Inner Monologue: Embodied Reasoning Through Planning with Language Models",
+    "url": "https://arxiv.org/abs/2207.05608",
+    "pdf_url": "https://arxiv.org/pdf/2207.05608",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/74.md"
+  },
+  {
+    "id": "75",
+    "title": "RT-H: Action Hierarchies Using Language",
+    "url": "https://arxiv.org/abs/2403.01823",
+    "pdf_url": "https://arxiv.org/pdf/2403.01823",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/75.md"
+  },
+  {
+    "id": "76",
+    "title": "Hi Robot: Open-Ended Instruction Following with Hierarchical Vision-Language-Action Models",
+    "url": "https://arxiv.org/abs/2502.19417",
+    "pdf_url": "https://arxiv.org/pdf/2502.19417",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/76.md"
+  },
+  {
+    "id": "77",
+    "title": "SayPlan: Grounding Large Language Models Using 3D Scene Graphs for Scalable Robot Task Planning",
+    "url": "https://arxiv.org/abs/2307.06135",
+    "pdf_url": "https://arxiv.org/pdf/2307.06135",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/77.md"
+  },
+  {
+    "id": "78",
+    "title": "Code as Policies: Language Model Programs for Embodied Control",
+    "url": "https://arxiv.org/abs/2209.07753",
+    "pdf_url": "https://arxiv.org/pdf/2209.07753",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/78.md"
+  },
+  {
+    "id": "79",
+    "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+    "url": "https://arxiv.org/abs/2305.16291",
+    "pdf_url": "https://arxiv.org/pdf/2305.16291",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/79.md"
+  },
+  {
+    "id": "80",
+    "title": "Generative Agents: Interactive Simulacra of Human Behavior",
+    "url": "https://arxiv.org/abs/2304.03442",
+    "pdf_url": "https://arxiv.org/pdf/2304.03442",
+    "status": "main_body_reviewed",
+    "notes_saved": true,
+    "notes_file": "papers/80.md"
+  }
+]
